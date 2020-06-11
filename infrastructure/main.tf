@@ -4,7 +4,7 @@ provider "azurerm" {
 
 resource "azurerm_resource_group" "rg" {
   name     = "${var.product}-${var.component}-${var.env}"
-  location = "${var.location}"
+  location = var.location
 
   tags = "${var.common_tags}"
 }
@@ -14,17 +14,17 @@ module "key-vault" {
   name                    = "ucmc-${var.env}"
   product                 = "${var.product}"
   env                     = "${var.env}"
-  tenant_id               = "${var.tenant_id}"
+  tenant_id               = var.tenant_id
   object_id               = "${var.jenkins_AAD_objectId}"
-  resource_group_name     = "${azurerm_resource_group.rg.name}"
+  resource_group_name     = azurerm_resource_group.rg.name
   product_group_object_id = "294f60bc-f8a2-4be3-8bb8-84975444d4a0"
-  common_tags             = "${var.common_tags}"
-  managed_identity_object_id = "${var.managed_identity_object_id}"
+  common_tags             = var.common_tags
+  managed_identity_object_id = var.managed_identity_object_id
 }
 
 resource "azurerm_application_insights" "appinsights" {
   name                = "${var.product}-${var.component}-appinsights-${var.env}"
-  location            = "${var.appinsights_location}"
-  resource_group_name = "${azurerm_resource_group.rg.name}"
-  application_type    = "${var.application_type}"
+  location            = var.appinsights_location
+  resource_group_name = azurerm_resource_group.rg.name
+  application_type    = var.application_type
 }
