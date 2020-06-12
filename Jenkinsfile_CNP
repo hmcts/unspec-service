@@ -13,6 +13,6 @@ withPipeline(type, product, component) {
   enableSlackNotifications('#ucmc_notification')
 
   after('functionalTest:preview') {
-    steps.archiveArtifacts allowEmptyArchive: true, artifacts: '**/*'
+    steps.archiveArtifacts allowEmptyArchive: true, artifacts: 'output/**/*'
   }
 }
