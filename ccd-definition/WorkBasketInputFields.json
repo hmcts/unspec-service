@@ -1,0 +1,9 @@
+[
+  {
+    "LiveFrom": "20/03/2020",
+    "CaseTypeID": "PERSONAL_INJURY",
+    "CaseFieldID": "[CASE_REFERENCE]",
+    "Label": "CCD Case Number",
+    "DisplayOrder": 4
+  }
+]
