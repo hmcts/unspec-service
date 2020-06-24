@@ -26,33 +26,6 @@ def otherSecrets = [
   ]
 ]
 
-def archiveCoreCaseDataDefinitions(env) {
-  dir("${WORKSPACE}/bin") {
-    sh "./build-release-ccd-definition.sh ${env}"
-  }
-
-  dir("${WORKSPACE}/build") {
-    steps.archiveArtifacts artifacts: "ccd-release-config/ccd-ucmc-${env}.xlsx"
-  }
-}
-
-/**
- * Imports CCD definitions into specified environment. Import XLSX file is archived when process completed.
- *
- * NOTE: It requires `bin/variables/load-${env}-environment-variables.sh` file to define environment specific URLs.
- *
- * @param env target environment
- */
-def uploadCoreCaseDataDefinitions(env) {
-  dir("${WORKSPACE}/bin"){
-    ccdDefinitionFilePath="${WORKSPACE}/build/ccd-release-config/ccd-ucmc-${env}.xlsx"
-    sh """
-    eval \$(./variables/load-${env}-environment-variables.sh)
-    ${WORKSPACE}/civil-unspecified-docker/bin/utils/ccd-import-definition.sh ${ccdDefinitionFilePath}
-  """
-  }
-}
-
 withPipeline(type, product, component) {
   disableLegacyDeployment()
 
@@ -68,8 +41,10 @@ withPipeline(type, product, component) {
   }
 
   before('smoketest:preview') {
-    archiveCoreCaseDataDefinitions('preview')
-    uploadCoreCaseDataDefinitions('preview')
+    sh """
+      eval \$(./bin/variables/load-preview-environment-variables.sh ${CHANGE_ID})
+      ./bin/import-ccd-definition.sh
+    """
   }
 
   after('functionalTest:preview') {
