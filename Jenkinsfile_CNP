@@ -63,6 +63,10 @@ withPipeline(type, product, component) {
     loadVaultSecrets(otherSecrets)
   }
 
+  after('checkout') {
+    sh """ git submodule update --init """
+  }
+
   before('smoketest:preview') {
     archiveCoreCaseDataDefinitions('preview')
     uploadCoreCaseDataDefinitions('preview')
