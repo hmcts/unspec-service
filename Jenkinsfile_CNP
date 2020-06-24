@@ -32,7 +32,7 @@ def archiveCoreCaseDataDefinitions(env) {
   }
 
   dir("${WORKSPACE}/build") {
-    steps.archiveArtifacts artifacts: "ccd-release-config/ccd-fpl-${env}.xlsx"
+    steps.archiveArtifacts artifacts: "ccd-release-config/ccd-ucmc-${env}.xlsx"
   }
 }
 
