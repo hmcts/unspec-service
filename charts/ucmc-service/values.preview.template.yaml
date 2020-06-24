@@ -1,16 +1,11 @@
 tags:
-  civil-unspecified-ccd-stack: true
+  ucmc-ccd-stack: true
 
 java:
   image: ${IMAGE_NAME}
   ingressHost: ${SERVICE_FQDN}
   environment:
     CORE_CASE_DATA_API_URL: http://${SERVICE_NAME}-ccd-data-store-api
-    IDAM_CLIENT_REDIRECT_URI: https://ucmc-service-aat.service.core-compute-aat.internal/oauth2/callback
-    SPRING_SECURITY_ENABLED: true
-    SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_JWKSETURI: https://idam-api.aat.platform.hmcts.net/o/jwks
-    GATEWAY_URL: https://gateway-${SERVICE_FQDN}
-    MANAGE_CASE_UI_BASE_URL: https://xui-${SERVICE_FQDN}
 
 xui-webapp:
   enabled: true
