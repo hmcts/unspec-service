@@ -1,9 +1,6 @@
 tags:
   civil-unspecified-ccd-stack: false
 
-idam-pr:
-  enabled: false
-
 xui-webapp:
   enabled: false
 

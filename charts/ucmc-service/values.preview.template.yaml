@@ -6,18 +6,11 @@ java:
   ingressHost: ${SERVICE_FQDN}
   environment:
     CORE_CASE_DATA_API_URL: http://${SERVICE_NAME}-ccd-data-store-api
-    IDAM_CLIENT_REDIRECT_URI: https://ucmc-service-*.service.core-compute-aat.internal/oauth2/callback
+    IDAM_CLIENT_REDIRECT_URI: https://ucmc-service-aat.service.core-compute-aat.internal/oauth2/callback
     SPRING_SECURITY_ENABLED: true
     SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_JWKSETURI: https://idam-api.aat.platform.hmcts.net/o/jwks
     GATEWAY_URL: https://gateway-${SERVICE_FQDN}
     MANAGE_CASE_UI_BASE_URL: https://xui-${SERVICE_FQDN}
-
-idam-pr:
-  releaseNameOverride: ${SERVICE_NAME}-xui-idam-pr
-  enabled: true
-  redirect_uris:
-    XUI:
-      - https://xui-${SERVICE_FQDN}/oauth2/callback
 
 xui-webapp:
   enabled: true
