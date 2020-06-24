@@ -18,7 +18,7 @@ fi
 root_dir=$(realpath $(dirname ${0})/..)
 config_dir=${root_dir}/ccd-definition
 build_dir=${root_dir}/build/ccd-release-config
-release_definition_output_file=${build_dir}/ccd-civil-unspecified-${environment}.xlsx
+release_definition_output_file=${build_dir}/ccd-ucmc-${environment}.xlsx
 
 mkdir -p ${build_dir}
 
