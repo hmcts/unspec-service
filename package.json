@@ -1,0 +1,27 @@
+{
+  "name": "ucmc-service",
+  "version": "1.0.0",
+  "description": "[![Build Status](https://travis-ci.org/hmcts/ucmc-service.svg?branch=master)](https://travis-ci.org/hmcts/ucmc-service)",
+  "main": "index.js",
+  "directories": {
+    "lib": "lib"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/hmcts/ucmc-service.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/hmcts/ucmc-service/issues"
+  },
+  "homepage": "https://github.com/hmcts/ucmc-service#readme",
+  "devDependencies": {
+    "codeceptjs": "^2.6.6",
+    "puppeteer": "^4.0.1"
+  }
+}
