@@ -1,6 +1,9 @@
 tags:
   ucmc-ccd-stack: false
 
+idam-pr:
+  enabled: false
+
 xui-webapp:
   enabled: false
 

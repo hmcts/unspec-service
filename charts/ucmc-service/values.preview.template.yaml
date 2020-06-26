@@ -7,6 +7,13 @@ java:
   environment:
     CORE_CASE_DATA_API_URL: http://${SERVICE_NAME}-ccd-data-store-api
 
+idam-pr:
+  releaseNameOverride: ${SERVICE_NAME}-xui-idam-pr
+  enabled: true
+  redirect_uris:
+    XUI:
+      - https://xui-${SERVICE_FQDN}/oauth2/callback
+
 xui-webapp:
   enabled: true
   nodejs:
