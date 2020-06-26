@@ -4,6 +4,6 @@
     "CaseTypeID": "PERSONAL_INJURY",
     "CaseEventID": "CREATE_CLAIM",
     "UserRole": "caseworker-cmc-solicitor",
-    "CRUD": "CRUD"
+    "CRUD": "CRU"
   }
 ]

@@ -11,6 +11,6 @@
     "CaseTypeID": "PERSONAL_INJURY",
     "CaseFieldID": "eligibilityQuestions",
     "UserRole": "caseworker-cmc-solicitor",
-    "CRUD": "CRU"
+    "CRUD": "CR"
   }
 ]
