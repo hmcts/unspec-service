@@ -15,3 +15,25 @@ management:
 spring:
   application:
     name: ucmc-service
+
+fees:
+  api:
+    service: civil money claims
+    jurisdiction1: civil
+    jurisdiction2: civil
+
+---
+
+spring:
+  profiles: local
+  security:
+    enabled: true
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: http://fr-am:8080/openam/oauth2/hmcts
+          jwk-set-uri: http://localhost:5000/o/jwks
+
+fees:
+  api:
+    url: http://localhost:8765
