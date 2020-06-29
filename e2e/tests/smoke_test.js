@@ -1,3 +1,5 @@
+/* global process */
+
 const user = {
   password: 'Password12',
   email: 'solicitor@example.com'
