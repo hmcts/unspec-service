@@ -6,6 +6,7 @@ java:
   ingressHost: ${SERVICE_FQDN}
   environment:
     CORE_CASE_DATA_API_URL: http://${SERVICE_NAME}-ccd-data-store-api
+    FEES_API_URL: http://fees-register-api-aat.service.core-compute-aat.internal
 
 idam-pr:
   releaseNameOverride: ${SERVICE_NAME}-xui-idam-pr
