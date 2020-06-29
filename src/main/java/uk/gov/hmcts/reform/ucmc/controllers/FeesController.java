@@ -32,7 +32,7 @@ public class FeesController {
         var caseData = callbackRequest.getCaseDetails().getData();
 
         var claimValuePence = new BigDecimal(caseData.get("claimValue").toString());
-        var claimValuePounds = claimValuePence.divide(BigDecimal.valueOf(100), RoundingMode.UNNECESSARY);
+        var claimValuePounds = claimValuePence.divide(BigDecimal.valueOf(100), RoundingMode.UP);
 
         List<String> errors = new ArrayList<>();
         try {
