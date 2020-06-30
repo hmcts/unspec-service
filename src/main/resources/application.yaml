@@ -18,7 +18,6 @@ spring:
 
 fees:
   api:
-    url: ${FEES_API_URL:}
     service: civil money claims
     jurisdiction1: civil
     jurisdiction2: civil
@@ -38,3 +37,11 @@ spring:
 fees:
   api:
     url: http://localhost:8765
+
+---
+
+spring:
+  profiles: integration-test
+fees:
+  api:
+    url: http://fake-fees-register-api
