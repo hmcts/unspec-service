@@ -47,5 +47,41 @@
     "PageLabel": "",
     "PageDisplayOrder": 2,
     "PageColumnNumber": 1
+  },
+  {
+    "LiveFrom": "01/01/2017",
+    "CaseTypeID": "PERSONAL_INJURY",
+    "CaseEventID": "CREATE_CLAIM",
+    "CaseFieldID": "customerReference",
+    "PageFieldDisplayOrder": 3,
+    "DisplayContext": "MANDATORY",
+    "PageID": "FeePayment",
+    "PageLabel": "",
+    "PageDisplayOrder": 2,
+    "PageColumnNumber": 1
+  },
+  {
+    "LiveFrom": "01/01/2017",
+    "CaseTypeID": "PERSONAL_INJURY",
+    "CaseEventID": "CREATE_CLAIM",
+    "CaseFieldID": "description",
+    "PageFieldDisplayOrder": 4,
+    "DisplayContext": "MANDATORY",
+    "PageID": "FeePayment",
+    "PageLabel": "",
+    "PageDisplayOrder": 2,
+    "PageColumnNumber": 1
+  },
+  {
+    "LiveFrom": "01/01/2017",
+    "CaseTypeID": "PERSONAL_INJURY",
+    "CaseEventID": "CREATE_CLAIM",
+    "CaseFieldID": "organisationName",
+    "PageFieldDisplayOrder": 5,
+    "DisplayContext": "MANDATORY",
+    "PageID": "FeePayment",
+    "PageLabel": "",
+    "PageDisplayOrder": 2,
+    "PageColumnNumber": 1
   }
 ]

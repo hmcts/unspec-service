@@ -38,5 +38,29 @@
     "Label": "PBA number",
     "FieldType": "Text",
     "SecurityClassification": "Public"
+  },
+  {
+    "LiveFrom": "01/01/2017",
+    "CaseTypeID": "PERSONAL_INJURY",
+    "ID": "customerReference",
+    "Label": "Customer reference",
+    "FieldType": "Text",
+    "SecurityClassification": "Public"
+  },
+  {
+    "LiveFrom": "01/01/2017",
+    "CaseTypeID": "PERSONAL_INJURY",
+    "ID": "description",
+    "Label": "Description",
+    "FieldType": "Text",
+    "SecurityClassification": "Public"
+  },
+  {
+    "LiveFrom": "01/01/2017",
+    "CaseTypeID": "PERSONAL_INJURY",
+    "ID": "organisationName",
+    "Label": "Organisation name",
+    "FieldType": "Text",
+    "SecurityClassification": "Public"
   }
 ]
