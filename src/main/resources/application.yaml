@@ -38,10 +38,19 @@ fees:
   api:
     url: http://localhost:8765
 
+payment:
+  api:
+    url: http://localhost:8765
+
 ---
 
 spring:
   profiles: integration-test
+
 fees:
   api:
     url: http://fake-fees-register-api
+
+payment:
+  api:
+    url: http://fake-payment-register-api

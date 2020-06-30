@@ -31,7 +31,19 @@
     "CaseFieldID": "feeAmount",
     "PageFieldDisplayOrder": 1,
     "DisplayContext": "READONLY",
-    "PageID": "FeeAmount",
+    "PageID": "FeePayment",
+    "PageLabel": "",
+    "PageDisplayOrder": 2,
+    "PageColumnNumber": 1
+  },
+  {
+    "LiveFrom": "01/01/2017",
+    "CaseTypeID": "PERSONAL_INJURY",
+    "CaseEventID": "CREATE_CLAIM",
+    "CaseFieldID": "pbaNumber",
+    "PageFieldDisplayOrder": 2,
+    "DisplayContext": "MANDATORY",
+    "PageID": "FeePayment",
     "PageLabel": "",
     "PageDisplayOrder": 2,
     "PageColumnNumber": 1
