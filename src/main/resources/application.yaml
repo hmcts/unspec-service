@@ -21,6 +21,8 @@ fees:
     service: civil money claims
     jurisdiction1: civil
     jurisdiction2: county court
+    channel: default
+    event: issue
 
 idam:
   s2s-auth:
