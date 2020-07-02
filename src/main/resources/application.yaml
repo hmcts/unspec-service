@@ -15,3 +15,25 @@ management:
 spring:
   application:
     name: ucmc-service
+  cache:
+    cache-names: userInfoCache
+    caffeine:
+      spec: expireAfterAccess=3600s
+
+  security:
+    oauth2:
+      client:
+        provider:
+          oidc:
+            issuer-uri: ${idam.api.url}/o
+        registration:
+          oidc:
+            client-id: internal
+            client-secret: internal
+
+oidc:
+  issuer: ${OIDC_ISSUER:http://fr-am:8080/openam/oauth2/hmcts}
+
+idam:
+  api:
+    url: "http://localhost:5000"
