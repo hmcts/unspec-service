@@ -1,40 +1,46 @@
 package uk.gov.hmcts.reform.ucmc.service;
 
-import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import uk.gov.hmcts.reform.authorisation.generators.AuthTokenGenerator;
 import uk.gov.hmcts.reform.ccd.client.model.CaseDetails;
+import uk.gov.hmcts.reform.payments.client.PaymentsClient;
+import uk.gov.hmcts.reform.payments.client.models.FeeDto;
 import uk.gov.hmcts.reform.payments.client.models.PaymentDto;
-import uk.gov.hmcts.reform.ucmc.fnp.client.PaymentApi;
-import uk.gov.hmcts.reform.ucmc.fnp.model.payment.CreditAccountPaymentRequest;
-import uk.gov.hmcts.reform.ucmc.fnp.model.payment.FeeDto;
+import uk.gov.hmcts.reform.payments.client.request.CreditAccountPaymentRequest;
 import uk.gov.hmcts.reform.ucmc.request.RequestData;
 
 import java.math.BigDecimal;
-import java.util.List;
-
-import static uk.gov.hmcts.reform.ucmc.fnp.model.payment.enums.Currency.GBP;
-import static uk.gov.hmcts.reform.ucmc.fnp.model.payment.enums.Service.CMC;
 
 @Service
-@RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class PaymentService {
 
-    private static final String SITE_ID = "AA00";
-
     private final FeeService feeService;
-    private final PaymentApi paymentApi;
+    private final PaymentsClient paymentsClient;
     private final RequestData requestData;
-    private final AuthTokenGenerator authTokenGenerator;
+    private final String siteId;
+    private final String service;
+
+    @Autowired
+    public PaymentService(FeeService feeService,
+                          PaymentsClient paymentsClient,
+                          RequestData requestData,
+                          @Value("${payments.api.site_id:}") String siteId,
+                          @Value("${payments.api.service:}") String service) {
+        this.feeService = feeService;
+        this.paymentsClient = paymentsClient;
+        this.requestData = requestData;
+        this.siteId = siteId;
+        this.service = service;
+    }
 
     public PaymentDto createCreditAccountPayment(CaseDetails caseDetails) {
         var claimValue = new BigDecimal(caseDetails.getData().get("claimValue").toString());
+        //TODO: consider if fees register should be called again or fees data should be stored in the case
         FeeDto feeDto = feeService.getFeeDataByClaimValue(claimValue);
 
-        return paymentApi.createCreditAccountPayment(
+        return paymentsClient.createCreditAccountPayment(
             requestData.authorisation(),
-            authTokenGenerator.generate(),
             buildRequest(caseDetails, feeDto)
         );
     }
@@ -47,13 +53,12 @@ public class PaymentService {
             .amount(feeDto.getCalculatedAmount())
             .caseReference(String.valueOf(caseDetails.getId()))
             .ccdCaseNumber(String.valueOf(caseDetails.getId()))
-            .currency(GBP)
             .customerReference(caseData.get("customerReference").toString())
             .description(caseData.get("description").toString())
             .organisationName(caseData.get("organisationName").toString())
-            .service(CMC)
-            .siteId(SITE_ID)
-            .fees(List.of(feeDto))
+            .service(service)
+            .siteId(siteId)
+            .fees(new FeeDto[]{feeDto})
             .build();
     }
 }

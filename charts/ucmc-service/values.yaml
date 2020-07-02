@@ -25,7 +25,7 @@ java:
     AUTH_IDAM_CLIENT_BASEURL: https://idam-api.{{ .Values.global.environment }}.platform.hmcts.net
     AUTH_PROVIDER_SERVICE_CLIENT_BASEURL: http://rpe-service-auth-provider-{{ .Values.global.environment }}.service.core-compute-{{ .Values.global.environment }}.internal
     FEES_API_URL: http://fees-register-api-{{ .Values.global.environment }}.service.core-compute-{{ .Values.global.environment }}.internal
-    PAYMENT_API_URL: http://payment-api-{{ .Values.global.environment }}.service.core-compute-{{ .Values.global.environment }}.internal
+    PAYMENTS_API_URL: http://payment-api-{{ .Values.global.environment }}.service.core-compute-{{ .Values.global.environment }}.internal
   keyVaults:
     ucmc:
       resourceGroup: ucmc

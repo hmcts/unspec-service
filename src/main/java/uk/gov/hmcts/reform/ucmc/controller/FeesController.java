@@ -38,9 +38,9 @@ public class FeesController {
         try {
             //TODO: mapping to CaseData model
             var claimValue = new BigDecimal(caseData.get("claimValue").toString());
-            caseData.put("feeAmount", feeService.getFeeAmountByClaimValue(claimValue));
+            caseData.put("feeAmount", feeService.getFeeAmountByClaimValue(claimValue).toString());
         } catch (FeignException e) {
-            //TODO: proper error scenario handling
+            //TODO: proper error scenario handling - currently blocking user
             log.error("There was a problem with finding fee value: " + e.contentUTF8());
             errors.add("Fee amount could not be retrieved");
         }
@@ -59,9 +59,8 @@ public class FeesController {
         try {
             PaymentDto paymentResponse = paymentService.createCreditAccountPayment(caseDetails);
             log.info("Payment made successfully: " + paymentResponse);
-            caseDetails.getData().remove("feeAmount");
         } catch (FeignException e) {
-            //TODO: proper error scenario handling
+            //TODO: proper error scenario handling - currently blocking user
             log.error("There was a problem with making payment: " + e.contentUTF8());
             errors.add("Payment could not be processed");
         }

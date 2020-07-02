@@ -189,6 +189,10 @@ repositories {
   maven {
     url  "http://repo.spring.io/milestone"
   }
+  flatDir {
+    //TODO: remove once updated payments client gets released
+    dirs 'lib'
+  }
 }
 
 def versions = [
@@ -233,7 +237,7 @@ dependencies {
 
   compile group: 'uk.gov.hmcts.reform', name: 'core-case-data-store-client', version: '4.6.4'
   compile group: 'uk.gov.hmcts.reform', name: 'fees-java-client', version: '0.0.6'
-  compile group: 'uk.gov.hmcts.reform', name: 'payments-client', version: '0.0.6'
+  compile group: 'uk.gov.hmcts.reform', name: 'payments-client', version: '1.0.0'
   compile group: 'uk.gov.hmcts.reform', name: 'service-auth-provider-client', version: '3.1.2'
   compile group: 'uk.gov.hmcts.reform', name: 'properties-volume-spring-boot-starter', version: '0.1.0'
 

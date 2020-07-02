@@ -5,7 +5,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import uk.gov.hmcts.reform.fees.client.FeesClient;
 import uk.gov.hmcts.reform.fees.client.model.FeeLookupResponseDto;
-import uk.gov.hmcts.reform.ucmc.fnp.model.payment.FeeDto;
+import uk.gov.hmcts.reform.payments.client.models.FeeDto;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
@@ -22,8 +22,8 @@ public class FeeService {
 
     @Autowired
     public FeeService(FeesClient feesClient,
-        @Value("${fees.api.channel:}") String channel,
-        @Value("${fees.api.event:}") String event) {
+                      @Value("${fees.api.channel:}") String channel,
+                      @Value("${fees.api.event:}") String event) {
         this.feesClient = feesClient;
         this.channel = channel;
         this.event = event;
@@ -48,8 +48,7 @@ public class FeeService {
     }
 
     private BigDecimal convertToPounds(BigDecimal value) {
-        //TODO: remove rounding - it's there for Wiremock
-        return value.divide(PENCE_PER_POUND, RoundingMode.UP);
+        return value.divide(PENCE_PER_POUND, RoundingMode.UNNECESSARY);
     }
 
     private BigInteger getFeeAmountInPence(FeeLookupResponseDto feeLookupResponseDto) {
@@ -62,7 +61,7 @@ public class FeeService {
         return FeeDto.builder()
             .calculatedAmount(feeLookupResponseDto.getFeeAmount())
             .code(feeLookupResponseDto.getCode())
-            .version(feeLookupResponseDto.getVersion())
+            .version(feeLookupResponseDto.getVersion().toString())
             .build();
     }
 }
