@@ -12,6 +12,8 @@ const chooseCourtPage = require('./pages/createClaim/chooseCourt.page');
 const claimantDetailsPage = require('./pages/createClaim/claimantDetails.page');
 const claimValue = require('./pages/createClaim/claimValue.page');
 
+const statementOfTruth = require('./fragments/statementOfTruth');
+
 const baseUrl = process.env.URL || 'http://localhost:3333';
 const signedInSelector = 'exui-header';
 
@@ -40,6 +42,7 @@ module.exports = function() {
       await chooseCourtPage.enterCourt();
       await claimantDetailsPage.enterClaimant(config.address);
       await claimValue.enterClaimValue();
+      await statementOfTruth.enterNameAndRole();
       await this.retryUntilExists(() => this.click('Issue claim'), 'ccd-markdown');
       this.see('Your claim has been issued');
       await this.retryUntilExists(() =>
