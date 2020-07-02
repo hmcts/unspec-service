@@ -46,7 +46,6 @@ class JwtGrantedAuthoritiesConverterTest {
     }
 
     @Test
-    @DisplayName("No Claims should return empty authorities")
     void shouldReturnEmptyAuthoritiesWhenClaimNotAvailable() {
         Jwt jwt = Mockito.mock(Jwt.class);
         when(jwt.containsClaim(anyString())).thenReturn(false);
@@ -56,7 +55,6 @@ class JwtGrantedAuthoritiesConverterTest {
     }
 
     @Test
-    @DisplayName("Should return empty authorities when token value is not matching with expected")
     void shouldReturnEmptyAuthoritiesWhenClaimValueNotEquals() {
         Jwt jwt = Mockito.mock(Jwt.class);
         when(jwt.containsClaim(anyString())).thenReturn(true);
@@ -67,7 +65,6 @@ class JwtGrantedAuthoritiesConverterTest {
     }
 
     @Test
-    @DisplayName("Should return empty authorities when token value is not matching with expected")
     void shouldReturnEmptyAuthoritiesWhenIdamReturnsNoUsers() {
         Jwt jwt = Mockito.mock(Jwt.class);
         when(jwt.containsClaim(anyString())).thenReturn(true);
@@ -82,14 +79,13 @@ class JwtGrantedAuthoritiesConverterTest {
     }
 
     @Test
-    @DisplayName("Should return empty authorities when token value is not matching with expected")
     void shouldReturnAuthoritiesWhenIdamReturnsUserRoles() {
         Jwt jwt = Mockito.mock(Jwt.class);
         when(jwt.containsClaim(anyString())).thenReturn(true);
         when(jwt.getClaim(anyString())).thenReturn("access_token");
         when(jwt.getTokenValue()).thenReturn("access_token");
         UserInfo userInfo = mock(UserInfo.class);
-        doReturn(ImmutableList.of("citizen")).when(userInfo).getRoles();
+        doReturn(ImmutableList.of("caseworker-solicitor")).when(userInfo).getRoles();
         when(userService.getUserInfo(anyString())).thenReturn(userInfo);
         Collection<GrantedAuthority> authorities = converter.convert(jwt);
         assertNotNull(authorities);
