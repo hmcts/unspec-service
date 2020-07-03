@@ -46,5 +46,63 @@
     "Label": "Enter expected claim value",
     "FieldType": "ClaimValue",
     "SecurityClassification": "Public"
+  },
+  {
+    "LiveFrom": "01/01/2017",
+    "CaseTypeID": "PERSONAL_INJURY",
+    "ID": "servedDocuments",
+    "Label": "Which documents did you serve?",
+    "FieldType": "MultiSelectList",
+    "FieldTypeParameter": "ServedDocuments",
+    "SecurityClassification": "Public"
+  },
+  {
+    "LiveFrom": "01/01/2017",
+    "CaseTypeID": "PERSONAL_INJURY",
+    "ID": "servedDocumentsOther",
+    "Label": "List them here:",
+    "FieldType": "TextArea",
+    "SecurityClassification": "Public"
+  },
+  {
+    "LiveFrom": "01/01/2017",
+    "CaseTypeID": "PERSONAL_INJURY",
+    "ID": "servedDocumentFiles",
+    "Label": "Upload your documents",
+    "FieldType": "ServedDocumentFiles",
+    "SecurityClassification": "Public"
+  },
+  {
+    "LiveFrom": "01/01/2017",
+    "CaseTypeID": "PERSONAL_INJURY",
+    "ID": "serviceMethod",
+    "Label": "How did you serve the documents?",
+    "FieldType": "FixedRadioList",
+    "FieldTypeParameter": "ServiceMethod",
+    "SecurityClassification": "Public"
+  },
+  {
+    "LiveFrom": "01/01/2017",
+    "CaseTypeID": "PERSONAL_INJURY",
+    "ID": "serviceLocation",
+    "Label": "Where did you serve the documents?",
+    "FieldType": "ServiceLocation",
+    "SecurityClassification": "Public"
+  },
+  {
+    "LiveFrom": "01/01/2017",
+    "CaseTypeID": "PERSONAL_INJURY",
+    "ID": "serviceDate",
+    "Label": "When did you serve the documents?",
+    "FieldType": "Date",
+    "SecurityClassification": "Public"
+  },
+  {
+    "LiveFrom": "01/01/2017",
+    "CaseTypeID": "PERSONAL_INJURY",
+    "ID": "serviceStatementOfTruth",
+    "Label": "Statement of truth",
+    "FieldType": "StatementOfTruth",
+    "SecurityClassification": "Public"
   }
 ]

@@ -151,5 +151,90 @@
     "FieldType": "MoneyGBP",
     "ElementLabel": "Higher value",
     "SecurityClassification": "Public"
+  },
+  {
+    "ID": "ServedDocumentFiles",
+    "ListElementCode": "label",
+    "FieldType": "Label",
+    "ElementLabel": "## Content TBC",
+    "SecurityClassification": "Public"
+  },
+  {
+    "ID": "ServedDocumentFiles",
+    "ListElementCode": "particularsOfClaim",
+    "FieldType": "Collection",
+    "FieldTypeParameter": "Document",
+    "ElementLabel": "Particulars of claim",
+    "SecurityClassification": "Public"
+  },
+  {
+    "ID": "ServedDocumentFiles",
+    "ListElementCode": "medicalReports",
+    "FieldType": "Collection",
+    "FieldTypeParameter": "Document",
+    "ElementLabel": "Medical reports",
+    "SecurityClassification": "Public"
+  },
+  {
+    "ID": "ServedDocumentFiles",
+    "ListElementCode": "scheduleOfLoss",
+    "FieldType": "Collection",
+    "FieldTypeParameter": "Document",
+    "ElementLabel": "Schedule of loss",
+    "SecurityClassification": "Public"
+  },
+  {
+    "ID": "ServedDocumentFiles",
+    "ListElementCode": "certificateOfSuitability",
+    "FieldType": "Collection",
+    "FieldTypeParameter": "Document",
+    "ElementLabel": "Certificate of suitability",
+    "SecurityClassification": "Public"
+  },
+  {
+    "ID": "ServedDocumentFiles",
+    "ListElementCode": "other",
+    "FieldType": "Collection",
+    "FieldTypeParameter": "Document",
+    "ElementLabel": "Other documents",
+    "SecurityClassification": "Public"
+  },
+  {
+    "ID": "ServiceLocation",
+    "ListElementCode": "location",
+    "FieldType": "FixedRadioList",
+    "FieldTypeParameter": "ServiceLocation",
+    "ElementLabel": "I served to their:",
+    "SecurityClassification": "Public"
+  },
+  {
+    "ID": "ServiceLocation",
+    "ListElementCode": "other",
+    "FieldType": "Text",
+    "ElementLabel": "Enter place of service",
+    "HintText": "This should be the type of location you served to, not and address.",
+    "SecurityClassification": "Public",
+    "FieldShowCondition": "location = \"OTHER\""
+  },
+  {
+    "ID": "StatementOfTruth",
+    "ListElementCode": "label",
+    "FieldType": "Label",
+    "ElementLabel": "I believe that the facts stated in this certificate are true.",
+    "SecurityClassification": "Public"
+  },
+  {
+    "ID": "StatementOfTruth",
+    "ListElementCode": "name",
+    "FieldType": "Text",
+    "ElementLabel": "Name",
+    "SecurityClassification": "Public"
+  },
+  {
+    "ID": "StatementOfTruth",
+    "ListElementCode": "role",
+    "FieldType": "Text",
+    "ElementLabel": "Role",
+    "SecurityClassification": "Public"
   }
 ]

@@ -40,5 +40,54 @@
     "CaseFieldID": "claimValue",
     "UserRole": "caseworker-cmc-solicitor",
     "CRUD": "CRU"
+  },
+  {
+    "LiveFrom": "01/01/2017",
+    "CaseTypeID": "PERSONAL_INJURY",
+    "CaseFieldID": "servedDocuments",
+    "UserRole": "caseworker-cmc-solicitor",
+    "CRUD": "CRU"
+  },
+  {
+    "LiveFrom": "01/01/2017",
+    "CaseTypeID": "PERSONAL_INJURY",
+    "CaseFieldID": "servedDocumentsOther",
+    "UserRole": "caseworker-cmc-solicitor",
+    "CRUD": "CRU"
+  },
+  {
+    "LiveFrom": "01/01/2017",
+    "CaseTypeID": "PERSONAL_INJURY",
+    "CaseFieldID": "servedDocumentFiles",
+    "UserRole": "caseworker-cmc-solicitor",
+    "CRUD": "CRU"
+  },
+  {
+    "LiveFrom": "01/01/2017",
+    "CaseTypeID": "PERSONAL_INJURY",
+    "CaseFieldID": "serviceMethod",
+    "UserRole": "caseworker-cmc-solicitor",
+    "CRUD": "CRU"
+  },
+  {
+    "LiveFrom": "01/01/2017",
+    "CaseTypeID": "PERSONAL_INJURY",
+    "CaseFieldID": "serviceLocation",
+    "UserRole": "caseworker-cmc-solicitor",
+    "CRUD": "CRU"
+  },
+  {
+    "LiveFrom": "01/01/2017",
+    "CaseTypeID": "PERSONAL_INJURY",
+    "CaseFieldID": "serviceDate",
+    "UserRole": "caseworker-cmc-solicitor",
+    "CRUD": "CRU"
+  },
+  {
+    "LiveFrom": "01/01/2017",
+    "CaseTypeID": "PERSONAL_INJURY",
+    "CaseFieldID": "serviceStatementOfTruth",
+    "UserRole": "caseworker-cmc-solicitor",
+    "CRUD": "CRU"
   }
 ]

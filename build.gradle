@@ -194,6 +194,9 @@ ext.libraries = [
 ]
 
 dependencies {
+  annotationProcessor group: 'org.projectlombok', name: 'lombok', version: '1.18.12'
+  compileOnly group: 'org.projectlombok', name: 'lombok', version: '1.18.10'
+
   implementation group: 'org.springframework.boot', name: 'spring-boot-starter-web'
   implementation group: 'org.springframework.boot', name: 'spring-boot-starter-actuator'
   implementation group: 'org.springframework.boot', name: 'spring-boot-starter-aop'

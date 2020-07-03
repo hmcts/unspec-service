@@ -5,5 +5,12 @@
     "CaseEventID": "CREATE_CLAIM",
     "UserRole": "caseworker-cmc-solicitor",
     "CRUD": "CRU"
+  },
+  {
+    "LiveFrom": "01/01/2017",
+    "CaseTypeID": "PERSONAL_INJURY",
+    "CaseEventID": "CONFIRM_SERVICE",
+    "UserRole": "caseworker-cmc-solicitor",
+    "CRUD": "CRU"
   }
 ]
