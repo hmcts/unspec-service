@@ -4,14 +4,18 @@
     "ListElementCode": "solicitorReference",
     "FieldType": "Text",
     "ElementLabel": "Claimant's legal representative's reference",
-    "SecurityClassification": "Public"
+    "SecurityClassification": "Public",
+    "Min": "1",
+    "Max": "40"
   },
   {
     "ID": "SolicitorReferences",
     "ListElementCode": "defendantReference",
     "FieldType": "Text",
     "ElementLabel": "Defendant's legal representative's reference",
-    "SecurityClassification": "Public"
+    "SecurityClassification": "Public",
+    "Min": "1",
+    "Max": "40"
   },
   {
     "ID": "CourtLocation",
