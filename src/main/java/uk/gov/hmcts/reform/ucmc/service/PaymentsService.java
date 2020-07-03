@@ -1,43 +1,30 @@
 package uk.gov.hmcts.reform.ucmc.service;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import uk.gov.hmcts.reform.ccd.client.model.CaseDetails;
 import uk.gov.hmcts.reform.payments.client.PaymentsClient;
 import uk.gov.hmcts.reform.payments.client.models.FeeDto;
 import uk.gov.hmcts.reform.payments.client.models.PaymentDto;
 import uk.gov.hmcts.reform.payments.client.request.CreditAccountPaymentRequest;
+import uk.gov.hmcts.reform.ucmc.config.PaymentsConfiguration;
 import uk.gov.hmcts.reform.ucmc.request.RequestData;
 
 import java.math.BigDecimal;
 
 @Service
-public class PaymentService {
+@RequiredArgsConstructor(onConstructor = @__(@Autowired))
+public class PaymentsService {
 
-    private final FeeService feeService;
+    private final FeesService feesService;
     private final PaymentsClient paymentsClient;
     private final RequestData requestData;
-    private final String siteId;
-    private final String service;
-
-    @Autowired
-    public PaymentService(FeeService feeService,
-                          PaymentsClient paymentsClient,
-                          RequestData requestData,
-                          @Value("${payments.api.site_id:}") String siteId,
-                          @Value("${payments.api.service:}") String service) {
-        this.feeService = feeService;
-        this.paymentsClient = paymentsClient;
-        this.requestData = requestData;
-        this.siteId = siteId;
-        this.service = service;
-    }
+    private final PaymentsConfiguration paymentsConfiguration;
 
     public PaymentDto createCreditAccountPayment(CaseDetails caseDetails) {
         var claimValue = new BigDecimal(caseDetails.getData().get("claimValue").toString());
-        //TODO: consider if fees register should be called again or fees data should be stored in the case
-        FeeDto feeDto = feeService.getFeeDataByClaimValue(claimValue);
+        FeeDto feeDto = feesService.getFeeDataByClaimValue(claimValue);
 
         return paymentsClient.createCreditAccountPayment(
             requestData.authorisation(),
@@ -56,8 +43,8 @@ public class PaymentService {
             .customerReference(caseData.get("customerReference").toString())
             .description(caseData.get("description").toString())
             .organisationName(caseData.get("organisationName").toString())
-            .service(service)
-            .siteId(siteId)
+            .service(paymentsConfiguration.getService())
+            .siteId(paymentsConfiguration.getSiteId())
             .fees(new FeeDto[]{feeDto})
             .build();
     }

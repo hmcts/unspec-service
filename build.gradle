@@ -140,7 +140,7 @@ sonarqube {
     property "sonar.projectName", "UCMC :: service"
     property "sonar.projectKey", "ucmc-service"
     property "sonar.coverage.jacoco.xmlReportPaths", "${jacocoTestReport.reports.xml.destination.path}"
-    property "sonar.coverage.exclusions", "**/ucmc/**"
+    property "sonar.coverage.exclusions", "**/config/**/*Configuration.java"
   }
 }
 

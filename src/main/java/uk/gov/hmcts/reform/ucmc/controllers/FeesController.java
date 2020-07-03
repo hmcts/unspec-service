@@ -13,8 +13,8 @@ import uk.gov.hmcts.reform.ccd.client.model.AboutToStartOrSubmitCallbackResponse
 import uk.gov.hmcts.reform.ccd.client.model.CallbackRequest;
 import uk.gov.hmcts.reform.ccd.client.model.CaseDetails;
 import uk.gov.hmcts.reform.payments.client.models.PaymentDto;
-import uk.gov.hmcts.reform.ucmc.service.FeeService;
-import uk.gov.hmcts.reform.ucmc.service.PaymentService;
+import uk.gov.hmcts.reform.ucmc.service.FeesService;
+import uk.gov.hmcts.reform.ucmc.service.PaymentsService;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -27,8 +27,8 @@ import java.util.List;
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class FeesController {
 
-    private final FeeService feeService;
-    private final PaymentService paymentService;
+    private final FeesService feesService;
+    private final PaymentsService paymentsService;
 
     @PostMapping("/mid-event")
     public AboutToStartOrSubmitCallbackResponse handleMidEvent(@RequestBody CallbackRequest callbackRequest) {
@@ -38,7 +38,7 @@ public class FeesController {
         try {
             //TODO: mapping to CaseData model
             var claimValue = new BigDecimal(caseData.get("claimValue").toString());
-            caseData.put("feeAmount", feeService.getFeeAmountByClaimValue(claimValue).toString());
+            caseData.put("feeAmount", feesService.getFeeAmountByClaimValue(claimValue).toString());
         } catch (FeignException e) {
             //TODO: proper error scenario handling - currently blocking user
             log.error("There was a problem with finding fee value: " + e.contentUTF8());
@@ -57,7 +57,7 @@ public class FeesController {
 
         List<String> errors = new ArrayList<>();
         try {
-            PaymentDto paymentResponse = paymentService.createCreditAccountPayment(caseDetails);
+            PaymentDto paymentResponse = paymentsService.createCreditAccountPayment(caseDetails);
             log.info("Payment made successfully: " + paymentResponse);
         } catch (FeignException e) {
             //TODO: proper error scenario handling - currently blocking user

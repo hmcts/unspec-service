@@ -1,33 +1,26 @@
 package uk.gov.hmcts.reform.ucmc.service;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import uk.gov.hmcts.reform.fees.client.FeesClient;
 import uk.gov.hmcts.reform.fees.client.model.FeeLookupResponseDto;
 import uk.gov.hmcts.reform.payments.client.models.FeeDto;
+import uk.gov.hmcts.reform.ucmc.config.FeesConfiguration;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.math.RoundingMode;
 
 @Service
-public class FeeService {
+@RequiredArgsConstructor(onConstructor = @__(@Autowired))
+public class FeesService {
 
     private static final BigDecimal PENCE_PER_POUND = BigDecimal.valueOf(100);
+    private static final int ROUNDING_SCALE = 2;
 
     private final FeesClient feesClient;
-    private final String channel;
-    private final String event;
-
-    @Autowired
-    public FeeService(FeesClient feesClient,
-                      @Value("${fees.api.channel:}") String channel,
-                      @Value("${fees.api.event:}") String event) {
-        this.feesClient = feesClient;
-        this.channel = channel;
-        this.event = event;
-    }
+    private final FeesConfiguration feesConfiguration;
 
     public BigInteger getFeeAmountByClaimValue(BigDecimal claimValue) {
         FeeLookupResponseDto feeLookupResponseDto = lookupFee(claimValue);
@@ -44,11 +37,11 @@ public class FeeService {
     private FeeLookupResponseDto lookupFee(BigDecimal claimValue) {
         var claimValuePounds = convertToPounds(claimValue);
 
-        return feesClient.lookupFee(channel, event, claimValuePounds);
+        return feesClient.lookupFee(feesConfiguration.getChannel(), feesConfiguration.getEvent(), claimValuePounds);
     }
 
     private BigDecimal convertToPounds(BigDecimal value) {
-        return value.divide(PENCE_PER_POUND, RoundingMode.UNNECESSARY);
+        return value.divide(PENCE_PER_POUND, ROUNDING_SCALE, RoundingMode.UNNECESSARY);
     }
 
     private BigInteger getFeeAmountInPence(FeeLookupResponseDto feeLookupResponseDto) {
