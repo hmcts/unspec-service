@@ -35,7 +35,7 @@ class FeesServiceTest {
     private FeesService feesService;
 
     @BeforeEach
-    void setup() {
+    void setUp() {
         given(feesClient.lookupFee(any(), any(), any()))
             .willReturn(FeeLookupResponseDto.builder()
                             .feeAmount(FEE_AMOUNT_POUNDS)

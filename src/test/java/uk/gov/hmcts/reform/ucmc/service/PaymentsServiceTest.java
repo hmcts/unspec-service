@@ -51,7 +51,7 @@ class PaymentsServiceTest {
     private PaymentsService paymentsService;
 
     @BeforeEach
-    void setup() {
+    void setUp() {
         given(feesService.getFeeDataByClaimValue(any())).willReturn(FEE_DATA);
         given(paymentsClient.createCreditAccountPayment(any(), any())).willReturn(PAYMENT_DTO);
         given(requestData.authorisation()).willReturn(AUTH_TOKEN);
