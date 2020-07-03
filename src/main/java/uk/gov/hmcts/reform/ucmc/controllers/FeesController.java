@@ -1,4 +1,4 @@
-package uk.gov.hmcts.reform.ucmc.controller;
+package uk.gov.hmcts.reform.ucmc.controllers;
 
 import feign.FeignException;
 import io.swagger.annotations.Api;
