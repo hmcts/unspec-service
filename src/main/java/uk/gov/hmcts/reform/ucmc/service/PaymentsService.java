@@ -38,7 +38,7 @@ public class PaymentsService {
         return CreditAccountPaymentRequest.builder()
             .accountNumber(caseData.get("pbaNumber").toString())
             .amount(feeDto.getCalculatedAmount())
-            .caseReference(String.valueOf(caseDetails.getId()))
+            .caseReference(caseData.get("caseReference").toString())
             .ccdCaseNumber(String.valueOf(caseDetails.getId()))
             .customerReference(caseData.get("customerReference").toString())
             .description(caseData.get("description").toString())

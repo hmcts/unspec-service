@@ -12,47 +12,5 @@
     "CaseFieldID": "eligibilityQuestions",
     "UserRole": "caseworker-cmc-solicitor",
     "CRUD": "CR"
-  },
-  {
-    "LiveFrom": "01/01/2017",
-    "CaseTypeID": "PERSONAL_INJURY",
-    "CaseFieldID": "claimValue",
-    "UserRole": "caseworker-cmc-solicitor",
-    "CRUD": "CRU"
-  },
-  {
-    "LiveFrom": "01/01/2017",
-    "CaseTypeID": "PERSONAL_INJURY",
-    "CaseFieldID": "feeAmount",
-    "UserRole": "caseworker-cmc-solicitor",
-    "CRUD": "CRUD"
-  },
-  {
-    "LiveFrom": "01/01/2017",
-    "CaseTypeID": "PERSONAL_INJURY",
-    "CaseFieldID": "pbaNumber",
-    "UserRole": "caseworker-cmc-solicitor",
-    "CRUD": "CRU"
-  },
-  {
-    "LiveFrom": "01/01/2017",
-    "CaseTypeID": "PERSONAL_INJURY",
-    "CaseFieldID": "customerReference",
-    "UserRole": "caseworker-cmc-solicitor",
-    "CRUD": "CRU"
-  },
-  {
-    "LiveFrom": "01/01/2017",
-    "CaseTypeID": "PERSONAL_INJURY",
-    "CaseFieldID": "description",
-    "UserRole": "caseworker-cmc-solicitor",
-    "CRUD": "CRU"
-  },
-  {
-    "LiveFrom": "01/01/2017",
-    "CaseTypeID": "PERSONAL_INJURY",
-    "CaseFieldID": "organisationName",
-    "UserRole": "caseworker-cmc-solicitor",
-    "CRUD": "CRU"
   }
 ]

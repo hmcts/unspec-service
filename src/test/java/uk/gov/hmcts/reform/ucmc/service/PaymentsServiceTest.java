@@ -66,6 +66,7 @@ class PaymentsServiceTest {
             .data(Map.of(
                 "claimValue", "500",
             "pbaNumber", "PBA1234567",
+            "caseReference", "case reference",
             "customerReference", "customer reference",
             "description", "description",
             "organisationName", "organisation name"))
@@ -73,7 +74,7 @@ class PaymentsServiceTest {
         var expectedCreditAccountPaymentRequest = CreditAccountPaymentRequest.builder()
             .accountNumber("PBA1234567")
             .amount(FEE_DATA.getCalculatedAmount())
-            .caseReference("1")
+            .caseReference("case reference")
             .ccdCaseNumber("1")
             .customerReference("customer reference")
             .description("description")
