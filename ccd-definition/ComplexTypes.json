@@ -165,6 +165,7 @@
     "FieldType": "Collection",
     "FieldTypeParameter": "Document",
     "ElementLabel": "Particulars of claim",
+    "RegularExpression": ".jpg,.gif,.doc,.pdf,.doc,.docx,.jpeg,.png,.xls,.xlsx",
     "SecurityClassification": "Public"
   },
   {
@@ -173,6 +174,7 @@
     "FieldType": "Collection",
     "FieldTypeParameter": "Document",
     "ElementLabel": "Medical reports",
+    "RegularExpression": ".jpg,.gif,.doc,.pdf,.doc,.docx,.jpeg,.png,.xls,.xlsx",
     "SecurityClassification": "Public"
   },
   {
@@ -181,6 +183,7 @@
     "FieldType": "Collection",
     "FieldTypeParameter": "Document",
     "ElementLabel": "Schedule of loss",
+    "RegularExpression": ".jpg,.gif,.doc,.pdf,.doc,.docx,.jpeg,.png,.xls,.xlsx",
     "SecurityClassification": "Public"
   },
   {
@@ -189,6 +192,7 @@
     "FieldType": "Collection",
     "FieldTypeParameter": "Document",
     "ElementLabel": "Certificate of suitability",
+    "RegularExpression": ".jpg,.gif,.doc,.pdf,.doc,.docx,.jpeg,.png,.xls,.xlsx",
     "SecurityClassification": "Public"
   },
   {
@@ -197,6 +201,7 @@
     "FieldType": "Collection",
     "FieldTypeParameter": "Document",
     "ElementLabel": "Other documents",
+    "RegularExpression": ".jpg,.gif,.doc,.pdf,.doc,.docx,.jpeg,.png,.xls,.xlsx",
     "SecurityClassification": "Public"
   },
   {
