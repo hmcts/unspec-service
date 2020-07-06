@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import uk.gov.hmcts.reform.ccd.client.model.AboutToStartOrSubmitCallbackResponse;
 import uk.gov.hmcts.reform.ccd.client.model.CallbackRequest;
 import uk.gov.hmcts.reform.ccd.client.model.SubmittedCallbackResponse;
 import uk.gov.hmcts.reform.ucmc.enums.ServiceMethod;
@@ -29,15 +30,29 @@ public class ConfirmServiceController {
     @Autowired
     private ObjectMapper mapper;
 
-    @PostMapping("/submitted")
-    public SubmittedCallbackResponse handleSubmitted(@RequestBody CallbackRequest callbackRequest) {
+    @PostMapping("/about-to-submit")
+    public AboutToStartOrSubmitCallbackResponse handleAboutToSubmit(@RequestBody CallbackRequest callbackRequest) {
         Map<String, Object> data = callbackRequest.getCaseDetails().getData();
         ServiceMethod serviceMethod = mapper.convertValue(data.get("serviceMethod"), ServiceMethod.class);
 
-        // TODO: this field will be different when date / date time in CCD.
+        // TODO: this field will be different (date / date time) in CCD depending on service method.
         LocalDate serviceTime = mapper.convertValue(data.get("serviceDate"), LocalDate.class);
         LocalDate deemedDateOfService = serviceMethod.getDeemedDateOfService(serviceTime);
+        LocalDateTime responseDeadline = addFourteenDays(deemedDateOfService);
 
+        data.put("deemedDateOfService", deemedDateOfService);
+        data.put("responseDeadline", responseDeadline);
+
+        return AboutToStartOrSubmitCallbackResponse.builder()
+            .data(data)
+            .build();
+    }
+
+    @PostMapping("/submitted")
+    public SubmittedCallbackResponse handleSubmitted(@RequestBody CallbackRequest callbackRequest) {
+        Map<String, Object> data = callbackRequest.getCaseDetails().getData();
+
+        LocalDate deemedDateOfService = mapper.convertValue(data.get("deemedDateOfService"), LocalDate.class);
         String formattedDeemedDateOfService = formatLocalDate(deemedDateOfService, DATE);
         String responseDeadlineDate = formatLocalDateTime(addFourteenDays(deemedDateOfService), DATE_TIME_AT);
         String certificateOfServiceLink = "http://www.google.com";

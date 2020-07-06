@@ -104,5 +104,21 @@
     "Label": "Statement of truth",
     "FieldType": "StatementOfTruth",
     "SecurityClassification": "Public"
+  },
+  {
+    "LiveFrom": "01/01/2017",
+    "CaseTypeID": "PERSONAL_INJURY",
+    "ID": "deemedDateOfService",
+    "Label": "Deemed date of service",
+    "FieldType": "Date",
+    "SecurityClassification": "Public"
+  },
+  {
+    "LiveFrom": "01/01/2017",
+    "CaseTypeID": "PERSONAL_INJURY",
+    "ID": "responseDeadline",
+    "Label": "Response deadline",
+    "FieldType": "DateTime",
+    "SecurityClassification": "Public"
   }
 ]

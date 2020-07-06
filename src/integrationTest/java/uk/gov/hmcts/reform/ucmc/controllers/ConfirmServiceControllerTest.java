@@ -2,6 +2,7 @@ package uk.gov.hmcts.reform.ucmc.controllers;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import uk.gov.hmcts.reform.ccd.client.model.AboutToStartOrSubmitCallbackResponse;
 import uk.gov.hmcts.reform.ccd.client.model.SubmittedCallbackResponse;
 
 import java.util.HashMap;
@@ -17,10 +18,26 @@ class ConfirmServiceControllerTest extends BaseControllerTest {
     }
 
     @Test
-    void shouldReturnExpectedSubmittedCallbackResponseObject() throws Exception {
+    void shouldReturnExpectedAboutToSubmitCallbackResponseObject() throws Exception {
         Map<String, Object> data = new HashMap<>();
         data.put("serviceMethod", "POST");
         data.put("serviceDate", "2099-06-23");
+
+        AboutToStartOrSubmitCallbackResponse response = postAboutToSubmitEvent(data);
+
+        assertThat(response.getData()).containsAllEntriesOf(
+            Map.of(
+                "deemedDateOfService", "2099-06-25",
+                "responseDeadline", "2099-07-09T16:00:00",
+                "serviceMethod", "POST",
+                "serviceDate", "2099-06-23"
+            ));
+    }
+
+    @Test
+    void shouldReturnExpectedSubmittedCallbackResponseObject() throws Exception {
+        Map<String, Object> data = new HashMap<>();
+        data.put("deemedDateOfService", "2099-06-25");
 
         SubmittedCallbackResponse callbackResponse = postSubmittedEvent(data);
 
