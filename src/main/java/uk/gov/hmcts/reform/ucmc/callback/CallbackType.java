@@ -1,7 +1,12 @@
 package uk.gov.hmcts.reform.ucmc.callback;
 
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+
 import java.util.Arrays;
 
+@Getter
+@RequiredArgsConstructor
 public enum CallbackType {
     ABOUT_TO_START("about-to-start"),
     ABOUT_TO_SUBMIT("about-to-submit"),
@@ -9,14 +14,6 @@ public enum CallbackType {
     MID("mid");
 
     private final String value;
-
-    CallbackType(String value) {
-        this.value = value;
-    }
-
-    public String getValue() {
-        return value;
-    }
 
     public static CallbackType fromValue(String value) {
         return Arrays.stream(values()).filter(event -> event.value.equals(value))
