@@ -4,10 +4,10 @@ import uk.gov.hmcts.reform.ccd.client.model.CallbackResponse;
 
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
+
+import static java.util.Optional.ofNullable;
 
 public abstract class CallbackHandler {
-
 
     protected abstract Map<CallbackType, Callback> callbacks();
 
@@ -19,7 +19,7 @@ public abstract class CallbackHandler {
     }
 
     public CallbackResponse handle(CallbackParams callbackParams) {
-        return Optional.ofNullable(callbacks().get(callbackParams.getType()))
+        return ofNullable(callbacks().get(callbackParams.getType()))
             .map(callback -> callback.execute(callbackParams))
             .orElseThrow(() -> new CallbackException(
                 String.format(

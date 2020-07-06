@@ -10,7 +10,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 public class CallbackTypeTest {
 
     @Test
-    public void shouldDeserialiseValidCallbacks() {
+    public void shouldDeserialiseWhenValidCallbacks() {
         assertThat(CallbackType.fromValue("mid")).isEqualTo(CallbackType.MID);
         assertThat(CallbackType.fromValue("about-to-start"))
             .isEqualTo(CallbackType.ABOUT_TO_START);
@@ -21,7 +21,7 @@ public class CallbackTypeTest {
     }
 
     @Test
-    public void shouldThrowIfUnknownCallback() {
+    public void shouldThrowCallbackExceptionWhenUnknownCallback() {
         assertThrows(CallbackException.class, () -> CallbackType.fromValue("nope"));
     }
 }

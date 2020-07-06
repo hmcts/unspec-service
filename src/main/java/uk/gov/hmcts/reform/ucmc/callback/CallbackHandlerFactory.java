@@ -6,7 +6,8 @@ import uk.gov.hmcts.reform.ccd.client.model.CallbackResponse;
 
 import java.util.HashMap;
 import java.util.List;
-import java.util.Optional;
+
+import static java.util.Optional.ofNullable;
 
 @Service
 public class CallbackHandlerFactory {
@@ -20,9 +21,8 @@ public class CallbackHandlerFactory {
 
     public CallbackResponse dispatch(CallbackParams callbackParams) {
         String eventId = callbackParams.getRequest().getEventId();
-        return Optional.ofNullable(eventHandlers.get(eventId))
+        return ofNullable(eventHandlers.get(eventId))
             .map(h -> h.handle(callbackParams))
             .orElseThrow(() -> new CallbackException("Could not handle callback for event " + eventId));
     }
-
 }

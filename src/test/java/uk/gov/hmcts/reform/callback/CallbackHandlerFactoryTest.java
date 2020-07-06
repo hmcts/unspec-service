@@ -21,8 +21,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 import static uk.gov.hmcts.reform.ucmc.callback.CallbackType.ABOUT_TO_SUBMIT;
 import static uk.gov.hmcts.reform.ucmc.callback.CaseEvent.CREATE_CASE;
 
@@ -30,7 +30,7 @@ import static uk.gov.hmcts.reform.ucmc.callback.CaseEvent.CREATE_CASE;
 public class CallbackHandlerFactoryTest {
 
     public static final String BEARER_TOKEN = "Bearer Token";
-    public static final CallbackResponse response = AboutToStartOrSubmitCallbackResponse.builder().build();
+    public static final CallbackResponse RESPONSE = AboutToStartOrSubmitCallbackResponse.builder().build();
 
     private CallbackHandler sampleCallbackHandler = new CallbackHandler() {
         @Override
@@ -41,7 +41,7 @@ public class CallbackHandlerFactoryTest {
         }
 
         private CallbackResponse createCitizenClaim(CallbackParams callbackParams) {
-            return response;
+            return RESPONSE;
         }
 
         @Override
@@ -58,7 +58,7 @@ public class CallbackHandlerFactoryTest {
     }
 
     @Test
-    public void shouldThrowIfUnknownEvent() {
+    public void shouldThrowCallbackExceptionWhenUnknownEvent() {
         CallbackRequest callbackRequest = CallbackRequest
             .builder()
             .eventId("nope")
@@ -68,16 +68,13 @@ public class CallbackHandlerFactoryTest {
             .params(ImmutableMap.of(CallbackParams.Params.BEARER_TOKEN, BEARER_TOKEN))
             .build();
 
-        Exception exception = assertThrows(
-            CallbackException.class,
-            () -> callbackHandlerFactory.dispatch(params)
-        );
-
-        assertEquals("Could not handle callback for event nope", exception.getMessage());
+        assertThatThrownBy(() -> callbackHandlerFactory.dispatch(params))
+            .isInstanceOf(CallbackException.class)
+            .hasMessage("Could not handle callback for event nope");
     }
 
     @Test
-    public void shouldDispatchCallbackForEvent() {
+    public void shouldDispatchCallbackWhenCreateCaseEvent() {
 
         CallbackRequest callbackRequest = CallbackRequest
             .builder()
@@ -91,7 +88,6 @@ public class CallbackHandlerFactoryTest {
 
         CallbackResponse callbackResponse = callbackHandlerFactory.dispatch(params);
 
-        assertEquals(response, callbackResponse);
+        assertEquals(RESPONSE, callbackResponse);
     }
-
 }
