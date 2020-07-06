@@ -6,8 +6,7 @@ import lombok.RequiredArgsConstructor;
 @Getter
 @RequiredArgsConstructor
 public enum CaseEvent {
-    CREATE_CASE("CreateClaim"),
-    ISSUE_CASE("IssueClaim");
+    CREATE_CASE("CREATE_CLAIM");
 
     private final String value;
 }

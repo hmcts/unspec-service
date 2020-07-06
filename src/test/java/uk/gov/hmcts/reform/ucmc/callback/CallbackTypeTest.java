@@ -1,8 +1,6 @@
-package uk.gov.hmcts.reform.callback;
+package uk.gov.hmcts.reform.ucmc.callback;
 
 import org.junit.jupiter.api.Test;
-import uk.gov.hmcts.reform.ucmc.callback.CallbackException;
-import uk.gov.hmcts.reform.ucmc.callback.CallbackType;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;

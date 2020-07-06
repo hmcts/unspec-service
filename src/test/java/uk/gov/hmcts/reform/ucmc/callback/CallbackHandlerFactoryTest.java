@@ -1,4 +1,4 @@
-package uk.gov.hmcts.reform.callback;
+package uk.gov.hmcts.reform.ucmc.callback;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
@@ -9,13 +9,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import uk.gov.hmcts.reform.ccd.client.model.AboutToStartOrSubmitCallbackResponse;
 import uk.gov.hmcts.reform.ccd.client.model.CallbackRequest;
 import uk.gov.hmcts.reform.ccd.client.model.CallbackResponse;
-import uk.gov.hmcts.reform.ucmc.callback.Callback;
-import uk.gov.hmcts.reform.ucmc.callback.CallbackException;
-import uk.gov.hmcts.reform.ucmc.callback.CallbackHandler;
-import uk.gov.hmcts.reform.ucmc.callback.CallbackHandlerFactory;
-import uk.gov.hmcts.reform.ucmc.callback.CallbackParams;
-import uk.gov.hmcts.reform.ucmc.callback.CallbackType;
-import uk.gov.hmcts.reform.ucmc.callback.CaseEvent;
 
 import java.util.Collections;
 import java.util.List;
@@ -24,6 +17,8 @@ import java.util.Map;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static uk.gov.hmcts.reform.ucmc.callback.CallbackType.ABOUT_TO_SUBMIT;
+import static uk.gov.hmcts.reform.ucmc.callback.CallbackVersion.V_1;
+import static uk.gov.hmcts.reform.ucmc.callback.CallbackVersion.V_2;
 import static uk.gov.hmcts.reform.ucmc.callback.CaseEvent.CREATE_CASE;
 
 @ExtendWith(MockitoExtension.class)
@@ -66,6 +61,7 @@ public class CallbackHandlerFactoryTest {
         CallbackParams params = CallbackParams.builder()
             .request(callbackRequest)
             .params(ImmutableMap.of(CallbackParams.Params.BEARER_TOKEN, BEARER_TOKEN))
+            .version(V_2)
             .build();
 
         assertThatThrownBy(() -> callbackHandlerFactory.dispatch(params))
@@ -83,6 +79,7 @@ public class CallbackHandlerFactoryTest {
         CallbackParams params = CallbackParams.builder()
             .request(callbackRequest)
             .type(ABOUT_TO_SUBMIT)
+            .version(V_1)
             .params(ImmutableMap.of(CallbackParams.Params.BEARER_TOKEN, BEARER_TOKEN))
             .build();
 
