@@ -8,6 +8,7 @@ exports.config = {
       show: process.env.SHOW_BROWSER_WINDOW || false,
       windowSize: '1200x900',
       waitForTimeout: 20000,
+      waitForAction: 1000,
       waitForNavigation: [ "domcontentloaded", "networkidle0" ],
       chrome: {
         ignoreHTTPSErrors: true,
