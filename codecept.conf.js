@@ -5,13 +5,19 @@ exports.config = {
   output: './output',
   helpers: {
     Puppeteer: {
-      show: process.env.SHOW_BROWSER_WINDOW || false,
+      show: true || false,
       windowSize: '1200x900',
       waitForTimeout: 20000,
+      waitForAction: 1000,
       waitForNavigation: [ "domcontentloaded", "networkidle0" ],
       chrome: {
         ignoreHTTPSErrors: true,
-        args: process.env.PROXY_SERVER ? [`--proxy-server=${process.env.PROXY_SERVER}`,] : [],
+        args: [
+          '--no-sandbox',
+          '--proxy-server=proxyout.reform.hmcts.net:8080',
+          '--proxy-bypass-list=*beta*LB.reform.hmcts.net',
+          '--window-size=1440,1400'
+        ]
       },
     },
     PuppeteerHelpers: {
