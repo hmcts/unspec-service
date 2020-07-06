@@ -1,7 +1,6 @@
 plugins {
   id 'application'
   id 'checkstyle'
-  id 'pmd'
   id 'jacoco'
   id 'io.spring.dependency-management' version '1.0.9.RELEASE'
   id 'org.springframework.boot' version '2.3.1.RELEASE'
@@ -115,15 +114,6 @@ checkstyle {
   getConfigDirectory().set(new File(rootDir, 'config/checkstyle'))
 }
 
-pmd {
-  toolVersion = "6.18.0"
-  sourceSets = [sourceSets.main, sourceSets.test, sourceSets.functionalTest, sourceSets.integrationTest, sourceSets.smokeTest]
-  reportsDir = file("$project.buildDir/reports/pmd")
-  // https://github.com/pmd/pmd/issues/876
-  ruleSets = []
-  ruleSetFiles = files("config/pmd/ruleset.xml")
-}
-
 jacocoTestReport {
   executionData(test, integration)
   reports {
@@ -214,6 +204,13 @@ dependencies {
   implementation group: 'uk.gov.hmcts.reform', name: 'logging-appinsights', version: versions.reformLogging
   implementation group: 'org.springframework.cloud', name: 'spring-cloud-starter-netflix-hystrix', version: '2.2.3.RELEASE'
   implementation group: 'uk.gov.hmcts.reform', name: 'properties-volume-spring-boot-starter', version: '0.1.0'
+
+  implementation group: 'javax.validation', name: 'validation-api', version: '2.0.1.Final'
+
+  implementation group: 'uk.gov.hmcts.reform', name: 'core-case-data-store-client', version: '4.7.0'
+
+  annotationProcessor group: 'org.projectlombok', name: 'lombok', version: '1.18.12'
+  compileOnly group: 'org.projectlombok', name: 'lombok', version: '1.18.12'
 
   compile group: 'org.apache.logging.log4j', name: 'log4j-api', version: '2.13.3'
   compile group: 'org.apache.logging.log4j', name: 'log4j-to-slf4j', version: '2.13.2'
