@@ -12,7 +12,7 @@ const chooseCourtPage = require('./pages/createClaim/chooseCourt.page');
 const claimantDetailsPage = require('./pages/createClaim/claimantDetails.page');
 const claimValue = require('./pages/createClaim/claimValue.page');
 
-const baseUrl = 'process.env.URL' || 'http://localhost:3333';
+const baseUrl = process.env.URL || 'http://localhost:3333';
 const signedInSelector = 'exui-header';
 
 module.exports = function() {
