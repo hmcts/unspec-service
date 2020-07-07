@@ -15,4 +15,3 @@ public class CacheConfiguration {
         return cacheManager -> cacheManager.setAllowNullValues(false);
     }
 }
-
