@@ -15,5 +15,3 @@ management:
 spring:
   application:
     name: ucmc-service
-  main:
-    allow-bean-definition-overriding: true
