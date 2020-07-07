@@ -43,9 +43,11 @@ module.exports = function() {
       await this.retryUntilExists(() => this.click('Issue claim'), 'ccd-markdown');
       this.see('Your claim has been issued');
       await this.retryUntilExists(() =>
-        this.click('Close and Return to case details'), locate('body > exui-root > exui-case-home > div > exui-alert > div > cut-alert > div > div > div > div').withText('created'));
-    },
-
+        this.click('Close and Return to case details'), locate('ccd-case-header > h1'));
+      let caseNumber = await this.grabTextFrom('ccd-case-header > h1');
+      caseNumber = caseNumber.split('-').join('');
+      this.see('Case ' + caseNumber + ' has been created.');
+      },
     async clickContinue() {
       await this.click('Continue');
     },
