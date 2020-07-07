@@ -24,3 +24,14 @@ services:
       - LOGBACK_REQUIRE_ERROR_CODE=false
     ports:
       - $SERVER_PORT:$SERVER_PORT
+
+  docmosis-tornado:
+    image: skeneventures/docmosis-tornado
+    environment:
+      # not supported in current version of Tornado
+      - DOCMOSIS_KEY
+      - DOCMOSIS_SITE="Free Trial License"
+    volumes:
+      - ./docker/docmosis/templates:/home/docmosis/templates:rw
+    ports:
+      - 5433:8080

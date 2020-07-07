@@ -5,18 +5,43 @@ exports.config = {
   output: './output',
   helpers: {
     Puppeteer: {
+      restart: false,
+      keepCookies: true,
       show: process.env.SHOW_BROWSER_WINDOW || false,
       windowSize: '1200x900',
       waitForTimeout: 20000,
+      // waitForAction: 1000,
+      waitForNavigation: [ "domcontentloaded", "networkidle0" ],
       chrome: {
         ignoreHTTPSErrors: true,
         args: process.env.PROXY_SERVER ? [`--proxy-server=${process.env.PROXY_SERVER}`,] : [],
       },
     },
+    PuppeteerHelpers: {
+      require: './e2e/helpers/puppeteer_helper.js',
+    },
   },
   include: {
-    I: './e2e/steps_file.js',
-    loginPage: './e2e/pages/login.page.js'
+    I: './e2e/steps_file.js'
+  },
+  plugins: {
+    autoDelay: {
+      enabled: true,
+      methods: [
+        'click',
+        'doubleClick',
+        'rightClick',
+        'fillField',
+        'pressKey',
+        'checkOption',
+        'selectOption',
+        'attachFile',
+      ],
+    },
+    screenshotOnFail: {
+      enabled: true,
+      fullPageScreenshots: true,
+    },
   },
   mocha: {
     reporterOptions: {

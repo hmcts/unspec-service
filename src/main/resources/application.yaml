@@ -11,7 +11,14 @@ management:
       exposure:
         include: health, info, prometheus
 
-#If you use a database then uncomment below lines and update db properties accordingly
 spring:
   application:
     name: ucmc-service
+
+doc_assembly:
+  url: ${DOC_ASSEMBLY_URL:false}
+  sealedClaimTemplateId: "CV-CMC-GOR-ENG-0001.docx"
+
+idam:
+  s2s-auth:
+    microservice: ucmc-service
