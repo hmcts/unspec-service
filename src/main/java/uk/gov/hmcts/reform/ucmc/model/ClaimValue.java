@@ -16,6 +16,6 @@ public class ClaimValue {
             return false;
         }
 
-        return lowerValue > higherValue || lowerValue.equals(higherValue);
+        return lowerValue > higherValue;
     }
 }

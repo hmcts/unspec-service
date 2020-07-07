@@ -29,15 +29,14 @@ class ClaimValueTest {
         assertFalse(claimValue.hasLargerLowerValue());
     }
 
-    // TODO: not 100% certain this test is valid. Awaiting input from Darren.
     @Test
-    void shouldReturnTrueWhenHigherValueAndLowerValueAreEqual() {
+    void shouldReturnFalseWhenHigherValueAndLowerValueAreEqual() {
         ClaimValue claimValue = ClaimValue.builder()
             .higherValue(HIGHER_VALUE)
             .lowerValue(HIGHER_VALUE)
             .build();
 
-        assertTrue(claimValue.hasLargerLowerValue());
+        assertFalse(claimValue.hasLargerLowerValue());
     }
 
     @Test
