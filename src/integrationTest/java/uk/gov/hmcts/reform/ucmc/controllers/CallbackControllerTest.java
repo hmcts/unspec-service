@@ -19,7 +19,7 @@ public class CallbackControllerTest extends BaseIntegrationTest {
             .caseDetails(CaseDetails.builder().build())
             .build();
 
-        doPost(BEARER_TOKEN, toJson(callbackRequest), CALLBACK_URL, ABOUT_TO_START.getValue())
+        doPost(BEARER_TOKEN, callbackRequest, CALLBACK_URL, ABOUT_TO_START.getValue())
             .andExpect(status().isNotFound());
     }
 }

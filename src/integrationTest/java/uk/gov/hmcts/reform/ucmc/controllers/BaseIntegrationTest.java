@@ -13,11 +13,10 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import uk.gov.hmcts.reform.ucmc.Application;
 
 @SpringBootTest(
-    webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,
     classes = Application.class
 )
 @AutoConfigureMockMvc
-public class BaseIntegrationTest {
+public abstract class BaseIntegrationTest {
 
     protected static final String BEARER_TOKEN = "Bearer let me in";
 
@@ -27,13 +26,12 @@ public class BaseIntegrationTest {
     @Autowired
     protected MockMvc mockMvc;
 
-    protected ResultActions doPost(String auth, String content, String urlTemplate, Object... uriVars)
-        throws Exception {
+    protected <T> ResultActions doPost(String auth, T content, String urlTemplate, Object... uriVars) throws Exception {
         return mockMvc.perform(
             MockMvcRequestBuilders.post(urlTemplate, uriVars)
                 .header(HttpHeaders.AUTHORIZATION, auth)
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(content));
+                .content(toJson(content)));
     }
 
     protected String toJson(Object input) {
