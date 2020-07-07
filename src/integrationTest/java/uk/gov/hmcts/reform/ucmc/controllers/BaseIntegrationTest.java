@@ -2,6 +2,7 @@ package uk.gov.hmcts.reform.ucmc.controllers;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -26,7 +27,8 @@ public abstract class BaseIntegrationTest {
     @Autowired
     protected MockMvc mockMvc;
 
-    protected <T> ResultActions doPost(String auth, T content, String urlTemplate, Object... uriVars) throws Exception {
+    @SneakyThrows
+    protected <T> ResultActions doPost(String auth, T content, String urlTemplate, Object... uriVars) {
         return mockMvc.perform(
             MockMvcRequestBuilders.post(urlTemplate, uriVars)
                 .header(HttpHeaders.AUTHORIZATION, auth)

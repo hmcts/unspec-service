@@ -1,5 +1,6 @@
 package uk.gov.hmcts.reform.ucmc.controllers;
 
+import lombok.SneakyThrows;
 import org.junit.jupiter.api.Test;
 import uk.gov.hmcts.reform.ccd.client.model.CallbackRequest;
 import uk.gov.hmcts.reform.ccd.client.model.CaseDetails;
@@ -13,7 +14,8 @@ public class CallbackControllerTest extends BaseIntegrationTest {
     private static final String CALLBACK_URL = "/cases/callbacks/{callback-type}";
 
     @Test
-    public void shouldReturnNotFoundWhenCallbackHandlerIsNotImplemented() throws Exception {
+    @SneakyThrows
+    public void shouldReturnNotFoundWhenCallbackHandlerIsNotImplemented() {
         CallbackRequest callbackRequest = CallbackRequest.builder()
             .eventId(CaseEvent.CREATE_CASE.getValue())
             .caseDetails(CaseDetails.builder().build())
