@@ -57,4 +57,11 @@ class ClaimValueTest {
 
         assertFalse(claimValue.hasLargerLowerValue());
     }
+
+    @Test
+    void shouldReturnFalseWhenBothValuesAreEmpty() {
+        ClaimValue claimValue = ClaimValue.builder().build();
+
+        assertFalse(claimValue.hasLargerLowerValue());
+    }
 }
