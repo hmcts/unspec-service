@@ -1,5 +1,6 @@
 package uk.gov.hmcts.reform.ucmc.controllers;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -7,10 +8,16 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
+import uk.gov.hmcts.reform.ccd.client.model.AboutToStartOrSubmitCallbackResponse;
+import uk.gov.hmcts.reform.ccd.client.model.CallbackRequest;
+import uk.gov.hmcts.reform.ccd.client.model.CaseDetails;
 import uk.gov.hmcts.reform.ccd.client.model.SubmittedCallbackResponse;
+import uk.gov.hmcts.reform.ucmc.model.ClaimValue;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.HashMap;
+import java.util.Map;
 
 import static java.lang.String.format;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -29,6 +36,37 @@ public class CreateClaimControllerTest {
 
     @Autowired
     ObjectMapper mapper;
+
+    @Test
+    void shouldReturnExpectedErrorInMidEventWhenValuesAreInvalid() throws Exception {
+        Map<String, Object> data = new HashMap<>();
+        data.put("claimValue", ClaimValue.builder().higherValue(1).lowerValue(10).build());
+
+        CallbackRequest callbackRequest = toCallbackRequest(data);
+        AboutToStartOrSubmitCallbackResponse callbackResponse  = postMidEvent(callbackRequest);
+
+        assertThat(callbackResponse.getErrors())
+            .containsOnly("CONTENT TBC: Higher value must not be lower than the lower value.");
+    }
+
+    @Test
+    void shouldReturnNoErrorInMidEventWhenValuesAreValid() throws Exception {
+        Map<String, Object> data = new HashMap<>();
+        data.put("claimValue", ClaimValue.builder().higherValue(10).lowerValue(1).build());
+
+        CallbackRequest callbackRequest = toCallbackRequest(data);
+        AboutToStartOrSubmitCallbackResponse callbackResponse =  postMidEvent(callbackRequest);
+
+        assertThat(callbackResponse.getErrors()).isEmpty();
+    }
+
+    @Test
+    void shouldReturnNoErrorInMidEventWhenNoValues() throws Exception {
+        CallbackRequest callbackRequest = toCallbackRequest(new HashMap<>());
+        AboutToStartOrSubmitCallbackResponse callbackResponse =  postMidEvent(callbackRequest);
+
+        assertThat(callbackResponse.getErrors()).isEmpty();
+    }
 
     @Test
     void shouldReturnExpectedSubmittedCallbackResponseObject() throws Exception {
@@ -63,6 +101,43 @@ public class CreateClaimControllerTest {
                 .confirmationHeader("# Your claim has been issued\n## Claim number: TBC")
                 .confirmationBody(body)
                 .build());
+    }
+
+    private CallbackRequest toCallbackRequest(Map<String, Object> data) {
+        return CallbackRequest.builder()
+            .caseDetails(CaseDetails.builder().data(data).build())
+            .build();
+    }
+
+    private AboutToStartOrSubmitCallbackResponse postMidEvent(CallbackRequest callbackRequest) throws Exception {
+        MvcResult response = mockMvc
+            .perform(post("/create-claim/mid-event")
+                         .header("authorization", USER_AUTH_TOKEN)
+                         .header("user-id", USER_ID)
+                         .contentType(MediaType.APPLICATION_JSON)
+                         .content(toBytes(callbackRequest)))
+            .andExpect(status().isOk())
+            .andReturn();
+
+        byte[] responseBody = response.getResponse().getContentAsByteArray();
+
+        return toAboutToSubmitResponse(responseBody);
+    }
+
+    private AboutToStartOrSubmitCallbackResponse toAboutToSubmitResponse(byte[] body) throws java.io.IOException {
+        if (body.length > 0) {
+            return mapper.readValue(body, AboutToStartOrSubmitCallbackResponse.class);
+        } else {
+            return null;
+        }
+    }
+
+    private byte[] toBytes(Object o) {
+        try {
+            return mapper.writeValueAsString(o).getBytes();
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     private SubmittedCallbackResponse toSubmittedCallbackResponse(byte[] responseBody) throws java.io.IOException {

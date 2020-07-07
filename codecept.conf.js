@@ -21,6 +21,21 @@ exports.config = {
   include: {
     I: './e2e/steps_file.js'
   },
+  plugins: {
+    autoDelay: {
+      enabled: true,
+      methods: [
+        'click',
+        'fillField',
+        'checkOption',
+        'selectOption',
+      ],
+    },
+    screenshotOnFail: {
+      enabled: true,
+      fullPageScreenshots: true,
+    },
+  },
   mocha: {
     reporterOptions: {
       'codeceptjs-cli-reporter': {

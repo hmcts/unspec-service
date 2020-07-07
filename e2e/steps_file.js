@@ -10,7 +10,7 @@ const createCasePage = require('./pages/createClaim/createCase.page');
 const solicitorReferencesPage = require('./pages/createClaim/solicitorReferences.page');
 const chooseCourtPage = require('./pages/createClaim/chooseCourt.page');
 const claimantDetailsPage = require('./pages/createClaim/claimantDetails.page');
-const claimValue = require('./pages/createClaim/claimValue.page');
+const claimValuePage = require('./pages/createClaim/claimValue.page');
 
 const statementOfTruth = require('./fragments/statementOfTruth');
 
@@ -33,6 +33,13 @@ module.exports = function() {
       }, signedInSelector);
     },
 
+    grabCaseNumber: async function () {
+      let caseNumber = await this.grabTextFrom('ccd-case-header > h1');
+
+      caseNumber = caseNumber.split('-').join('');
+      return caseNumber;
+    },
+
     async createCase() {
       this.click('Create case');
       this.waitForElement(`#cc-jurisdiction > option[value="${config.definition.jurisdiction}"]`);
@@ -41,12 +48,12 @@ module.exports = function() {
       await solicitorReferencesPage.enterReferences();
       await chooseCourtPage.enterCourt();
       await claimantDetailsPage.enterClaimant(config.address);
-      await claimValue.enterClaimValue();
+      await claimValuePage.enterClaimValue();
       await statementOfTruth.enterNameAndRole();
       await this.retryUntilExists(() => this.click('Issue claim'), 'ccd-markdown');
       this.see('Your claim has been issued');
       await this.retryUntilExists(() =>
-        this.click('Close and Return to case details'), locate('exui-alert').withText('created'));
+        this.click('Close and Return to case details'), locate('ccd-case-header > h1'));
     },
 
     async clickContinue() {
