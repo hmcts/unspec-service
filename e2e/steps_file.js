@@ -15,7 +15,7 @@ const claimValuePage = require('./pages/createClaim/claimValue.page');
 const baseUrl = process.env.URL || 'http://localhost:3333';
 const signedInSelector = 'exui-header';
 
-module.exports = function() {
+module.exports = function () {
   return actor({
     // Define custom steps here, use 'this' to access default methods of I.
     // It is recommended to place a general 'login' function here.
@@ -31,6 +31,13 @@ module.exports = function() {
       }, signedInSelector);
     },
 
+    grabCaseNumber: async function () {
+      let caseNumber = await this.grabTextFrom('ccd-case-header > h1');
+
+      caseNumber = caseNumber.split('-').join('');
+      return caseNumber;
+    },
+
     async createCase() {
       this.click('Create case');
       this.waitForElement(`#cc-jurisdiction > option[value="${config.definition.jurisdiction}"]`);
@@ -43,7 +50,7 @@ module.exports = function() {
       await this.retryUntilExists(() => this.click('Issue claim'), 'ccd-markdown');
       this.see('Your claim has been issued');
       await this.retryUntilExists(() =>
-        this.click('Close and Return to case details'), locate('exui-alert').withText('created'));
+        this.click('Close and Return to case details'), locate('ccd-case-header > h1'));
     },
 
     async clickContinue() {
