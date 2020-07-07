@@ -31,6 +31,21 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         "caseworker"
     };
 
+    private static final String[] AUTH_WHITELIST = {
+        // -- swagger ui
+        "/v2/api-docs",
+        "/swagger-resources/**",
+        "/swagger-ui.html",
+        "/webjars/**",
+        // other public endpoints of API
+        "/health",
+        "/env",
+        "/health/liveness",
+        "/status/health",
+        "/",
+        "/loggers/**"
+    };
+
     @Value("${spring.security.oauth2.client.provider.oidc.issuer-uri}")
     private String issuerUri;
 
@@ -47,18 +62,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     @Override
     public void configure(WebSecurity web) throws Exception {
-        web.ignoring().antMatchers(
-            "/swagger-ui.html",
-            "/webjars/springfox-swagger-ui/**",
-            "/v2/api-docs/**",
-            "/swagger-resources/**",
-            "/health",
-            "/env",
-            "/health/liveness",
-            "/status/health",
-            "/",
-            "/loggers/**"
-        );
+        web.ignoring().antMatchers(AUTH_WHITELIST);
     }
 
     @Override
@@ -69,6 +73,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
             .formLogin().disable()
             .logout().disable()
             .authorizeRequests()
+            .antMatchers(AUTH_WHITELIST).permitAll()
             .antMatchers("/create-claim/**")
             .hasAnyAuthority(AUTHORITIES)
             .anyRequest()
