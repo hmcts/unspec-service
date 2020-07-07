@@ -61,6 +61,14 @@ public class CreateClaimControllerTest {
     }
 
     @Test
+    void shouldReturnNoErrorInMidEventWhenNoValues() throws Exception {
+        CallbackRequest callbackRequest = toCallbackRequest(new HashMap<>());
+        AboutToStartOrSubmitCallbackResponse callbackResponse =  postMidEvent(callbackRequest);
+
+        assertThat(callbackResponse.getErrors()).isEmpty();
+    }
+
+    @Test
     void shouldReturnExpectedSubmittedCallbackResponseObject() throws Exception {
         MvcResult response = mockMvc
             .perform(post("/create-claim/submitted")

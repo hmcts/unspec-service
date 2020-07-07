@@ -33,11 +33,14 @@ public class CreateClaimController {
     @PostMapping("/mid-event")
     public AboutToStartOrSubmitCallbackResponse handleMid(@RequestBody CallbackRequest request) {
         Map<String, Object> data = request.getCaseDetails().getData();
-        ClaimValue claimValue = mapper.convertValue(data.get("claimValue"), ClaimValue.class);
         List<String> errors = new ArrayList<>();
 
-        if (claimValue.hasLargerLowerValue()) {
-            errors.add("CONTENT TBC: Higher value must not be lower than the lower value.");
+        if (data.get("claimValue") != null) {
+            ClaimValue claimValue = mapper.convertValue(data.get("claimValue"), ClaimValue.class);
+
+            if (claimValue.hasLargerLowerValue()) {
+                errors.add("CONTENT TBC: Higher value must not be lower than the lower value.");
+            }
         }
 
         return AboutToStartOrSubmitCallbackResponse.builder()
