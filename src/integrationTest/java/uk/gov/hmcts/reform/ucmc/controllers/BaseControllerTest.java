@@ -20,6 +20,7 @@ abstract class BaseControllerTest {
     static final String USER_AUTH_TOKEN = "Bearer token";
     static final String USER_ID = "1";
     public static final String ABOUT_TO_SUBMIT = "about-to-submit";
+    public static final String MID = "mid-event";
     public static final String SUBMITTED = "submitted";
 
     @Autowired
@@ -46,12 +47,24 @@ abstract class BaseControllerTest {
         return toSubmittedResponse(responseBody);
     }
 
+    AboutToStartOrSubmitCallbackResponse postMidEvent(CallbackRequest request) throws Exception {
+        return postEvent(request, MID);
+    }
+
+    AboutToStartOrSubmitCallbackResponse postMidEvent(Map<String, Object> data) throws Exception {
+        return postMidEvent(toCallbackRequest(data));
+    }
+
     AboutToStartOrSubmitCallbackResponse postAboutToSubmitEvent(Map<String, Object> data) throws Exception {
         return postAboutToSubmitEvent(toCallbackRequest(data));
     }
 
     AboutToStartOrSubmitCallbackResponse postAboutToSubmitEvent(CallbackRequest callbackRequest) throws Exception {
-        MvcResult response = getMvcResult(callbackRequest, ABOUT_TO_SUBMIT);
+        return postEvent(callbackRequest, ABOUT_TO_SUBMIT);
+    }
+
+    AboutToStartOrSubmitCallbackResponse postEvent(CallbackRequest callbackRequest, String event) throws Exception {
+        MvcResult response = getMvcResult(callbackRequest, event);
 
         byte[] responseBody = response.getResponse().getContentAsByteArray();
 

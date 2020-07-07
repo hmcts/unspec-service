@@ -2,11 +2,14 @@ package uk.gov.hmcts.reform.ucmc.controllers;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import uk.gov.hmcts.reform.ccd.client.model.AboutToStartOrSubmitCallbackResponse;
 import uk.gov.hmcts.reform.ccd.client.model.SubmittedCallbackResponse;
+import uk.gov.hmcts.reform.ucmc.model.ClaimValue;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.HashMap;
+import java.util.Map;
 
 import static java.lang.String.format;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -18,6 +21,33 @@ class CreateClaimControllerTest extends BaseControllerTest {
 
     CreateClaimControllerTest() {
         super("create-claim");
+    }
+
+    @Test
+    void shouldReturnExpectedErrorInMidEventWhenValuesAreInvalid() throws Exception {
+        Map<String, Object> data = new HashMap<>();
+        data.put("claimValue", ClaimValue.builder().higherValue(1).lowerValue(10).build());
+
+        AboutToStartOrSubmitCallbackResponse callbackResponse = postMidEvent(data);
+
+        assertThat(callbackResponse.getErrors())
+            .containsOnly("CONTENT TBC: Higher value must not be lower than the lower value.");
+    }
+
+    @Test
+    void shouldReturnNoErrorInMidEventWhenValuesAreValid() throws Exception {
+        Map<String, Object> data = new HashMap<>();
+        data.put("claimValue", ClaimValue.builder().higherValue(10).lowerValue(1).build());
+
+        AboutToStartOrSubmitCallbackResponse callbackResponse = postMidEvent(data);
+        assertThat(callbackResponse.getErrors()).isEmpty();
+    }
+
+    @Test
+    void shouldReturnNoErrorInMidEventWhenNoValues() throws Exception {
+        AboutToStartOrSubmitCallbackResponse callbackResponse = postMidEvent(new HashMap<>());
+
+        assertThat(callbackResponse.getErrors()).isEmpty();
     }
 
     @Test
