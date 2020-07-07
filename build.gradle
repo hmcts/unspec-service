@@ -211,7 +211,7 @@ dependencies {
 
   implementation group: 'javax.validation', name: 'validation-api', version: '2.0.1.Final'
 
-  implementation group: 'uk.gov.hmcts.reform', name: 'core-case-data-store-client', version: '4.7.0'
+  implementation group: 'uk.gov.hmcts.reform', name: 'core-case-data-store-client', version: '4.6.4'
 
   annotationProcessor group: 'org.projectlombok', name: 'lombok', version: versions.lombok
   compileOnly group: 'org.projectlombok', name: 'lombok', version: versions.lombok
