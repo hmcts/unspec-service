@@ -13,7 +13,7 @@ module.exports = {
       I.selectOption(this.fields.jurisdiction, 'Civil Money Claims');
       I.selectOption(this.fields.caseType, 'Personal Injury');
       I.selectOption(this.fields.event, 'Create claim');
-      I.click(this.startButton);
+      await I.click(this.startButton);
   }
 };
 

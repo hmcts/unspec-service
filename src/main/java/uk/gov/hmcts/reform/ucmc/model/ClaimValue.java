@@ -12,7 +12,7 @@ public class ClaimValue {
     private final Integer higherValue;
 
     public boolean hasLargerLowerValue() {
-        if (lowerValue == null && higherValue == null || lowerValue == null || higherValue == null) {
+        if (lowerValue == null || higherValue == null) {
             return false;
         }
 
