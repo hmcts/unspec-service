@@ -1,5 +1,6 @@
 package uk.gov.hmcts.reform.ucmc.service;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -9,21 +10,21 @@ import uk.gov.hmcts.reform.payments.client.models.FeeDto;
 import uk.gov.hmcts.reform.payments.client.models.PaymentDto;
 import uk.gov.hmcts.reform.payments.client.request.CreditAccountPaymentRequest;
 import uk.gov.hmcts.reform.ucmc.config.PaymentsConfiguration;
+import uk.gov.hmcts.reform.ucmc.model.ClaimValue;
 import uk.gov.hmcts.reform.ucmc.request.RequestData;
-
-import java.math.BigDecimal;
 
 @Service
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class PaymentsService {
 
+    private final ObjectMapper mapper;
     private final FeesService feesService;
     private final PaymentsClient paymentsClient;
     private final RequestData requestData;
     private final PaymentsConfiguration paymentsConfiguration;
 
     public PaymentDto createCreditAccountPayment(CaseDetails caseDetails) {
-        var claimValue = new BigDecimal(caseDetails.getData().get("claimValue").toString());
+        ClaimValue claimValue = mapper.convertValue(caseDetails.getData().get("claimValue"), ClaimValue.class);
         FeeDto feeDto = feesService.getFeeDataByClaimValue(claimValue);
 
         return paymentsClient.createCreditAccountPayment(

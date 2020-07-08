@@ -10,6 +10,7 @@ import uk.gov.hmcts.reform.ucmc.callback.CallbackParams;
 import uk.gov.hmcts.reform.ucmc.callback.CallbackType;
 import uk.gov.hmcts.reform.ucmc.model.ClaimValue;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.HashMap;
@@ -29,7 +30,10 @@ class CreateClaimCallbackHandlerTest extends BaseCallbackHandlerTest {
     @Test
     void shouldReturnExpectedErrorInMidEventWhenValuesAreInvalid() {
         Map<String, Object> data = new HashMap<>();
-        data.put("claimValue", ClaimValue.builder().higherValue(1).lowerValue(10).build());
+        data.put(
+            "claimValue",
+            ClaimValue.builder().higherValue(BigDecimal.valueOf(1)).lowerValue(BigDecimal.valueOf(10)).build()
+        );
 
         CallbackParams params = callbackParamsOf(data, CallbackType.MID);
 
@@ -42,7 +46,10 @@ class CreateClaimCallbackHandlerTest extends BaseCallbackHandlerTest {
     @Test
     void shouldReturnNoErrorInMidEventWhenValuesAreValid() {
         Map<String, Object> data = new HashMap<>();
-        data.put("claimValue", ClaimValue.builder().higherValue(10).lowerValue(1).build());
+        data.put(
+            "claimValue",
+            ClaimValue.builder().higherValue(BigDecimal.valueOf(10)).lowerValue(BigDecimal.valueOf(1)).build()
+        );
 
         CallbackParams params = callbackParamsOf(data, CallbackType.MID);
 
@@ -58,7 +65,7 @@ class CreateClaimCallbackHandlerTest extends BaseCallbackHandlerTest {
         AboutToStartOrSubmitCallbackResponse response = (AboutToStartOrSubmitCallbackResponse) handler.handle(params);
 
         assertThat(response.getErrors()).isEmpty();
-    }
+    }ga 
 
     @Test
     void shouldReturnExpectedSubmittedCallbackResponseObject() {
