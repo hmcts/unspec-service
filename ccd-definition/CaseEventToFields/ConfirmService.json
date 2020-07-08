@@ -79,10 +79,11 @@
     "CaseEventID": "CONFIRM_SERVICE",
     "CaseFieldID": "serviceStatementOfTruth",
     "PageFieldDisplayOrder": 1,
-    "DisplayContext": "MANDATORY",
-    "PageID": "StateOfTruth",
+    "DisplayContext": "COMPLEX",
+    "PageID": "StatementOfTruth",
     "PageDisplayOrder": 6,
     "PageColumnNumber": 1,
-    "ShowSummaryChangeOption": "Y"
+    "ShowSummaryChangeOption": "Y",
+    "Comment": "Display context is defined as complex to add new event label for single StatementOfTruth complex type"
   }
 ]

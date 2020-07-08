@@ -66,7 +66,7 @@
     "CaseEventID": "CREATE_CLAIM",
     "CaseFieldID": "claimStatementOfTruth",
     "PageFieldDisplayOrder": 1,
-    "DisplayContext": "MANDATORY",
+    "DisplayContext": "COMPLEX",
     "PageID": "StatementOfTruth",
     "PageLabel": " ",
     "PageDisplayOrder": 6,
