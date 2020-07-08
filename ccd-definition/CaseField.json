@@ -50,6 +50,14 @@
   {
     "LiveFrom": "01/01/2017",
     "CaseTypeID": "PERSONAL_INJURY",
+    "ID": "claimStatementOfTruth",
+    "Label": "Statement of truth",
+    "FieldType": "StatementOfTruth",
+    "SecurityClassification": "Public"
+  },
+  {
+    "LiveFrom": "01/01/2017",
+    "CaseTypeID": "PERSONAL_INJURY",
     "ID": "servedDocuments",
     "Label": "Which documents did you serve?",
     "FieldType": "MultiSelectList",
@@ -102,7 +110,7 @@
     "CaseTypeID": "PERSONAL_INJURY",
     "ID": "serviceStatementOfTruth",
     "Label": "Statement of truth",
-    "FieldType": "StatementOfTruth",
+    "FieldType": "StatementOfTruthService",
     "SecurityClassification": "Public"
   },
   {

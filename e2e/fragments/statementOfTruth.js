@@ -9,7 +9,7 @@ module.exports = {
     };
   },
 
-  async enterNameAndRole(fieldID = null, name = 'John Smith', role = 'Solicitor') {
+  async enterNameAndRole(fieldID = '', name = 'John Smith', role = 'Solicitor') {
     I.fillField(this.fields(fieldID).name, name);
     I.fillField(this.fields(fieldID).role, role);
     await I.clickContinue();

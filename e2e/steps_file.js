@@ -55,6 +55,7 @@ module.exports = function() {
       await chooseCourtPage.enterCourt();
       await claimantDetailsPage.enterClaimant(config.address);
       await claimValuePage.enterClaimValue();
+      await statementOfTruth.enterNameAndRole('claim');
       await this.retryUntilExists(() => this.click('Issue claim'), 'ccd-markdown');
       this.see('Your claim has been issued');
       await this.retryUntilExists(() =>
