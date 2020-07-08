@@ -1,9 +1,13 @@
-package uk.gov.hmcts.reform.ucmc.controllers;
+package uk.gov.hmcts.reform.ucmc.handler;
 
 import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.jackson.JacksonAutoConfiguration;
+import org.springframework.boot.test.context.SpringBootTest;
 import uk.gov.hmcts.reform.ccd.client.model.AboutToStartOrSubmitCallbackResponse;
 import uk.gov.hmcts.reform.ccd.client.model.SubmittedCallbackResponse;
+import uk.gov.hmcts.reform.ucmc.callback.CallbackParams;
+import uk.gov.hmcts.reform.ucmc.callback.CallbackType;
 import uk.gov.hmcts.reform.ucmc.model.ClaimValue;
 
 import java.time.LocalDate;
@@ -16,43 +20,51 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static uk.gov.hmcts.reform.ucmc.helpers.DateFormatHelper.DATE_TIME_AT;
 import static uk.gov.hmcts.reform.ucmc.helpers.DateFormatHelper.formatLocalDateTime;
 
-@WebMvcTest(CreateClaimController.class)
-class CreateClaimControllerTest extends BaseControllerTest {
+@SpringBootTest(classes = {CreateClaimCallbackHandler.class, JacksonAutoConfiguration.class})
+class CreateClaimCallbackHandlerTest extends BaseCallbackHandlerTest {
 
-    CreateClaimControllerTest() {
-        super("create-claim");
-    }
+    @Autowired
+    private CreateClaimCallbackHandler handler;
 
     @Test
-    void shouldReturnExpectedErrorInMidEventWhenValuesAreInvalid() throws Exception {
+    void shouldReturnExpectedErrorInMidEventWhenValuesAreInvalid() {
         Map<String, Object> data = new HashMap<>();
         data.put("claimValue", ClaimValue.builder().higherValue(1).lowerValue(10).build());
 
-        AboutToStartOrSubmitCallbackResponse callbackResponse = postMidEvent(data);
+        CallbackParams params = callbackParamsOf(data, CallbackType.MID);
 
-        assertThat(callbackResponse.getErrors())
+        AboutToStartOrSubmitCallbackResponse response = (AboutToStartOrSubmitCallbackResponse) handler.handle(params);
+
+        assertThat(response.getErrors())
             .containsOnly("CONTENT TBC: Higher value must not be lower than the lower value.");
     }
 
     @Test
-    void shouldReturnNoErrorInMidEventWhenValuesAreValid() throws Exception {
+    void shouldReturnNoErrorInMidEventWhenValuesAreValid() {
         Map<String, Object> data = new HashMap<>();
         data.put("claimValue", ClaimValue.builder().higherValue(10).lowerValue(1).build());
 
-        AboutToStartOrSubmitCallbackResponse callbackResponse = postMidEvent(data);
-        assertThat(callbackResponse.getErrors()).isEmpty();
+        CallbackParams params = callbackParamsOf(data, CallbackType.MID);
+
+        AboutToStartOrSubmitCallbackResponse response = (AboutToStartOrSubmitCallbackResponse) handler.handle(params);
+
+        assertThat(response.getErrors()).isEmpty();
     }
 
     @Test
-    void shouldReturnNoErrorInMidEventWhenNoValues() throws Exception {
-        AboutToStartOrSubmitCallbackResponse callbackResponse = postMidEvent(new HashMap<>());
+    void shouldReturnNoErrorInMidEventWhenNoValues() {
+        CallbackParams params = callbackParamsOf(new HashMap<>(), CallbackType.MID);
 
-        assertThat(callbackResponse.getErrors()).isEmpty();
+        AboutToStartOrSubmitCallbackResponse response = (AboutToStartOrSubmitCallbackResponse) handler.handle(params);
+
+        assertThat(response.getErrors()).isEmpty();
     }
 
     @Test
-    void shouldReturnExpectedSubmittedCallbackResponseObject() throws Exception {
-        SubmittedCallbackResponse callbackResponse = postSubmittedEvent(new HashMap<>());
+    void shouldReturnExpectedSubmittedCallbackResponseObject() {
+        CallbackParams params = callbackParamsOf(new HashMap<>(), CallbackType.SUBMITTED);
+
+        SubmittedCallbackResponse response = (SubmittedCallbackResponse) handler.handle(params);
 
         String documentLink = "https://www.google.com";
         String responsePackLink = "https://formfinder.hmctsformfinder.justice.gov.uk/n9-eng.pdf";
@@ -67,7 +79,7 @@ class CreateClaimControllerTest extends BaseControllerTest {
                 + "\n* Confirm service online within 21 days of sending the form, particulars and response pack, before"
                 + " 4pm if you're doing this on the due day", documentLink, responsePackLink, formattedServiceDeadline);
 
-        assertThat(callbackResponse).isEqualToComparingFieldByField(
+        assertThat(response).isEqualToComparingFieldByField(
             SubmittedCallbackResponse.builder()
                 .confirmationHeader("# Your claim has been issued\n## Claim number: TBC")
                 .confirmationBody(body)

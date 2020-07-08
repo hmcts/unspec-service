@@ -1,38 +1,55 @@
-package uk.gov.hmcts.reform.ucmc.controllers;
+package uk.gov.hmcts.reform.ucmc.handler;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import io.swagger.annotations.Api;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.stereotype.Service;
 import uk.gov.hmcts.reform.ccd.client.model.AboutToStartOrSubmitCallbackResponse;
-import uk.gov.hmcts.reform.ccd.client.model.CallbackRequest;
+import uk.gov.hmcts.reform.ccd.client.model.CallbackResponse;
 import uk.gov.hmcts.reform.ccd.client.model.SubmittedCallbackResponse;
+import uk.gov.hmcts.reform.ucmc.callback.Callback;
+import uk.gov.hmcts.reform.ucmc.callback.CallbackHandler;
+import uk.gov.hmcts.reform.ucmc.callback.CallbackParams;
+import uk.gov.hmcts.reform.ucmc.callback.CallbackType;
+import uk.gov.hmcts.reform.ucmc.callback.CaseEvent;
 import uk.gov.hmcts.reform.ucmc.enums.ServiceMethod;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.Collections;
+import java.util.List;
 import java.util.Map;
 
 import static java.lang.String.format;
+import static uk.gov.hmcts.reform.ucmc.callback.CaseEvent.CONFIRM_SERVICE;
 import static uk.gov.hmcts.reform.ucmc.helpers.DateFormatHelper.DATE;
 import static uk.gov.hmcts.reform.ucmc.helpers.DateFormatHelper.DATE_TIME_AT;
 import static uk.gov.hmcts.reform.ucmc.helpers.DateFormatHelper.formatLocalDate;
 import static uk.gov.hmcts.reform.ucmc.helpers.DateFormatHelper.formatLocalDateTime;
 
-@Api
-@RestController
-@RequestMapping("/confirm-service")
-public class ConfirmServiceController {
+@Service
+public class ConfirmServiceCallbackHandler extends CallbackHandler {
+    private static final List<CaseEvent> EVENTS = Collections.singletonList(CONFIRM_SERVICE);
 
-    @Autowired
-    private ObjectMapper mapper;
+    private final ObjectMapper mapper;
 
-    @PostMapping("/about-to-submit")
-    public AboutToStartOrSubmitCallbackResponse handleAboutToSubmit(@RequestBody CallbackRequest callbackRequest) {
-        Map<String, Object> data = callbackRequest.getCaseDetails().getData();
+    public ConfirmServiceCallbackHandler(ObjectMapper mapper) {
+        this.mapper = mapper;
+    }
+
+    @Override
+    protected Map<CallbackType, Callback> callbacks() {
+        return Map.of(
+            CallbackType.ABOUT_TO_SUBMIT, this::addResponseDatesToCase,
+            CallbackType.SUBMITTED, this::buildConfirmation
+        );
+    }
+
+    @Override
+    public List<CaseEvent> handledEvents() {
+        return EVENTS;
+    }
+
+    private CallbackResponse addResponseDatesToCase(CallbackParams callbackParams) {
+        Map<String, Object> data = callbackParams.getRequest().getCaseDetails().getData();
         ServiceMethod serviceMethod = mapper.convertValue(data.get("serviceMethod"), ServiceMethod.class);
 
         // TODO: this field will be different (date / date time) in CCD depending on service method.
@@ -48,9 +65,8 @@ public class ConfirmServiceController {
             .build();
     }
 
-    @PostMapping("/submitted")
-    public SubmittedCallbackResponse handleSubmitted(@RequestBody CallbackRequest callbackRequest) {
-        Map<String, Object> data = callbackRequest.getCaseDetails().getData();
+    private SubmittedCallbackResponse buildConfirmation(CallbackParams callbackParams) {
+        Map<String, Object> data = callbackParams.getRequest().getCaseDetails().getData();
 
         LocalDate deemedDateOfService = mapper.convertValue(data.get("deemedDateOfService"), LocalDate.class);
         String formattedDeemedDateOfService = formatLocalDate(deemedDateOfService, DATE);
