@@ -5,4 +5,4 @@ spring:
       prefixed: false
       paths: /mnt/secrets/ucmc
       aliases:
-        ucmc-service-s2s-secret: idam.s2s-auth.totp_secret
+        microservicekey-ucmc-service: idam.s2s-auth.totp_secret

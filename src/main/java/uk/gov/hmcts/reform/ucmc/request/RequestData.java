@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import javax.servlet.http.HttpServletRequest;
 
 @Service
+//NOTE: shouldn't be used for async methods as spring cleans up the request
 public class RequestData {
 
     private final HttpServletRequest httpServletRequest;

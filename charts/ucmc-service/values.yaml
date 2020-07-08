@@ -32,4 +32,3 @@ java:
       secrets:
         - ucmc-idam-client-secret
         - microservicekey-ucmc-service
-        - ucmc-service-s2s-secret
