@@ -6,7 +6,7 @@
     "CaseFieldID": "servedDocuments",
     "PageFieldDisplayOrder": 1,
     "DisplayContext": "MANDATORY",
-    "PageID": "WhatDocuments",
+    "PageID": "ServedDocuments",
     "PageDisplayOrder": 1,
     "PageColumnNumber": 1,
     "ShowSummaryChangeOption": "Y"
@@ -18,7 +18,7 @@
     "CaseFieldID": "servedDocumentsOther",
     "PageFieldDisplayOrder": 2,
     "DisplayContext": "MANDATORY",
-    "PageID": "WhatDocuments",
+    "PageID": "ServedDocuments",
     "PageDisplayOrder": 1,
     "PageColumnNumber": 1,
     "ShowSummaryChangeOption": "Y",
