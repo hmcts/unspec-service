@@ -65,7 +65,7 @@ class CreateClaimCallbackHandlerTest extends BaseCallbackHandlerTest {
         AboutToStartOrSubmitCallbackResponse response = (AboutToStartOrSubmitCallbackResponse) handler.handle(params);
 
         assertThat(response.getErrors()).isEmpty();
-    }ga 
+    }
 
     @Test
     void shouldReturnExpectedSubmittedCallbackResponseObject() {
