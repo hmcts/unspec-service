@@ -25,7 +25,7 @@
     "ID": "CourtLocation",
     "ListElementCode": "labelPreferredCourt",
     "FieldType": "Label",
-    "ElementLabel": "[Find a hearing centre](https://courttribunalfinder.service.gov.uk/search/postcode?aol=Money+claims&amp;spoe=nearest) (opens in a new window)",
+    "ElementLabel": "<a target=\"_blank\" href=\"https://courttribunalfinder.service.gov.uk/search/postcode?aol=Money+claims&amp;spoe=nearest\">Find a hearing centre</a> (opens in a new window)",
     "SecurityClassification": "Public"
   },
   {
@@ -135,7 +135,7 @@
     "ID": "ClaimValue",
     "ListElementCode": "label",
     "FieldType": "Label",
-    "ElementLabel": "Your fee will be calculated based on the higher value.",
+    "ElementLabel": "Your fee will be calculated based on the higher value. <br />If you do not enter a higher value, you will be charged the maximum fee of £10,000.",
     "SecurityClassification": "Public"
   },
   {
@@ -150,6 +150,27 @@
     "ListElementCode": "higherValue",
     "FieldType": "MoneyGBP",
     "ElementLabel": "Higher value",
+    "SecurityClassification": "Public"
+  },
+  {
+    "ID": "StatementOfTruth",
+    "ListElementCode": "label",
+    "FieldType": "Label",
+    "ElementLabel": "The claimant believes that the facts in this claim form are true. I'm duly authorised by the claimant to sign this statement.",
+    "SecurityClassification": "Public"
+  },
+  {
+    "ID": "StatementOfTruth",
+    "ListElementCode": "name",
+    "FieldType": "Text",
+    "ElementLabel": "Name",
+    "SecurityClassification": "Public"
+  },
+  {
+    "ID": "StatementOfTruth",
+    "ListElementCode": "role",
+    "FieldType": "Text",
+    "ElementLabel": "Role",
     "SecurityClassification": "Public"
   },
   {
