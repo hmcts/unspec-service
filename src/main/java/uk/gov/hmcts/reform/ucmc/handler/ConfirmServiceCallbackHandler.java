@@ -11,6 +11,7 @@ import uk.gov.hmcts.reform.ucmc.callback.CallbackHandler;
 import uk.gov.hmcts.reform.ucmc.callback.CallbackParams;
 import uk.gov.hmcts.reform.ucmc.callback.CallbackType;
 import uk.gov.hmcts.reform.ucmc.callback.CaseEvent;
+import uk.gov.hmcts.reform.ucmc.enums.ServedDocuments;
 import uk.gov.hmcts.reform.ucmc.enums.ServiceMethod;
 import uk.gov.hmcts.reform.ucmc.model.CaseData;
 
@@ -37,6 +38,7 @@ public class ConfirmServiceCallbackHandler extends CallbackHandler {
     @Override
     protected Map<CallbackType, Callback> callbacks() {
         return Map.of(
+            CallbackType.ABOUT_TO_START, this::prepopulateServedDocuments,
             CallbackType.ABOUT_TO_SUBMIT, this::addResponseDatesToCase,
             CallbackType.SUBMITTED, this::buildConfirmation
         );
@@ -45,6 +47,18 @@ public class ConfirmServiceCallbackHandler extends CallbackHandler {
     @Override
     public List<CaseEvent> handledEvents() {
         return EVENTS;
+    }
+
+    private CallbackResponse prepopulateServedDocuments(CallbackParams callbackParams) {
+        List<ServedDocuments> servedDocuments = List.of(ServedDocuments.CLAIM_FORM,
+                                                        ServedDocuments.PARTICULARS_OF_CLAIM);
+
+        Map<String, Object> data = callbackParams.getRequest().getCaseDetails().getData();
+        data.put("servedDocuments", servedDocuments);
+
+        return AboutToStartOrSubmitCallbackResponse.builder()
+                   .data(data)
+                   .build();
     }
 
     private CallbackResponse addResponseDatesToCase(CallbackParams callbackParams) {
