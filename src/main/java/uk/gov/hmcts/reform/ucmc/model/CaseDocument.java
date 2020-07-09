@@ -7,7 +7,7 @@ import lombok.Data;
 @Data
 @Builder(toBuilder = true)
 @AllArgsConstructor
-public class DocmosisDocument {
+public class CaseDocument {
     private final String documentTitle;
     private final String documentUrl;
 }

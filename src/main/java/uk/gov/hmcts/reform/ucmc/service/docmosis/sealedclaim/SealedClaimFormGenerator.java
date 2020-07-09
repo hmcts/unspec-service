@@ -3,7 +3,7 @@ package uk.gov.hmcts.reform.ucmc.service.docmosis.sealedclaim;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import uk.gov.hmcts.reform.ucmc.model.CaseData;
-import uk.gov.hmcts.reform.ucmc.model.DocmosisDocument;
+import uk.gov.hmcts.reform.ucmc.model.CaseDocument;
 import uk.gov.hmcts.reform.ucmc.service.docmosis.DocAssemblyService;
 import uk.gov.hmcts.reform.ucmc.service.docmosis.model.DocAssemblyTemplateBody;
 import uk.gov.hmcts.reform.ucmc.service.docmosis.DocmosisTemplates;
@@ -21,7 +21,7 @@ public class SealedClaimFormGenerator {
         this.docAssemblyService = docAssemblyService;
     }
 
-    public DocmosisDocument generate(CaseData caseData, String authorisation) {
+    public CaseDocument generate(CaseData caseData, String authorisation) {
         DocAssemblyTemplateBody body = sealedClaimTemplateBodyMapper.from(caseData);
         return docAssemblyService.generateDocument(
             authorisation,

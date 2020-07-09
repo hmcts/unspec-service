@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Builder;
 import lombok.Value;
+import uk.gov.hmcts.reform.ucmc.model.Address;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 @Builder
