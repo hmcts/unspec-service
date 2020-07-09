@@ -74,7 +74,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
             .logout().disable()
             .authorizeRequests()
             .antMatchers(AUTH_WHITELIST).permitAll()
-            .antMatchers("/create-claim/**")
+            .antMatchers("/cases/callbacks/**")
             .hasAnyAuthority(AUTHORITIES)
             .anyRequest()
             .authenticated()
