@@ -17,7 +17,7 @@ import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-public class UserServiceTest {
+class UserServiceTest {
 
     private static final String SUB = "user-idam@reform.local";
     private static final String UID = "user-idam-01";
@@ -49,7 +49,7 @@ public class UserServiceTest {
     }
 
     @Test
-    public void findsUserInfoForAuthToken() {
+    void findsUserInfoForAuthToken() {
 
         UserInfo found = userService.getUserInfo(AUTHORISATION);
 

@@ -14,6 +14,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static java.lang.Boolean.TRUE;
 import static org.springframework.security.oauth2.core.endpoint.OAuth2ParameterNames.ACCESS_TOKEN;
 
 @Component
@@ -32,7 +33,7 @@ public class JwtGrantedAuthoritiesConverter implements Converter<Jwt, Collection
     @Override
     public Collection<GrantedAuthority> convert(Jwt jwt) {
         List<GrantedAuthority> authorities = new ArrayList<>();
-        if (jwt.containsClaim(TOKEN_NAME) && jwt.getClaim(TOKEN_NAME).equals(ACCESS_TOKEN)) {
+        if (TRUE.equals(jwt.containsClaim(TOKEN_NAME)) && jwt.getClaim(TOKEN_NAME).equals(ACCESS_TOKEN)) {
             UserInfo userInfo = userService.getUserInfo(BEARER + jwt.getTokenValue());
             authorities = extractAuthorityFromClaims(userInfo.getRoles());
         }
