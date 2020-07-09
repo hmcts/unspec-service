@@ -17,6 +17,7 @@ import java.math.BigInteger;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
 
@@ -24,7 +25,10 @@ import static org.mockito.Mockito.verify;
 class FeesServiceTest {
     private static final String CHANNEL = "channel";
     private static final String EVENT = "event";
-    private static final BigDecimal FEE_AMOUNT_POUNDS = new BigDecimal("1.00");
+    private static final BigDecimal TEST_FEE_AMOUNT_POUNDS = new BigDecimal("1.00");
+    private static final BigDecimal MAX_FEE_AMOUNT_POUNDS = new BigDecimal("10000.00");
+    private static final BigInteger TEST_FEE_PENCE = BigInteger.valueOf(100);
+    private static final BigInteger MAX_FEE_PENCE = BigInteger.valueOf(1000000);
 
     @Mock
     private FeesClient feesClient;
@@ -37,11 +41,17 @@ class FeesServiceTest {
 
     @BeforeEach
     void setUp() {
-        given(feesClient.lookupFee(any(), any(), any()))
+        given(feesClient.lookupFee(any(), any(), eq(new BigDecimal("50.00"))))
             .willReturn(FeeLookupResponseDto.builder()
-                            .feeAmount(FEE_AMOUNT_POUNDS)
-                            .code("testcode")
+                            .feeAmount(TEST_FEE_AMOUNT_POUNDS)
+                            .code("test_fee_code")
                             .version(1)
+                            .build());
+        given(feesClient.lookupFee(any(), any(), eq(new BigDecimal("200000.01"))))
+            .willReturn(FeeLookupResponseDto.builder()
+                            .feeAmount(MAX_FEE_AMOUNT_POUNDS)
+                            .code("max_fee_code")
+                            .version(2)
                             .build());
         given(feesConfiguration.getChannel()).willReturn(CHANNEL);
         given(feesConfiguration.getEvent()).willReturn(EVENT);
@@ -49,26 +59,63 @@ class FeesServiceTest {
 
     @Test
     public void shouldReturnFeeAmountForClaimValue() {
-        var claimValue = ClaimValue.builder().higherValue(BigDecimal.valueOf(500)).build();
+        var claimValue = ClaimValue.builder()
+            .lowerValue(BigDecimal.valueOf(100))
+            .higherValue(BigDecimal.valueOf(5000))
+            .build();
 
         BigInteger feeAmount = feesService.getFeeAmountByClaimValue(claimValue);
 
-        verify(feesClient).lookupFee(CHANNEL, EVENT, new BigDecimal("5.00"));
-        assertThat(feeAmount).isEqualTo(BigInteger.valueOf(100));
+        verify(feesClient).lookupFee(CHANNEL, EVENT, new BigDecimal("50.00"));
+        assertThat(feeAmount).isEqualTo(TEST_FEE_PENCE);
+    }
+
+    @Test
+    public void shouldReturnMaxFeeAmountForClaimValueWithNoHigherValue() {
+        var claimValue = ClaimValue.builder()
+            .lowerValue(BigDecimal.valueOf(100))
+            .build();
+
+        BigInteger feeAmount = feesService.getFeeAmountByClaimValue(claimValue);
+
+        verify(feesClient).lookupFee(CHANNEL, EVENT, new BigDecimal("200000.01"));
+        assertThat(feeAmount).isEqualTo(MAX_FEE_PENCE);
     }
 
     @Test
     public void shouldReturnFeeDataForClaimValue() {
-        var claimValue = ClaimValue.builder().higherValue(BigDecimal.valueOf(500)).build();
+        var claimValue = ClaimValue.builder()
+            .lowerValue(BigDecimal.valueOf(100))
+            .higherValue(BigDecimal.valueOf(5000))
+            .build();
+
         FeeDto expectedFeeDto = FeeDto.builder()
-            .calculatedAmount(FEE_AMOUNT_POUNDS)
-            .code("testcode")
+            .calculatedAmount(TEST_FEE_AMOUNT_POUNDS)
+            .code("test_fee_code")
             .version("1")
             .build();
 
         FeeDto feeDto = feesService.getFeeDataByClaimValue(claimValue);
 
-        verify(feesClient).lookupFee(CHANNEL, EVENT, new BigDecimal("5.00"));
+        verify(feesClient).lookupFee(CHANNEL, EVENT, new BigDecimal("50.00"));
+        assertThat(feeDto).isEqualTo(expectedFeeDto);
+    }
+
+    @Test
+    public void shouldReturnMaxFeeDataForClaimValueWithNoHigherValue() {
+        var claimValue = ClaimValue.builder()
+            .lowerValue(BigDecimal.valueOf(100))
+            .build();
+
+        FeeDto expectedFeeDto = FeeDto.builder()
+            .calculatedAmount(MAX_FEE_AMOUNT_POUNDS)
+            .code("max_fee_code")
+            .version("2")
+            .build();
+
+        FeeDto feeDto = feesService.getFeeDataByClaimValue(claimValue);
+
+        verify(feesClient).lookupFee(CHANNEL, EVENT, new BigDecimal("200000.01"));
         assertThat(feeDto).isEqualTo(expectedFeeDto);
     }
 }

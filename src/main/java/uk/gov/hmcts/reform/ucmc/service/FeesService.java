@@ -12,11 +12,13 @@ import uk.gov.hmcts.reform.ucmc.model.ClaimValue;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.math.RoundingMode;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class FeesService {
 
+    private static final BigDecimal CLAIM_VALUE_FOR_MAX_FEE = BigDecimal.valueOf(200000.01);
     private static final BigDecimal PENCE_PER_POUND = BigDecimal.valueOf(100);
     private static final int ROUNDING_SCALE = 2;
 
@@ -36,7 +38,9 @@ public class FeesService {
     }
 
     private FeeLookupResponseDto lookupFee(BigDecimal claimValue) {
-        var claimValuePounds = convertToPounds(claimValue);
+        var claimValuePounds = Optional.ofNullable(claimValue)
+            .map(this::convertToPounds)
+            .orElse(CLAIM_VALUE_FOR_MAX_FEE);
 
         return feesClient.lookupFee(feesConfiguration.getChannel(), feesConfiguration.getEvent(), claimValuePounds);
     }
