@@ -1,14 +1,14 @@
 package uk.gov.hmcts.reform.ucmc.model;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Builder;
 import lombok.Data;
-import lombok.RequiredArgsConstructor;
 
 import java.time.LocalDate;
 
 @Data
 @Builder
-@RequiredArgsConstructor
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class Applicant {
     private final Type type;
     private final String individualTitle;

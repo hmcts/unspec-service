@@ -1,5 +1,7 @@
 package uk.gov.hmcts.reform.ucmc.model;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import uk.gov.hmcts.reform.ucmc.enums.ServiceMethod;
@@ -10,6 +12,8 @@ import java.util.List;
 
 @Data
 @Builder
+@AllArgsConstructor
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class CaseData {
     private final SolicitorReferences solicitorReferences;
     private final CourtLocation courtLocation;

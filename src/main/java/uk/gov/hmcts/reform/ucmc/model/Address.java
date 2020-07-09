@@ -14,6 +14,6 @@ public class Address {
     private final String addressLine3;
     private final String postTown;
     private final String county;
-    private final String postcode;
+    private final String postCode;
     private final String country;
 }

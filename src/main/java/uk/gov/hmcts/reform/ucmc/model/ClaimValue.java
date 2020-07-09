@@ -1,12 +1,12 @@
 package uk.gov.hmcts.reform.ucmc.model;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Builder;
 import lombok.Data;
-import lombok.RequiredArgsConstructor;
 
 @Data
 @Builder
-@RequiredArgsConstructor
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class ClaimValue {
     private final Integer lowerValue;
     private final Integer higherValue;
