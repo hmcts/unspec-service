@@ -24,6 +24,7 @@ public class PaymentsService {
     private final PaymentsConfiguration paymentsConfiguration;
 
     public PaymentDto createCreditAccountPayment(CaseDetails caseDetails) {
+        //TODO: update to use CaseData model (no mapping should be required here)
         ClaimValue claimValue = mapper.convertValue(caseDetails.getData().get("claimValue"), ClaimValue.class);
         FeeDto feeDto = feesService.getFeeDataByClaimValue(claimValue);
 
@@ -36,6 +37,7 @@ public class PaymentsService {
     private CreditAccountPaymentRequest buildRequest(CaseDetails caseDetails, FeeDto feeDto) {
         var caseData = caseDetails.getData();
 
+        // TODO: update with case data fields used
         return CreditAccountPaymentRequest.builder()
             .accountNumber(caseData.get("pbaNumber").toString())
             .amount(feeDto.getCalculatedAmount())

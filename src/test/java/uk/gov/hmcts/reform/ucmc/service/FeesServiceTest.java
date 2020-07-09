@@ -10,6 +10,7 @@ import uk.gov.hmcts.reform.fees.client.FeesClient;
 import uk.gov.hmcts.reform.fees.client.model.FeeLookupResponseDto;
 import uk.gov.hmcts.reform.payments.client.models.FeeDto;
 import uk.gov.hmcts.reform.ucmc.config.FeesConfiguration;
+import uk.gov.hmcts.reform.ucmc.model.ClaimValue;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
@@ -48,7 +49,7 @@ class FeesServiceTest {
 
     @Test
     public void shouldReturnFeeAmountForClaimValue() {
-        var claimValue = BigDecimal.valueOf(500);
+        var claimValue = ClaimValue.builder().higherValue(BigDecimal.valueOf(500)).build();
 
         BigInteger feeAmount = feesService.getFeeAmountByClaimValue(claimValue);
 
@@ -58,7 +59,7 @@ class FeesServiceTest {
 
     @Test
     public void shouldReturnFeeDataForClaimValue() {
-        var claimValue = BigDecimal.valueOf(500);
+        var claimValue = ClaimValue.builder().higherValue(BigDecimal.valueOf(500)).build();
         FeeDto expectedFeeDto = FeeDto.builder()
             .calculatedAmount(FEE_AMOUNT_POUNDS)
             .code("testcode")

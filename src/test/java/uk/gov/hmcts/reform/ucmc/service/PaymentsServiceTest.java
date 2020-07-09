@@ -1,10 +1,14 @@
 package uk.gov.hmcts.reform.ucmc.service;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.jackson.JacksonAutoConfiguration;
+import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import uk.gov.hmcts.reform.ccd.client.model.CaseDetails;
 import uk.gov.hmcts.reform.payments.client.PaymentsClient;
@@ -12,6 +16,7 @@ import uk.gov.hmcts.reform.payments.client.models.FeeDto;
 import uk.gov.hmcts.reform.payments.client.models.PaymentDto;
 import uk.gov.hmcts.reform.payments.client.request.CreditAccountPaymentRequest;
 import uk.gov.hmcts.reform.ucmc.config.PaymentsConfiguration;
+import uk.gov.hmcts.reform.ucmc.model.ClaimValue;
 import uk.gov.hmcts.reform.ucmc.request.RequestData;
 
 import java.math.BigDecimal;
@@ -23,6 +28,7 @@ import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
 
 @ExtendWith(SpringExtension.class)
+@ContextConfiguration(classes = {JacksonAutoConfiguration.class})
 class PaymentsServiceTest {
     private static final String SERVICE = "service";
     private static final String SITE_ID = "site_id";
@@ -34,6 +40,8 @@ class PaymentsServiceTest {
         .build();
     private static final PaymentDto PAYMENT_DTO = PaymentDto.builder().reference("RC-1234-1234-1234-1234").build();
 
+    @Autowired
+    private ObjectMapper objectMapper;
 
     @Mock
     private FeesService feesService;
@@ -57,6 +65,14 @@ class PaymentsServiceTest {
         given(requestData.authorisation()).willReturn(AUTH_TOKEN);
         given(paymentsConfiguration.getService()).willReturn(SERVICE);
         given(paymentsConfiguration.getSiteId()).willReturn(SITE_ID);
+
+        paymentsService = new PaymentsService(
+            objectMapper,
+            feesService,
+            paymentsClient,
+            requestData,
+            paymentsConfiguration
+        );
     }
 
     @Test
@@ -64,7 +80,7 @@ class PaymentsServiceTest {
         CaseDetails caseDetails = CaseDetails.builder()
             .id(1L)
             .data(Map.of(
-                "claimValue", "500",
+                "claimValue", Map.of("lowerValue", "50", "higherValue", "500"),
             "pbaNumber", "PBA1234567",
             "caseReference", "case reference",
             "customerReference", "customer reference",
@@ -83,10 +99,14 @@ class PaymentsServiceTest {
             .siteId(paymentsConfiguration.getSiteId())
             .fees(new FeeDto[]{FEE_DATA})
             .build();
+        var expectedClaimValue = ClaimValue.builder()
+            .lowerValue(BigDecimal.valueOf(50))
+            .higherValue(BigDecimal.valueOf(500))
+            .build();
 
         PaymentDto paymentResponse = paymentsService.createCreditAccountPayment(caseDetails);
 
-        verify(feesService).getFeeDataByClaimValue(new BigDecimal("500"));
+        verify(feesService).getFeeDataByClaimValue(expectedClaimValue);
         verify(paymentsClient).createCreditAccountPayment(AUTH_TOKEN, expectedCreditAccountPaymentRequest);
         assertThat(paymentResponse).isEqualTo(PAYMENT_DTO);
     }

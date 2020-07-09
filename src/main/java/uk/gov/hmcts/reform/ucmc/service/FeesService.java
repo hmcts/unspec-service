@@ -7,6 +7,7 @@ import uk.gov.hmcts.reform.fees.client.FeesClient;
 import uk.gov.hmcts.reform.fees.client.model.FeeLookupResponseDto;
 import uk.gov.hmcts.reform.payments.client.models.FeeDto;
 import uk.gov.hmcts.reform.ucmc.config.FeesConfiguration;
+import uk.gov.hmcts.reform.ucmc.model.ClaimValue;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
@@ -22,14 +23,14 @@ public class FeesService {
     private final FeesClient feesClient;
     private final FeesConfiguration feesConfiguration;
 
-    public BigInteger getFeeAmountByClaimValue(BigDecimal claimValue) {
-        FeeLookupResponseDto feeLookupResponseDto = lookupFee(claimValue);
+    public BigInteger getFeeAmountByClaimValue(ClaimValue claimValue) {
+        FeeLookupResponseDto feeLookupResponseDto = lookupFee(claimValue.getHigherValue());
 
         return getFeeAmountInPence(feeLookupResponseDto);
     }
 
-    public FeeDto getFeeDataByClaimValue(BigDecimal claimValue) {
-        FeeLookupResponseDto feeLookupResponseDto = lookupFee(claimValue);
+    public FeeDto getFeeDataByClaimValue(ClaimValue claimValue) {
+        FeeLookupResponseDto feeLookupResponseDto = lookupFee(claimValue.getHigherValue());
 
         return buildFeeDto(feeLookupResponseDto);
     }
