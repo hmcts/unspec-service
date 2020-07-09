@@ -110,7 +110,7 @@
     "CaseTypeID": "PERSONAL_INJURY",
     "ID": "serviceStatementOfTruth",
     "Label": "Statement of truth",
-    "FieldType": "StatementOfTruthService",
+    "FieldType": "StatementOfTruth",
     "SecurityClassification": "Public"
   },
   {

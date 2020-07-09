@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import uk.gov.hmcts.reform.ucmc.enums.ServedDocuments;
 import uk.gov.hmcts.reform.ucmc.enums.ServiceMethod;
 
 import java.time.LocalDate;
@@ -29,4 +30,5 @@ public class CaseData {
     private final StatementOfTruth serviceStatementOfTruth;
     private final LocalDate deemedDateOfService;
     private final LocalDateTime responseDeadline;
+    private final List<ServedDocuments> servedDocuments;
 }

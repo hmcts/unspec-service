@@ -156,8 +156,9 @@
     "ID": "StatementOfTruth",
     "ListElementCode": "label",
     "FieldType": "Label",
-    "ElementLabel": "The claimant believes that the facts in this claim form are true. I'm duly authorised by the claimant to sign this statement.",
-    "SecurityClassification": "Public"
+    "ElementLabel": "Label",
+    "SecurityClassification": "Public",
+    "Comment": "This label should be set in caseEventToComplexTypes"
   },
   {
     "ID": "StatementOfTruth",
@@ -168,27 +169,6 @@
   },
   {
     "ID": "StatementOfTruth",
-    "ListElementCode": "role",
-    "FieldType": "Text",
-    "ElementLabel": "Role",
-    "SecurityClassification": "Public"
-  },
-  {
-    "ID": "StatementOfTruthService",
-    "ListElementCode": "label",
-    "FieldType": "Label",
-    "ElementLabel": "I believe that the facts stated in this certificate are true.",
-    "SecurityClassification": "Public"
-  },
-  {
-    "ID": "StatementOfTruthService",
-    "ListElementCode": "name",
-    "FieldType": "Text",
-    "ElementLabel": "Name",
-    "SecurityClassification": "Public"
-  },
-  {
-    "ID": "StatementOfTruthService",
     "ListElementCode": "role",
     "FieldType": "Text",
     "ElementLabel": "Role",

@@ -8,10 +8,12 @@ import uk.gov.hmcts.reform.ccd.client.model.AboutToStartOrSubmitCallbackResponse
 import uk.gov.hmcts.reform.ccd.client.model.SubmittedCallbackResponse;
 import uk.gov.hmcts.reform.ucmc.callback.CallbackParams;
 import uk.gov.hmcts.reform.ucmc.callback.CallbackType;
+import uk.gov.hmcts.reform.ucmc.enums.ServedDocuments;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -21,6 +23,15 @@ class ConfirmServiceCallbackHandlerTest extends BaseCallbackHandlerTest {
 
     @Autowired
     private ConfirmServiceCallbackHandler handler;
+
+    @Test
+    void shouldPrepopulateServedDocumentsList() {
+        CallbackParams params = callbackParamsOf(new HashMap<>(), CallbackType.ABOUT_TO_START);
+        AboutToStartOrSubmitCallbackResponse response = (AboutToStartOrSubmitCallbackResponse) handler.handle(params);
+
+        assertThat(response.getData()).isEqualTo(
+            Map.of("servedDocuments", List.of(ServedDocuments.CLAIM_FORM, ServedDocuments.PARTICULARS_OF_CLAIM)));
+    }
 
     @Test
     void shouldReturnExpectedAboutToSubmitCallbackResponseObject() {
@@ -34,7 +45,7 @@ class ConfirmServiceCallbackHandlerTest extends BaseCallbackHandlerTest {
 
         assertThat(response.getData()).isEqualTo(
             Map.of(
-                "deemedDateOfService", LocalDate.of(2099, 6,25),
+                "deemedDateOfService", LocalDate.of(2099, 6, 25),
                 "responseDeadline", LocalDateTime.of(2099, 7, 9, 16, 0),
                 "serviceMethod", "POST",
                 "serviceDate", "2099-06-23"
