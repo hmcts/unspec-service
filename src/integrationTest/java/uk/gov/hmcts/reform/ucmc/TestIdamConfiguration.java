@@ -8,8 +8,7 @@ import org.springframework.security.oauth2.client.registration.InMemoryClientReg
 import org.springframework.security.oauth2.core.AuthorizationGrantType;
 import org.springframework.web.context.ContextCleanupListener;
 
-import java.util.HashMap;
-import java.util.Map;
+import static com.google.common.collect.ImmutableMap.of;
 
 @Configuration
 public class TestIdamConfiguration extends ContextCleanupListener {
@@ -20,8 +19,6 @@ public class TestIdamConfiguration extends ContextCleanupListener {
     }
 
     private ClientRegistration clientRegistration() {
-        Map<String, Object> metadata = new HashMap<>();
-        metadata.put("end_session_endpoint", "https://idam/logout");
 
         return ClientRegistration.withRegistrationId("oidc")
             .redirectUriTemplate("{baseUrl}/{action}/oauth2/code/{registrationId}")
@@ -31,7 +28,7 @@ public class TestIdamConfiguration extends ContextCleanupListener {
             .tokenUri("http://idam/o/token")
             .userInfoUri("http://idam/o/userinfo")
             .jwkSetUri("http://idam/o/oauth/jwk")
-            .providerConfigurationMetadata(metadata)
+            .providerConfigurationMetadata(of("end_session_endpoint", "https://idam/logout"))
             .userNameAttributeName("id")
             .clientName("Client Name")
             .clientId("client-id")

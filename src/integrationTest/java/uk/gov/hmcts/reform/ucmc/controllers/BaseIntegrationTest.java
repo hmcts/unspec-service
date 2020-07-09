@@ -73,7 +73,6 @@ public abstract class BaseIntegrationTest {
 
     @MockBean
     protected UserService userService;
-
     @MockBean
     protected Authentication authentication;
     @MockBean
