@@ -10,7 +10,7 @@ module.exports = {
   startButton: 'Start',
 
   async selectCaseType() {
-      I.selectOption(this.fields.jurisdiction, 'Civil Jurisdiction');
+      I.selectOption(this.fields.jurisdiction, 'Civil');
       I.selectOption(this.fields.caseType, 'Unspecified Claims');
       I.selectOption(this.fields.event, 'Create claim');
       await I.click(this.startButton);
