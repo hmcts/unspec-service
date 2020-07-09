@@ -21,6 +21,7 @@ import uk.gov.hmcts.cmc.domain.models.ClaimDocument;
 import uk.gov.hmcts.cmc.domain.models.ScannedDocument;
 import uk.gov.hmcts.cmc.domain.utils.LocalDateTimeFactory;
 import uk.gov.hmcts.reform.authorisation.generators.AuthTokenGenerator;
+import uk.gov.hmcts.reform.ccd.client.model.UserId;
 import uk.gov.hmcts.reform.document.DocumentDownloadClientApi;
 import uk.gov.hmcts.reform.document.DocumentMetadataDownloadClientApi;
 import uk.gov.hmcts.reform.document.DocumentUploadClientApi;
@@ -28,6 +29,8 @@ import uk.gov.hmcts.reform.document.domain.Classification;
 import uk.gov.hmcts.reform.document.domain.Document;
 import uk.gov.hmcts.reform.document.domain.UploadResponse;
 import uk.gov.hmcts.reform.document.utils.InMemoryMultipartFile;
+import uk.gov.hmcts.reform.idam.client.models.UserInfo;
+import uk.gov.hmcts.reform.ucmc.service.UserService;
 
 import java.net.URI;
 import java.util.List;
@@ -48,6 +51,7 @@ public class DocumentManagementService {
     private final DocumentDownloadClientApi documentDownloadClient;
     private final DocumentUploadClientApi documentUploadClient;
     private final AuthTokenGenerator authTokenGenerator;
+    private final UserService userService;
     private final List<String> userRoles;
 
     @Autowired
@@ -56,12 +60,14 @@ public class DocumentManagementService {
         DocumentDownloadClientApi documentDownloadClientApi,
         DocumentUploadClientApi documentUploadClientApi,
         AuthTokenGenerator authTokenGenerator,
+        UserService userService,
         @Value("${document_management.userRoles}") List<String> userRoles
     ) {
         this.documentMetadataDownloadClient = documentMetadataDownloadApi;
         this.documentDownloadClient = documentDownloadClientApi;
         this.documentUploadClient = documentUploadClientApi;
         this.authTokenGenerator = authTokenGenerator;
+        this.userService = userService;
         this.userRoles = userRoles;
     }
 
@@ -72,11 +78,11 @@ public class DocumentManagementService {
             MultipartFile file
                 = new InMemoryMultipartFile(FILES_NAME, originalFileName, PDF.CONTENT_TYPE, pdf.getBytes());
 
-            UserDetails userDetails = userService.getUserDetails(authorisation);
+            UserInfo userInfo = userService.getUserInfo(authorisation);
             UploadResponse response = documentUploadClient.upload(
                 authorisation,
                 authTokenGenerator.generate(),
-                userDetails.getId(),
+                userInfo.getUid(),
                 userRoles,
                 Classification.RESTRICTED,
                 singletonList(file)
