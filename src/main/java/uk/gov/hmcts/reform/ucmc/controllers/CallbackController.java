@@ -48,7 +48,7 @@ public class CallbackController {
         @NotNull @RequestBody CallbackRequest callback,
         @PathVariable("version") Optional<CallbackVersion> version
     ) {
-        log.info("Received callback from CCD, eventId: {} and callback type: {}", callback.getEventId(), callbackType);
+        log.info("Received callback from CCD, eventId: {}", callback.getEventId());
         CallbackParams callbackParams = CallbackParams.builder()
             .request(callback)
             .type(CallbackType.fromValue(callbackType))
