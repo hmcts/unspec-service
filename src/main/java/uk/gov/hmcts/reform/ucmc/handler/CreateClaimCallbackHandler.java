@@ -10,6 +10,7 @@ import uk.gov.hmcts.reform.ucmc.callback.CallbackHandler;
 import uk.gov.hmcts.reform.ucmc.callback.CallbackParams;
 import uk.gov.hmcts.reform.ucmc.callback.CallbackType;
 import uk.gov.hmcts.reform.ucmc.callback.CaseEvent;
+import uk.gov.hmcts.reform.ucmc.helpers.JsonMapper;
 import uk.gov.hmcts.reform.ucmc.model.ClaimValue;
 
 import java.time.LocalDate;
@@ -28,16 +29,17 @@ import static uk.gov.hmcts.reform.ucmc.helpers.DateFormatHelper.formatLocalDateT
 public class CreateClaimCallbackHandler extends CallbackHandler {
     private static final List<CaseEvent> EVENTS = Collections.singletonList(CREATE_CASE);
 
-    private final ObjectMapper mapper;
+    private final JsonMapper jsonMapper;
 
-    public CreateClaimCallbackHandler(ObjectMapper mapper) {
-        this.mapper = mapper;
+    public CreateClaimCallbackHandler(JsonMapper jsonMapper, ) {
+        this.jsonMapper = jsonMapper;
     }
 
     @Override
     protected Map<CallbackType, Callback> callbacks() {
         return Map.of(
             CallbackType.MID, this::validateClaimValues,
+            CallbackType.ABOUT_TO_SUBMIT, this::generateSealedClaim,
             CallbackType.SUBMITTED, this::buildConfirmation
         );
     }
@@ -52,7 +54,7 @@ public class CreateClaimCallbackHandler extends CallbackHandler {
         List<String> errors = new ArrayList<>();
 
         if (data.get("claimValue") != null) {
-            ClaimValue claimValue = mapper.convertValue(data.get("claimValue"), ClaimValue.class);
+            ClaimValue claimValue = jsonMapper.convertValue(data.get("claimValue"), ClaimValue.class);
 
             if (claimValue.hasLargerLowerValue()) {
                 errors.add("CONTENT TBC: Higher value must not be lower than the lower value.");
@@ -64,6 +66,17 @@ public class CreateClaimCallbackHandler extends CallbackHandler {
             .errors(errors)
             .build();
     }
+
+    private CallbackResponse generateSealedClaim(CallbackParams callbackParams) {
+        Map<String, Object> data = callbackParams.getRequest().getCaseDetails().getData();
+        List<String> errors = new ArrayList<>();
+
+        return AboutToStartOrSubmitCallbackResponse.builder()
+            .data(data)
+            .errors(errors)
+            .build();
+    }
+
 
     private SubmittedCallbackResponse buildConfirmation(CallbackParams callbackParams) {
         String documentLink = "https://www.google.com";
