@@ -80,8 +80,8 @@ public class CreateClaimCallbackHandler extends CallbackHandler {
         String body = format(
             "<br />Follow these steps to serve a claim:"
                 + "\n* [Download the sealed claim form](%s) (PDF, 123KB)"
-                + "\n* Send the form, particulars of claim and [a response pack](%s target=\"_blank\") (PDF, 266 KB) "
-                + "to the defendant by %s"
+                + "\n* Send the form, particulars of claim and "
+                + "<a href=\"%s\" target=\"_blank\">a response pack</a> (PDF, 266 KB) to the defendant by %s"
                 + "\n* Confirm service online within 21 days of sending the form, particulars and response pack, before"
                 + " 4pm if you're doing this on the due day", documentLink, responsePackLink, formattedServiceDeadline);
 
