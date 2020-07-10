@@ -12,6 +12,7 @@ import uk.gov.hmcts.reform.docassembly.domain.DocAssemblyResponse;
 import uk.gov.hmcts.reform.docassembly.domain.OutputType;
 import uk.gov.hmcts.reform.docassembly.exception.DocumentGenerationFailedException;
 import uk.gov.hmcts.reform.ucmc.model.documents.CaseDocument;
+import uk.gov.hmcts.reform.ucmc.model.documents.Document;
 import uk.gov.hmcts.reform.ucmc.service.docmosis.model.DocAssemblyTemplateBody;
 
 @Service
@@ -28,15 +29,15 @@ public class DocAssemblyService {
         this.docAssemblyClient = docAssemblyClient;
     }
 
-    public CaseDocument generateDocument(String authorisation,
-                                         DocAssemblyTemplateBody formPayload,
-                                         DocmosisTemplates docmosisTemplates) {
+    public Document generateDocument(String authorisation,
+                                     DocAssemblyTemplateBody formPayload,
+                                     DocmosisTemplates docmosisTemplates) {
 
         var docAssemblyResponse = renderTemplate(authorisation, docmosisTemplates, formPayload);
 
-        return CaseDocument.builder()
+        return Document.builder()
             .documentUrl(docAssemblyResponse.getRenditionOutputLocation())
-            .documentTitle(docmosisTemplates.getDocumentTitle())
+            .documentFileName(docmosisTemplates.getDocumentTitle())
             .build();
     }
 

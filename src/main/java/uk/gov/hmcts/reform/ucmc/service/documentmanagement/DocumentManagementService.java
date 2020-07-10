@@ -36,7 +36,7 @@ public class DocumentManagementService {
 
     private final Logger logger = LoggerFactory.getLogger(DocumentManagementService.class);
     private static final String FILES_NAME = "files";
-    private static final String UNSPEC = "Unspecified";
+    public static final String UNSPEC = "Unspecified";
 
     private final DocumentMetadataDownloadClientApi documentMetadataDownloadClient;
     private final DocumentDownloadClientApi documentDownloadClient;

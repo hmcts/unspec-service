@@ -1,6 +1,5 @@
 package uk.gov.hmcts.reform.ucmc.handler;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.stereotype.Service;
 import uk.gov.hmcts.reform.ccd.client.model.AboutToStartOrSubmitCallbackResponse;
 import uk.gov.hmcts.reform.ccd.client.model.CallbackResponse;
@@ -10,8 +9,13 @@ import uk.gov.hmcts.reform.ucmc.callback.CallbackHandler;
 import uk.gov.hmcts.reform.ucmc.callback.CallbackParams;
 import uk.gov.hmcts.reform.ucmc.callback.CallbackType;
 import uk.gov.hmcts.reform.ucmc.callback.CaseEvent;
+import uk.gov.hmcts.reform.ucmc.helpers.CaseDetailsConverter;
 import uk.gov.hmcts.reform.ucmc.helpers.JsonMapper;
+import uk.gov.hmcts.reform.ucmc.model.CaseData;
 import uk.gov.hmcts.reform.ucmc.model.ClaimValue;
+import uk.gov.hmcts.reform.ucmc.model.documents.CaseDocument;
+import uk.gov.hmcts.reform.ucmc.service.docmosis.DocAssemblyService;
+import uk.gov.hmcts.reform.ucmc.service.docmosis.sealedclaim.SealedClaimFormGenerator;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -21,6 +25,7 @@ import java.util.List;
 import java.util.Map;
 
 import static java.lang.String.format;
+import static uk.gov.hmcts.reform.ucmc.callback.CallbackParams.Params.BEARER_TOKEN;
 import static uk.gov.hmcts.reform.ucmc.callback.CaseEvent.CREATE_CASE;
 import static uk.gov.hmcts.reform.ucmc.helpers.DateFormatHelper.DATE_TIME_AT;
 import static uk.gov.hmcts.reform.ucmc.helpers.DateFormatHelper.formatLocalDateTime;
@@ -29,10 +34,13 @@ import static uk.gov.hmcts.reform.ucmc.helpers.DateFormatHelper.formatLocalDateT
 public class CreateClaimCallbackHandler extends CallbackHandler {
     private static final List<CaseEvent> EVENTS = Collections.singletonList(CREATE_CASE);
 
-    private final JsonMapper jsonMapper;
+    private final SealedClaimFormGenerator sealedClaimFormGenerator;
+    private final CaseDetailsConverter caseDetailsConverter;
 
-    public CreateClaimCallbackHandler(JsonMapper jsonMapper, ) {
-        this.jsonMapper = jsonMapper;
+    public CreateClaimCallbackHandler(CaseDetailsConverter caseDetailsConverter,
+                                      SealedClaimFormGenerator sealedClaimFormGenerator) {
+        this.caseDetailsConverter = caseDetailsConverter;
+        this.sealedClaimFormGenerator = sealedClaimFormGenerator;
     }
 
     @Override
@@ -54,7 +62,7 @@ public class CreateClaimCallbackHandler extends CallbackHandler {
         List<String> errors = new ArrayList<>();
 
         if (data.get("claimValue") != null) {
-            ClaimValue claimValue = jsonMapper.convertValue(data.get("claimValue"), ClaimValue.class);
+            ClaimValue claimValue = caseDetailsConverter.to(data.get("claimValue"), ClaimValue.class);
 
             if (claimValue.hasLargerLowerValue()) {
                 errors.add("CONTENT TBC: Higher value must not be lower than the lower value.");
@@ -62,19 +70,24 @@ public class CreateClaimCallbackHandler extends CallbackHandler {
         }
 
         return AboutToStartOrSubmitCallbackResponse.builder()
-            .data(data)
-            .errors(errors)
-            .build();
+                                                   .data(data)
+                                                   .errors(errors)
+                                                   .build();
     }
 
     private CallbackResponse generateSealedClaim(CallbackParams callbackParams) {
-        Map<String, Object> data = callbackParams.getRequest().getCaseDetails().getData();
         List<String> errors = new ArrayList<>();
+        String authorisation = callbackParams.getParams().get(BEARER_TOKEN).toString();
+
+        CaseData caseData = caseDetailsConverter.to(callbackParams.getRequest().getCaseDetails());
+        CaseDocument sealedClaim = sealedClaimFormGenerator.generate(caseData, authorisation);
+        
+        caseData.toBuilder().systemGeneratedCaseDocuments(caseData.getSystemGeneratedCaseDocuments().)
 
         return AboutToStartOrSubmitCallbackResponse.builder()
-            .data(data)
-            .errors(errors)
-            .build();
+                                                   .data(caseDetailsConverter.convertToMap(caseData))
+                                                   .errors(errors)
+                                                   .build();
     }
 
 
@@ -94,8 +107,11 @@ public class CreateClaimCallbackHandler extends CallbackHandler {
                 + " 4pm if you're doing this on the due day", documentLink, responsePackLink, formattedServiceDeadline);
 
         return SubmittedCallbackResponse.builder()
-            .confirmationHeader(format("# Your claim has been issued\n## Claim number: %s", claimNumber))
-            .confirmationBody(body)
-            .build();
+                                        .confirmationHeader(format(
+                                            "# Your claim has been issued\n## Claim number: %s",
+                                            claimNumber
+                                        ))
+                                        .confirmationBody(body)
+                                        .build();
     }
 }
