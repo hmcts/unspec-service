@@ -50,6 +50,24 @@
   {
     "LiveFrom": "01/01/2017",
     "CaseTypeID": "PERSONAL_INJURY",
+    "ID": "claimType",
+    "Label": "CONTENT TBC: Enter the type of claim",
+    "FieldType": "FixedList",
+    "FieldTypeParameter": "ClaimType",
+    "SecurityClassification": "Public"
+  },
+  {
+    "LiveFrom": "01/01/2017",
+    "CaseTypeID": "PERSONAL_INJURY",
+    "ID": "allocatedTrack",
+    "Label": "Allocated track",
+    "FieldType": "FixedList",
+    "FieldTypeParameter": "Track",
+    "SecurityClassification": "Public"
+  },
+  {
+    "LiveFrom": "01/01/2017",
+    "CaseTypeID": "PERSONAL_INJURY",
     "ID": "statementOfTruth",
     "Label": "Statement of truth",
     "FieldType": "StatementOfTruth",

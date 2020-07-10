@@ -10,6 +10,7 @@ import uk.gov.hmcts.reform.ucmc.callback.CallbackHandler;
 import uk.gov.hmcts.reform.ucmc.callback.CallbackParams;
 import uk.gov.hmcts.reform.ucmc.callback.CallbackType;
 import uk.gov.hmcts.reform.ucmc.callback.CaseEvent;
+import uk.gov.hmcts.reform.ucmc.enums.ClaimType;
 import uk.gov.hmcts.reform.ucmc.model.ClaimValue;
 
 import java.time.LocalDate;
@@ -21,6 +22,7 @@ import java.util.Map;
 
 import static java.lang.String.format;
 import static uk.gov.hmcts.reform.ucmc.callback.CaseEvent.CREATE_CASE;
+import static uk.gov.hmcts.reform.ucmc.enums.AllocatedTrack.getAllocatedTrack;
 import static uk.gov.hmcts.reform.ucmc.helpers.DateFormatHelper.DATE_TIME_AT;
 import static uk.gov.hmcts.reform.ucmc.helpers.DateFormatHelper.formatLocalDateTime;
 
@@ -57,12 +59,18 @@ public class CreateClaimCallbackHandler extends CallbackHandler {
             if (claimValue.hasLargerLowerValue()) {
                 errors.add("CONTENT TBC: Higher value must not be lower than the lower value.");
             }
+
+            if (errors.isEmpty()) {
+                ClaimType claimType = mapper.convertValue(data.get("claimType"), ClaimType.class);
+
+                data.put("allocatedTrack", getAllocatedTrack(claimValue, claimType));
+            }
         }
 
         return AboutToStartOrSubmitCallbackResponse.builder()
-            .data(data)
-            .errors(errors)
-            .build();
+                   .data(data)
+                   .errors(errors)
+                   .build();
     }
 
     private SubmittedCallbackResponse buildConfirmation(CallbackParams callbackParams) {
@@ -81,8 +89,8 @@ public class CreateClaimCallbackHandler extends CallbackHandler {
                 + " 4pm if you're doing this on the due day", documentLink, responsePackLink, formattedServiceDeadline);
 
         return SubmittedCallbackResponse.builder()
-            .confirmationHeader(format("# Your claim has been issued\n## Claim number: %s", claimNumber))
-            .confirmationBody(body)
-            .build();
+                   .confirmationHeader(format("# Your claim has been issued\n## Claim number: %s", claimNumber))
+                   .confirmationBody(body)
+                   .build();
     }
 }
