@@ -12,16 +12,7 @@ import org.springframework.retry.annotation.Recover;
 import org.springframework.retry.annotation.Retryable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
-import uk.gov.hmcts.cmc.claimstore.appinsights.AppInsights;
-import uk.gov.hmcts.cmc.claimstore.documents.output.PDF;
-import uk.gov.hmcts.cmc.claimstore.exceptions.DocumentManagementException;
-import uk.gov.hmcts.cmc.claimstore.idam.models.UserDetails;
-import uk.gov.hmcts.cmc.claimstore.services.UserService;
-import uk.gov.hmcts.cmc.domain.models.ClaimDocument;
-import uk.gov.hmcts.cmc.domain.models.ScannedDocument;
-import uk.gov.hmcts.cmc.domain.utils.LocalDateTimeFactory;
 import uk.gov.hmcts.reform.authorisation.generators.AuthTokenGenerator;
-import uk.gov.hmcts.reform.ccd.client.model.UserId;
 import uk.gov.hmcts.reform.document.DocumentDownloadClientApi;
 import uk.gov.hmcts.reform.document.DocumentMetadataDownloadClientApi;
 import uk.gov.hmcts.reform.document.DocumentUploadClientApi;
@@ -30,22 +21,22 @@ import uk.gov.hmcts.reform.document.domain.Document;
 import uk.gov.hmcts.reform.document.domain.UploadResponse;
 import uk.gov.hmcts.reform.document.utils.InMemoryMultipartFile;
 import uk.gov.hmcts.reform.idam.client.models.UserInfo;
+import uk.gov.hmcts.reform.ucmc.helpers.LocalDateTimeHelper;
+import uk.gov.hmcts.reform.ucmc.model.documents.CaseDocument;
+import uk.gov.hmcts.reform.ucmc.model.documents.PDF;
 import uk.gov.hmcts.reform.ucmc.service.UserService;
 
 import java.net.URI;
 import java.util.List;
 
 import static java.util.Collections.singletonList;
-import static uk.gov.hmcts.cmc.claimstore.appinsights.AppInsights.DOCUMENT_NAME;
-import static uk.gov.hmcts.cmc.claimstore.appinsights.AppInsightsEvent.DOCUMENT_MANAGEMENT_DOWNLOAD_FAILURE;
-import static uk.gov.hmcts.cmc.claimstore.appinsights.AppInsightsEvent.DOCUMENT_MANAGEMENT_UPLOAD_FAILURE;
 
 @Service
 public class DocumentManagementService {
 
-    private final Logger logger = LoggerFactory.getLogger(uk.gov.hmcts.cmc.claimstore.services.document.DocumentManagementService.class);
+    private final Logger logger = LoggerFactory.getLogger(DocumentManagementService.class);
     private static final String FILES_NAME = "files";
-    private static final String OCMC = "OCMC";
+    private static final String UNSPEC = "Unspecified";
 
     private final DocumentMetadataDownloadClientApi documentMetadataDownloadClient;
     private final DocumentDownloadClientApi documentDownloadClient;
@@ -72,7 +63,7 @@ public class DocumentManagementService {
     }
 
     @Retryable(value = {DocumentManagementException.class}, backoff = @Backoff(delay = 200))
-    public ClaimDocument uploadDocument(String authorisation, PDF pdf) {
+    public CaseDocument uploadDocument(String authorisation, PDF pdf) {
         String originalFileName = pdf.getFilename();
         try {
             MultipartFile file
@@ -91,57 +82,61 @@ public class DocumentManagementService {
             Document document = response.getEmbedded().getDocuments().stream()
                 .findFirst()
                 .orElseThrow(() ->
-                    new DocumentManagementException("Document management failed uploading file" + originalFileName));
+                     new DocumentManagementException("Document management failed uploading file" + originalFileName));
 
-            return ClaimDocument.builder()
-                .documentManagementUrl(URI.create(document.links.self.href))
-                .documentManagementBinaryUrl(URI.create(document.links.binary.href))
+            return CaseDocument.builder()
+                .documentLink(uk.gov.hmcts.reform.ucmc.model.documents.Document.builder()
+                    .documentUrl(document.links.self.href)
+                    .documentBinaryUrl(document.links.binary.href)
+                    .documentFileName(originalFileName)
+                    .build())
                 .documentName(originalFileName)
-                .documentType(pdf.getClaimDocumentType())
-                .createdDatetime(LocalDateTimeFactory.nowInUTC())
+                .documentType(pdf.getDocumentType())
+                .createdDatetime(LocalDateTimeHelper.nowInUTC())
                 .size(document.size)
-                .createdBy(OCMC)
+                .createdBy(UNSPEC)
                 .build();
         } catch (Exception ex) {
-            throw new DocumentManagementException(String.format("Unable to upload document %s to document management.",
-                originalFileName), ex);
+            throw new DocumentManagementException(String.format(
+                "Unable to upload document %s to document management.",
+                originalFileName
+            ), ex);
         }
     }
 
     @Recover
-    public ClaimDocument logUploadDocumentFailure(
+    public CaseDocument logUploadDocumentFailure(
         DocumentManagementException exception,
         String authorisation,
         PDF pdf
     ) {
         String filename = pdf.getFilename();
         logger.info(exception.getMessage() + " " + exception.getCause(), exception);
-        appInsights.trackEvent(DOCUMENT_MANAGEMENT_UPLOAD_FAILURE, DOCUMENT_NAME, filename);
         throw exception;
     }
 
-    public byte[] downloadDocument(String authorisation, ClaimDocument claimDocument) {
-        return downloadDocumentByUrl(authorisation, claimDocument.getDocumentManagementUrl());
+    public byte[] downloadDocument(String authorisation, CaseDocument caseDocument) {
+        return downloadDocumentByUrl(authorisation, URI.create(caseDocument.getDocumentLink().getDocumentUrl()));
     }
 
     @Retryable(value = DocumentManagementException.class, backoff = @Backoff(delay = 200))
-    private byte[] downloadDocumentByUrl(String authorisation, URI documentManagementUrl) {
+    private byte[] downloadDocumentByUrl(String authorisation, URI documentUrl) {
         try {
-            UserDetails userDetails = userService.getUserDetails(authorisation);
+            UserInfo userInfo = userService.getUserInfo(authorisation);
             String userRoles = String.join(",", this.userRoles);
             Document documentMetadata = documentMetadataDownloadClient.getDocumentMetadata(
                 authorisation,
                 authTokenGenerator.generate(),
                 userRoles,
-                userDetails.getId(),
-                documentManagementUrl.getPath()
+                userInfo.getUid(),
+                documentUrl.getPath()
             );
 
             ResponseEntity<Resource> responseEntity = documentDownloadClient.downloadBinary(
                 authorisation,
                 authTokenGenerator.generate(),
                 userRoles,
-                userDetails.getId(),
+                userInfo.getUid(),
                 URI.create(documentMetadata.links.binary.href).getPath()
             );
 
@@ -150,8 +145,10 @@ public class DocumentManagementService {
             return resource.getByteArray();
         } catch (Exception ex) {
             throw new DocumentManagementException(
-                String.format("Unable to download document %s from document management.",
-                    documentManagementUrl), ex);
+                String.format(
+                    "Unable to download document %s from document management.",
+                    documentUrl
+                ), ex);
         }
     }
 
@@ -159,23 +156,22 @@ public class DocumentManagementService {
     public byte[] logDownloadDocumentFailure(
         DocumentManagementException exception,
         String authorisation,
-        ClaimDocument claimDocument
+        CaseDocument claimDocument
     ) {
         String filename = claimDocument.getDocumentName() + ".pdf";
         logger.warn(exception.getMessage() + " " + exception.getCause(), exception);
-        appInsights.trackEvent(DOCUMENT_MANAGEMENT_DOWNLOAD_FAILURE, DOCUMENT_NAME, filename);
         throw exception;
     }
 
     public Document getDocumentMetaData(String authorisation, String documentPath) {
         try {
-            UserDetails userDetails = userService.getUserDetails(authorisation);
+            UserInfo userInfo = userService.getUserInfo(authorisation);
             String userRoles = String.join(",", this.userRoles);
             return documentMetadataDownloadClient.getDocumentMetadata(
                 authorisation,
                 authTokenGenerator.generate(),
                 userRoles,
-                userDetails.getId(),
+                userInfo.getUid(),
                 documentPath
             );
         } catch (Exception ex) {

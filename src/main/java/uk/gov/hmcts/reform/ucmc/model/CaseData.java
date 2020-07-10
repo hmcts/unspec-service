@@ -8,4 +8,5 @@ import lombok.Data;
 @Builder(toBuilder = true)
 @AllArgsConstructor
 public class CaseData {
+
 }
