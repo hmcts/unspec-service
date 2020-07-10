@@ -17,28 +17,28 @@
     "LiveFrom": "01/01/2017",
     "ID": "ClaimType",
     "ListElementCode": "PERSONAL_INJURY_PUBLIC",
-    "ListElement": " Personal injury - public liability accident",
+    "ListElement": "Personal injury - public liability accident",
     "DisplayOrder": 3
   },
   {
     "LiveFrom": "01/01/2017",
     "ID": "ClaimType",
     "ListElementCode": "PERSONAL_INJURY_HOLIDAY",
-    "ListElement": " Personal Injury - holiday illness",
+    "ListElement": "Personal Injury - holiday illness",
     "DisplayOrder": 4
   },
   {
     "LiveFrom": "01/01/2017",
     "ID": "ClaimType",
     "ListElementCode": "PERSONAL_INJURY_DISEASE",
-    "ListElement": " Personal Injury - disease claim",
+    "ListElement": "Personal Injury - disease claim",
     "DisplayOrder": 5
   },
   {
     "LiveFrom": "01/01/2017",
     "ID": "ClaimType",
     "ListElementCode": "PERSONAL_INJURY_OTHER",
-    "ListElement": " Personal Injury - other",
+    "ListElement": "Personal Injury - other",
     "DisplayOrder": 6
   },
   {
