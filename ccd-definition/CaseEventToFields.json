@@ -70,7 +70,7 @@
     "CaseEventID": "CREATE_CLAIM",
     "CaseFieldID": "claimValue",
     "PageFieldDisplayOrder": 1,
-    "DisplayContext": "OPTIONAL",
+    "DisplayContext": "COMPLEX",
     "PageID": "ClaimValue",
     "PageLabel": " ",
     "PageDisplayOrder": 6,

@@ -61,24 +61,6 @@ class CreateClaimCallbackHandlerTest extends BaseCallbackHandlerTest {
             ));
     }
 
-    //TODO: logic for when no claim value -> checking with Darren and Luke
-    @Test
-    void shouldReturnNoErrorInMidEventWhenNoClaimValue() {
-        Map<String, Object> data = new HashMap<>();
-        data.put("claimType", PERSONAL_INJURY_WORK);
-
-        CallbackParams params = callbackParamsOf(data, CallbackType.MID);
-
-        AboutToStartOrSubmitCallbackResponse response = (AboutToStartOrSubmitCallbackResponse) handler.handle(params);
-
-        assertThat(response.getErrors()).isEmpty();
-        assertThat(response.getData())
-            .isEqualTo(
-                Map.of(
-                    "claimType", PERSONAL_INJURY_WORK
-                ));
-    }
-
     @Test
     void shouldReturnExpectedSubmittedCallbackResponseObject() {
         CallbackParams params = callbackParamsOf(new HashMap<>(), CallbackType.SUBMITTED);

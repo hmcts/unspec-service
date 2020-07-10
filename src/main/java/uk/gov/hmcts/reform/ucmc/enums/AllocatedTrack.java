@@ -7,7 +7,6 @@ public enum AllocatedTrack {
     FAST_CLAIM,
     MULTI_CLAIM;
 
-    //TODO: logic for when no claim value -> checking with Darren and Luke
     public static AllocatedTrack getAllocatedTrack(ClaimValue claimValue, ClaimType claimType) {
         if (claimType.isPersonalInjury()) {
             if (claimValue.getHigherValue() < 1000) {

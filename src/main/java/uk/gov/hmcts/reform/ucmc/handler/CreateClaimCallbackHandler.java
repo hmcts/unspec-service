@@ -51,20 +51,17 @@ public class CreateClaimCallbackHandler extends CallbackHandler {
 
     private CallbackResponse validateClaimValues(CallbackParams callbackParams) {
         Map<String, Object> data = callbackParams.getRequest().getCaseDetails().getData();
+        ClaimValue claimValue = mapper.convertValue(data.get("claimValue"), ClaimValue.class);
         List<String> errors = new ArrayList<>();
 
-        if (data.get("claimValue") != null) {
-            ClaimValue claimValue = mapper.convertValue(data.get("claimValue"), ClaimValue.class);
+        if (claimValue.hasLargerLowerValue()) {
+            errors.add("CONTENT TBC: Higher value must not be lower than the lower value.");
+        }
 
-            if (claimValue.hasLargerLowerValue()) {
-                errors.add("CONTENT TBC: Higher value must not be lower than the lower value.");
-            }
+        if (errors.isEmpty()) {
+            ClaimType claimType = mapper.convertValue(data.get("claimType"), ClaimType.class);
 
-            if (errors.isEmpty()) {
-                ClaimType claimType = mapper.convertValue(data.get("claimType"), ClaimType.class);
-
-                data.put("allocatedTrack", getAllocatedTrack(claimValue, claimType));
-            }
+            data.put("allocatedTrack", getAllocatedTrack(claimValue, claimType));
         }
 
         return AboutToStartOrSubmitCallbackResponse.builder()
