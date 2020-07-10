@@ -8,4 +8,4 @@ Scenario('Solicitor creates claim', async (I) => {
 
   let caseNumber = await I.grabCaseNumber();
   await I.see('Case ' + caseNumber + ' has been created.');
-});re/
+});
