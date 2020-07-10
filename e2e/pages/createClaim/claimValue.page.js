@@ -11,6 +11,7 @@ module.exports = {
       I.fillField(this.fields.lowerValue, '1000');
       I.fillField(this.fields.higherValue, '10000');
       await I.clickContinue();
+      await I.waitForNavigation;
   }
 };
 
