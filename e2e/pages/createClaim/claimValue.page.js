@@ -1,4 +1,6 @@
-const { I } = inject();
+const {I} = inject();
+
+const statementOfTruth = require('../../fragments/statementOfTruth');
 
 module.exports = {
 
@@ -8,10 +10,9 @@ module.exports = {
   },
 
   async enterClaimValue() {
-      I.fillField(this.fields.lowerValue, '1000');
-      I.fillField(this.fields.higherValue, '10000');
-      await I.clickContinue();
-      await I.waitForNavigation;
+    I.fillField(this.fields.lowerValue, '1000');
+    I.fillField(this.fields.higherValue, '10000');
+    await I.retryUntilExists(() => I.clickContinue(), statementOfTruth.fields.name);
   }
 };
 
