@@ -74,7 +74,7 @@
   },
   "solicitorReferences": {
     "defendantReference": "6789",
-    "solicitorReference": "12345"
+    "claimantReference": "12345"
   },
   "servedDocumentsOther": "Other documents",
   "claimStatementOfTruth": {
