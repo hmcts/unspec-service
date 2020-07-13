@@ -5,11 +5,11 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.client.circuitbreaker.EnableCircuitBreaker;
 import org.springframework.cloud.openfeign.EnableFeignClients;
 
-@SpringBootApplication(scanBasePackages = "uk.gov.hmcts")
+@SpringBootApplication
 @EnableCircuitBreaker
 @EnableFeignClients(basePackages = {"uk.gov.hmcts.reform.idam.client",
     "uk.gov.hmcts.reform.ccd.client",
-    "uk.gov.hmcts.reform.authorisation.generators",
+    "uk.gov.hmcts.reform.authorisation",
     "uk.gov.hmcts.reform.document",
     "uk.gov.hmcts.reform.docassembly"
 })

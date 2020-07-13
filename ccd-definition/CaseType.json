@@ -1,9 +1,9 @@
 [
   {
     "LiveFrom": "01/01/2017",
-    "ID": "PERSONAL_INJURY",
-    "Name": "Personal Injury",
-    "Description": "Personal Injury",
+    "ID": "UNSPECIFIED_CLAIMS",
+    "Name": "Unspecified Claims",
+    "Description": "Unspecified Claims",
     "JurisdictionID": "CIVIL",
     "SecurityClassification": "Public"
   }

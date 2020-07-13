@@ -1,112 +1,112 @@
 [
   {
     "LiveFrom": "01/01/2017",
-    "CaseTypeID": "PERSONAL_INJURY",
+    "CaseTypeID": "UNSPECIFIED_CLAIMS",
     "CaseFieldID": "caseHistory",
     "UserRole": "caseworker-civil-solicitor",
     "CRUD": "CRU"
   },
   {
     "LiveFrom": "01/01/2017",
-    "CaseTypeID": "PERSONAL_INJURY",
+    "CaseTypeID": "UNSPECIFIED_CLAIMS",
     "CaseFieldID": "eligibilityQuestions",
     "UserRole": "caseworker-civil-solicitor",
     "CRUD": "CR"
   },
   {
     "LiveFrom": "01/01/2017",
-    "CaseTypeID": "PERSONAL_INJURY",
+    "CaseTypeID": "UNSPECIFIED_CLAIMS",
     "CaseFieldID": "solicitorReferences",
     "UserRole": "caseworker-civil-solicitor",
     "CRUD": "CRU"
   },
   {
     "LiveFrom": "01/01/2017",
-    "CaseTypeID": "PERSONAL_INJURY",
+    "CaseTypeID": "UNSPECIFIED_CLAIMS",
     "CaseFieldID": "courtLocation",
     "UserRole": "caseworker-civil-solicitor",
     "CRUD": "CRU"
   },
   {
     "LiveFrom": "01/01/2017",
-    "CaseTypeID": "PERSONAL_INJURY",
+    "CaseTypeID": "UNSPECIFIED_CLAIMS",
     "CaseFieldID": "claimant",
     "UserRole": "caseworker-civil-solicitor",
     "CRUD": "CRU"
   },
   {
     "LiveFrom": "01/01/2017",
-    "CaseTypeID": "PERSONAL_INJURY",
+    "CaseTypeID": "UNSPECIFIED_CLAIMS",
     "CaseFieldID": "claimValue",
     "UserRole": "caseworker-civil-solicitor",
     "CRUD": "CRU"
   },
   {
     "LiveFrom": "01/01/2017",
-    "CaseTypeID": "PERSONAL_INJURY",
+    "CaseTypeID": "UNSPECIFIED_CLAIMS",
     "CaseFieldID": "statementOfTruth",
     "UserRole": "caseworker-civil-solicitor",
     "CRUD": "CRU"
   },
   {
     "LiveFrom": "01/01/2017",
-    "CaseTypeID": "PERSONAL_INJURY",
+    "CaseTypeID": "UNSPECIFIED_CLAIMS",
     "CaseFieldID": "servedDocuments",
     "UserRole": "caseworker-civil-solicitor",
     "CRUD": "CRU"
   },
   {
     "LiveFrom": "01/01/2017",
-    "CaseTypeID": "PERSONAL_INJURY",
+    "CaseTypeID": "UNSPECIFIED_CLAIMS",
     "CaseFieldID": "servedDocumentsOther",
     "UserRole": "caseworker-civil-solicitor",
     "CRUD": "CRU"
   },
   {
     "LiveFrom": "01/01/2017",
-    "CaseTypeID": "PERSONAL_INJURY",
+    "CaseTypeID": "UNSPECIFIED_CLAIMS",
     "CaseFieldID": "servedDocumentFiles",
     "UserRole": "caseworker-civil-solicitor",
     "CRUD": "CRU"
   },
   {
     "LiveFrom": "01/01/2017",
-    "CaseTypeID": "PERSONAL_INJURY",
+    "CaseTypeID": "UNSPECIFIED_CLAIMS",
     "CaseFieldID": "serviceMethod",
     "UserRole": "caseworker-civil-solicitor",
     "CRUD": "CRU"
   },
   {
     "LiveFrom": "01/01/2017",
-    "CaseTypeID": "PERSONAL_INJURY",
+    "CaseTypeID": "UNSPECIFIED_CLAIMS",
     "CaseFieldID": "serviceLocation",
     "UserRole": "caseworker-civil-solicitor",
     "CRUD": "CRU"
   },
   {
     "LiveFrom": "01/01/2017",
-    "CaseTypeID": "PERSONAL_INJURY",
+    "CaseTypeID": "UNSPECIFIED_CLAIMS",
     "CaseFieldID": "serviceDate",
     "UserRole": "caseworker-civil-solicitor",
     "CRUD": "CRU"
   },
   {
     "LiveFrom": "01/01/2017",
-    "CaseTypeID": "PERSONAL_INJURY",
+    "CaseTypeID": "UNSPECIFIED_CLAIMS",
     "CaseFieldID": "serviceStatementOfTruth",
     "UserRole": "caseworker-civil-solicitor",
     "CRUD": "CRU"
   },
   {
     "LiveFrom": "01/01/2017",
-    "CaseTypeID": "PERSONAL_INJURY",
+    "CaseTypeID": "UNSPECIFIED_CLAIMS",
     "CaseFieldID": "deemedDateOfService",
     "UserRole": "caseworker-civil-solicitor",
     "CRUD": "CRU"
   },
   {
     "LiveFrom": "01/01/2017",
-    "CaseTypeID": "PERSONAL_INJURY",
+    "CaseTypeID": "UNSPECIFIED_CLAIMS",
     "CaseFieldID": "responseDeadline",
     "UserRole": "caseworker-civil-solicitor",
     "CRUD": "CRU"

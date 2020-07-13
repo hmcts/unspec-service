@@ -1,13 +1,14 @@
 [
   {
     "LiveFrom": "01/01/2017",
-    "CaseTypeID": "PERSONAL_INJURY",
+    "CaseTypeID": "UNSPECIFIED_CLAIMS",
     "ID": "CREATE_CLAIM",
     "Name": "Create claim",
     "Description": "Case created, post actions triggered",
     "DisplayOrder": 1,
     "PostConditionState": "CREATED",
     "SecurityClassification": "Public",
+    "CallBackURLAboutToSubmitEvent": "${CCD_DEF_CASE_SERVICE_BASE_URL}/cases/callbacks/about-to-submit",
     "CallBackURLSubmittedEvent": "${CCD_DEF_CASE_SERVICE_BASE_URL}/cases/callbacks/submitted",
     "ShowSummary": "Y",
     "ShowEventNotes": "N",
@@ -15,7 +16,7 @@
   },
   {
     "LiveFrom": "01/01/2017",
-    "CaseTypeID": "PERSONAL_INJURY",
+    "CaseTypeID": "UNSPECIFIED_CLAIMS",
     "ID": "CONFIRM_SERVICE",
     "Name": "Confirm service",
     "Description": "Confirm documents have been served to the defendant",

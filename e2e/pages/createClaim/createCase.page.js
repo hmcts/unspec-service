@@ -11,7 +11,7 @@ module.exports = {
 
   async selectCaseType() {
       I.selectOption(this.fields.jurisdiction, 'Civil Money Claims');
-      I.selectOption(this.fields.caseType, 'Personal Injury');
+      I.selectOption(this.fields.caseType, 'Unspecified Claims');
       I.selectOption(this.fields.event, 'Create claim');
       await I.click(this.startButton);
   }

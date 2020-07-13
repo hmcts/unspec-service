@@ -7,7 +7,7 @@ module.exports = {
   },
   definition: {
     jurisdiction: 'CMC',
-    caseType: 'PERSONAL_INJURY',
+    caseType: 'UNSPECIFIED_CLAIMS',
   },
   address: {
     buildingAndStreet: {
