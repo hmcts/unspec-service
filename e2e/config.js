@@ -6,7 +6,7 @@ module.exports = {
     email: 'solicitor@example.com'
   },
   definition: {
-    jurisdiction: 'CMC',
+    jurisdiction: 'CIVIL',
     caseType: 'UNSPECIFIED_CLAIMS',
   },
   address: {
