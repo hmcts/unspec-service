@@ -54,3 +54,6 @@ document_management:
 
 doc_assembly:
   url: ${DOC_ASSEMBLY_URL:false}
+
+unspecified:
+  response-pack-url: https://formfinder.hmctsformfinder.justice.gov.uk/n9-eng.pdf

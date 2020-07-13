@@ -4,6 +4,7 @@
     "CaseTypeID": "UNSPECIFIED_CLAIMS",
     "CaseEventID": "CREATE_CLAIM",
     "UserRole": "caseworker-civil-solicitor",
+    "UserRole": "caseworker-civil-solicitor",
     "CRUD": "CRU"
   },
   {
