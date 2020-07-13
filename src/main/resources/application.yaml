@@ -2,6 +2,9 @@ server:
   port: 4000
 
 management:
+  health:
+    probes:
+      enabled: true
   endpoint:
     health:
       show-details: "always"
@@ -14,6 +17,24 @@ management:
 spring:
   application:
     name: ucmc-service
+  cache:
+    cache-names: userInfoCache
+    caffeine:
+      spec: expireAfterAccess=3600s
+
+  security:
+    oauth2:
+      client:
+        provider:
+          oidc:
+            issuer-uri: ${idam.web.url}/o
+        registration:
+          oidc:
+            client-id: internal
+            client-secret: internal
+
+oidc:
+  issuer: ${OIDC_ISSUER:http://fr-am:8080/openam/oauth2/hmcts}
 
 fees:
   api:
@@ -33,6 +54,9 @@ idam:
   s2s-auth:
     microservice: ucmc_service
 
+unspecified:
+  response-pack-url: https://formfinder.hmctsformfinder.justice.gov.uk/n9-eng.pdf
+
 ---
 
 spring:
@@ -47,6 +71,8 @@ payments:
     url: http://localhost:8765
 
 idam:
+  web:
+    url: http://localhost:9002
   api:
     url: http://localhost:5000
   s2s-auth:
@@ -71,6 +97,8 @@ payments:
     url: http://fake-payment-register-api
 
 idam:
+  web:
+    url: http://fake-idam-web
   api:
     url: http://fake-idam-api
   s2s-auth:
