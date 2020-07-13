@@ -17,6 +17,7 @@ import uk.gov.hmcts.reform.ucmc.model.CaseData;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -39,6 +40,7 @@ public class ConfirmServiceCallbackHandler extends CallbackHandler {
     protected Map<CallbackType, Callback> callbacks() {
         return Map.of(
             CallbackType.ABOUT_TO_START, this::prepopulateServedDocuments,
+            CallbackType.MID, this::checkServedDocumentsOtherHasWhiteSpace,
             CallbackType.ABOUT_TO_SUBMIT, this::addResponseDatesToCase,
             CallbackType.SUBMITTED, this::buildConfirmation
         );
@@ -50,14 +52,28 @@ public class ConfirmServiceCallbackHandler extends CallbackHandler {
     }
 
     private CallbackResponse prepopulateServedDocuments(CallbackParams callbackParams) {
-        List<ServedDocuments> servedDocuments = List.of(ServedDocuments.CLAIM_FORM,
-                                                        ServedDocuments.PARTICULARS_OF_CLAIM);
+        List<ServedDocuments> servedDocuments = List.of(ServedDocuments.CLAIM_FORM);
 
         Map<String, Object> data = callbackParams.getRequest().getCaseDetails().getData();
         data.put("servedDocuments", servedDocuments);
 
         return AboutToStartOrSubmitCallbackResponse.builder()
                    .data(data)
+                   .build();
+    }
+
+    private CallbackResponse checkServedDocumentsOtherHasWhiteSpace(CallbackParams callbackParams) {
+        Map<String, Object> data = callbackParams.getRequest().getCaseDetails().getData();
+        List<String> errors = new ArrayList<>();
+        var servedDocumentsOther = data.get("servedDocumentsOther");
+
+        if (servedDocumentsOther != null && servedDocumentsOther.toString().isBlank()) {
+            errors.add("CONTENT TBC: please enter a valid value for other documents");
+        }
+
+        return AboutToStartOrSubmitCallbackResponse.builder()
+                   .data(data)
+                   .errors(errors)
                    .build();
     }
 

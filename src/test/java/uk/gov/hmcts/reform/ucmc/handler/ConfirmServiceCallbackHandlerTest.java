@@ -29,8 +29,32 @@ class ConfirmServiceCallbackHandlerTest extends BaseCallbackHandlerTest {
         CallbackParams params = callbackParamsOf(new HashMap<>(), CallbackType.ABOUT_TO_START);
         AboutToStartOrSubmitCallbackResponse response = (AboutToStartOrSubmitCallbackResponse) handler.handle(params);
 
-        assertThat(response.getData()).isEqualTo(
-            Map.of("servedDocuments", List.of(ServedDocuments.CLAIM_FORM, ServedDocuments.PARTICULARS_OF_CLAIM)));
+        assertThat(response.getData()).isEqualTo(Map.of("servedDocuments", List.of(ServedDocuments.CLAIM_FORM)));
+    }
+
+    @Test
+    void shouldReturnErrorWhenWhitespaceInServedDocumentsOther() {
+        Map<String, Object> data = new HashMap<>();
+        data.put("servedDocumentsOther", " ");
+
+        CallbackParams params = callbackParamsOf(data, CallbackType.MID);
+
+        AboutToStartOrSubmitCallbackResponse response = (AboutToStartOrSubmitCallbackResponse) handler.handle(params);
+
+        assertThat(response.getErrors()).containsExactly("CONTENT TBC: please enter a valid value for other documents");
+    }
+
+    @Test
+    void shouldReturnNoErrorWhenValidServedDocumentsOtherValue() {
+        Map<String, Object> data = new HashMap<>();
+        data.put("servedDocumentsOther", "A valid document");
+
+        CallbackParams params = callbackParamsOf(data, CallbackType.MID);
+
+        AboutToStartOrSubmitCallbackResponse response = (AboutToStartOrSubmitCallbackResponse) handler.handle(params);
+
+        assertThat(response.getData()).isEqualTo(data);
+        assertThat(response.getErrors()).isEmpty();
     }
 
     @Test
