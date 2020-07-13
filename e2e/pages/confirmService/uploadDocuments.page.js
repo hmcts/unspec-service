@@ -22,6 +22,7 @@ module.exports = {
       await within(fileType, async () => {
         I.click('Add new');
         await I.attachFile(fileType + '_0', file);
+        await I.waitForInvisible(locate('.error-message').withText('Uploading...'));
       });
     }
 

@@ -8,11 +8,9 @@ import uk.gov.hmcts.reform.ucmc.model.documents.CaseDocument;
 import uk.gov.hmcts.reform.ucmc.model.documents.Document;
 import uk.gov.hmcts.reform.ucmc.model.documents.DocumentType;
 import uk.gov.hmcts.reform.ucmc.service.docmosis.DocAssemblyService;
-import uk.gov.hmcts.reform.ucmc.service.docmosis.model.DocAssemblyTemplateBody;
 import uk.gov.hmcts.reform.ucmc.service.docmosis.DocmosisTemplates;
+import uk.gov.hmcts.reform.ucmc.service.docmosis.model.DocAssemblyTemplateBody;
 import uk.gov.hmcts.reform.ucmc.service.documentmanagement.DocumentManagementService;
-
-import java.time.LocalDateTime;
 
 @Service
 public class SealedClaimFormGenerator {

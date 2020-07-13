@@ -220,6 +220,8 @@ dependencies {
 
   implementation group: 'org.springframework.retry', name: 'spring-retry'
 
+  compile group: 'org.apache.logging.log4j', name: 'log4j-api', version: '2.13.3'
+  compile group: 'org.apache.logging.log4j', name: 'log4j-to-slf4j', version: '2.13.2'
   annotationProcessor group: 'org.projectlombok', name: 'lombok', version: versions.lombok
   compileOnly group: 'org.projectlombok', name: 'lombok', version: versions.lombok
 

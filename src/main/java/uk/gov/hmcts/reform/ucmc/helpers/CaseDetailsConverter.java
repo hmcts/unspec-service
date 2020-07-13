@@ -14,13 +14,13 @@ public class CaseDetailsConverter {
         this.jsonMapper = jsonMapper;
     }
 
-    public CaseData to(CaseDetails caseDetails){
+    public CaseData to(CaseDetails caseDetails) {
         Map<String, Object> data = caseDetails.getData();
         data.put("state", caseDetails.getState());
         return jsonMapper.fromMap(data, CaseData.class);
     }
 
-    public <T> T to(Object input, Class<T> type){
+    public <T> T to(Object input, Class<T> type) {
         return jsonMapper.convertValue(input, type);
     }
 

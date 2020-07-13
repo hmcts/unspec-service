@@ -11,7 +11,7 @@ import java.time.LocalTime;
 @RequiredArgsConstructor
 public enum ServiceMethod {
     POST(2),
-    DX(2),
+    DOCUMENT_EXCHANGE(2),
     FAX(0),
     EMAIL(0),
     OTHER(2);

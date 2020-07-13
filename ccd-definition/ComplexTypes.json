@@ -156,8 +156,9 @@
     "ID": "StatementOfTruth",
     "ListElementCode": "label",
     "FieldType": "Label",
-    "ElementLabel": "The claimant believes that the facts in this claim form are true. I'm duly authorised by the claimant to sign this statement.",
-    "SecurityClassification": "Public"
+    "ElementLabel": "Label",
+    "SecurityClassification": "Public",
+    "Comment": "This label should be set in caseEventToComplexTypes"
   },
   {
     "ID": "StatementOfTruth",
@@ -186,7 +187,7 @@
     "FieldType": "Collection",
     "FieldTypeParameter": "Document",
     "ElementLabel": "Particulars of claim",
-    "RegularExpression": ".jpg,.gif,.doc,.pdf,.doc,.docx,.jpeg,.png,.xls,.xlsx",
+    "RegularExpression": ".jpg,.gif,.pdf,.doc,.docx,.jpeg,.png,.xls,.xlsx",
     "SecurityClassification": "Public"
   },
   {
@@ -195,7 +196,7 @@
     "FieldType": "Collection",
     "FieldTypeParameter": "Document",
     "ElementLabel": "Medical reports",
-    "RegularExpression": ".jpg,.gif,.doc,.pdf,.doc,.docx,.jpeg,.png,.xls,.xlsx",
+    "RegularExpression": ".jpg,.gif,.pdf,.doc,.docx,.jpeg,.png,.xls,.xlsx",
     "SecurityClassification": "Public"
   },
   {
@@ -204,7 +205,7 @@
     "FieldType": "Collection",
     "FieldTypeParameter": "Document",
     "ElementLabel": "Schedule of loss",
-    "RegularExpression": ".jpg,.gif,.doc,.pdf,.doc,.docx,.jpeg,.png,.xls,.xlsx",
+    "RegularExpression": ".jpg,.gif,.pdf,.doc,.docx,.jpeg,.png,.xls,.xlsx",
     "SecurityClassification": "Public"
   },
   {
@@ -213,7 +214,7 @@
     "FieldType": "Collection",
     "FieldTypeParameter": "Document",
     "ElementLabel": "Certificate of suitability",
-    "RegularExpression": ".jpg,.gif,.doc,.pdf,.doc,.docx,.jpeg,.png,.xls,.xlsx",
+    "RegularExpression": ".jpg,.gif,.pdf,.doc,.docx,.jpeg,.png,.xls,.xlsx",
     "SecurityClassification": "Public"
   },
   {
@@ -222,7 +223,7 @@
     "FieldType": "Collection",
     "FieldTypeParameter": "Document",
     "ElementLabel": "Other documents",
-    "RegularExpression": ".jpg,.gif,.doc,.pdf,.doc,.docx,.jpeg,.png,.xls,.xlsx",
+    "RegularExpression": ".jpg,.gif,.pdf,.doc,.docx,.jpeg,.png,.xls,.xlsx",
     "SecurityClassification": "Public"
   },
   {
@@ -241,26 +242,5 @@
     "HintText": "This should be the type of location you served to, not and address.",
     "SecurityClassification": "Public",
     "FieldShowCondition": "location = \"OTHER\""
-  },
-  {
-    "ID": "StatementOfTruth",
-    "ListElementCode": "label",
-    "FieldType": "Label",
-    "ElementLabel": "I believe that the facts stated in this certificate are true.",
-    "SecurityClassification": "Public"
-  },
-  {
-    "ID": "StatementOfTruth",
-    "ListElementCode": "name",
-    "FieldType": "Text",
-    "ElementLabel": "Name",
-    "SecurityClassification": "Public"
-  },
-  {
-    "ID": "StatementOfTruth",
-    "ListElementCode": "role",
-    "FieldType": "Text",
-    "ElementLabel": "Role",
-    "SecurityClassification": "Public"
   }
 ]

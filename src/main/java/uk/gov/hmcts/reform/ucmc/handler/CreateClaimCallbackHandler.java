@@ -10,11 +10,9 @@ import uk.gov.hmcts.reform.ucmc.callback.CallbackParams;
 import uk.gov.hmcts.reform.ucmc.callback.CallbackType;
 import uk.gov.hmcts.reform.ucmc.callback.CaseEvent;
 import uk.gov.hmcts.reform.ucmc.helpers.CaseDetailsConverter;
-import uk.gov.hmcts.reform.ucmc.helpers.JsonMapper;
 import uk.gov.hmcts.reform.ucmc.model.CaseData;
-import uk.gov.hmcts.reform.ucmc.model.ClaimValue;
+import uk.gov.hmcts.reform.ucmc.model.common.Element;
 import uk.gov.hmcts.reform.ucmc.model.documents.CaseDocument;
-import uk.gov.hmcts.reform.ucmc.service.docmosis.DocAssemblyService;
 import uk.gov.hmcts.reform.ucmc.service.docmosis.sealedclaim.SealedClaimFormGenerator;
 
 import java.time.LocalDate;
@@ -58,21 +56,16 @@ public class CreateClaimCallbackHandler extends CallbackHandler {
     }
 
     private CallbackResponse validateClaimValues(CallbackParams callbackParams) {
-        Map<String, Object> data = callbackParams.getRequest().getCaseDetails().getData();
+        CaseData caseData = caseDetailsConverter.to(callbackParams.getRequest().getCaseDetails());
         List<String> errors = new ArrayList<>();
 
-        if (data.get("claimValue") != null) {
-            ClaimValue claimValue = caseDetailsConverter.to(data.get("claimValue"), ClaimValue.class);
-
-            if (claimValue.hasLargerLowerValue()) {
-                errors.add("CONTENT TBC: Higher value must not be lower than the lower value.");
-            }
+        if (caseData.getClaimValue() != null && caseData.getClaimValue().hasLargerLowerValue()) {
+            errors.add("CONTENT TBC: Higher value must not be lower than the lower value.");
         }
 
         return AboutToStartOrSubmitCallbackResponse.builder()
-                                                   .data(data)
-                                                   .errors(errors)
-                                                   .build();
+            .errors(errors)
+            .build();
     }
 
     private CallbackResponse generateSealedClaim(CallbackParams callbackParams) {
@@ -81,15 +74,23 @@ public class CreateClaimCallbackHandler extends CallbackHandler {
 
         CaseData caseData = caseDetailsConverter.to(callbackParams.getRequest().getCaseDetails());
         CaseDocument sealedClaim = sealedClaimFormGenerator.generate(caseData, authorisation);
-        
-        caseData.toBuilder().systemGeneratedCaseDocuments(caseData.getSystemGeneratedCaseDocuments().)
+        CaseData updated = addToCaseData(caseData, sealedClaim);
 
         return AboutToStartOrSubmitCallbackResponse.builder()
-                                                   .data(caseDetailsConverter.convertToMap(caseData))
-                                                   .errors(errors)
-                                                   .build();
+            .data(caseDetailsConverter.convertToMap(updated))
+            .errors(errors)
+            .build();
     }
 
+    private CaseData addToCaseData(CaseData caseData, CaseDocument sealedClaim) {
+        List<Element<CaseDocument>> caseDocuments = new ArrayList<>();
+        caseDocuments.addAll(caseData.getSystemGeneratedCaseDocuments());
+        caseDocuments.add(Element.<CaseDocument>builder().value(sealedClaim).build());
+
+        return caseData.toBuilder()
+            .systemGeneratedCaseDocuments(caseDocuments)
+            .build();
+    }
 
     private SubmittedCallbackResponse buildConfirmation(CallbackParams callbackParams) {
         String documentLink = "https://www.google.com";
@@ -107,11 +108,8 @@ public class CreateClaimCallbackHandler extends CallbackHandler {
                 + " 4pm if you're doing this on the due day", documentLink, responsePackLink, formattedServiceDeadline);
 
         return SubmittedCallbackResponse.builder()
-                                        .confirmationHeader(format(
-                                            "# Your claim has been issued\n## Claim number: %s",
-                                            claimNumber
-                                        ))
-                                        .confirmationBody(body)
-                                        .build();
+            .confirmationHeader(format("# Your claim has been issued\n## Claim number: %s", claimNumber))
+            .confirmationBody(body)
+            .build();
     }
 }

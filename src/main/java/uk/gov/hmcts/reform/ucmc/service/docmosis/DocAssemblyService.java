@@ -11,7 +11,6 @@ import uk.gov.hmcts.reform.docassembly.domain.DocAssemblyRequest;
 import uk.gov.hmcts.reform.docassembly.domain.DocAssemblyResponse;
 import uk.gov.hmcts.reform.docassembly.domain.OutputType;
 import uk.gov.hmcts.reform.docassembly.exception.DocumentGenerationFailedException;
-import uk.gov.hmcts.reform.ucmc.model.documents.CaseDocument;
 import uk.gov.hmcts.reform.ucmc.model.documents.Document;
 import uk.gov.hmcts.reform.ucmc.service.docmosis.model.DocAssemblyTemplateBody;
 

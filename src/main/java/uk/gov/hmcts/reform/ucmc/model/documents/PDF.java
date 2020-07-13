@@ -2,6 +2,7 @@ package uk.gov.hmcts.reform.ucmc.model.documents;
 
 import org.springframework.http.MediaType;
 
+@SuppressWarnings({"AbbreviationAsWordInName"})
 public class PDF {
     public static final String CONTENT_TYPE = MediaType.APPLICATION_PDF_VALUE;
     public static final String EXTENSION = ".pdf";

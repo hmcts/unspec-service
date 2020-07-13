@@ -23,8 +23,9 @@
     "PreConditionState(s)": "CREATED",
     "PostConditionState": "*",
     "SecurityClassification": "Public",
-    "CallBackURLAboutToSubmitEvent": "${CCD_DEF_CASE_SERVICE_BASE_URL}/confirm-service/about-to-submit",
-    "CallBackURLSubmittedEvent": "${CCD_DEF_CASE_SERVICE_BASE_URL}/confirm-service/submitted",
+    "CallBackURLAboutToStartEvent": "${CCD_DEF_CASE_SERVICE_BASE_URL}/cases/callbacks/about-to-start",
+    "CallBackURLAboutToSubmitEvent": "${CCD_DEF_CASE_SERVICE_BASE_URL}/cases/callbacks/about-to-submit",
+    "CallBackURLSubmittedEvent": "${CCD_DEF_CASE_SERVICE_BASE_URL}/cases/callbacks/submitted",
     "ShowSummary": "Y",
     "ShowEventNotes": "N",
     "EndButtonLabel": "Confirm service"

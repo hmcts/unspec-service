@@ -1,10 +1,7 @@
 package uk.gov.hmcts.reform.ucmc.helpers;
 
-import java.time.Instant;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.util.Date;
 
 public class LocalDateTimeHelper {
 
@@ -14,6 +11,7 @@ public class LocalDateTimeHelper {
     private LocalDateTimeHelper() {
     }
 
+    @SuppressWarnings({"AbbreviationAsWordInName"})
     public static LocalDateTime fromUTC(LocalDateTime input) {
         return input.atZone(UTC_ZONE)
             .withZoneSameInstant(LOCAL_ZONE)
@@ -24,6 +22,7 @@ public class LocalDateTimeHelper {
         return LocalDateTime.now(LOCAL_ZONE);
     }
 
+    @SuppressWarnings({"AbbreviationAsWordInName"})
     public static LocalDateTime nowInUTC() {
         return LocalDateTime.now(UTC_ZONE);
     }

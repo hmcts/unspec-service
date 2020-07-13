@@ -13,7 +13,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 class ServiceMethodTest {
 
     @ParameterizedTest
-    @EnumSource(value = ServiceMethod.class, names = {"POST", "DX", "FAX", "EMAIL", "OTHER"})
+    @EnumSource(value = ServiceMethod.class, names = {"POST", "DOCUMENT_EXCHANGE", "FAX", "EMAIL", "OTHER"})
     void shouldReturnExpectedDaysWhenTimeIsBefore4pm(ServiceMethod serviceMethod) {
         LocalDate dateTime = LocalDate.of(2000, 1, 1);
 
@@ -22,7 +22,7 @@ class ServiceMethodTest {
     }
 
     @ParameterizedTest
-    @EnumSource(value = ServiceMethod.class, names = {"POST", "DX", "FAX", "EMAIL", "OTHER"})
+    @EnumSource(value = ServiceMethod.class, names = {"POST", "DOCUMENT_EXCHANGE", "FAX", "EMAIL", "OTHER"})
     void shouldReturnExpectedDaysWhenTimeIs4am(ServiceMethod serviceMethod) {
         LocalDate dateTime = LocalDate.of(2000, 1, 1);
 
@@ -49,7 +49,7 @@ class ServiceMethodTest {
     }
 
     @ParameterizedTest
-    @EnumSource(value = ServiceMethod.class, names = {"POST", "DX", "OTHER"})
+    @EnumSource(value = ServiceMethod.class, names = {"POST", "DOCUMENT_EXCHANGE", "OTHER"})
     void shouldReturnPlusTwoDaysWhenTimeIsAfter4pm(ServiceMethod serviceMethod) {
         LocalDate dateTime = LocalDate.of(2000, 1, 1);
 
@@ -58,7 +58,7 @@ class ServiceMethodTest {
     }
 
     @ParameterizedTest
-    @EnumSource(value = ServiceMethod.class, names = {"POST", "DX", "OTHER"})
+    @EnumSource(value = ServiceMethod.class, names = {"POST", "DOCUMENT_EXCHANGE", "OTHER"})
     void shouldReturnPlusTwoDaysWhenTimeIs4pm(ServiceMethod serviceMethod) {
         LocalDate dateTime = LocalDate.of(2000, 1, 1);
 

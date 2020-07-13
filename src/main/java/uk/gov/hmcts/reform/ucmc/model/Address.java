@@ -1,20 +1,19 @@
 package uk.gov.hmcts.reform.ucmc.model;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.PropertyNamingStrategy;
+import com.fasterxml.jackson.databind.annotation.JsonNaming;
+import lombok.Builder;
+import lombok.Data;
 
+@Data
+@Builder
+@JsonNaming(PropertyNamingStrategy.UpperCamelCaseStrategy.class)
 public class Address {
-    @JsonProperty("AddressLine1")
-    private String addressLine1;
-    @JsonProperty("AddressLine2")
-    private String addressLine2;
-    @JsonProperty("AddressLine3")
-    private String addressLine3;
-    @JsonProperty("PostTown")
-    private String postTown;
-    @JsonProperty("PostCode")
-    private String postCode;
-    @JsonProperty("Country")
-    private String country;
-    @JsonProperty("County")
-    private String county;
+    private final String addressLine1;
+    private final String addressLine2;
+    private final String addressLine3;
+    private final String postTown;
+    private final String county;
+    private final String postCode;
+    private final String country;
 }

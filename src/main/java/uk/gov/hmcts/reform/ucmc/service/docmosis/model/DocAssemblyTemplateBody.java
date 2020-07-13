@@ -9,19 +9,21 @@ import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateSerializer;
 import lombok.Builder;
 import lombok.Value;
 import uk.gov.hmcts.reform.docassembly.domain.FormPayload;
+import uk.gov.hmcts.reform.ucmc.model.Applicant;
+import uk.gov.hmcts.reform.ucmc.model.StatementOfTruth;
 
 import java.time.LocalDate;
 import java.util.List;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-@Builder
+@Builder(toBuilder = true)
 @Value
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class DocAssemblyTemplateBody implements FormPayload {
     @JsonProperty("courtseal")
     private final String courtSeal = "[userImage:courtseal.PNG]";
-    private List<Claimant> claimant;
-    private List<Defendant> defendants;
+    private List<Applicant> claimant;
+    private List<Applicant> defendants;
     private String referenceNumber;
     private String feeAccount;
     private String externalReferenceNumber;
