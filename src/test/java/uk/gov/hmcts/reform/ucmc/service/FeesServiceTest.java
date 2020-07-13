@@ -58,7 +58,7 @@ class FeesServiceTest {
     }
 
     @Test
-    public void shouldReturnFeeAmountForClaimValue() {
+    public void shouldReturnFeeAmountWhenValidClaimValue() {
         var claimValue = ClaimValue.builder()
             .lowerValue(BigDecimal.valueOf(100))
             .higherValue(BigDecimal.valueOf(5000))
@@ -71,7 +71,7 @@ class FeesServiceTest {
     }
 
     @Test
-    public void shouldReturnMaxFeeAmountForClaimValueWithNoHigherValue() {
+    public void shouldReturnMaxFeeAmountWhenClaimValueHaveNoHigherValue() {
         var claimValue = ClaimValue.builder()
             .lowerValue(BigDecimal.valueOf(100))
             .build();
@@ -83,7 +83,7 @@ class FeesServiceTest {
     }
 
     @Test
-    public void shouldReturnFeeDataForClaimValue() {
+    public void shouldReturnFeeDataWhenValidClaimValue() {
         var claimValue = ClaimValue.builder()
             .lowerValue(BigDecimal.valueOf(100))
             .higherValue(BigDecimal.valueOf(5000))
@@ -102,7 +102,7 @@ class FeesServiceTest {
     }
 
     @Test
-    public void shouldReturnMaxFeeDataForClaimValueWithNoHigherValue() {
+    public void shouldReturnMaxFeeDataWhenClaimValueHaveNoHigherValue() {
         var claimValue = ClaimValue.builder()
             .lowerValue(BigDecimal.valueOf(100))
             .build();

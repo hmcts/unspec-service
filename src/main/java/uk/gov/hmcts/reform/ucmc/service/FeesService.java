@@ -12,7 +12,8 @@ import uk.gov.hmcts.reform.ucmc.model.ClaimValue;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.math.RoundingMode;
-import java.util.Optional;
+
+import static java.util.Optional.ofNullable;
 
 @Service
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
@@ -37,8 +38,8 @@ public class FeesService {
         return buildFeeDto(feeLookupResponseDto);
     }
 
-    private FeeLookupResponseDto lookupFee(BigDecimal claimValue) {
-        var claimValuePounds = Optional.ofNullable(claimValue)
+    private FeeLookupResponseDto lookupFee(BigDecimal claimHigherValue) {
+        var claimValuePounds = ofNullable(claimHigherValue)
             .map(this::convertToPounds)
             .orElse(CLAIM_VALUE_FOR_MAX_FEE);
 
