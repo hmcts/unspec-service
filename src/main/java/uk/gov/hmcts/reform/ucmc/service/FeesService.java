@@ -13,13 +13,10 @@ import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.math.RoundingMode;
 
-import static java.util.Optional.ofNullable;
-
 @Service
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class FeesService {
 
-    private static final BigDecimal CLAIM_VALUE_FOR_MAX_FEE = BigDecimal.valueOf(200000.01);
     private static final BigDecimal PENCE_PER_POUND = BigDecimal.valueOf(100);
     private static final int ROUNDING_SCALE = 2;
 
@@ -39,11 +36,13 @@ public class FeesService {
     }
 
     private FeeLookupResponseDto lookupFee(BigDecimal claimHigherValue) {
-        var claimValuePounds = ofNullable(claimHigherValue)
-            .map(this::convertToPounds)
-            .orElse(CLAIM_VALUE_FOR_MAX_FEE);
+        var claimHigherValuePounds = convertToPounds(claimHigherValue);
 
-        return feesClient.lookupFee(feesConfiguration.getChannel(), feesConfiguration.getEvent(), claimValuePounds);
+        return feesClient.lookupFee(
+            feesConfiguration.getChannel(),
+            feesConfiguration.getEvent(),
+            claimHigherValuePounds
+        );
     }
 
     private BigDecimal convertToPounds(BigDecimal value) {
