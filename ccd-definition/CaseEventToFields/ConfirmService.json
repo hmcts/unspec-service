@@ -1,7 +1,7 @@
 [
   {
     "LiveFrom": "01/01/2017",
-    "CaseTypeID": "PERSONAL_INJURY",
+    "CaseTypeID": "UNSPECIFIED_CLAIMS",
     "CaseEventID": "CONFIRM_SERVICE",
     "CaseFieldID": "servedDocuments",
     "PageFieldDisplayOrder": 1,
@@ -14,7 +14,7 @@
   },
   {
     "LiveFrom": "01/01/2017",
-    "CaseTypeID": "PERSONAL_INJURY",
+    "CaseTypeID": "UNSPECIFIED_CLAIMS",
     "CaseEventID": "CONFIRM_SERVICE",
     "CaseFieldID": "servedDocumentsOther",
     "PageFieldDisplayOrder": 2,
@@ -27,7 +27,7 @@
   },
   {
     "LiveFrom": "01/01/2017",
-    "CaseTypeID": "PERSONAL_INJURY",
+    "CaseTypeID": "UNSPECIFIED_CLAIMS",
     "CaseEventID": "CONFIRM_SERVICE",
     "CaseFieldID": "servedDocumentFiles",
     "PageFieldDisplayOrder": 1,
@@ -39,7 +39,7 @@
   },
   {
     "LiveFrom": "01/01/2017",
-    "CaseTypeID": "PERSONAL_INJURY",
+    "CaseTypeID": "UNSPECIFIED_CLAIMS",
     "CaseEventID": "CONFIRM_SERVICE",
     "CaseFieldID": "serviceMethod",
     "PageFieldDisplayOrder": 1,
@@ -51,7 +51,7 @@
   },
   {
     "LiveFrom": "01/01/2017",
-    "CaseTypeID": "PERSONAL_INJURY",
+    "CaseTypeID": "UNSPECIFIED_CLAIMS",
     "CaseEventID": "CONFIRM_SERVICE",
     "CaseFieldID": "serviceLocation",
     "PageFieldDisplayOrder": 1,
@@ -64,7 +64,7 @@
   },
   {
     "LiveFrom": "01/01/2017",
-    "CaseTypeID": "PERSONAL_INJURY",
+    "CaseTypeID": "UNSPECIFIED_CLAIMS",
     "CaseEventID": "CONFIRM_SERVICE",
     "CaseFieldID": "serviceDate",
     "PageFieldDisplayOrder": 1,
@@ -76,7 +76,7 @@
   },
   {
     "LiveFrom": "01/01/2017",
-    "CaseTypeID": "PERSONAL_INJURY",
+    "CaseTypeID": "UNSPECIFIED_CLAIMS",
     "CaseEventID": "CONFIRM_SERVICE",
     "CaseFieldID": "serviceStatementOfTruth",
     "PageFieldDisplayOrder": 1,
