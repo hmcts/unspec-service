@@ -6,7 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import uk.gov.hmcts.reform.ccd.client.model.CaseDetails;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
 
@@ -17,17 +17,14 @@ import static java.util.Map.of;
 public class CaseSearchService {
     private final CoreCaseDataService coreCaseDataService;
 
-    public static final String CASE_TYPE = "UNSPECIFIED_CLAIMS";
-
-    public List<CaseDetails> searchCasesOver112Days() {
-        return coreCaseDataService.searchCases(CASE_TYPE, dateQuery());
+    public List<CaseDetails> getCasesOver112Days() {
+        return coreCaseDataService.searchCases(dateQuery());
     }
 
     private String dateQuery() {
-        final String CLAIM_ISSUED_DATE_PROPERTY = "data.claimIssuedDate";
+        final String dateProperty = "data.claimIssuedDate";
+        final Map<String, Object> dayRange = of("gte", "now+112d");
 
-        final Map<String, Object> dayRange = of("gte", LocalDateTime.now().plusDays(112));
-
-        return new JSONObject(of("query", of("range", of(CLAIM_ISSUED_DATE_PROPERTY, dayRange)))).toString();
+        return new JSONObject(of("query", of("range", of(dateProperty, dayRange)))).toString();
     }
 }
