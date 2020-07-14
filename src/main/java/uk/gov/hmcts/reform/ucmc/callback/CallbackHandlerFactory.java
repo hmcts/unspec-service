@@ -20,7 +20,7 @@ public class CallbackHandlerFactory {
     }
 
     public CallbackResponse dispatch(CallbackParams callbackParams) {
-        String eventId = callbackParams.getRequest().getEventId();
+ri        String eventId = callbackParams.getRequest().getEventId();
         return ofNullable(eventHandlers.get(eventId))
             .map(h -> h.handle(callbackParams))
             .orElseThrow(() -> new CallbackException("Could not handle callback for event " + eventId));
