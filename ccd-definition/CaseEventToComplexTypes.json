@@ -193,7 +193,7 @@
     "LiveFrom": "01/01/2017",
     "ID": "Defendant",
     "CaseEventID": "CREATE_CLAIM",
-    "CaseFieldID": "defendant",
+    "CaseFieldID": "respondent",
     "ListElementCode": "type",
     "FieldDisplayOrder": 1,
     "DisplayContext": "MANDATORY",
@@ -203,7 +203,7 @@
     "LiveFrom": "01/01/2017",
     "ID": "Defendant",
     "CaseEventID": "CREATE_CLAIM",
-    "CaseFieldID": "defendant",
+    "CaseFieldID": "respondent",
     "ListElementCode": "individualTitle",
     "FieldDisplayOrder": 2,
     "DisplayContext": "OPTIONAL"
@@ -212,7 +212,7 @@
     "LiveFrom": "01/01/2017",
     "ID": "Defendant",
     "CaseEventID": "CREATE_CLAIM",
-    "CaseFieldID": "defendant",
+    "CaseFieldID": "respondent",
     "ListElementCode": "individualFirstName",
     "FieldDisplayOrder": 3,
     "DisplayContext": "MANDATORY"
@@ -221,7 +221,7 @@
     "LiveFrom": "01/01/2017",
     "ID": "Defendant",
     "CaseEventID": "CREATE_CLAIM",
-    "CaseFieldID": "defendant",
+    "CaseFieldID": "respondent",
     "ListElementCode": "individualLastName",
     "FieldDisplayOrder": 4,
     "DisplayContext": "MANDATORY"
@@ -230,7 +230,7 @@
     "LiveFrom": "01/01/2017",
     "ID": "Defendant",
     "CaseEventID": "CREATE_CLAIM",
-    "CaseFieldID": "defendant",
+    "CaseFieldID": "respondent",
     "ListElementCode": "companyName",
     "FieldDisplayOrder": 5,
     "DisplayContext": "MANDATORY"
@@ -239,7 +239,7 @@
     "LiveFrom": "01/01/2017",
     "ID": "Defendant",
     "CaseEventID": "CREATE_CLAIM",
-    "CaseFieldID": "defendant",
+    "CaseFieldID": "respondent",
     "ListElementCode": "organisationName",
     "FieldDisplayOrder": 6,
     "DisplayContext": "MANDATORY"
@@ -248,7 +248,7 @@
     "LiveFrom": "01/01/2017",
     "ID": "Defendant",
     "CaseEventID": "CREATE_CLAIM",
-    "CaseFieldID": "defendant",
+    "CaseFieldID": "respondent",
     "ListElementCode": "soleTraderTitle",
     "FieldDisplayOrder": 7,
     "DisplayContext": "OPTIONAL"
@@ -257,7 +257,7 @@
     "LiveFrom": "01/01/2017",
     "ID": "Defendant",
     "CaseEventID": "CREATE_CLAIM",
-    "CaseFieldID": "defendant",
+    "CaseFieldID": "respondent",
     "ListElementCode": "soleTraderFirstName",
     "FieldDisplayOrder": 8,
     "DisplayContext": "MANDATORY"
@@ -266,7 +266,7 @@
     "LiveFrom": "01/01/2017",
     "ID": "Defendant",
     "CaseEventID": "CREATE_CLAIM",
-    "CaseFieldID": "defendant",
+    "CaseFieldID": "respondent",
     "ListElementCode": "soleTraderLastName",
     "FieldDisplayOrder": 9,
     "DisplayContext": "MANDATORY"
@@ -275,7 +275,7 @@
     "LiveFrom": "01/01/2017",
     "ID": "Defendant",
     "CaseEventID": "CREATE_CLAIM",
-    "CaseFieldID": "defendant",
+    "CaseFieldID": "respondent",
     "ListElementCode": "soleTraderTradingAs",
     "FieldDisplayOrder": 10,
     "DisplayContext": "OPTIONAL"
@@ -284,7 +284,7 @@
     "LiveFrom": "01/01/2017",
     "ID": "Defendant",
     "CaseEventID": "CREATE_CLAIM",
-    "CaseFieldID": "defendant",
+    "CaseFieldID": "respondent",
     "ListElementCode": "primaryAddress.AddressLine1",
     "FieldDisplayOrder": 11,
     "DisplayContext": "MANDATORY"
@@ -293,7 +293,7 @@
     "LiveFrom": "01/01/2017",
     "ID": "Defendant",
     "CaseEventID": "CREATE_CLAIM",
-    "CaseFieldID": "defendant",
+    "CaseFieldID": "respondent",
     "ListElementCode": "primaryAddress.AddressLine2",
     "FieldDisplayOrder": 12,
     "DisplayContext": "OPTIONAL"
@@ -302,7 +302,7 @@
     "LiveFrom": "01/01/2017",
     "ID": "Defendant",
     "CaseEventID": "CREATE_CLAIM",
-    "CaseFieldID": "defendant",
+    "CaseFieldID": "respondent",
     "ListElementCode": "primaryAddress.AddressLine3",
     "FieldDisplayOrder": 13,
     "DisplayContext": "OPTIONAL"
@@ -311,7 +311,7 @@
     "LiveFrom": "01/01/2017",
     "ID": "Defendant",
     "CaseEventID": "CREATE_CLAIM",
-    "CaseFieldID": "defendant",
+    "CaseFieldID": "respondent",
     "ListElementCode": "primaryAddress.PostTown",
     "FieldDisplayOrder": 14,
     "DisplayContext": "OPTIONAL"
@@ -320,7 +320,7 @@
     "LiveFrom": "01/01/2017",
     "ID": "Defendant",
     "CaseEventID": "CREATE_CLAIM",
-    "CaseFieldID": "defendant",
+    "CaseFieldID": "respondent",
     "ListElementCode": "primaryAddress.County",
     "FieldDisplayOrder": 15,
     "DisplayContext": "OPTIONAL"
@@ -329,7 +329,7 @@
     "LiveFrom": "01/01/2017",
     "ID": "Defendant",
     "CaseEventID": "CREATE_CLAIM",
-    "CaseFieldID": "defendant",
+    "CaseFieldID": "respondent",
     "ListElementCode": "primaryAddress.Country",
     "FieldDisplayOrder": 16,
     "DisplayContext": "OPTIONAL"
@@ -338,7 +338,7 @@
     "LiveFrom": "01/01/2017",
     "ID": "Defendant",
     "CaseEventID": "CREATE_CLAIM",
-    "CaseFieldID": "defendant",
+    "CaseFieldID": "respondent",
     "ListElementCode": "primaryAddress.PostCode",
     "FieldDisplayOrder": 17,
     "DisplayContext": "MANDATORY"

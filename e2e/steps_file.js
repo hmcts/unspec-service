@@ -48,7 +48,7 @@ module.exports = function() {
       await solicitorReferencesPage.enterReferences();
       await chooseCourtPage.enterCourt();
       await party.enterParty('claimant', config.address);
-      await party.enterParty('defendant', config.address);
+      await party.enterParty('respondent', config.address);
       await claimValuePage.enterClaimValue();
       await statementOfTruth.enterNameAndRole();
       await this.retryUntilExists(() => this.click('Issue claim'), 'ccd-markdown');
