@@ -1,7 +1,7 @@
 package uk.gov.hmcts.reform.ucmc.service.docmosis;
 
 public enum DocmosisTemplates {
-    OCCN1("CV-CMC-GOR-ENG-0001.docx", "sealed_claim_form_%s.pdf");
+    OCCN1("CV-UNS-GOR-ENG-0001.docx", "sealed_claim_form_%s.pdf");
 
     private final String template;
     private final String documentTitle;

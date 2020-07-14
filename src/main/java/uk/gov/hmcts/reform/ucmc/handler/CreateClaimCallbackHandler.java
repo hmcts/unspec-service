@@ -89,7 +89,9 @@ public class CreateClaimCallbackHandler extends CallbackHandler {
 
     private CaseData addToCaseData(CaseData caseData, CaseDocument sealedClaim) {
         List<Element<CaseDocument>> caseDocuments = new ArrayList<>();
-        caseDocuments.addAll(caseData.getSystemGeneratedCaseDocuments());
+        if (caseData.getSystemGeneratedCaseDocuments() != null && !caseData.getSystemGeneratedCaseDocuments().isEmpty()) {
+            caseDocuments.addAll(caseData.getSystemGeneratedCaseDocuments());
+        }
         caseDocuments.add(Element.<CaseDocument>builder().value(sealedClaim).build());
 
         return caseData.toBuilder()
