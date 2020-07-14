@@ -10,8 +10,8 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 @NoArgsConstructor(force = true)
 public class ClaimValue {
-    private  final Integer lowerValue;
-    private  final Integer higherValue;
+    private final Integer lowerValue;
+    private final Integer higherValue;
 
     public boolean hasLargerLowerValue() {
         if (lowerValue == null || higherValue == null) {
