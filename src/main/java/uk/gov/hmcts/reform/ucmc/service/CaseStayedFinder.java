@@ -1,22 +1,21 @@
 package uk.gov.hmcts.reform.ucmc.service;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.quartz.Job;
 import org.quartz.JobExecutionContext;
-import org.quartz.JobExecutionException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationEventPublisher;
 import uk.gov.hmcts.reform.ccd.client.model.CaseDetails;
+import uk.gov.hmcts.reform.ucmc.event.MoveCaseToStayedEvent;
 
 import java.util.List;
 
 @Slf4j
+@RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class CaseStayedFinder implements Job {
-
-    @Autowired
-    private CaseSearchService caseSearchService;
-
-    @Autowired
-    private CoreCaseDataService coreCaseDataService;
+    private final CaseSearchService caseSearchService;
+    private final ApplicationEventPublisher applicationEventPublisher;
 
     @Override
     public void execute(JobExecutionContext context) {
@@ -30,13 +29,8 @@ public class CaseStayedFinder implements Job {
         } else {
             log.info("Job '{}' found {} case(s)", jobName, cases.size());
 
-            // logic to update cases
-            cases.forEach(x -> coreCaseDataService.triggerEvent(
-                "CIVIL",
-                "UNSPECIFIED_CLAIMS",
-                x.getId(),
-                "MOVE_TO_STAYED",
-                x.getData()));
+            cases.forEach(caseDetails -> applicationEventPublisher.publishEvent(
+                new MoveCaseToStayedEvent(caseDetails.getId(), caseDetails.getData())));
         }
 
         log.info("Job '{}' finished", jobName);

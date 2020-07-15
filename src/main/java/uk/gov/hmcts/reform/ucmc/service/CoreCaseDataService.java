@@ -24,12 +24,9 @@ public class CoreCaseDataService {
     private final AuthTokenGenerator authTokenGenerator;
 
     public static final String CASE_TYPE = "UNSPECIFIED_CLAIMS";
+    public static final String JURISDICTION = "CIVIL";
 
-    public void triggerEvent(String jurisdiction,
-                             String caseType,
-                             Long caseId,
-                             String eventName,
-                             Map<String, Object> eventData) {
+    public void triggerEvent(Long caseId, String eventName, Map<String, Object> eventData) {
         String userToken = idamClient.getAccessToken(userConfig.getUserName(), userConfig.getPassword());
         String systemUpdateUserId = idamClient.getUserInfo(userToken).getUid();
 
@@ -37,8 +34,8 @@ public class CoreCaseDataService {
             userToken,
             authTokenGenerator.generate(),
             systemUpdateUserId,
-            jurisdiction,
-            caseType,
+            JURISDICTION,
+            CASE_TYPE,
             caseId.toString(),
             eventName);
 
@@ -54,8 +51,8 @@ public class CoreCaseDataService {
             userToken,
             authTokenGenerator.generate(),
             systemUpdateUserId,
-            jurisdiction,
-            caseType,
+            JURISDICTION,
+            CASE_TYPE,
             caseId.toString(),
             true,
             caseDataContent);

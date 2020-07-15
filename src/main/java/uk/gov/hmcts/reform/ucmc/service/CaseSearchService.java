@@ -6,7 +6,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import uk.gov.hmcts.reform.ccd.client.model.CaseDetails;
 
-import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
 
@@ -23,7 +22,7 @@ public class CaseSearchService {
 
     private String dateQuery() {
         final String dateProperty = "data.claimIssuedDate";
-        final Map<String, Object> dayRange = of("gte", "now+112d");
+        final Map<String, Object> dayRange = of("gt", "now+112d");
 
         return new JSONObject(of("query", of("range", of(dateProperty, dayRange)))).toString();
     }

@@ -1,4 +1,4 @@
-package uk.gov.hmcts.reform.ucmc.handler;
+package uk.gov.hmcts.reform.ucmc.handler.callback;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Value;

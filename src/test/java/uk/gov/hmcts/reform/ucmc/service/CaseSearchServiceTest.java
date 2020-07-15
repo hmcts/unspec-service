@@ -11,7 +11,6 @@ import org.skyscreamer.jsonassert.JSONAssert;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import uk.gov.hmcts.reform.ccd.client.model.CaseDetails;
 
-import java.time.LocalDate;
 import java.util.List;
 
 import static java.lang.String.format;
@@ -47,7 +46,7 @@ class CaseSearchServiceTest {
 
         verify(coreCaseDataService).searchCases(queryCaptor.capture());
 
-        String expectedQuery = format("{\"query\":{\"range\":{\"%s\":{\"gte\":\"now+112d\"}}}}", property);
+        String expectedQuery = format("{\"query\":{\"range\":{\"%s\":{\"gt\":\"now+112d\"}}}}", property);
 
         JSONAssert.assertEquals(queryCaptor.getValue(), expectedQuery, STRICT);
     }
