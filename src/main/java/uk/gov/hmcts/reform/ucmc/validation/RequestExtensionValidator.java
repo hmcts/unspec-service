@@ -20,10 +20,7 @@ public class RequestExtensionValidator {
     private final ObjectMapper mapper;
 
     public List<String> validate(CallbackRequest callbackRequest) {
-        CaseDetails caseDetailsBefore = callbackRequest.getCaseDetailsBefore();
-        if (isExtensionAlreadyRequested(caseDetailsBefore)) {
-            return ImmutableList.of("A request can only be requested once");
-        }
+
         CaseDetails caseDetails = callbackRequest.getCaseDetails();
         LocalDate proposedDeadline = mapper.convertValue(
             caseDetails.getData().get("extensionProposedDeadline"),
@@ -34,9 +31,5 @@ public class RequestExtensionValidator {
             return ImmutableList.of("The proposed deadline can't be in the past.");
         }
         return Collections.emptyList();
-    }
-
-    private boolean isExtensionAlreadyRequested(CaseDetails caseDetailsBefore) {
-        return caseDetailsBefore.getData().get("extensionProposedDeadline") != null;
     }
 }

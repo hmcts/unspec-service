@@ -1,4 +1,4 @@
-package uk.gov.hmcts.reform.service;
+package uk.gov.hmcts.reform.ucmc.service;
 
 import com.google.common.collect.Lists;
 import org.junit.jupiter.api.BeforeEach;
@@ -8,7 +8,6 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import uk.gov.hmcts.reform.idam.client.IdamClient;
 import uk.gov.hmcts.reform.idam.client.models.UserInfo;
-import uk.gov.hmcts.reform.ucmc.service.UserService;
 
 import java.util.List;
 

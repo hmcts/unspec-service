@@ -67,7 +67,7 @@ public class RequestExtensionCallbackHandler extends CallbackHandler {
         );
         String claimNumber = "TBC";
 
-        LocalDate responseDeadline = now().plusDays(14);
+        LocalDate responseDeadline = now().plusDays(7); //TODO: Waiting for that to be populated in CaseDetails
         String body = format(
             "<br /><p>You asked if you can respond before 4pm on %s We'll ask the claimant's legal representative"
                 + " and email you to tell you whether they accept or reject your request.</p>"
