@@ -1,16 +1,17 @@
 package uk.gov.hmcts.reform.ucmc.handler;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import uk.gov.hmcts.reform.ccd.client.model.AboutToStartOrSubmitCallbackResponse;
 import uk.gov.hmcts.reform.ccd.client.model.CallbackResponse;
+import uk.gov.hmcts.reform.ccd.client.model.CaseDetails;
 import uk.gov.hmcts.reform.ccd.client.model.SubmittedCallbackResponse;
 import uk.gov.hmcts.reform.ucmc.callback.Callback;
 import uk.gov.hmcts.reform.ucmc.callback.CallbackHandler;
 import uk.gov.hmcts.reform.ucmc.callback.CallbackParams;
 import uk.gov.hmcts.reform.ucmc.callback.CallbackType;
 import uk.gov.hmcts.reform.ucmc.callback.CaseEvent;
+import uk.gov.hmcts.reform.ucmc.model.YesOrNo;
 import uk.gov.hmcts.reform.ucmc.validation.RequestExtensionValidator;
 
 import java.time.LocalDate;
@@ -23,11 +24,15 @@ import static java.time.LocalDate.now;
 import static uk.gov.hmcts.reform.ucmc.callback.CaseEvent.REQUEST_EXTENSION;
 import static uk.gov.hmcts.reform.ucmc.helpers.DateFormatHelper.DATE_AT;
 import static uk.gov.hmcts.reform.ucmc.helpers.DateFormatHelper.formatLocalDate;
+import static uk.gov.hmcts.reform.ucmc.model.YesOrNo.YES;
 
-@Slf4j
 @Service
 public class RequestExtensionCallbackHandler extends CallbackHandler {
     private static final List<CaseEvent> EVENTS = Collections.singletonList(REQUEST_EXTENSION);
+    public static final String ALREADY_AGREED = "You told us you've already agreed this with the claimant's legal "
+        + "representative. We'll contact them and email you to confirm the deadline.</p>";
+    public static final String NOT_AGREED = "We'll email you to tell you if the claimant's legal representative "
+        + "accepts or rejects your request.</p>";
 
     private final ObjectMapper mapper;
     private final RequestExtensionValidator validator;
@@ -40,6 +45,7 @@ public class RequestExtensionCallbackHandler extends CallbackHandler {
     @Override
     protected Map<CallbackType, Callback> callbacks() {
         return Map.of(
+            CallbackType.ABOUT_TO_START, this::aboutToStart,
             CallbackType.MID, this::validateRequestedDeadline,
             CallbackType.SUBMITTED, this::buildConfirmation
         );
@@ -50,12 +56,21 @@ public class RequestExtensionCallbackHandler extends CallbackHandler {
         return EVENTS;
     }
 
+    private CallbackResponse aboutToStart(CallbackParams callbackParams) {
+        CaseDetails caseDetails = callbackParams.getRequest().getCaseDetails();
+
+        return AboutToStartOrSubmitCallbackResponse.builder()
+            .data(caseDetails.getData())
+            .errors(validator.validateAlreadyRequested(caseDetails))
+            .build();
+    }
+
     private CallbackResponse validateRequestedDeadline(CallbackParams callbackParams) {
         Map<String, Object> data = callbackParams.getRequest().getCaseDetails().getData();
 
         return AboutToStartOrSubmitCallbackResponse.builder()
             .data(data)
-            .errors(validator.validate(callbackParams.getRequest()))
+            .errors(validator.validateProposedDeadline(callbackParams.getRequest().getCaseDetails()))
             .build();
     }
 
@@ -65,15 +80,16 @@ public class RequestExtensionCallbackHandler extends CallbackHandler {
             data.get("extensionProposedDeadline"),
             LocalDate.class
         );
+        YesOrNo extensionAlreadyAgreed = mapper.convertValue(data.get("extensionAlreadyAgreed"), YesOrNo.class);
         String claimNumber = "TBC";
 
         LocalDate responseDeadline = now().plusDays(7); //TODO: Waiting for that to be populated in CaseDetails
         String body = format(
-            "<br /><p>You asked if you can respond before 4pm on %s We'll ask the claimant's legal representative"
-                + " and email you to tell you whether they accept or reject your request.</p>"
+            "<br /><p>You asked if you can respond before 4pm on %s %s"
                 + "<p>They can choose not to respond to your request, so if you don't get an email from us, "
                 + "assume you need to respond before 4pm on %s.</p>",
             formatLocalDate(proposedDeadline, DATE_AT),
+            extensionAlreadyAgreed == YES ? ALREADY_AGREED : NOT_AGREED,
             formatLocalDate(responseDeadline, DATE_AT)
         );
 

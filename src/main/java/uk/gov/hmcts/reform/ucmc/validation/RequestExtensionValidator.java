@@ -4,14 +4,13 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.ImmutableList;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import uk.gov.hmcts.reform.ccd.client.model.CallbackRequest;
 import uk.gov.hmcts.reform.ccd.client.model.CaseDetails;
 
 import java.time.LocalDate;
-import java.util.Collections;
 import java.util.List;
 
 import static java.time.LocalDate.now;
+import static java.util.Collections.emptyList;
 
 @Service
 @RequiredArgsConstructor
@@ -19,9 +18,8 @@ public class RequestExtensionValidator {
 
     private final ObjectMapper mapper;
 
-    public List<String> validate(CallbackRequest callbackRequest) {
+    public List<String> validateProposedDeadline(CaseDetails caseDetails) {
 
-        CaseDetails caseDetails = callbackRequest.getCaseDetails();
         LocalDate proposedDeadline = mapper.convertValue(
             caseDetails.getData().get("extensionProposedDeadline"),
             LocalDate.class
@@ -30,6 +28,17 @@ public class RequestExtensionValidator {
         if (proposedDeadline.isBefore(now())) {
             return ImmutableList.of("The proposed deadline can't be in the past.");
         }
-        return Collections.emptyList();
+        return emptyList();
+    }
+
+    public List<String> validateAlreadyRequested(CaseDetails caseDetails) {
+        if (isExtensionAlreadyRequested(caseDetails)) {
+            return ImmutableList.of("A request for extension can only be requested once.");
+        }
+        return emptyList();
+    }
+
+    private boolean isExtensionAlreadyRequested(CaseDetails caseDetailsBefore) {
+        return caseDetailsBefore.getData().get("extensionProposedDeadline") != null;
     }
 }
