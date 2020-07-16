@@ -20,4 +20,11 @@ public class ClaimValue {
 
         return new BigDecimal(lowerValue).compareTo(new BigDecimal(higherValue)) > 0;
     }
+
+    public String formData() {
+        if (lowerValue == null) {
+            return "up to " + higherValue;
+        }
+        return lowerValue + " - " + higherValue;
+    }
 }

@@ -32,7 +32,7 @@ class CreateClaimCallbackHandlerTest extends BaseCallbackHandlerTest {
     @Test
     void shouldReturnExpectedErrorInMidEventWhenValuesAreInvalid() {
         Map<String, Object> data = new HashMap<>();
-        data.put("claimValue", ClaimValue.builder().higherValue(1).lowerValue(10).build());
+        data.put("claimValue", ClaimValue.builder().higherValue("1").lowerValue("10").build());
 
         CallbackParams params = callbackParamsOf(data, CallbackType.MID);
 
@@ -45,7 +45,7 @@ class CreateClaimCallbackHandlerTest extends BaseCallbackHandlerTest {
     @Test
     void shouldReturnNoErrorInMidEventWhenValuesAreValid() {
         Map<String, Object> data = new HashMap<>();
-        data.put("claimValue", ClaimValue.builder().higherValue(10).lowerValue(1).build());
+        data.put("claimValue", ClaimValue.builder().higherValue("10").lowerValue("1").build());
 
         CallbackParams params = callbackParamsOf(data, CallbackType.MID);
 

@@ -131,6 +131,15 @@
     "ID": "Claimant",
     "CaseEventID": "CREATE_CLAIM",
     "CaseFieldID": "claimant",
+    "ListElementCode": "primaryAddress",
+    "FieldDisplayOrder": 13,
+    "DisplayContext": "MANDATORY"
+  },
+  {
+    "LiveFrom": "01/01/2017",
+    "ID": "Claimant",
+    "CaseEventID": "CREATE_CLAIM",
+    "CaseFieldID": "claimant",
     "ListElementCode": "primaryAddress.AddressLine1",
     "FieldDisplayOrder": 13,
     "DisplayContext": "MANDATORY"
@@ -279,6 +288,15 @@
     "ListElementCode": "soleTraderTradingAs",
     "FieldDisplayOrder": 10,
     "DisplayContext": "OPTIONAL"
+  },
+  {
+    "LiveFrom": "01/01/2017",
+    "ID": "Defendant",
+    "CaseEventID": "CREATE_CLAIM",
+    "CaseFieldID": "respondent",
+    "ListElementCode": "primaryAddress",
+    "FieldDisplayOrder": 11,
+    "DisplayContext": "MANDATORY"
   },
   {
     "LiveFrom": "01/01/2017",

@@ -30,7 +30,7 @@ public class SealedClaimFormGenerator extends TemplateDataGenerator<SealedClaimF
 
     public CaseDocument generate(CaseData caseData, String authorisation) {
         SealedClaimForm templateData = getTemplateData(caseData);
-        DocmosisTemplates sealedClaimForm = DocmosisTemplates.OCCN1;
+        DocmosisTemplates sealedClaimForm = DocmosisTemplates.N1;
 
         DocmosisDocument docmosisDocument = documentGeneratorService.generateDocmosisDocument(
             templateData,
@@ -47,9 +47,9 @@ public class SealedClaimFormGenerator extends TemplateDataGenerator<SealedClaimF
     public SealedClaimForm getTemplateData(CaseData caseData) {
         return SealedClaimForm.builder()
             .claimant(List.of(caseData.getClaimant()))
-            .defendants(List.of(caseData.getClaimant()))
-            .claimAmount(caseData.getClaimValue().getHigherValue()) //TODO Claim amount logic
-            .statementOfTruth(caseData.getClaimStatementOfTruth())
+            .defendants(List.of(caseData.getRespondent()))
+            .claimValue(caseData.getClaimValue().formData()) //TODO Claim amount logic
+            .statementOfTruth(caseData.getStatementOfTruth())
             .build();
     }
 }

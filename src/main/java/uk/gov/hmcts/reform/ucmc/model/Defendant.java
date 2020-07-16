@@ -9,7 +9,7 @@ import java.time.LocalDate;
 @Data
 @Builder
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class Applicant {
+public class Defendant {
     private final Type type;
     private final String individualTitle;
     private final String individualFirstName;

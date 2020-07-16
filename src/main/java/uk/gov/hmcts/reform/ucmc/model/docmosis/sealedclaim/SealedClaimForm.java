@@ -9,6 +9,7 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.experimental.SuperBuilder;
 import uk.gov.hmcts.reform.ucmc.model.Applicant;
+import uk.gov.hmcts.reform.ucmc.model.Defendant;
 import uk.gov.hmcts.reform.ucmc.model.StatementOfTruth;
 import uk.gov.hmcts.reform.ucmc.model.docmosis.DocmosisData;
 
@@ -23,7 +24,7 @@ public class SealedClaimForm implements DocmosisData {
     @JsonProperty("courtseal")
     private final String courtSeal = "[userImage:courtseal.PNG]";
     private final List<Applicant> claimant;
-    private final List<Applicant> defendants;
+    private final List<Defendant> defendants;
     private final String referenceNumber;
     private final String feeAccount;
     private final String externalReferenceNumber;
@@ -35,7 +36,7 @@ public class SealedClaimForm implements DocmosisData {
     private final LocalDate issueDate;
     private final String claimDetails;
     private final String statementOfValue;
-    private final String claimAmount;
+    private final String claimValue;
     private final String legalRepCost;
     private final String courtFee;
     private final String hearingCourtName;
