@@ -62,5 +62,13 @@
     "Label": "Statement of truth",
     "FieldType": "StatementOfTruth",
     "SecurityClassification": "Public"
+  },
+  {
+    "LiveFrom": "01/01/2017",
+    "CaseTypeID": "UNSPECIFIED_CLAIMS",
+    "ID": "claimIssuedDate",
+    "Label": "Claim issued date",
+    "FieldType": "Date",
+    "SecurityClassification": "Public"
   }
 ]
