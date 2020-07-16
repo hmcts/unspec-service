@@ -22,7 +22,7 @@ import java.util.Map;
 import static java.lang.String.format;
 import static java.time.LocalDate.now;
 import static uk.gov.hmcts.reform.ucmc.callback.CaseEvent.REQUEST_EXTENSION;
-import static uk.gov.hmcts.reform.ucmc.helpers.DateFormatHelper.DATE_AT;
+import static uk.gov.hmcts.reform.ucmc.helpers.DateFormatHelper.DATE;
 import static uk.gov.hmcts.reform.ucmc.helpers.DateFormatHelper.formatLocalDate;
 import static uk.gov.hmcts.reform.ucmc.model.YesOrNo.YES;
 
@@ -88,9 +88,9 @@ public class RequestExtensionCallbackHandler extends CallbackHandler {
             "<br /><p>You asked if you can respond before 4pm on %s %s"
                 + "<p>They can choose not to respond to your request, so if you don't get an email from us, "
                 + "assume you need to respond before 4pm on %s.</p>",
-            formatLocalDate(proposedDeadline, DATE_AT),
+            formatLocalDate(proposedDeadline, DATE),
             extensionAlreadyAgreed == YES ? ALREADY_AGREED : NOT_AGREED,
-            formatLocalDate(responseDeadline, DATE_AT)
+            formatLocalDate(responseDeadline, DATE)
         );
 
         return SubmittedCallbackResponse.builder()

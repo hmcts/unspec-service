@@ -21,7 +21,7 @@ import static java.util.Collections.emptyMap;
 import static org.assertj.core.api.Assertions.assertThat;
 import static uk.gov.hmcts.reform.ucmc.handler.RequestExtensionCallbackHandler.ALREADY_AGREED;
 import static uk.gov.hmcts.reform.ucmc.handler.RequestExtensionCallbackHandler.NOT_AGREED;
-import static uk.gov.hmcts.reform.ucmc.helpers.DateFormatHelper.DATE_AT;
+import static uk.gov.hmcts.reform.ucmc.helpers.DateFormatHelper.DATE;
 import static uk.gov.hmcts.reform.ucmc.helpers.DateFormatHelper.formatLocalDate;
 
 @SpringBootTest(classes = {
@@ -122,9 +122,9 @@ class RequestExtensionCallbackHandlerTest extends BaseCallbackHandlerTest {
             "<br /><p>You asked if you can respond before 4pm on %s %s"
                 + "<p>They can choose not to respond to your request, so if you don't get an email from us, "
                 + "assume you need to respond before 4pm on %s.</p>",
-            formatLocalDate(proposedDeadline, DATE_AT),
+            formatLocalDate(proposedDeadline, DATE),
             notAgreed,
-            formatLocalDate(responseDeadline, DATE_AT)
+            formatLocalDate(responseDeadline, DATE)
         );
     }
 }
