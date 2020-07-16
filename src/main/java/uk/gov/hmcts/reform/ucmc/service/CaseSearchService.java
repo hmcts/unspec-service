@@ -17,13 +17,14 @@ public class CaseSearchService {
     private final CoreCaseDataService coreCaseDataService;
 
     public List<CaseDetails> getCasesOver112Days() {
-        return coreCaseDataService.searchCases(dateQuery());
+        return coreCaseDataService.searchCases(dateQuery()).getCases();
     }
 
     private String dateQuery() {
         final String dateProperty = "data.claimIssuedDate";
-        final Map<String, Object> dayRange = of("gt", "now+112d");
+        final Map<String, Object> dayRange = of("lt", "now-112d");
 
-        return new JSONObject(of("query", of("range", of(dateProperty, dayRange)))).toString();
+        return new JSONObject(of("query", of("range", of(dateProperty, dayRange)), "_source", List.of("reference")))
+                   .toString();
     }
 }

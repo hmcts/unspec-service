@@ -62,7 +62,7 @@ class CaseStayedFinderTest {
 
         caseStayedFinder.execute(jobExecutionContext);
 
-        verify(applicationEventPublisher).publishEvent(new MoveCaseToStayedEvent(caseId, data));
+        verify(applicationEventPublisher).publishEvent(new MoveCaseToStayedEvent(caseId));
     }
 
     @Test

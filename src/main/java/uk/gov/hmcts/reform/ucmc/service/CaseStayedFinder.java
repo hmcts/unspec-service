@@ -30,7 +30,7 @@ public class CaseStayedFinder implements Job {
             log.info("Job '{}' found {} case(s)", jobName, cases.size());
 
             cases.forEach(caseDetails -> applicationEventPublisher.publishEvent(
-                new MoveCaseToStayedEvent(caseDetails.getId(), caseDetails.getData())));
+                new MoveCaseToStayedEvent(caseDetails.getId())));
         }
 
         log.info("Job '{}' finished", jobName);

@@ -8,8 +8,6 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import uk.gov.hmcts.reform.ucmc.event.MoveCaseToStayedEvent;
 import uk.gov.hmcts.reform.ucmc.service.CoreCaseDataService;
 
-import java.util.Map;
-
 import static org.mockito.Mockito.verify;
 
 @ExtendWith(SpringExtension.class)
@@ -23,10 +21,10 @@ class MoveCaseToStayedEventHandlerTest {
 
     @Test
     void shouldTriggerMoveToStayedEvent() {
-        MoveCaseToStayedEvent event = new MoveCaseToStayedEvent(1L, Map.of("data", "some data"));
+        MoveCaseToStayedEvent event = new MoveCaseToStayedEvent(1L);
 
         handler.moveCaseToStayed(event);
 
-        verify(coreCaseDataService).triggerEvent(event.getCaseId(), "MOVE_TO_STAYED", event.getData());
+        verify(coreCaseDataService).triggerEvent(event.getCaseId(), "MOVE_TO_STAYED");
     }
 }

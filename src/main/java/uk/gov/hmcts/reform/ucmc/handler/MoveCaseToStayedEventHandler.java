@@ -16,6 +16,6 @@ public class MoveCaseToStayedEventHandler {
 
     @EventListener
     public void moveCaseToStayed(MoveCaseToStayedEvent event) {
-        coreCaseDataService.triggerEvent(event.getCaseId(), "MOVE_TO_STAYED", event.getData());
+        coreCaseDataService.triggerEvent(event.getCaseId(), "MOVE_TO_STAYED");
     }
 }

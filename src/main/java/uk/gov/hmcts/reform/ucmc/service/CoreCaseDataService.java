@@ -6,14 +6,11 @@ import org.springframework.stereotype.Service;
 import uk.gov.hmcts.reform.authorisation.generators.AuthTokenGenerator;
 import uk.gov.hmcts.reform.ccd.client.CoreCaseDataApi;
 import uk.gov.hmcts.reform.ccd.client.model.CaseDataContent;
-import uk.gov.hmcts.reform.ccd.client.model.CaseDetails;
 import uk.gov.hmcts.reform.ccd.client.model.Event;
+import uk.gov.hmcts.reform.ccd.client.model.SearchResult;
 import uk.gov.hmcts.reform.ccd.client.model.StartEventResponse;
 import uk.gov.hmcts.reform.idam.client.IdamClient;
 import uk.gov.hmcts.reform.ucmc.config.SystemUpdateUserConfiguration;
-
-import java.util.List;
-import java.util.Map;
 
 @Service
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
@@ -26,7 +23,7 @@ public class CoreCaseDataService {
     public static final String CASE_TYPE = "UNSPECIFIED_CLAIMS";
     public static final String JURISDICTION = "CIVIL";
 
-    public void triggerEvent(Long caseId, String eventName, Map<String, Object> eventData) {
+    public void triggerEvent(Long caseId, String eventName) {
         String userToken = idamClient.getAccessToken(userConfig.getUserName(), userConfig.getPassword());
         String systemUpdateUserId = idamClient.getUserInfo(userToken).getUid();
 
@@ -39,14 +36,6 @@ public class CoreCaseDataService {
             caseId.toString(),
             eventName);
 
-        CaseDataContent caseDataContent = CaseDataContent.builder()
-                                              .eventToken(startEventResponse.getToken())
-                                              .event(Event.builder()
-                                                         .id(startEventResponse.getEventId())
-                                                         .build())
-                                              .data(eventData)
-                                              .build();
-
         coreCaseDataApi.submitEventForCaseWorker(
             userToken,
             authTokenGenerator.generate(),
@@ -55,12 +44,22 @@ public class CoreCaseDataService {
             CASE_TYPE,
             caseId.toString(),
             true,
-            caseDataContent);
+            caseDataContentFromStartEventResponse(startEventResponse));
     }
 
-    public List<CaseDetails> searchCases(String query) {
+    public SearchResult searchCases(String query) {
         String userToken = idamClient.getAccessToken(userConfig.getUserName(), userConfig.getPassword());
 
-        return coreCaseDataApi.searchCases(userToken, authTokenGenerator.generate(), CASE_TYPE, query).getCases();
+        return coreCaseDataApi.searchCases(userToken, authTokenGenerator.generate(), CASE_TYPE, query);
+    }
+
+    private CaseDataContent caseDataContentFromStartEventResponse(StartEventResponse startEventResponse) {
+        return CaseDataContent.builder()
+                   .eventToken(startEventResponse.getToken())
+                   .event(Event.builder()
+                              .id(startEventResponse.getEventId())
+                              .build())
+                   .data(startEventResponse.getCaseDetails().getData())
+                   .build();
     }
 }

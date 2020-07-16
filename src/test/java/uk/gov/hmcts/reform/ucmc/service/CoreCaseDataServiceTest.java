@@ -71,26 +71,31 @@ class CoreCaseDataServiceTest {
 
         @Test
         void shouldStartAndSubmitEvent() {
-            Map<String, Object> eventData = Map.of("data", "some data");
-            service.triggerEvent(CASE_ID, EVENT_ID, eventData);
+            service.triggerEvent(CASE_ID, EVENT_ID);
 
             verify(coreCaseDataApi).startEventForCaseWorker(USER_AUTH_TOKEN, SERVICE_AUTH_TOKEN, USER_ID,
                 JURISDICTION, CASE_TYPE, Long.toString(CASE_ID), EVENT_ID);
             verify(coreCaseDataApi).submitEventForCaseWorker(USER_AUTH_TOKEN, SERVICE_AUTH_TOKEN, USER_ID, JURISDICTION,
-                CASE_TYPE, Long.toString(CASE_ID), true, buildCaseDataContent(eventData));
+                CASE_TYPE, Long.toString(CASE_ID), true, buildCaseDataContent());
         }
 
         private StartEventResponse buildStartEventResponse() {
-            return StartEventResponse.builder().eventId(EVENT_ID).token(EVENT_TOKEN).build();
+            return StartEventResponse.builder()
+                       .eventId(EVENT_ID)
+                       .token(EVENT_TOKEN)
+                       .caseDetails(CaseDetails.builder()
+                                        .data(Map.of("data", "some data"))
+                                        .build())
+                       .build();
         }
 
-        private CaseDataContent buildCaseDataContent(Object eventData) {
+        private CaseDataContent buildCaseDataContent() {
             return CaseDataContent.builder()
                        .eventToken(EVENT_TOKEN)
                        .event(Event.builder()
                                   .id(EVENT_ID)
                                   .build())
-                       .data(eventData)
+                       .data(Map.of("data", "some data"))
                        .build();
         }
     }
@@ -108,7 +113,7 @@ class CoreCaseDataServiceTest {
             when(coreCaseDataApi.searchCases(USER_AUTH_TOKEN, SERVICE_AUTH_TOKEN, CASE_TYPE, query))
                 .thenReturn(searchResult);
 
-            List<CaseDetails> casesFound = service.searchCases(query);
+            List<CaseDetails> casesFound = service.searchCases(query).getCases();
 
             assertThat(casesFound).isEqualTo(cases);
             verify(coreCaseDataApi).searchCases(USER_AUTH_TOKEN, SERVICE_AUTH_TOKEN, CASE_TYPE, query);

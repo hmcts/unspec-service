@@ -44,6 +44,7 @@ public class CreateClaimCallbackHandler extends CallbackHandler {
     protected Map<CallbackType, Callback> callbacks() {
         return Map.of(
             CallbackType.MID, this::validateClaimValues,
+            CallbackType.ABOUT_TO_SUBMIT, this::addIssuedDate,
             CallbackType.SUBMITTED, this::buildConfirmation
         );
     }
@@ -69,6 +70,15 @@ public class CreateClaimCallbackHandler extends CallbackHandler {
             .data(data)
             .errors(errors)
             .build();
+    }
+
+    private AboutToStartOrSubmitCallbackResponse addIssuedDate(CallbackParams callbackParams) {
+        Map<String, Object> data = callbackParams.getRequest().getCaseDetails().getData();
+        data.put("claimIssuedDate", LocalDate.now());
+
+        return AboutToStartOrSubmitCallbackResponse.builder()
+                   .data(data)
+                   .build();
     }
 
     private SubmittedCallbackResponse buildConfirmation(CallbackParams callbackParams) {

@@ -10,6 +10,7 @@ import org.mockito.Mock;
 import org.skyscreamer.jsonassert.JSONAssert;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import uk.gov.hmcts.reform.ccd.client.model.CaseDetails;
+import uk.gov.hmcts.reform.ccd.client.model.SearchResult;
 
 import java.util.List;
 
@@ -36,17 +37,21 @@ class CaseSearchServiceTest {
     void shouldSearchCasesByDateProperty() throws JSONException {
         String property = "data.claimIssuedDate";
 
-        List<CaseDetails> expectedCases = List.of(CaseDetails.builder().id(1L).build());
+        SearchResult expectedSearchResults = SearchResult.builder()
+                                                 .total(1)
+                                                 .cases(List.of(CaseDetails.builder().id(1L).build()))
+                                                 .build();
 
-        when(coreCaseDataService.searchCases(any())).thenReturn(expectedCases);
+        when(coreCaseDataService.searchCases(any())).thenReturn(expectedSearchResults);
 
         List<CaseDetails> casesFound = searchService.getCasesOver112Days();
 
-        assertThat(casesFound).isEqualTo(expectedCases);
+        assertThat(casesFound).isEqualTo(expectedSearchResults.getCases());
 
         verify(coreCaseDataService).searchCases(queryCaptor.capture());
 
-        String expectedQuery = format("{\"query\":{\"range\":{\"%s\":{\"gt\":\"now+112d\"}}}}", property);
+        String expectedQuery = format("{\"query\":{\"range\":{\"%s\":{\"lt\":\"now-112d\"}}}, "
+                                          + "\"_source\": [\"reference\"]}", property);
 
         JSONAssert.assertEquals(queryCaptor.getValue(), expectedQuery, STRICT);
     }
