@@ -11,7 +11,7 @@ resource "azurerm_resource_group" "rg" {
 
 module "key-vault" {
   source                  = "git@github.com:hmcts/cnp-module-key-vault?ref=master"
-  name                    = "ucmc-${var.env}"
+  name                    = "unspec-${var.env}"
   product                 = var.product
   env                     = var.env
   tenant_id               = var.tenant_id
