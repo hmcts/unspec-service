@@ -60,7 +60,7 @@
     "PageDisplayOrder": 4,
     "PageColumnNumber": 1,
     "ShowSummaryChangeOption": "Y",
-    "PageShowCondition": "serviceMethod = \"POST\" OR serviceMethod = \"DOCUMENT_EXCHANGE\" OR serviceMethod = \"FAX\" OR serviceMethod = \"OTHER\""
+    "FieldShowCondition": "serviceMethod = \"POST\""
   },
   {
     "LiveFrom": "01/01/2017",
