@@ -17,6 +17,7 @@ import java.util.Map;
 import static com.google.common.collect.ImmutableMap.of;
 import static java.lang.String.format;
 import static java.time.LocalDate.now;
+import static java.util.Arrays.asList;
 import static java.util.Collections.emptyMap;
 import static org.assertj.core.api.Assertions.assertThat;
 import static uk.gov.hmcts.reform.ucmc.handler.RequestExtensionCallbackHandler.ALREADY_AGREED;
@@ -59,23 +60,32 @@ class RequestExtensionCallbackHandlerTest extends BaseCallbackHandlerTest {
 
     @Test
     void shouldReturnExpectedErrorInMidEventWhenValuesAreInvalid() {
-        Map<String, Object> data = new HashMap<>();
-        data.put("extensionProposedDeadline", now().minusDays(1));
 
-        CallbackParams params = callbackParamsOf(data, CallbackType.MID);
+        CallbackParams params = callbackParamsOf(
+            of("extensionProposedDeadline", now().minusDays(1),
+               "responseDeadline", now().atTime(16, 0)
+            ),
+            CallbackType.MID
+        );
 
         AboutToStartOrSubmitCallbackResponse response = (AboutToStartOrSubmitCallbackResponse) handler.handle(params);
 
         assertThat(response.getErrors())
-            .containsOnly("The proposed deadline can't be in the past.");
+            .containsAll(asList(
+                "The proposed deadline must be a future date.",
+                "The proposed deadline can't be before the current response deadline."
+            ));
     }
 
     @Test
     void shouldReturnNoErrorInMidEventWhenValuesAreValid() {
-        Map<String, Object> data = new HashMap<>();
-        data.put("extensionProposedDeadline", now().plusDays(14));
 
-        CallbackParams params = callbackParamsOf(data, CallbackType.MID);
+        CallbackParams params = callbackParamsOf(
+            of("extensionProposedDeadline", now().plusDays(14),
+               "responseDeadline", now().atTime(16, 0)
+            ),
+            CallbackType.MID
+        );
 
         AboutToStartOrSubmitCallbackResponse response = (AboutToStartOrSubmitCallbackResponse) handler.handle(params);
 

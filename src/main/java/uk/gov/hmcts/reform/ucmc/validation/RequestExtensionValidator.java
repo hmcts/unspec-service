@@ -7,6 +7,8 @@ import org.springframework.stereotype.Service;
 import uk.gov.hmcts.reform.ccd.client.model.CaseDetails;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 import static java.time.LocalDate.now;
@@ -19,16 +21,27 @@ public class RequestExtensionValidator {
     private final ObjectMapper mapper;
 
     public List<String> validateProposedDeadline(CaseDetails caseDetails) {
-
+        List<String> errors = new ArrayList<>();
         LocalDate proposedDeadline = mapper.convertValue(
             caseDetails.getData().get("extensionProposedDeadline"),
             LocalDate.class
         );
 
-        if (proposedDeadline.isBefore(now())) {
-            return ImmutableList.of("The proposed deadline can't be in the past.");
+        if (!proposedDeadline.isAfter(now())) {
+            errors.add("The proposed deadline must be a future date.");
         }
-        return emptyList();
+
+        LocalDateTime responseDeadline = mapper.convertValue(
+            caseDetails.getData().get("responseDeadline"),
+            LocalDateTime.class
+        );
+        if (proposedDeadline.isBefore(responseDeadline.toLocalDate())) {
+            errors.add("The proposed deadline can't be before the current response deadline.");
+        }
+        if (proposedDeadline.isAfter(responseDeadline.toLocalDate().plusDays(28))) {
+            errors.add("The proposed deadline can't be later than 28 days after the current deadline.");
+        }
+        return errors;
     }
 
     public List<String> validateAlreadyRequested(CaseDetails caseDetails) {
