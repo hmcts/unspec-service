@@ -14,7 +14,6 @@ import uk.gov.hmcts.reform.ucmc.helpers.CaseDetailsConverter;
 import uk.gov.hmcts.reform.ucmc.model.CaseData;
 import uk.gov.hmcts.reform.ucmc.model.common.Element;
 import uk.gov.hmcts.reform.ucmc.model.documents.CaseDocument;
-import uk.gov.hmcts.reform.ucmc.model.documents.Document;
 import uk.gov.hmcts.reform.ucmc.model.documents.DocumentType;
 import uk.gov.hmcts.reform.ucmc.service.docmosis.sealedclaim.SealedClaimFormGenerator;
 import uk.gov.hmcts.reform.ucmc.utils.ElementUtils;
@@ -25,7 +24,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 
 import static java.lang.String.format;
 import static uk.gov.hmcts.reform.ucmc.callback.CallbackParams.Params.BEARER_TOKEN;
@@ -121,10 +119,11 @@ public class CreateClaimCallbackHandler extends CallbackHandler {
                 + "<a href=\"%s\" target=\"_blank\">a response pack</a> (PDF, 266 KB) to the defendant by %s"
                 + "\n* Confirm service online within 21 days of sending the form, particulars and response pack, before"
                 + " 4pm if you're doing this on the due day",
-            format("/cases/case-details/%s#CaseDocuments",caseData.getId()),
-            caseDocument.getSize() /1024,
+            format("/cases/case-details/%s#CaseDocuments", caseData.getId()),
+            caseDocument.getSize() / 1024,
             responsePackLink,
-            formattedServiceDeadline);
+            formattedServiceDeadline
+        );
 
         return SubmittedCallbackResponse.builder()
             .confirmationHeader(format("# Your claim has been issued\n## Claim number: %s", claimNumber))
