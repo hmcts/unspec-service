@@ -16,6 +16,7 @@ import java.util.List;
 @Builder(toBuilder = true)
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class CaseData {
+    private Long id;
     private final SolicitorReferences solicitorReferences;
     private final CourtLocation courtLocation;
     private final Applicant claimant;

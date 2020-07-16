@@ -4,18 +4,20 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Builder;
 import lombok.Data;
 
+import java.math.BigDecimal;
+
 @Data
 @Builder
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class ClaimValue {
-    private final Integer lowerValue;
-    private final Integer higherValue;
+    private final String lowerValue;
+    private final String higherValue;
 
     public boolean hasLargerLowerValue() {
         if (lowerValue == null || higherValue == null) {
             return false;
         }
 
-        return lowerValue > higherValue;
+        return new BigDecimal(lowerValue).compareTo(new BigDecimal(higherValue)) > 0;
     }
 }

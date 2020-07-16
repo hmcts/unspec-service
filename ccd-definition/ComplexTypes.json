@@ -29,15 +29,15 @@
     "SecurityClassification": "Public"
   },
   {
-    "ID": "Applicant",
+    "ID": "Party",
     "ListElementCode": "type",
     "FieldType": "FixedRadioList",
-    "FieldTypeParameter": "ApplicantType",
-    "ElementLabel": "Claimant type",
+    "FieldTypeParameter": "PartyType",
+    "ElementLabel": "Party type",
     "SecurityClassification": "Public"
   },
   {
-    "ID": "Applicant",
+    "ID": "Party",
     "ListElementCode": "individualTitle",
     "FieldType": "Text",
     "ElementLabel": "Title",
@@ -45,7 +45,7 @@
     "SecurityClassification": "Public"
   },
   {
-    "ID": "Applicant",
+    "ID": "Party",
     "ListElementCode": "individualFirstName",
     "FieldType": "Text",
     "ElementLabel": "First name",
@@ -53,7 +53,7 @@
     "SecurityClassification": "Public"
   },
   {
-    "ID": "Applicant",
+    "ID": "Party",
     "ListElementCode": "individualLastName",
     "FieldType": "Text",
     "ElementLabel": "Last name",
@@ -61,7 +61,7 @@
     "SecurityClassification": "Public"
   },
   {
-    "ID": "Applicant",
+    "ID": "Party",
     "ListElementCode": "individualDateOfBirth",
     "FieldType": "Date",
     "ElementLabel": "Date of birth",
@@ -69,7 +69,7 @@
     "SecurityClassification": "Public"
   },
   {
-    "ID": "Applicant",
+    "ID": "Party",
     "ListElementCode": "companyName",
     "FieldType": "Text",
     "ElementLabel": "Name",
@@ -77,7 +77,7 @@
     "SecurityClassification": "Public"
   },
   {
-    "ID": "Applicant",
+    "ID": "Party",
     "ListElementCode": "organisationName",
     "FieldType": "Text",
     "ElementLabel": "Name",
@@ -85,7 +85,7 @@
     "SecurityClassification": "Public"
   },
   {
-    "ID": "Applicant",
+    "ID": "Party",
     "ListElementCode": "soleTraderTitle",
     "FieldType": "Text",
     "ElementLabel": "Title",
@@ -93,7 +93,7 @@
     "SecurityClassification": "Public"
   },
   {
-    "ID": "Applicant",
+    "ID": "Party",
     "ListElementCode": "soleTraderFirstName",
     "FieldType": "Text",
     "ElementLabel": "First name",
@@ -101,7 +101,7 @@
     "SecurityClassification": "Public"
   },
   {
-    "ID": "Applicant",
+    "ID": "Party",
     "ListElementCode": "soleTraderLastName",
     "FieldType": "Text",
     "ElementLabel": "Last name",
@@ -109,7 +109,7 @@
     "SecurityClassification": "Public"
   },
   {
-    "ID": "Applicant",
+    "ID": "Party",
     "ListElementCode": "soleTraderTradingAs",
     "FieldType": "Text",
     "ElementLabel": "Trading as",
@@ -117,7 +117,7 @@
     "SecurityClassification": "Public"
   },
   {
-    "ID": "Applicant",
+    "ID": "Party",
     "ListElementCode": "soleTraderDateOfBirth",
     "FieldType": "Date",
     "ElementLabel": "Date of birth",
@@ -125,8 +125,8 @@
     "SecurityClassification": "Public"
   },
   {
-    "ID": "Applicant",
-    "ListElementCode": "applicantAddress",
+    "ID": "Party",
+    "ListElementCode": "primaryAddress",
     "FieldType": "AddressUK",
     "ElementLabel": "Address",
     "SecurityClassification": "Public"
@@ -242,5 +242,48 @@
     "HintText": "This should be the type of location you served to, not and address.",
     "SecurityClassification": "Public",
     "FieldShowCondition": "location = \"OTHER\""
+  },
+  {
+    "ID": "CaseDocument",
+    "ListElementCode": "documentName",
+    "FieldType": "Text",
+    "ElementLabel": "Name",
+    "SecurityClassification": "Public"
+  },
+  {
+    "ID": "CaseDocument",
+    "ListElementCode": "documentType",
+    "FieldType": "FixedList",
+    "FieldTypeParameter": "DocumentType",
+    "ElementLabel": "Type",
+    "SecurityClassification": "Public"
+  },
+  {
+    "ID": "CaseDocument",
+    "ListElementCode": "documentLink",
+    "FieldType": "Document",
+    "ElementLabel": "Document URL",
+    "SecurityClassification": "Public"
+  },
+  {
+    "ID": "CaseDocument",
+    "ListElementCode": "size",
+    "FieldType": "Number",
+    "ElementLabel": "Document size",
+    "SecurityClassification": "Public"
+  },
+  {
+    "ID": "CaseDocument",
+    "ListElementCode": "createdDatetime",
+    "FieldType": "DateTime",
+    "ElementLabel": "Uploaded on",
+    "SecurityClassification": "Public"
+  },
+  {
+    "ID": "CaseDocument",
+    "ListElementCode": "createdBy",
+    "FieldType": "Text",
+    "ElementLabel": "Uploaded by",
+    "SecurityClassification": "Public"
   }
 ]

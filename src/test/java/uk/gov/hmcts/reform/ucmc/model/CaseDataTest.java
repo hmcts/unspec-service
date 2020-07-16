@@ -15,7 +15,7 @@ import java.util.Map;
 import static uk.gov.hmcts.reform.ucmc.utils.ResourceReader.readString;
 
 @SpringBootTest(classes = JacksonAutoConfiguration.class)
-class CaseDataTest {
+class oCaseDataTest {
 
     @Autowired
     private ObjectMapper mapper;

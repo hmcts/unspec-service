@@ -17,6 +17,7 @@ public class CaseDetailsConverter {
     public CaseData to(CaseDetails caseDetails) {
         Map<String, Object> data = caseDetails.getData();
         data.put("state", caseDetails.getState());
+        data.put("id", caseDetails.getId());
         return jsonMapper.fromMap(data, CaseData.class);
     }
 
