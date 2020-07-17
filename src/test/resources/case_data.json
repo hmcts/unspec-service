@@ -2,7 +2,23 @@
   "claimant": {
     "type": "INDIVIDUAL",
     "individualTitle": "Mr",
-    "applicantAddress": {
+    "primaryAddress": {
+      "County": "County",
+      "Country": "Country",
+      "PostCode": "POSTCODE",
+      "PostTown": "City",
+      "AddressLine1": "99 The Road",
+      "AddressLine2": "The Street",
+      "AddressLine3": ""
+    },
+    "individualLastName": "Smith",
+    "individualFirstName": "John",
+    "individualDateOfBirth": "1980-06-23"
+  },
+  "respondent": {
+    "type": "INDIVIDUAL",
+    "individualTitle": "Mr",
+    "primaryAddress": {
       "County": "County",
       "Country": "Country",
       "PostCode": "POSTCODE",
@@ -16,8 +32,8 @@
     "individualDateOfBirth": "1980-06-23"
   },
   "claimValue": {
-    "lowerValue": 10000,
-    "higherValue": 100000
+    "lowerValue": "10000",
+    "higherValue": "100000"
   },
   "serviceDate": "2020-06-23",
   "courtLocation": {

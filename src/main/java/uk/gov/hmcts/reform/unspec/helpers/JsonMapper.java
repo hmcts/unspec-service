@@ -3,6 +3,7 @@ package uk.gov.hmcts.reform.unspec.helpers;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -16,6 +17,7 @@ public class JsonMapper {
 
     private final ObjectMapper objectMapper;
 
+    @Autowired
     public JsonMapper(ObjectMapper objectMapper) {
         this.objectMapper = objectMapper;
     }

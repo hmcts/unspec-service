@@ -1,5 +1,6 @@
 package uk.gov.hmcts.reform.unspec.model;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Builder;
 import lombok.Data;
 
@@ -7,6 +8,7 @@ import java.time.LocalDate;
 
 @Data
 @Builder(toBuilder = true)
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class Party {
     private final Type type;
     private final String individualTitle;
