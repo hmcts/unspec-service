@@ -1,0 +1,10 @@
+spring:
+  cloud:
+    propertiesvolume:
+      enabled: true
+      prefixed: false
+      paths: /mnt/secrets/ucmc
+      aliases:
+        microservicekey-unspec-service: idam.s2s-auth.totp_secret
+        system-update-user-password: unspecified.system_update.password
+        system-update-user-username: unspecified.system_update.username

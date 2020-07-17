@@ -33,3 +33,5 @@ java:
       secrets:
         - ucmc-idam-client-secret
         - microservicekey-ucmc-service
+        - system-update-user-username
+        - system-update-user-password
