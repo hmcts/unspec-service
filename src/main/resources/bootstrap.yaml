@@ -3,7 +3,7 @@ spring:
     propertiesvolume:
       enabled: true
       prefixed: false
-      paths: /mnt/secrets/ucmc
+      paths: /mnt/secrets/unspec
       aliases:
         microservicekey-unspec-service: idam.s2s-auth.totp_secret
         system-update-user-password: unspecified.system_update.password

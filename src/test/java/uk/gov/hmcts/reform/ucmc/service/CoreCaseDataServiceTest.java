@@ -1,4 +1,4 @@
-package uk.gov.hmcts.reform.ucmc.service;
+package uk.gov.hmcts.reform.unspec.service;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
@@ -16,7 +16,7 @@ import uk.gov.hmcts.reform.ccd.client.model.SearchResult;
 import uk.gov.hmcts.reform.ccd.client.model.StartEventResponse;
 import uk.gov.hmcts.reform.idam.client.IdamClient;
 import uk.gov.hmcts.reform.idam.client.models.UserInfo;
-import uk.gov.hmcts.reform.ucmc.config.SystemUpdateUserConfiguration;
+import uk.gov.hmcts.reform.unspec.config.SystemUpdateUserConfiguration;
 
 import java.util.List;
 import java.util.Map;

@@ -1,4 +1,4 @@
-package uk.gov.hmcts.reform.ucmc.service;
+package uk.gov.hmcts.reform.unspec.service;
 
 import org.json.JSONException;
 import org.junit.jupiter.api.Test;

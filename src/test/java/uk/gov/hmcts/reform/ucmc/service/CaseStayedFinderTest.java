@@ -1,4 +1,4 @@
-package uk.gov.hmcts.reform.ucmc.service;
+package uk.gov.hmcts.reform.unspec.service;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -11,7 +11,7 @@ import org.quartz.JobKey;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import uk.gov.hmcts.reform.ccd.client.model.CaseDetails;
-import uk.gov.hmcts.reform.ucmc.event.MoveCaseToStayedEvent;
+import uk.gov.hmcts.reform.unspec.event.MoveCaseToStayedEvent;
 
 import java.util.List;
 import java.util.Map;
