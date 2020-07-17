@@ -18,6 +18,7 @@ public class BaseCallbackHandlerTest {
                                            CallbackType type,
                                            CallbackVersion version,
                                            Map<CallbackParams.Params, Object> params
+
     ) {
         return CallbackParams.builder()
             .type(type)
@@ -29,7 +30,7 @@ public class BaseCallbackHandlerTest {
 
     private CallbackRequest toCallbackRequest(Map<String, Object> data) {
         return CallbackRequest.builder()
-            .caseDetails(CaseDetails.builder().data(data).build())
+            .caseDetails(CaseDetails.builder().data(data).id((Long) data.get("id")).build())
             .build();
     }
 }

@@ -25,7 +25,11 @@ import java.util.List;
 @Service
 public class SealedClaimFormGenerator extends TemplateDataGenerator<SealedClaimForm> {
 
-    public static final String TEMP_CLAIM_DETAILS = "The claimant seeks compensation from injuries and losses arising from a road traffic accident which occurred on 1st July 2017 as a result of the negligence of the first defendant.The claimant seeks compensation from injuries and losses arising from a road traffic accident which occurred on 1st July 2017 as a result of the negligence of the first defendant.";
+    public static final String TEMP_CLAIM_DETAILS = "The claimant seeks compensation from injuries and losses arising"
+        + " from a road traffic accident which occurred on 1st July 2017 as a result of the negligence of the first "
+        + "defendant.The claimant seeks compensation from injuries and losses arising from a road traffic accident "
+        + "which occurred on 1st July 2017 as a result of the negligence of the first defendant.";
+
     private static final Representative TEMP_REPRESENTATIVE = Representative.builder()
         .contactName("MiguelSpooner")
         .dxAddress("DX 751Newport")
@@ -67,7 +71,7 @@ public class SealedClaimFormGenerator extends TemplateDataGenerator<SealedClaimF
     }
 
     private String getFileName(CaseData caseData, DocmosisTemplates sealedClaimForm) {
-        if (StringUtils.isBlank(caseData.getReferenceNumber())){
+        if (StringUtils.isBlank(caseData.getReferenceNumber())) {
             return String.format(sealedClaimForm.getDocumentTitle(), REFERENCE_NUMBER);
         }
 

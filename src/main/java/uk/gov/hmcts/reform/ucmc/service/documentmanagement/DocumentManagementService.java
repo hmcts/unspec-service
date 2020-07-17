@@ -82,8 +82,10 @@ public class DocumentManagementService {
 
             Document document = response.getEmbedded().getDocuments().stream()
                 .findFirst()
-                .orElseThrow(() ->
-                                 new DocumentManagementException("Document management failed uploading file" + originalFileName));
+                .orElseThrow(() -> {
+                    String message = "Document management failed uploading file" + originalFileName;
+                    return new DocumentManagementException(message);
+                });
 
             return CaseDocument.builder()
                 .documentLink(uk.gov.hmcts.reform.ucmc.model.documents.Document.builder()

@@ -41,8 +41,7 @@ public class CreateClaimCallbackHandler extends CallbackHandler {
 
     public CreateClaimCallbackHandler(CaseDetailsConverter caseDetailsConverter,
                                       SealedClaimFormGenerator sealedClaimFormGenerator,
-                                      @Value("${unspecified.response-pack-url}") String responsePackLink
-    ) {
+                                      @Value("${unspecified.response-pack-url}") String responsePackLink) {
         this.caseDetailsConverter = caseDetailsConverter;
         this.sealedClaimFormGenerator = sealedClaimFormGenerator;
         this.responsePackLink = responsePackLink;
@@ -91,8 +90,9 @@ public class CreateClaimCallbackHandler extends CallbackHandler {
 
     private CaseData addToCaseData(CaseData caseData, CaseDocument sealedClaim) {
         List<Element<CaseDocument>> caseDocuments = new ArrayList<>();
-        if (caseData.getSystemGeneratedCaseDocuments() != null && !caseData.getSystemGeneratedCaseDocuments().isEmpty()) {
-            caseDocuments.addAll(caseData.getSystemGeneratedCaseDocuments());
+        List<Element<CaseDocument>> systemGeneratedCaseDocuments = caseData.getSystemGeneratedCaseDocuments();
+        if (systemGeneratedCaseDocuments != null && !systemGeneratedCaseDocuments.isEmpty()) {
+            caseDocuments.addAll(systemGeneratedCaseDocuments);
         }
         caseDocuments.add(Element.<CaseDocument>builder().value(sealedClaim).build());
 

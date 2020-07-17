@@ -11,7 +11,7 @@ public class DocmosisConfiguration {
     private final String accessKey;
 
     public DocmosisConfiguration(@Value("${docmosis.tornado.url}") String url,
-								 @Value("${docmosis.tornado.key}") String accessKey) {
+                                 @Value("${docmosis.tornado.key}") String accessKey) {
         this.url = url;
         this.accessKey = accessKey;
     }
