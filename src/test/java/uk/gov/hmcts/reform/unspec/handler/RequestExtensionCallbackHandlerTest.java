@@ -12,6 +12,7 @@ import uk.gov.hmcts.reform.unspec.callback.CallbackType;
 import uk.gov.hmcts.reform.unspec.validation.RequestExtensionValidator;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -25,6 +26,7 @@ import static uk.gov.hmcts.reform.unspec.handler.RequestExtensionCallbackHandler
 import static uk.gov.hmcts.reform.unspec.handler.RequestExtensionCallbackHandler.NOT_AGREED;
 import static uk.gov.hmcts.reform.unspec.helpers.DateFormatHelper.DATE;
 import static uk.gov.hmcts.reform.unspec.helpers.DateFormatHelper.formatLocalDate;
+import static uk.gov.hmcts.reform.unspec.helpers.DateFormatHelper.formatLocalDateTime;
 
 @SpringBootTest(classes = {
     RequestExtensionCallbackHandler.class,
@@ -38,6 +40,7 @@ class RequestExtensionCallbackHandlerTest extends BaseCallbackHandlerTest {
 
     @Nested
     class AboutToSubmitCallback {
+
         @Test
         void shouldReturnError_whenExtensionIsAlreadyRequested() {
             Map<String, Object> data = new HashMap<>();
@@ -54,7 +57,6 @@ class RequestExtensionCallbackHandlerTest extends BaseCallbackHandlerTest {
 
         @Test
         void shouldReturnNoError_WhenExtensionIsRequestedFirstTime() {
-
             CallbackParams params = callbackParamsOf(emptyMap(), CallbackType.ABOUT_TO_START);
 
             AboutToStartOrSubmitCallbackResponse response = (AboutToStartOrSubmitCallbackResponse) handler
@@ -66,9 +68,9 @@ class RequestExtensionCallbackHandlerTest extends BaseCallbackHandlerTest {
 
     @Nested
     class MidCallback {
+
         @Test
         void shouldReturnExpectedError_whenValuesAreInvalid() {
-
             CallbackParams params = callbackParamsOf(
                 of("extensionProposedDeadline", now().minusDays(1),
                    "responseDeadline", now().atTime(16, 0)
@@ -88,7 +90,6 @@ class RequestExtensionCallbackHandlerTest extends BaseCallbackHandlerTest {
 
         @Test
         void shouldReturnNoError_whenValuesAreValid() {
-
             CallbackParams params = callbackParamsOf(
                 of("extensionProposedDeadline", now().plusDays(14),
                    "responseDeadline", now().atTime(16, 0)
@@ -105,11 +106,16 @@ class RequestExtensionCallbackHandlerTest extends BaseCallbackHandlerTest {
 
     @Nested
     class SubmittedCallback {
+
         @Test
         void shouldReturnExpectedResponse_whenAlreadyAgreed() {
             LocalDate proposedDeadline = now().plusDays(14);
+            LocalDateTime responseDeadline = now().atTime(16, 0);
             CallbackParams params = callbackParamsOf(
-                of("extensionProposedDeadline", proposedDeadline, "extensionAlreadyAgreed", "Yes"),
+                of("extensionProposedDeadline", proposedDeadline,
+                   "extensionAlreadyAgreed", "Yes",
+                   "responseDeadline", responseDeadline
+                ),
                 CallbackType.SUBMITTED
             );
 
@@ -118,15 +124,19 @@ class RequestExtensionCallbackHandlerTest extends BaseCallbackHandlerTest {
             assertThat(response).isEqualToComparingFieldByField(
                 SubmittedCallbackResponse.builder()
                     .confirmationHeader("# You asked for extra time to respond\n## Claim number: TBC")
-                    .confirmationBody(prepareBody(proposedDeadline, ALREADY_AGREED))
+                    .confirmationBody(prepareBody(proposedDeadline, responseDeadline, ALREADY_AGREED))
                     .build());
         }
 
         @Test
         void shouldReturnExpectedResponse_whenNotAlreadyAgreed() {
             LocalDate proposedDeadline = now().plusDays(14);
+            LocalDateTime responseDeadline = now().atTime(16, 0);
             CallbackParams params = callbackParamsOf(
-                of("extensionProposedDeadline", proposedDeadline, "extensionAlreadyAgreed", "No"),
+                of("extensionProposedDeadline", proposedDeadline,
+                   "extensionAlreadyAgreed", "No",
+                   "responseDeadline", responseDeadline
+                ),
                 CallbackType.SUBMITTED
             );
 
@@ -135,19 +145,18 @@ class RequestExtensionCallbackHandlerTest extends BaseCallbackHandlerTest {
             assertThat(response).isEqualToComparingFieldByField(
                 SubmittedCallbackResponse.builder()
                     .confirmationHeader("# You asked for extra time to respond\n## Claim number: TBC")
-                    .confirmationBody(prepareBody(proposedDeadline, NOT_AGREED))
+                    .confirmationBody(prepareBody(proposedDeadline, responseDeadline, NOT_AGREED))
                     .build());
         }
 
-        private String prepareBody(LocalDate proposedDeadline, String notAgreed) {
-            LocalDate responseDeadline = now().plusDays(7);
+        private String prepareBody(LocalDate proposedDeadline, LocalDateTime responseDeadline, String notAgreed) {
             return format(
                 "<br /><p>You asked if you can respond before 4pm on %s %s"
                     + "<p>They can choose not to respond to your request, so if you don't get an email from us, "
                     + "assume you need to respond before 4pm on %s.</p>",
                 formatLocalDate(proposedDeadline, DATE),
                 notAgreed,
-                formatLocalDate(responseDeadline, DATE)
+                formatLocalDateTime(responseDeadline, DATE)
             );
         }
     }

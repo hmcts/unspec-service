@@ -20,7 +20,6 @@ import java.util.List;
 import java.util.Map;
 
 import static java.lang.String.format;
-import static java.time.LocalDate.now;
 import static uk.gov.hmcts.reform.unspec.callback.CaseEvent.REQUEST_EXTENSION;
 import static uk.gov.hmcts.reform.unspec.enums.YesOrNo.YES;
 import static uk.gov.hmcts.reform.unspec.helpers.DateFormatHelper.DATE;
@@ -28,6 +27,7 @@ import static uk.gov.hmcts.reform.unspec.helpers.DateFormatHelper.formatLocalDat
 
 @Service
 public class RequestExtensionCallbackHandler extends CallbackHandler {
+
     private static final List<CaseEvent> EVENTS = Collections.singletonList(REQUEST_EXTENSION);
     public static final String ALREADY_AGREED = "You told us you've already agreed this with the claimant's legal "
         + "representative. We'll contact them and email you to confirm the deadline.</p>";
@@ -60,16 +60,13 @@ public class RequestExtensionCallbackHandler extends CallbackHandler {
         CaseDetails caseDetails = callbackParams.getRequest().getCaseDetails();
 
         return AboutToStartOrSubmitCallbackResponse.builder()
-            .data(caseDetails.getData())
             .errors(validator.validateAlreadyRequested(caseDetails))
             .build();
     }
 
     private CallbackResponse validateRequestedDeadline(CallbackParams callbackParams) {
-        Map<String, Object> data = callbackParams.getRequest().getCaseDetails().getData();
 
         return AboutToStartOrSubmitCallbackResponse.builder()
-            .data(data)
             .errors(validator.validateProposedDeadline(callbackParams.getRequest().getCaseDetails()))
             .build();
     }
@@ -83,7 +80,10 @@ public class RequestExtensionCallbackHandler extends CallbackHandler {
         YesOrNo extensionAlreadyAgreed = mapper.convertValue(data.get("extensionAlreadyAgreed"), YesOrNo.class);
         String claimNumber = "TBC";
 
-        LocalDate responseDeadline = now().plusDays(7); //TODO: Waiting for that to be populated in CaseDetails
+        LocalDate responseDeadline = mapper.convertValue(
+            data.get("responseDeadline"),
+            LocalDate.class
+        );
         String body = format(
             "<br /><p>You asked if you can respond before 4pm on %s %s"
                 + "<p>They can choose not to respond to your request, so if you don't get an email from us, "

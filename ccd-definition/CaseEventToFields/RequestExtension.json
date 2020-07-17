@@ -7,7 +7,6 @@
     "PageFieldDisplayOrder": 1,
     "DisplayContext": "MANDATORY",
     "PageID": "ProposeDeadline",
-    "PageLabel": " ",
     "PageDisplayOrder": 1,
     "PageColumnNumber": 1,
     "ShowSummaryChangeOption": "Y",
@@ -21,7 +20,6 @@
     "PageFieldDisplayOrder": 1,
     "DisplayContext": "MANDATORY",
     "PageID": "ExtensionAlreadyAgreed",
-    "PageLabel": " ",
     "PageDisplayOrder": 2,
     "PageColumnNumber": 1,
     "ShowSummaryChangeOption": "Y"
@@ -35,7 +33,6 @@
     "DisplayContext": "OPTIONAL",
     "PageID": "ExtensionAlreadyAgreed",
     "FieldShowCondition": "extensionAlreadyAgreed=\"No\"",
-    "PageLabel": " ",
     "PageDisplayOrder": 2,
     "PageColumnNumber": 1,
     "ShowSummaryChangeOption": "Y"

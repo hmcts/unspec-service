@@ -12,8 +12,6 @@ import java.util.List;
 import static com.google.common.collect.ImmutableMap.of;
 import static java.time.LocalDate.now;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertAll;
-import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @SpringBootTest(classes = {RequestExtensionValidator.class, JacksonAutoConfiguration.class})
 class RequestExtensionValidatorTest {
@@ -23,9 +21,9 @@ class RequestExtensionValidatorTest {
 
     @Nested
     class ValidateProposedDeadLine {
+
         @Test
         void shouldReturnNoErrors_whenValidProposedDeadline() {
-
             CaseDetails caseDetails = CaseDetails.builder()
                 .data(of("extensionProposedDeadline", now().plusDays(14),
                          "responseDeadline", now().plusDays(7).atTime(16, 0)
@@ -39,7 +37,6 @@ class RequestExtensionValidatorTest {
 
         @Test
         void shouldReturnErrors_whenProposedDeadlineIsAfter28DaysFromResponseDeadline() {
-
             CaseDetails caseDetails = CaseDetails.builder()
                 .data(of("extensionProposedDeadline", now().plusDays(29),
                          "responseDeadline", now().atTime(16, 0)
@@ -48,14 +45,8 @@ class RequestExtensionValidatorTest {
 
             List<String> errors = validator.validateProposedDeadline(caseDetails);
 
-            assertAll(
-                () -> assertThat(errors.isEmpty()).isFalse(),
-                () -> assertEquals(1, errors.size()),
-                () -> assertEquals(
-                    "The proposed deadline can't be later than 28 days after the current deadline.",
-                    errors.get(0)
-                )
-            );
+            assertThat(errors)
+                .containsOnly("The proposed deadline can't be later than 28 days after the current deadline.");
         }
 
         @Test
@@ -68,22 +59,16 @@ class RequestExtensionValidatorTest {
 
             List<String> errors = validator.validateProposedDeadline(caseDetails);
 
-            assertAll(
-                () -> assertThat(errors.isEmpty()).isFalse(),
-                () -> assertEquals(1, errors.size()),
-                () -> assertEquals(
-                    "The proposed deadline must be a future date.",
-                    errors.get(0)
-                )
-            );
+            assertThat(errors)
+                .containsOnly("The proposed deadline must be a future date.");
         }
     }
 
     @Nested
     class ExtensionAlreadyRequested {
+
         @Test
         void shouldReturnErrors_whenExtensionAlreadyRequested() {
-
             CaseDetails caseDetails = CaseDetails.builder()
                 .data(of("extensionProposedDeadline", now().plusDays(14),
                          "responseDeadline", now().plusDays(7).atTime(16, 0)
@@ -92,26 +77,19 @@ class RequestExtensionValidatorTest {
 
             List<String> errors = validator.validateAlreadyRequested(caseDetails);
 
-            assertAll(
-                () -> assertThat(errors.isEmpty()).isFalse(),
-                () -> assertEquals(1, errors.size()),
-                () -> assertEquals(
-                    "A request for extension can only be requested once.",
-                    errors.get(0)
-                )
-            );
+            assertThat(errors)
+                .containsOnly("A request for extension can only be requested once.");
         }
 
         @Test
         void shouldReturnNoError_whenExtensionRequestedFirstTime() {
-
             List<String> errors = validator.validateAlreadyRequested(
                 CaseDetails.builder()
                     .data(of("responseDeadline", now().atTime(16, 0)))
                     .build()
             );
 
-            assertThat(errors.isEmpty()).isTrue();
+            assertThat(errors).isEmpty();
         }
     }
 }
