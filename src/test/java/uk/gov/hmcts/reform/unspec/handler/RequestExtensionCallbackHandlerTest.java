@@ -52,7 +52,7 @@ class RequestExtensionCallbackHandlerTest extends BaseCallbackHandlerTest {
                 .handle(params);
 
             assertThat(response.getErrors())
-                .containsOnly("A request for extension can only be requested once.");
+                .containsOnly("CONTENT TBC: A request for extension can only be requested once.");
         }
 
         @Test
@@ -83,8 +83,8 @@ class RequestExtensionCallbackHandlerTest extends BaseCallbackHandlerTest {
 
             assertThat(response.getErrors())
                 .containsAll(asList(
-                    "The proposed deadline must be a future date.",
-                    "The proposed deadline can't be before the current response deadline."
+                    "CONTENT TBC: The proposed deadline must be a future date.",
+                    "CONTENT TBC: The proposed deadline can't be before the current response deadline."
                 ));
         }
 

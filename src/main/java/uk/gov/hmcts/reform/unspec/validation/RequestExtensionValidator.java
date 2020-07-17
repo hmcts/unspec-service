@@ -28,7 +28,7 @@ public class RequestExtensionValidator {
         );
 
         if (!proposedDeadline.isAfter(now())) {
-            errors.add("The proposed deadline must be a future date.");
+            errors.add("CONTENT TBC: The proposed deadline must be a future date.");
         }
 
         LocalDateTime responseDeadline = mapper.convertValue(
@@ -36,17 +36,17 @@ public class RequestExtensionValidator {
             LocalDateTime.class
         );
         if (proposedDeadline.isBefore(responseDeadline.toLocalDate())) {
-            errors.add("The proposed deadline can't be before the current response deadline.");
+            errors.add("CONTENT TBC: The proposed deadline can't be before the current response deadline.");
         }
         if (proposedDeadline.isAfter(responseDeadline.toLocalDate().plusDays(28))) {
-            errors.add("The proposed deadline can't be later than 28 days after the current deadline.");
+            errors.add("CONTENT TBC: The proposed deadline can't be later than 28 days after the current deadline.");
         }
         return errors;
     }
 
     public List<String> validateAlreadyRequested(CaseDetails caseDetails) {
         if (isExtensionAlreadyRequested(caseDetails)) {
-            return ImmutableList.of("A request for extension can only be requested once.");
+            return ImmutableList.of("CONTENT TBC: A request for extension can only be requested once.");
         }
         return emptyList();
     }
