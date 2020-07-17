@@ -55,7 +55,6 @@
     "PageFieldDisplayOrder": 1,
     "DisplayContext": "COMPLEX",
     "PageID": "Defendant",
-    "PageLabel": " ",
     "PageDisplayOrder": 5,
     "PageColumnNumber": 1,
     "ShowSummaryChangeOption": "Y"
@@ -66,10 +65,9 @@
     "CaseEventID": "CREATE_CLAIM",
     "CaseFieldID": "claimType",
     "PageFieldDisplayOrder": 1,
-    "DisplayContext": "Mandatory",
+    "DisplayContext": "MANDATORY",
     "PageID": "ClaimType",
-    "PageLabel": " ",
-    "PageDisplayOrder": 5,
+    "PageDisplayOrder": 6,
     "PageColumnNumber": 1,
     "ShowSummaryChangeOption": "Y"
   },
@@ -81,7 +79,7 @@
     "PageFieldDisplayOrder": 1,
     "DisplayContext": "COMPLEX",
     "PageID": "ClaimValue",
-    "PageDisplayOrder": 6,
+    "PageDisplayOrder": 7,
     "PageColumnNumber": 1,
     "ShowSummaryChangeOption": "Y",
     "CallBackURLMidEvent": "${CCD_DEF_CASE_SERVICE_BASE_URL}/cases/callbacks/mid"
@@ -94,8 +92,7 @@
     "PageFieldDisplayOrder": 1,
     "DisplayContext": "COMPLEX",
     "PageID": "StatementOfTruth",
-    "PageLabel": " ",
-    "PageDisplayOrder": 7,
+    "PageDisplayOrder": 8,
     "PageColumnNumber": 1,
     "ShowSummaryChangeOption": "Y"
   }
