@@ -88,8 +88,7 @@ module.exports = function() {
 
       await this.retryUntilExists(() => this.click('Ask for extension'), 'ccd-markdown');
       this.see('You asked for extra time to respond');
-      await this.retryUntilExists(() => this.click('Close and Return to case details'),
-        locate('exui-alert').withText('updated with event: Request extension'));
+      this.click('Close and Return to case details');
     },
 
     async clickContinue() {
