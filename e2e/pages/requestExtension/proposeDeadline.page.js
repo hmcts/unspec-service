@@ -12,9 +12,9 @@ module.exports = {
 
   async enterExtensionProposedDeadline () {
     const proposedDeadline = new Date();
-    proposedDeadline.setDate(proposedDeadline.getDate() + 7);
+    proposedDeadline.setDate(proposedDeadline.getDate() + 28);
     I.fillField(this.fields.extensionProposedDeadline.day, proposedDeadline.getDate());
-    I.fillField(this.fields.extensionProposedDeadline.month, new String(proposedDeadline.getMonth() + 1));
+    I.fillField(this.fields.extensionProposedDeadline.month, proposedDeadline.getMonth() + 1);
     I.fillField(this.fields.extensionProposedDeadline.year, proposedDeadline.getFullYear());
 
     await I.clickContinue();
