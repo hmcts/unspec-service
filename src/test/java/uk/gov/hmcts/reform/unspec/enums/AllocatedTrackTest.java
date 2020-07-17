@@ -40,13 +40,13 @@ class AllocatedTrackTest {
             assertThat(getAllocatedTrack(claimValue, claimType)).isEqualTo(FAST_CLAIM);
         }
 
-        @ParameterizedTest(name = "{0} has fast claim track when claim value is more than 1000 but less than 25000")
+        @ParameterizedTest(name = "{0} has fast claim track when claim value is more than 1000 but less than 25001")
         @EnumSource(
             value = ClaimType.class,
             names = {"PERSONAL_INJURY_ROAD", "PERSONAL_INJURY_WORK", "PERSONAL_INJURY_PUBLIC",
                 "PERSONAL_INJURY_HOLIDAY", "PERSONAL_INJURY_DISEASE", "PERSONAL_INJURY_OTHER", "CLINICAL_NEGLIGENCE"})
         void shouldAllocatePersonalInjuryClaimTypesAbove1000AndBelow25000ToFastClaim(ClaimType claimType) {
-            ClaimValue claimValue = claimValueWithHigherValueOf(24999);
+            ClaimValue claimValue = claimValueWithHigherValueOf(25000);
 
             assertThat(getAllocatedTrack(claimValue, claimType)).isEqualTo(FAST_CLAIM);
         }
@@ -57,7 +57,7 @@ class AllocatedTrackTest {
             names = {"PERSONAL_INJURY_ROAD", "PERSONAL_INJURY_WORK", "PERSONAL_INJURY_PUBLIC",
                 "PERSONAL_INJURY_HOLIDAY", "PERSONAL_INJURY_DISEASE", "PERSONAL_INJURY_OTHER", "CLINICAL_NEGLIGENCE"})
         void shouldAllocatePersonalInjuryClaimTypesAbove25000ToMultiClaim(ClaimType claimType) {
-            ClaimValue claimValue = claimValueWithHigherValueOf(25000);
+            ClaimValue claimValue = claimValueWithHigherValueOf(25001);
 
             assertThat(getAllocatedTrack(claimValue, claimType)).isEqualTo(MULTI_CLAIM);
         }
@@ -85,12 +85,12 @@ class AllocatedTrackTest {
             assertThat(getAllocatedTrack(claimValue, claimType)).isEqualTo(FAST_CLAIM);
         }
 
-        @ParameterizedTest(name = "{0} has fast claim track when claim value is more than 1000 but less than 25000")
+        @ParameterizedTest(name = "{0} has fast claim track when claim value is more than 1000 but less than 25001")
         @EnumSource(
             value = ClaimType.class,
             names = {"BREACH_OF_CONTRACT", "CONSUMER_CREDIT", "OTHER"})
         void shouldAllocateOtherClaimTypesAbove10000AndBelow25000ToFastClaim(ClaimType claimType) {
-            ClaimValue claimValue = claimValueWithHigherValueOf(24999);
+            ClaimValue claimValue = claimValueWithHigherValueOf(25000);
 
             assertThat(getAllocatedTrack(claimValue, claimType)).isEqualTo(FAST_CLAIM);
         }
@@ -100,7 +100,7 @@ class AllocatedTrackTest {
             value = ClaimType.class,
             names = {"BREACH_OF_CONTRACT", "CONSUMER_CREDIT", "OTHER"})
         void shouldAllocateOtherClaimTypesAbove25000ToMultiClaim(ClaimType claimType) {
-            ClaimValue claimValue = claimValueWithHigherValueOf(25000);
+            ClaimValue claimValue = claimValueWithHigherValueOf(25001);
 
             assertThat(getAllocatedTrack(claimValue, claimType)).isEqualTo(MULTI_CLAIM);
         }
