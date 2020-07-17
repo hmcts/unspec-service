@@ -1,5 +1,6 @@
 package uk.gov.hmcts.reform.ucmc.handler;
 
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.jackson.JacksonAutoConfiguration;
@@ -35,106 +36,119 @@ class RequestExtensionCallbackHandlerTest extends BaseCallbackHandlerTest {
     @Autowired
     private RequestExtensionCallbackHandler handler;
 
-    @Test
-    void shouldReturnErrorInAboutToSubmitEventWhenExtensionIsAlreadyRequested() {
-        Map<String, Object> data = new HashMap<>();
-        data.put("extensionProposedDeadline", now());
+    @Nested
+    class AboutToSubmitCallback {
+        @Test
+        void shouldReturnError_whenExtensionIsAlreadyRequested() {
+            Map<String, Object> data = new HashMap<>();
+            data.put("extensionProposedDeadline", now());
 
-        CallbackParams params = callbackParamsOf(data, CallbackType.ABOUT_TO_START);
+            CallbackParams params = callbackParamsOf(data, CallbackType.ABOUT_TO_START);
 
-        AboutToStartOrSubmitCallbackResponse response = (AboutToStartOrSubmitCallbackResponse) handler.handle(params);
+            AboutToStartOrSubmitCallbackResponse response = (AboutToStartOrSubmitCallbackResponse) handler
+                .handle(params);
 
-        assertThat(response.getErrors())
-            .containsOnly("A request for extension can only be requested once.");
+            assertThat(response.getErrors())
+                .containsOnly("A request for extension can only be requested once.");
+        }
+
+        @Test
+        void shouldReturnNoError_WhenExtensionIsRequestedFirstTime() {
+
+            CallbackParams params = callbackParamsOf(emptyMap(), CallbackType.ABOUT_TO_START);
+
+            AboutToStartOrSubmitCallbackResponse response = (AboutToStartOrSubmitCallbackResponse) handler
+                .handle(params);
+
+            assertThat(response.getErrors()).isEmpty();
+        }
     }
 
-    @Test
-    void shouldReturnNoErrorInAboutToSubmitEventWhenExtensionIsRequestedFirstTime() {
+    @Nested
+    class MidCallback {
+        @Test
+        void shouldReturnExpectedError_whenValuesAreInvalid() {
 
-        CallbackParams params = callbackParamsOf(emptyMap(), CallbackType.ABOUT_TO_START);
+            CallbackParams params = callbackParamsOf(
+                of("extensionProposedDeadline", now().minusDays(1),
+                   "responseDeadline", now().atTime(16, 0)
+                ),
+                CallbackType.MID
+            );
 
-        AboutToStartOrSubmitCallbackResponse response = (AboutToStartOrSubmitCallbackResponse) handler.handle(params);
+            AboutToStartOrSubmitCallbackResponse response = (AboutToStartOrSubmitCallbackResponse) handler
+                .handle(params);
 
-        assertThat(response.getErrors()).isEmpty();
+            assertThat(response.getErrors())
+                .containsAll(asList(
+                    "The proposed deadline must be a future date.",
+                    "The proposed deadline can't be before the current response deadline."
+                ));
+        }
+
+        @Test
+        void shouldReturnNoError_whenValuesAreValid() {
+
+            CallbackParams params = callbackParamsOf(
+                of("extensionProposedDeadline", now().plusDays(14),
+                   "responseDeadline", now().atTime(16, 0)
+                ),
+                CallbackType.MID
+            );
+
+            AboutToStartOrSubmitCallbackResponse response = (AboutToStartOrSubmitCallbackResponse) handler
+                .handle(params);
+
+            assertThat(response.getErrors()).isEmpty();
+        }
     }
 
-    @Test
-    void shouldReturnExpectedErrorInMidEventWhenValuesAreInvalid() {
+    @Nested
+    class SubmittedCallback {
+        @Test
+        void shouldReturnExpectedResponse_whenAlreadyAgreed() {
+            LocalDate proposedDeadline = now().plusDays(14);
+            CallbackParams params = callbackParamsOf(
+                of("extensionProposedDeadline", proposedDeadline, "extensionAlreadyAgreed", "Yes"),
+                CallbackType.SUBMITTED
+            );
 
-        CallbackParams params = callbackParamsOf(
-            of("extensionProposedDeadline", now().minusDays(1),
-               "responseDeadline", now().atTime(16, 0)
-            ),
-            CallbackType.MID
-        );
+            SubmittedCallbackResponse response = (SubmittedCallbackResponse) handler.handle(params);
 
-        AboutToStartOrSubmitCallbackResponse response = (AboutToStartOrSubmitCallbackResponse) handler.handle(params);
+            assertThat(response).isEqualToComparingFieldByField(
+                SubmittedCallbackResponse.builder()
+                    .confirmationHeader("# You asked for extra time to respond\n## Claim number: TBC")
+                    .confirmationBody(prepareBody(proposedDeadline, ALREADY_AGREED))
+                    .build());
+        }
 
-        assertThat(response.getErrors())
-            .containsAll(asList(
-                "The proposed deadline must be a future date.",
-                "The proposed deadline can't be before the current response deadline."
-            ));
-    }
+        @Test
+        void shouldReturnExpectedResponse_whenNotAlreadyAgreed() {
+            LocalDate proposedDeadline = now().plusDays(14);
+            CallbackParams params = callbackParamsOf(
+                of("extensionProposedDeadline", proposedDeadline, "extensionAlreadyAgreed", "No"),
+                CallbackType.SUBMITTED
+            );
 
-    @Test
-    void shouldReturnNoErrorInMidEventWhenValuesAreValid() {
+            SubmittedCallbackResponse response = (SubmittedCallbackResponse) handler.handle(params);
 
-        CallbackParams params = callbackParamsOf(
-            of("extensionProposedDeadline", now().plusDays(14),
-               "responseDeadline", now().atTime(16, 0)
-            ),
-            CallbackType.MID
-        );
+            assertThat(response).isEqualToComparingFieldByField(
+                SubmittedCallbackResponse.builder()
+                    .confirmationHeader("# You asked for extra time to respond\n## Claim number: TBC")
+                    .confirmationBody(prepareBody(proposedDeadline, NOT_AGREED))
+                    .build());
+        }
 
-        AboutToStartOrSubmitCallbackResponse response = (AboutToStartOrSubmitCallbackResponse) handler.handle(params);
-
-        assertThat(response.getErrors()).isEmpty();
-    }
-
-    @Test
-    void shouldReturnExpectedSubmittedCallbackResponseWhenAlreadyAgreed() {
-        LocalDate proposedDeadline = now().plusDays(14);
-        CallbackParams params = callbackParamsOf(
-            of("extensionProposedDeadline", proposedDeadline, "extensionAlreadyAgreed", "Yes"),
-            CallbackType.SUBMITTED
-        );
-
-        SubmittedCallbackResponse response = (SubmittedCallbackResponse) handler.handle(params);
-
-        assertThat(response).isEqualToComparingFieldByField(
-            SubmittedCallbackResponse.builder()
-                .confirmationHeader("# You asked for extra time to respond\n## Claim number: TBC")
-                .confirmationBody(prepareBody(proposedDeadline, ALREADY_AGREED))
-                .build());
-    }
-
-    @Test
-    void shouldReturnExpectedSubmittedCallbackResponseWhenNotAlreadyAgreed() {
-        LocalDate proposedDeadline = now().plusDays(14);
-        CallbackParams params = callbackParamsOf(
-            of("extensionProposedDeadline", proposedDeadline, "extensionAlreadyAgreed", "No"),
-            CallbackType.SUBMITTED
-        );
-
-        SubmittedCallbackResponse response = (SubmittedCallbackResponse) handler.handle(params);
-
-        assertThat(response).isEqualToComparingFieldByField(
-            SubmittedCallbackResponse.builder()
-                .confirmationHeader("# You asked for extra time to respond\n## Claim number: TBC")
-                .confirmationBody(prepareBody(proposedDeadline, NOT_AGREED))
-                .build());
-    }
-
-    private String prepareBody(LocalDate proposedDeadline, String notAgreed) {
-        LocalDate responseDeadline = now().plusDays(7);
-        return format(
-            "<br /><p>You asked if you can respond before 4pm on %s %s"
-                + "<p>They can choose not to respond to your request, so if you don't get an email from us, "
-                + "assume you need to respond before 4pm on %s.</p>",
-            formatLocalDate(proposedDeadline, DATE),
-            notAgreed,
-            formatLocalDate(responseDeadline, DATE)
-        );
+        private String prepareBody(LocalDate proposedDeadline, String notAgreed) {
+            LocalDate responseDeadline = now().plusDays(7);
+            return format(
+                "<br /><p>You asked if you can respond before 4pm on %s %s"
+                    + "<p>They can choose not to respond to your request, so if you don't get an email from us, "
+                    + "assume you need to respond before 4pm on %s.</p>",
+                formatLocalDate(proposedDeadline, DATE),
+                notAgreed,
+                formatLocalDate(responseDeadline, DATE)
+            );
+        }
     }
 }
