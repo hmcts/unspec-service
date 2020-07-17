@@ -16,7 +16,7 @@ import static java.util.Map.of;
 public class CaseSearchService {
     private final CoreCaseDataService coreCaseDataService;
 
-    public List<CaseDetails> getCasesOver112Days() {
+    public List<CaseDetails> getCasesToBeStayed() {
         return coreCaseDataService.searchCases(dateQuery()).getCases();
     }
 

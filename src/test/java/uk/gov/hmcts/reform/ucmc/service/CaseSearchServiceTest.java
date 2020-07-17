@@ -44,7 +44,7 @@ class CaseSearchServiceTest {
 
         when(coreCaseDataService.searchCases(any())).thenReturn(expectedSearchResults);
 
-        List<CaseDetails> casesFound = searchService.getCasesOver112Days();
+        List<CaseDetails> casesFound = searchService.getCasesToBeStayed();
 
         assertThat(casesFound).isEqualTo(expectedSearchResults.getCases());
 

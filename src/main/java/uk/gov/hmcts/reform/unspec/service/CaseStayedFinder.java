@@ -22,7 +22,7 @@ public class CaseStayedFinder implements Job {
         final String jobName = context.getJobDetail().getKey().getName();
         log.info("Job {} started", jobName);
 
-        List<CaseDetails> cases = caseSearchService.getCasesOver112Days();
+        List<CaseDetails> cases = caseSearchService.getCasesToBeStayed();
 
         if (cases.isEmpty()) {
             log.info("Job '{}' did not find any cases", jobName);

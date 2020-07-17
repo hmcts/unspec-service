@@ -58,7 +58,7 @@ class CaseStayedFinderTest {
                                                     .data(data)
                                                     .build());
 
-        when(caseSearchService.getCasesOver112Days()).thenReturn(caseDetails);
+        when(caseSearchService.getCasesToBeStayed()).thenReturn(caseDetails);
 
         caseStayedFinder.execute(jobExecutionContext);
 
@@ -67,7 +67,7 @@ class CaseStayedFinderTest {
 
     @Test
     void shouldNotEmitMoveCaseToStayedEventWhenNoCasesFound() {
-        when(caseSearchService.getCasesOver112Days()).thenReturn(List.of());
+        when(caseSearchService.getCasesToBeStayed()).thenReturn(List.of());
 
         caseStayedFinder.execute(jobExecutionContext);
 
