@@ -18,7 +18,7 @@ spring:
   main:
     allow-bean-definition-overriding: true
   application:
-    name: ucmc-service
+    name: unspec-service
   cache:
     cache-names: userInfoCache
     caffeine:
@@ -44,16 +44,13 @@ idam:
   api:
     url: "http://localhost:5000"
   s2s-auth:
+    microservice: unspec-service
     url: "http://localhost:4502"
     totp_secret: "AABBCCDDEEFFGGHH"
-    microservice: ucmc_service
 
 document_management:
   url: "http://localhost:4506"
   userRoles: "caseworker-civil,caseworker-civil-solicitor"
-
-doc_assembly:
-  url: ${DOC_ASSEMBLY_URL:false}
 
 docmosis:
   tornado:
