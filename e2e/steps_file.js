@@ -18,6 +18,9 @@ const serviceMethodPage = require('./pages/confirmService/serviceMethod.page');
 const serviceLocationPage = require('./pages/confirmService/serviceLocation.page');
 const serviceDatePage = require('./pages/confirmService/serviceDate.page');
 
+const proposeDeadline = require('./pages/requestExtension/proposeDeadline.page');
+const extensionAlreadyAgreed = require('./pages/requestExtension/extensionAlreadyAgreed.page');
+
 const statementOfTruth = require('./fragments/statementOfTruth');
 const party = require('./fragments/party');
 
@@ -76,6 +79,17 @@ module.exports = function() {
       this.see('You\'ve confirmed service');
       await this.retryUntilExists(() => this.click('Close and Return to case details'),
         locate('exui-alert').withText('updated with event: Confirm service'));
+    },
+
+    async requestExtension() {
+      await caseViewPage.startEvent('Request extension');
+      await proposeDeadline.enterExtensionProposedDeadline();
+      await extensionAlreadyAgreed.selectAlreadyAgreed();
+
+      await this.retryUntilExists(() => this.click('Ask for extension'), 'ccd-markdown');
+      this.see('You asked for extra time to respond');
+      await this.retryUntilExists(() => this.click('Close and Return to case details'),
+        locate('exui-alert').withText('updated with event: Request extension'));
     },
 
     async clickContinue() {
