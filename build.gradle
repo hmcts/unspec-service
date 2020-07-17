@@ -130,8 +130,8 @@ project.tasks['sonarqube'].dependsOn test, integration, jacocoTestReport
 
 sonarqube {
   properties {
-    property "sonar.projectName", "UCMC :: service"
-    property "sonar.projectKey", "ucmc-service"
+    property "sonar.projectName", "UNSPEC :: service"
+    property "sonar.projectKey", "unspec-service"
     property "sonar.coverage.jacoco.xmlReportPaths", "${jacocoTestReport.reports.xml.destination.path}"
     property "sonar.coverage.exclusions", "**/model/**, **/config/**/*Configuration.java"
   }
@@ -164,7 +164,7 @@ dependencyCheck {
 
 dependencyManagement {
   dependencies {
-    dependency group: 'org.bouncycastle', name: 'bcpkix-jdk15on', version: '1.65'
+    dependency group: 'org.bouncycastle', name: 'bcpkix-jdk15on', version: '1.66'
     // CVE-2018-10237 - Unbounded memory allocation
     dependencySet(group: 'com.google.guava', version: '29.0-jre') {
       entry 'guava'
@@ -241,8 +241,8 @@ dependencies {
   implementation group: 'org.apache.tomcat.embed', name: 'tomcat-embed-core', version: '9.0.37'
   implementation group: 'org.apache.tomcat.embed', name: 'tomcat-embed-websocket', version: '9.0.37'
 
-  testImplementation group: 'org.mockito', name: 'mockito-core', version: '3.3.3'
-  testImplementation group: 'org.mockito', name: 'mockito-junit-jupiter', version: '3.3.3'
+  testImplementation group: 'org.mockito', name: 'mockito-core', version: '3.4.0'
+  testImplementation group: 'org.mockito', name: 'mockito-junit-jupiter', version: '3.4.0'
 
   compile group: 'uk.gov.hmcts.reform', name: 'fees-java-client', version: '0.0.6'
   compile group: 'uk.gov.hmcts.reform', name: 'payments-client', version: '1.0.0'
@@ -266,11 +266,11 @@ dependencies {
   smokeTestImplementation sourceSets.main.runtimeClasspath
 }
 
-mainClassName = 'uk.gov.hmcts.reform.ucmc.Application'
+mainClassName = 'uk.gov.hmcts.reform.unspec.Application'
 
 bootJar {
   getArchiveFileName().set(provider {
-    'ucmc-service.jar'
+    'unspec-service.jar'
   })
 
   manifest {

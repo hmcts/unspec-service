@@ -6,8 +6,8 @@ module.exports = {
     email: 'solicitor@example.com'
   },
   definition: {
-    jurisdiction: 'CMC',
-    caseType: 'PERSONAL_INJURY',
+    jurisdiction: 'CIVIL',
+    caseType: 'UNSPECIFIED_CLAIMS',
   },
   address: {
     buildingAndStreet: {
@@ -19,5 +19,6 @@ module.exports = {
     county: 'Kent',
     country: 'United Kingdom',
     postcode: 'RG4 7AA',
-  }
+  },
+  testFile: './e2e/fixtures/examplePDF.pdf'
 };

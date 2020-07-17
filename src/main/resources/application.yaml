@@ -16,7 +16,7 @@ management:
 
 spring:
   application:
-    name: ucmc-service
+    name: unspec-service
   cache:
     cache-names: userInfoCache
     caffeine:
@@ -52,7 +52,7 @@ payments:
 
 idam:
   s2s-auth:
-    microservice: ucmc_service
+    microservice: unspec-service
 
 unspecified:
   response-pack-url: https://formfinder.hmctsformfinder.justice.gov.uk/n9-eng.pdf
@@ -79,7 +79,7 @@ idam:
     url: http://localhost:4502
     totp_secret: AABBCCDDEEFFGGHH
   client:
-    id: ucmc
+    id: unspec
     redirect_uri: https://localhost:9000/oauth2/callback
     secret: OOOOOOOOOOOOOOOO
 
