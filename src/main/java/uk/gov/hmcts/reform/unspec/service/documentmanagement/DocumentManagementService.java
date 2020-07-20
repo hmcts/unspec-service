@@ -111,7 +111,6 @@ public class DocumentManagementService {
     public CaseDocument logUploadDocumentFailure(DocumentManagementException exception,
                                                  String authorisation,
                                                  PDF pdf) {
-        String filename = pdf.getFilename();
         logger.info(exception.getMessage() + " " + exception.getCause(), exception);
         throw exception;
     }
@@ -147,9 +146,8 @@ public class DocumentManagementService {
     public byte[] logDownloadDocumentFailure(
         DocumentManagementException exception,
         String authorisation,
-        CaseDocument caseDocument
+        URI documentManagementUrl
     ) {
-        String filename = caseDocument.getDocumentName() + ".pdf";
         logger.warn(exception.getMessage() + " " + exception.getCause(), exception);
         throw exception;
     }

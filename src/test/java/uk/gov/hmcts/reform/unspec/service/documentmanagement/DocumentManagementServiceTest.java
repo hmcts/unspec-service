@@ -168,7 +168,7 @@ class DocumentManagementServiceTest {
             assertNotNull(pdf);
             assertArrayEquals("test".getBytes(), pdf);
 
-            verify(documentMetadataDownloadClient, atLeast(2))
+            verify(documentMetadataDownloadClient, atLeast(3))
                 .getDocumentMetadata(anyString(), anyString(), eq(USER_ROLES_JOINED), anyString(), anyString());
             verify(documentDownloadClient)
                 .downloadBinary(anyString(), anyString(), eq(USER_ROLES_JOINED), anyString(), anyString());

@@ -8,12 +8,10 @@ import lombok.Data;
 @Data
 @Builder
 public class CourtLocation {
-    private final String preferredCourt;
-
-    //needs class constructor or throws error when mapping due to single field class
+    private final String applicantPreferredCourt;
 
     @JsonCreator
-    CourtLocation(@JsonProperty("preferredCourt") String preferredCourt) {
-        this.preferredCourt = preferredCourt;
+    CourtLocation(@JsonProperty("applicantPreferredCourt") String applicantPreferredCourt) {
+        this.applicantPreferredCourt = applicantPreferredCourt;
     }
 }

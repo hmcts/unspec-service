@@ -79,7 +79,7 @@ public class SealedClaimFormGenerator extends TemplateDataGenerator<SealedClaimF
             .claimValue(caseData.getClaimValue().formData())
             .statementOfTruth(caseData.getClaimStatementOfTruth())
             .claimDetails(TEMP_CLAIM_DETAILS)
-            .hearingCourtLocation(caseData.getCourtLocation().getPreferredCourt())
+            .hearingCourtLocation(caseData.getCourtLocation().getApplicantPreferredCourt())
             .claimantRepresentative(TEMP_REPRESENTATIVE)
             .referenceNumber(REFERENCE_NUMBER)
             .issueDate(LocalDate.of(2020, 9, 29))

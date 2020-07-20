@@ -167,9 +167,9 @@
   {
     "LiveFrom": "01/01/2017",
     "CaseTypeID": "UNSPECIFIED_CLAIMS",
-    "ID": "id",
-    "Label": "id",
-    "HintText": "Case id",
+    "ID": "ccdCaseReference",
+    "Label": "CCD Case Reference",
+    "HintText": "CCD Case Reference",
     "FieldType": "Number",
     "SecurityClassification": "Public"
   }
