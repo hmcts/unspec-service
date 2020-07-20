@@ -2,6 +2,8 @@ package uk.gov.hmcts.reform.unspec.handler;
 
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.jackson.JacksonAutoConfiguration;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -33,6 +35,32 @@ class RespondExtensionCallbackHandlerTest extends BaseCallbackHandlerTest {
 
     @Autowired
     private RespondExtensionCallbackHandler handler;
+
+    @Nested
+    class AboutToStartCallback {
+
+        @Test
+        void shouldAddNoReasonGiven_WhenNoReasonGivenForExtensionRequest() {
+            CallbackParams params = callbackParamsOf(new HashMap<>(), CallbackType.ABOUT_TO_START);
+
+            AboutToStartOrSubmitCallbackResponse response =
+                (AboutToStartOrSubmitCallbackResponse) handler.handle(params);
+
+            assertThat(response.getData().get("extensionReason")).isEqualTo("No reason given");
+        }
+
+        @Test
+        void shouldKeepReasonGiven_WhenReasonGivenForExtensionRequest() {
+            Map<String, Object> data = new HashMap<>();
+            data.put("extensionReason", "Reason given");
+            CallbackParams params = callbackParamsOf(data, CallbackType.ABOUT_TO_START);
+
+            AboutToStartOrSubmitCallbackResponse response =
+                (AboutToStartOrSubmitCallbackResponse) handler.handle(params);
+
+            assertThat(response.getData().get("extensionReason")).isEqualTo("Reason given");
+        }
+    }
 
     @Nested
     class MidEventCallback {
@@ -75,11 +103,12 @@ class RespondExtensionCallbackHandlerTest extends BaseCallbackHandlerTest {
     @Nested
     class AboutToSubmitCallback {
 
-        @Test
-        void shouldUpdateResponseDeadline_whenProposedDeadline() {
+        @ParameterizedTest(name = "should update response deadline when {0} is set")
+        @ValueSource(strings = {"extensionCounterDate", "extensionProposedDeadline"})
+        void shouldUpdateResponseDeadline_whenNewDeadline(String deadlineKey) {
             LocalDate proposedDeadline = now().plusDays(14);
             Map<String, Object> map = new HashMap<>();
-            map.put("extensionCounterDate", proposedDeadline);
+            map.put(deadlineKey, proposedDeadline);
             map.put("responseDeadline", now().atTime(16, 0));
 
             CallbackParams params = callbackParamsOf(map, CallbackType.ABOUT_TO_SUBMIT);
@@ -88,6 +117,21 @@ class RespondExtensionCallbackHandlerTest extends BaseCallbackHandlerTest {
                 (AboutToStartOrSubmitCallbackResponse) handler.handle(params);
 
             assertThat(response.getData().get("responseDeadline")).isEqualTo(proposedDeadline.atTime(16, 0));
+        }
+
+        @Test
+        void shouldKeepExistingResponseDeadline_whenNoNewDeadline() {
+            LocalDateTime responseDeadline = now().atTime(16, 0);
+
+            Map<String, Object> map = new HashMap<>();
+            map.put("responseDeadline", responseDeadline);
+
+            CallbackParams params = callbackParamsOf(map, CallbackType.ABOUT_TO_SUBMIT);
+
+            AboutToStartOrSubmitCallbackResponse response =
+                (AboutToStartOrSubmitCallbackResponse) handler.handle(params);
+
+            assertThat(response.getData().get("responseDeadline")).isEqualTo(responseDeadline);
         }
     }
 

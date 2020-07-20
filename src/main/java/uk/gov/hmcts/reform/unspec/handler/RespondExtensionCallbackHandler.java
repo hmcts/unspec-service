@@ -39,6 +39,7 @@ public class RespondExtensionCallbackHandler extends CallbackHandler {
     @Override
     protected Map<CallbackType, Callback> callbacks() {
         return Map.of(
+            CallbackType.ABOUT_TO_START, this::prepopulateRequestReasonIfAbsent,
             CallbackType.MID, this::validateRequestedDeadline,
             CallbackType.ABOUT_TO_SUBMIT, this::updateResponseDeadline,
             CallbackType.SUBMITTED, this::buildConfirmation
@@ -48,6 +49,15 @@ public class RespondExtensionCallbackHandler extends CallbackHandler {
     @Override
     public List<CaseEvent> handledEvents() {
         return EVENTS;
+    }
+
+    private CallbackResponse prepopulateRequestReasonIfAbsent(CallbackParams callbackParams) {
+        Map<String, Object> data = callbackParams.getRequest().getCaseDetails().getData();
+        data.putIfAbsent("extensionReason", "No reason given");
+
+        return AboutToStartOrSubmitCallbackResponse.builder()
+                   .data(data)
+                   .build();
     }
 
     private CallbackResponse validateRequestedDeadline(CallbackParams callbackParams) {
@@ -64,18 +74,22 @@ public class RespondExtensionCallbackHandler extends CallbackHandler {
         );
 
         return AboutToStartOrSubmitCallbackResponse.builder()
-            .errors(validator.validateProposedDeadline(extensionCounterDate, responseDeadline))
-            .build();
+                   .errors(validator.validateProposedDeadline(extensionCounterDate, responseDeadline))
+                   .build();
     }
 
     private CallbackResponse updateResponseDeadline(CallbackParams callbackParams) {
         Map<String, Object> data = callbackParams.getRequest().getCaseDetails().getData();
 
-        LocalDate extensionCounterDate = mapper.convertValue(
-            data.get("extensionCounterDate"), LocalDate.class
-        );
+        if (data.get("extensionCounterDate") != null) {
+            LocalDate newDeadline = mapper.convertValue(data.get("extensionCounterDate"), LocalDate.class);
+            data.put("responseDeadline", newDeadline.atTime(16, 0));
+        }
 
-        data.put("responseDeadline", extensionCounterDate.atTime(16, 0));
+        if (data.get("extensionProposedDeadline") != null) {
+            LocalDate newDeadline = mapper.convertValue(data.get("extensionProposedDeadline"), LocalDate.class);
+            data.put("responseDeadline", newDeadline.atTime(16, 0));
+        }
 
         return AboutToStartOrSubmitCallbackResponse.builder()
                    .data(data)
@@ -95,9 +109,9 @@ public class RespondExtensionCallbackHandler extends CallbackHandler {
             "<br />The defendant must respond before 4pm on %s", formatLocalDateTime(responseDeadline, DATE));
 
         return SubmittedCallbackResponse.builder()
-            .confirmationHeader(format("# You've responded to the request for more time\n## Claim number: %s",
-                claimNumber))
-            .confirmationBody(body)
-            .build();
+                   .confirmationHeader(format("# You've responded to the request for more time\n## Claim number: %s",
+                       claimNumber))
+                   .confirmationBody(body)
+                   .build();
     }
 }
