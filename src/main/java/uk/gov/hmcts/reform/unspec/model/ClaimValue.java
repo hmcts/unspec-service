@@ -23,10 +23,10 @@ public class ClaimValue {
     }
 
     public String formData() {
-        BigDecimal higerAmount = MonetaryConversions.penniesToPounds(new BigDecimal(higherValue));
+        BigDecimal higherAmount = MonetaryConversions.penniesToPounds(new BigDecimal(higherValue));
         if (lowerValue == null) {
-            return "up to £" + higerAmount;
+            return "up to £" + higherAmount;
         }
-        return "£" + MonetaryConversions.penniesToPounds(new BigDecimal(lowerValue)) + " - £" + higerAmount;
+        return "£" + MonetaryConversions.penniesToPounds(new BigDecimal(lowerValue)) + " - £" + higherAmount;
     }
 }
