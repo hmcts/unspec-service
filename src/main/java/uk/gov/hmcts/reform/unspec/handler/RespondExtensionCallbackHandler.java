@@ -20,13 +20,13 @@ import java.util.List;
 import java.util.Map;
 
 import static java.lang.String.format;
-import static uk.gov.hmcts.reform.unspec.callback.CaseEvent.REQUEST_EXTENSION;
+import static uk.gov.hmcts.reform.unspec.callback.CaseEvent.RESPOND_EXTENSION;
 import static uk.gov.hmcts.reform.unspec.helpers.DateFormatHelper.DATE;
 import static uk.gov.hmcts.reform.unspec.helpers.DateFormatHelper.formatLocalDateTime;
 
 @Service
 public class RespondExtensionCallbackHandler extends CallbackHandler {
-    private static final List<CaseEvent> EVENTS = Collections.singletonList(REQUEST_EXTENSION);
+    private static final List<CaseEvent> EVENTS = Collections.singletonList(RESPOND_EXTENSION);
 
     private final ObjectMapper mapper;
     private final RequestExtensionValidator validator;

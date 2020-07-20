@@ -5,24 +5,24 @@ const date = require('../../fragments/date');
 module.exports = {
 
   fields: {
-    counterDate: {
+    extensionCounter: {
       id: '#extensionCounter',
       options: {
         yes: 'Yes',
         no: 'No'
       }
     },
-    newDeadline: {
-      id: '#extensionProposedDeadline',
+    extensionCounterDate: {
+      id: 'extensionCounterDate',
     }
   },
 
   async enterCounterDate() {
-    await within(this.fields.counterDate.id, () => {
-      I.click(this.fields.counterDate.options.yes);
+    await within(this.fields.extensionCounter.id, () => {
+      I.click(this.fields.extensionCounter.options.yes);
     });
 
-    await date.enterDate(this.fields.newDeadline.id);
+    await date.enterDate(this.fields.extensionCounterDate.id);
     await I.clickContinue();
   }
 };
