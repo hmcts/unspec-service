@@ -34,6 +34,10 @@ public class RequestExtensionCallbackHandler extends CallbackHandler {
     public static final String NOT_AGREED = "We'll email you to tell you if the claimant's legal representative "
         + "accepts or rejects your request.</p>";
 
+    public static final String PROPOSED_DEADLINE = "defendantSolicitor1claimResponseExtensionProposedDeadline";
+    public static final String RESPONSE_DEADLINE = "responseDeadline";
+    public static final String EXTENSION_ALREADY_AGREED = "defendantSolicitor1claimResponseExtensionAlreadyAgreed";
+
     private final ObjectMapper mapper;
     private final RequestExtensionValidator validator;
 
@@ -74,14 +78,14 @@ public class RequestExtensionCallbackHandler extends CallbackHandler {
     private SubmittedCallbackResponse buildConfirmation(CallbackParams callbackParams) {
         Map<String, Object> data = callbackParams.getRequest().getCaseDetails().getData();
         LocalDate proposedDeadline = mapper.convertValue(
-            data.get("extensionProposedDeadline"),
+            data.get(PROPOSED_DEADLINE),
             LocalDate.class
         );
-        YesOrNo extensionAlreadyAgreed = mapper.convertValue(data.get("extensionAlreadyAgreed"), YesOrNo.class);
+        YesOrNo extensionAlreadyAgreed = mapper.convertValue(data.get(EXTENSION_ALREADY_AGREED), YesOrNo.class);
         String claimNumber = "TBC";
 
         LocalDate responseDeadline = mapper.convertValue(
-            data.get("responseDeadline"),
+            data.get(RESPONSE_DEADLINE),
             LocalDate.class
         );
         String body = format(

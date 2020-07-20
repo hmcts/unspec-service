@@ -13,6 +13,8 @@ import java.util.List;
 
 import static java.time.LocalDate.now;
 import static java.util.Collections.emptyList;
+import static uk.gov.hmcts.reform.unspec.handler.RequestExtensionCallbackHandler.PROPOSED_DEADLINE;
+import static uk.gov.hmcts.reform.unspec.handler.RequestExtensionCallbackHandler.RESPONSE_DEADLINE;
 
 @Service
 @RequiredArgsConstructor
@@ -23,7 +25,7 @@ public class RequestExtensionValidator {
 
     public List<String> validateProposedDeadline(CaseDetails caseDetails) {
         LocalDate proposedDeadline = mapper.convertValue(
-            caseDetails.getData().get("extensionProposedDeadline"),
+            caseDetails.getData().get(PROPOSED_DEADLINE),
             LocalDate.class
         );
 
@@ -32,7 +34,7 @@ public class RequestExtensionValidator {
         }
 
         LocalDateTime responseDeadline = mapper.convertValue(
-            caseDetails.getData().get("responseDeadline"),
+            caseDetails.getData().get(RESPONSE_DEADLINE),
             LocalDateTime.class
         );
         if (proposedDeadline.isBefore(responseDeadline.toLocalDate())) {
@@ -52,6 +54,6 @@ public class RequestExtensionValidator {
     }
 
     private boolean isExtensionAlreadyRequested(CaseDetails caseDetailsBefore) {
-        return caseDetailsBefore.getData().get("extensionProposedDeadline") != null;
+        return caseDetailsBefore.getData().get(PROPOSED_DEADLINE) != null;
     }
 }
