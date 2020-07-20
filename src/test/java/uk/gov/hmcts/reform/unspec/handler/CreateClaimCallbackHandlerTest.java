@@ -51,7 +51,6 @@ class CreateClaimCallbackHandlerTest extends BaseCallbackHandlerTest {
     @Test
     void shouldReturnNoErrorInMidEventWhenValuesAreValid() {
         Map<String, Object> data = new HashMap<>();
-
         data.put(
             "claimValue",
             ClaimValue.builder().higherValue(BigDecimal.valueOf(10, 2)).lowerValue(BigDecimal.valueOf(1, 2)).build()
