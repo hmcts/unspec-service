@@ -37,6 +37,7 @@ import static uk.gov.hmcts.reform.unspec.helpers.DateFormatHelper.formatLocalDat
 
 @Service
 public class CreateClaimCallbackHandler extends CallbackHandler {
+
     private static final List<CaseEvent> EVENTS = Collections.singletonList(CREATE_CASE);
     public static final String CONFIRMATION_SUMMARY = "<br />Follow these steps to serve a claim:"
         + "\n* <a href=\"%s\" target=\"_blank\">[Download the sealed claim form]</a> (PDF, %sKB)"

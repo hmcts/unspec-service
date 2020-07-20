@@ -17,6 +17,7 @@ import static uk.gov.hmcts.reform.unspec.service.docmosis.sealedclaim.SealedClai
 @Data
 @Builder(toBuilder = true)
 public class CaseData {
+
     private final Long ccdCaseReference;
     private final SolicitorReferences solicitorReferences;
     private final CourtLocation courtLocation;
