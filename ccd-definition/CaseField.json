@@ -58,6 +58,24 @@
   {
     "LiveFrom": "01/01/2017",
     "CaseTypeID": "UNSPECIFIED_CLAIMS",
+    "ID": "claimType",
+    "Label": "CONTENT TBC: Enter the type of claim",
+    "FieldType": "FixedList",
+    "FieldTypeParameter": "ClaimType",
+    "SecurityClassification": "Public"
+  },
+  {
+    "LiveFrom": "01/01/2017",
+    "CaseTypeID": "UNSPECIFIED_CLAIMS",
+    "ID": "allocatedTrack",
+    "Label": "Allocated track",
+    "FieldType": "FixedList",
+    "FieldTypeParameter": "Track",
+    "SecurityClassification": "Public"
+  },
+  {
+    "LiveFrom": "01/01/2017",
+    "CaseTypeID": "UNSPECIFIED_CLAIMS",
     "ID": "claimStatementOfTruth",
     "Label": "Statement of truth",
     "FieldType": "StatementOfTruth",
@@ -140,7 +158,7 @@
   {
     "LiveFrom": "01/01/2017",
     "CaseTypeID": "UNSPECIFIED_CLAIMS",
-    "ID": "extensionProposedDeadline",
+    "ID": "defendantSolicitor1claimResponseExtensionProposedDeadline",
     "Label": "Proposed new deadline",
     "HintText": "This can't be later than 28 working days after the current deadline. All deadlines require a response before 4pm on the deadline day.",
     "FieldType": "Date",
@@ -149,7 +167,7 @@
   {
     "LiveFrom": "01/01/2017",
     "CaseTypeID": "UNSPECIFIED_CLAIMS",
-    "ID": "extensionAlreadyAgreed",
+    "ID": "defendantSolicitor1claimResponseExtensionAlreadyAgreed",
     "Label": "Have you already agreed the new deadline with the claimant's legal representative?",
     "HintText": "If not, you can propose it using this service.",
     "FieldType": "YesOrNo",
@@ -158,7 +176,7 @@
   {
     "LiveFrom": "01/01/2017",
     "CaseTypeID": "UNSPECIFIED_CLAIMS",
-    "ID": "extensionReason",
+    "ID": "defendantSolicitor1claimResponseExtensionReason",
     "Label": "Reason why more time is needed.",
     "HintText": "This is optional - the claimant will see your answer.",
     "FieldType": "TextArea",
@@ -167,7 +185,7 @@
   {
     "LiveFrom": "01/01/2017",
     "CaseTypeID": "UNSPECIFIED_CLAIMS",
-    "ID": "extensionAccepted",
+    "ID": "defendantSolicitor1claimResponseExtensionAccepted",
     "Label": "Do you agree to extend the deadline to this date?",
     "FieldType": "YesOrNo",
     "SecurityClassification": "Public"
@@ -175,7 +193,7 @@
   {
     "LiveFrom": "01/01/2017",
     "CaseTypeID": "UNSPECIFIED_CLAIMS",
-    "ID": "extensionCounter",
+    "ID": "defendantSolicitor1claimResponseExtensionCounter",
     "Label": "Would you like to set a different extended deadline?",
     "FieldType": "YesOrNo",
     "SecurityClassification": "Public"
@@ -183,7 +201,7 @@
   {
     "LiveFrom": "01/01/2017",
     "CaseTypeID": "UNSPECIFIED_CLAIMS",
-    "ID": "extensionCounterDate",
+    "ID": "defendantSolicitor1claimResponseExtensionCounterDate",
     "Label": "New deadline",
     "HintText": "This can't be later than 28 working days after the current deadline. All deadlines require a response before 4pm on the deadline day.",
     "FieldType": "Date",
@@ -192,7 +210,7 @@
   {
     "LiveFrom": "01/01/2017",
     "CaseTypeID": "UNSPECIFIED_CLAIMS",
-    "ID": "extensionResponse",
+    "ID": "defendantSolicitor1claimResponseExtensionResponse",
     "Label": "Add a response",
     "FieldType": "TextArea",
     "SecurityClassification": "Public"

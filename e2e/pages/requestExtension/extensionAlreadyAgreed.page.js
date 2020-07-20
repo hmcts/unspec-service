@@ -4,7 +4,7 @@ module.exports = {
 
   fields: {
     extensionAlreadyAgreed: {
-      id: '#extensionAlreadyAgreed',
+      id: '#defendantSolicitor1claimResponseExtensionAlreadyAgreed',
       options: {
         yes: 'Yes',
         no: 'No'

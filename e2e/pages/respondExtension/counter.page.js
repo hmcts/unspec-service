@@ -6,14 +6,14 @@ module.exports = {
 
   fields: {
     extensionCounter: {
-      id: '#extensionCounter',
+      id: '#defendantSolicitor1claimResponseExtensionCounter',
       options: {
         yes: 'Yes',
         no: 'No'
       }
     },
     extensionCounterDate: {
-      id: 'extensionCounterDate',
+      id: 'defendantSolicitor1claimResponseExtensionCounterDate',
     }
   },
 

@@ -27,6 +27,10 @@ import static uk.gov.hmcts.reform.unspec.helpers.DateFormatHelper.formatLocalDat
 @Service
 public class RespondExtensionCallbackHandler extends CallbackHandler {
     private static final List<CaseEvent> EVENTS = Collections.singletonList(RESPOND_EXTENSION);
+    public static final String COUNTER_DEADLINE = "defendantSolicitor1claimResponseExtensionCounterDate";
+    public static final String RESPONSE_DEADLINE = "responseDeadline";
+    public static final String PROPOSED_DEADLINE = "defendantSolicitor1claimResponseExtensionProposedDeadline";
+    public static final String EXTENSION_REASON = "defendantSolicitor1claimResponseExtensionReason";
 
     private final ObjectMapper mapper;
     private final RequestExtensionValidator validator;
@@ -53,7 +57,7 @@ public class RespondExtensionCallbackHandler extends CallbackHandler {
 
     private CallbackResponse prepopulateRequestReasonIfAbsent(CallbackParams callbackParams) {
         Map<String, Object> data = callbackParams.getRequest().getCaseDetails().getData();
-        data.putIfAbsent("extensionReason", "No reason given");
+        data.putIfAbsent(EXTENSION_REASON, "No reason given");
 
         return AboutToStartOrSubmitCallbackResponse.builder()
                    .data(data)
@@ -64,12 +68,12 @@ public class RespondExtensionCallbackHandler extends CallbackHandler {
         CaseDetails caseDetails = callbackParams.getRequest().getCaseDetails();
 
         LocalDate extensionCounterDate = mapper.convertValue(
-            caseDetails.getData().get("extensionCounterDate"),
+            caseDetails.getData().get(COUNTER_DEADLINE),
             LocalDate.class
         );
 
         LocalDateTime responseDeadline = mapper.convertValue(
-            caseDetails.getData().get("responseDeadline"),
+            caseDetails.getData().get(RESPONSE_DEADLINE),
             LocalDateTime.class
         );
 
@@ -81,14 +85,14 @@ public class RespondExtensionCallbackHandler extends CallbackHandler {
     private CallbackResponse updateResponseDeadline(CallbackParams callbackParams) {
         Map<String, Object> data = callbackParams.getRequest().getCaseDetails().getData();
 
-        if (data.get("extensionCounterDate") != null) {
-            LocalDate newDeadline = mapper.convertValue(data.get("extensionCounterDate"), LocalDate.class);
-            data.put("responseDeadline", newDeadline.atTime(16, 0));
+        if (data.get(COUNTER_DEADLINE) != null) {
+            LocalDate newDeadline = mapper.convertValue(data.get(COUNTER_DEADLINE), LocalDate.class);
+            data.put(RESPONSE_DEADLINE, newDeadline.atTime(16, 0));
         }
 
-        if (data.get("extensionProposedDeadline") != null) {
-            LocalDate newDeadline = mapper.convertValue(data.get("extensionProposedDeadline"), LocalDate.class);
-            data.put("responseDeadline", newDeadline.atTime(16, 0));
+        if (data.get(PROPOSED_DEADLINE) != null) {
+            LocalDate newDeadline = mapper.convertValue(data.get(PROPOSED_DEADLINE), LocalDate.class);
+            data.put(RESPONSE_DEADLINE, newDeadline.atTime(16, 0));
         }
 
         return AboutToStartOrSubmitCallbackResponse.builder()
@@ -96,11 +100,10 @@ public class RespondExtensionCallbackHandler extends CallbackHandler {
                    .build();
     }
 
-
     private SubmittedCallbackResponse buildConfirmation(CallbackParams callbackParams) {
         Map<String, Object> data = callbackParams.getRequest().getCaseDetails().getData();
         LocalDateTime responseDeadline = mapper.convertValue(
-            data.get("responseDeadline"), LocalDateTime.class
+            data.get(RESPONSE_DEADLINE), LocalDateTime.class
         );
 
         String claimNumber = "TBC";

@@ -3,7 +3,7 @@ const {I} = inject();
 module.exports = {
 
   fields: {
-    extensionResponse: '#extensionResponse'
+    extensionResponse: '#defendantSolicitor1claimResponseExtensionResponse'
   },
 
   async enterResponse() {

@@ -19,11 +19,13 @@ import java.util.Map;
 import static com.google.common.collect.ImmutableMap.of;
 import static java.lang.String.format;
 import static java.time.LocalDate.now;
-import static java.util.Arrays.asList;
 import static java.util.Collections.emptyMap;
 import static org.assertj.core.api.Assertions.assertThat;
 import static uk.gov.hmcts.reform.unspec.handler.RequestExtensionCallbackHandler.ALREADY_AGREED;
+import static uk.gov.hmcts.reform.unspec.handler.RequestExtensionCallbackHandler.EXTENSION_ALREADY_AGREED;
 import static uk.gov.hmcts.reform.unspec.handler.RequestExtensionCallbackHandler.NOT_AGREED;
+import static uk.gov.hmcts.reform.unspec.handler.RequestExtensionCallbackHandler.PROPOSED_DEADLINE;
+import static uk.gov.hmcts.reform.unspec.handler.RequestExtensionCallbackHandler.RESPONSE_DEADLINE;
 import static uk.gov.hmcts.reform.unspec.helpers.DateFormatHelper.DATE;
 import static uk.gov.hmcts.reform.unspec.helpers.DateFormatHelper.formatLocalDate;
 import static uk.gov.hmcts.reform.unspec.helpers.DateFormatHelper.formatLocalDateTime;
@@ -44,7 +46,7 @@ class RequestExtensionCallbackHandlerTest extends BaseCallbackHandlerTest {
         @Test
         void shouldReturnError_whenExtensionIsAlreadyRequested() {
             Map<String, Object> data = new HashMap<>();
-            data.put("extensionProposedDeadline", now());
+            data.put(PROPOSED_DEADLINE, now());
 
             CallbackParams params = callbackParamsOf(data, CallbackType.ABOUT_TO_START);
 
@@ -52,7 +54,7 @@ class RequestExtensionCallbackHandlerTest extends BaseCallbackHandlerTest {
                 .handle(params);
 
             assertThat(response.getErrors())
-                .containsOnly("CONTENT TBC: A request for extension can only be requested once.");
+                .containsOnly("You can only request an extension once");
         }
 
         @Test
@@ -72,8 +74,8 @@ class RequestExtensionCallbackHandlerTest extends BaseCallbackHandlerTest {
         @Test
         void shouldReturnExpectedError_whenValuesAreInvalid() {
             CallbackParams params = callbackParamsOf(
-                of("extensionProposedDeadline", now().minusDays(1),
-                   "responseDeadline", now().atTime(16, 0)
+                of(PROPOSED_DEADLINE, now().minusDays(1),
+                   RESPONSE_DEADLINE, now().atTime(16, 0)
                 ),
                 CallbackType.MID
             );
@@ -82,17 +84,14 @@ class RequestExtensionCallbackHandlerTest extends BaseCallbackHandlerTest {
                 .handle(params);
 
             assertThat(response.getErrors())
-                .containsAll(asList(
-                    "CONTENT TBC: The proposed deadline must be a future date.",
-                    "CONTENT TBC: The proposed deadline can't be before the current response deadline."
-                ));
+                .containsOnly("The proposed deadline must be a date in the future");
         }
 
         @Test
         void shouldReturnNoError_whenValuesAreValid() {
             CallbackParams params = callbackParamsOf(
-                of("extensionProposedDeadline", now().plusDays(14),
-                   "responseDeadline", now().atTime(16, 0)
+                of(PROPOSED_DEADLINE, now().plusDays(14),
+                   RESPONSE_DEADLINE, now().atTime(16, 0)
                 ),
                 CallbackType.MID
             );
@@ -112,9 +111,9 @@ class RequestExtensionCallbackHandlerTest extends BaseCallbackHandlerTest {
             LocalDate proposedDeadline = now().plusDays(14);
             LocalDateTime responseDeadline = now().atTime(16, 0);
             CallbackParams params = callbackParamsOf(
-                of("extensionProposedDeadline", proposedDeadline,
-                   "extensionAlreadyAgreed", "Yes",
-                   "responseDeadline", responseDeadline
+                of(PROPOSED_DEADLINE, proposedDeadline,
+                   EXTENSION_ALREADY_AGREED, "Yes",
+                   RESPONSE_DEADLINE, responseDeadline
                 ),
                 CallbackType.SUBMITTED
             );
@@ -133,9 +132,9 @@ class RequestExtensionCallbackHandlerTest extends BaseCallbackHandlerTest {
             LocalDate proposedDeadline = now().plusDays(14);
             LocalDateTime responseDeadline = now().atTime(16, 0);
             CallbackParams params = callbackParamsOf(
-                of("extensionProposedDeadline", proposedDeadline,
-                   "extensionAlreadyAgreed", "No",
-                   "responseDeadline", responseDeadline
+                of(PROPOSED_DEADLINE, proposedDeadline,
+                   EXTENSION_ALREADY_AGREED, "No",
+                   RESPONSE_DEADLINE, responseDeadline
                 ),
                 CallbackType.SUBMITTED
             );

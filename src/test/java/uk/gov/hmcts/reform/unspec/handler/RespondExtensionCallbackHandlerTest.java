@@ -21,7 +21,6 @@ import java.util.Map;
 import static com.google.common.collect.ImmutableMap.of;
 import static java.lang.String.format;
 import static java.time.LocalDate.now;
-import static java.util.Arrays.asList;
 import static org.assertj.core.api.Assertions.assertThat;
 import static uk.gov.hmcts.reform.unspec.helpers.DateFormatHelper.DATE;
 import static uk.gov.hmcts.reform.unspec.helpers.DateFormatHelper.formatLocalDateTime;
@@ -32,12 +31,16 @@ import static uk.gov.hmcts.reform.unspec.helpers.DateFormatHelper.formatLocalDat
     JacksonAutoConfiguration.class
 })
 class RespondExtensionCallbackHandlerTest extends BaseCallbackHandlerTest {
+    public static final String RESPONSE_DEADLINE = "responseDeadline";
+    public static final String COUNTER_DATE = "defendantSolicitor1claimResponseExtensionCounterDate";
 
     @Autowired
     private RespondExtensionCallbackHandler handler;
 
     @Nested
     class AboutToStartCallback {
+
+        public static final String EXTENSION_REASON = "defendantSolicitor1claimResponseExtensionReason";
 
         @Test
         void shouldAddNoReasonGiven_WhenNoReasonGivenForExtensionRequest() {
@@ -46,19 +49,19 @@ class RespondExtensionCallbackHandlerTest extends BaseCallbackHandlerTest {
             AboutToStartOrSubmitCallbackResponse response =
                 (AboutToStartOrSubmitCallbackResponse) handler.handle(params);
 
-            assertThat(response.getData().get("extensionReason")).isEqualTo("No reason given");
+            assertThat(response.getData().get(EXTENSION_REASON)).isEqualTo("No reason given");
         }
 
         @Test
         void shouldKeepReasonGiven_WhenReasonGivenForExtensionRequest() {
             Map<String, Object> data = new HashMap<>();
-            data.put("extensionReason", "Reason given");
+            data.put(EXTENSION_REASON, "Reason given");
             CallbackParams params = callbackParamsOf(data, CallbackType.ABOUT_TO_START);
 
             AboutToStartOrSubmitCallbackResponse response =
                 (AboutToStartOrSubmitCallbackResponse) handler.handle(params);
 
-            assertThat(response.getData().get("extensionReason")).isEqualTo("Reason given");
+            assertThat(response.getData().get(EXTENSION_REASON)).isEqualTo("Reason given");
         }
     }
 
@@ -68,8 +71,8 @@ class RespondExtensionCallbackHandlerTest extends BaseCallbackHandlerTest {
         @Test
         void shouldReturnExpectedError_whenValuesAreInvalid() {
             CallbackParams params = callbackParamsOf(
-                of("extensionCounterDate", now().minusDays(1),
-                    "responseDeadline", now().atTime(16, 0)
+                of(COUNTER_DATE, now().minusDays(1),
+                    RESPONSE_DEADLINE, now().atTime(16, 0)
                 ),
                 CallbackType.MID
             );
@@ -78,17 +81,14 @@ class RespondExtensionCallbackHandlerTest extends BaseCallbackHandlerTest {
                 (AboutToStartOrSubmitCallbackResponse) handler.handle(params);
 
             assertThat(response.getErrors())
-                .containsAll(asList(
-                    "CONTENT TBC: The proposed deadline must be a future date.",
-                    "CONTENT TBC: The proposed deadline can't be before the current response deadline."
-                ));
+                .containsOnly("The proposed deadline must be a date in the future");
         }
 
         @Test
         void shouldReturnNoError_whenValuesAreValid() {
             CallbackParams params = callbackParamsOf(
-                of("extensionCounterDate", now().plusDays(14),
-                    "responseDeadline", now().atTime(16, 0)
+                of(COUNTER_DATE, now().plusDays(14),
+                    RESPONSE_DEADLINE, now().atTime(16, 0)
                 ),
                 CallbackType.MID
             );
@@ -102,21 +102,22 @@ class RespondExtensionCallbackHandlerTest extends BaseCallbackHandlerTest {
 
     @Nested
     class AboutToSubmitCallback {
+        public static final String PROPOSED_DEADLINE = "defendantSolicitor1claimResponseExtensionProposedDeadline";
 
         @ParameterizedTest(name = "should update response deadline when {0} is set")
-        @ValueSource(strings = {"extensionCounterDate", "extensionProposedDeadline"})
+        @ValueSource(strings = {COUNTER_DATE, PROPOSED_DEADLINE})
         void shouldUpdateResponseDeadline_whenNewDeadline(String deadlineKey) {
             LocalDate proposedDeadline = now().plusDays(14);
             Map<String, Object> map = new HashMap<>();
             map.put(deadlineKey, proposedDeadline);
-            map.put("responseDeadline", now().atTime(16, 0));
+            map.put(RESPONSE_DEADLINE, now().atTime(16, 0));
 
             CallbackParams params = callbackParamsOf(map, CallbackType.ABOUT_TO_SUBMIT);
 
             AboutToStartOrSubmitCallbackResponse response =
                 (AboutToStartOrSubmitCallbackResponse) handler.handle(params);
 
-            assertThat(response.getData().get("responseDeadline")).isEqualTo(proposedDeadline.atTime(16, 0));
+            assertThat(response.getData().get(RESPONSE_DEADLINE)).isEqualTo(proposedDeadline.atTime(16, 0));
         }
 
         @Test
@@ -124,14 +125,14 @@ class RespondExtensionCallbackHandlerTest extends BaseCallbackHandlerTest {
             LocalDateTime responseDeadline = now().atTime(16, 0);
 
             Map<String, Object> map = new HashMap<>();
-            map.put("responseDeadline", responseDeadline);
+            map.put(RESPONSE_DEADLINE, responseDeadline);
 
             CallbackParams params = callbackParamsOf(map, CallbackType.ABOUT_TO_SUBMIT);
 
             AboutToStartOrSubmitCallbackResponse response =
                 (AboutToStartOrSubmitCallbackResponse) handler.handle(params);
 
-            assertThat(response.getData().get("responseDeadline")).isEqualTo(responseDeadline);
+            assertThat(response.getData().get(RESPONSE_DEADLINE)).isEqualTo(responseDeadline);
         }
     }
 
@@ -142,7 +143,7 @@ class RespondExtensionCallbackHandlerTest extends BaseCallbackHandlerTest {
         void shouldReturnExpectedResponse_withNewResponseDeadline() {
             LocalDateTime responseDeadline = now().atTime(16, 0);
             CallbackParams params = callbackParamsOf(
-                of("responseDeadline", responseDeadline), CallbackType.SUBMITTED
+                of(RESPONSE_DEADLINE, responseDeadline), CallbackType.SUBMITTED
             );
 
             SubmittedCallbackResponse response = (SubmittedCallbackResponse) handler.handle(params);
