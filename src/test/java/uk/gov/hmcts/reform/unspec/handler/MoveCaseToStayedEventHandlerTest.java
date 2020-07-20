@@ -2,6 +2,7 @@ package uk.gov.hmcts.reform.unspec.handler;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.params.shadow.com.univocity.parsers.annotations.Nested;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
@@ -21,7 +22,7 @@ class MoveCaseToStayedEventHandlerTest {
     private MoveCaseToStayedEventHandler handler;
 
     @Test
-    void shouldTriggerMoveToStayedEvent() {
+    void shouldCallTriggerEventWithExpectedParams_WhenMoveToStayedEvent() {
         MoveCaseToStayedEvent event = new MoveCaseToStayedEvent(1L);
 
         handler.moveCaseToStayed(event);

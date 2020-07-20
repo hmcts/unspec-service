@@ -71,7 +71,7 @@ class CoreCaseDataServiceTest {
         }
 
         @Test
-        void shouldStartAndSubmitEvent() {
+        void shouldStartAndSubmitEvent_WhenCalled() {
             service.triggerEvent(CASE_ID, CaseEvent.valueOf(EVENT_ID));
 
             verify(coreCaseDataApi).startEventForCaseWorker(USER_AUTH_TOKEN, SERVICE_AUTH_TOKEN, USER_ID,
@@ -105,7 +105,7 @@ class CoreCaseDataServiceTest {
     class SearchCases {
 
         @Test
-        void shouldReturnCasesAsSystemUpdateUser() {
+        void shouldReturnCases_WhenSearchingCasesAsSystemUpdateUser() {
             String query = "query";
 
             List<CaseDetails> cases = List.of(CaseDetails.builder().id(1L).build());

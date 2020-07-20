@@ -49,7 +49,7 @@ class CaseStayedFinderTest {
     }
 
     @Test
-    void shouldEmitMoveCaseToStayedEventWhenCasesFound() {
+    void shouldEmitMoveCaseToStayedEvent_WhenCasesFound() {
         long caseId = 1L;
         Map<String, Object> data = Map.of("data", "some data");
         List<CaseDetails> caseDetails = List.of(CaseDetails.builder()
@@ -65,7 +65,7 @@ class CaseStayedFinderTest {
     }
 
     @Test
-    void shouldNotEmitMoveCaseToStayedEventWhenNoCasesFound() {
+    void shouldNotEmitMoveCaseToStayedEvent_WhenNoCasesFound() {
         when(caseSearchService.getCasesToBeStayed()).thenReturn(List.of());
 
         caseStayedFinder.execute(jobExecutionContext);

@@ -43,7 +43,7 @@ class CaseSearchServiceTest {
     }
 
     @Test
-    void shouldSearchCasesByDateProperty() throws JSONException {
+    void shouldGetCases_WhenSearchingCasesByDateProperty() throws JSONException {
         String expectedQuery = "{\"query\":"
                                    + "{\"range\":{\"data.claimIssuedDate\":{\"lt\":\"now-112d\"}}}, "
                                    + "\"_source\": [\"reference\"]}";
