@@ -35,7 +35,7 @@ import static java.util.Collections.singletonList;
 public class DocumentManagementService {
 
     private final Logger logger = LoggerFactory.getLogger(DocumentManagementService.class);
-    private static final String UNSPEC = "Unspec";
+    public static final String UNSPEC = "Unspec";
     private static final String FILES_NAME = "files";
 
     private final DocumentUploadClientApi documentUploadClientApi;
@@ -96,7 +96,7 @@ public class DocumentManagementService {
                 .documentName(originalFileName)
                 .documentType(pdf.getDocumentType())
                 .createdDatetime(LocalDateTimeHelper.nowInUTC())
-                .size(document.size)
+                .documentSize(document.size)
                 .createdBy(UNSPEC)
                 .build();
         } catch (Exception ex) {
@@ -117,17 +117,11 @@ public class DocumentManagementService {
     }
 
     @Retryable(value = DocumentManagementException.class, backoff = @Backoff(delay = 200))
-    private byte[] downloadDocumentByUrl(String authorisation, URI documentManagementUrl) {
+    public byte[] downloadDocument(String authorisation, URI documentManagementUrl) {
         try {
             UserInfo userInfo = userService.getUserInfo(authorisation);
             String userRoles = String.join(",", this.userRoles);
-            Document documentMetadata = documentMetadataDownloadClient.getDocumentMetadata(
-                authorisation,
-                authTokenGenerator.generate(),
-                userRoles,
-                userInfo.getUid(),
-                documentManagementUrl.getPath()
-            );
+            Document documentMetadata = getDocumentMetaData(authorisation, documentManagementUrl.getPath());
 
             ResponseEntity<Resource> responseEntity = documentDownloadClientApi.downloadBinary(
                 authorisation,

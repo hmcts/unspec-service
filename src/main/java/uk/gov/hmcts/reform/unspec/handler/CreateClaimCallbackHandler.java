@@ -34,6 +34,12 @@ import static uk.gov.hmcts.reform.unspec.helpers.DateFormatHelper.formatLocalDat
 @Service
 public class CreateClaimCallbackHandler extends CallbackHandler {
     private static final List<CaseEvent> EVENTS = Collections.singletonList(CREATE_CASE);
+    public static final String CONFIRMATION_SUMMARY = "<br />Follow these steps to serve a claim:"
+        + "\n* <a href=\"%s\" target=\"_blank\">[Download the sealed claim form]</a> (PDF, %sKB)"
+        + "\n* Send the form, particulars of claim and "
+        + "<a href=\"%s\" target=\"_blank\">a response pack</a> (PDF, 266 KB) to the defendant by %s"
+        + "\n* Confirm service online within 21 days of sending the form, particulars and response pack, before"
+        + " 4pm if you're doing this on the due day";
 
     private final String responsePackLink;
     private final SealedClaimFormGenerator sealedClaimFormGenerator;
@@ -113,14 +119,9 @@ public class CreateClaimCallbackHandler extends CallbackHandler {
         String claimNumber = "TBC";
 
         String body = format(
-            "<br />Follow these steps to serve a claim:"
-                + "\n* <a href=\"%s\" target=\"_blank\">[Download the sealed claim form]</a> (PDF, %sKB)"
-                + "\n* Send the form, particulars of claim and "
-                + "<a href=\"%s\" target=\"_blank\">a response pack</a> (PDF, 266 KB) to the defendant by %s"
-                + "\n* Confirm service online within 21 days of sending the form, particulars and response pack, before"
-                + " 4pm if you're doing this on the due day",
-            format("/cases/case-details/%s#CaseDocuments", caseData.getId()),
-            caseDocument.getSize() / 1024,
+            CONFIRMATION_SUMMARY,
+            format("/cases/case-details/%s#CaseDocuments", caseData.getCcdCaseReference()),
+            caseDocument.getDocumentSize() / 1024,
             responsePackLink,
             formattedServiceDeadline
         );

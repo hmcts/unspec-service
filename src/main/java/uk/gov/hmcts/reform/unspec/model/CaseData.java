@@ -22,7 +22,7 @@ import java.util.List;
 @AllArgsConstructor
 @Builder(toBuilder = true)
 public class CaseData {
-    private Long id;
+    private Long ccdCaseReference;
     private SolicitorReferences solicitorReferences;
     private CourtLocation courtLocation;
     private Party claimant;
@@ -36,7 +36,7 @@ public class CaseData {
     private LocalDate deemedDateOfService;
     private LocalDateTime responseDeadline;
     private List<ServedDocuments> servedDocuments;
-    private String referenceNumber;
+    private String legacyCaseReference;
     private ServiceLocation serviceLocation;
     private ServedDocumentFiles servedDocumentFiles;
     private String servedDocumentsOther;

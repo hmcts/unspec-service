@@ -1,7 +1,7 @@
 package uk.gov.hmcts.reform.unspec.service.docmosis;
 
 public enum DocmosisTemplates {
-    N1("CV-UNS-GOR-ENG-0001.docx", "sealed_claim_form_%s.pdf");
+    N1("CV-UNS-GOR-ENG-0001.docx", "sealed_claim_form_%s");
 
     private final String template;
     private final String documentTitle;

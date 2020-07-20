@@ -13,7 +13,7 @@ public class CaseDocument {
     private final Document documentLink;
     private final String documentName;
     private final DocumentType documentType;
+    private final long documentSize;
     private final LocalDateTime createdDatetime;
     private final String createdBy;
-    private final long size;
 }

@@ -14,7 +14,6 @@ import uk.gov.hmcts.reform.unspec.model.docmosis.sealedclaim.SealedClaimForm;
 import uk.gov.hmcts.reform.unspec.model.documents.CaseDocument;
 import uk.gov.hmcts.reform.unspec.model.documents.DocumentType;
 import uk.gov.hmcts.reform.unspec.model.documents.PDF;
-import uk.gov.hmcts.reform.unspec.service.docmosis.DocmosisTemplates;
 import uk.gov.hmcts.reform.unspec.service.docmosis.DocumentGeneratorService;
 import uk.gov.hmcts.reform.unspec.service.docmosis.TemplateDataGenerator;
 import uk.gov.hmcts.reform.unspec.service.documentmanagement.DocumentManagementService;
@@ -22,13 +21,15 @@ import uk.gov.hmcts.reform.unspec.service.documentmanagement.DocumentManagementS
 import java.time.LocalDate;
 import java.util.List;
 
+import static uk.gov.hmcts.reform.unspec.service.docmosis.DocmosisTemplates.N1;
+
 @Service
 public class SealedClaimFormGenerator extends TemplateDataGenerator<SealedClaimForm> {
 
     public static final String TEMP_CLAIM_DETAILS = "The claimant seeks compensation from injuries and losses arising"
         + " from a road traffic accident which occurred on 1st July 2017 as a result of the negligence of the first "
         + "defendant.The claimant seeks compensation from injuries and losses arising from a road traffic accident "
-        + "which occurred on 1st July 2017 as a result of the negligence of the first defendant.";
+        + "which occurred on 1st July 2017 as a result of the negligence of the first defendant."; //TODO
 
     private static final Representative TEMP_REPRESENTATIVE = Representative.builder()
         .contactName("MiguelSpooner")
@@ -42,9 +43,9 @@ public class SealedClaimFormGenerator extends TemplateDataGenerator<SealedClaimF
                             .postTown("Newport")
                             .postCode("NP204AG")
                             .build())
-        .build();
-    public static final String REFERENCE_NUMBER = "000LR095";
-    public static final String CASE_NAME = "SamClark v AlexRichards";
+        .build(); //TODO
+    public static final String REFERENCE_NUMBER = "000LR095"; //TODO
+    public static final String CASE_NAME = "SamClark v AlexRichards"; //TODO
     private final DocumentManagementService documentManagementService;
     private final DocumentGeneratorService documentGeneratorService;
 
@@ -57,25 +58,21 @@ public class SealedClaimFormGenerator extends TemplateDataGenerator<SealedClaimF
 
     public CaseDocument generate(CaseData caseData, String authorisation) {
         SealedClaimForm templateData = getTemplateData(caseData);
-        DocmosisTemplates sealedClaimForm = DocmosisTemplates.N1;
 
-        DocmosisDocument docmosisDocument = documentGeneratorService.generateDocmosisDocument(
-            templateData,
-            sealedClaimForm
-        );
+        DocmosisDocument docmosisDocument = documentGeneratorService.generateDocmosisDocument(templateData, N1);
 
         return documentManagementService.uploadDocument(
             authorisation,
-            new PDF(getFileName(caseData, sealedClaimForm), docmosisDocument.getBytes(), DocumentType.SEALED_CLAIM)
+            new PDF(getFileName(caseData), docmosisDocument.getBytes(), DocumentType.SEALED_CLAIM)
         );
     }
 
-    private String getFileName(CaseData caseData, DocmosisTemplates sealedClaimForm) {
-        if (StringUtils.isBlank(caseData.getReferenceNumber())) {
-            return String.format(sealedClaimForm.getDocumentTitle(), REFERENCE_NUMBER);
+    private String getFileName(CaseData caseData) {
+        if (StringUtils.isBlank(caseData.getLegacyCaseReference())) {
+            return String.format(N1.getDocumentTitle(), REFERENCE_NUMBER);
         }
 
-        return String.format(sealedClaimForm.getDocumentTitle(), caseData.getReferenceNumber());
+        return String.format(N1.getDocumentTitle(), caseData.getLegacyCaseReference());
     }
 
     @Override
