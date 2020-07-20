@@ -8,7 +8,7 @@ import uk.gov.hmcts.reform.ccd.client.model.CaseDetails;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
+import java.time.LocalTime;
 import java.util.List;
 
 import static java.time.LocalDate.now;
@@ -18,17 +18,17 @@ import static java.util.Collections.emptyList;
 @RequiredArgsConstructor
 public class RequestExtensionValidator {
 
+    public static final LocalTime END_OF_COURT_TIME = LocalTime.of(16, 0);
     private final ObjectMapper mapper;
 
     public List<String> validateProposedDeadline(CaseDetails caseDetails) {
-        List<String> errors = new ArrayList<>();
         LocalDate proposedDeadline = mapper.convertValue(
             caseDetails.getData().get("extensionProposedDeadline"),
             LocalDate.class
         );
 
         if (!proposedDeadline.isAfter(now())) {
-            errors.add("CONTENT TBC: The proposed deadline must be a future date.");
+            return ImmutableList.of("The proposed deadline must be a date in the future");
         }
 
         LocalDateTime responseDeadline = mapper.convertValue(
@@ -36,17 +36,17 @@ public class RequestExtensionValidator {
             LocalDateTime.class
         );
         if (proposedDeadline.isBefore(responseDeadline.toLocalDate())) {
-            errors.add("CONTENT TBC: The proposed deadline can't be before the current response deadline.");
+            return ImmutableList.of("The proposed deadline cannot be before the current deadline");
         }
-        if (proposedDeadline.isAfter(responseDeadline.toLocalDate().plusDays(28))) {
-            errors.add("CONTENT TBC: The proposed deadline can't be later than 28 days after the current deadline.");
+        if (LocalDateTime.of(proposedDeadline, END_OF_COURT_TIME).isAfter(responseDeadline.plusDays(28))) {
+            return ImmutableList.of("The proposed deadline cannot be more than 28 days after the current deadline");
         }
-        return errors;
+        return emptyList();
     }
 
     public List<String> validateAlreadyRequested(CaseDetails caseDetails) {
         if (isExtensionAlreadyRequested(caseDetails)) {
-            return ImmutableList.of("CONTENT TBC: A request for extension can only be requested once.");
+            return ImmutableList.of("You can only request an extension once");
         }
         return emptyList();
     }

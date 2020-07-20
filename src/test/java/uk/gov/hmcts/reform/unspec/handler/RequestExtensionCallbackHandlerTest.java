@@ -19,7 +19,6 @@ import java.util.Map;
 import static com.google.common.collect.ImmutableMap.of;
 import static java.lang.String.format;
 import static java.time.LocalDate.now;
-import static java.util.Arrays.asList;
 import static java.util.Collections.emptyMap;
 import static org.assertj.core.api.Assertions.assertThat;
 import static uk.gov.hmcts.reform.unspec.handler.RequestExtensionCallbackHandler.ALREADY_AGREED;
@@ -52,7 +51,7 @@ class RequestExtensionCallbackHandlerTest extends BaseCallbackHandlerTest {
                 .handle(params);
 
             assertThat(response.getErrors())
-                .containsOnly("CONTENT TBC: A request for extension can only be requested once.");
+                .containsOnly("You can only request an extension once");
         }
 
         @Test
@@ -82,10 +81,7 @@ class RequestExtensionCallbackHandlerTest extends BaseCallbackHandlerTest {
                 .handle(params);
 
             assertThat(response.getErrors())
-                .containsAll(asList(
-                    "CONTENT TBC: The proposed deadline must be a future date.",
-                    "CONTENT TBC: The proposed deadline can't be before the current response deadline."
-                ));
+                .containsOnly("The proposed deadline must be a date in the future");
         }
 
         @Test

@@ -46,8 +46,7 @@ class RequestExtensionValidatorTest {
             List<String> errors = validator.validateProposedDeadline(caseDetails);
 
             assertThat(errors)
-                .containsOnly("CONTENT TBC: The proposed deadline can't be later than 28 days after the"
-                                  + " current deadline.");
+                .containsOnly("The proposed deadline cannot be more than 28 days after the current deadline");
         }
 
         @Test
@@ -61,7 +60,7 @@ class RequestExtensionValidatorTest {
             List<String> errors = validator.validateProposedDeadline(caseDetails);
 
             assertThat(errors)
-                .containsOnly("CONTENT TBC: The proposed deadline must be a future date.");
+                .containsOnly("The proposed deadline must be a date in the future");
         }
     }
 
@@ -79,7 +78,7 @@ class RequestExtensionValidatorTest {
             List<String> errors = validator.validateAlreadyRequested(caseDetails);
 
             assertThat(errors)
-                .containsOnly("CONTENT TBC: A request for extension can only be requested once.");
+                .containsOnly("You can only request an extension once");
         }
 
         @Test
