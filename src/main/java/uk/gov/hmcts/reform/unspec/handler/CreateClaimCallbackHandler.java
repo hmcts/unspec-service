@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import uk.gov.hmcts.reform.ccd.client.model.AboutToStartOrSubmitCallbackResponse;
 import uk.gov.hmcts.reform.ccd.client.model.CallbackResponse;
+import uk.gov.hmcts.reform.ccd.client.model.CaseDetails;
 import uk.gov.hmcts.reform.ccd.client.model.SubmittedCallbackResponse;
 import uk.gov.hmcts.reform.unspec.callback.Callback;
 import uk.gov.hmcts.reform.unspec.callback.CallbackHandler;
@@ -84,17 +85,19 @@ public class CreateClaimCallbackHandler extends CallbackHandler {
         List<String> errors = new ArrayList<>();
         String authorisation = callbackParams.getParams().get(BEARER_TOKEN).toString();
 
-        CaseData caseData = caseDetailsConverter.to(callbackParams.getRequest().getCaseDetails());
+        CaseDetails caseDetails = callbackParams.getRequest().getCaseDetails();
+        CaseData caseData = caseDetailsConverter.to(caseDetails);
         CaseDocument sealedClaim = sealedClaimFormGenerator.generate(caseData, authorisation);
-        CaseData updated = addToCaseData(caseData, sealedClaim);
+        Map<String, Object> data = caseDetails.getData();
+        data.put("systemGeneratedCaseDocuments", systemGeneratedDocuments(caseData, sealedClaim));
 
         return AboutToStartOrSubmitCallbackResponse.builder()
-            .data(caseDetailsConverter.convertToMap(updated))
+            .data(data)
             .errors(errors)
             .build();
     }
 
-    private CaseData addToCaseData(CaseData caseData, CaseDocument sealedClaim) {
+    private List<Element<CaseDocument>> systemGeneratedDocuments(CaseData caseData, CaseDocument sealedClaim) {
         List<Element<CaseDocument>> caseDocuments = new ArrayList<>();
         List<Element<CaseDocument>> systemGeneratedCaseDocuments = caseData.getSystemGeneratedCaseDocuments();
         if (systemGeneratedCaseDocuments != null && !systemGeneratedCaseDocuments.isEmpty()) {
@@ -102,9 +105,7 @@ public class CreateClaimCallbackHandler extends CallbackHandler {
         }
         caseDocuments.add(Element.<CaseDocument>builder().value(sealedClaim).build());
 
-        return caseData.toBuilder()
-            .systemGeneratedCaseDocuments(caseDocuments)
-            .build();
+        return caseDocuments;
     }
 
     private SubmittedCallbackResponse buildConfirmation(CallbackParams callbackParams) {

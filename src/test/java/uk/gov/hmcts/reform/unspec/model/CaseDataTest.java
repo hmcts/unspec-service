@@ -5,6 +5,7 @@ import org.json.JSONException;
 import org.junit.jupiter.api.Test;
 import org.skyscreamer.jsonassert.JSONAssert;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.jackson.JacksonAutoConfiguration;
 import org.springframework.boot.test.context.SpringBootTest;
 import uk.gov.hmcts.reform.unspec.helpers.JsonMapper;
 
@@ -13,7 +14,7 @@ import java.util.Map;
 
 import static uk.gov.hmcts.reform.unspec.utils.ResourceReader.readString;
 
-@SpringBootTest
+@SpringBootTest(classes = {JacksonAutoConfiguration.class, JsonMapper.class})
 class CaseDataTest {
 
     @Autowired
