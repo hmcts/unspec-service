@@ -1,5 +1,6 @@
 package uk.gov.hmcts.reform.unspec.helpers;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.stereotype.Service;
 import uk.gov.hmcts.reform.ccd.client.model.CaseDetails;
 import uk.gov.hmcts.reform.unspec.model.CaseData;
@@ -8,25 +9,16 @@ import java.util.Map;
 
 @Service
 public class CaseDetailsConverter {
-    private final JsonMapper jsonMapper;
+    private final ObjectMapper objectMapper;
 
-    public CaseDetailsConverter(JsonMapper jsonMapper) {
-        this.jsonMapper = jsonMapper;
+    public CaseDetailsConverter(ObjectMapper objectMapper) {
+        this.objectMapper = objectMapper;
     }
 
     public CaseData to(CaseDetails caseDetails) {
         Map<String, Object> data = caseDetails.getData();
         data.put("state", caseDetails.getState());
         data.put("ccdCaseReference", caseDetails.getId());
-        return jsonMapper.fromMap(data, CaseData.class);
-    }
-
-    public <T> T to(Object input, Class<T> type) {
-        return jsonMapper.convertValue(input, type);
-    }
-
-    @SuppressWarnings("unchecked")
-    public Map<String, Object> convertToMap(CaseData caseData) {
-        return (Map<String, Object>) jsonMapper.convertValue(caseData, Map.class);
+        return objectMapper.convertValue(data, CaseData.class);
     }
 }

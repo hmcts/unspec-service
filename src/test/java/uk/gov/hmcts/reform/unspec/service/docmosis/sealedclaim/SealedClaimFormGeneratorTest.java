@@ -1,5 +1,7 @@
 package uk.gov.hmcts.reform.unspec.service.docmosis.sealedclaim;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -7,7 +9,6 @@ import org.springframework.boot.autoconfigure.jackson.JacksonAutoConfiguration;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
-import uk.gov.hmcts.reform.unspec.helpers.JsonMapper;
 import uk.gov.hmcts.reform.unspec.model.CaseData;
 import uk.gov.hmcts.reform.unspec.model.docmosis.DocmosisData;
 import uk.gov.hmcts.reform.unspec.model.docmosis.DocmosisDocument;
@@ -34,8 +35,7 @@ import static uk.gov.hmcts.reform.unspec.service.documentmanagement.DocumentMana
 @ExtendWith(SpringExtension.class)
 @ContextConfiguration(classes = {
     SealedClaimFormGenerator.class,
-    JacksonAutoConfiguration.class,
-    JsonMapper.class
+    JacksonAutoConfiguration.class
 })
 class SealedClaimFormGeneratorTest {
     public static final String REFERENCE_NUMBER = "000LR095";
@@ -48,10 +48,10 @@ class SealedClaimFormGeneratorTest {
     @Autowired
     private SealedClaimFormGenerator sealedClaimFormGenerator;
     @Autowired
-    private JsonMapper jsonMapper;
+    private ObjectMapper objectMapper;
 
     @Test
-    public void shouldGenerateSealedClaimForm() {
+    public void shouldGenerateSealedClaimForm() throws JsonProcessingException {
         CaseData caseData = getCaseData();
         when(documentGeneratorService.generateDocmosisDocument(any(DocmosisData.class), eq(N1)))
             .thenReturn(new DocmosisDocument(N1.getDocumentTitle(), bytes));
@@ -67,8 +67,8 @@ class SealedClaimFormGeneratorTest {
         verify(documentGeneratorService).generateDocmosisDocument(any(DocmosisData.class), eq(N1));
     }
 
-    private CaseData getCaseData() {
-        return jsonMapper.fromJson(ResourceReader.readString("case_data.json"), CaseData.class);
+    private CaseData getCaseData() throws JsonProcessingException {
+        return objectMapper.readValue(ResourceReader.readString("case_data.json"), CaseData.class);
     }
 
     private CaseDocument getCaseDocument() {

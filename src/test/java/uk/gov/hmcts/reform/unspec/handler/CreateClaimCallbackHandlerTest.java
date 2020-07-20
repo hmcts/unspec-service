@@ -1,6 +1,8 @@
 package uk.gov.hmcts.reform.unspec.handler;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -16,7 +18,6 @@ import uk.gov.hmcts.reform.ccd.client.model.SubmittedCallbackResponse;
 import uk.gov.hmcts.reform.unspec.callback.CallbackParams;
 import uk.gov.hmcts.reform.unspec.callback.CallbackType;
 import uk.gov.hmcts.reform.unspec.helpers.CaseDetailsConverter;
-import uk.gov.hmcts.reform.unspec.helpers.JsonMapper;
 import uk.gov.hmcts.reform.unspec.model.CaseData;
 import uk.gov.hmcts.reform.unspec.model.ClaimValue;
 import uk.gov.hmcts.reform.unspec.model.common.Element;
@@ -47,7 +48,6 @@ import static uk.gov.hmcts.reform.unspec.service.documentmanagement.DocumentMana
 @ContextConfiguration(classes = {
     CreateClaimCallbackHandler.class,
     JacksonAutoConfiguration.class,
-    JsonMapper.class,
     CaseDetailsConverter.class
 })
 class CreateClaimCallbackHandlerTest extends BaseCallbackHandlerTest {
@@ -59,7 +59,7 @@ class CreateClaimCallbackHandlerTest extends BaseCallbackHandlerTest {
     @Autowired
     private CreateClaimCallbackHandler handler;
     @Autowired
-    private JsonMapper jsonMapper;
+    private ObjectMapper objectMapper;
     @Value("${unspecified.response-pack-url}")
     private String responsePackLink;
 
@@ -109,19 +109,20 @@ class CreateClaimCallbackHandlerTest extends BaseCallbackHandlerTest {
     class AboutToSubmit {
 
         @Test
-        void shouldAddSystemGeneratedDocuments() {
+        void shouldAddSystemGeneratedDocuments() throws JsonProcessingException {
             CallbackParams params = callbackParamsOf(getCaseData(), CallbackType.ABOUT_TO_SUBMIT);
 
             var response = (AboutToStartOrSubmitCallbackResponse) handler.handle(params);
 
-            CaseData caseData = jsonMapper.fromMap(response.getData(), CaseData.class);
+            CaseData caseData = objectMapper.convertValue(response.getData(), CaseData.class);
             assertThat(caseData.getSystemGeneratedCaseDocuments()).isNotEmpty()
                 .contains(Element.<CaseDocument>builder().value(getCaseDocument()).build());
         }
 
-        private Map<String, Object> getCaseData() {
-            Map<String, Object> caseData = jsonMapper.fromJson(
-                ResourceReader.readString("case_data.json"), new TypeReference<>() {
+        private Map<String, Object> getCaseData() throws JsonProcessingException {
+            Map<String, Object> caseData = objectMapper.readValue(
+                ResourceReader.readString("case_data.json"),
+                new TypeReference<>() {
                 }
             );
             caseData.remove("systemGeneratedCaseDocuments");

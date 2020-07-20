@@ -1,5 +1,7 @@
 package uk.gov.hmcts.reform.unspec.service.documentmanagement;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -19,7 +21,6 @@ import uk.gov.hmcts.reform.document.domain.Classification;
 import uk.gov.hmcts.reform.document.domain.Document;
 import uk.gov.hmcts.reform.document.domain.UploadResponse;
 import uk.gov.hmcts.reform.idam.client.models.UserInfo;
-import uk.gov.hmcts.reform.unspec.helpers.JsonMapper;
 import uk.gov.hmcts.reform.unspec.model.documents.CaseDocument;
 import uk.gov.hmcts.reform.unspec.model.documents.PDF;
 import uk.gov.hmcts.reform.unspec.service.UserService;
@@ -45,7 +46,6 @@ import static uk.gov.hmcts.reform.unspec.utils.ResourceReader.read;
 
 @SpringBootTest(classes = {
     DocumentManagementService.class,
-    JsonMapper.class,
     JacksonAutoConfiguration.class
 })
 class DocumentManagementServiceTest {
@@ -65,7 +65,7 @@ class DocumentManagementServiceTest {
     private UserService userService;
 
     @Autowired
-    private JsonMapper jsonMapper;
+    private ObjectMapper mapper;
 
     @Autowired
     private DocumentManagementService documentManagementService;
@@ -91,7 +91,7 @@ class DocumentManagementServiceTest {
     class UploadDocument {
 
         @Test
-        public void shouldUploadToDocumentManagement() {
+        public void shouldUploadToDocumentManagement() throws JsonProcessingException {
             when(documentUploadClient.upload(
                 anyString(),
                 anyString(),
@@ -100,7 +100,7 @@ class DocumentManagementServiceTest {
                 any(Classification.class),
                 anyList()
                  )
-            ).thenReturn(jsonMapper.fromJson(
+            ).thenReturn(mapper.readValue(
                 read("/document-management/response.success.json"), UploadResponse.class)
             );
 
@@ -116,7 +116,7 @@ class DocumentManagementServiceTest {
         }
 
         @Test
-        public void shouldThrow_whenUploadDocumentFails() {
+        public void shouldThrow_whenUploadDocumentFails() throws JsonProcessingException {
             when(documentUploadClient.upload(
                 anyString(),
                 anyString(),
@@ -125,7 +125,7 @@ class DocumentManagementServiceTest {
                 any(Classification.class),
                 anyList()
                  )
-            ).thenReturn(jsonMapper.fromJson(
+            ).thenReturn(mapper.readValue(
                 read("/document-management/response.failure.json"), UploadResponse.class));
 
             DocumentManagementException documentManagementException = assertThrows(
@@ -147,11 +147,11 @@ class DocumentManagementServiceTest {
     class DownloadDocument {
 
         @Test
-        public void shouldDownloadDocumentFromDocumentManagement() {
+        public void shouldDownloadDocumentFromDocumentManagement() throws JsonProcessingException {
 
             when(documentMetadataDownloadClient
                      .getDocumentMetadata(anyString(), anyString(), eq(USER_ROLES_JOINED), anyString(), anyString())
-            ).thenReturn(jsonMapper.fromJson(
+            ).thenReturn(mapper.readValue(
                 read("/document-management/download.success.json"), Document.class)
             );
 
@@ -201,12 +201,12 @@ class DocumentManagementServiceTest {
     @Nested
     class DocumentMetaData {
         @Test
-        public void getDocumentMetaData() {
+        public void getDocumentMetaData() throws JsonProcessingException {
             URI docUri = URI.create("http://dm-store:4506/documents/85d97996-22a5-40d7-882e-3a382c8ae1b4");
 
             when(documentMetadataDownloadClient
                      .getDocumentMetadata(anyString(), anyString(), eq(USER_ROLES_JOINED), anyString(), anyString())
-            ).thenReturn(jsonMapper.fromJson(
+            ).thenReturn(mapper.readValue(
                 read("/document-management/download.success.json"), Document.class)
             );
 

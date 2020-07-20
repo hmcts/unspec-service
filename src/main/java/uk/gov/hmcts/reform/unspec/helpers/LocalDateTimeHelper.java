@@ -1,4 +1,4 @@
-package uk.gov.hmcts.reform.ucmc.helpers;
+package uk.gov.hmcts.reform.unspec.helpers;
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;
