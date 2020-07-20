@@ -7,7 +7,6 @@ import org.springframework.stereotype.Service;
 import uk.gov.hmcts.reform.ccd.client.model.CaseDetails;
 
 import java.util.List;
-import java.util.Map;
 
 import static java.util.Map.of;
 
@@ -21,10 +20,14 @@ public class CaseSearchService {
     }
 
     private String dateQuery() {
-        final String dateProperty = "data.claimIssuedDate";
-        final Map<String, Object> dayRange = of("lt", "now-112d");
-
-        return new JSONObject(of("query", of("range", of(dateProperty, dayRange)), "_source", List.of("reference")))
-                   .toString();
+        return new JSONObject(
+            of("query",
+                of("range",
+                    of("data.claimIssuedDate",
+                        of("lt", "now-112d")
+                    )
+                ),
+                "_source", List.of("reference")
+            )).toString();
     }
 }

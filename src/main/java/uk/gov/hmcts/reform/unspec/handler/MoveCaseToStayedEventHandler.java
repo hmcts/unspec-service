@@ -8,6 +8,8 @@ import org.springframework.stereotype.Service;
 import uk.gov.hmcts.reform.unspec.event.MoveCaseToStayedEvent;
 import uk.gov.hmcts.reform.unspec.service.CoreCaseDataService;
 
+import static uk.gov.hmcts.reform.unspec.callback.CaseEvent.MOVE_TO_STAYED;
+
 @Slf4j
 @Service
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
@@ -16,6 +18,6 @@ public class MoveCaseToStayedEventHandler {
 
     @EventListener
     public void moveCaseToStayed(MoveCaseToStayedEvent event) {
-        coreCaseDataService.triggerEvent(event.getCaseId(), "MOVE_TO_STAYED");
+        coreCaseDataService.triggerEvent(event.getCaseId(), MOVE_TO_STAYED);
     }
 }

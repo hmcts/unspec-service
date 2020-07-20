@@ -17,7 +17,7 @@ import java.util.List;
 import java.util.Map;
 
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyZeroInteractions;
+import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(SpringExtension.class)
@@ -52,7 +52,6 @@ class CaseStayedFinderTest {
     void shouldEmitMoveCaseToStayedEventWhenCasesFound() {
         long caseId = 1L;
         Map<String, Object> data = Map.of("data", "some data");
-
         List<CaseDetails> caseDetails = List.of(CaseDetails.builder()
                                                     .id(caseId)
                                                     .data(data)
@@ -71,6 +70,6 @@ class CaseStayedFinderTest {
 
         caseStayedFinder.execute(jobExecutionContext);
 
-        verifyZeroInteractions(applicationEventPublisher);
+        verifyNoInteractions(applicationEventPublisher);
     }
 }

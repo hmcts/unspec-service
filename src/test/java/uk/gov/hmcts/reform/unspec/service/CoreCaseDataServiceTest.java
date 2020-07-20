@@ -16,6 +16,7 @@ import uk.gov.hmcts.reform.ccd.client.model.SearchResult;
 import uk.gov.hmcts.reform.ccd.client.model.StartEventResponse;
 import uk.gov.hmcts.reform.idam.client.IdamClient;
 import uk.gov.hmcts.reform.idam.client.models.UserInfo;
+import uk.gov.hmcts.reform.unspec.callback.CaseEvent;
 import uk.gov.hmcts.reform.unspec.config.SystemUpdateUserConfiguration;
 
 import java.util.List;
@@ -71,7 +72,7 @@ class CoreCaseDataServiceTest {
 
         @Test
         void shouldStartAndSubmitEvent() {
-            service.triggerEvent(CASE_ID, EVENT_ID);
+            service.triggerEvent(CASE_ID, CaseEvent.valueOf(EVENT_ID));
 
             verify(coreCaseDataApi).startEventForCaseWorker(USER_AUTH_TOKEN, SERVICE_AUTH_TOKEN, USER_ID,
                 JURISDICTION, CASE_TYPE, Long.toString(CASE_ID), EVENT_ID);

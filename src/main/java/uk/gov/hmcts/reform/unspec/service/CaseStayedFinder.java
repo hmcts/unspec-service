@@ -24,14 +24,10 @@ public class CaseStayedFinder implements Job {
 
         List<CaseDetails> cases = caseSearchService.getCasesToBeStayed();
 
-        if (cases.isEmpty()) {
-            log.info("Job '{}' did not find any cases", jobName);
-        } else {
-            log.info("Job '{}' found {} case(s)", jobName, cases.size());
+        log.info("Job '{}' found {} case(s)", jobName, cases.size());
 
-            cases.forEach(caseDetails -> applicationEventPublisher.publishEvent(
-                new MoveCaseToStayedEvent(caseDetails.getId())));
-        }
+        cases.forEach(caseDetails -> applicationEventPublisher.publishEvent(
+            new MoveCaseToStayedEvent(caseDetails.getId())));
 
         log.info("Job '{}' finished", jobName);
     }

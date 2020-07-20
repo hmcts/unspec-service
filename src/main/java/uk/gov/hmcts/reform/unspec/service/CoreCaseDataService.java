@@ -10,7 +10,11 @@ import uk.gov.hmcts.reform.ccd.client.model.Event;
 import uk.gov.hmcts.reform.ccd.client.model.SearchResult;
 import uk.gov.hmcts.reform.ccd.client.model.StartEventResponse;
 import uk.gov.hmcts.reform.idam.client.IdamClient;
+import uk.gov.hmcts.reform.unspec.callback.CaseEvent;
 import uk.gov.hmcts.reform.unspec.config.SystemUpdateUserConfiguration;
+
+import static uk.gov.hmcts.reform.unspec.CaseDefinitionConstants.CASE_TYPE;
+import static uk.gov.hmcts.reform.unspec.CaseDefinitionConstants.JURISDICTION;
 
 @Service
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
@@ -20,10 +24,7 @@ public class CoreCaseDataService {
     private final SystemUpdateUserConfiguration userConfig;
     private final AuthTokenGenerator authTokenGenerator;
 
-    public static final String CASE_TYPE = "UNSPECIFIED_CLAIMS";
-    public static final String JURISDICTION = "CIVIL";
-
-    public void triggerEvent(Long caseId, String eventName) {
+    public void triggerEvent(Long caseId, CaseEvent eventName) {
         String userToken = idamClient.getAccessToken(userConfig.getUserName(), userConfig.getPassword());
         String systemUpdateUserId = idamClient.getUserInfo(userToken).getUid();
 
@@ -34,7 +35,7 @@ public class CoreCaseDataService {
             JURISDICTION,
             CASE_TYPE,
             caseId.toString(),
-            eventName);
+            eventName.getValue());
 
         coreCaseDataApi.submitEventForCaseWorker(
             userToken,

@@ -5,6 +5,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
+import uk.gov.hmcts.reform.unspec.callback.CaseEvent;
 import uk.gov.hmcts.reform.unspec.event.MoveCaseToStayedEvent;
 import uk.gov.hmcts.reform.unspec.service.CoreCaseDataService;
 
@@ -25,6 +26,6 @@ class MoveCaseToStayedEventHandlerTest {
 
         handler.moveCaseToStayed(event);
 
-        verify(coreCaseDataService).triggerEvent(event.getCaseId(), "MOVE_TO_STAYED");
+        verify(coreCaseDataService).triggerEvent(event.getCaseId(), CaseEvent.MOVE_TO_STAYED);
     }
 }
