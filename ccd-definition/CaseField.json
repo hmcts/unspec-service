@@ -210,7 +210,7 @@
   {
     "LiveFrom": "01/01/2017",
     "CaseTypeID": "UNSPECIFIED_CLAIMS",
-    "ID": "defendantSolicitor1claimResponseExtensionResponse",
+    "ID": "defendantSolicitor1claimResponseExtensionRejectionReason",
     "Label": "Add a response",
     "FieldType": "TextArea",
     "SecurityClassification": "Public"

@@ -20,7 +20,7 @@ import static uk.gov.hmcts.reform.unspec.handler.RequestExtensionCallbackHandler
 @RequiredArgsConstructor
 public class RequestExtensionValidator {
 
-    public static final LocalTime END_OF_COURT_TIME = LocalTime.of(16, 0);
+    public static final LocalTime END_OF_BUSINESS_DAY = LocalTime.of(16, 0);
     private final ObjectMapper mapper;
 
     public List<String> validateProposedDeadline(LocalDate dateToValidate,  LocalDateTime responseDeadline) {
@@ -36,7 +36,7 @@ public class RequestExtensionValidator {
             return ImmutableList.of("The proposed deadline cannot be before the current deadline");
         }
 
-        if (LocalDateTime.of(dateToValidate, END_OF_COURT_TIME).isAfter(responseDeadline.plusDays(28))) {
+        if (LocalDateTime.of(dateToValidate, END_OF_BUSINESS_DAY).isAfter(responseDeadline.plusDays(28))) {
             return ImmutableList.of("The proposed deadline cannot be more than 28 days after the current deadline");
         }
 

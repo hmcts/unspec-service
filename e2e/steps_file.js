@@ -24,7 +24,7 @@ const extensionAlreadyAgreed = require('./pages/requestExtension/extensionAlread
 
 const respondToExtensionPage = require('./pages/respondExtension/respond.page');
 const counterExtensionPage = require('./pages/respondExtension/counter.page');
-const extensionResponsePage = require('./pages/respondExtension/response.page');
+const rejectionReasonPage = require('./pages/respondExtension/reason.page');
 
 const statementOfTruth = require('./fragments/statementOfTruth');
 const party = require('./fragments/party');
@@ -101,7 +101,7 @@ module.exports = function () {
       await caseViewPage.startEvent('Respond to extension request');
       await respondToExtensionPage.selectDoNotAccept();
       await counterExtensionPage.enterCounterDate();
-      await extensionResponsePage.enterResponse();
+      await rejectionReasonPage.enterResponse();
 
       await this.retryUntilExists(() => this.click('Respond to request'), 'ccd-markdown');
       this.see('You\'ve responded to the request for more time');
