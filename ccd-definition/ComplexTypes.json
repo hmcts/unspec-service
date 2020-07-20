@@ -15,7 +15,7 @@
   },
   {
     "ID": "CourtLocation",
-    "ListElementCode": "preferredCourt",
+    "ListElementCode": "applicantPreferredCourt",
     "FieldType": "Text",
     "ElementLabel": "Court name",
     "HintText": "This should be your preferred County Court hearing centre.",
@@ -135,7 +135,7 @@
     "ID": "ClaimValue",
     "ListElementCode": "label",
     "FieldType": "Label",
-    "ElementLabel": "Your fee will be calculated based on the higher value. <br />If you do not enter a higher value, you will be charged the maximum fee of £10,000.",
+    "ElementLabel": "Your fee will be calculated based on the higher value.",
     "SecurityClassification": "Public"
   },
   {
