@@ -20,28 +20,35 @@ public class RequestExtensionValidator {
 
     private final ObjectMapper mapper;
 
-    public List<String> validateProposedDeadline(CaseDetails caseDetails) {
+    public List<String> validateProposedDeadline(LocalDate dateToValidate,  LocalDateTime responseDeadline) {
         List<String> errors = new ArrayList<>();
+
+        if (!dateToValidate.isAfter(now())) {
+            errors.add("CONTENT TBC: The proposed deadline must be a future date.");
+        }
+
+        if (dateToValidate.isBefore(responseDeadline.toLocalDate())) {
+            errors.add("CONTENT TBC: The proposed deadline can't be before the current response deadline.");
+        }
+
+        if (dateToValidate.isAfter(responseDeadline.toLocalDate().plusDays(28))) {
+            errors.add("CONTENT TBC: The proposed deadline can't be later than 28 days after the current deadline.");
+        }
+        return errors;
+    }
+
+    public List<String> validateProposedDeadline(CaseDetails caseDetails) {
         LocalDate proposedDeadline = mapper.convertValue(
             caseDetails.getData().get("extensionProposedDeadline"),
             LocalDate.class
         );
 
-        if (!proposedDeadline.isAfter(now())) {
-            errors.add("CONTENT TBC: The proposed deadline must be a future date.");
-        }
-
         LocalDateTime responseDeadline = mapper.convertValue(
             caseDetails.getData().get("responseDeadline"),
             LocalDateTime.class
         );
-        if (proposedDeadline.isBefore(responseDeadline.toLocalDate())) {
-            errors.add("CONTENT TBC: The proposed deadline can't be before the current response deadline.");
-        }
-        if (proposedDeadline.isAfter(responseDeadline.toLocalDate().plusDays(28))) {
-            errors.add("CONTENT TBC: The proposed deadline can't be later than 28 days after the current deadline.");
-        }
-        return errors;
+
+        return validateProposedDeadline(proposedDeadline, responseDeadline);
     }
 
     public List<String> validateAlreadyRequested(CaseDetails caseDetails) {

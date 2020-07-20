@@ -7,6 +7,8 @@ import org.springframework.boot.autoconfigure.jackson.JacksonAutoConfiguration;
 import org.springframework.boot.test.context.SpringBootTest;
 import uk.gov.hmcts.reform.ccd.client.model.CaseDetails;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import static com.google.common.collect.ImmutableMap.of;
@@ -62,6 +64,16 @@ class RequestExtensionValidatorTest {
 
             assertThat(errors)
                 .containsOnly("CONTENT TBC: The proposed deadline must be a future date.");
+        }
+
+        @Test
+        void shouldReturnNoErrors_whenIndividualDates() {
+            LocalDate proposedDeadline = now().plusDays(14);
+            LocalDateTime responseDeadline = now().plusDays(7).atTime(16, 0);
+
+            List<String> errors = validator.validateProposedDeadline(proposedDeadline, responseDeadline);
+
+            assertThat(errors.isEmpty()).isTrue();
         }
     }
 
