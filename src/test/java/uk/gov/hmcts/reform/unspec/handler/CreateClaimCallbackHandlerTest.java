@@ -37,6 +37,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
+import static uk.gov.hmcts.reform.unspec.enums.AllocatedTrack.SMALL_CLAIM;
+import static uk.gov.hmcts.reform.unspec.enums.ClaimType.PERSONAL_INJURY_WORK;
 import static uk.gov.hmcts.reform.unspec.handler.CreateClaimCallbackHandler.CONFIRMATION_SUMMARY;
 import static uk.gov.hmcts.reform.unspec.helpers.DateFormatHelper.DATE_TIME_AT;
 import static uk.gov.hmcts.reform.unspec.helpers.DateFormatHelper.formatLocalDateTime;
@@ -52,7 +54,6 @@ import static uk.gov.hmcts.reform.unspec.service.documentmanagement.DocumentMana
 })
 class CreateClaimCallbackHandlerTest extends BaseCallbackHandlerTest {
     public static final String REFERENCE_NUMBER = "000LR095";
-
     @MockBean
     private SealedClaimFormGenerator sealedClaimFormGenerator;
 
@@ -73,7 +74,7 @@ class CreateClaimCallbackHandlerTest extends BaseCallbackHandlerTest {
         @Test
         void shouldReturnExpectedErrorInMidEvent_whenValuesAreInvalid() {
             Map<String, Object> data = new HashMap<>();
-            data.put("claimValue", ClaimValue.builder().higherValue("1").lowerValue("10").build());
+            data.put("claimValue", ClaimValue.builder().higherValue(1).lowerValue(10).build());
 
             CallbackParams params = callbackParamsOf(data, CallbackType.MID);
 
@@ -86,22 +87,21 @@ class CreateClaimCallbackHandlerTest extends BaseCallbackHandlerTest {
         @Test
         void shouldReturnNoErrorInMidEvent_whenValuesAreValid() {
             Map<String, Object> data = new HashMap<>();
-            data.put("claimValue", ClaimValue.builder().higherValue("10").lowerValue("1").build());
-
+            data.put("claimValue", ClaimValue.builder().higherValue(10).lowerValue(1).build());
+            data.put("claimType", PERSONAL_INJURY_WORK);
             CallbackParams params = callbackParamsOf(data, CallbackType.MID);
 
             var response = (AboutToStartOrSubmitCallbackResponse) handler.handle(params);
 
             assertThat(response.getErrors()).isEmpty();
-        }
-
-        @Test
-        void shouldReturnNoErrorInMidEvent_whenNoValues() {
-            CallbackParams params = callbackParamsOf(new HashMap<>(), CallbackType.MID);
-
-            var response = (AboutToStartOrSubmitCallbackResponse) handler.handle(params);
-
-            assertThat(response.getErrors()).isEmpty();
+            assertThat(response.getData())
+                .isEqualTo(
+                    Map.of(
+                        "claimValue", ClaimValue.builder().higherValue(10).lowerValue(1).build(),
+                        "ccdCaseReference", CASE_ID,
+                        "claimType", PERSONAL_INJURY_WORK,
+                        "allocatedTrack", SMALL_CLAIM
+                    ));
         }
     }
 
@@ -136,13 +136,11 @@ class CreateClaimCallbackHandlerTest extends BaseCallbackHandlerTest {
         @Test
         void shouldReturnExpectedSubmittedCallbackResponseObject() {
             Map<String, Object> data = new HashMap<>();
-            Long caseId = 1594901956117591L;
             int documentSize = 125952;
             Element<CaseDocument> documents = Element.<CaseDocument>builder()
                 .value(CaseDocument.builder().documentSize(documentSize).documentType(SEALED_CLAIM).build())
                 .build();
             data.put("systemGeneratedCaseDocuments", List.of(documents));
-            data.put("id", caseId);
             CallbackParams params = callbackParamsOf(data, CallbackType.SUBMITTED);
             SubmittedCallbackResponse response = (SubmittedCallbackResponse) handler.handle(params);
 
@@ -151,7 +149,7 @@ class CreateClaimCallbackHandlerTest extends BaseCallbackHandlerTest {
 
             String body = format(
                 CONFIRMATION_SUMMARY,
-                format("/cases/case-details/%s#CaseDocuments", caseId),
+                format("/cases/case-details/%s#CaseDocuments", CASE_ID),
                 documentSize / 1024,
                 responsePackLink,
                 formattedServiceDeadline

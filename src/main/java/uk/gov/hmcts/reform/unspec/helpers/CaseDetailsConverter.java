@@ -17,7 +17,6 @@ public class CaseDetailsConverter {
 
     public CaseData to(CaseDetails caseDetails) {
         Map<String, Object> data = caseDetails.getData();
-        data.put("state", caseDetails.getState());
         data.put("ccdCaseReference", caseDetails.getId());
         return objectMapper.convertValue(data, CaseData.class);
     }

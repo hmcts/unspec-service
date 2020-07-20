@@ -11,8 +11,10 @@ import uk.gov.hmcts.reform.unspec.callback.CallbackHandler;
 import uk.gov.hmcts.reform.unspec.callback.CallbackParams;
 import uk.gov.hmcts.reform.unspec.callback.CallbackType;
 import uk.gov.hmcts.reform.unspec.callback.CaseEvent;
+import uk.gov.hmcts.reform.unspec.enums.ClaimType;
 import uk.gov.hmcts.reform.unspec.helpers.CaseDetailsConverter;
 import uk.gov.hmcts.reform.unspec.model.CaseData;
+import uk.gov.hmcts.reform.unspec.model.ClaimValue;
 import uk.gov.hmcts.reform.unspec.model.common.Element;
 import uk.gov.hmcts.reform.unspec.model.documents.CaseDocument;
 import uk.gov.hmcts.reform.unspec.model.documents.DocumentType;
@@ -29,6 +31,7 @@ import java.util.Map;
 import static java.lang.String.format;
 import static uk.gov.hmcts.reform.unspec.callback.CallbackParams.Params.BEARER_TOKEN;
 import static uk.gov.hmcts.reform.unspec.callback.CaseEvent.CREATE_CASE;
+import static uk.gov.hmcts.reform.unspec.enums.AllocatedTrack.getAllocatedTrack;
 import static uk.gov.hmcts.reform.unspec.helpers.DateFormatHelper.DATE_TIME_AT;
 import static uk.gov.hmcts.reform.unspec.helpers.DateFormatHelper.formatLocalDateTime;
 
@@ -72,11 +75,19 @@ public class CreateClaimCallbackHandler extends CallbackHandler {
         CaseData caseData = caseDetailsConverter.to(callbackParams.getRequest().getCaseDetails());
         List<String> errors = new ArrayList<>();
 
-        if (caseData.getClaimValue() != null && caseData.getClaimValue().hasLargerLowerValue()) {
+        ClaimValue claimValue = caseData.getClaimValue();
+        if (claimValue != null && claimValue.hasLargerLowerValue()) {
             errors.add("CONTENT TBC: Higher value must not be lower than the lower value.");
         }
 
+        Map<String, Object> data = callbackParams.getRequest().getCaseDetails().getData();
+        if (errors.isEmpty()) {
+            ClaimType claimType = caseData.getClaimType();
+
+            data.put("allocatedTrack", getAllocatedTrack(claimValue, claimType));
+        }
         return AboutToStartOrSubmitCallbackResponse.builder()
+            .data(data)
             .errors(errors)
             .build();
     }

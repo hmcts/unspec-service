@@ -1,25 +1,25 @@
 package uk.gov.hmcts.reform.unspec.model;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Builder;
 import lombok.Data;
+import lombok.RequiredArgsConstructor;
 import uk.gov.hmcts.reform.unspec.utils.MonetaryConversions;
 
 import java.math.BigDecimal;
 
 @Data
 @Builder
-@JsonInclude(JsonInclude.Include.NON_NULL)
+@RequiredArgsConstructor
 public class ClaimValue {
-    private final String lowerValue;
-    private final String higherValue;
+    private final Integer lowerValue;
+    private final Integer higherValue;
 
     public boolean hasLargerLowerValue() {
         if (lowerValue == null || higherValue == null) {
             return false;
         }
 
-        return new BigDecimal(lowerValue).compareTo(new BigDecimal(higherValue)) > 0;
+        return lowerValue > higherValue;
     }
 
     public String formData() {

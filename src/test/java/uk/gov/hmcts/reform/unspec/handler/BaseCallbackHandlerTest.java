@@ -4,9 +4,6 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import uk.gov.hmcts.reform.authorisation.generators.AuthTokenGenerator;
 import uk.gov.hmcts.reform.ccd.client.model.CallbackRequest;
 import uk.gov.hmcts.reform.ccd.client.model.CaseDetails;
-import uk.gov.hmcts.reform.document.DocumentDownloadClientApi;
-import uk.gov.hmcts.reform.document.DocumentMetadataDownloadClientApi;
-import uk.gov.hmcts.reform.document.DocumentUploadClientApi;
 import uk.gov.hmcts.reform.unspec.callback.CallbackParams;
 import uk.gov.hmcts.reform.unspec.callback.CallbackParams.Params;
 import uk.gov.hmcts.reform.unspec.callback.CallbackType;
@@ -16,12 +13,7 @@ import uk.gov.hmcts.reform.unspec.service.UserService;
 import java.util.Map;
 
 public class BaseCallbackHandlerTest {
-    @MockBean
-    protected DocumentMetadataDownloadClientApi documentMetadataDownloadClient;
-    @MockBean
-    protected DocumentDownloadClientApi documentDownloadClient;
-    @MockBean
-    protected DocumentUploadClientApi documentUploadClient;
+    public static final Long CASE_ID = 1594901956117591L;
     @MockBean
     protected AuthTokenGenerator authTokenGenerator;
     @MockBean
@@ -48,7 +40,7 @@ public class BaseCallbackHandlerTest {
 
     private CallbackRequest toCallbackRequest(Map<String, Object> data) {
         return CallbackRequest.builder()
-            .caseDetails(CaseDetails.builder().data(data).id((Long) data.get("id")).build())
+            .caseDetails(CaseDetails.builder().data(data).id(CASE_ID).build())
             .build();
     }
 }
