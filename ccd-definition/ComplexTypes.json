@@ -267,7 +267,7 @@
   },
   {
     "ID": "CaseDocument",
-    "ListElementCode": "size",
+    "ListElementCode": "documentSize",
     "FieldType": "Number",
     "ElementLabel": "Document size",
     "SecurityClassification": "Public"

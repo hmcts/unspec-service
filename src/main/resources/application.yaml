@@ -44,7 +44,7 @@ idam:
   api:
     url: "http://localhost:5000"
   s2s-auth:
-    microservice: unspec-service
+    microservice: unspec_service
     url: "http://localhost:4502"
     totp_secret: "AABBCCDDEEFFGGHH"
 
