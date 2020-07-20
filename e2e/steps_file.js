@@ -21,13 +21,17 @@ const serviceDatePage = require('./pages/confirmService/serviceDate.page');
 const proposeDeadline = require('./pages/requestExtension/proposeDeadline.page');
 const extensionAlreadyAgreed = require('./pages/requestExtension/extensionAlreadyAgreed.page');
 
+const respondToExtensionPage = require('./pages/respondExtension/respond.page');
+const counterExtensionPage = require('./pages/respondExtension/counter.page');
+const extensionResponsePage = require('./pages/respondExtension/response.page');
+
 const statementOfTruth = require('./fragments/statementOfTruth');
 const party = require('./fragments/party');
 
 const baseUrl = process.env.URL || 'http://localhost:3333';
 const signedInSelector = 'exui-header';
 
-module.exports = function() {
+module.exports = function () {
   return actor({
     // Define custom steps here, use 'this' to access default methods of I.
     // It is recommended to place a general 'login' function here.
@@ -89,6 +93,18 @@ module.exports = function() {
       await this.retryUntilExists(() => this.click('Ask for extension'), 'ccd-markdown');
       this.see('You asked for extra time to respond');
       this.click('Close and Return to case details');
+    },
+
+    async respondToExtension() {
+      await caseViewPage.startEvent('Respond to extension request');
+      await respondToExtensionPage.selectDoNotAccept();
+      await counterExtensionPage.enterCounterDate();
+      await extensionResponsePage.enterResponse();
+
+      await this.retryUntilExists(() => this.click('Respond to request'), 'ccd-markdown');
+      this.see('You\'ve responded to the request for more time');
+      await this.retryUntilExists(() => this.click('Close and Return to case details'),
+        locate('exui-alert').withText('updated with event: Respond to extension request'));
     },
 
     async clickContinue() {
