@@ -68,10 +68,6 @@ public class SealedClaimFormGenerator extends TemplateDataGenerator<SealedClaimF
     }
 
     private String getFileName(CaseData caseData) {
-        if (StringUtils.isBlank(caseData.getLegacyCaseReference())) {
-            return String.format(N1.getDocumentTitle(), REFERENCE_NUMBER);
-        }
-
         return String.format(N1.getDocumentTitle(), caseData.getLegacyCaseReference());
     }
 
@@ -113,21 +109,21 @@ public class SealedClaimFormGenerator extends TemplateDataGenerator<SealedClaimF
 
     private String getNameBasedOnType(Party party) {
         switch (party.getType()) {
-            case COMPANY:
-                return party.getCompanyName();
+            //            case COMPANY:
+            //                return party.getCompanyName();
             case INDIVIDUAL:
                 return
                     getTitle(party.getIndividualTitle())
                         + party.getIndividualFirstName()
                         + " "
                         + party.getIndividualLastName();
-            case SOLE_TRADER:
-                return getTitle(party.getSoleTraderTitle())
-                    + party.getSoleTraderFirstName()
-                    + party.getSoleTraderLastName();
-
-            case ORGANISATION:
-                return party.getOrganisationName();
+            //            case SOLE_TRADER:
+            //                return getTitle(party.getSoleTraderTitle())
+            //                    + party.getSoleTraderFirstName()
+            //                    + party.getSoleTraderLastName();
+            //
+            //            case ORGANISATION:
+            //                return party.getOrganisationName();
             default:
                 throw new IllegalArgumentException("invalid Applicant type " + party.getType());
         }
