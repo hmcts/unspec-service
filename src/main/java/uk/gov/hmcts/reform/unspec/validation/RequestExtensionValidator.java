@@ -29,6 +29,10 @@ public class RequestExtensionValidator {
             LocalDate.class
         );
 
+        if (proposedDeadline == null) {
+            return ImmutableList.of("The proposed deadline must be provided");
+        }
+
         if (!proposedDeadline.isAfter(now())) {
             return ImmutableList.of("The proposed deadline must be a date in the future");
         }

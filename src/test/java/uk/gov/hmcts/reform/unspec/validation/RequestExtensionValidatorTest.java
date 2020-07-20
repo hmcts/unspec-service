@@ -38,6 +38,17 @@ class RequestExtensionValidatorTest {
         }
 
         @Test
+        void shouldReturnError_whenProposedDeadlineIsNotProvided() {
+            CaseDetails caseDetails = CaseDetails.builder()
+                .data(of(RESPONSE_DEADLINE, now().atTime(16, 0)))
+                .build();
+
+            List<String> errors = validator.validateProposedDeadline(caseDetails);
+
+            assertThat(errors).containsOnly("The proposed deadline must be provided");
+        }
+
+        @Test
         void shouldReturnErrors_whenProposedDeadlineIsAfter28DaysFromResponseDeadline() {
             CaseDetails caseDetails = CaseDetails.builder()
                 .data(of(PROPOSED_DEADLINE, now().plusDays(29),
