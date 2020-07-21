@@ -98,7 +98,7 @@ public class RequestExtensionCallbackHandler extends CallbackHandler {
         );
 
         return SubmittedCallbackResponse.builder()
-            .confirmationHeader(format("# You asked for extra time to respond\n## Claim number: %s", claimNumber))
+            .confirmationHeader(format("# You asked for extra time to respond%n## Claim number: %s", claimNumber))
             .confirmationBody(body)
             .build();
     }

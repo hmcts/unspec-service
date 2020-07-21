@@ -122,7 +122,7 @@ class RequestExtensionCallbackHandlerTest extends BaseCallbackHandlerTest {
 
             assertThat(response).isEqualToComparingFieldByField(
                 SubmittedCallbackResponse.builder()
-                    .confirmationHeader("# You asked for extra time to respond\n## Claim number: TBC")
+                    .confirmationHeader("# You asked for extra time to respond%n## Claim number: TBC")
                     .confirmationBody(prepareBody(proposedDeadline, responseDeadline, ALREADY_AGREED))
                     .build());
         }
