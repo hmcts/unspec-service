@@ -22,15 +22,18 @@ import java.util.Map;
 @Slf4j
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class DocumentGeneratorService {
+
     private final RestTemplate restTemplate;
     private final DocmosisConfiguration configuration;
     private final ObjectMapper mapper;
 
     public DocmosisDocument generateDocmosisDocument(DocmosisData templateData, DocmosisTemplates template) {
+
         return generateDocmosisDocument(templateData.toMap(mapper), template);
     }
 
     public DocmosisDocument generateDocmosisDocument(Map<String, Object> templateData, DocmosisTemplates template) {
+
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
 

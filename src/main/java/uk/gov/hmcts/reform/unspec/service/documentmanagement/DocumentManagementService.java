@@ -62,7 +62,6 @@ public class DocumentManagementService {
         this.userRoles = userRoles;
     }
 
-
     @Retryable(value = {DocumentManagementException.class}, backoff = @Backoff(delay = 200))
     public CaseDocument uploadDocument(String authorisation, PDF pdf) {
         String originalFileName = pdf.getFilename();

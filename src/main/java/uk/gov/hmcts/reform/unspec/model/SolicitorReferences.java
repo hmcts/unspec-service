@@ -8,6 +8,7 @@ import lombok.Data;
 @Builder
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class SolicitorReferences {
+
     private final String claimantReference;
     private final String defendantReference;
 }

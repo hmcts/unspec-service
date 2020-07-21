@@ -4,5 +4,6 @@ import lombok.Data;
 
 @Data
 public class ServiceLocation {
+
     private String location;
 }

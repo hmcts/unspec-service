@@ -19,6 +19,7 @@ import java.util.List;
 @AllArgsConstructor
 @EqualsAndHashCode
 public class SealedClaimForm implements DocmosisData {
+
     @JsonProperty("courtseal")
     private final String courtSeal = "[userImage:courtseal.PNG]";
     private final List<Claimant> claimants;

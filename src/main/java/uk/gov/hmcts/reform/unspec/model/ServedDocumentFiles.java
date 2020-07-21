@@ -8,6 +8,7 @@ import java.util.List;
 
 @Data
 public class ServedDocumentFiles {
+
     private List<Element<Document>> other;
     private List<Element<Document>> medicalReports;
     private List<Element<Document>> scheduleOfLoss;

@@ -53,6 +53,7 @@ import static uk.gov.hmcts.reform.unspec.service.documentmanagement.DocumentMana
     CaseDetailsConverter.class
 })
 class CreateClaimCallbackHandlerTest extends BaseCallbackHandlerTest {
+
     public static final String REFERENCE_NUMBER = "000LR095";
     @MockBean
     private SealedClaimFormGenerator sealedClaimFormGenerator;

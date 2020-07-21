@@ -10,6 +10,7 @@ import java.time.LocalDate;
 @Builder(toBuilder = true)
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class Party {
+
     private final Type type;
     private final String individualTitle;
     private final String individualFirstName;

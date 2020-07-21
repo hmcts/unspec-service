@@ -9,6 +9,7 @@ import java.util.Map;
 
 @Service
 public class CaseDetailsConverter {
+
     private final ObjectMapper objectMapper;
 
     public CaseDetailsConverter(ObjectMapper objectMapper) {

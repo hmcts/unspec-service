@@ -38,6 +38,7 @@ import static uk.gov.hmcts.reform.unspec.service.documentmanagement.DocumentMana
     JacksonAutoConfiguration.class
 })
 class SealedClaimFormGeneratorTest {
+
     public static final String REFERENCE_NUMBER = "000LR095";
     private final byte[] bytes = {1, 2, 3, 4, 5, 6};
     private final String fileName = format(N1.getDocumentTitle(), REFERENCE_NUMBER);
@@ -72,7 +73,6 @@ class SealedClaimFormGeneratorTest {
     }
 
     private CaseDocument getCaseDocument() {
-
 
         return CaseDocument.builder()
             .documentLink(Document.builder()

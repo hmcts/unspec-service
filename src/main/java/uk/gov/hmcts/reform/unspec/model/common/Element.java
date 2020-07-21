@@ -14,6 +14,7 @@ import javax.validation.constraints.NotNull;
 @AllArgsConstructor
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Element<T> {
+
     private final UUID id;
     @NotNull
     @Valid

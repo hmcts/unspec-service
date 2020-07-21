@@ -6,6 +6,7 @@ import org.springframework.http.MediaType;
 @SuppressWarnings({"AbbreviationAsWordInName"})
 @Data
 public class PDF {
+
     public static final String CONTENT_TYPE = MediaType.APPLICATION_PDF_VALUE;
     public static final String EXTENSION = ".pdf";
 

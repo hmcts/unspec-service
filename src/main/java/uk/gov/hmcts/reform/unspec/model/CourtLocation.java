@@ -8,6 +8,7 @@ import lombok.Data;
 @Data
 @Builder
 public class CourtLocation {
+
     private final String applicantPreferredCourt;
 
     @JsonCreator

@@ -8,6 +8,7 @@ import lombok.Value;
 @Value
 @Builder(toBuilder = true)
 public class Document {
+
     @JsonProperty("document_url")
     private String documentUrl;
 

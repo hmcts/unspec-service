@@ -7,6 +7,7 @@ import uk.gov.hmcts.reform.unspec.model.Address;
 @Data
 @Builder(toBuilder = true)
 public class Representative {
+
     private final String contactName;
     private final String organisationName;
     private final String phoneNumber;

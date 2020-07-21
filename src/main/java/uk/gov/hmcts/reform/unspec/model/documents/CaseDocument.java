@@ -10,6 +10,7 @@ import java.time.LocalDateTime;
 @Builder(toBuilder = true)
 @AllArgsConstructor
 public class CaseDocument {
+
     private final Document documentLink;
     private final String documentName;
     private final DocumentType documentType;

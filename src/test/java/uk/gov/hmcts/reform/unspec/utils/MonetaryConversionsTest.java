@@ -1,6 +1,5 @@
 package uk.gov.hmcts.reform.unspec.utils;
 
-
 import org.junit.jupiter.api.Test;
 
 import java.math.BigDecimal;

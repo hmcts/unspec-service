@@ -9,6 +9,7 @@ import lombok.Data;
 @Builder
 @JsonNaming(PropertyNamingStrategy.UpperCamelCaseStrategy.class)
 public class Address {
+
     private final String addressLine1;
     private final String addressLine2;
     private final String addressLine3;
