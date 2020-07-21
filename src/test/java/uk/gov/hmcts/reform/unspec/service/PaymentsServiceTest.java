@@ -77,7 +77,7 @@ class PaymentsServiceTest {
     }
 
     @Test
-    public void shouldCreateCreditAccountPayment() {
+    public void shouldCreateCreditAccountPayment_whenValidCaseDetails() {
         CaseDetails caseDetails = CaseDetails.builder()
             .id(1L)
             .data(Map.of(
