@@ -12,22 +12,22 @@ import java.math.BigDecimal;
 @RequiredArgsConstructor
 public class ClaimValue {
 
-    private final Integer lowerValue;
-    private final Integer higherValue;
+    private final BigDecimal lowerValue;
+    private final BigDecimal higherValue;
 
     public boolean hasLargerLowerValue() {
         if (lowerValue == null || higherValue == null) {
             return false;
         }
 
-        return lowerValue > higherValue;
+        return lowerValue.compareTo(higherValue) > 0;
     }
 
     public String formData() {
-        BigDecimal higherAmount = MonetaryConversions.penniesToPounds(new BigDecimal(higherValue));
+        BigDecimal higherAmount = MonetaryConversions.penniesToPounds(higherValue);
         if (lowerValue == null) {
             return "up to £" + higherAmount;
         }
-        return "£" + MonetaryConversions.penniesToPounds(new BigDecimal(lowerValue)) + " - £" + higherAmount;
+        return "£" + MonetaryConversions.penniesToPounds(lowerValue) + " - £" + higherAmount;
     }
 }
