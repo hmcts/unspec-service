@@ -239,7 +239,7 @@ class DocumentManagementServiceTest {
                 documentManagementException.getMessage()
             );
 
-            verify(documentMetadataDownloadClient)
+            verify(documentMetadataDownloadClient, atLeast(2))
                 .getDocumentMetadata(anyString(), anyString(), eq(USER_ROLES_JOINED), anyString(), anyString());
         }
     }

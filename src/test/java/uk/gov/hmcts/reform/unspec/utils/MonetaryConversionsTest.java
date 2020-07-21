@@ -11,7 +11,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 public class MonetaryConversionsTest {
 
     @Test
-    public void shouldThrowNullPointerWhenGivenNullAmount() {
+    public void shouldThrowNullPointer_whenGivenNullAmount() {
         assertThrows(NullPointerException.class, () ->
             MonetaryConversions.penniesToPounds(null));
     }

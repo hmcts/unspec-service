@@ -1,6 +1,5 @@
 package uk.gov.hmcts.reform.unspec.service.docmosis.sealedclaim;
 
-import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import uk.gov.hmcts.reform.unspec.model.Address;
@@ -22,6 +21,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 import static uk.gov.hmcts.reform.unspec.service.docmosis.DocmosisTemplates.N1;
+import static uk.gov.hmcts.reform.unspec.utils.PartyNameUtils.getPartyNameBasedOnType;
 
 @Service
 public class SealedClaimFormGenerator extends TemplateDataGenerator<SealedClaimForm> {
@@ -93,7 +93,7 @@ public class SealedClaimFormGenerator extends TemplateDataGenerator<SealedClaimF
     private List<Defendant> geDefendants(CaseData caseData) {
         Party respondent = caseData.getRespondent();
         return List.of(Defendant.builder()
-                           .name(getNameBasedOnType(respondent))
+                           .name(getPartyNameBasedOnType(respondent))
                            .primaryAddress(respondent.getPrimaryAddress())
                            .representative(TEMP_REPRESENTATIVE)
                            .build());
@@ -102,34 +102,8 @@ public class SealedClaimFormGenerator extends TemplateDataGenerator<SealedClaimF
     private List<Claimant> getClaimants(CaseData caseData) {
         Party applicant = caseData.getClaimant();
         return List.of(Claimant.builder()
-                           .name(getNameBasedOnType(applicant))
+                           .name(getPartyNameBasedOnType(applicant))
                            .primaryAddress(applicant.getPrimaryAddress())
                            .build());
-    }
-
-    private String getNameBasedOnType(Party party) {
-        switch (party.getType()) {
-            //            case COMPANY:
-            //                return party.getCompanyName();
-            case INDIVIDUAL:
-                return
-                    getTitle(party.getIndividualTitle())
-                        + party.getIndividualFirstName()
-                        + " "
-                        + party.getIndividualLastName();
-            //            case SOLE_TRADER:
-            //                return getTitle(party.getSoleTraderTitle())
-            //                    + party.getSoleTraderFirstName()
-            //                    + party.getSoleTraderLastName();
-            //
-            //            case ORGANISATION:
-            //                return party.getOrganisationName();
-            default:
-                throw new IllegalArgumentException("invalid Applicant type " + party.getType());
-        }
-    }
-
-    private String getTitle(String title) {
-        return StringUtils.isBlank(title) ? "" : title + " ";
     }
 }
