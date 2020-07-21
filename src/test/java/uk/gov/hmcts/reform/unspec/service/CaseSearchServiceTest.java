@@ -23,10 +23,11 @@ import static org.skyscreamer.jsonassert.JSONCompareMode.STRICT;
 
 @ExtendWith(SpringExtension.class)
 class CaseSearchServiceTest {
+
     public static final SearchResult EXPECTED_SEARCH_RESULTS = SearchResult.builder()
-                                                                   .total(1)
-                                                                   .cases(List.of(CaseDetails.builder().id(1L).build()))
-                                                                   .build();
+        .total(1)
+        .cases(List.of(CaseDetails.builder().id(1L).build()))
+        .build();
 
     @Captor
     private ArgumentCaptor<String> queryCaptor;
@@ -45,8 +46,8 @@ class CaseSearchServiceTest {
     @Test
     void shouldGetCases_WhenSearchingCasesByDateProperty() throws JSONException {
         String expectedQuery = "{\"query\":"
-                                   + "{\"range\":{\"data.claimIssuedDate\":{\"lt\":\"now-112d\"}}}, "
-                                   + "\"_source\": [\"reference\"]}";
+            + "{\"range\":{\"data.claimIssuedDate\":{\"lt\":\"now-112d\"}}}, "
+            + "\"_source\": [\"reference\"]}";
 
         assertThat(searchService.getCasesToBeStayed()).isEqualTo(EXPECTED_SEARCH_RESULTS.getCases());
         verify(coreCaseDataService).searchCases(queryCaptor.capture());

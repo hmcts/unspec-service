@@ -13,6 +13,7 @@ import static java.util.Map.of;
 @Service
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class CaseSearchService {
+
     private final CoreCaseDataService coreCaseDataService;
 
     public List<CaseDetails> getCasesToBeStayed() {

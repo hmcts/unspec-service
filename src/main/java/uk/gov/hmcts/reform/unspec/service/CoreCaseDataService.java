@@ -19,6 +19,7 @@ import static uk.gov.hmcts.reform.unspec.CaseDefinitionConstants.JURISDICTION;
 @Service
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class CoreCaseDataService {
+
     private final IdamClient idamClient;
     private final CoreCaseDataApi coreCaseDataApi;
     private final SystemUpdateUserConfiguration userConfig;
@@ -56,11 +57,11 @@ public class CoreCaseDataService {
 
     private CaseDataContent caseDataContentFromStartEventResponse(StartEventResponse startEventResponse) {
         return CaseDataContent.builder()
-                   .eventToken(startEventResponse.getToken())
-                   .event(Event.builder()
-                              .id(startEventResponse.getEventId())
-                              .build())
-                   .data(startEventResponse.getCaseDetails().getData())
-                   .build();
+            .eventToken(startEventResponse.getToken())
+            .event(Event.builder()
+                .id(startEventResponse.getEventId())
+                .build())
+            .data(startEventResponse.getCaseDetails().getData())
+            .build();
     }
 }

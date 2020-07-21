@@ -28,6 +28,7 @@ import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class CoreCaseDataServiceTest {
+
     private static final String USER_AUTH_TOKEN = "Bearer user-xyz";
     private static final String SERVICE_AUTH_TOKEN = "Bearer service-xyz";
     private static final String CASE_TYPE = "UNSPECIFIED_CLAIMS";
@@ -55,6 +56,7 @@ class CoreCaseDataServiceTest {
 
     @Nested
     class TriggerEvent {
+
         private static final String EVENT_ID = "MOVE_TO_STAYED";
         private static final String JURISDICTION = "CIVIL";
         private static final String EVENT_TOKEN = "eventToken";
@@ -82,22 +84,22 @@ class CoreCaseDataServiceTest {
 
         private StartEventResponse buildStartEventResponse() {
             return StartEventResponse.builder()
-                       .eventId(EVENT_ID)
-                       .token(EVENT_TOKEN)
-                       .caseDetails(CaseDetails.builder()
-                                        .data(Map.of("data", "some data"))
-                                        .build())
-                       .build();
+                .eventId(EVENT_ID)
+                .token(EVENT_TOKEN)
+                .caseDetails(CaseDetails.builder()
+                    .data(Map.of("data", "some data"))
+                    .build())
+                .build();
         }
 
         private CaseDataContent buildCaseDataContent() {
             return CaseDataContent.builder()
-                       .eventToken(EVENT_TOKEN)
-                       .event(Event.builder()
-                                  .id(EVENT_ID)
-                                  .build())
-                       .data(Map.of("data", "some data"))
-                       .build();
+                .eventToken(EVENT_TOKEN)
+                .event(Event.builder()
+                    .id(EVENT_ID)
+                    .build())
+                .data(Map.of("data", "some data"))
+                .build();
         }
     }
 

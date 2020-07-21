@@ -14,6 +14,7 @@ import static uk.gov.hmcts.reform.unspec.callback.CaseEvent.MOVE_TO_STAYED;
 @Service
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class MoveCaseToStayedEventHandler {
+
     private final CoreCaseDataService coreCaseDataService;
 
     @EventListener

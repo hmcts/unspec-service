@@ -14,6 +14,7 @@ import java.util.List;
 @Slf4j
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class CaseStayedFinder implements Job {
+
     private final CaseSearchService caseSearchService;
     private final ApplicationEventPublisher applicationEventPublisher;
 
