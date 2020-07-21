@@ -37,7 +37,7 @@ class CreateClaimCallbackHandlerTest extends BaseCallbackHandlerTest {
     class MidEventCallback {
 
         @Test
-        void shouldReturnExpectedErrorInMidEvent_whenValuesAreInvalid() {
+        void shouldReturnExpectedError_whenValuesAreInvalid() {
             Map<String, Object> data = new HashMap<>();
             data.put(
                 "claimValue",
@@ -54,7 +54,7 @@ class CreateClaimCallbackHandlerTest extends BaseCallbackHandlerTest {
         }
 
         @Test
-        void shouldReturnNoErrorInMidEvent_whenValuesAreValid() {
+        void shouldReturnNoError_whenValuesAreValid() {
             Map<String, Object> data = new HashMap<>();
             data.put(
                 "claimValue",
@@ -85,7 +85,7 @@ class CreateClaimCallbackHandlerTest extends BaseCallbackHandlerTest {
     class AboutToSubmitCallback {
 
         @Test
-        void shouldAddClaimIssuedDate_whenAboutToSubmitInvoked() {
+        void shouldAddClaimIssuedDate_whenInvoked() {
             CallbackParams params = callbackParamsOf(new HashMap<>(), CallbackType.ABOUT_TO_SUBMIT);
 
             AboutToStartOrSubmitCallbackResponse response = (AboutToStartOrSubmitCallbackResponse) handler
@@ -99,7 +99,7 @@ class CreateClaimCallbackHandlerTest extends BaseCallbackHandlerTest {
     class SubmittedCallback {
 
         @Test
-        void shouldReturnExpectedSubmittedCallbackResponse_whenSubmitted() {
+        void shouldReturnExpectedSubmittedCallbackResponse_whenInvoked() {
             CallbackParams params = callbackParamsOf(new HashMap<>(), CallbackType.SUBMITTED);
 
             SubmittedCallbackResponse response = (SubmittedCallbackResponse) handler.handle(params);

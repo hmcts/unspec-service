@@ -57,7 +57,7 @@ class ConfirmServiceCallbackHandlerTest extends BaseCallbackHandlerTest {
         }
 
         @Test
-        void shouldReturnNoError_whenValidServedDocumentsOtherValue() {
+        void shouldReturnNoError_whenValidServedDocumentsOther() {
             Map<String, Object> data = new HashMap<>();
             data.put("servedDocumentsOther", "A valid document");
 
@@ -75,7 +75,7 @@ class ConfirmServiceCallbackHandlerTest extends BaseCallbackHandlerTest {
     class AboutToSubmitCallback {
 
         @Test
-        void shouldReturnExpectedAboutToSubmitCallbackResponse_whenNoError() {
+        void shouldReturnExpectedAboutToSubmitCallbackResponse_whenValidData() {
             Map<String, Object> data = new HashMap<>();
             data.put("serviceMethod", "POST");
             data.put("serviceDate", "2099-06-23");
@@ -99,7 +99,7 @@ class ConfirmServiceCallbackHandlerTest extends BaseCallbackHandlerTest {
     class SubmittedCallback {
 
         @Test
-        void shouldReturnExpectedSubmittedCallbackResponse_whenNoError() {
+        void shouldReturnExpectedSubmittedCallbackResponse_whenValidData() {
             Map<String, Object> data = new HashMap<>();
             data.put("deemedDateOfService", "2099-06-25");
 

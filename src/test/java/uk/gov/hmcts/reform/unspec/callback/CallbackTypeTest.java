@@ -8,7 +8,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 public class CallbackTypeTest {
 
     @Test
-    public void shouldDeserialise_whenValidCallbacks() {
+    public void shouldDeserialize_whenValidCallbacks() {
         assertThat(CallbackType.fromValue("mid")).isEqualTo(CallbackType.MID);
         assertThat(CallbackType.fromValue("about-to-start"))
             .isEqualTo(CallbackType.ABOUT_TO_START);

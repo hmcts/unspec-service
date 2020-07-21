@@ -71,7 +71,6 @@ public class CallbackHandlerFactoryTest {
 
     @Test
     public void shouldDispatchCallback_whenValidCaseEvent() {
-
         CallbackRequest callbackRequest = CallbackRequest
             .builder()
             .eventId(CREATE_CASE.getValue())
