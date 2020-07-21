@@ -54,7 +54,7 @@ public class DocumentGeneratorService {
                                              HttpMethod.POST, request, byte[].class
             ).getBody();
         } catch (HttpClientErrorException ex) {
-            log.error("Docmosis document generation failed" + ex.getMessage());
+            log.error("Docmosis document generation failed for " + ex.getMessage());
             throw ex;
         }
 
