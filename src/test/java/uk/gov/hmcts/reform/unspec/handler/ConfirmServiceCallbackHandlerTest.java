@@ -29,7 +29,7 @@ class ConfirmServiceCallbackHandlerTest extends BaseCallbackHandlerTest {
     class AboutToStartCallback {
 
         @Test
-        void shouldPrepopulateServedDocumentsList_whenAboutToStartEvent() {
+        void shouldPrepopulateServedDocumentsList_whenInvoked() {
             CallbackParams params = callbackParamsOf(new HashMap<>(), CallbackType.ABOUT_TO_START);
             AboutToStartOrSubmitCallbackResponse response = (AboutToStartOrSubmitCallbackResponse) handler
                 .handle(params);
@@ -75,7 +75,7 @@ class ConfirmServiceCallbackHandlerTest extends BaseCallbackHandlerTest {
     class AboutToSubmitCallback {
 
         @Test
-        void shouldReturnExpectedAboutToSubmitCallbackResponse_whenValidData() {
+        void shouldReturnExpectedResponse_whenValidData() {
             Map<String, Object> data = new HashMap<>();
             data.put("serviceMethod", "POST");
             data.put("serviceDate", "2099-06-23");
@@ -99,7 +99,7 @@ class ConfirmServiceCallbackHandlerTest extends BaseCallbackHandlerTest {
     class SubmittedCallback {
 
         @Test
-        void shouldReturnExpectedSubmittedCallbackResponse_whenValidData() {
+        void shouldReturnExpectedResponse_whenValidData() {
             Map<String, Object> data = new HashMap<>();
             data.put("deemedDateOfService", "2099-06-25");
 

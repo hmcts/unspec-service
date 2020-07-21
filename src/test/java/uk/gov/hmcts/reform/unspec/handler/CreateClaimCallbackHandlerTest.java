@@ -99,7 +99,7 @@ class CreateClaimCallbackHandlerTest extends BaseCallbackHandlerTest {
     class SubmittedCallback {
 
         @Test
-        void shouldReturnExpectedSubmittedCallbackResponse_whenInvoked() {
+        void shouldReturnExpectedResponse_whenInvoked() {
             CallbackParams params = callbackParamsOf(new HashMap<>(), CallbackType.SUBMITTED);
 
             SubmittedCallbackResponse response = (SubmittedCallbackResponse) handler.handle(params);
