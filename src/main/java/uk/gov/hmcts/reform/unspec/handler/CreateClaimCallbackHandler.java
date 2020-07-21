@@ -77,7 +77,7 @@ public class CreateClaimCallbackHandler extends CallbackHandler {
         List<String> errors = new ArrayList<>();
 
         ClaimValue claimValue = caseData.getClaimValue();
-        if (claimValue != null && claimValue.hasLargerLowerValue()) {
+        if (claimValue.hasLargerLowerValue()) {
             errors.add("CONTENT TBC: Higher value must not be lower than the lower value.");
         }
 

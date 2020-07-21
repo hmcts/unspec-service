@@ -1,7 +1,11 @@
 package uk.gov.hmcts.reform.unspec.utils;
 
 import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoSettings;
 import uk.gov.hmcts.reform.unspec.model.Party;
+
+import java.util.Arrays;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -9,9 +13,9 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 class PartyNameUtilsTest {
 
     @Test
-    public void shouldThrowNullPointer_whenPartyTypeIsInvalid() {
-        assertThrows(IllegalArgumentException.class, () ->
-            PartyNameUtils.getPartyNameBasedOnType(Party.builder().type(Party.Type.valueOf("Unknown")).build()));
+    public void shouldThrowNullPointer_whenPartyTypeIsNull() {
+        assertThrows(NullPointerException.class, () ->
+            PartyNameUtils.getPartyNameBasedOnType(Party.builder().type(null).build()));
     }
 
     @Test

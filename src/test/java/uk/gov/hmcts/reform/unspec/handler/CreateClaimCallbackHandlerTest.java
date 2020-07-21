@@ -141,13 +141,38 @@ class CreateClaimCallbackHandlerTest extends BaseCallbackHandlerTest {
     @Nested
     class SubmittedEvent {
         @Test
-        void shouldReturnExpectedSubmittedCallbackResponseObject() {
+        void shouldReturnExpectedSubmittedCallbackResponseObject_whenDocumentIsGenerated() {
             Map<String, Object> data = new HashMap<>();
             int documentSize = 125952;
             Element<CaseDocument> documents = Element.<CaseDocument>builder()
                 .value(CaseDocument.builder().documentSize(documentSize).documentType(SEALED_CLAIM).build())
                 .build();
             data.put("systemGeneratedCaseDocuments", List.of(documents));
+            CallbackParams params = callbackParamsOf(data, CallbackType.SUBMITTED);
+            SubmittedCallbackResponse response = (SubmittedCallbackResponse) handler.handle(params);
+
+            LocalDateTime serviceDeadline = LocalDate.now().plusDays(112).atTime(23, 59);
+            String formattedServiceDeadline = formatLocalDateTime(serviceDeadline, DATE_TIME_AT);
+
+            String body = format(
+                CONFIRMATION_SUMMARY,
+                format("/cases/case-details/%s#CaseDocuments", CASE_ID),
+                documentSize / 1024,
+                responsePackLink,
+                formattedServiceDeadline
+            );
+
+            assertThat(response).isEqualToComparingFieldByField(
+                SubmittedCallbackResponse.builder()
+                    .confirmationHeader("# Your claim has been issued\n## Claim number: TBC")
+                    .confirmationBody(body)
+                    .build());
+        }
+
+        @Test
+        void shouldReturnExpectedSubmittedCallbackResponseObject_whenDocumentIsNotGenerated() {
+            Map<String, Object> data = new HashMap<>();
+            int documentSize = 0;
             CallbackParams params = callbackParamsOf(data, CallbackType.SUBMITTED);
             SubmittedCallbackResponse response = (SubmittedCallbackResponse) handler.handle(params);
 

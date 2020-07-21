@@ -14,11 +14,10 @@ public class PartyNameUtils {
             case COMPANY:
                 return party.getCompanyName();
             case INDIVIDUAL:
-                return
-                    getTitle(party.getIndividualTitle())
-                        + party.getIndividualFirstName()
-                        + " "
-                        + party.getIndividualLastName();
+                return getTitle(party.getIndividualTitle())
+                    + party.getIndividualFirstName()
+                    + " "
+                    + party.getIndividualLastName();
             case SOLE_TRADER:
                 return getTitle(party.getSoleTraderTitle())
                     + party.getSoleTraderFirstName()
@@ -26,10 +25,9 @@ public class PartyNameUtils {
                     + party.getSoleTraderLastName();
             case ORGANISATION:
                 return party.getOrganisationName();
-            default:
-                throw new IllegalArgumentException("Invalid Party Type " + party.getType());
-
         }
+
+        throw new IllegalArgumentException("Invalid Party type in " + party);
     }
 
     private static String getTitle(String title) {
