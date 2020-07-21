@@ -15,8 +15,6 @@ management:
         include: health, info, prometheus
 
 spring:
-  main:
-    allow-bean-definition-overriding: true
   application:
     name: unspec-service
   cache:
@@ -52,12 +50,12 @@ payments:
     site_id:
     service:
 
-  idam:
-    s2s-auth:
-      microservice: unspec_service
+idam:
+  s2s-auth:
+    microservice: unspec_service
 
 document_management:
-   userRoles: "caseworker-civil,caseworker-civil-solicitor"
+  userRoles: "caseworker-civil,caseworker-civil-solicitor"
 
 unspecified:
   response-pack-url: https://formfinder.hmctsformfinder.justice.gov.uk/n9-eng.pdf
@@ -119,4 +117,4 @@ idam:
     totp_secret: AABBCCDDEEFFGGHH
 
 document_management:
-  url: http://fake-document-management  
+  url: http://fake-document-management
