@@ -117,4 +117,8 @@ idam:
     totp_secret: AABBCCDDEEFFGGHH
 
 document_management:
-  url: http://fake-document-management
+  url: http://fake-document-management-api
+  
+docmosis:
+  tornado:
+    url': http://fake-docmosis-api
