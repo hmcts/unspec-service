@@ -1,11 +1,7 @@
 package uk.gov.hmcts.reform.unspec.utils;
 
 import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoSettings;
 import uk.gov.hmcts.reform.unspec.model.Party;
-
-import java.util.Arrays;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;

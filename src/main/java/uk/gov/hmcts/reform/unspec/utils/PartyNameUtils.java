@@ -25,9 +25,9 @@ public class PartyNameUtils {
                     + party.getSoleTraderLastName();
             case ORGANISATION:
                 return party.getOrganisationName();
+            default:
+                throw new IllegalArgumentException("Invalid Party type in " + party);
         }
-
-        throw new IllegalArgumentException("Invalid Party type in " + party);
     }
 
     private static String getTitle(String title) {

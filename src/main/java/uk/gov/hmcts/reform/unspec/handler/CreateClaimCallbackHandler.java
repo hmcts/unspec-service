@@ -80,7 +80,7 @@ public class CreateClaimCallbackHandler extends CallbackHandler {
         if (claimValue.hasLargerLowerValue()) {
             errors.add("CONTENT TBC: Higher value must not be lower than the lower value.");
         }
-
+    
         Map<String, Object> data = callbackParams.getRequest().getCaseDetails().getData();
         if (errors.isEmpty()) {
             ClaimType claimType = caseData.getClaimType();
