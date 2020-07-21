@@ -73,6 +73,7 @@ class CreateClaimCallbackHandlerTest extends BaseCallbackHandlerTest {
 
     @Nested
     class AboutToSubmitCallback {
+
         @Test
         void shouldAddClaimIssuedDate_whenAboutToSubmitInvoked() {
             CallbackParams params = callbackParamsOf(new HashMap<>(), CallbackType.ABOUT_TO_SUBMIT);

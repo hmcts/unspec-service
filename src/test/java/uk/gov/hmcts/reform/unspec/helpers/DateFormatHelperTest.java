@@ -16,6 +16,7 @@ class DateFormatHelperTest {
 
     @Nested
     class LocalDateTimeFormat {
+
         @Test
         void shouldReturnExpectedDateTimeFormat_whenValidFormatIsPassed() {
             LocalDateTime now = LocalDateTime.of(2999, 1, 1, 9, 0, 0);
@@ -27,6 +28,7 @@ class DateFormatHelperTest {
 
     @Nested
     class LocalDateFormat {
+
         @Test
         void shouldReturnExpectedDateFormat_whenValidFormatIsPassed() {
             LocalDate now = LocalDate.of(2999, 1, 1);
