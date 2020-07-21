@@ -118,7 +118,8 @@ idam:
 
 document_management:
   url: http://fake-document-management-api
-  
+
 docmosis:
   tornado:
-    url': http://fake-docmosis-api
+    url: http://fake-docmosis-api
+    key: fake-key
