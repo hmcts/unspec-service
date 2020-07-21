@@ -8,7 +8,6 @@ import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.Resource;
 import org.springframework.http.ResponseEntity;
 import org.springframework.retry.annotation.Backoff;
-import org.springframework.retry.annotation.Recover;
 import org.springframework.retry.annotation.Retryable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -106,14 +105,6 @@ public class DocumentManagementService {
         }
     }
 
-    @Recover
-    public CaseDocument logUploadDocumentFailure(DocumentManagementException exception,
-                                                 String authorisation,
-                                                 PDF pdf) {
-        logger.info(exception.getMessage() + " " + exception.getCause(), exception);
-        throw exception;
-    }
-
     @Retryable(value = DocumentManagementException.class, backoff = @Backoff(delay = 200))
     public byte[] downloadDocument(String authorisation, URI documentManagementUrl) {
         try {
@@ -139,16 +130,6 @@ public class DocumentManagementService {
                     documentManagementUrl
                 ), ex);
         }
-    }
-
-    @Recover
-    public byte[] logDownloadDocumentFailure(
-        DocumentManagementException exception,
-        String authorisation,
-        URI documentManagementUrl
-    ) {
-        logger.warn(exception.getMessage() + " " + exception.getCause(), exception);
-        throw exception;
     }
 
     public Document getDocumentMetaData(String authorisation, String documentPath) {
