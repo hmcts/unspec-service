@@ -8,6 +8,7 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class ClaimValueTest {
+
     public static final BigDecimal HIGHER_VALUE = BigDecimal.valueOf(1000);
     public static final BigDecimal LOWER_VALUE = BigDecimal.valueOf(10);
 

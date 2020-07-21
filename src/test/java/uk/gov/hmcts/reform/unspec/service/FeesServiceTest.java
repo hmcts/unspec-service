@@ -23,6 +23,7 @@ import static org.mockito.Mockito.verify;
 
 @ExtendWith(SpringExtension.class)
 class FeesServiceTest {
+
     private static final String CHANNEL = "channel";
     private static final String EVENT = "event";
     private static final BigDecimal TEST_FEE_AMOUNT_POUNDS = new BigDecimal("1.00");

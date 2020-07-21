@@ -7,6 +7,7 @@ import org.springframework.context.annotation.Configuration;
 @Data
 @Configuration
 public class FeesConfiguration {
+
     private final String channel;
     private final String event;
 

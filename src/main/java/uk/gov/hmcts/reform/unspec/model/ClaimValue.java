@@ -10,6 +10,7 @@ import java.math.BigDecimal;
 @Builder
 @RequiredArgsConstructor
 public class ClaimValue {
+
     private final BigDecimal lowerValue;
     private final BigDecimal higherValue;
 

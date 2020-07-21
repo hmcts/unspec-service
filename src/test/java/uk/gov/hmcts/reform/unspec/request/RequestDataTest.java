@@ -13,6 +13,7 @@ import static org.mockito.Mockito.when;
 
 @ExtendWith(SpringExtension.class)
 class RequestDataTest {
+
     private static final String AUTH_TOKEN = "Bearer token";
     private static final String USER_ID = "example.gov.uk";
 

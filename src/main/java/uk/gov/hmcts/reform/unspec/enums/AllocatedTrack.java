@@ -11,25 +11,27 @@ public enum AllocatedTrack {
 
     public static AllocatedTrack getAllocatedTrack(ClaimValue claimValue, ClaimType claimType) {
         if (claimType.isPersonalInjury()) {
-            if (claimValue.getHigherValue().compareTo(BigDecimal.valueOf(1000)) < 0) {
+            if (isValueSmallerThan(claimValue.getHigherValue(), 1000)) {
                 return SMALL_CLAIM;
-            } else if ((claimValue.getHigherValue().compareTo(BigDecimal.valueOf(1000)) == 0
-                || claimValue.getHigherValue().compareTo(BigDecimal.valueOf(1000)) > 0)
-                && (claimValue.getHigherValue().compareTo(BigDecimal.valueOf(25000)) < 0
-                || claimValue.getHigherValue().compareTo(BigDecimal.valueOf(25000)) == 0)) {
+            } else if (isValueWithinRange(claimValue.getHigherValue(), 1000, 25000)) {
                 return FAST_CLAIM;
             }
         }
 
-        if (claimValue.getHigherValue().compareTo(BigDecimal.valueOf(10000)) < 0) {
+        if (isValueSmallerThan(claimValue.getHigherValue(), 10000)) {
             return SMALL_CLAIM;
-        } else if ((claimValue.getHigherValue().compareTo(BigDecimal.valueOf(10000)) == 0
-            || claimValue.getHigherValue().compareTo(BigDecimal.valueOf(10000)) > 0)
-            && (claimValue.getHigherValue().compareTo(BigDecimal.valueOf(25000)) < 0
-            || claimValue.getHigherValue().compareTo(BigDecimal.valueOf(25000)) == 0)) {
+        } else if (isValueWithinRange(claimValue.getHigherValue(), 10000, 25000)) {
             return FAST_CLAIM;
         } else {
             return MULTI_CLAIM;
         }
+    }
+
+    private static boolean isValueSmallerThan(BigDecimal value, int comparisionValue) {
+        return value.compareTo(BigDecimal.valueOf(comparisionValue)) < 0;
+    }
+
+    private static boolean isValueWithinRange(BigDecimal value, int lower, int higher) {
+        return value.compareTo(BigDecimal.valueOf(lower)) >= 0 &&  value.compareTo(BigDecimal.valueOf(higher)) <= 0;
     }
 }

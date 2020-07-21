@@ -30,6 +30,7 @@ import static org.mockito.Mockito.verify;
 @ExtendWith(SpringExtension.class)
 @ContextConfiguration(classes = {JacksonAutoConfiguration.class})
 class PaymentsServiceTest {
+
     private static final String SERVICE = "service";
     private static final String SITE_ID = "site_id";
     private static final String AUTH_TOKEN = "Bearer token";

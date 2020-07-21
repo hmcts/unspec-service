@@ -37,7 +37,7 @@ class CreateClaimCallbackHandlerTest extends BaseCallbackHandlerTest {
         Map<String, Object> data = new HashMap<>();
         data.put(
             "claimValue",
-            ClaimValue.builder().higherValue(BigDecimal.valueOf(1,2)).lowerValue(BigDecimal.valueOf(10,2)).build()
+            ClaimValue.builder().higherValue(BigDecimal.valueOf(1, 2)).lowerValue(BigDecimal.valueOf(10, 2)).build()
         );
 
         CallbackParams params = callbackParamsOf(data, CallbackType.MID);
@@ -67,7 +67,7 @@ class CreateClaimCallbackHandlerTest extends BaseCallbackHandlerTest {
                 Map.of(
                 "claimValue", ClaimValue.builder()
                         .higherValue(BigDecimal.valueOf(10, 2))
-                        .lowerValue(BigDecimal.valueOf(1,2))
+                        .lowerValue(BigDecimal.valueOf(1, 2))
                         .build(),
                 "claimType", PERSONAL_INJURY_WORK,
                 "allocatedTrack", SMALL_CLAIM
