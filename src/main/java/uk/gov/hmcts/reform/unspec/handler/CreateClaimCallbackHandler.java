@@ -122,10 +122,11 @@ public class CreateClaimCallbackHandler extends CallbackHandler {
 
     private SubmittedCallbackResponse buildConfirmation(CallbackParams callbackParams) {
         CaseData caseData = caseDetailsConverter.to(callbackParams.getRequest().getCaseDetails());
-        CaseDocument caseDocument = ElementUtils.unwrapElements(caseData.getSystemGeneratedCaseDocuments()).stream()
+        Long documentSize = ElementUtils.unwrapElements(caseData.getSystemGeneratedCaseDocuments()).stream()
             .filter(c -> c.getDocumentType() == DocumentType.SEALED_CLAIM)
             .findFirst()
-            .get();
+            .map(CaseDocument::getDocumentSize)
+            .orElse(0L);
 
         LocalDateTime serviceDeadline = LocalDate.now().plusDays(112).atTime(23, 59);
         String formattedServiceDeadline = formatLocalDateTime(serviceDeadline, DATE_TIME_AT);
@@ -134,7 +135,7 @@ public class CreateClaimCallbackHandler extends CallbackHandler {
         String body = format(
             CONFIRMATION_SUMMARY,
             format("/cases/case-details/%s#CaseDocuments", caseData.getCcdCaseReference()),
-            caseDocument.getDocumentSize() / 1024,
+            documentSize / 1024,
             responsePackLink,
             formattedServiceDeadline
         );

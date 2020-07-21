@@ -42,7 +42,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static uk.gov.hmcts.reform.unspec.callback.CallbackHandlerFactoryTest.BEARER_TOKEN;
 import static uk.gov.hmcts.reform.unspec.model.documents.DocumentType.SEALED_CLAIM;
-import static uk.gov.hmcts.reform.unspec.utils.ResourceReader.read;
+import static uk.gov.hmcts.reform.unspec.utils.ResourceReader.readString;
 
 @SpringBootTest(classes = {
     DocumentManagementService.class,
@@ -101,7 +101,7 @@ class DocumentManagementServiceTest {
                 anyList()
                  )
             ).thenReturn(mapper.readValue(
-                read("/document-management/response.success.json"), UploadResponse.class)
+                readString("document-management/response.success.json"), UploadResponse.class)
             );
 
             CaseDocument caseDocument = documentManagementService.uploadDocument(BEARER_TOKEN, document);
@@ -126,7 +126,7 @@ class DocumentManagementServiceTest {
                 anyList()
                  )
             ).thenReturn(mapper.readValue(
-                read("/document-management/response.failure.json"), UploadResponse.class));
+                readString("document-management/response.failure.json"), UploadResponse.class));
 
             DocumentManagementException documentManagementException = assertThrows(
                 DocumentManagementException.class,
@@ -152,7 +152,7 @@ class DocumentManagementServiceTest {
             when(documentMetadataDownloadClient
                      .getDocumentMetadata(anyString(), anyString(), eq(USER_ROLES_JOINED), anyString(), anyString())
             ).thenReturn(mapper.readValue(
-                read("/document-management/download.success.json"), Document.class)
+                readString("document-management/download.success.json"), Document.class)
             );
 
             when(responseEntity.getBody()).thenReturn(new ByteArrayResource("test".getBytes()));
@@ -207,7 +207,7 @@ class DocumentManagementServiceTest {
             when(documentMetadataDownloadClient
                      .getDocumentMetadata(anyString(), anyString(), eq(USER_ROLES_JOINED), anyString(), anyString())
             ).thenReturn(mapper.readValue(
-                read("/document-management/download.success.json"), Document.class)
+                readString("document-management/download.success.json"), Document.class)
             );
 
             when(responseEntity.getBody()).thenReturn(new ByteArrayResource("test".getBytes()));
