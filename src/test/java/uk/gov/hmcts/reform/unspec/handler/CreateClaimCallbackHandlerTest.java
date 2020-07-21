@@ -110,7 +110,7 @@ class CreateClaimCallbackHandlerTest extends BaseCallbackHandlerTest {
     class AboutToSubmit {
 
         @Test
-        void shouldAddSystemGeneratedDocuments() throws JsonProcessingException {
+        void shouldIssueClaimWithSystemGeneratedDocumentsAndDate() throws JsonProcessingException {
             CallbackParams params = callbackParamsOf(getCaseData(), CallbackType.ABOUT_TO_SUBMIT);
 
             var response = (AboutToStartOrSubmitCallbackResponse) handler.handle(params);
@@ -118,6 +118,8 @@ class CreateClaimCallbackHandlerTest extends BaseCallbackHandlerTest {
             CaseData caseData = objectMapper.convertValue(response.getData(), CaseData.class);
             assertThat(caseData.getSystemGeneratedCaseDocuments()).isNotEmpty()
                 .contains(Element.<CaseDocument>builder().value(getCaseDocument()).build());
+
+            assertThat(caseData.getClaimIssuedDate()).isEqualTo(LocalDate.now());
         }
 
         private Map<String, Object> getCaseData() throws JsonProcessingException {
@@ -175,7 +177,7 @@ class CreateClaimCallbackHandlerTest extends BaseCallbackHandlerTest {
                               .documentUrl("http://dm-store:4506/documents/73526424-8434-4b1f-acca-bd33a3f8338f")
                               .build())
             .documentSize(56975)
-            .createdDatetime(LocalDateTime.of(2020, 07, 16, 14, 05, 15, 550439))
+            .createdDatetime(LocalDateTime.of(2020, 7, 16, 14, 5, 15, 550439))
             .documentType(SEALED_CLAIM)
             .createdBy(UNSPEC)
             .documentName(fileName)

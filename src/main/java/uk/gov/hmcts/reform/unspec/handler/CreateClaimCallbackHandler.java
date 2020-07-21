@@ -62,7 +62,7 @@ public class CreateClaimCallbackHandler extends CallbackHandler {
     protected Map<CallbackType, Callback> callbacks() {
         return Map.of(
             CallbackType.MID, this::validateClaimValues,
-            CallbackType.ABOUT_TO_SUBMIT, this::generateSealedClaim,
+            CallbackType.ABOUT_TO_SUBMIT, this::issueClaim,
             CallbackType.SUBMITTED, this::buildConfirmation
         );
     }
@@ -87,13 +87,14 @@ public class CreateClaimCallbackHandler extends CallbackHandler {
 
             data.put("allocatedTrack", getAllocatedTrack(claimValue, claimType));
         }
+
         return AboutToStartOrSubmitCallbackResponse.builder()
             .data(data)
             .errors(errors)
             .build();
     }
 
-    private CallbackResponse generateSealedClaim(CallbackParams callbackParams) {
+    private CallbackResponse issueClaim(CallbackParams callbackParams) {
         List<String> errors = new ArrayList<>();
         String authorisation = callbackParams.getParams().get(BEARER_TOKEN).toString();
 
@@ -102,6 +103,7 @@ public class CreateClaimCallbackHandler extends CallbackHandler {
         CaseDocument sealedClaim = sealedClaimFormGenerator.generate(caseData, authorisation);
         Map<String, Object> data = caseDetails.getData();
         data.put("systemGeneratedCaseDocuments", systemGeneratedDocuments(caseData, sealedClaim));
+        data.put("claimIssuedDate", LocalDate.now());
 
         return AboutToStartOrSubmitCallbackResponse.builder()
             .data(data)

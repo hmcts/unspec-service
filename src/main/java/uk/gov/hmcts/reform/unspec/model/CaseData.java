@@ -30,6 +30,7 @@ public class CaseData {
     private final List<Element<CaseDocument>> systemGeneratedCaseDocuments;
     private final ServiceMethod serviceMethod;
     private final LocalDate serviceDate;
+    private final LocalDate claimIssuedDate;
     private final LocalDate deemedDateOfService;
     private final LocalDateTime responseDeadline;
     private final List<ServedDocuments> servedDocuments;
