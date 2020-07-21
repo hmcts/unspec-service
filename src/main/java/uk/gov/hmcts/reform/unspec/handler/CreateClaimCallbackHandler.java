@@ -102,24 +102,13 @@ public class CreateClaimCallbackHandler extends CallbackHandler {
         CaseData caseData = caseDetailsConverter.to(caseDetails);
         CaseDocument sealedClaim = sealedClaimFormGenerator.generate(caseData, authorisation);
         Map<String, Object> data = caseDetails.getData();
-        data.put("systemGeneratedCaseDocuments", systemGeneratedDocuments(caseData, sealedClaim));
+        data.put("systemGeneratedCaseDocuments", List.of(Element.<CaseDocument>builder().value(sealedClaim).build()));
         data.put("claimIssuedDate", LocalDate.now());
 
         return AboutToStartOrSubmitCallbackResponse.builder()
             .data(data)
             .errors(errors)
             .build();
-    }
-
-    private List<Element<CaseDocument>> systemGeneratedDocuments(CaseData caseData, CaseDocument sealedClaim) {
-        List<Element<CaseDocument>> caseDocuments = new ArrayList<>();
-        List<Element<CaseDocument>> systemGeneratedCaseDocuments = caseData.getSystemGeneratedCaseDocuments();
-        if (systemGeneratedCaseDocuments != null && !systemGeneratedCaseDocuments.isEmpty()) {
-            caseDocuments.addAll(systemGeneratedCaseDocuments);
-        }
-        caseDocuments.add(Element.<CaseDocument>builder().value(sealedClaim).build());
-
-        return caseDocuments;
     }
 
     private SubmittedCallbackResponse buildConfirmation(CallbackParams callbackParams) {
