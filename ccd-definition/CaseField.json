@@ -1,7 +1,7 @@
 [
   {
     "LiveFrom": "01/01/2017",
-    "CaseTypeID": "PERSONAL_INJURY",
+    "CaseTypeID": "UNSPECIFIED_CLAIMS",
     "ID": "caseHistory",
     "Label": " ",
     "FieldType": "CaseHistoryViewer",
@@ -9,7 +9,7 @@
   },
   {
     "LiveFrom": "01/01/2017",
-    "CaseTypeID": "PERSONAL_INJURY",
+    "CaseTypeID": "UNSPECIFIED_CLAIMS",
     "ID": "eligibilityQuestions",
     "Label": "## Issue civil court proceedings\nTo use this service you must be:\n* issuing a claim for an unspecified (unfixed) amount of money\n* serving the claim yourself, with a UK postal address and an email address\n* able to pay the full issue fee using payment by account\n* issuing and conducting the claim in English\n* representing a claimant who has no civil proceedings order, civil restraint order or all proceedings order against them\n* representing a claimant who isn’t seeking Help With Fees\n\nBoth claimant and defendant must:\n* have an address in England or Wales\n* be 18 or older and not a protected party\n\nThe claim you’re issuing must not:\n* ordinarily follow the Part 8 procedure\n* be brought under the Consumer Credit Act 1974\n* be against the crown\n\nIf this claim doesn't meet these conditions, select 'Cancel'",
     "FieldType": "Label",
@@ -17,7 +17,7 @@
   },
   {
     "LiveFrom": "01/01/2017",
-    "CaseTypeID": "PERSONAL_INJURY",
+    "CaseTypeID": "UNSPECIFIED_CLAIMS",
     "ID": "solicitorReferences",
     "Label": "Claim references",
     "FieldType": "SolicitorReferences",
@@ -25,7 +25,7 @@
   },
   {
     "LiveFrom": "01/01/2017",
-    "CaseTypeID": "PERSONAL_INJURY",
+    "CaseTypeID": "UNSPECIFIED_CLAIMS",
     "ID": "courtLocation",
     "Label": "Choose court location",
     "FieldType": "CourtLocation",
@@ -33,15 +33,23 @@
   },
   {
     "LiveFrom": "01/01/2017",
-    "CaseTypeID": "PERSONAL_INJURY",
+    "CaseTypeID": "UNSPECIFIED_CLAIMS",
     "ID": "claimant",
     "Label": "Claimant details",
-    "FieldType": "Applicant",
+    "FieldType": "Party",
     "SecurityClassification": "Public"
   },
   {
     "LiveFrom": "01/01/2017",
-    "CaseTypeID": "PERSONAL_INJURY",
+    "CaseTypeID": "UNSPECIFIED_CLAIMS",
+    "ID": "respondent",
+    "Label": "Defendant details",
+    "FieldType": "Party",
+    "SecurityClassification": "Public"
+  },
+  {
+    "LiveFrom": "01/01/2017",
+    "CaseTypeID": "UNSPECIFIED_CLAIMS",
     "ID": "claimValue",
     "Label": "Enter expected claim value",
     "FieldType": "ClaimValue",
@@ -49,7 +57,25 @@
   },
   {
     "LiveFrom": "01/01/2017",
-    "CaseTypeID": "PERSONAL_INJURY",
+    "CaseTypeID": "UNSPECIFIED_CLAIMS",
+    "ID": "claimType",
+    "Label": "CONTENT TBC: Enter the type of claim",
+    "FieldType": "FixedList",
+    "FieldTypeParameter": "ClaimType",
+    "SecurityClassification": "Public"
+  },
+  {
+    "LiveFrom": "01/01/2017",
+    "CaseTypeID": "UNSPECIFIED_CLAIMS",
+    "ID": "allocatedTrack",
+    "Label": "Allocated track",
+    "FieldType": "FixedList",
+    "FieldTypeParameter": "Track",
+    "SecurityClassification": "Public"
+  },
+  {
+    "LiveFrom": "01/01/2017",
+    "CaseTypeID": "UNSPECIFIED_CLAIMS",
     "ID": "claimStatementOfTruth",
     "Label": "Statement of truth",
     "FieldType": "StatementOfTruth",
@@ -57,7 +83,15 @@
   },
   {
     "LiveFrom": "01/01/2017",
-    "CaseTypeID": "PERSONAL_INJURY",
+    "CaseTypeID": "UNSPECIFIED_CLAIMS",
+    "ID": "claimIssuedDate",
+    "Label": "Claim issued date",
+    "FieldType": "Date",
+    "SecurityClassification": "Public"
+  },
+  {
+    "LiveFrom": "01/01/2017",
+    "CaseTypeID": "UNSPECIFIED_CLAIMS",
     "ID": "servedDocuments",
     "Label": "Which documents did you serve?",
     "FieldType": "MultiSelectList",
@@ -66,7 +100,7 @@
   },
   {
     "LiveFrom": "01/01/2017",
-    "CaseTypeID": "PERSONAL_INJURY",
+    "CaseTypeID": "UNSPECIFIED_CLAIMS",
     "ID": "servedDocumentsOther",
     "Label": "List them here:",
     "FieldType": "TextArea",
@@ -74,7 +108,7 @@
   },
   {
     "LiveFrom": "01/01/2017",
-    "CaseTypeID": "PERSONAL_INJURY",
+    "CaseTypeID": "UNSPECIFIED_CLAIMS",
     "ID": "servedDocumentFiles",
     "Label": "Upload your documents",
     "FieldType": "ServedDocumentFiles",
@@ -82,7 +116,7 @@
   },
   {
     "LiveFrom": "01/01/2017",
-    "CaseTypeID": "PERSONAL_INJURY",
+    "CaseTypeID": "UNSPECIFIED_CLAIMS",
     "ID": "serviceMethod",
     "Label": "How did you serve the documents?",
     "FieldType": "FixedRadioList",
@@ -91,7 +125,7 @@
   },
   {
     "LiveFrom": "01/01/2017",
-    "CaseTypeID": "PERSONAL_INJURY",
+    "CaseTypeID": "UNSPECIFIED_CLAIMS",
     "ID": "serviceLocation",
     "Label": "Where did you serve the documents?",
     "FieldType": "ServiceLocation",
@@ -99,7 +133,7 @@
   },
   {
     "LiveFrom": "01/01/2017",
-    "CaseTypeID": "PERSONAL_INJURY",
+    "CaseTypeID": "UNSPECIFIED_CLAIMS",
     "ID": "serviceDate",
     "Label": "When did you serve the documents?",
     "FieldType": "Date",
@@ -107,7 +141,7 @@
   },
   {
     "LiveFrom": "01/01/2017",
-    "CaseTypeID": "PERSONAL_INJURY",
+    "CaseTypeID": "UNSPECIFIED_CLAIMS",
     "ID": "serviceStatementOfTruth",
     "Label": "Statement of truth",
     "FieldType": "StatementOfTruth",
@@ -115,7 +149,7 @@
   },
   {
     "LiveFrom": "01/01/2017",
-    "CaseTypeID": "PERSONAL_INJURY",
+    "CaseTypeID": "UNSPECIFIED_CLAIMS",
     "ID": "deemedDateOfService",
     "Label": "Deemed date of service",
     "FieldType": "Date",
@@ -123,7 +157,7 @@
   },
   {
     "LiveFrom": "01/01/2017",
-    "CaseTypeID": "PERSONAL_INJURY",
+    "CaseTypeID": "UNSPECIFIED_CLAIMS",
     "ID": "responseDeadline",
     "Label": "Response deadline",
     "FieldType": "DateTime",

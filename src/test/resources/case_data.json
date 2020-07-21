@@ -2,7 +2,7 @@
   "claimant": {
     "type": "INDIVIDUAL",
     "individualTitle": "Mr",
-    "applicantAddress": {
+    "primaryAddress": {
       "County": "County",
       "Country": "Country",
       "PostCode": "POSTCODE",
@@ -21,7 +21,7 @@
   },
   "serviceDate": "2020-06-23",
   "courtLocation": {
-    "preferredCourt": "The court location"
+    "applicantPreferredCourt": "The court location"
   },
   "serviceMethod": "POST",
   "servedDocuments": ["PARTICULARS_OF_CLAIM", "CLAIM_FORM", "RESPONSE_PACK", "MEDICAL_REPORTS", "SCHEDULE_LOSS", "CERTIFICATE_SUITABILITY", "OTHER"],

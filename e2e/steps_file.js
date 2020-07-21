@@ -7,11 +7,10 @@ const output = require('codeceptjs').output;
 const config = require('./config.js');
 const loginPage = require('./pages/login.page');
 const caseViewPage = require('./pages/caseView.page');
-const statementOfTruth = require('./fragments/statementOfTruth');
 const createCasePage = require('./pages/createClaim/createCase.page');
 const solicitorReferencesPage = require('./pages/createClaim/solicitorReferences.page');
 const chooseCourtPage = require('./pages/createClaim/chooseCourt.page');
-const claimantDetailsPage = require('./pages/createClaim/claimantDetails.page');
+const claimTypePage = require('./pages/createClaim/claimType.page');
 const claimValuePage = require('./pages/createClaim/claimValue.page');
 
 const servedDocumentsPage = require('./pages/confirmService/servedDocuments.page');
@@ -19,6 +18,9 @@ const uploadDocumentsPage = require('./pages/confirmService/uploadDocuments.page
 const serviceMethodPage = require('./pages/confirmService/serviceMethod.page');
 const serviceLocationPage = require('./pages/confirmService/serviceLocation.page');
 const serviceDatePage = require('./pages/confirmService/serviceDate.page');
+
+const statementOfTruth = require('./fragments/statementOfTruth');
+const party = require('./fragments/party');
 
 const baseUrl = process.env.URL || 'http://localhost:3333';
 const signedInSelector = 'exui-header';
@@ -53,7 +55,9 @@ module.exports = function() {
       await this.clickContinue();
       await solicitorReferencesPage.enterReferences();
       await chooseCourtPage.enterCourt();
-      await claimantDetailsPage.enterClaimant(config.address);
+      await party.enterParty('claimant', config.address);
+      await party.enterParty('respondent', config.address);
+      await claimTypePage.selectClaimType();
       await claimValuePage.enterClaimValue();
       await statementOfTruth.enterNameAndRole('claim');
       await this.retryUntilExists(() => this.click('Issue claim'), 'ccd-markdown');
