@@ -19,6 +19,7 @@ import org.springframework.web.client.RestTemplate;
 import uk.gov.hmcts.reform.unspec.config.DocmosisConfiguration;
 import uk.gov.hmcts.reform.unspec.model.docmosis.DocmosisDocument;
 import uk.gov.hmcts.reform.unspec.model.docmosis.DocmosisRequest;
+import uk.gov.hmcts.reform.unspec.model.docmosis.sealedclaim.SealedClaimForm;
 
 import java.time.LocalDate;
 import java.util.Map;
@@ -50,7 +51,7 @@ class DocumentGeneratorServiceTest {
 
     @Test
     void shouldInvokesTornado() {
-        Map<String, Object> placeholders = Map.of("claimIssueDate", LocalDate.now());
+        SealedClaimForm sealedClaimForm = SealedClaimForm.builder().issueDate(LocalDate.now()).build();
 
         when(restTemplate.exchange(eq(configuration.getUrl() + "/api/render"),
                                    eq(HttpMethod.POST), argumentCaptor.capture(), eq(byte[].class)
@@ -59,7 +60,7 @@ class DocumentGeneratorServiceTest {
         byte[] expectedResponse = {1, 2, 3};
         when(tornadoResponse.getBody()).thenReturn(expectedResponse);
 
-        DocmosisDocument docmosisDocument = documentGeneratorService.generateDocmosisDocument(placeholders, N1);
+        DocmosisDocument docmosisDocument = documentGeneratorService.generateDocmosisDocument(sealedClaimForm, N1);
         assertThat(docmosisDocument.getBytes()).isEqualTo(expectedResponse);
 
         assertThat(argumentCaptor.getValue().getBody().getTemplateName()).isEqualTo(N1.getTemplate());
@@ -82,3 +83,4 @@ class DocumentGeneratorServiceTest {
         assertThat(httpClientErrorException).hasMessageContaining("404 not found");
     }
 }
+
