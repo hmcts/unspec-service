@@ -238,7 +238,7 @@ dependencies {
   implementation group: 'org.apache.tomcat.embed', name: 'tomcat-embed-core', version: '9.0.37'
   implementation group: 'org.apache.tomcat.embed', name: 'tomcat-embed-websocket', version: '9.0.37'
 
-  implementation group: 'org.postgresql', name: 'postgresql', version: '42.2.12'
+  implementation group: 'org.postgresql', name: 'postgresql', version: '42.2.14'
   implementation group: 'org.flywaydb', name: 'flyway-core', version: '6.3.2'
 
   testImplementation group: 'org.mockito', name: 'mockito-core', version: '3.4.4'
