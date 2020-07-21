@@ -1,4 +1,4 @@
-package uk.gov.hmcts.reform.unspec.service;
+package uk.gov.hmcts.reform.unspec.jobs;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
 import uk.gov.hmcts.reform.ccd.client.model.CaseDetails;
 import uk.gov.hmcts.reform.unspec.event.MoveCaseToStayedEvent;
+import uk.gov.hmcts.reform.unspec.service.CaseSearchService;
 
 import java.util.List;
 

@@ -1,4 +1,4 @@
-package uk.gov.hmcts.reform.unspec.service;
+package uk.gov.hmcts.reform.unspec.job;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -12,6 +12,8 @@ import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import uk.gov.hmcts.reform.ccd.client.model.CaseDetails;
 import uk.gov.hmcts.reform.unspec.event.MoveCaseToStayedEvent;
+import uk.gov.hmcts.reform.unspec.jobs.CaseStayedFinder;
+import uk.gov.hmcts.reform.unspec.service.CaseSearchService;
 
 import java.util.List;
 import java.util.Map;
@@ -53,9 +55,9 @@ class CaseStayedFinderTest {
         long caseId = 1L;
         Map<String, Object> data = Map.of("data", "some data");
         List<CaseDetails> caseDetails = List.of(CaseDetails.builder()
-                                                    .id(caseId)
-                                                    .data(data)
-                                                    .build());
+            .id(caseId)
+            .data(data)
+            .build());
 
         when(caseSearchService.getCasesToBeStayed()).thenReturn(caseDetails);
 

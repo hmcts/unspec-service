@@ -50,6 +50,31 @@ core_case_data:
   api:
     url: http://localhost:4452
 
+scheduler:
+  enabled: ${SCHEDULER_ENABLED:true}
+  datasourceConf:
+    name: schedulerDataSource
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://${SCHEDULER_DB_HOST:localhost}:${SCHEDULER_DB_PORT:5050}/${SCHEDULER_DB_NAME:civil_scheduler}
+    username: ${SCHEDULER_DB_USER:civil_scheduler}
+    password: ${SCHEDULER_DB_PASSWORD:civil_scheduler}
+  quartzConf:
+    org.quartz:
+      scheduler:
+        instanceId: AUTO
+      jobStore:
+        isClustered: true
+        class: org.quartz.impl.jdbcjobstore.JobStoreTX
+        driverDelegateClass: org.quartz.impl.jdbcjobstore.PostgreSQLDelegate
+        dataSource: schedulerDataSource
+  schedulerConf:
+    - name: 'Cases stayed'
+      enabled: true
+      cronGroup: "NIGHTLY_CRON"
+      description: 'Finds cases that need to be moved to stayed state'
+      jobClass: 'uk.gov.hmcts.reform.unspec.jobs.CaseStayedFinder'
+      cron: ${STAYED_CASES_CRON:0 0 2 ? * MON-FRI *}
+
 ---
 
 spring:
@@ -63,6 +88,9 @@ idam:
   s2s-auth:
     url: "http://localhost:4502"
     totp_secret: AABBCCDDEEFFGGHH
+
+scheduler:
+  enabled: true
 
 ---
 
@@ -87,3 +115,6 @@ idam:
 core_case_data:
   api:
     url: http://fake-ccd-data-store-api
+
+scheduler:
+  enabled: false
