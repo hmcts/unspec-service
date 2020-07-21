@@ -195,7 +195,6 @@ class DocumentManagementServiceTest {
             verify(documentMetadataDownloadClient, atLeast(2))
                 .getDocumentMetadata(anyString(), anyString(), eq(USER_ROLES_JOINED), anyString(), anyString());
         }
-
     }
 
     @Nested
@@ -217,6 +216,28 @@ class DocumentManagementServiceTest {
 
             assertEquals(72552L, documentMetaData.size);
             assertEquals("000LR002.pdf", documentMetaData.originalDocumentName);
+
+            verify(documentMetadataDownloadClient)
+                .getDocumentMetadata(anyString(), anyString(), eq(USER_ROLES_JOINED), anyString(), anyString());
+        }
+
+        @Test
+        public void shouldThrow_whenMetadataDownloadFails() {
+            when(documentMetadataDownloadClient
+                     .getDocumentMetadata(anyString(), anyString(), eq(USER_ROLES_JOINED), anyString(), anyString())
+            ).thenThrow(new RuntimeException("Failed to access document metadata"));
+
+            URI documentUri = URI.create("http://dm-store:4506/documents/85d97996-22a5-40d7-882e-3a382c8ae1b4");
+
+            DocumentManagementException documentManagementException = assertThrows(
+                DocumentManagementException.class,
+                () -> documentManagementService.getDocumentMetaData("auth string", documentUri.getPath())
+            );
+
+            assertEquals(
+                "Unable to download document from document management.",
+                documentManagementException.getMessage()
+            );
 
             verify(documentMetadataDownloadClient)
                 .getDocumentMetadata(anyString(), anyString(), eq(USER_ROLES_JOINED), anyString(), anyString());
