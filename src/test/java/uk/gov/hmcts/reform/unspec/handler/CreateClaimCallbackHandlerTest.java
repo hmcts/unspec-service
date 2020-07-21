@@ -72,10 +72,24 @@ class CreateClaimCallbackHandlerTest extends BaseCallbackHandlerTest {
     }
 
     @Nested
+    class AboutToSubmitCallback {
+        @Test
+        void shouldAddClaimIssuedDate_whenAboutToSubmitInvoked() {
+            CallbackParams params = callbackParamsOf(new HashMap<>(), CallbackType.ABOUT_TO_SUBMIT);
+
+            AboutToStartOrSubmitCallbackResponse response = (AboutToStartOrSubmitCallbackResponse) handler
+                .handle(params);
+
+            assertThat(response.getData()).containsEntry("claimIssuedDate", LocalDate.now());
+        }
+
+    }
+
+    @Nested
     class SubmittedCallback {
 
         @Test
-        void shouldReturnExpectedSubmittedCallbackResponse_whenNoError() {
+        void shouldReturnExpectedSubmittedCallbackResponse_whenSubmitted() {
             CallbackParams params = callbackParamsOf(new HashMap<>(), CallbackType.SUBMITTED);
 
             SubmittedCallbackResponse response = (SubmittedCallbackResponse) handler.handle(params);
