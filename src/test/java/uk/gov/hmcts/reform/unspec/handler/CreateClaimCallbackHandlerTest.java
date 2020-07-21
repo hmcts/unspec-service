@@ -72,7 +72,8 @@ class CreateClaimCallbackHandlerTest extends BaseCallbackHandlerTest {
     }
 
     @Nested
-    class MidEvent {
+    class MidEventCallback {
+
         @Test
         void shouldReturnExpectedErrorInMidEvent_whenValuesAreInvalid() {
             Map<String, Object> data = new HashMap<>();
@@ -111,7 +112,7 @@ class CreateClaimCallbackHandlerTest extends BaseCallbackHandlerTest {
     }
 
     @Nested
-    class AboutToSubmit {
+    class AboutToSubmitCallback {
 
         @Test
         void shouldIssueClaimWithSystemGeneratedDocumentsAndDate() throws JsonProcessingException {
@@ -139,7 +140,8 @@ class CreateClaimCallbackHandlerTest extends BaseCallbackHandlerTest {
     }
 
     @Nested
-    class SubmittedEvent {
+    class SubmittedCallback {
+
         @Test
         void shouldReturnExpectedSubmittedCallbackResponseObject_whenDocumentIsGenerated() {
             Map<String, Object> data = new HashMap<>();
