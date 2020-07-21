@@ -52,20 +52,12 @@ payments:
     site_id:
     service:
 
-idam:
-  s2s-auth:
-    microservice: unspec_service
-    url: "http://localhost:4502"
-    totp_secret: "AABBCCDDEEFFGGHH"
+  idam:
+    s2s-auth:
+      microservice: unspec_service
 
 document_management:
-  url: "http://localhost:4506"
-  userRoles: "caseworker-civil,caseworker-civil-solicitor"
-
-docmosis:
-  tornado:
-    url: "http://localhost:5433"
-    key: "0UAD-KLTK-JALP-DKIA-EBBH-1ELH-PBKQ-KS91-23ED-8-97D1"
+   userRoles: "caseworker-civil,caseworker-civil-solicitor"
 
 unspecified:
   response-pack-url: https://formfinder.hmctsformfinder.justice.gov.uk/n9-eng.pdf
@@ -95,6 +87,14 @@ idam:
     id: unspec
     redirect_uri: https://localhost:9000/oauth2/callback
     secret: OOOOOOOOOOOOOOOO
+
+document_management:
+  url: http://localhost:4506a
+
+docmosis:
+  tornado:
+    url: "http://localhost:5433"
+    key: "0UAD-KLTK-JALP-DKIA-EBBH-1ELH-PBKQ-KS91-23ED-8-97D1"
 
 ---
 
