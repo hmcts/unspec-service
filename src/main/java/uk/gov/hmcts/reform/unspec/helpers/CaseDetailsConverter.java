@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import uk.gov.hmcts.reform.ccd.client.model.CaseDetails;
 import uk.gov.hmcts.reform.unspec.model.CaseData;
 
+import java.util.HashMap;
 import java.util.Map;
 
 @Service
@@ -17,7 +18,7 @@ public class CaseDetailsConverter {
     }
 
     public CaseData to(CaseDetails caseDetails) {
-        Map<String, Object> data = caseDetails.getData();
+        Map<String, Object> data = new HashMap<>(caseDetails.getData());
         data.put("ccdCaseReference", caseDetails.getId());
         return objectMapper.convertValue(data, CaseData.class);
     }
