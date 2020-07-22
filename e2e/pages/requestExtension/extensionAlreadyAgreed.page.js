@@ -9,13 +9,15 @@ module.exports = {
         yes: 'Yes',
         no: 'No'
       }
-    }
+    },
+    extensionReason: "#respondentSolicitor1claimResponseExtensionReason"
   },
 
   async selectAlreadyAgreed () {
     await within(this.fields.extensionAlreadyAgreed.id, () => {
-      I.click(this.fields.extensionAlreadyAgreed.options.yes);
+      I.click(this.fields.extensionAlreadyAgreed.options.no);
     });
+    I.fillField(this.fields.extensionReason, 'I need more time');
 
     await I.clickContinue();
   }
