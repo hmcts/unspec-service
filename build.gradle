@@ -245,7 +245,7 @@ dependencies {
   testImplementation group: 'org.mockito', name: 'mockito-junit-jupiter', version: '3.4.4'
 
   compile group: 'uk.gov.hmcts.reform', name: 'fees-java-client', version: '0.0.6'
-  compile group: 'uk.gov.hmcts.reform', name: 'payments-client', version: '1.0.0'
+  compile group: 'uk.gov.hmcts.reform', name: 'payments-client', version: '1f3e1ea'
   compile group: 'uk.gov.hmcts.reform', name: 'service-auth-provider-client', version: '3.1.2'
   compile group: 'uk.gov.hmcts.reform', name: 'properties-volume-spring-boot-starter', version: '0.1.0'
 
