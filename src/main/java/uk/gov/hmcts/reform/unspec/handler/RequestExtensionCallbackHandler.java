@@ -34,9 +34,9 @@ public class RequestExtensionCallbackHandler extends CallbackHandler {
     public static final String NOT_AGREED = "We'll email you to tell you if the claimant's legal representative "
         + "accepts or rejects your request.</p>";
 
-    public static final String PROPOSED_DEADLINE = "defendantSolicitor1claimResponseExtensionProposedDeadline";
+    public static final String PROPOSED_DEADLINE = "respondentSolicitor1claimResponseExtensionProposedDeadline";
     public static final String RESPONSE_DEADLINE = "responseDeadline";
-    public static final String EXTENSION_ALREADY_AGREED = "defendantSolicitor1claimResponseExtensionAlreadyAgreed";
+    public static final String EXTENSION_ALREADY_AGREED = "respondentSolicitor1claimResponseExtensionAlreadyAgreed";
 
     private final ObjectMapper mapper;
     private final RequestExtensionValidator validator;

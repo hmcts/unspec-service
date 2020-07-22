@@ -4,9 +4,9 @@ module.exports = {
 
   fields: {
     extensionProposedDeadline: {
-      day: '#defendantSolicitor1claimResponseExtensionProposedDeadline-day',
-      month: '#defendantSolicitor1claimResponseExtensionProposedDeadline-month',
-      year: '#defendantSolicitor1claimResponseExtensionProposedDeadline-year'
+      day: '#respondentSolicitor1claimResponseExtensionProposedDeadline-day',
+      month: '#respondentSolicitor1claimResponseExtensionProposedDeadline-month',
+      year: '#respondentSolicitor1claimResponseExtensionProposedDeadline-year'
     }
   },
 
