@@ -104,7 +104,6 @@ class CreateClaimCallbackHandlerTest extends BaseCallbackHandlerTest {
                     Map.of(
                         "claimValue", ClaimValue.builder()
                             .higherValue(BigDecimal.valueOf(10)).lowerValue(BigDecimal.valueOf(1)).build(),
-                        "ccdCaseReference", CASE_ID,
                         "claimType", PERSONAL_INJURY_WORK,
                         "allocatedTrack", SMALL_CLAIM
                     ));
