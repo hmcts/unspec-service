@@ -26,11 +26,12 @@ import static uk.gov.hmcts.reform.unspec.helpers.DateFormatHelper.formatLocalDat
 
 @Service
 public class RespondExtensionCallbackHandler extends CallbackHandler {
+
     private static final List<CaseEvent> EVENTS = Collections.singletonList(RESPOND_EXTENSION);
-    public static final String COUNTER_DEADLINE = "defendantSolicitor1claimResponseExtensionCounterDate";
+    public static final String COUNTER_DEADLINE = "respondentSolicitor1claimResponseExtensionCounterDate";
     public static final String RESPONSE_DEADLINE = "responseDeadline";
-    public static final String PROPOSED_DEADLINE = "defendantSolicitor1claimResponseExtensionProposedDeadline";
-    public static final String EXTENSION_REASON = "defendantSolicitor1claimResponseExtensionReason";
+    public static final String PROPOSED_DEADLINE = "respondentSolicitor1claimResponseExtensionProposedDeadline";
+    public static final String EXTENSION_REASON = "respondentSolicitor1claimResponseExtensionReason";
 
     private final ObjectMapper mapper;
     private final RequestExtensionValidator validator;
@@ -60,8 +61,8 @@ public class RespondExtensionCallbackHandler extends CallbackHandler {
         data.putIfAbsent(EXTENSION_REASON, "No reason given");
 
         return AboutToStartOrSubmitCallbackResponse.builder()
-                   .data(data)
-                   .build();
+            .data(data)
+            .build();
     }
 
     private CallbackResponse validateRequestedDeadline(CallbackParams callbackParams) {
@@ -78,8 +79,8 @@ public class RespondExtensionCallbackHandler extends CallbackHandler {
         );
 
         return AboutToStartOrSubmitCallbackResponse.builder()
-                   .errors(validator.validateProposedDeadline(extensionCounterDate, responseDeadline))
-                   .build();
+            .errors(validator.validateProposedDeadline(extensionCounterDate, responseDeadline))
+            .build();
     }
 
     private CallbackResponse updateResponseDeadline(CallbackParams callbackParams) {
@@ -96,8 +97,8 @@ public class RespondExtensionCallbackHandler extends CallbackHandler {
         }
 
         return AboutToStartOrSubmitCallbackResponse.builder()
-                   .data(data)
-                   .build();
+            .data(data)
+            .build();
     }
 
     private SubmittedCallbackResponse buildConfirmation(CallbackParams callbackParams) {
@@ -112,9 +113,9 @@ public class RespondExtensionCallbackHandler extends CallbackHandler {
             "<br />The defendant must respond before 4pm on %s", formatLocalDateTime(responseDeadline, DATE));
 
         return SubmittedCallbackResponse.builder()
-                   .confirmationHeader(format("# You've responded to the request for more time\n## Claim number: %s",
-                       claimNumber))
-                   .confirmationBody(body)
-                   .build();
+            .confirmationHeader(format("# You've responded to the request for more time\n## Claim number: %s",
+                claimNumber))
+            .confirmationBody(body)
+            .build();
     }
 }

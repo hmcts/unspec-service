@@ -31,8 +31,9 @@ import static uk.gov.hmcts.reform.unspec.helpers.DateFormatHelper.formatLocalDat
     JacksonAutoConfiguration.class
 })
 class RespondExtensionCallbackHandlerTest extends BaseCallbackHandlerTest {
+
     public static final String RESPONSE_DEADLINE = "responseDeadline";
-    public static final String COUNTER_DATE = "defendantSolicitor1claimResponseExtensionCounterDate";
+    public static final String COUNTER_DATE = "respondentSolicitor1claimResponseExtensionCounterDate";
 
     @Autowired
     private RespondExtensionCallbackHandler handler;
@@ -40,7 +41,7 @@ class RespondExtensionCallbackHandlerTest extends BaseCallbackHandlerTest {
     @Nested
     class AboutToStartCallback {
 
-        public static final String EXTENSION_REASON = "defendantSolicitor1claimResponseExtensionReason";
+        public static final String EXTENSION_REASON = "respondentSolicitor1claimResponseExtensionReason";
 
         @Test
         void shouldAddNoReasonGiven_WhenNoReasonGivenForExtensionRequest() {
@@ -102,7 +103,8 @@ class RespondExtensionCallbackHandlerTest extends BaseCallbackHandlerTest {
 
     @Nested
     class AboutToSubmitCallback {
-        public static final String PROPOSED_DEADLINE = "defendantSolicitor1claimResponseExtensionProposedDeadline";
+
+        public static final String PROPOSED_DEADLINE = "respondentSolicitor1claimResponseExtensionProposedDeadline";
 
         @ParameterizedTest(name = "should update response deadline when {0} is set")
         @ValueSource(strings = {COUNTER_DATE, PROPOSED_DEADLINE})
@@ -150,7 +152,6 @@ class RespondExtensionCallbackHandlerTest extends BaseCallbackHandlerTest {
 
             String expectedBody = format(
                 "<br />The defendant must respond before 4pm on %s", formatLocalDateTime(responseDeadline, DATE));
-
 
             assertThat(response).isEqualToComparingFieldByField(
                 SubmittedCallbackResponse.builder()
