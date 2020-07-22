@@ -37,3 +37,4 @@ java:
       secrets:
         - unspec-idam-client-secret
         - microservicekey-unspec-service
+        - docmosis-api-key
