@@ -10,7 +10,7 @@ module.exports = {
         no: 'No'
       }
     },
-    extensionReason: "#respondentSolicitor1claimResponseExtensionReason"
+    extensionReason: '#respondentSolicitor1claimResponseExtensionReason'
   },
 
   async selectAlreadyAgreed () {
