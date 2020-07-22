@@ -1,5 +1,6 @@
 package uk.gov.hmcts.reform.unspec.handler;
 
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -11,6 +12,7 @@ import uk.gov.hmcts.reform.unspec.callback.CallbackParams;
 import uk.gov.hmcts.reform.unspec.callback.CallbackType;
 import uk.gov.hmcts.reform.unspec.model.ClaimValue;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.HashMap;
@@ -31,61 +33,98 @@ class CreateClaimCallbackHandlerTest extends BaseCallbackHandlerTest {
     @Value("${unspecified.response-pack-url}")
     private String responsePackLink;
 
-    @Test
-    void shouldReturnExpectedErrorInMidEventWhenValuesAreInvalid() {
-        Map<String, Object> data = new HashMap<>();
-        data.put("claimValue", ClaimValue.builder().higherValue(1).lowerValue(10).build());
+    @Nested
+    class MidEventCallback {
 
-        CallbackParams params = callbackParamsOf(data, CallbackType.MID);
+        @Test
+        void shouldReturnExpectedError_whenValuesAreInvalid() {
+            Map<String, Object> data = new HashMap<>();
+            data.put(
+                "claimValue",
+                ClaimValue.builder().higherValue(BigDecimal.valueOf(1)).lowerValue(BigDecimal.valueOf(10)).build()
+            );
 
-        AboutToStartOrSubmitCallbackResponse response = (AboutToStartOrSubmitCallbackResponse) handler.handle(params);
+            CallbackParams params = callbackParamsOf(data, CallbackType.MID);
 
-        assertThat(response.getErrors())
-            .containsOnly("CONTENT TBC: Higher value must not be lower than the lower value.");
+            AboutToStartOrSubmitCallbackResponse response = (AboutToStartOrSubmitCallbackResponse) handler
+                .handle(params);
+
+            assertThat(response.getErrors())
+                .containsOnly("CONTENT TBC: Higher value must not be lower than the lower value.");
+        }
+
+        @Test
+        void shouldReturnNoError_whenValuesAreValid() {
+            Map<String, Object> data = new HashMap<>();
+            data.put(
+                "claimValue",
+                ClaimValue.builder().higherValue(BigDecimal.valueOf(10)).lowerValue(BigDecimal.valueOf(1)).build()
+            );
+            data.put("claimType", PERSONAL_INJURY_WORK);
+
+            CallbackParams params = callbackParamsOf(data, CallbackType.MID);
+
+            AboutToStartOrSubmitCallbackResponse response = (AboutToStartOrSubmitCallbackResponse) handler
+                .handle(params);
+
+            assertThat(response.getErrors()).isEmpty();
+            assertThat(response.getData())
+                .isEqualTo(
+                    Map.of(
+                        "claimValue", ClaimValue.builder()
+                            .higherValue(BigDecimal.valueOf(10))
+                            .lowerValue(BigDecimal.valueOf(1))
+                            .build(),
+                        "claimType", PERSONAL_INJURY_WORK,
+                        "allocatedTrack", SMALL_CLAIM
+                    ));
+        }
     }
 
-    @Test
-    void shouldReturnNoErrorInMidEventWhenValuesAreValid() {
-        Map<String, Object> data = new HashMap<>();
-        data.put("claimValue", ClaimValue.builder().higherValue(10).lowerValue(1).build());
-        data.put("claimType", PERSONAL_INJURY_WORK);
+    @Nested
+    class AboutToSubmitCallback {
 
-        CallbackParams params = callbackParamsOf(data, CallbackType.MID);
+        @Test
+        void shouldAddClaimIssuedDate_whenInvoked() {
+            CallbackParams params = callbackParamsOf(new HashMap<>(), CallbackType.ABOUT_TO_SUBMIT);
 
-        AboutToStartOrSubmitCallbackResponse response = (AboutToStartOrSubmitCallbackResponse) handler.handle(params);
+            AboutToStartOrSubmitCallbackResponse response = (AboutToStartOrSubmitCallbackResponse) handler
+                .handle(params);
 
-        assertThat(response.getErrors()).isEmpty();
-        assertThat(response.getData())
-            .isEqualTo(
-                Map.of(
-                "claimValue", ClaimValue.builder().higherValue(10).lowerValue(1).build(),
-                "claimType", PERSONAL_INJURY_WORK,
-                "allocatedTrack", SMALL_CLAIM
-            ));
+            assertThat(response.getData()).containsEntry("claimIssuedDate", LocalDate.now());
+        }
     }
 
-    @Test
-    void shouldReturnExpectedSubmittedCallbackResponseObject() {
-        CallbackParams params = callbackParamsOf(new HashMap<>(), CallbackType.SUBMITTED);
+    @Nested
+    class SubmittedCallback {
 
-        SubmittedCallbackResponse response = (SubmittedCallbackResponse) handler.handle(params);
+        @Test
+        void shouldReturnExpectedResponse_whenInvoked() {
+            CallbackParams params = callbackParamsOf(new HashMap<>(), CallbackType.SUBMITTED);
 
-        String documentLink = "https://www.google.com";
-        LocalDateTime serviceDeadline = LocalDate.now().plusDays(112).atTime(23, 59);
-        String formattedServiceDeadline = formatLocalDateTime(serviceDeadline, DATE_TIME_AT);
+            SubmittedCallbackResponse response = (SubmittedCallbackResponse) handler.handle(params);
 
-        String body = format(
-            "<br />Follow these steps to serve a claim:"
-                + "\n* [Download the sealed claim form](%s) (PDF, 123KB)"
-                + "\n* Send the form, particulars of claim and "
-                + "<a href=\"%s\" target=\"_blank\">a response pack</a> (PDF, 266 KB) to the defendant by %s"
-                + "\n* Confirm service online within 21 days of sending the form, particulars and response pack, before"
-                + " 4pm if you're doing this on the due day", documentLink, responsePackLink, formattedServiceDeadline);
+            String documentLink = "https://www.google.com";
+            LocalDateTime serviceDeadline = LocalDate.now().plusDays(112).atTime(23, 59);
+            String formattedServiceDeadline = formatLocalDateTime(serviceDeadline, DATE_TIME_AT);
 
-        assertThat(response).isEqualToComparingFieldByField(
-            SubmittedCallbackResponse.builder()
-                .confirmationHeader("# Your claim has been issued\n## Claim number: TBC")
-                .confirmationBody(body)
-                .build());
+            String body = format(
+                "<br />Follow these steps to serve a claim:"
+                    + "\n* [Download the sealed claim form](%s) (PDF, 123KB)"
+                    + "\n* Send the form, particulars of claim and "
+                    + "<a href=\"%s\" target=\"_blank\">a response pack</a> (PDF, 266 KB) to the defendant by %s"
+                    + "\n* Confirm service online within 21 days of sending the form, particulars and response pack,"
+                    + " before 4pm if you're doing this on the due day",
+                documentLink,
+                responsePackLink,
+                formattedServiceDeadline
+            );
+
+            assertThat(response).isEqualToComparingFieldByField(
+                SubmittedCallbackResponse.builder()
+                    .confirmationHeader("# Your claim has been issued\n## Claim number: TBC")
+                    .confirmationBody(body)
+                    .build());
+        }
     }
 }

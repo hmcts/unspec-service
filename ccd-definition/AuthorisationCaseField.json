@@ -135,21 +135,28 @@
   {
     "LiveFrom": "01/01/2017",
     "CaseTypeID": "UNSPECIFIED_CLAIMS",
-    "CaseFieldID": "defendantSolicitor1claimResponseExtensionProposedDeadline",
+    "CaseFieldID": "claimIssuedDate",
     "UserRole": "caseworker-civil-solicitor",
     "CRUD": "CRU"
   },
   {
     "LiveFrom": "01/01/2017",
     "CaseTypeID": "UNSPECIFIED_CLAIMS",
-    "CaseFieldID": "defendantSolicitor1claimResponseExtensionAlreadyAgreed",
+    "CaseFieldID": "respondentSolicitor1claimResponseExtensionProposedDeadline",
     "UserRole": "caseworker-civil-solicitor",
     "CRUD": "CRU"
   },
   {
     "LiveFrom": "01/01/2017",
     "CaseTypeID": "UNSPECIFIED_CLAIMS",
-    "CaseFieldID": "defendantSolicitor1claimResponseExtensionReason",
+    "CaseFieldID": "respondentSolicitor1claimResponseExtensionAlreadyAgreed",
+    "UserRole": "caseworker-civil-solicitor",
+    "CRUD": "CRU"
+  },
+  {
+    "LiveFrom": "01/01/2017",
+    "CaseTypeID": "UNSPECIFIED_CLAIMS",
+    "CaseFieldID": "respondentSolicitor1claimResponseExtensionReason",
     "UserRole": "caseworker-civil-solicitor",
     "CRUD": "CRU"
   },

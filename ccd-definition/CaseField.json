@@ -84,6 +84,14 @@
   {
     "LiveFrom": "01/01/2017",
     "CaseTypeID": "UNSPECIFIED_CLAIMS",
+    "ID": "claimIssuedDate",
+    "Label": "Claim issued date",
+    "FieldType": "Date",
+    "SecurityClassification": "Public"
+  },
+  {
+    "LiveFrom": "01/01/2017",
+    "CaseTypeID": "UNSPECIFIED_CLAIMS",
     "ID": "servedDocuments",
     "Label": "Which documents did you serve?",
     "FieldType": "MultiSelectList",
@@ -158,7 +166,7 @@
   {
     "LiveFrom": "01/01/2017",
     "CaseTypeID": "UNSPECIFIED_CLAIMS",
-    "ID": "defendantSolicitor1claimResponseExtensionProposedDeadline",
+    "ID": "respondentSolicitor1claimResponseExtensionProposedDeadline",
     "Label": "Proposed new deadline",
     "HintText": "This can't be later than 28 working days after the current deadline. All deadlines require a response before 4pm on the deadline day.",
     "FieldType": "Date",
@@ -167,7 +175,7 @@
   {
     "LiveFrom": "01/01/2017",
     "CaseTypeID": "UNSPECIFIED_CLAIMS",
-    "ID": "defendantSolicitor1claimResponseExtensionAlreadyAgreed",
+    "ID": "respondentSolicitor1claimResponseExtensionAlreadyAgreed",
     "Label": "Have you already agreed the new deadline with the claimant's legal representative?",
     "HintText": "If not, you can propose it using this service.",
     "FieldType": "YesOrNo",
@@ -176,7 +184,7 @@
   {
     "LiveFrom": "01/01/2017",
     "CaseTypeID": "UNSPECIFIED_CLAIMS",
-    "ID": "defendantSolicitor1claimResponseExtensionReason",
+    "ID": "respondentSolicitor1claimResponseExtensionReason",
     "Label": "Reason why more time is needed.",
     "HintText": "This is optional - the claimant will see your answer.",
     "FieldType": "TextArea",
