@@ -186,7 +186,7 @@
     "CaseTypeID": "UNSPECIFIED_CLAIMS",
     "ID": "respondentSolicitor1claimResponseExtensionReason",
     "Label": "Reason why more time is needed.",
-    "HintText": "This is optional - the claimant will see your answer.",
+    "HintText": "This is mandatory - the claimant will see your answer.",
     "FieldType": "TextArea",
     "SecurityClassification": "Public"
   }

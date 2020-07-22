@@ -30,7 +30,7 @@
     "CaseEventID": "REQUEST_EXTENSION",
     "CaseFieldID": "respondentSolicitor1claimResponseExtensionReason",
     "PageFieldDisplayOrder": 1,
-    "DisplayContext": "OPTIONAL",
+    "DisplayContext": "MANDATORY",
     "PageID": "ExtensionAlreadyAgreed",
     "FieldShowCondition": "respondentSolicitor1claimResponseExtensionAlreadyAgreed=\"No\"",
     "PageDisplayOrder": 2,
