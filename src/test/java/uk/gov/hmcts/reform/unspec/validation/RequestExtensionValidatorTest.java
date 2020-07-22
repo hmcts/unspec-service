@@ -75,6 +75,34 @@ class RequestExtensionValidatorTest {
             assertThat(errors)
                 .containsOnly("The proposed deadline must be a date in the future");
         }
+
+        @Test
+        void shouldReturnError_whenProposedDeadlineInIsSameAsResponseDeadline() {
+            CaseDetails caseDetails = CaseDetails.builder()
+                .data(of(PROPOSED_DEADLINE, now().plusDays(5),
+                         RESPONSE_DEADLINE, now().plusDays(5).atTime(16, 0)
+                ))
+                .build();
+
+            List<String> errors = validator.validateProposedDeadline(caseDetails);
+
+            assertThat(errors)
+                .containsOnly("The proposed deadline must be after the current deadline");
+        }
+
+        @Test
+        void shouldReturnError_whenProposedDeadlineInIsBeforeResponseDeadline() {
+            CaseDetails caseDetails = CaseDetails.builder()
+                .data(of(PROPOSED_DEADLINE, now().plusDays(4),
+                         RESPONSE_DEADLINE, now().plusDays(5).atTime(16, 0)
+                ))
+                .build();
+
+            List<String> errors = validator.validateProposedDeadline(caseDetails);
+
+            assertThat(errors)
+                .containsOnly("The proposed deadline must be after the current deadline");
+        }
     }
 
     @Nested
