@@ -1,5 +1,6 @@
 package uk.gov.hmcts.reform.unspec.service.docmosis.sealedclaim;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import uk.gov.hmcts.reform.unspec.model.Address;
@@ -24,6 +25,7 @@ import static uk.gov.hmcts.reform.unspec.service.docmosis.DocmosisTemplates.N1;
 import static uk.gov.hmcts.reform.unspec.utils.PartyNameUtils.getPartyNameBasedOnType;
 
 @Service
+@RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class SealedClaimFormGenerator extends TemplateDataGenerator<SealedClaimForm> {
 
     public static final String TEMP_CLAIM_DETAILS = "The claimant seeks compensation from injuries and losses arising"
@@ -48,13 +50,6 @@ public class SealedClaimFormGenerator extends TemplateDataGenerator<SealedClaimF
     public static final String CASE_NAME = "SamClark v AlexRichards"; //TODO
     private final DocumentManagementService documentManagementService;
     private final DocumentGeneratorService documentGeneratorService;
-
-    @Autowired
-    public SealedClaimFormGenerator(DocumentManagementService documentManagementService,
-                                    DocumentGeneratorService documentGeneratorService) {
-        this.documentManagementService = documentManagementService;
-        this.documentGeneratorService = documentGeneratorService;
-    }
 
     public CaseDocument generate(CaseData caseData, String authorisation) {
         SealedClaimForm templateData = getTemplateData(caseData);

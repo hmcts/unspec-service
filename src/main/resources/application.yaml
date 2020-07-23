@@ -87,12 +87,12 @@ idam:
     secret: OOOOOOOOOOOOOOOO
 
 document_management:
-  url: http://localhost:4506a
+  url: http://localhost:4506
 
 docmosis:
   tornado:
-    url: "http://localhost:5433"
-    key: "0UAD-KLTK-JALP-DKIA-EBBH-1ELH-PBKQ-KS91-23ED-8-97D1"
+    url: http://localhost:5433
+    key: ACCESS_KEY
 
 ---
 

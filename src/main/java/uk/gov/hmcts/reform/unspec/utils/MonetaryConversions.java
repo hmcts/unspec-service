@@ -16,7 +16,7 @@ public class MonetaryConversions {
 
     public static BigDecimal penniesToPounds(BigDecimal amountInPennies) {
         requireNonNull(amountInPennies);
-        return amountInPennies.divide(HUNDRED, 2, RoundingMode.HALF_EVEN);
+        return amountInPennies.divide(HUNDRED, 2, RoundingMode.UNNECESSARY);
     }
 
     public static BigInteger poundsToPennies(BigDecimal amountInPounds) {

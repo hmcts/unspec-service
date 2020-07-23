@@ -15,7 +15,6 @@ import uk.gov.hmcts.reform.unspec.enums.ClaimType;
 import uk.gov.hmcts.reform.unspec.helpers.CaseDetailsConverter;
 import uk.gov.hmcts.reform.unspec.model.CaseData;
 import uk.gov.hmcts.reform.unspec.model.ClaimValue;
-import uk.gov.hmcts.reform.unspec.model.common.Element;
 import uk.gov.hmcts.reform.unspec.model.documents.CaseDocument;
 import uk.gov.hmcts.reform.unspec.model.documents.DocumentType;
 import uk.gov.hmcts.reform.unspec.service.docmosis.sealedclaim.SealedClaimFormGenerator;
@@ -73,18 +72,17 @@ public class CreateClaimCallbackHandler extends CallbackHandler {
     }
 
     private CallbackResponse validateClaimValues(CallbackParams callbackParams) {
-        CaseData caseData = caseDetailsConverter.to(callbackParams.getRequest().getCaseDetails());
+        CaseData caseData = caseDetailsConverter.toCaseData(callbackParams.getRequest().getCaseDetails());
         List<String> errors = new ArrayList<>();
 
         ClaimValue claimValue = caseData.getClaimValue();
         if (claimValue.hasLargerLowerValue()) {
             errors.add("CONTENT TBC: Higher value must not be lower than the lower value.");
         }
-    
+
         Map<String, Object> data = callbackParams.getRequest().getCaseDetails().getData();
         if (errors.isEmpty()) {
             ClaimType claimType = caseData.getClaimType();
-
             data.put("allocatedTrack", getAllocatedTrack(claimValue, claimType));
         }
 
@@ -95,24 +93,22 @@ public class CreateClaimCallbackHandler extends CallbackHandler {
     }
 
     private CallbackResponse issueClaim(CallbackParams callbackParams) {
-        List<String> errors = new ArrayList<>();
         String authorisation = callbackParams.getParams().get(BEARER_TOKEN).toString();
 
         CaseDetails caseDetails = callbackParams.getRequest().getCaseDetails();
-        CaseData caseData = caseDetailsConverter.to(caseDetails);
+        CaseData caseData = caseDetailsConverter.toCaseData(caseDetails);
         CaseDocument sealedClaim = sealedClaimFormGenerator.generate(caseData, authorisation);
         Map<String, Object> data = caseDetails.getData();
-        data.put("systemGeneratedCaseDocuments", List.of(Element.<CaseDocument>builder().value(sealedClaim).build()));
+        data.put("systemGeneratedCaseDocuments", ElementUtils.wrapElements(sealedClaim));
         data.put("claimIssuedDate", LocalDate.now());
 
         return AboutToStartOrSubmitCallbackResponse.builder()
             .data(data)
-            .errors(errors)
             .build();
     }
 
     private SubmittedCallbackResponse buildConfirmation(CallbackParams callbackParams) {
-        CaseData caseData = caseDetailsConverter.to(callbackParams.getRequest().getCaseDetails());
+        CaseData caseData = caseDetailsConverter.toCaseData(callbackParams.getRequest().getCaseDetails());
         Long documentSize = ElementUtils.unwrapElements(caseData.getSystemGeneratedCaseDocuments()).stream()
             .filter(c -> c.getDocumentType() == DocumentType.SEALED_CLAIM)
             .findFirst()

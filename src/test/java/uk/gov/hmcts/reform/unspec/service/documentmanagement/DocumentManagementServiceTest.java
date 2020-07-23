@@ -13,6 +13,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.Resource;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.multipart.MultipartFile;
 import uk.gov.hmcts.reform.authorisation.generators.AuthTokenGenerator;
 import uk.gov.hmcts.reform.document.DocumentDownloadClientApi;
 import uk.gov.hmcts.reform.document.DocumentMetadataDownloadClientApi;
@@ -20,6 +21,7 @@ import uk.gov.hmcts.reform.document.DocumentUploadClientApi;
 import uk.gov.hmcts.reform.document.domain.Classification;
 import uk.gov.hmcts.reform.document.domain.Document;
 import uk.gov.hmcts.reform.document.domain.UploadResponse;
+import uk.gov.hmcts.reform.document.utils.InMemoryMultipartFile;
 import uk.gov.hmcts.reform.idam.client.models.UserInfo;
 import uk.gov.hmcts.reform.unspec.model.documents.CaseDocument;
 import uk.gov.hmcts.reform.unspec.model.documents.PDF;
@@ -34,14 +36,14 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.atLeast;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static uk.gov.hmcts.reform.unspec.callback.CallbackHandlerFactoryTest.BEARER_TOKEN;
 import static uk.gov.hmcts.reform.unspec.model.documents.DocumentType.SEALED_CLAIM;
+import static uk.gov.hmcts.reform.unspec.service.documentmanagement.DocumentDownloadException.DOWNLOAD_FAILURE;
+import static uk.gov.hmcts.reform.unspec.service.documentmanagement.DocumentManagementService.FILES_NAME;
 import static uk.gov.hmcts.reform.unspec.utils.ResourceReader.readString;
 
 @SpringBootTest(classes = {
@@ -72,7 +74,6 @@ class DocumentManagementServiceTest {
 
     @Mock
     private ResponseEntity<Resource> responseEntity;
-    private final PDF document = new PDF("0000-claim", "test".getBytes(), SEALED_CLAIM);
     private final UserInfo userInfo = UserInfo.builder()
         .roles(List.of("role"))
         .uid("id")
@@ -92,108 +93,150 @@ class DocumentManagementServiceTest {
 
         @Test
         public void shouldUploadToDocumentManagement() throws JsonProcessingException {
+            PDF document = new PDF("0000-claim", "test".getBytes(), SEALED_CLAIM);
+
+            List<MultipartFile> files = List.of(new InMemoryMultipartFile(
+                FILES_NAME,
+                document.getFilename(),
+                PDF.CONTENT_TYPE,
+                document.getBytes()
+            ));
+
+            UploadResponse uploadResponse = mapper.readValue(
+                readString("document-management/response.success.json"), UploadResponse.class);
+
             when(documentUploadClient.upload(
                 anyString(),
                 anyString(),
                 anyString(),
                 eq(USER_ROLES),
                 any(Classification.class),
-                anyList()
+                eq(files)
                  )
-            ).thenReturn(mapper.readValue(
-                readString("document-management/response.success.json"), UploadResponse.class)
-            );
+            ).thenReturn(uploadResponse);
 
             CaseDocument caseDocument = documentManagementService.uploadDocument(BEARER_TOKEN, document);
             assertNotNull(caseDocument.getDocumentLink());
             assertEquals(
-                "http://dm-store:4506/documents/85d97996-22a5-40d7-882e-3a382c8ae1b4",
+                uploadResponse.getEmbedded().getDocuments().get(0).links.self.href,
                 caseDocument.getDocumentLink().getDocumentUrl()
             );
 
-            verify(documentUploadClient, atLeast(2))
-                .upload(anyString(), anyString(), anyString(), eq(USER_ROLES), any(Classification.class), anyList());
+            verify(documentUploadClient)
+                .upload(anyString(), anyString(), anyString(), eq(USER_ROLES), any(Classification.class), eq(files));
         }
 
         @Test
         public void shouldThrow_whenUploadDocumentFails() throws JsonProcessingException {
+            PDF document = new PDF("0000-failed-claim", "failed-test".getBytes(), SEALED_CLAIM);
+
+            List<MultipartFile> files = List.of(new InMemoryMultipartFile(
+                FILES_NAME,
+                document.getFilename(),
+                PDF.CONTENT_TYPE,
+                document.getBytes()
+            ));
+
             when(documentUploadClient.upload(
                 anyString(),
                 anyString(),
                 anyString(),
                 eq(USER_ROLES),
                 any(Classification.class),
-                anyList()
+                eq(files)
                  )
             ).thenReturn(mapper.readValue(
                 readString("document-management/response.failure.json"), UploadResponse.class));
 
-            DocumentManagementException documentManagementException = assertThrows(
-                DocumentManagementException.class,
+            DocumentUploadException documentManagementException = assertThrows(
+                DocumentUploadException.class,
                 () -> documentManagementService.uploadDocument(anyString(), document)
             );
 
             assertEquals(
-                "Unable to upload document 0000-claim.pdf to document management.",
+                "Unable to upload document 0000-failed-claim.pdf to document management.",
                 documentManagementException.getMessage()
             );
 
             verify(documentUploadClient)
-                .upload(anyString(), anyString(), anyString(), eq(USER_ROLES), any(Classification.class), anyList());
+                .upload(anyString(), anyString(), anyString(), eq(USER_ROLES), any(Classification.class), eq(files));
         }
     }
 
     @Nested
     class DownloadDocument {
 
+        @Mock
+        Document documentMetaData;
+
         @Test
         public void shouldDownloadDocumentFromDocumentManagement() throws JsonProcessingException {
 
-            when(documentMetadataDownloadClient
-                     .getDocumentMetadata(anyString(), anyString(), eq(USER_ROLES_JOINED), anyString(), anyString())
-            ).thenReturn(mapper.readValue(
-                readString("document-management/download.success.json"), Document.class)
+            Document document = mapper.readValue(
+                readString("document-management/download.success.json"),
+                Document.class
             );
+            String documentPath = URI.create(document.links.self.href).getPath();
+            String documentBinary = URI.create(document.links.binary.href).getPath();
+
+            when(documentMetadataDownloadClient.getDocumentMetadata(
+                anyString(),
+                anyString(),
+                eq(USER_ROLES_JOINED),
+                anyString(),
+                eq(documentPath)
+                 )
+            ).thenReturn(document);
 
             when(responseEntity.getBody()).thenReturn(new ByteArrayResource("test".getBytes()));
 
-            when(documentDownloadClient
-                     .downloadBinary(anyString(), anyString(), eq(USER_ROLES_JOINED), anyString(), anyString())
+            when(documentDownloadClient.downloadBinary(
+                anyString(),
+                anyString(),
+                eq(USER_ROLES_JOINED),
+                anyString(),
+                eq(documentBinary)
+                 )
             ).thenReturn(responseEntity);
 
-            URI documentUri = URI.create("http://dm-store:4506/documents/85d97996-22a5-40d7-882e-3a382c8ae1b4");
-
-            byte[] pdf = documentManagementService.downloadDocument(BEARER_TOKEN, documentUri);
+            byte[] pdf = documentManagementService.downloadDocument(BEARER_TOKEN, documentPath);
 
             assertNotNull(pdf);
             assertArrayEquals("test".getBytes(), pdf);
 
-            verify(documentMetadataDownloadClient, atLeast(3))
-                .getDocumentMetadata(anyString(), anyString(), eq(USER_ROLES_JOINED), anyString(), anyString());
+            verify(documentMetadataDownloadClient)
+                .getDocumentMetadata(anyString(), anyString(), eq(USER_ROLES_JOINED), anyString(), eq(documentPath));
+
             verify(documentDownloadClient)
-                .downloadBinary(anyString(), anyString(), eq(USER_ROLES_JOINED), anyString(), anyString());
+                .downloadBinary(anyString(), anyString(), eq(USER_ROLES_JOINED), anyString(), eq(documentBinary));
         }
 
         @Test
         public void shouldThrow_whenDocumentDownloadFails() {
-            when(documentMetadataDownloadClient
-                     .getDocumentMetadata(anyString(), anyString(), eq(USER_ROLES_JOINED), anyString(), anyString())
+            String documentPath = "/documents/85d97996-22a5-40d7-882e-3a382c8ae1b7";
+            String documentBinary = "/documents/85d97996-22a5-40d7-882e-3a382c8ae1b7/binary";
+            when(documentMetadataDownloadClient.getDocumentMetadata(
+                anyString(),
+                anyString(),
+                eq(USER_ROLES_JOINED),
+                anyString(),
+                eq(documentPath)
+                 )
+            ).thenReturn(documentMetaData);
+
+            when(documentDownloadClient
+                     .downloadBinary(anyString(), anyString(), eq(USER_ROLES_JOINED), anyString(), eq(documentBinary))
             ).thenReturn(null);
 
-            URI documentUri = URI.create("http://dm-store:4506/documents/85d97996-22a5-40d7-882e-3a382c8ae1b4");
-
-            DocumentManagementException documentManagementException = assertThrows(
-                DocumentManagementException.class,
-                () -> documentManagementService.downloadDocument("auth string", documentUri)
+            DocumentDownloadException documentManagementException = assertThrows(
+                DocumentDownloadException.class,
+                () -> documentManagementService.downloadDocument(BEARER_TOKEN, documentPath)
             );
 
-            assertEquals(
-                format("Unable to download document %s from document management.", documentUri),
-                documentManagementException.getMessage()
-            );
+            assertEquals(format(DOWNLOAD_FAILURE, documentPath), documentManagementException.getMessage());
 
-            verify(documentMetadataDownloadClient, atLeast(2))
-                .getDocumentMetadata(anyString(), anyString(), eq(USER_ROLES_JOINED), anyString(), anyString());
+            verify(documentMetadataDownloadClient)
+                .getDocumentMetadata(anyString(), anyString(), eq(USER_ROLES_JOINED), anyString(), eq(documentPath));
         }
     }
 
@@ -201,24 +244,28 @@ class DocumentManagementServiceTest {
     class DocumentMetaData {
         @Test
         public void getDocumentMetaData() throws JsonProcessingException {
-            URI docUri = URI.create("http://dm-store:4506/documents/85d97996-22a5-40d7-882e-3a382c8ae1b4");
+            String documentPath = "/documents/85d97996-22a5-40d7-882e-3a382c8ae1b3";
 
-            when(documentMetadataDownloadClient
-                     .getDocumentMetadata(anyString(), anyString(), eq(USER_ROLES_JOINED), anyString(), anyString())
+            when(documentMetadataDownloadClient.getDocumentMetadata(
+                anyString(),
+                anyString(),
+                eq(USER_ROLES_JOINED),
+                anyString(),
+                eq(documentPath)
+                 )
             ).thenReturn(mapper.readValue(
-                readString("document-management/download.success.json"), Document.class)
+                readString("document-management/metadata.success.json"), Document.class)
             );
 
             when(responseEntity.getBody()).thenReturn(new ByteArrayResource("test".getBytes()));
 
-            Document documentMetaData = documentManagementService
-                .getDocumentMetaData("auth string", docUri.getPath());
+            Document documentMetaData = documentManagementService.getDocumentMetaData(BEARER_TOKEN, documentPath);
 
             assertEquals(72552L, documentMetaData.size);
             assertEquals("000LR002.pdf", documentMetaData.originalDocumentName);
 
             verify(documentMetadataDownloadClient)
-                .getDocumentMetadata(anyString(), anyString(), eq(USER_ROLES_JOINED), anyString(), anyString());
+                .getDocumentMetadata(anyString(), anyString(), eq(USER_ROLES_JOINED), anyString(), eq(documentPath));
         }
 
         @Test
@@ -227,20 +274,20 @@ class DocumentManagementServiceTest {
                      .getDocumentMetadata(anyString(), anyString(), eq(USER_ROLES_JOINED), anyString(), anyString())
             ).thenThrow(new RuntimeException("Failed to access document metadata"));
 
-            URI documentUri = URI.create("http://dm-store:4506/documents/85d97996-22a5-40d7-882e-3a382c8ae1b4");
+            String documentPath = "/documents/85d97996-22a5-40d7-882e-3a382c8ae1b5";
 
-            DocumentManagementException documentManagementException = assertThrows(
-                DocumentManagementException.class,
-                () -> documentManagementService.getDocumentMetaData("auth string", documentUri.getPath())
+            DocumentDownloadException documentManagementException = assertThrows(
+                DocumentDownloadException.class,
+                () -> documentManagementService.getDocumentMetaData(BEARER_TOKEN, documentPath)
             );
 
             assertEquals(
-                "Unable to download document from document management.",
+                String.format(DOWNLOAD_FAILURE, documentPath),
                 documentManagementException.getMessage()
             );
 
-            verify(documentMetadataDownloadClient, atLeast(2))
-                .getDocumentMetadata(anyString(), anyString(), eq(USER_ROLES_JOINED), anyString(), anyString());
+            verify(documentMetadataDownloadClient)
+                .getDocumentMetadata(anyString(), anyString(), eq(USER_ROLES_JOINED), anyString(), eq(documentPath));
         }
     }
 }

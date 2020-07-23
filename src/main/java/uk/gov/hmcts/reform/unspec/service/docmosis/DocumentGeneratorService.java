@@ -22,17 +22,16 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class DocumentGeneratorService {
 
+    public static final String API_RENDER = "/api/render";
     private final RestTemplate restTemplate;
     private final DocmosisConfiguration configuration;
     private final ObjectMapper mapper;
 
     public DocmosisDocument generateDocmosisDocument(DocmosisData templateData, DocmosisTemplates template) {
-
         return generateDocmosisDocument(templateData.toMap(mapper), template);
     }
 
     public DocmosisDocument generateDocmosisDocument(Map<String, Object> templateData, DocmosisTemplates template) {
-
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
 
@@ -49,7 +48,7 @@ public class DocumentGeneratorService {
         byte[] response;
 
         try {
-            response = restTemplate.exchange(configuration.getUrl() + "/api/render",
+            response = restTemplate.exchange(configuration.getUrl() + API_RENDER,
                                              HttpMethod.POST, request, byte[].class
             ).getBody();
         } catch (HttpClientErrorException ex) {
