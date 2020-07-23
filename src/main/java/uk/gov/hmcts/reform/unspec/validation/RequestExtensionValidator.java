@@ -32,8 +32,8 @@ public class RequestExtensionValidator {
             return ImmutableList.of("The proposed deadline must be a date in the future");
         }
 
-        if (dateToValidate.isBefore(responseDeadline.toLocalDate())) {
-            return ImmutableList.of("The proposed deadline cannot be before the current deadline");
+        if (!dateToValidate.isAfter(responseDeadline.toLocalDate())) {
+            return ImmutableList.of("The proposed deadline must be after the current deadline");
         }
 
         if (LocalDateTime.of(dateToValidate, END_OF_BUSINESS_DAY).isAfter(responseDeadline.plusDays(28))) {

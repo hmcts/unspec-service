@@ -65,7 +65,7 @@ class RequestExtensionValidatorTest {
         }
 
         @Test
-        void shouldReturnError_whenProposedDeadlineInIsNotInFuture() {
+        void shouldReturnError_whenProposedDeadlineIsNotInFuture() {
             CaseDetails caseDetails = CaseDetails.builder()
                 .data(of(PROPOSED_DEADLINE, now(),
                          RESPONSE_DEADLINE, now().atTime(16, 0)
@@ -74,8 +74,33 @@ class RequestExtensionValidatorTest {
 
             List<String> errors = validator.validateProposedDeadline(caseDetails);
 
-            assertThat(errors)
-                .containsOnly("The proposed deadline must be a date in the future");
+            assertThat(errors).containsOnly("The proposed deadline must be a date in the future");
+        }
+
+        @Test
+        void shouldReturnError_whenProposedDeadlineIsSameAsResponseDeadline() {
+            CaseDetails caseDetails = CaseDetails.builder()
+                .data(of(PROPOSED_DEADLINE, now().plusDays(5),
+                         RESPONSE_DEADLINE, now().plusDays(5).atTime(16, 0)
+                ))
+                .build();
+
+            List<String> errors = validator.validateProposedDeadline(caseDetails);
+
+            assertThat(errors).containsOnly("The proposed deadline must be after the current deadline");
+        }
+
+        @Test
+        void shouldReturnError_whenProposedDeadlineIsBeforeResponseDeadline() {
+            CaseDetails caseDetails = CaseDetails.builder()
+                .data(of(PROPOSED_DEADLINE, now().plusDays(4),
+                         RESPONSE_DEADLINE, now().plusDays(5).atTime(16, 0)
+                ))
+                .build();
+
+            List<String> errors = validator.validateProposedDeadline(caseDetails);
+
+            assertThat(errors).containsOnly("The proposed deadline must be after the current deadline");
         }
 
         @Test
@@ -85,7 +110,7 @@ class RequestExtensionValidatorTest {
 
             List<String> errors = validator.validateProposedDeadline(proposedDeadline, responseDeadline);
 
-            assertThat(errors.isEmpty()).isTrue();
+            assertThat(errors).isEmpty();
         }
     }
 
