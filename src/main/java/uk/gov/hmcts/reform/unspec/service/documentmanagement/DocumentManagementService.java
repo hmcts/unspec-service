@@ -3,7 +3,6 @@ package uk.gov.hmcts.reform.unspec.service.documentmanagement;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.Resource;
 import org.springframework.http.ResponseEntity;
@@ -20,13 +19,13 @@ import uk.gov.hmcts.reform.document.domain.Document;
 import uk.gov.hmcts.reform.document.domain.UploadResponse;
 import uk.gov.hmcts.reform.document.utils.InMemoryMultipartFile;
 import uk.gov.hmcts.reform.idam.client.models.UserInfo;
+import uk.gov.hmcts.reform.unspec.config.DocumentManagementConfiguration;
 import uk.gov.hmcts.reform.unspec.helpers.LocalDateTimeHelper;
 import uk.gov.hmcts.reform.unspec.model.documents.CaseDocument;
 import uk.gov.hmcts.reform.unspec.model.documents.PDF;
 import uk.gov.hmcts.reform.unspec.service.UserService;
 
 import java.net.URI;
-import java.util.List;
 
 import static java.util.Collections.singletonList;
 
@@ -43,9 +42,7 @@ public class DocumentManagementService {
     private final DocumentMetadataDownloadClientApi documentMetadataDownloadClient;
     private final AuthTokenGenerator authTokenGenerator;
     private final UserService userService;
-
-    @Value("${document_management.userRoles}")
-    private final List<String> userRoles;
+    private final DocumentManagementConfiguration documentManagementConfiguration;
 
     @Retryable(value = {DocumentUploadException.class}, backoff = @Backoff(delay = 200))
     public CaseDocument uploadDocument(String authorisation, PDF pdf) {
@@ -60,7 +57,7 @@ public class DocumentManagementService {
                 authorisation,
                 authTokenGenerator.generate(),
                 userInfo.getUid(),
-                userRoles,
+                documentManagementConfiguration.getUserRoles(),
                 Classification.RESTRICTED,
                 singletonList(file)
             );
@@ -92,7 +89,7 @@ public class DocumentManagementService {
         log.info("Downloading document {}", documentPath);
         try {
             UserInfo userInfo = userService.getUserInfo(authorisation);
-            String userRoles = String.join(",", this.userRoles);
+            String userRoles = String.join(",", this.documentManagementConfiguration.getUserRoles());
             Document documentMetadata = getDocumentMetaData(authorisation, documentPath);
 
             ResponseEntity<Resource> responseEntity = documentDownloadClientApi.downloadBinary(
@@ -104,7 +101,6 @@ public class DocumentManagementService {
             );
 
             ByteArrayResource resource = (ByteArrayResource) responseEntity.getBody();
-            //noinspection ConstantConditions let the NPE be thrown
             return resource.getByteArray();
         } catch (Exception ex) {
             log.error("Failed downloading document {}", documentPath, ex);
@@ -117,7 +113,7 @@ public class DocumentManagementService {
 
         try {
             UserInfo userInfo = userService.getUserInfo(authorisation);
-            String userRoles = String.join(",", this.userRoles);
+            String userRoles = String.join(",", this.documentManagementConfiguration.getUserRoles());
             return documentMetadataDownloadClient.getDocumentMetadata(
                 authorisation,
                 authTokenGenerator.generate(),

@@ -1,6 +1,5 @@
 package uk.gov.hmcts.reform.unspec.handler;
 
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import uk.gov.hmcts.reform.ccd.client.model.AboutToStartOrSubmitCallbackResponse;
 import uk.gov.hmcts.reform.ccd.client.model.CallbackResponse;
@@ -11,6 +10,7 @@ import uk.gov.hmcts.reform.unspec.callback.CallbackHandler;
 import uk.gov.hmcts.reform.unspec.callback.CallbackParams;
 import uk.gov.hmcts.reform.unspec.callback.CallbackType;
 import uk.gov.hmcts.reform.unspec.callback.CaseEvent;
+import uk.gov.hmcts.reform.unspec.config.ClaimIssueConfiguration;
 import uk.gov.hmcts.reform.unspec.enums.ClaimType;
 import uk.gov.hmcts.reform.unspec.helpers.CaseDetailsConverter;
 import uk.gov.hmcts.reform.unspec.model.CaseData;
@@ -45,16 +45,16 @@ public class CreateClaimCallbackHandler extends CallbackHandler {
         + "\n* Confirm service online within 21 days of sending the form, particulars and response pack, before"
         + " 4pm if you're doing this on the due day";
 
-    private final String responsePackLink;
     private final SealedClaimFormGenerator sealedClaimFormGenerator;
+    private final ClaimIssueConfiguration claimIssueConfiguration;
     private final CaseDetailsConverter caseDetailsConverter;
 
     public CreateClaimCallbackHandler(CaseDetailsConverter caseDetailsConverter,
                                       SealedClaimFormGenerator sealedClaimFormGenerator,
-                                      @Value("${unspecified.response-pack-url}") String responsePackLink) {
+                                      ClaimIssueConfiguration claimIssueConfiguration) {
         this.caseDetailsConverter = caseDetailsConverter;
         this.sealedClaimFormGenerator = sealedClaimFormGenerator;
-        this.responsePackLink = responsePackLink;
+        this.claimIssueConfiguration = claimIssueConfiguration;
     }
 
     @Override
@@ -123,7 +123,7 @@ public class CreateClaimCallbackHandler extends CallbackHandler {
             CONFIRMATION_SUMMARY,
             format("/cases/case-details/%s#CaseDocuments", caseData.getCcdCaseReference()),
             documentSize / 1024,
-            responsePackLink,
+            claimIssueConfiguration.getResponsePackLink(),
             formattedServiceDeadline
         );
 
