@@ -1,5 +1,7 @@
 package uk.gov.hmcts.reform.unspec.handler;
 
+import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import uk.gov.hmcts.reform.ccd.client.model.AboutToStartOrSubmitCallbackResponse;
 import uk.gov.hmcts.reform.ccd.client.model.CallbackResponse;
@@ -28,13 +30,13 @@ import java.util.List;
 import java.util.Map;
 
 import static java.lang.String.format;
-import static uk.gov.hmcts.reform.unspec.callback.CallbackParams.Params.BEARER_TOKEN;
 import static uk.gov.hmcts.reform.unspec.callback.CaseEvent.CREATE_CASE;
 import static uk.gov.hmcts.reform.unspec.enums.AllocatedTrack.getAllocatedTrack;
 import static uk.gov.hmcts.reform.unspec.helpers.DateFormatHelper.DATE_TIME_AT;
 import static uk.gov.hmcts.reform.unspec.helpers.DateFormatHelper.formatLocalDateTime;
 
 @Service
+@RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class CreateClaimCallbackHandler extends CallbackHandler {
 
     private static final List<CaseEvent> EVENTS = Collections.singletonList(CREATE_CASE);
@@ -48,14 +50,6 @@ public class CreateClaimCallbackHandler extends CallbackHandler {
     private final SealedClaimFormGenerator sealedClaimFormGenerator;
     private final ClaimIssueConfiguration claimIssueConfiguration;
     private final CaseDetailsConverter caseDetailsConverter;
-
-    public CreateClaimCallbackHandler(CaseDetailsConverter caseDetailsConverter,
-                                      SealedClaimFormGenerator sealedClaimFormGenerator,
-                                      ClaimIssueConfiguration claimIssueConfiguration) {
-        this.caseDetailsConverter = caseDetailsConverter;
-        this.sealedClaimFormGenerator = sealedClaimFormGenerator;
-        this.claimIssueConfiguration = claimIssueConfiguration;
-    }
 
     @Override
     protected Map<CallbackType, Callback> callbacks() {
@@ -93,11 +87,8 @@ public class CreateClaimCallbackHandler extends CallbackHandler {
     }
 
     private CallbackResponse issueClaim(CallbackParams callbackParams) {
-        String authorisation = callbackParams.getParams().get(BEARER_TOKEN).toString();
-
         CaseDetails caseDetails = callbackParams.getRequest().getCaseDetails();
-        CaseData caseData = caseDetailsConverter.toCaseData(caseDetails);
-        CaseDocument sealedClaim = sealedClaimFormGenerator.generate(caseData, authorisation);
+        CaseDocument sealedClaim = sealedClaimFormGenerator.generate(callbackParams);
         Map<String, Object> data = caseDetails.getData();
         data.put("systemGeneratedCaseDocuments", ElementUtils.wrapElements(sealedClaim));
         data.put("claimIssuedDate", LocalDate.now());

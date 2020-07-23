@@ -37,7 +37,6 @@ import java.util.Map;
 import static java.lang.String.format;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 import static uk.gov.hmcts.reform.unspec.enums.AllocatedTrack.SMALL_CLAIM;
 import static uk.gov.hmcts.reform.unspec.enums.ClaimType.PERSONAL_INJURY_WORK;
@@ -60,7 +59,6 @@ class CreateClaimCallbackHandlerTest extends BaseCallbackHandlerTest {
     public static final String REFERENCE_NUMBER = "000LR095";
     @MockBean
     private SealedClaimFormGenerator sealedClaimFormGenerator;
-
     @Autowired
     private CreateClaimCallbackHandler handler;
     @Autowired
@@ -70,7 +68,7 @@ class CreateClaimCallbackHandlerTest extends BaseCallbackHandlerTest {
 
     @BeforeEach
     public void setup() {
-        when(sealedClaimFormGenerator.generate(any(CaseData.class), anyString())).thenReturn(getCaseDocument());
+        when(sealedClaimFormGenerator.generate(any(CallbackParams.class))).thenReturn(getCaseDocument());
     }
 
     @Nested

@@ -1,6 +1,7 @@
 package uk.gov.hmcts.reform.unspec.service.docmosis.sealedclaim;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -9,7 +10,10 @@ import org.springframework.boot.autoconfigure.jackson.JacksonAutoConfiguration;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
-import uk.gov.hmcts.reform.unspec.model.CaseData;
+import uk.gov.hmcts.reform.ccd.client.model.CallbackRequest;
+import uk.gov.hmcts.reform.ccd.client.model.CaseDetails;
+import uk.gov.hmcts.reform.unspec.callback.CallbackParams;
+import uk.gov.hmcts.reform.unspec.helpers.CaseDetailsConverter;
 import uk.gov.hmcts.reform.unspec.model.docmosis.DocmosisData;
 import uk.gov.hmcts.reform.unspec.model.docmosis.DocmosisDocument;
 import uk.gov.hmcts.reform.unspec.model.documents.CaseDocument;
@@ -20,6 +24,7 @@ import uk.gov.hmcts.reform.unspec.service.documentmanagement.DocumentManagementS
 import uk.gov.hmcts.reform.unspec.utils.ResourceReader;
 
 import java.time.LocalDateTime;
+import java.util.Map;
 
 import static java.lang.String.format;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -35,7 +40,8 @@ import static uk.gov.hmcts.reform.unspec.service.documentmanagement.DocumentMana
 @ExtendWith(SpringExtension.class)
 @ContextConfiguration(classes = {
     SealedClaimFormGenerator.class,
-    JacksonAutoConfiguration.class
+    JacksonAutoConfiguration.class,
+    CaseDetailsConverter.class
 })
 class SealedClaimFormGeneratorTest {
 
@@ -53,7 +59,11 @@ class SealedClaimFormGeneratorTest {
 
     @Test
     public void shouldGenerateSealedClaimForm() throws JsonProcessingException {
-        CaseData caseData = getCaseData();
+        CallbackParams callbackParams = CallbackParams.builder()
+            .params(Map.of(CallbackParams.Params.BEARER_TOKEN, BEARER_TOKEN))
+            .request(CallbackRequest.builder().caseDetails(CaseDetails.builder().data(getCaseData()).build()).build())
+            .build();
+
         when(documentGeneratorService.generateDocmosisDocument(any(DocmosisData.class), eq(N1)))
             .thenReturn(new DocmosisDocument(N1.getDocumentTitle(), bytes));
 
@@ -61,15 +71,16 @@ class SealedClaimFormGeneratorTest {
                  .uploadDocument(eq(BEARER_TOKEN), eq(new PDF(fileName, bytes, SEALED_CLAIM))))
             .thenReturn(getCaseDocument());
 
-        CaseDocument caseDocument = sealedClaimFormGenerator.generate(caseData, BEARER_TOKEN);
+        CaseDocument caseDocument = sealedClaimFormGenerator.generate(callbackParams);
         assertThat(caseDocument).isNotNull().isEqualTo(getCaseDocument());
 
         verify(documentManagementService).uploadDocument(eq(BEARER_TOKEN), eq(new PDF(fileName, bytes, SEALED_CLAIM)));
         verify(documentGeneratorService).generateDocmosisDocument(any(DocmosisData.class), eq(N1));
     }
 
-    private CaseData getCaseData() throws JsonProcessingException {
-        return objectMapper.readValue(ResourceReader.readString("case_data.json"), CaseData.class);
+    private Map<String, Object> getCaseData() throws JsonProcessingException {
+        return objectMapper.readValue(ResourceReader.readString("case_data.json"), new TypeReference<>() {
+        });
     }
 
     private CaseDocument getCaseDocument() {

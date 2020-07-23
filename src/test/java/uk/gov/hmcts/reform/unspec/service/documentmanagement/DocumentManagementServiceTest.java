@@ -43,7 +43,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static uk.gov.hmcts.reform.unspec.callback.CallbackHandlerFactoryTest.BEARER_TOKEN;
 import static uk.gov.hmcts.reform.unspec.model.documents.DocumentType.SEALED_CLAIM;
-import static uk.gov.hmcts.reform.unspec.service.documentmanagement.DocumentDownloadException.DOWNLOAD_FAILURE;
+import static uk.gov.hmcts.reform.unspec.service.documentmanagement.DocumentDownloadException.MESSAGE_TEMPLATE;
 import static uk.gov.hmcts.reform.unspec.service.documentmanagement.DocumentManagementService.FILES_NAME;
 import static uk.gov.hmcts.reform.unspec.utils.ResourceReader.readString;
 
@@ -235,7 +235,7 @@ class DocumentManagementServiceTest {
                 () -> documentManagementService.downloadDocument(BEARER_TOKEN, documentPath)
             );
 
-            assertEquals(format(DOWNLOAD_FAILURE, documentPath), documentManagementException.getMessage());
+            assertEquals(format(MESSAGE_TEMPLATE, documentPath), documentManagementException.getMessage());
 
             verify(documentMetadataDownloadClient)
                 .getDocumentMetadata(anyString(), anyString(), eq(USER_ROLES_JOINED), anyString(), eq(documentPath));
@@ -284,7 +284,7 @@ class DocumentManagementServiceTest {
             );
 
             assertEquals(
-                String.format(DOWNLOAD_FAILURE, documentPath),
+                String.format(MESSAGE_TEMPLATE, documentPath),
                 documentManagementException.getMessage()
             );
 
