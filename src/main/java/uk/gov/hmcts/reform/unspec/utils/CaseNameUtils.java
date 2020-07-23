@@ -1,5 +1,6 @@
 package uk.gov.hmcts.reform.unspec.utils;
 
+import org.apache.commons.lang.StringUtils;
 import uk.gov.hmcts.reform.unspec.model.CaseData;
 import uk.gov.hmcts.reform.unspec.model.Party;
 
@@ -51,9 +52,8 @@ public class CaseNameUtils {
     }
 
     private static void soleTraderCompany(Party party, StringBuilder stringBuilder) {
-        if (party.getType() == Party.Type.SOLE_TRADER) {
+        if (party.getType() == Party.Type.SOLE_TRADER && StringUtils.isNotBlank(party.getSoleTraderTradingAs())) {
             stringBuilder.append(" T/A ").append(party.getSoleTraderTradingAs());
         }
-
     }
 }
