@@ -94,7 +94,7 @@ class DocumentManagementServiceTest {
     class UploadDocument {
 
         @Test
-        public void shouldUploadToDocumentManagement() throws JsonProcessingException {
+        void shouldUploadToDocumentManagement() throws JsonProcessingException {
             PDF document = new PDF("0000-claim", "test".getBytes(), SEALED_CLAIM);
 
             List<MultipartFile> files = List.of(new InMemoryMultipartFile(
@@ -129,7 +129,7 @@ class DocumentManagementServiceTest {
         }
 
         @Test
-        public void shouldThrow_whenUploadDocumentFails() throws JsonProcessingException {
+        void shouldThrow_whenUploadDocumentFails() throws JsonProcessingException {
             PDF document = new PDF("0000-failed-claim", "failed-test".getBytes(), SEALED_CLAIM);
 
             List<MultipartFile> files = List.of(new InMemoryMultipartFile(
@@ -172,7 +172,7 @@ class DocumentManagementServiceTest {
         Document documentMetaData;
 
         @Test
-        public void shouldDownloadDocumentFromDocumentManagement() throws JsonProcessingException {
+        void shouldDownloadDocumentFromDocumentManagement() throws JsonProcessingException {
 
             Document document = mapper.readValue(
                 readString("document-management/download.success.json"),
@@ -214,7 +214,7 @@ class DocumentManagementServiceTest {
         }
 
         @Test
-        public void shouldThrow_whenDocumentDownloadFails() {
+        void shouldThrow_whenDocumentDownloadFails() {
             String documentPath = "/documents/85d97996-22a5-40d7-882e-3a382c8ae1b7";
             String documentBinary = "/documents/85d97996-22a5-40d7-882e-3a382c8ae1b7/binary";
             when(documentMetadataDownloadClient.getDocumentMetadata(
@@ -245,7 +245,7 @@ class DocumentManagementServiceTest {
     @Nested
     class DocumentMetaData {
         @Test
-        public void getDocumentMetaData() throws JsonProcessingException {
+        void getDocumentMetaData() throws JsonProcessingException {
             String documentPath = "/documents/85d97996-22a5-40d7-882e-3a382c8ae1b3";
 
             when(documentMetadataDownloadClient.getDocumentMetadata(
@@ -271,7 +271,7 @@ class DocumentManagementServiceTest {
         }
 
         @Test
-        public void shouldThrow_whenMetadataDownloadFails() {
+        void shouldThrow_whenMetadataDownloadFails() {
             when(documentMetadataDownloadClient
                      .getDocumentMetadata(anyString(), anyString(), eq(USER_ROLES_JOINED), anyString(), anyString())
             ).thenThrow(new RuntimeException("Failed to access document metadata"));

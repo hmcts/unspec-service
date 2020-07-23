@@ -126,7 +126,7 @@ class CreateClaimCallbackHandlerTest extends BaseCallbackHandlerTest {
             assertThat(caseData.getClaimIssuedDate()).isEqualTo(LocalDate.now());
         }
 
-        private Map<String, Object> getCaseData() throws JsonProcessingException {
+        Map<String, Object> getCaseData() throws JsonProcessingException {
             Map<String, Object> caseData = objectMapper.readValue(
                 ResourceReader.readString("case_data.json"),
                 new TypeReference<>() {

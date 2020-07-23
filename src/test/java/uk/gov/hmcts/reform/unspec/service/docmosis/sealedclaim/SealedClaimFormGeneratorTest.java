@@ -58,7 +58,7 @@ class SealedClaimFormGeneratorTest {
     private ObjectMapper objectMapper;
 
     @Test
-    public void shouldGenerateSealedClaimForm() throws JsonProcessingException {
+    void shouldGenerateSealedClaimForm() throws JsonProcessingException {
         CallbackParams callbackParams = CallbackParams.builder()
             .params(Map.of(CallbackParams.Params.BEARER_TOKEN, BEARER_TOKEN))
             .request(CallbackRequest.builder().caseDetails(CaseDetails.builder().data(getCaseData()).build()).build())
