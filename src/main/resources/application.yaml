@@ -21,6 +21,10 @@ spring:
     cache-names: userInfoCache
     caffeine:
       spec: expireAfterAccess=3600s
+  autoconfigure:
+    exclude:
+      - org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration
+      - org.springframework.boot.autoconfigure.quartz.QuartzAutoConfiguration
 
   security:
     oauth2:
