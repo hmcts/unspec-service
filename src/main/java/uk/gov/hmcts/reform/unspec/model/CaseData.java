@@ -36,7 +36,8 @@ public class CaseData {
     private final LocalDate deemedDateOfService;
     private final LocalDateTime responseDeadline;
     private final List<ServedDocuments> servedDocuments;
-    private final String legacyCaseReference = REFERENCE_NUMBER; //TODO
+    //TODO this will be stored in database while reading sequence number of OCMC for Case man reference number  
+    private final String legacyCaseReference = REFERENCE_NUMBER;
     private final ServiceLocation serviceLocation;
     private final ServedDocumentFiles servedDocumentFiles;
     private final String servedDocumentsOther;
