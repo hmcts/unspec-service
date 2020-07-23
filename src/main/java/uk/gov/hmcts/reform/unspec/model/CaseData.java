@@ -22,7 +22,9 @@ public class CaseData {
     private final SolicitorReferences solicitorReferences;
     private final CourtLocation courtLocation;
     private final Party claimant;
+    private final Party claimant2;
     private final Party respondent;
+    private final Party respondent2;
     private final ClaimValue claimValue;
     private final ClaimType claimType;
     private final StatementOfTruth claimStatementOfTruth;

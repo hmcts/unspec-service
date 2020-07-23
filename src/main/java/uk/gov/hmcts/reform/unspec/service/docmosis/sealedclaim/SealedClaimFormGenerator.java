@@ -19,6 +19,7 @@ import uk.gov.hmcts.reform.unspec.model.documents.PDF;
 import uk.gov.hmcts.reform.unspec.service.docmosis.DocumentGeneratorService;
 import uk.gov.hmcts.reform.unspec.service.docmosis.TemplateDataGenerator;
 import uk.gov.hmcts.reform.unspec.service.documentmanagement.DocumentManagementService;
+import uk.gov.hmcts.reform.unspec.utils.CaseNameUtils;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -34,7 +35,8 @@ public class SealedClaimFormGenerator extends TemplateDataGenerator<SealedClaimF
     public static final String TEMP_CLAIM_DETAILS = "The claimant seeks compensation from injuries and losses arising"
         + " from a road traffic accident which occurred on 1st July 2017 as a result of the negligence of the first "
         + "defendant.The claimant seeks compensation from injuries and losses arising from a road traffic accident "
-        + "which occurred on 1st July 2017 as a result of the negligence of the first defendant."; //TODO
+        + "which occurred on 1st July 2017 as a result of the negligence of the first defendant.";
+    //TODO this need ui implementation to capture claim details
 
     private static final Representative TEMP_REPRESENTATIVE = Representative.builder()
         .contactName("MiguelSpooner")
@@ -48,9 +50,8 @@ public class SealedClaimFormGenerator extends TemplateDataGenerator<SealedClaimF
                             .postTown("Newport")
                             .postCode("NP204AG")
                             .build())
-        .build(); //TODO
-    public static final String REFERENCE_NUMBER = "000LR095"; //TODO
-    public static final String CASE_NAME = "SamClark v AlexRichards"; //TODO
+        .build(); //TODO Rep details need to be picked from reference data
+    public static final String REFERENCE_NUMBER = "000LR095"; //TODO Need to agree a way to get
     private final DocumentManagementService documentManagementService;
     private final DocumentGeneratorService documentGeneratorService;
     private final CaseDetailsConverter caseDetailsConverter;
@@ -86,7 +87,7 @@ public class SealedClaimFormGenerator extends TemplateDataGenerator<SealedClaimF
             .submittedOn(LocalDate.of(2020, 9, 29))
             .claimantExternalReference(caseData.getSolicitorReferences().getClaimantReference())
             .defendantExternalReference(caseData.getSolicitorReferences().getClaimantReference())
-            .caseName(CASE_NAME)
+            .caseName(CaseNameUtils.toCaseName.apply(caseData))
             .build();
     }
 
