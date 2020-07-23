@@ -32,7 +32,7 @@ const party = require('./fragments/party');
 const baseUrl = process.env.URL || 'http://localhost:3333';
 const signedInSelector = 'exui-header';
 
-module.exports = function () {
+module.exports = function() {
   return actor({
     // Define custom steps here, use 'this' to access default methods of I.
     // It is recommended to place a general 'login' function here.
