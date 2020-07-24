@@ -15,6 +15,7 @@ import uk.gov.hmcts.reform.unspec.service.CoreCaseDataService;
 
 import java.util.List;
 
+import static java.util.Collections.emptyList;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.times;
@@ -23,11 +24,6 @@ import static org.mockito.Mockito.when;
 
 @ExtendWith(SpringExtension.class)
 class CaseStayedSearchServiceTest {
-
-    public static final SearchResult EXPECTED_SEARCH_RESULTS = SearchResult.builder()
-        .total(1)
-        .cases(List.of(CaseDetails.builder().id(1L).build()))
-        .build();
 
     @Captor
     private ArgumentCaptor<Query> queryCaptor;
@@ -39,20 +35,41 @@ class CaseStayedSearchServiceTest {
     private CaseStayedSearchService searchService;
 
     @Test
-    void shouldGetCases_WhenSearchingCasesByDateProperty() {
-        when(coreCaseDataService.searchCases(any())).thenReturn(EXPECTED_SEARCH_RESULTS);
+    void shouldCallGetCasesOnce_WhenCasesReturnEqualsTotalCases() {
+        SearchResult searchResult = buildSearchResultWithTotalCases(1);
 
-        assertThat(searchService.getCases()).isEqualTo(EXPECTED_SEARCH_RESULTS.getCases());
+        when(coreCaseDataService.searchCases(any())).thenReturn(searchResult);
+
+        assertThat(searchService.getCases()).isEqualTo(searchResult.getCases());
         verify(coreCaseDataService).searchCases(queryCaptor.capture());
         assertThat(queryCaptor.getValue()).isEqualToComparingFieldByField(buildQuery(0));
     }
 
     @Test
-    void shouldCallGetCasesMultipleTimes_WhenSearchingForMoreCases() {
-        SearchResult searchResult = SearchResult.builder()
-            .total(2)
-            .cases(List.of(CaseDetails.builder().id(1L).build()))
-            .build();
+    void shouldCallGetCasesOnce_WhenNoCasesReturned() {
+        SearchResult searchResult = buildSearchResult(0, emptyList());
+
+        when(coreCaseDataService.searchCases(any())).thenReturn(searchResult);
+
+        assertThat(searchService.getCases()).isEmpty();
+        verify(coreCaseDataService).searchCases(queryCaptor.capture());
+        assertThat(queryCaptor.getValue()).isEqualToComparingFieldByField(buildQuery(0));
+    }
+
+    @Test
+    void shouldCallGetCasesOnce_WhenCasesRetrievedEqualsEsSearchLimit() {
+        SearchResult searchResult = buildSearchResultWithTotalCases(10);
+
+        when(coreCaseDataService.searchCases(any())).thenReturn(searchResult);
+
+        assertThat(searchService.getCases()).hasSize(1);
+        verify(coreCaseDataService).searchCases(queryCaptor.capture());
+        assertThat(queryCaptor.getValue()).isEqualToComparingFieldByField(buildQuery(0));
+    }
+
+    @Test
+    void shouldCallGetCasesMultipleTimes_WhenCasesReturnedIsMoreThanEsSearchLimit() {
+        SearchResult searchResult = buildSearchResultWithTotalCases(11);
 
         when(coreCaseDataService.searchCases(any())).thenReturn(searchResult);
 
@@ -62,6 +79,17 @@ class CaseStayedSearchServiceTest {
         List<Query> capturedQueries = queryCaptor.getAllValues();
         assertThat(capturedQueries.get(0)).isEqualToComparingFieldByField(buildQuery(0));
         assertThat(capturedQueries.get(1)).isEqualToComparingFieldByField(buildQuery(10));
+    }
+
+    private SearchResult buildSearchResultWithTotalCases(int i) {
+        return buildSearchResult(i, List.of(CaseDetails.builder().id(1L).build()));
+    }
+
+    private SearchResult buildSearchResult(int i, List<CaseDetails> caseDetails) {
+        return SearchResult.builder()
+            .total(i)
+            .cases(caseDetails)
+            .build();
     }
 
     private Query buildQuery(int fromValue) {
