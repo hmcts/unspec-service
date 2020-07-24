@@ -56,6 +56,10 @@ withPipeline(type, product, component) {
   enableAksStagingDeployment()
   enableSlackNotifications('#unspec_notification')
 
+  onMaster {
+    loadVaultSecrets(otherSecrets)
+  }
+
   onPR {
     loadVaultSecrets(otherSecrets)
   }
@@ -102,6 +106,10 @@ withPipeline(type, product, component) {
 
   after('smoketest:aat') {
     steps.archiveArtifacts allowEmptyArchive: true, artifacts: 'output/**/*'
+  }
+
+  before('functionalTest:aat') {
+    env.SKIP_FUNCTIONAL_TESTS = 'true'
   }
 
   after('smoketest:preview') {
