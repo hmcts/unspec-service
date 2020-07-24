@@ -193,6 +193,14 @@
   {
     "LiveFrom": "01/01/2017",
     "CaseTypeID": "UNSPECIFIED_CLAIMS",
+    "ID": "respondentSolicitor1claimResponseExtensionLabel4pm",
+    "Label": "All deadlines require a response before 4pm on the deadline day",
+    "FieldType": "Label",
+    "SecurityClassification": "Public"
+  },
+  {
+    "LiveFrom": "01/01/2017",
+    "CaseTypeID": "UNSPECIFIED_CLAIMS",
     "ID": "respondentSolicitor1claimResponseExtensionAccepted",
     "Label": "Do you agree to extend the deadline to this date?",
     "FieldType": "YesOrNo",
