@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import uk.gov.hmcts.reform.ccd.client.model.CaseDetails;
 import uk.gov.hmcts.reform.ccd.client.model.SearchResult;
+import uk.gov.hmcts.reform.unspec.model.search.Query;
 import uk.gov.hmcts.reform.unspec.service.CoreCaseDataService;
 
 import java.util.ArrayList;
@@ -21,13 +22,13 @@ public abstract class ElasticSearchService {
         SearchResult searchResult = coreCaseDataService.searchCases(query(startIndex));
         List<CaseDetails> caseDetails = new ArrayList<>(searchResult.getCases());
 
-        while (searchResult.getTotal() > caseDetails.size()) {
-            SearchResult result = coreCaseDataService.searchCases(query(startIndex + esDefaultSearchLimit));
+        for (int i = esDefaultSearchLimit; caseDetails.size() < searchResult.getTotal(); i = i + esDefaultSearchLimit) {
+            SearchResult result = coreCaseDataService.searchCases(query(i));
             caseDetails.addAll(result.getCases());
         }
 
         return caseDetails;
     }
 
-    abstract String query(int startIndex);
+    abstract Query query(int startIndex);
 }

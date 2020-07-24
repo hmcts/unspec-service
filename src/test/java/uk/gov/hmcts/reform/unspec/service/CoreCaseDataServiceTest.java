@@ -1,5 +1,6 @@
 package uk.gov.hmcts.reform.unspec.service;
 
+import org.elasticsearch.index.query.QueryBuilders;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -18,6 +19,7 @@ import uk.gov.hmcts.reform.idam.client.IdamClient;
 import uk.gov.hmcts.reform.idam.client.models.UserInfo;
 import uk.gov.hmcts.reform.unspec.callback.CaseEvent;
 import uk.gov.hmcts.reform.unspec.config.SystemUpdateUserConfiguration;
+import uk.gov.hmcts.reform.unspec.model.search.Query;
 
 import java.util.List;
 import java.util.Map;
@@ -68,7 +70,8 @@ class CoreCaseDataServiceTest {
             when(idamClient.getUserInfo(USER_AUTH_TOKEN)).thenReturn(UserInfo.builder().uid(USER_ID).build());
 
             when(coreCaseDataApi.startEventForCaseWorker(USER_AUTH_TOKEN, SERVICE_AUTH_TOKEN, USER_ID, JURISDICTION,
-                CASE_TYPE, Long.toString(CASE_ID), EVENT_ID))
+                                                         CASE_TYPE, Long.toString(CASE_ID), EVENT_ID
+            ))
                 .thenReturn(buildStartEventResponse());
         }
 
@@ -77,9 +80,17 @@ class CoreCaseDataServiceTest {
             service.triggerEvent(CASE_ID, CaseEvent.valueOf(EVENT_ID));
 
             verify(coreCaseDataApi).startEventForCaseWorker(USER_AUTH_TOKEN, SERVICE_AUTH_TOKEN, USER_ID,
-                JURISDICTION, CASE_TYPE, Long.toString(CASE_ID), EVENT_ID);
-            verify(coreCaseDataApi).submitEventForCaseWorker(USER_AUTH_TOKEN, SERVICE_AUTH_TOKEN, USER_ID, JURISDICTION,
-                CASE_TYPE, Long.toString(CASE_ID), true, buildCaseDataContent());
+                                                            JURISDICTION, CASE_TYPE, Long.toString(CASE_ID), EVENT_ID
+            );
+            verify(coreCaseDataApi).submitEventForCaseWorker(USER_AUTH_TOKEN,
+                                                             SERVICE_AUTH_TOKEN,
+                                                             USER_ID,
+                                                             JURISDICTION,
+                                                             CASE_TYPE,
+                                                             Long.toString(CASE_ID),
+                                                             true,
+                                                             buildCaseDataContent()
+            );
         }
 
         private StartEventResponse buildStartEventResponse() {
@@ -87,8 +98,8 @@ class CoreCaseDataServiceTest {
                 .eventId(EVENT_ID)
                 .token(EVENT_TOKEN)
                 .caseDetails(CaseDetails.builder()
-                    .data(Map.of("data", "some data"))
-                    .build())
+                                 .data(Map.of("data", "some data"))
+                                 .build())
                 .build();
         }
 
@@ -96,8 +107,8 @@ class CoreCaseDataServiceTest {
             return CaseDataContent.builder()
                 .eventToken(EVENT_TOKEN)
                 .event(Event.builder()
-                    .id(EVENT_ID)
-                    .build())
+                           .id(EVENT_ID)
+                           .build())
                 .data(Map.of("data", "some data"))
                 .build();
         }
@@ -108,18 +119,22 @@ class CoreCaseDataServiceTest {
 
         @Test
         void shouldReturnCases_WhenSearchingCasesAsSystemUpdateUser() {
-            String query = "query";
+            Query query = new Query(
+                QueryBuilders.matchQuery("field", "value"),
+                List.of(),
+                0
+            );
 
             List<CaseDetails> cases = List.of(CaseDetails.builder().id(1L).build());
             SearchResult searchResult = SearchResult.builder().cases(cases).build();
 
-            when(coreCaseDataApi.searchCases(USER_AUTH_TOKEN, SERVICE_AUTH_TOKEN, CASE_TYPE, query))
+            when(coreCaseDataApi.searchCases(USER_AUTH_TOKEN, SERVICE_AUTH_TOKEN, CASE_TYPE, query.toString()))
                 .thenReturn(searchResult);
 
             List<CaseDetails> casesFound = service.searchCases(query).getCases();
 
             assertThat(casesFound).isEqualTo(cases);
-            verify(coreCaseDataApi).searchCases(USER_AUTH_TOKEN, SERVICE_AUTH_TOKEN, CASE_TYPE, query);
+            verify(coreCaseDataApi).searchCases(USER_AUTH_TOKEN, SERVICE_AUTH_TOKEN, CASE_TYPE, query.toString());
             verify(idamClient).getAccessToken(userConfig.getUserName(), userConfig.getPassword());
         }
     }
