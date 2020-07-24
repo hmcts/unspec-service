@@ -40,7 +40,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import static uk.gov.hmcts.reform.unspec.enums.AllocatedTrack.SMALL_CLAIM;
 import static uk.gov.hmcts.reform.unspec.enums.ClaimType.PERSONAL_INJURY_WORK;
-import static uk.gov.hmcts.reform.unspec.handler.CreateClaimCallbackHandler.CONFIRMATION_SUMMARY;
+import static uk.gov.hmcts.reform.unspec.handler.callback.CreateClaimCallbackHandler.CONFIRMATION_SUMMARY;
 import static uk.gov.hmcts.reform.unspec.helpers.DateFormatHelper.DATE_TIME_AT;
 import static uk.gov.hmcts.reform.unspec.helpers.DateFormatHelper.formatLocalDateTime;
 import static uk.gov.hmcts.reform.unspec.model.documents.DocumentType.SEALED_CLAIM;
