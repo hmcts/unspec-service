@@ -1,4 +1,4 @@
-package uk.gov.hmcts.reform.unspec.handler;
+package uk.gov.hmcts.reform.unspec.handler.callback;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;

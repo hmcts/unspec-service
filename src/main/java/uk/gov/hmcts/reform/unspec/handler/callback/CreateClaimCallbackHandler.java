@@ -1,4 +1,4 @@
-package uk.gov.hmcts.reform.unspec.handler;
+package uk.gov.hmcts.reform.unspec.handler.callback;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
