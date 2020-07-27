@@ -52,7 +52,7 @@ payments:
 
 idam:
   s2s-auth:
-    microservice: unspec-service
+    microservice: unspec_service
 
 document_management:
   userRoles: "caseworker-civil,caseworker-civil-solicitor"
