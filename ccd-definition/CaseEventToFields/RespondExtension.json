@@ -83,7 +83,6 @@
     "PageID": "Reason",
     "PageDisplayOrder": 3,
     "PageColumnNumber": 1,
-    "FieldShowCondition": "respondentSolicitor1claimResponseExtensionCounter=\"Yes\"",
     "PageShowCondition": "respondentSolicitor1claimResponseExtensionAccepted=\"No\"",
     "ShowSummaryChangeOption": "Y"
   }
