@@ -14,6 +14,7 @@ import uk.gov.hmcts.reform.unspec.callback.CaseEvent;
 import uk.gov.hmcts.reform.unspec.enums.ServedDocuments;
 import uk.gov.hmcts.reform.unspec.enums.ServiceMethod;
 import uk.gov.hmcts.reform.unspec.model.CaseData;
+import uk.gov.hmcts.reform.unspec.service.docmosis.cos.CertificateOfServiceGenerator;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -36,6 +37,7 @@ public class ConfirmServiceCallbackHandler extends CallbackHandler {
     private static final List<CaseEvent> EVENTS = Collections.singletonList(CONFIRM_SERVICE);
 
     private final ObjectMapper mapper;
+    private final CertificateOfServiceGenerator certificateOfServiceGenerator;
 
     @Override
     protected Map<CallbackType, Callback> callbacks() {
