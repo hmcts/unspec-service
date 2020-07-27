@@ -11,10 +11,12 @@ import uk.gov.hmcts.reform.unspec.callback.CallbackHandler;
 import uk.gov.hmcts.reform.unspec.callback.CallbackParams;
 import uk.gov.hmcts.reform.unspec.callback.CallbackType;
 import uk.gov.hmcts.reform.unspec.callback.CaseEvent;
+import uk.gov.hmcts.reform.unspec.enums.YesOrNo;
 import uk.gov.hmcts.reform.unspec.validation.RequestExtensionValidator;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -32,6 +34,7 @@ public class RespondExtensionCallbackHandler extends CallbackHandler {
     public static final String RESPONSE_DEADLINE = "responseDeadline";
     public static final String PROPOSED_DEADLINE = "respondentSolicitor1claimResponseExtensionProposedDeadline";
     public static final String EXTENSION_REASON = "respondentSolicitor1claimResponseExtensionReason";
+    public static final String COUNTER = "respondentSolicitor1claimResponseExtensionCounter";
 
     private final ObjectMapper mapper;
     private final RequestExtensionValidator validator;
@@ -67,19 +70,18 @@ public class RespondExtensionCallbackHandler extends CallbackHandler {
 
     private CallbackResponse validateRequestedDeadline(CallbackParams callbackParams) {
         CaseDetails caseDetails = callbackParams.getRequest().getCaseDetails();
+        YesOrNo counter = mapper.convertValue(caseDetails.getData().get(COUNTER), YesOrNo.class);
+        List<String> errors = new ArrayList<>();
 
-        LocalDate extensionCounterDate = mapper.convertValue(
-            caseDetails.getData().get(COUNTER_DEADLINE),
-            LocalDate.class
-        );
+        if (counter == YesOrNo.YES) {
+            LocalDate extensionCounterDate = getCounterDeadline(caseDetails.getData());
+            LocalDateTime responseDeadline = mapToDateTime(caseDetails.getData(), RESPONSE_DEADLINE);
 
-        LocalDateTime responseDeadline = mapper.convertValue(
-            caseDetails.getData().get(RESPONSE_DEADLINE),
-            LocalDateTime.class
-        );
+            errors = validator.validateProposedDeadline(extensionCounterDate, responseDeadline);
+        }
 
         return AboutToStartOrSubmitCallbackResponse.builder()
-            .errors(validator.validateProposedDeadline(extensionCounterDate, responseDeadline))
+            .errors(errors)
             .build();
     }
 
@@ -87,12 +89,12 @@ public class RespondExtensionCallbackHandler extends CallbackHandler {
         Map<String, Object> data = callbackParams.getRequest().getCaseDetails().getData();
 
         if (data.get(COUNTER_DEADLINE) != null) {
-            LocalDate newDeadline = mapper.convertValue(data.get(COUNTER_DEADLINE), LocalDate.class);
+            LocalDate newDeadline = getCounterDeadline(data);
             data.put(RESPONSE_DEADLINE, newDeadline.atTime(16, 0));
         }
 
         if (data.get(PROPOSED_DEADLINE) != null) {
-            LocalDate newDeadline = mapper.convertValue(data.get(PROPOSED_DEADLINE), LocalDate.class);
+            LocalDate newDeadline = mapToDate(data, PROPOSED_DEADLINE);
             data.put(RESPONSE_DEADLINE, newDeadline.atTime(16, 0));
         }
 
@@ -103,9 +105,7 @@ public class RespondExtensionCallbackHandler extends CallbackHandler {
 
     private SubmittedCallbackResponse buildConfirmation(CallbackParams callbackParams) {
         Map<String, Object> data = callbackParams.getRequest().getCaseDetails().getData();
-        LocalDateTime responseDeadline = mapper.convertValue(
-            data.get(RESPONSE_DEADLINE), LocalDateTime.class
-        );
+        LocalDateTime responseDeadline = mapToDateTime(data, RESPONSE_DEADLINE);
 
         String claimNumber = "TBC";
 
@@ -113,9 +113,23 @@ public class RespondExtensionCallbackHandler extends CallbackHandler {
             "<br />The defendant must respond before 4pm on %s", formatLocalDateTime(responseDeadline, DATE));
 
         return SubmittedCallbackResponse.builder()
-            .confirmationHeader(format("# You've responded to the request for more time\n## Claim number: %s",
-                claimNumber))
+            .confirmationHeader(format(
+                "# You've responded to the request for more time\n## Claim number: %s",
+                claimNumber
+            ))
             .confirmationBody(body)
             .build();
+    }
+
+    private LocalDate getCounterDeadline(Map<String, Object> data) {
+        return mapToDate(data, COUNTER_DEADLINE);
+    }
+
+    private LocalDate mapToDate(Map<String, Object> data, String field) {
+        return mapper.convertValue(data.get(field), LocalDate.class);
+    }
+
+    private LocalDateTime mapToDateTime(Map<String, Object> data, String field) {
+        return mapper.convertValue(data.get(field), LocalDateTime.class);
     }
 }

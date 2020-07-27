@@ -11,6 +11,7 @@ import uk.gov.hmcts.reform.ccd.client.model.AboutToStartOrSubmitCallbackResponse
 import uk.gov.hmcts.reform.ccd.client.model.SubmittedCallbackResponse;
 import uk.gov.hmcts.reform.unspec.callback.CallbackParams;
 import uk.gov.hmcts.reform.unspec.callback.CallbackType;
+import uk.gov.hmcts.reform.unspec.enums.YesOrNo;
 import uk.gov.hmcts.reform.unspec.validation.RequestExtensionValidator;
 
 import java.time.LocalDate;
@@ -34,6 +35,7 @@ class RespondExtensionCallbackHandlerTest extends BaseCallbackHandlerTest {
 
     public static final String RESPONSE_DEADLINE = "responseDeadline";
     public static final String COUNTER_DATE = "respondentSolicitor1claimResponseExtensionCounterDate";
+    public static final String COUNTER = "respondentSolicitor1claimResponseExtensionCounter";
 
     @Autowired
     private RespondExtensionCallbackHandler handler;
@@ -73,7 +75,8 @@ class RespondExtensionCallbackHandlerTest extends BaseCallbackHandlerTest {
         void shouldReturnExpectedError_whenValuesAreInvalid() {
             CallbackParams params = callbackParamsOf(
                 of(COUNTER_DATE, now().minusDays(1),
-                    RESPONSE_DEADLINE, now().atTime(16, 0)
+                   COUNTER, YesOrNo.YES,
+                   RESPONSE_DEADLINE, now().atTime(16, 0)
                 ),
                 CallbackType.MID
             );
@@ -89,10 +92,21 @@ class RespondExtensionCallbackHandlerTest extends BaseCallbackHandlerTest {
         void shouldReturnNoError_whenValuesAreValid() {
             CallbackParams params = callbackParamsOf(
                 of(COUNTER_DATE, now().plusDays(14),
-                    RESPONSE_DEADLINE, now().atTime(16, 0)
+                   COUNTER, YesOrNo.YES,
+                   RESPONSE_DEADLINE, now().atTime(16, 0)
                 ),
                 CallbackType.MID
             );
+
+            AboutToStartOrSubmitCallbackResponse response =
+                (AboutToStartOrSubmitCallbackResponse) handler.handle(params);
+
+            assertThat(response.getErrors()).isEmpty();
+        }
+
+        @Test
+        void shouldReturnNoError_whenCounterDateIsNo() {
+            CallbackParams params = callbackParamsOf(of(COUNTER, YesOrNo.NO), CallbackType.MID);
 
             AboutToStartOrSubmitCallbackResponse response =
                 (AboutToStartOrSubmitCallbackResponse) handler.handle(params);
