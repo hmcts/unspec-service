@@ -15,8 +15,6 @@ management:
         include: health, info, prometheus
 
 spring:
-  main:
-    allow-bean-definition-overriding: true
   application:
     name: unspec-service
   cache:
@@ -38,24 +36,106 @@ spring:
 oidc:
   issuer: ${OIDC_ISSUER:http://fr-am:8080/openam/oauth2/hmcts}
 
-idam:
-  web:
-    url: "http://localhost:9002"
+fees:
   api:
-    url: "http://localhost:5000"
+    service: civil money claims
+    jurisdiction1: civil
+    jurisdiction2: county court
+    channel: default
+    event: issue
+
+payments:
+  api:
+    # TODO: update once f&p onboarding is completed
+    site_id:
+    service:
+
+idam:
   s2s-auth:
     microservice: unspec_service
-    url: "http://localhost:4502"
-    totp_secret: "AABBCCDDEEFFGGHH"
 
 document_management:
-  url: "http://localhost:4506"
   userRoles: "caseworker-civil,caseworker-civil-solicitor"
-
-docmosis:
-  tornado:
-    url: "http://localhost:5433"
-    key: "0UAD-KLTK-JALP-DKIA-EBBH-1ELH-PBKQ-KS91-23ED-8-97D1"
 
 unspecified:
   response-pack-url: https://formfinder.hmctsformfinder.justice.gov.uk/n9-eng.pdf
+  system-update:
+    username: 'civil-system-update@mailnesia.com'
+    password: 'Password12'
+
+core_case_data:
+  api:
+    url: http://localhost:4452
+
+---
+
+spring:
+  profiles: local
+
+fees:
+  api:
+    url: http://localhost:8765
+
+payments:
+  api:
+    url: http://localhost:8765
+
+idam:
+  web:
+    url: http://localhost:9002
+  api:
+    url: http://localhost:5000
+  s2s-auth:
+    url: http://localhost:4502
+    totp_secret: AABBCCDDEEFFGGHH
+  client:
+    id: unspec
+    redirect_uri: https://localhost:9000/oauth2/callback
+    secret: OOOOOOOOOOOOOOOO
+
+document_management:
+  url: http://localhost:4506
+
+docmosis:
+  tornado:
+    url: http://localhost:5433
+
+---
+
+spring:
+  profiles: integration-test
+  main:
+    lazy-initialization: true
+
+management:
+  endpoints:
+    enabled-by-default: false
+
+fees:
+  api:
+    url: http://fake-fees-register-api
+
+payments:
+  api:
+    url: http://fake-payment-register-api
+
+idam:
+  web:
+    url: http://fake-idam-web
+  api:
+    url: http://fake-idam-api
+  s2s-auth:
+    url: http://fake-service-auth-provider-api
+    totp_secret: AABBCCDDEEFFGGHH
+
+core_case_data:
+  api:
+    url: http://fake-ccd-data-store-api
+
+document_management:
+  url: http://fake-document-management-api
+
+docmosis:
+  tornado:
+    url: http://fake-docmosis-api
+    key: fake-key

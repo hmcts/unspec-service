@@ -1,14 +1,12 @@
 package uk.gov.hmcts.reform.unspec.service.documentmanagement;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.Resource;
 import org.springframework.http.ResponseEntity;
 import org.springframework.retry.annotation.Backoff;
-import org.springframework.retry.annotation.Recover;
 import org.springframework.retry.annotation.Retryable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -21,50 +19,35 @@ import uk.gov.hmcts.reform.document.domain.Document;
 import uk.gov.hmcts.reform.document.domain.UploadResponse;
 import uk.gov.hmcts.reform.document.utils.InMemoryMultipartFile;
 import uk.gov.hmcts.reform.idam.client.models.UserInfo;
+import uk.gov.hmcts.reform.unspec.config.DocumentManagementConfiguration;
 import uk.gov.hmcts.reform.unspec.helpers.LocalDateTimeHelper;
 import uk.gov.hmcts.reform.unspec.model.documents.CaseDocument;
 import uk.gov.hmcts.reform.unspec.model.documents.PDF;
 import uk.gov.hmcts.reform.unspec.service.UserService;
 
 import java.net.URI;
-import java.util.List;
 
 import static java.util.Collections.singletonList;
 
+@Slf4j
 @Service
+@RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class DocumentManagementService {
 
-    private final Logger logger = LoggerFactory.getLogger(DocumentManagementService.class);
     public static final String UNSPEC = "Unspec";
-    private static final String FILES_NAME = "files";
+    protected static final String FILES_NAME = "files";
 
     private final DocumentUploadClientApi documentUploadClientApi;
     private final DocumentDownloadClientApi documentDownloadClientApi;
     private final DocumentMetadataDownloadClientApi documentMetadataDownloadClient;
     private final AuthTokenGenerator authTokenGenerator;
     private final UserService userService;
-    private final List<String> userRoles;
+    private final DocumentManagementConfiguration documentManagementConfiguration;
 
-    @Autowired
-    public DocumentManagementService(
-        DocumentUploadClientApi documentUploadClientApi,
-        DocumentDownloadClientApi documentDownloadClientApi,
-        DocumentMetadataDownloadClientApi documentMetadataDownloadApi,
-        AuthTokenGenerator authTokenGenerator,
-        UserService userService,
-        @Value("${document_management.userRoles}") List<String> userRoles
-    ) {
-        this.documentUploadClientApi = documentUploadClientApi;
-        this.documentDownloadClientApi = documentDownloadClientApi;
-        this.documentMetadataDownloadClient = documentMetadataDownloadApi;
-        this.authTokenGenerator = authTokenGenerator;
-        this.userService = userService;
-        this.userRoles = userRoles;
-    }
-
-    @Retryable(value = {DocumentManagementException.class}, backoff = @Backoff(delay = 200))
+    @Retryable(value = {DocumentUploadException.class}, backoff = @Backoff(delay = 200))
     public CaseDocument uploadDocument(String authorisation, PDF pdf) {
         String originalFileName = pdf.getFilename();
+        log.info("Uploading file {}", originalFileName);
         try {
             MultipartFile file
                 = new InMemoryMultipartFile(FILES_NAME, originalFileName, PDF.CONTENT_TYPE, pdf.getBytes());
@@ -74,17 +57,14 @@ public class DocumentManagementService {
                 authorisation,
                 authTokenGenerator.generate(),
                 userInfo.getUid(),
-                userRoles,
+                documentManagementConfiguration.getUserRoles(),
                 Classification.RESTRICTED,
                 singletonList(file)
             );
 
             Document document = response.getEmbedded().getDocuments().stream()
                 .findFirst()
-                .orElseThrow(() -> {
-                    String message = "Document management failed uploading file" + originalFileName;
-                    return new DocumentManagementException(message);
-                });
+                .orElseThrow(() -> new DocumentUploadException(originalFileName));
 
             return CaseDocument.builder()
                 .documentLink(uk.gov.hmcts.reform.unspec.model.documents.Document.builder()
@@ -99,27 +79,18 @@ public class DocumentManagementService {
                 .createdBy(UNSPEC)
                 .build();
         } catch (Exception ex) {
-            throw new DocumentManagementException(String.format(
-                "Unable to upload document %s to document management.",
-                originalFileName
-            ), ex);
+            log.error("Failed uploading file {}", originalFileName, ex);
+            throw new DocumentUploadException(originalFileName, ex);
         }
     }
 
-    @Recover
-    public CaseDocument logUploadDocumentFailure(DocumentManagementException exception,
-                                                 String authorisation,
-                                                 PDF pdf) {
-        logger.info(exception.getMessage() + " " + exception.getCause(), exception);
-        throw exception;
-    }
-
-    @Retryable(value = DocumentManagementException.class, backoff = @Backoff(delay = 200))
-    public byte[] downloadDocument(String authorisation, URI documentManagementUrl) {
+    @Retryable(value = DocumentDownloadException.class, backoff = @Backoff(delay = 200))
+    public byte[] downloadDocument(String authorisation, String documentPath) {
+        log.info("Downloading document {}", documentPath);
         try {
             UserInfo userInfo = userService.getUserInfo(authorisation);
-            String userRoles = String.join(",", this.userRoles);
-            Document documentMetadata = getDocumentMetaData(authorisation, documentManagementUrl.getPath());
+            String userRoles = String.join(",", this.documentManagementConfiguration.getUserRoles());
+            Document documentMetadata = getDocumentMetaData(authorisation, documentPath);
 
             ResponseEntity<Resource> responseEntity = documentDownloadClientApi.downloadBinary(
                 authorisation,
@@ -130,31 +101,19 @@ public class DocumentManagementService {
             );
 
             ByteArrayResource resource = (ByteArrayResource) responseEntity.getBody();
-            //noinspection ConstantConditions let the NPE be thrown
             return resource.getByteArray();
         } catch (Exception ex) {
-            throw new DocumentManagementException(
-                String.format(
-                    "Unable to download document %s from document management.",
-                    documentManagementUrl
-                ), ex);
+            log.error("Failed downloading document {}", documentPath, ex);
+            throw new DocumentDownloadException(documentPath, ex);
         }
     }
 
-    @Recover
-    public byte[] logDownloadDocumentFailure(
-        DocumentManagementException exception,
-        String authorisation,
-        URI documentManagementUrl
-    ) {
-        logger.warn(exception.getMessage() + " " + exception.getCause(), exception);
-        throw exception;
-    }
-
     public Document getDocumentMetaData(String authorisation, String documentPath) {
+        log.info("Getting metadata for file {}", documentPath);
+
         try {
             UserInfo userInfo = userService.getUserInfo(authorisation);
-            String userRoles = String.join(",", this.userRoles);
+            String userRoles = String.join(",", this.documentManagementConfiguration.getUserRoles());
             return documentMetadataDownloadClient.getDocumentMetadata(
                 authorisation,
                 authTokenGenerator.generate(),
@@ -163,8 +122,8 @@ public class DocumentManagementService {
                 documentPath
             );
         } catch (Exception ex) {
-            throw new DocumentManagementException(
-                "Unable to download document from document management.", ex);
+            log.error("Failed getting metadata for {}", documentPath, ex);
+            throw new DocumentDownloadException(documentPath, ex);
         }
     }
 }

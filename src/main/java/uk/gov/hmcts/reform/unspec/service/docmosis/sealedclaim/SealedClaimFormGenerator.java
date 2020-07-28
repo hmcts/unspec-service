@@ -1,8 +1,10 @@
 package uk.gov.hmcts.reform.unspec.service.docmosis.sealedclaim;
 
-import org.apache.commons.lang.StringUtils;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import uk.gov.hmcts.reform.unspec.callback.CallbackParams;
+import uk.gov.hmcts.reform.unspec.helpers.CaseDetailsConverter;
 import uk.gov.hmcts.reform.unspec.model.Address;
 import uk.gov.hmcts.reform.unspec.model.CaseData;
 import uk.gov.hmcts.reform.unspec.model.Party;
@@ -17,19 +19,24 @@ import uk.gov.hmcts.reform.unspec.model.documents.PDF;
 import uk.gov.hmcts.reform.unspec.service.docmosis.DocumentGeneratorService;
 import uk.gov.hmcts.reform.unspec.service.docmosis.TemplateDataGenerator;
 import uk.gov.hmcts.reform.unspec.service.documentmanagement.DocumentManagementService;
+import uk.gov.hmcts.reform.unspec.utils.CaseNameUtils;
 
 import java.time.LocalDate;
 import java.util.List;
 
+import static uk.gov.hmcts.reform.unspec.callback.CallbackParams.Params.BEARER_TOKEN;
 import static uk.gov.hmcts.reform.unspec.service.docmosis.DocmosisTemplates.N1;
+import static uk.gov.hmcts.reform.unspec.utils.PartyNameUtils.getPartyNameBasedOnType;
 
 @Service
+@RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class SealedClaimFormGenerator extends TemplateDataGenerator<SealedClaimForm> {
 
     public static final String TEMP_CLAIM_DETAILS = "The claimant seeks compensation from injuries and losses arising"
         + " from a road traffic accident which occurred on 1st July 2017 as a result of the negligence of the first "
         + "defendant.The claimant seeks compensation from injuries and losses arising from a road traffic accident "
-        + "which occurred on 1st July 2017 as a result of the negligence of the first defendant."; //TODO
+        + "which occurred on 1st July 2017 as a result of the negligence of the first defendant.";
+    //TODO this need ui implementation to capture claim details
 
     private static final Representative TEMP_REPRESENTATIVE = Representative.builder()
         .contactName("MiguelSpooner")
@@ -43,24 +50,18 @@ public class SealedClaimFormGenerator extends TemplateDataGenerator<SealedClaimF
                             .postTown("Newport")
                             .postCode("NP204AG")
                             .build())
-        .build(); //TODO
-    public static final String REFERENCE_NUMBER = "000LR095"; //TODO
-    public static final String CASE_NAME = "SamClark v AlexRichards"; //TODO
+        .build(); //TODO Rep details need to be picked from reference data
+    public static final String REFERENCE_NUMBER = "000LR095"; //TODO Need to agree a way to get
     private final DocumentManagementService documentManagementService;
     private final DocumentGeneratorService documentGeneratorService;
+    private final CaseDetailsConverter caseDetailsConverter;
 
-    @Autowired
-    public SealedClaimFormGenerator(DocumentManagementService documentManagementService,
-                                    DocumentGeneratorService documentGeneratorService) {
-        this.documentManagementService = documentManagementService;
-        this.documentGeneratorService = documentGeneratorService;
-    }
-
-    public CaseDocument generate(CaseData caseData, String authorisation) {
+    public CaseDocument generate(CallbackParams callbackParams) {
+        CaseData caseData = caseDetailsConverter.toCaseData(callbackParams.getRequest().getCaseDetails());
         SealedClaimForm templateData = getTemplateData(caseData);
 
         DocmosisDocument docmosisDocument = documentGeneratorService.generateDocmosisDocument(templateData, N1);
-
+        String authorisation = callbackParams.getParams().get(BEARER_TOKEN).toString();
         return documentManagementService.uploadDocument(
             authorisation,
             new PDF(getFileName(caseData), docmosisDocument.getBytes(), DocumentType.SEALED_CLAIM)
@@ -86,14 +87,14 @@ public class SealedClaimFormGenerator extends TemplateDataGenerator<SealedClaimF
             .submittedOn(LocalDate.of(2020, 9, 29))
             .claimantExternalReference(caseData.getSolicitorReferences().getClaimantReference())
             .defendantExternalReference(caseData.getSolicitorReferences().getClaimantReference())
-            .caseName(CASE_NAME)
+            .caseName(CaseNameUtils.toCaseName.apply(caseData))
             .build();
     }
 
     private List<Defendant> geDefendants(CaseData caseData) {
         Party respondent = caseData.getRespondent();
         return List.of(Defendant.builder()
-                           .name(getNameBasedOnType(respondent))
+                           .name(getPartyNameBasedOnType(respondent))
                            .primaryAddress(respondent.getPrimaryAddress())
                            .representative(TEMP_REPRESENTATIVE)
                            .build());
@@ -102,34 +103,8 @@ public class SealedClaimFormGenerator extends TemplateDataGenerator<SealedClaimF
     private List<Claimant> getClaimants(CaseData caseData) {
         Party applicant = caseData.getClaimant();
         return List.of(Claimant.builder()
-                           .name(getNameBasedOnType(applicant))
+                           .name(getPartyNameBasedOnType(applicant))
                            .primaryAddress(applicant.getPrimaryAddress())
                            .build());
-    }
-
-    private String getNameBasedOnType(Party party) {
-        switch (party.getType()) {
-            //            case COMPANY:
-            //                return party.getCompanyName();
-            case INDIVIDUAL:
-                return
-                    getTitle(party.getIndividualTitle())
-                        + party.getIndividualFirstName()
-                        + " "
-                        + party.getIndividualLastName();
-            //            case SOLE_TRADER:
-            //                return getTitle(party.getSoleTraderTitle())
-            //                    + party.getSoleTraderFirstName()
-            //                    + party.getSoleTraderLastName();
-            //
-            //            case ORGANISATION:
-            //                return party.getOrganisationName();
-            default:
-                throw new IllegalArgumentException("invalid Applicant type " + party.getType());
-        }
-    }
-
-    private String getTitle(String title) {
-        return StringUtils.isBlank(title) ? "" : title + " ";
     }
 }

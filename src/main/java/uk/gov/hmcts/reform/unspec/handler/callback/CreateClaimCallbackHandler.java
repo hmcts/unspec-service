@@ -1,6 +1,7 @@
-package uk.gov.hmcts.reform.unspec.handler;
+package uk.gov.hmcts.reform.unspec.handler.callback;
 
-import org.springframework.beans.factory.annotation.Value;
+import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import uk.gov.hmcts.reform.ccd.client.model.AboutToStartOrSubmitCallbackResponse;
 import uk.gov.hmcts.reform.ccd.client.model.CallbackResponse;
@@ -11,11 +12,11 @@ import uk.gov.hmcts.reform.unspec.callback.CallbackHandler;
 import uk.gov.hmcts.reform.unspec.callback.CallbackParams;
 import uk.gov.hmcts.reform.unspec.callback.CallbackType;
 import uk.gov.hmcts.reform.unspec.callback.CaseEvent;
+import uk.gov.hmcts.reform.unspec.config.ClaimIssueConfiguration;
 import uk.gov.hmcts.reform.unspec.enums.ClaimType;
 import uk.gov.hmcts.reform.unspec.helpers.CaseDetailsConverter;
 import uk.gov.hmcts.reform.unspec.model.CaseData;
 import uk.gov.hmcts.reform.unspec.model.ClaimValue;
-import uk.gov.hmcts.reform.unspec.model.common.Element;
 import uk.gov.hmcts.reform.unspec.model.documents.CaseDocument;
 import uk.gov.hmcts.reform.unspec.model.documents.DocumentType;
 import uk.gov.hmcts.reform.unspec.service.docmosis.sealedclaim.SealedClaimFormGenerator;
@@ -29,13 +30,13 @@ import java.util.List;
 import java.util.Map;
 
 import static java.lang.String.format;
-import static uk.gov.hmcts.reform.unspec.callback.CallbackParams.Params.BEARER_TOKEN;
 import static uk.gov.hmcts.reform.unspec.callback.CaseEvent.CREATE_CASE;
 import static uk.gov.hmcts.reform.unspec.enums.AllocatedTrack.getAllocatedTrack;
 import static uk.gov.hmcts.reform.unspec.helpers.DateFormatHelper.DATE_TIME_AT;
 import static uk.gov.hmcts.reform.unspec.helpers.DateFormatHelper.formatLocalDateTime;
 
 @Service
+@RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class CreateClaimCallbackHandler extends CallbackHandler {
 
     private static final List<CaseEvent> EVENTS = Collections.singletonList(CREATE_CASE);
@@ -46,17 +47,9 @@ public class CreateClaimCallbackHandler extends CallbackHandler {
         + "\n* Confirm service online within 21 days of sending the form, particulars and response pack, before"
         + " 4pm if you're doing this on the due day";
 
-    private final String responsePackLink;
     private final SealedClaimFormGenerator sealedClaimFormGenerator;
+    private final ClaimIssueConfiguration claimIssueConfiguration;
     private final CaseDetailsConverter caseDetailsConverter;
-
-    public CreateClaimCallbackHandler(CaseDetailsConverter caseDetailsConverter,
-                                      SealedClaimFormGenerator sealedClaimFormGenerator,
-                                      @Value("${unspecified.response-pack-url}") String responsePackLink) {
-        this.caseDetailsConverter = caseDetailsConverter;
-        this.sealedClaimFormGenerator = sealedClaimFormGenerator;
-        this.responsePackLink = responsePackLink;
-    }
 
     @Override
     protected Map<CallbackType, Callback> callbacks() {
@@ -73,18 +66,17 @@ public class CreateClaimCallbackHandler extends CallbackHandler {
     }
 
     private CallbackResponse validateClaimValues(CallbackParams callbackParams) {
-        CaseData caseData = caseDetailsConverter.to(callbackParams.getRequest().getCaseDetails());
+        CaseData caseData = caseDetailsConverter.toCaseData(callbackParams.getRequest().getCaseDetails());
         List<String> errors = new ArrayList<>();
 
         ClaimValue claimValue = caseData.getClaimValue();
-        if (claimValue != null && claimValue.hasLargerLowerValue()) {
+        if (claimValue.hasLargerLowerValue()) {
             errors.add("CONTENT TBC: Higher value must not be lower than the lower value.");
         }
 
         Map<String, Object> data = callbackParams.getRequest().getCaseDetails().getData();
         if (errors.isEmpty()) {
             ClaimType claimType = caseData.getClaimType();
-
             data.put("allocatedTrack", getAllocatedTrack(claimValue, claimType));
         }
 
@@ -95,35 +87,19 @@ public class CreateClaimCallbackHandler extends CallbackHandler {
     }
 
     private CallbackResponse issueClaim(CallbackParams callbackParams) {
-        List<String> errors = new ArrayList<>();
-        String authorisation = callbackParams.getParams().get(BEARER_TOKEN).toString();
-
         CaseDetails caseDetails = callbackParams.getRequest().getCaseDetails();
-        CaseData caseData = caseDetailsConverter.to(caseDetails);
-        CaseDocument sealedClaim = sealedClaimFormGenerator.generate(caseData, authorisation);
+        CaseDocument sealedClaim = sealedClaimFormGenerator.generate(callbackParams);
         Map<String, Object> data = caseDetails.getData();
-        data.put("systemGeneratedCaseDocuments", systemGeneratedDocuments(caseData, sealedClaim));
+        data.put("systemGeneratedCaseDocuments", ElementUtils.wrapElements(sealedClaim));
         data.put("claimIssuedDate", LocalDate.now());
 
         return AboutToStartOrSubmitCallbackResponse.builder()
             .data(data)
-            .errors(errors)
             .build();
     }
 
-    private List<Element<CaseDocument>> systemGeneratedDocuments(CaseData caseData, CaseDocument sealedClaim) {
-        List<Element<CaseDocument>> caseDocuments = new ArrayList<>();
-        List<Element<CaseDocument>> systemGeneratedCaseDocuments = caseData.getSystemGeneratedCaseDocuments();
-        if (systemGeneratedCaseDocuments != null && !systemGeneratedCaseDocuments.isEmpty()) {
-            caseDocuments.addAll(systemGeneratedCaseDocuments);
-        }
-        caseDocuments.add(Element.<CaseDocument>builder().value(sealedClaim).build());
-
-        return caseDocuments;
-    }
-
     private SubmittedCallbackResponse buildConfirmation(CallbackParams callbackParams) {
-        CaseData caseData = caseDetailsConverter.to(callbackParams.getRequest().getCaseDetails());
+        CaseData caseData = caseDetailsConverter.toCaseData(callbackParams.getRequest().getCaseDetails());
         Long documentSize = ElementUtils.unwrapElements(caseData.getSystemGeneratedCaseDocuments()).stream()
             .filter(c -> c.getDocumentType() == DocumentType.SEALED_CLAIM)
             .findFirst()
@@ -138,7 +114,7 @@ public class CreateClaimCallbackHandler extends CallbackHandler {
             CONFIRMATION_SUMMARY,
             format("/cases/case-details/%s#CaseDocuments", caseData.getCcdCaseReference()),
             documentSize / 1024,
-            responsePackLink,
+            claimIssueConfiguration.getResponsePackLink(),
             formattedServiceDeadline
         );
 

@@ -1,4 +1,4 @@
-package uk.gov.hmcts.reform.unspec.handler;
+package uk.gov.hmcts.reform.unspec.handler.callback;
 
 import org.springframework.boot.test.mock.mockito.MockBean;
 import uk.gov.hmcts.reform.authorisation.generators.AuthTokenGenerator;

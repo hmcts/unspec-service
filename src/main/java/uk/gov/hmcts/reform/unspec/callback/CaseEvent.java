@@ -7,7 +7,9 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public enum CaseEvent {
     CREATE_CASE("CREATE_CLAIM"),
-    CONFIRM_SERVICE("CONFIRM_SERVICE");
+    CONFIRM_SERVICE("CONFIRM_SERVICE"),
+    REQUEST_EXTENSION("REQUEST_EXTENSION"),
+    MOVE_TO_STAYED("MOVE_TO_STAYED");
 
     private final String value;
 }

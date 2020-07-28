@@ -1,4 +1,4 @@
-package uk.gov.hmcts.reform.unspec.handler;
+package uk.gov.hmcts.reform.unspec.handler.callback;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -17,6 +17,7 @@ import uk.gov.hmcts.reform.ccd.client.model.AboutToStartOrSubmitCallbackResponse
 import uk.gov.hmcts.reform.ccd.client.model.SubmittedCallbackResponse;
 import uk.gov.hmcts.reform.unspec.callback.CallbackParams;
 import uk.gov.hmcts.reform.unspec.callback.CallbackType;
+import uk.gov.hmcts.reform.unspec.config.ClaimIssueConfiguration;
 import uk.gov.hmcts.reform.unspec.helpers.CaseDetailsConverter;
 import uk.gov.hmcts.reform.unspec.model.CaseData;
 import uk.gov.hmcts.reform.unspec.model.ClaimValue;
@@ -26,6 +27,7 @@ import uk.gov.hmcts.reform.unspec.model.documents.Document;
 import uk.gov.hmcts.reform.unspec.service.docmosis.sealedclaim.SealedClaimFormGenerator;
 import uk.gov.hmcts.reform.unspec.utils.ResourceReader;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.HashMap;
@@ -35,11 +37,10 @@ import java.util.Map;
 import static java.lang.String.format;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 import static uk.gov.hmcts.reform.unspec.enums.AllocatedTrack.SMALL_CLAIM;
 import static uk.gov.hmcts.reform.unspec.enums.ClaimType.PERSONAL_INJURY_WORK;
-import static uk.gov.hmcts.reform.unspec.handler.CreateClaimCallbackHandler.CONFIRMATION_SUMMARY;
+import static uk.gov.hmcts.reform.unspec.handler.callback.CreateClaimCallbackHandler.CONFIRMATION_SUMMARY;
 import static uk.gov.hmcts.reform.unspec.helpers.DateFormatHelper.DATE_TIME_AT;
 import static uk.gov.hmcts.reform.unspec.helpers.DateFormatHelper.formatLocalDateTime;
 import static uk.gov.hmcts.reform.unspec.model.documents.DocumentType.SEALED_CLAIM;
@@ -50,14 +51,14 @@ import static uk.gov.hmcts.reform.unspec.service.documentmanagement.DocumentMana
 @ContextConfiguration(classes = {
     CreateClaimCallbackHandler.class,
     JacksonAutoConfiguration.class,
-    CaseDetailsConverter.class
+    CaseDetailsConverter.class,
+    ClaimIssueConfiguration.class
 })
 class CreateClaimCallbackHandlerTest extends BaseCallbackHandlerTest {
 
     public static final String REFERENCE_NUMBER = "000LR095";
     @MockBean
     private SealedClaimFormGenerator sealedClaimFormGenerator;
-
     @Autowired
     private CreateClaimCallbackHandler handler;
     @Autowired
@@ -67,15 +68,17 @@ class CreateClaimCallbackHandlerTest extends BaseCallbackHandlerTest {
 
     @BeforeEach
     public void setup() {
-        when(sealedClaimFormGenerator.generate(any(CaseData.class), anyString())).thenReturn(getCaseDocument());
+        when(sealedClaimFormGenerator.generate(any(CallbackParams.class))).thenReturn(getCaseDocument());
     }
 
     @Nested
-    class MidEvent {
+    class MidEventCallback {
+
         @Test
         void shouldReturnExpectedErrorInMidEvent_whenValuesAreInvalid() {
             Map<String, Object> data = new HashMap<>();
-            data.put("claimValue", ClaimValue.builder().higherValue(1).lowerValue(10).build());
+            data.put("claimValue", ClaimValue.builder()
+                .higherValue(BigDecimal.valueOf(1)).lowerValue(BigDecimal.valueOf(10)).build());
 
             CallbackParams params = callbackParamsOf(data, CallbackType.MID);
 
@@ -88,7 +91,8 @@ class CreateClaimCallbackHandlerTest extends BaseCallbackHandlerTest {
         @Test
         void shouldReturnNoErrorInMidEvent_whenValuesAreValid() {
             Map<String, Object> data = new HashMap<>();
-            data.put("claimValue", ClaimValue.builder().higherValue(10).lowerValue(1).build());
+            data.put("claimValue", ClaimValue.builder()
+                .higherValue(BigDecimal.valueOf(10)).lowerValue(BigDecimal.valueOf(1)).build());
             data.put("claimType", PERSONAL_INJURY_WORK);
             CallbackParams params = callbackParamsOf(data, CallbackType.MID);
 
@@ -98,8 +102,8 @@ class CreateClaimCallbackHandlerTest extends BaseCallbackHandlerTest {
             assertThat(response.getData())
                 .isEqualTo(
                     Map.of(
-                        "claimValue", ClaimValue.builder().higherValue(10).lowerValue(1).build(),
-                        "ccdCaseReference", CASE_ID,
+                        "claimValue", ClaimValue.builder()
+                            .higherValue(BigDecimal.valueOf(10)).lowerValue(BigDecimal.valueOf(1)).build(),
                         "claimType", PERSONAL_INJURY_WORK,
                         "allocatedTrack", SMALL_CLAIM
                     ));
@@ -107,7 +111,7 @@ class CreateClaimCallbackHandlerTest extends BaseCallbackHandlerTest {
     }
 
     @Nested
-    class AboutToSubmit {
+    class AboutToSubmitCallback {
 
         @Test
         void shouldIssueClaimWithSystemGeneratedDocumentsAndDate() throws JsonProcessingException {
@@ -122,7 +126,7 @@ class CreateClaimCallbackHandlerTest extends BaseCallbackHandlerTest {
             assertThat(caseData.getClaimIssuedDate()).isEqualTo(LocalDate.now());
         }
 
-        private Map<String, Object> getCaseData() throws JsonProcessingException {
+        Map<String, Object> getCaseData() throws JsonProcessingException {
             Map<String, Object> caseData = objectMapper.readValue(
                 ResourceReader.readString("case_data.json"),
                 new TypeReference<>() {
@@ -135,15 +139,41 @@ class CreateClaimCallbackHandlerTest extends BaseCallbackHandlerTest {
     }
 
     @Nested
-    class SubmittedEvent {
+    class SubmittedCallback {
+
         @Test
-        void shouldReturnExpectedSubmittedCallbackResponseObject() {
+        void shouldReturnExpectedSubmittedCallbackResponseObject_whenDocumentIsGenerated() {
             Map<String, Object> data = new HashMap<>();
             int documentSize = 125952;
             Element<CaseDocument> documents = Element.<CaseDocument>builder()
                 .value(CaseDocument.builder().documentSize(documentSize).documentType(SEALED_CLAIM).build())
                 .build();
             data.put("systemGeneratedCaseDocuments", List.of(documents));
+            CallbackParams params = callbackParamsOf(data, CallbackType.SUBMITTED);
+            SubmittedCallbackResponse response = (SubmittedCallbackResponse) handler.handle(params);
+
+            LocalDateTime serviceDeadline = LocalDate.now().plusDays(112).atTime(23, 59);
+            String formattedServiceDeadline = formatLocalDateTime(serviceDeadline, DATE_TIME_AT);
+
+            String body = format(
+                CONFIRMATION_SUMMARY,
+                format("/cases/case-details/%s#CaseDocuments", CASE_ID),
+                documentSize / 1024,
+                responsePackLink,
+                formattedServiceDeadline
+            );
+
+            assertThat(response).isEqualToComparingFieldByField(
+                SubmittedCallbackResponse.builder()
+                    .confirmationHeader("# Your claim has been issued\n## Claim number: TBC")
+                    .confirmationBody(body)
+                    .build());
+        }
+
+        @Test
+        void shouldReturnExpectedSubmittedCallbackResponseObject_whenDocumentIsNotGenerated() {
+            Map<String, Object> data = new HashMap<>();
+            int documentSize = 0;
             CallbackParams params = callbackParamsOf(data, CallbackType.SUBMITTED);
             SubmittedCallbackResponse response = (SubmittedCallbackResponse) handler.handle(params);
 

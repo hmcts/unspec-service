@@ -3,7 +3,6 @@ package uk.gov.hmcts.reform.unspec.model.documents;
 import lombok.Data;
 import org.springframework.http.MediaType;
 
-@SuppressWarnings({"AbbreviationAsWordInName"})
 @Data
 public class PDF {
 

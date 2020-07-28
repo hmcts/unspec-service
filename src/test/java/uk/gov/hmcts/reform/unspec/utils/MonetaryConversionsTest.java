@@ -11,7 +11,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 public class MonetaryConversionsTest {
 
     @Test
-    public void shouldThrowNullPointerWhenGivenNullAmount() {
+    public void shouldThrowNullPointer_whenGivenNullAmount() {
         assertThrows(NullPointerException.class, () ->
             MonetaryConversions.penniesToPounds(null));
     }
@@ -25,7 +25,7 @@ public class MonetaryConversionsTest {
     @Test
     public void zeroPoundsShouldConvertToZeroPennies() {
         BigInteger converted = MonetaryConversions.poundsToPennies(BigDecimal.ZERO);
-        assertThat(converted).isEqualTo("0");
+        assertThat(converted).isEqualTo(new BigInteger("0"));
     }
 
     @Test
@@ -37,7 +37,7 @@ public class MonetaryConversionsTest {
     @Test
     public void oneHundredthOfPoundShouldConvertToOnePenny() {
         BigInteger converted = MonetaryConversions.poundsToPennies(new BigDecimal("0.01"));
-        assertThat(converted).isEqualTo("1");
+        assertThat(converted).isEqualTo(new BigInteger("1"));
     }
 
     @Test
@@ -49,7 +49,7 @@ public class MonetaryConversionsTest {
     @Test
     public void oneTenthofPoundShouldConvertToTenPennies() {
         BigInteger converted = MonetaryConversions.poundsToPennies(new BigDecimal("0.10"));
-        assertThat(converted).isEqualTo("10");
+        assertThat(converted).isEqualTo(new BigInteger("10"));
     }
 
     @Test
@@ -61,7 +61,7 @@ public class MonetaryConversionsTest {
     @Test
     public void onePoundShouldConvertToHundredPennies() {
         BigInteger converted = MonetaryConversions.poundsToPennies(new BigDecimal("1.00"));
-        assertThat(converted).isEqualTo("100");
+        assertThat(converted).isEqualTo(new BigInteger("100"));
     }
 
     @Test
@@ -73,7 +73,7 @@ public class MonetaryConversionsTest {
     @Test
     public void twentyFivePoundsShouldConvertToTwoAndHalfThousandPennies() {
         BigInteger converted = MonetaryConversions.poundsToPennies(new BigDecimal("25.00"));
-        assertThat(converted).isEqualTo("2500");
+        assertThat(converted).isEqualTo(new BigInteger("2500"));
     }
 
 }
