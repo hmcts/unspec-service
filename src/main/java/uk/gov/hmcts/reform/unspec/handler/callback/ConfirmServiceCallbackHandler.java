@@ -14,6 +14,7 @@ import uk.gov.hmcts.reform.unspec.enums.ServedDocuments;
 import uk.gov.hmcts.reform.unspec.enums.ServiceMethod;
 import uk.gov.hmcts.reform.unspec.helpers.CaseDetailsConverter;
 import uk.gov.hmcts.reform.unspec.model.CaseData;
+import uk.gov.hmcts.reform.unspec.model.common.Element;
 import uk.gov.hmcts.reform.unspec.model.documents.CaseDocument;
 import uk.gov.hmcts.reform.unspec.model.documents.DocumentType;
 import uk.gov.hmcts.reform.unspec.service.docmosis.cos.CertificateOfServiceGenerator;
@@ -34,12 +35,16 @@ import static uk.gov.hmcts.reform.unspec.helpers.DateFormatHelper.DATE_TIME_AT;
 import static uk.gov.hmcts.reform.unspec.helpers.DateFormatHelper.formatLocalDate;
 import static uk.gov.hmcts.reform.unspec.helpers.DateFormatHelper.formatLocalDateTime;
 import static uk.gov.hmcts.reform.unspec.utils.ElementUtils.element;
+import static uk.gov.hmcts.reform.unspec.utils.ElementUtils.wrapElements;
 
 @Service
 @RequiredArgsConstructor
 public class ConfirmServiceCallbackHandler extends CallbackHandler {
 
     private static final List<CaseEvent> EVENTS = Collections.singletonList(CONFIRM_SERVICE);
+    public static final String CONFIRMATION_SUMMARY = "<br /> Deemed date of service: %s."
+        + "<br />The defendant must respond before %s."
+        + "\n\n[Download certificate of service](%s) (PDF, %s KB)";
 
     private final CertificateOfServiceGenerator certificateOfServiceGenerator;
     private final CaseDetailsConverter caseDetailsConverter;
@@ -107,9 +112,14 @@ public class ConfirmServiceCallbackHandler extends CallbackHandler {
             caseDateUpdated,
             callbackParams.getParams().get(BEARER_TOKEN).toString()
         );
-        caseData.getSystemGeneratedCaseDocuments()
-            .add(element(certificateOfService));
-        data.put("systemGeneratedCaseDocuments", caseData.getSystemGeneratedCaseDocuments());
+        List<Element<CaseDocument>> systemGeneratedCaseDocuments = caseData.getSystemGeneratedCaseDocuments();
+
+        data.put(
+            "systemGeneratedCaseDocuments",
+            systemGeneratedCaseDocuments == null
+                ? wrapElements(certificateOfService)
+                : systemGeneratedCaseDocuments.add(element(certificateOfService))
+        );
 
         return AboutToStartOrSubmitCallbackResponse.builder()
             .data(data)
@@ -129,9 +139,7 @@ public class ConfirmServiceCallbackHandler extends CallbackHandler {
             .orElse(0L);
 
         String body = format(
-            "<br /> Deemed date of service: %s."
-                + "<br />The defendant must respond before %s."
-                + "\n\n[Download certificate of service](%s) (PDF, %s KB)",
+            CONFIRMATION_SUMMARY,
             formattedDeemedDateOfService,
             responseDeadlineDate,
             format("/cases/case-details/%s#CaseDocuments", caseData.getCcdCaseReference()),
