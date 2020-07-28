@@ -4,7 +4,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.stereotype.Service;
 import uk.gov.hmcts.reform.ccd.client.model.AboutToStartOrSubmitCallbackResponse;
 import uk.gov.hmcts.reform.ccd.client.model.CallbackResponse;
-import uk.gov.hmcts.reform.ccd.client.model.CaseDetails;
 import uk.gov.hmcts.reform.ccd.client.model.SubmittedCallbackResponse;
 import uk.gov.hmcts.reform.unspec.callback.Callback;
 import uk.gov.hmcts.reform.unspec.callback.CallbackHandler;
@@ -34,7 +33,8 @@ public class RespondExtensionCallbackHandler extends CallbackHandler {
     public static final String RESPONSE_DEADLINE = "responseDeadline";
     public static final String PROPOSED_DEADLINE = "respondentSolicitor1claimResponseExtensionProposedDeadline";
     public static final String EXTENSION_REASON = "respondentSolicitor1claimResponseExtensionReason";
-    public static final String COUNTER = "respondentSolicitor1claimResponseExtensionCounter";
+    public static final String PROVIDED_COUNTER_DATE = "respondentSolicitor1claimResponseExtensionCounter";
+    public static final String PROPOSED_DEADLINE_ACCEPTED = "respondentSolicitor1claimResponseExtensionAccepted";
 
     private final ObjectMapper mapper;
     private final RequestExtensionValidator validator;
@@ -69,13 +69,13 @@ public class RespondExtensionCallbackHandler extends CallbackHandler {
     }
 
     private CallbackResponse validateRequestedDeadline(CallbackParams callbackParams) {
-        CaseDetails caseDetails = callbackParams.getRequest().getCaseDetails();
-        YesOrNo counter = mapper.convertValue(caseDetails.getData().get(COUNTER), YesOrNo.class);
+        Map<String, Object> data = callbackParams.getRequest().getCaseDetails().getData();
+        YesOrNo providedCounterDate = mapToYesOrNo(data, PROVIDED_COUNTER_DATE);
         List<String> errors = new ArrayList<>();
 
-        if (counter == YesOrNo.YES) {
-            LocalDate extensionCounterDate = getCounterDeadline(caseDetails.getData());
-            LocalDateTime responseDeadline = mapToDateTime(caseDetails.getData(), RESPONSE_DEADLINE);
+        if (providedCounterDate == YesOrNo.YES) {
+            LocalDate extensionCounterDate = mapToDate(data, COUNTER_DEADLINE);
+            LocalDateTime responseDeadline = mapToDateTime(data, RESPONSE_DEADLINE);
 
             errors = validator.validateProposedDeadline(extensionCounterDate, responseDeadline);
         }
@@ -87,14 +87,17 @@ public class RespondExtensionCallbackHandler extends CallbackHandler {
 
     private CallbackResponse updateResponseDeadline(CallbackParams callbackParams) {
         Map<String, Object> data = callbackParams.getRequest().getCaseDetails().getData();
+        YesOrNo proposedDeadlineAccepted = mapToYesOrNo(data, PROPOSED_DEADLINE_ACCEPTED);
+        YesOrNo providedCounterDate = mapToYesOrNo(data, PROVIDED_COUNTER_DATE);
+        LocalDate newDeadline;
 
-        if (data.get(COUNTER_DEADLINE) != null) {
-            LocalDate newDeadline = getCounterDeadline(data);
+        if (proposedDeadlineAccepted == YesOrNo.YES) {
+            newDeadline = mapToDate(data, PROPOSED_DEADLINE);
             data.put(RESPONSE_DEADLINE, newDeadline.atTime(16, 0));
         }
 
-        if (data.get(PROPOSED_DEADLINE) != null) {
-            LocalDate newDeadline = mapToDate(data, PROPOSED_DEADLINE);
+        if (providedCounterDate == YesOrNo.YES) {
+            newDeadline = mapToDate(data, COUNTER_DEADLINE);
             data.put(RESPONSE_DEADLINE, newDeadline.atTime(16, 0));
         }
 
@@ -121,8 +124,8 @@ public class RespondExtensionCallbackHandler extends CallbackHandler {
             .build();
     }
 
-    private LocalDate getCounterDeadline(Map<String, Object> data) {
-        return mapToDate(data, COUNTER_DEADLINE);
+    private YesOrNo mapToYesOrNo(Map<String, Object> data, String fieldName) {
+        return mapper.convertValue(data.get(fieldName), YesOrNo.class);
     }
 
     private LocalDate mapToDate(Map<String, Object> data, String field) {

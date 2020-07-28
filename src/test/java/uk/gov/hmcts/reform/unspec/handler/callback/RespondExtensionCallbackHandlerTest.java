@@ -2,8 +2,6 @@ package uk.gov.hmcts.reform.unspec.handler.callback;
 
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.jackson.JacksonAutoConfiguration;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -119,14 +117,15 @@ class RespondExtensionCallbackHandlerTest extends BaseCallbackHandlerTest {
     class AboutToSubmitCallback {
 
         public static final String PROPOSED_DEADLINE = "respondentSolicitor1claimResponseExtensionProposedDeadline";
+        public static final String ACCEPT = "respondentSolicitor1claimResponseExtensionAccepted";
 
-        @ParameterizedTest(name = "should update response deadline when {0} is set")
-        @ValueSource(strings = {COUNTER_DATE, PROPOSED_DEADLINE})
-        void shouldUpdateResponseDeadline_whenNewDeadline(String deadlineKey) {
+        @Test
+        void shouldUpdateResponseDeadlineToProposedDeadline_whenAcceptIsYes() {
             LocalDate proposedDeadline = now().plusDays(14);
             Map<String, Object> map = new HashMap<>();
-            map.put(deadlineKey, proposedDeadline);
+            map.put(PROPOSED_DEADLINE, proposedDeadline);
             map.put(RESPONSE_DEADLINE, now().atTime(16, 0));
+            map.put(ACCEPT, YesOrNo.YES);
 
             CallbackParams params = callbackParamsOf(map, CallbackType.ABOUT_TO_SUBMIT);
 
@@ -137,11 +136,32 @@ class RespondExtensionCallbackHandlerTest extends BaseCallbackHandlerTest {
         }
 
         @Test
-        void shouldKeepExistingResponseDeadline_whenNoNewDeadline() {
+        void shouldUpdateResponseDeadlineToCounterDate_whenAcceptIsNoAndCounterIsYes() {
             LocalDateTime responseDeadline = now().atTime(16, 0);
 
             Map<String, Object> map = new HashMap<>();
             map.put(RESPONSE_DEADLINE, responseDeadline);
+            map.put(PROPOSED_DEADLINE, responseDeadline.plusDays(14).toLocalDate());
+            map.put(COUNTER_DATE, responseDeadline.plusDays(7).toLocalDate());
+            map.put(ACCEPT, YesOrNo.NO);
+            map.put(COUNTER, YesOrNo.YES);
+
+            CallbackParams params = callbackParamsOf(map, CallbackType.ABOUT_TO_SUBMIT);
+
+            AboutToStartOrSubmitCallbackResponse response =
+                (AboutToStartOrSubmitCallbackResponse) handler.handle(params);
+
+            assertThat(response.getData().get(RESPONSE_DEADLINE)).isEqualTo(responseDeadline.plusDays(7));
+        }
+
+        @Test
+        void shouldKeepExistingResponseDeadline_whenAcceptIsNoAndCounterIsNo() {
+            LocalDateTime responseDeadline = now().atTime(16, 0);
+
+            Map<String, Object> map = new HashMap<>();
+            map.put(RESPONSE_DEADLINE, responseDeadline);
+            map.put(COUNTER, YesOrNo.NO);
+            map.put(ACCEPT, YesOrNo.NO);
 
             CallbackParams params = callbackParamsOf(map, CallbackType.ABOUT_TO_SUBMIT);
 
