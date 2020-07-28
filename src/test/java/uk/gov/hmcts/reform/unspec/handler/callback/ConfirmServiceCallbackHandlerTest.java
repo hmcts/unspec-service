@@ -10,6 +10,7 @@ import uk.gov.hmcts.reform.ccd.client.model.SubmittedCallbackResponse;
 import uk.gov.hmcts.reform.unspec.callback.CallbackParams;
 import uk.gov.hmcts.reform.unspec.callback.CallbackType;
 import uk.gov.hmcts.reform.unspec.enums.ServedDocuments;
+import uk.gov.hmcts.reform.unspec.helpers.CaseDetailsConverter;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -19,7 +20,11 @@ import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-@SpringBootTest(classes = {ConfirmServiceCallbackHandler.class, JacksonAutoConfiguration.class})
+@SpringBootTest(classes = {
+    ConfirmServiceCallbackHandler.class,
+    JacksonAutoConfiguration.class,
+    CaseDetailsConverter.class
+})
 class ConfirmServiceCallbackHandlerTest extends BaseCallbackHandlerTest {
 
     @Autowired

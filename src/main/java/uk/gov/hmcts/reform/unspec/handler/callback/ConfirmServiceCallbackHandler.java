@@ -1,6 +1,5 @@
 package uk.gov.hmcts.reform.unspec.handler.callback;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import uk.gov.hmcts.reform.ccd.client.model.AboutToStartOrSubmitCallbackResponse;
@@ -13,8 +12,12 @@ import uk.gov.hmcts.reform.unspec.callback.CallbackType;
 import uk.gov.hmcts.reform.unspec.callback.CaseEvent;
 import uk.gov.hmcts.reform.unspec.enums.ServedDocuments;
 import uk.gov.hmcts.reform.unspec.enums.ServiceMethod;
+import uk.gov.hmcts.reform.unspec.helpers.CaseDetailsConverter;
 import uk.gov.hmcts.reform.unspec.model.CaseData;
+import uk.gov.hmcts.reform.unspec.model.documents.CaseDocument;
+import uk.gov.hmcts.reform.unspec.model.documents.DocumentType;
 import uk.gov.hmcts.reform.unspec.service.docmosis.cos.CertificateOfServiceGenerator;
+import uk.gov.hmcts.reform.unspec.utils.ElementUtils;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -24,11 +27,13 @@ import java.util.List;
 import java.util.Map;
 
 import static java.lang.String.format;
+import static uk.gov.hmcts.reform.unspec.callback.CallbackParams.Params.BEARER_TOKEN;
 import static uk.gov.hmcts.reform.unspec.callback.CaseEvent.CONFIRM_SERVICE;
 import static uk.gov.hmcts.reform.unspec.helpers.DateFormatHelper.DATE;
 import static uk.gov.hmcts.reform.unspec.helpers.DateFormatHelper.DATE_TIME_AT;
 import static uk.gov.hmcts.reform.unspec.helpers.DateFormatHelper.formatLocalDate;
 import static uk.gov.hmcts.reform.unspec.helpers.DateFormatHelper.formatLocalDateTime;
+import static uk.gov.hmcts.reform.unspec.utils.ElementUtils.element;
 
 @Service
 @RequiredArgsConstructor
@@ -36,15 +41,15 @@ public class ConfirmServiceCallbackHandler extends CallbackHandler {
 
     private static final List<CaseEvent> EVENTS = Collections.singletonList(CONFIRM_SERVICE);
 
-    private final ObjectMapper mapper;
     private final CertificateOfServiceGenerator certificateOfServiceGenerator;
+    private final CaseDetailsConverter caseDetailsConverter;
 
     @Override
     protected Map<CallbackType, Callback> callbacks() {
         return Map.of(
             CallbackType.ABOUT_TO_START, this::prepopulateServedDocuments,
             CallbackType.MID, this::checkServedDocumentsOtherHasWhiteSpace,
-            CallbackType.ABOUT_TO_SUBMIT, this::addResponseDatesToCase,
+            CallbackType.ABOUT_TO_SUBMIT, this::prepareCertificateOfService,
             CallbackType.SUBMITTED, this::buildConfirmation
         );
     }
@@ -61,8 +66,8 @@ public class ConfirmServiceCallbackHandler extends CallbackHandler {
         data.put("servedDocuments", servedDocuments);
 
         return AboutToStartOrSubmitCallbackResponse.builder()
-                   .data(data)
-                   .build();
+            .data(data)
+            .build();
     }
 
     private CallbackResponse checkServedDocumentsOtherHasWhiteSpace(CallbackParams callbackParams) {
@@ -75,25 +80,36 @@ public class ConfirmServiceCallbackHandler extends CallbackHandler {
         }
 
         return AboutToStartOrSubmitCallbackResponse.builder()
-                   .data(data)
-                   .errors(errors)
-                   .build();
+            .data(data)
+            .errors(errors)
+            .build();
     }
 
-    private CallbackResponse addResponseDatesToCase(CallbackParams callbackParams) {
-        Map<String, Object> data = callbackParams.getRequest().getCaseDetails().getData();
-        CaseData caseData = mapper.convertValue(data, CaseData.class);
+    private CallbackResponse prepareCertificateOfService(CallbackParams callbackParams) {
+        CaseData caseData = caseDetailsConverter.toCaseData(callbackParams.getRequest().getCaseDetails());
 
         ServiceMethod serviceMethod = caseData.getServiceMethod();
-
+        Map<String, Object> data = callbackParams.getRequest().getCaseDetails().getData();
         // TODO: this field will be different (date / date time) in CCD depending on service method.
         LocalDate serviceDate = caseData.getServiceDate();
 
         LocalDate deemedDateOfService = serviceMethod.getDeemedDateOfService(serviceDate);
         LocalDateTime responseDeadline = addFourteenDays(deemedDateOfService);
-
         data.put("deemedDateOfService", deemedDateOfService);
         data.put("responseDeadline", responseDeadline);
+
+        CaseData caseDateUpdated = caseData.toBuilder()
+            .deemedDateOfService(deemedDateOfService)
+            .responseDeadline(responseDeadline)
+            .build();
+
+        CaseDocument certificateOfService = certificateOfServiceGenerator.generate(
+            caseDateUpdated,
+            callbackParams.getParams().get(BEARER_TOKEN).toString()
+        );
+        caseData.getSystemGeneratedCaseDocuments()
+            .add(element(certificateOfService));
+        data.put("systemGeneratedCaseDocuments", caseData.getSystemGeneratedCaseDocuments());
 
         return AboutToStartOrSubmitCallbackResponse.builder()
             .data(data)
@@ -101,18 +117,25 @@ public class ConfirmServiceCallbackHandler extends CallbackHandler {
     }
 
     private SubmittedCallbackResponse buildConfirmation(CallbackParams callbackParams) {
-        Map<String, Object> data = callbackParams.getRequest().getCaseDetails().getData();
-        CaseData caseData = mapper.convertValue(data, CaseData.class);
+        CaseData caseData = caseDetailsConverter.toCaseData(callbackParams.getRequest().getCaseDetails());
 
         LocalDate deemedDateOfService = caseData.getDeemedDateOfService();
         String formattedDeemedDateOfService = formatLocalDate(deemedDateOfService, DATE);
         String responseDeadlineDate = formatLocalDateTime(addFourteenDays(deemedDateOfService), DATE_TIME_AT);
-        String certificateOfServiceLink = "http://www.google.com";
+        Long documentSize = ElementUtils.unwrapElements(caseData.getSystemGeneratedCaseDocuments()).stream()
+            .filter(c -> c.getDocumentType() == DocumentType.CERTIFICATE_OF_SERVICE)
+            .findFirst()
+            .map(CaseDocument::getDocumentSize)
+            .orElse(0L);
 
-        String body = format("<br /> Deemed date of service: %s."
-                                 + "<br />The defendant must respond before %s."
-                                 + "\n\n[Download certificate of service](%s) (PDF, 266 KB)",
-                             formattedDeemedDateOfService, responseDeadlineDate, certificateOfServiceLink
+        String body = format(
+            "<br /> Deemed date of service: %s."
+                + "<br />The defendant must respond before %s."
+                + "\n\n[Download certificate of service](%s) (PDF, %s KB)",
+            formattedDeemedDateOfService,
+            responseDeadlineDate,
+            format("/cases/case-details/%s#CaseDocuments", caseData.getCcdCaseReference()),
+            documentSize / 1024
         );
 
         return SubmittedCallbackResponse.builder()
