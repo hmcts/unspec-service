@@ -22,7 +22,7 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class DocumentGeneratorService {
 
-    public static final String API_RENDER = "/api/render";
+    public static final String API_RENDER = "/rs/render";
     private final RestTemplate restTemplate;
     private final DocmosisConfiguration configuration;
     private final ObjectMapper mapper;

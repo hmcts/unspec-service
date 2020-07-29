@@ -28,6 +28,7 @@ import uk.gov.hmcts.reform.unspec.service.UserService;
 import java.net.URI;
 
 import static java.util.Collections.singletonList;
+import static org.springframework.http.MediaType.APPLICATION_PDF_VALUE;
 
 @Slf4j
 @Service
@@ -46,11 +47,11 @@ public class DocumentManagementService {
 
     @Retryable(value = {DocumentUploadException.class}, backoff = @Backoff(delay = 200))
     public CaseDocument uploadDocument(String authorisation, PDF pdf) {
-        String originalFileName = pdf.getFilename();
+        String originalFileName = pdf.getFileBaseName();
         log.info("Uploading file {}", originalFileName);
         try {
             MultipartFile file
-                = new InMemoryMultipartFile(FILES_NAME, originalFileName, PDF.CONTENT_TYPE, pdf.getBytes());
+                = new InMemoryMultipartFile(FILES_NAME, originalFileName, APPLICATION_PDF_VALUE, pdf.getBytes());
 
             UserInfo userInfo = userService.getUserInfo(authorisation);
             UploadResponse response = documentUploadClientApi.upload(

@@ -29,6 +29,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.when;
 import static uk.gov.hmcts.reform.unspec.service.docmosis.DocmosisTemplates.N1;
+import static uk.gov.hmcts.reform.unspec.service.docmosis.DocumentGeneratorService.API_RENDER;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(classes = {DocumentGeneratorService.class, JacksonAutoConfiguration.class})
@@ -53,7 +54,7 @@ class DocumentGeneratorServiceTest {
     void shouldInvokesTornado() {
         SealedClaimForm sealedClaimForm = SealedClaimForm.builder().issueDate(LocalDate.now()).build();
 
-        when(restTemplate.exchange(eq(configuration.getUrl() + "/api/render"),
+        when(restTemplate.exchange(eq(configuration.getUrl() + API_RENDER),
                                    eq(HttpMethod.POST), argumentCaptor.capture(), eq(byte[].class)
         )).thenReturn(tornadoResponse);
 
@@ -69,7 +70,7 @@ class DocumentGeneratorServiceTest {
 
     @Test
     void shouldThrowWhenTornadoFails() {
-        when(restTemplate.exchange(eq(configuration.getUrl() + "/api/render"),
+        when(restTemplate.exchange(eq(configuration.getUrl() + API_RENDER),
                                    eq(HttpMethod.POST), argumentCaptor.capture(), eq(byte[].class)
         )).thenThrow(new HttpClientErrorException(HttpStatus.NOT_FOUND, "not found"));
 

@@ -41,6 +41,7 @@ import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import static org.springframework.http.MediaType.APPLICATION_PDF_VALUE;
 import static uk.gov.hmcts.reform.unspec.callback.CallbackHandlerFactoryTest.BEARER_TOKEN;
 import static uk.gov.hmcts.reform.unspec.model.documents.DocumentType.SEALED_CLAIM;
 import static uk.gov.hmcts.reform.unspec.service.documentmanagement.DocumentDownloadException.MESSAGE_TEMPLATE;
@@ -95,12 +96,12 @@ class DocumentManagementServiceTest {
 
         @Test
         void shouldUploadToDocumentManagement() throws JsonProcessingException {
-            PDF document = new PDF("0000-claim", "test".getBytes(), SEALED_CLAIM);
+            PDF document = new PDF("0000-claim.pdf", "test".getBytes(), SEALED_CLAIM);
 
             List<MultipartFile> files = List.of(new InMemoryMultipartFile(
                 FILES_NAME,
-                document.getFilename(),
-                PDF.CONTENT_TYPE,
+                document.getFileBaseName(),
+                APPLICATION_PDF_VALUE,
                 document.getBytes()
             ));
 
@@ -130,12 +131,12 @@ class DocumentManagementServiceTest {
 
         @Test
         void shouldThrow_whenUploadDocumentFails() throws JsonProcessingException {
-            PDF document = new PDF("0000-failed-claim", "failed-test".getBytes(), SEALED_CLAIM);
+            PDF document = new PDF("0000-failed-claim.pdf", "failed-test".getBytes(), SEALED_CLAIM);
 
             List<MultipartFile> files = List.of(new InMemoryMultipartFile(
                 FILES_NAME,
-                document.getFilename(),
-                PDF.CONTENT_TYPE,
+                document.getFileBaseName(),
+                APPLICATION_PDF_VALUE,
                 document.getBytes()
             ));
 
