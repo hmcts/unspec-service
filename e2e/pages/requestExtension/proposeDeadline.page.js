@@ -6,7 +6,7 @@ module.exports = {
 
   fields: {
     extensionProposedDeadline: {
-      id: '#respondentSolicitor1claimResponseExtensionProposedDeadline',
+      id: 'respondentSolicitor1claimResponseExtensionProposedDeadline',
     }
   },
 
