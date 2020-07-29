@@ -2,6 +2,7 @@ package uk.gov.hmcts.reform.unspec.handler.callback;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.util.ObjectUtils;
 import uk.gov.hmcts.reform.ccd.client.model.AboutToStartOrSubmitCallbackResponse;
 import uk.gov.hmcts.reform.ccd.client.model.CallbackResponse;
 import uk.gov.hmcts.reform.ccd.client.model.SubmittedCallbackResponse;
@@ -113,13 +114,12 @@ public class ConfirmServiceCallbackHandler extends CallbackHandler {
             callbackParams.getParams().get(BEARER_TOKEN).toString()
         );
         List<Element<CaseDocument>> systemGeneratedCaseDocuments = caseData.getSystemGeneratedCaseDocuments();
-
-        data.put(
-            "systemGeneratedCaseDocuments",
-            systemGeneratedCaseDocuments == null
-                ? wrapElements(certificateOfService)
-                : systemGeneratedCaseDocuments.add(element(certificateOfService))
-        );
+        if (ObjectUtils.isEmpty(systemGeneratedCaseDocuments)) {
+            data.put("systemGeneratedCaseDocuments", wrapElements(certificateOfService));
+        } else {
+            systemGeneratedCaseDocuments.add(element(certificateOfService));
+            data.put("systemGeneratedCaseDocuments", systemGeneratedCaseDocuments);
+        }
 
         return AboutToStartOrSubmitCallbackResponse.builder()
             .data(data)
