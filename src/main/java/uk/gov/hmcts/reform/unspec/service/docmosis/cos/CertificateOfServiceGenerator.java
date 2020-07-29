@@ -21,6 +21,7 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static uk.gov.hmcts.reform.unspec.enums.ServedDocuments.OTHER;
 import static uk.gov.hmcts.reform.unspec.service.docmosis.DocmosisTemplates.N215;
 
 @Service
@@ -73,15 +74,16 @@ public class CertificateOfServiceGenerator extends TemplateDataGenerator<Certifi
             .respondentRepresentative(TEMP_REPRESENTATIVE)
             .serviceMethod(caseData.getServiceMethod().getLabel())
             .servedLocation(caseData.getServiceLocation().getLocation())
-            .documentsServed(prepareDocumentList(caseData.getServedDocuments()))
+            .documentsServed(prepareDocumentList(caseData.getServedDocuments(), caseData.getServedDocumentsOther()))
             .statementOfTruth(caseData.getClaimStatementOfTruth())
             .applicantRepresentative(TEMP_REPRESENTATIVE)
             .build();
     }
 
-    private String prepareDocumentList(List<ServedDocuments> servedDocuments) {
+    private String prepareDocumentList(List<ServedDocuments> servedDocuments, String otherServedDocuments) {
         return servedDocuments.stream()
             .map(ServedDocuments::getLabel)
+            .map(label -> label.replace(OTHER.getLabel(), "Other - " + otherServedDocuments))
             .collect(Collectors.joining("\n"));
     }
 }
