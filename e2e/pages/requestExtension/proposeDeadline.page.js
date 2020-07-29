@@ -1,4 +1,4 @@
-const { I } = inject();
+const {I} = inject();
 
 const date = require('../../fragments/date');
 
@@ -10,7 +10,7 @@ module.exports = {
     }
   },
 
-  async enterExtensionProposedDeadline () {
+  async enterExtensionProposedDeadline() {
     await date.enterDate(this.fields.extensionProposedDeadline.id);
     await I.clickContinue();
   }
