@@ -78,6 +78,8 @@ module.exports = function() {
       await serviceLocationPage.selectUsualResidence();
       await serviceDatePage.enterServiceDate();
       await statementOfTruth.enterNameAndRole('service');
+
+      this.waitForText('Confirm service');
       await this.retryUntilExists(() => this.click('Confirm service'), 'ccd-markdown');
       this.see('You\'ve confirmed service');
       this.click('Close and Return to case details');
@@ -89,6 +91,7 @@ module.exports = function() {
       await proposeDeadline.enterExtensionProposedDeadline();
       await extensionAlreadyAgreed.selectAlreadyAgreed();
 
+      this.waitForText('Ask for extension');
       await this.retryUntilExists(() => this.click('Ask for extension'), 'ccd-markdown');
       this.see('You asked for extra time to respond');
       this.click('Close and Return to case details');
