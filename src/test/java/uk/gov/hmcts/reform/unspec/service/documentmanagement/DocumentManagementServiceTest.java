@@ -41,6 +41,7 @@ import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import static org.springframework.http.MediaType.APPLICATION_PDF_VALUE;
 import static uk.gov.hmcts.reform.unspec.callback.CallbackHandlerFactoryTest.BEARER_TOKEN;
 import static uk.gov.hmcts.reform.unspec.model.documents.DocumentType.SEALED_CLAIM;
 import static uk.gov.hmcts.reform.unspec.service.documentmanagement.DocumentDownloadException.MESSAGE_TEMPLATE;
@@ -100,7 +101,7 @@ class DocumentManagementServiceTest {
             List<MultipartFile> files = List.of(new InMemoryMultipartFile(
                 FILES_NAME,
                 document.getFilename(),
-                PDF.CONTENT_TYPE,
+                APPLICATION_PDF_VALUE,
                 document.getBytes()
             ));
 
@@ -135,7 +136,7 @@ class DocumentManagementServiceTest {
             List<MultipartFile> files = List.of(new InMemoryMultipartFile(
                 FILES_NAME,
                 document.getFilename(),
-                PDF.CONTENT_TYPE,
+                APPLICATION_PDF_VALUE,
                 document.getBytes()
             ));
 
