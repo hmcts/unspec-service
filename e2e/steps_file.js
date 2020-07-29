@@ -108,6 +108,7 @@ module.exports = function() {
       await counterExtensionPage.enterCounterDate();
       await rejectionReasonPage.enterResponse();
 
+      this.waitForText('Respond to request');
       await this.retryUntilExists(() => this.click('Respond to request'), 'ccd-markdown');
       this.see('You\'ve responded to the request for more time');
       await this.retryUntilExists(() => this.click('Close and Return to case details'),

@@ -22,5 +22,5 @@ Scenario('Solicitor requests extension', async (I) => {
 
 Scenario('Solicitor reponds to extension request', async (I) => {
   await I.respondToExtension();
-  await I.see('updated with event: Respond to extension request');
+  await I.waitForElement(locate('exui-alert').withText('updated with event: Respond to extension request'));
 });
