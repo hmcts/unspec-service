@@ -47,7 +47,7 @@ public class DocumentManagementService {
 
     @Retryable(value = {DocumentUploadException.class}, backoff = @Backoff(delay = 200))
     public CaseDocument uploadDocument(String authorisation, PDF pdf) {
-        String originalFileName = pdf.getFilename();
+        String originalFileName = pdf.getFileBaseName();
         log.info("Uploading file {}", originalFileName);
         try {
             MultipartFile file

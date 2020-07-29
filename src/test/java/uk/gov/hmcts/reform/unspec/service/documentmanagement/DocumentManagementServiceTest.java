@@ -96,11 +96,11 @@ class DocumentManagementServiceTest {
 
         @Test
         void shouldUploadToDocumentManagement() throws JsonProcessingException {
-            PDF document = new PDF("0000-claim", "test".getBytes(), SEALED_CLAIM);
+            PDF document = new PDF("0000-claim.pdf", "test".getBytes(), SEALED_CLAIM);
 
             List<MultipartFile> files = List.of(new InMemoryMultipartFile(
                 FILES_NAME,
-                document.getFilename(),
+                document.getFileBaseName(),
                 APPLICATION_PDF_VALUE,
                 document.getBytes()
             ));
@@ -131,11 +131,11 @@ class DocumentManagementServiceTest {
 
         @Test
         void shouldThrow_whenUploadDocumentFails() throws JsonProcessingException {
-            PDF document = new PDF("0000-failed-claim", "failed-test".getBytes(), SEALED_CLAIM);
+            PDF document = new PDF("0000-failed-claim.pdf", "failed-test".getBytes(), SEALED_CLAIM);
 
             List<MultipartFile> files = List.of(new InMemoryMultipartFile(
                 FILES_NAME,
-                document.getFilename(),
+                document.getFileBaseName(),
                 APPLICATION_PDF_VALUE,
                 document.getBytes()
             ));
