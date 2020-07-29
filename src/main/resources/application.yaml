@@ -100,7 +100,7 @@ idam:
     secret: OOOOOOOOOOOOOOOO
 
 document_management:
-  url: http://dm-store:4506
+  url: http://localhost:3453
 
 docmosis:
   tornado:
