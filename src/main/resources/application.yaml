@@ -99,7 +99,6 @@ document_management:
 docmosis:
   tornado:
     url: http://localhost:5433
-    key: 0UAD-KLTK-JALP-DKIA-EBBH-1ELH-PBKQ-KS91-23ED-8-97D1
 
 ---
 
