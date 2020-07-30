@@ -22,7 +22,6 @@ import uk.gov.hmcts.reform.unspec.utils.CaseNameUtils;
 
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static java.util.Optional.ofNullable;
