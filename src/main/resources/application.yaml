@@ -69,9 +69,6 @@ core_case_data:
   api:
     url: http://localhost:4452
 
-database:
-  migration: false
-
 ---
 
 spring:
@@ -132,3 +129,6 @@ idam:
 core_case_data:
   api:
     url: http://fake-ccd-data-store-api
+
+database:
+  migration: false
