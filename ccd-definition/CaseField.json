@@ -234,9 +234,9 @@
   {
     "LiveFrom": "01/01/2017",
     "CaseTypeID": "UNSPECIFIED_CLAIMS",
-    "ID": "legacyCaseReference",
+    "ID": "legacyReferenceNumber",
     "FieldType": "Text",
-    "Label": "Case mam reference",
+    "Label": "CaseMan Reference number",
     "SecurityClassification": "Public"
   }
 ]

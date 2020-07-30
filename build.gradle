@@ -221,6 +221,7 @@ dependencies {
   implementation group: 'io.springfox', name: 'springfox-swagger-ui', version: versions.springfoxSwagger
   implementation group: 'org.postgresql', name: 'postgresql', version: '42.2.14'
   implementation group: 'org.jdbi', name: 'jdbi', version: '2.78'
+  compile group: 'org.flywaydb', name: 'flyway-core', version: '5.2.4'
 
   implementation group: 'uk.gov.hmcts.reform', name: 'logging', version: versions.reformLogging
   implementation group: 'uk.gov.hmcts.reform', name: 'logging-appinsights', version: versions.reformLogging
