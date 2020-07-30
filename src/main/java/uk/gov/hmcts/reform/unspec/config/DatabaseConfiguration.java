@@ -16,7 +16,8 @@ import uk.gov.hmcts.reform.unspec.repositories.ReferenceNumberRepository;
 import javax.sql.DataSource;
 
 @Configuration
-public class DBConfiguration {
+public class DatabaseConfiguration {
+
     @Value("${database.migration}")
     public boolean databaseMigration;
 
@@ -48,7 +49,6 @@ public class DBConfiguration {
     ) {
         return new DataSourceTransactionManager(transactionAwareDataSourceProxy);
     }
-
 
     private void migrateFlyway(DataSource dataSource) {
         Flyway.configure()
