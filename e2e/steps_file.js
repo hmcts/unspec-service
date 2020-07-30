@@ -22,13 +22,17 @@ const serviceDatePage = require('./pages/confirmService/serviceDate.page');
 const proposeDeadline = require('./pages/requestExtension/proposeDeadline.page');
 const extensionAlreadyAgreed = require('./pages/requestExtension/extensionAlreadyAgreed.page');
 
+const respondToExtensionPage = require('./pages/respondExtension/respond.page');
+const counterExtensionPage = require('./pages/respondExtension/counter.page');
+const rejectionReasonPage = require('./pages/respondExtension/reason.page');
+
 const statementOfTruth = require('./fragments/statementOfTruth');
 const party = require('./fragments/party');
 
 const baseUrl = process.env.URL || 'http://localhost:3333';
 const signedInSelector = 'exui-header';
 
-module.exports = function() {
+module.exports = function () {
   return actor({
     // Define custom steps here, use 'this' to access default methods of I.
     // It is recommended to place a general 'login' function here.
@@ -45,10 +49,9 @@ module.exports = function() {
     },
 
     grabCaseNumber: async function () {
-      let caseNumber = await this.grabTextFrom('ccd-case-header > h1');
+      this.waitForElement('ccd-case-header > h1');
 
-      caseNumber = caseNumber.split('-').join('');
-      return caseNumber;
+      return await this.grabTextFrom('ccd-case-header > h1');
     },
 
     async createCase() {
@@ -63,10 +66,10 @@ module.exports = function() {
       await claimTypePage.selectClaimType();
       await claimValuePage.enterClaimValue();
       await statementOfTruth.enterNameAndRole('claim');
+      this.waitForText('Issue claim');
       await this.retryUntilExists(() => this.click('Issue claim'), 'ccd-markdown');
       this.see('Your claim has been issued');
-      await this.retryUntilExists(() =>
-        this.click('Close and Return to case details'), locate('ccd-case-header > h1'));
+      this.click('Close and Return to case details');
     },
 
     async confirmService() {
@@ -77,10 +80,12 @@ module.exports = function() {
       await serviceLocationPage.selectUsualResidence();
       await serviceDatePage.enterServiceDate();
       await statementOfTruth.enterNameAndRole('service');
+
+      this.waitForText('Confirm service');
       await this.retryUntilExists(() => this.click('Confirm service'), 'ccd-markdown');
       this.see('You\'ve confirmed service');
-      await this.retryUntilExists(() => this.click('Close and Return to case details'),
-        locate('exui-alert').withText('updated with event: Confirm service'));
+      this.click('Close and Return to case details');
+      this.waitForElement('ccd-case-header > h1');
     },
 
     async requestExtension() {
@@ -88,9 +93,24 @@ module.exports = function() {
       await proposeDeadline.enterExtensionProposedDeadline();
       await extensionAlreadyAgreed.selectAlreadyAgreed();
 
+      this.waitForText('Ask for extension');
       await this.retryUntilExists(() => this.click('Ask for extension'), 'ccd-markdown');
       this.see('You asked for extra time to respond');
       this.click('Close and Return to case details');
+      this.waitForElement('ccd-case-header > h1');
+    },
+
+    async respondToExtension() {
+      await caseViewPage.startEvent('Respond to extension request');
+      await respondToExtensionPage.selectDoNotAccept();
+      await counterExtensionPage.enterCounterDate();
+      await rejectionReasonPage.enterResponse();
+
+      this.waitForText('Respond to request');
+      await this.retryUntilExists(() => this.click('Respond to request'), 'ccd-markdown');
+      this.see('You\'ve responded to the request for more time');
+      this.click('Close and Return to case details');
+      this.waitForElement('ccd-case-header > h1');
     },
 
     async clickContinue() {
