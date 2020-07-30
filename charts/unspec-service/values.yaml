@@ -41,4 +41,5 @@ java:
         - microservicekey-unspec-service
         - system-update-user-username
         - system-update-user-password
+        - AppInsightsInstrumentationKey
         - cmc-db-password
