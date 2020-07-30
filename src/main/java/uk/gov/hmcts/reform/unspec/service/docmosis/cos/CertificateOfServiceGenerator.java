@@ -4,8 +4,11 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import uk.gov.hmcts.reform.unspec.enums.ServedDocuments;
+import uk.gov.hmcts.reform.unspec.enums.ServiceLocationType;
 import uk.gov.hmcts.reform.unspec.model.Address;
 import uk.gov.hmcts.reform.unspec.model.CaseData;
+import uk.gov.hmcts.reform.unspec.model.ServiceLocation;
+import uk.gov.hmcts.reform.unspec.model.SolicitorReferences;
 import uk.gov.hmcts.reform.unspec.model.docmosis.DocmosisDocument;
 import uk.gov.hmcts.reform.unspec.model.docmosis.cos.CertificateOfServiceForm;
 import uk.gov.hmcts.reform.unspec.model.docmosis.sealedclaim.Representative;
@@ -19,8 +22,10 @@ import uk.gov.hmcts.reform.unspec.utils.CaseNameUtils;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
+import static java.util.Optional.ofNullable;
 import static uk.gov.hmcts.reform.unspec.enums.ServedDocuments.OTHER;
 import static uk.gov.hmcts.reform.unspec.service.docmosis.DocmosisTemplates.N215;
 
@@ -66,18 +71,33 @@ public class CertificateOfServiceGenerator extends TemplateDataGenerator<Certifi
         return CertificateOfServiceForm.builder()
             .caseName(CaseNameUtils.toCaseName.apply(caseData))
             .referenceNumber(TEMP_REFERENCE_NUMBER)
-            .solicitorReferences(caseData.getSolicitorReferences())
+            .solicitorReferences(prepareSolicitorReferences(caseData.getSolicitorReferences()))
             .issueDate(caseData.getClaimIssuedDate())
             .submittedOn(TEMP_SUBMITTED_ON)
             .applicantName(CaseNameUtils.fetchClaimantName(caseData))
             .respondentName(CaseNameUtils.fetchDefendantName(caseData))
             .respondentRepresentative(TEMP_REPRESENTATIVE)
             .serviceMethod(caseData.getServiceMethod().getLabel())
-            .servedLocation(caseData.getServiceLocation().getLocation())
+            .servedLocation(prepareServedLocation(caseData.getServiceLocation()))
             .documentsServed(prepareDocumentList(caseData.getServedDocuments(), caseData.getServedDocumentsOther()))
             .statementOfTruth(caseData.getClaimStatementOfTruth())
             .applicantRepresentative(TEMP_REPRESENTATIVE)
             .build();
+    }
+
+    private SolicitorReferences prepareSolicitorReferences(SolicitorReferences solicitorReferences) {
+        return SolicitorReferences
+            .builder()
+            .claimantReference(ofNullable(solicitorReferences.getClaimantReference()).orElse("Not Provided"))
+            .defendantReference(ofNullable(solicitorReferences.getDefendantReference()).orElse("Not Provided"))
+            .build();
+    }
+
+    private String prepareServedLocation(ServiceLocation serviceLocation) {
+        if (serviceLocation.getLocation() == ServiceLocationType.OTHER) {
+            return ServiceLocationType.OTHER.getLabel() + " - " + serviceLocation.getOther();
+        }
+        return serviceLocation.getLocation().getLabel();
     }
 
     private String prepareDocumentList(List<ServedDocuments> servedDocuments, String otherServedDocuments) {
