@@ -23,3 +23,7 @@ dependencies:
     version: ~2.2.3
     repository: '@hmctspublic'
     condition: idam-pr.enabled
+  - name: postgresql
+    version: 8.9.8
+    repository: https://charts.bitnami.com/bitnami
+    condition: postgresql.enabled
