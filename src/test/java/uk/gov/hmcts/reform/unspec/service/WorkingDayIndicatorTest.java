@@ -104,7 +104,7 @@ class WorkingDayIndicatorTest {
     }
 
     @Nested
-    class Holidays {
+    class IsWorkingDay {
 
         @Test
         void shouldReturnFalseForOneBankHoliday_whenThereIsOneBankHolidayInCollection() {
@@ -135,6 +135,10 @@ class WorkingDayIndicatorTest {
 
             assertFalse(service.isWorkingDay(MONDAY));
         }
+    }
+
+    @Nested
+    class NextWorkingDay {
 
         @Test
         void shouldReturnFollowingMonday_whenDayGivenAsSunday() {
@@ -160,6 +164,11 @@ class WorkingDayIndicatorTest {
 
             assertEquals(nextWorkingDay, NEXT_WORKING_DAY_AFTER_BANK_HOLIDAY);
         }
+
+    }
+
+    @Nested
+    class PreviousWorkingDay {
 
         @Test
         void shouldReturnPreviousFriday_whenNextWorkingDayGivenAsSunday() {
