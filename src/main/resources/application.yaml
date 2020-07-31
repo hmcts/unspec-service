@@ -75,7 +75,8 @@ spring:
   profiles: local
 
 database:
-  migration: true
+  migration:
+    enabled: true
 
 fees:
   api:
@@ -131,4 +132,5 @@ core_case_data:
     url: http://fake-ccd-data-store-api
 
 database:
-  migration: false
+  migration:
+    enabled: false
