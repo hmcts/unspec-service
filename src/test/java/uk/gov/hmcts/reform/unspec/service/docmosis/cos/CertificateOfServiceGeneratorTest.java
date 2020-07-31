@@ -124,7 +124,7 @@ class CertificateOfServiceGeneratorTest {
             SolicitorReferences result = generator.prepareSolicitorReferences(solicitorReferences);
 
             assertAll(
-                "SolicitorReferences provided",
+                "SolicitorReferences one is provided",
                 () -> assertEquals("Claimant ref", result.getClaimantReference()),
                 () -> assertEquals("Not Provided", result.getDefendantReference())
             );
