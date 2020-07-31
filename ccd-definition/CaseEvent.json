@@ -37,7 +37,7 @@
     "ID": "REQUEST_EXTENSION",
     "Name": "Request extension",
     "Description": "Defendant solicitor is submitting requesting for an extension of time",
-    "DisplayOrder": 1,
+    "DisplayOrder": 3,
     "PreConditionState(s)": "CREATED",
     "PostConditionState": "*",
     "SecurityClassification": "Public",
@@ -73,6 +73,19 @@
     "DisplayOrder": 5,
     "PreConditionState(s)": "CREATED",
     "PostConditionState": "STAYED",
+    "SecurityClassification": "Public",
+    "ShowSummary": "N",
+    "ShowEventNotes": "N"
+  },
+  {
+    "LiveFrom": "01/01/2017",
+    "CaseTypeID": "UNSPECIFIED_CLAIMS",
+    "ID": "ACKNOWLEDGE_SERVICE",
+    "Name": "Acknowledge service",
+    "Description": "Defendant solicitor is acknowledging service",
+    "DisplayOrder": 6,
+    "PreConditionState(s)": "CREATED",
+    "PostConditionState": "*",
     "SecurityClassification": "Public",
     "ShowSummary": "N",
     "ShowEventNotes": "N"
