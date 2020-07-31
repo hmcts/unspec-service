@@ -11,6 +11,9 @@ postgresql:
   initdbScripts:
     init.sql: |-
       CREATE DATABASE cmc WITH OWNER = hmcts ENCODING = 'UTF-8' CONNECTION LIMIT = -1;
+      CREATE DATABASE "data-store" WITH OWNER = hmcts ENCODING = 'UTF-8' CONNECTION LIMIT = -1;
+      CREATE DATABASE "definition-store" WITH OWNER = hmcts ENCODING = 'UTF-8' CONNECTION LIMIT = -1;
+      CREATE DATABASE "user-profile" WITH OWNER = hmcts ENCODING = 'UTF-8' CONNECTION LIMIT = -1;
   postgresqlUsername: hmcts
   postgresqlPassword: hmcts
   persistence:
@@ -61,6 +64,8 @@ ccd:
     managementWeb:
       enabled: true
     s2s:
+      enabled: false
+    postgresql:
       enabled: false
 
   global:
