@@ -5,9 +5,10 @@ import org.springframework.stereotype.Service;
 import uk.gov.hmcts.reform.unspec.service.bankholidays.NonWorkingDaysCollection;
 import uk.gov.hmcts.reform.unspec.service.bankholidays.PublicHolidaysCollection;
 
-import java.time.DayOfWeek;
 import java.time.LocalDate;
 
+import static java.time.DayOfWeek.SATURDAY;
+import static java.time.DayOfWeek.SUNDAY;
 import static java.util.Objects.requireNonNull;
 
 @Service
@@ -27,8 +28,7 @@ public class WorkingDayIndicator {
     }
 
     public boolean isWeekend(LocalDate date) {
-        DayOfWeek day = date.getDayOfWeek();
-        return day == DayOfWeek.SATURDAY || day == DayOfWeek.SUNDAY;
+        return date.getDayOfWeek() == SATURDAY || date.getDayOfWeek() == SUNDAY;
     }
 
     public boolean isPublicHoliday(LocalDate date) {

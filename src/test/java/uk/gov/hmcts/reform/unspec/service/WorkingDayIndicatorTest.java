@@ -21,6 +21,7 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Stream;
 
+import static java.util.Collections.singletonList;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -85,7 +86,7 @@ class WorkingDayIndicatorTest {
 
         @ParameterizedTest
         @ArgumentsSource(WeekDays.class)
-        void shouldReturnTrue_whenWeekdays(LocalDate weekday) {
+        void shouldReturnTrue_whenItsWeekdays(LocalDate weekday) {
             when(publicHolidaysApiClient.getPublicHolidays()).thenReturn(Collections.emptySet());
 
             assertTrue(service.isWorkingDay(weekday));
@@ -97,7 +98,7 @@ class WorkingDayIndicatorTest {
 
         @ParameterizedTest
         @ArgumentsSource(Weekend.class)
-        void shouldReturnFalseForWeekend(LocalDate weekend) {
+        void shouldReturnFalseF_whenItsWeekend(LocalDate weekend) {
             assertFalse(service.isWorkingDay(weekend));
         }
     }
@@ -109,7 +110,7 @@ class WorkingDayIndicatorTest {
         void shouldReturnFalseForOneBankHoliday_whenThereIsOneBankHolidayInCollection() {
             LocalDate bankHoliday = BANK_HOLIDAY;
             when(publicHolidaysApiClient.getPublicHolidays())
-                .thenReturn(new HashSet<>(Collections.singletonList(bankHoliday)));
+                .thenReturn(new HashSet<>(singletonList(bankHoliday)));
 
             assertFalse(service.isWorkingDay(bankHoliday));
         }
@@ -120,7 +121,7 @@ class WorkingDayIndicatorTest {
             when(publicHolidaysApiClient.getPublicHolidays()).thenReturn(publicHolidays);
 
             assertAll(
-                "Public holiday",
+                "Public holidays",
                 () -> assertFalse(service.isWorkingDay(MONDAY)),
                 () -> assertFalse(service.isWorkingDay(TUESDAY)),
                 () -> assertFalse(service.isWorkingDay(WEDNESDAY)),
@@ -136,14 +137,14 @@ class WorkingDayIndicatorTest {
         }
 
         @Test
-        void shouldReturnFollowingMonday_whenNextWorkingDayGivenASunday() {
+        void shouldReturnFollowingMonday_whenDayGivenAsSunday() {
             LocalDate nextWorkingDay = service.getNextWorkingDay(SUNDAY_WEEK_BEFORE);
 
             assertEquals(nextWorkingDay, MONDAY);
         }
 
         @Test
-        void shouldReturnFollowingMonday_whenNextWorkingDayGivenASaturday() {
+        void shouldReturnFollowingMonday_whenDayGivenAsSaturday() {
             LocalDate nextWorkingDay = service.getNextWorkingDay(SATURDAY_WEEK_BEFORE);
 
             assertEquals(nextWorkingDay, MONDAY);
@@ -152,7 +153,7 @@ class WorkingDayIndicatorTest {
         @Test
         void shouldReturnFollowingTuesday_whenNextWorkingDayGivenABankHolidayFridayAndMonday() {
             when(publicHolidaysApiClient.getPublicHolidays()).thenReturn(
-                new HashSet<>(Collections.singletonList(BANK_HOLIDAY))
+                new HashSet<>(singletonList(BANK_HOLIDAY))
             );
 
             LocalDate nextWorkingDay = service.getNextWorkingDay(BANK_HOLIDAY);
@@ -161,14 +162,14 @@ class WorkingDayIndicatorTest {
         }
 
         @Test
-        void shouldReturnPreviousFriday_whenNextWorkingDayGivenASunday() {
+        void shouldReturnPreviousFriday_whenNextWorkingDayGivenAsSunday() {
             LocalDate previousWorkingDay = service.getPreviousWorkingDay(SUNDAY);
 
             assertEquals(FRIDAY, previousWorkingDay);
         }
 
         @Test
-        void shouldReturnPreviousFriday_whenNextWorkingDayGivenASaturday() {
+        void shouldReturnPreviousFriday_whenNextWorkingDayGivenAsSaturday() {
             LocalDate previousWorkingDay = service.getPreviousWorkingDay(SATURDAY);
 
             assertEquals(FRIDAY, previousWorkingDay);
@@ -177,7 +178,7 @@ class WorkingDayIndicatorTest {
         @Test
         void shouldReturnPreviousThursday_whenNextWorkingDayGivenABankHolidayFridayAndMonday() {
             when(publicHolidaysApiClient.getPublicHolidays()).thenReturn(
-                new HashSet<>(Collections.singletonList(BANK_HOLIDAY))
+                new HashSet<>(singletonList(BANK_HOLIDAY))
             );
 
             LocalDate previousWorkingDay = service.getPreviousWorkingDay(BANK_HOLIDAY);
