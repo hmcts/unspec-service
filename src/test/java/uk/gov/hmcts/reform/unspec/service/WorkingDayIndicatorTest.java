@@ -144,14 +144,14 @@ class WorkingDayIndicatorTest {
         void shouldReturnFollowingMonday_whenDayGivenAsSunday() {
             LocalDate nextWorkingDay = service.getNextWorkingDay(SUNDAY_WEEK_BEFORE);
 
-            assertEquals(nextWorkingDay, MONDAY);
+            assertEquals(MONDAY, nextWorkingDay);
         }
 
         @Test
         void shouldReturnFollowingMonday_whenDayGivenAsSaturday() {
             LocalDate nextWorkingDay = service.getNextWorkingDay(SATURDAY_WEEK_BEFORE);
 
-            assertEquals(nextWorkingDay, MONDAY);
+            assertEquals(MONDAY, nextWorkingDay);
         }
 
         @Test
@@ -162,7 +162,7 @@ class WorkingDayIndicatorTest {
 
             LocalDate nextWorkingDay = service.getNextWorkingDay(BANK_HOLIDAY);
 
-            assertEquals(nextWorkingDay, NEXT_WORKING_DAY_AFTER_BANK_HOLIDAY);
+            assertEquals(NEXT_WORKING_DAY_AFTER_BANK_HOLIDAY, nextWorkingDay);
         }
 
     }
