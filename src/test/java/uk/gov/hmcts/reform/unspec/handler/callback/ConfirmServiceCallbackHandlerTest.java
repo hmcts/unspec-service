@@ -23,6 +23,7 @@ import java.util.List;
 import java.util.Map;
 
 import static java.lang.String.format;
+import static java.util.Collections.emptyList;
 import static org.assertj.core.api.Assertions.assertThat;
 import static uk.gov.hmcts.reform.unspec.handler.callback.ConfirmServiceCallbackHandler.CONFIRMATION_SUMMARY;
 import static uk.gov.hmcts.reform.unspec.helpers.DateFormatHelper.DATE;
@@ -54,7 +55,7 @@ class ConfirmServiceCallbackHandlerTest extends BaseCallbackHandlerTest {
                 .handle(params);
 
             assertThat(response.getData())
-                .containsEntry("servedDocuments", List.of(ServedDocuments.CLAIM_FORM));
+                .containsOnly(Map.entry("servedDocuments", List.of(ServedDocuments.CLAIM_FORM)));
         }
     }
 
@@ -104,12 +105,13 @@ class ConfirmServiceCallbackHandlerTest extends BaseCallbackHandlerTest {
             AboutToStartOrSubmitCallbackResponse response = (AboutToStartOrSubmitCallbackResponse) handler
                 .handle(params);
 
-            assertThat(response.getData()).containsAllEntriesOf(
+            assertThat(response.getData()).containsExactlyInAnyOrderEntriesOf(
                 Map.of(
                     "deemedDateOfService", LocalDate.of(2099, 6, 25),
                     "responseDeadline", LocalDateTime.of(2099, 7, 9, 16, 0),
                     "serviceMethod", "POST",
-                    "serviceDate", "2099-06-23"
+                    "serviceDate", "2099-06-23",
+                    "systemGeneratedCaseDocuments", emptyList()
                 )
             );
         }

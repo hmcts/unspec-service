@@ -84,7 +84,7 @@ public class CertificateOfServiceGenerator extends TemplateDataGenerator<Certifi
             .build();
     }
 
-    private SolicitorReferences prepareSolicitorReferences(SolicitorReferences solicitorReferences) {
+    public SolicitorReferences prepareSolicitorReferences(SolicitorReferences solicitorReferences) {
         return SolicitorReferences
             .builder()
             .claimantReference(ofNullable(solicitorReferences.getClaimantReference()).orElse("Not Provided"))
@@ -92,14 +92,14 @@ public class CertificateOfServiceGenerator extends TemplateDataGenerator<Certifi
             .build();
     }
 
-    private String prepareServedLocation(ServiceLocation serviceLocation) {
+    public String prepareServedLocation(ServiceLocation serviceLocation) {
         if (serviceLocation.getLocation() == ServiceLocationType.OTHER) {
             return ServiceLocationType.OTHER.getLabel() + " - " + serviceLocation.getOther();
         }
         return serviceLocation.getLocation().getLabel();
     }
 
-    private String prepareDocumentList(List<ServedDocuments> servedDocuments, String otherServedDocuments) {
+    public String prepareDocumentList(List<ServedDocuments> servedDocuments, String otherServedDocuments) {
         return servedDocuments.stream()
             .map(ServedDocuments::getLabel)
             .map(label -> label.replace(OTHER.getLabel(), "Other - " + otherServedDocuments))
