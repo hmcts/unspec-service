@@ -18,7 +18,6 @@ public class BankHolidays {
         private Countries() {
             // NO-OP
         }
-
     }
 
     @JsonIgnoreProperties(ignoreUnknown = true)

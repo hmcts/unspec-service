@@ -13,7 +13,6 @@ import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
-import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -35,7 +34,6 @@ class PublicHolidaysCollectionTest {
 
         assertAll(
             "Bank holidays",
-            () -> assertThat(response).isNotEmpty(),
             () -> assertThat(response.contains(toDate(BANK_HOLIDAY_1))),
             () -> assertThat(response.contains(toDate(BANK_HOLIDAY_2)))
         );
@@ -50,7 +48,7 @@ class PublicHolidaysCollectionTest {
         Set<LocalDate> resultFromCache = publicHolidaysCollection.getPublicHolidays();
         Set<LocalDate> resultFromCacheAgain = publicHolidaysCollection.getPublicHolidays();
 
-        verify(bankHolidaysApi, times(1)).retrieveAll();
+        verify(bankHolidaysApi).retrieveAll();
         assertThat(resultFromApi).isSameAs(resultFromCache).isSameAs(resultFromCacheAgain);
     }
 

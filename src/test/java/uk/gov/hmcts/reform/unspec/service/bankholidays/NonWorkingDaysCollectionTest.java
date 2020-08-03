@@ -5,7 +5,8 @@ import org.junit.jupiter.api.Test;
 import java.time.LocalDate;
 import java.time.Month;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class NonWorkingDaysCollectionTest {
 
@@ -14,24 +15,24 @@ class NonWorkingDaysCollectionTest {
     @Test
     void shouldReturnTrue_whenMatchingNonWorkingDays() {
         collection = new NonWorkingDaysCollection("/non-working-days/nwd-valid.dat");
-        assertThat(collection.contains(LocalDate.of(2020, Month.DECEMBER, 2))).isTrue();
+        assertTrue(collection.contains(LocalDate.of(2020, Month.DECEMBER, 2)));
     }
 
     @Test
     void shouldReturnFalse_whenNoNonWorkingDays() {
         collection = new NonWorkingDaysCollection("/non-working-days/nwd-empty-file.dat");
-        assertThat(collection.contains(LocalDate.now())).isFalse();
+        assertFalse(collection.contains(LocalDate.now()));
     }
 
     @Test
     void shouldReturnFalse_whenNonMatchingNonWorkingDays() {
         collection = new NonWorkingDaysCollection("/non-working-days/nwd-valid.dat");
-        assertThat(collection.contains(LocalDate.of(2020, Month.DECEMBER, 3))).isFalse();
+        assertFalse(collection.contains(LocalDate.of(2020, Month.DECEMBER, 3)));
     }
 
     @Test
     void shouldReturnFalse_whenIncoherentNonWorkingDays() {
         collection = new NonWorkingDaysCollection("/non-working-days/nwd-invalid.dat");
-        assertThat(collection.contains(LocalDate.now())).isFalse();
+        assertFalse(collection.contains(LocalDate.now()));
     }
 }

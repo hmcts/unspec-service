@@ -86,7 +86,7 @@ class WorkingDayIndicatorTest {
 
         @ParameterizedTest
         @ArgumentsSource(WeekDays.class)
-        void shouldReturnTrue_whenItsWeekdays(LocalDate weekday) {
+        void shouldReturnTrue_whenWeekday(LocalDate weekday) {
             when(publicHolidaysApiClient.getPublicHolidays()).thenReturn(Collections.emptySet());
 
             assertTrue(service.isWorkingDay(weekday));
@@ -98,7 +98,7 @@ class WorkingDayIndicatorTest {
 
         @ParameterizedTest
         @ArgumentsSource(Weekend.class)
-        void shouldReturnFalseF_whenItsWeekend(LocalDate weekend) {
+        void shouldReturnFalse_whenWeekend(LocalDate weekend) {
             assertFalse(service.isWorkingDay(weekend));
         }
     }
