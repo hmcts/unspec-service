@@ -13,6 +13,7 @@ import uk.gov.hmcts.reform.unspec.callback.CallbackType;
 import uk.gov.hmcts.reform.unspec.callback.CaseEvent;
 import uk.gov.hmcts.reform.unspec.enums.ClaimType;
 import uk.gov.hmcts.reform.unspec.model.ClaimValue;
+import uk.gov.hmcts.reform.unspec.service.IssueDateCalculator;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -34,12 +35,15 @@ public class CreateClaimCallbackHandler extends CallbackHandler {
 
     private final ObjectMapper mapper;
     private final String responsePackLink;
+    private final IssueDateCalculator issueDateCalculator;
 
     public CreateClaimCallbackHandler(
         ObjectMapper mapper,
+        IssueDateCalculator issueDateCalculator,
         @Value("${unspecified.response-pack-url}") String responsePackLink
     ) {
         this.mapper = mapper;
+        this.issueDateCalculator = issueDateCalculator;
         this.responsePackLink = responsePackLink;
     }
 
@@ -80,7 +84,7 @@ public class CreateClaimCallbackHandler extends CallbackHandler {
 
     private AboutToStartOrSubmitCallbackResponse addIssuedDate(CallbackParams callbackParams) {
         Map<String, Object> data = callbackParams.getRequest().getCaseDetails().getData();
-        data.put("claimIssuedDate", LocalDate.now());
+        data.put("claimIssuedDate", issueDateCalculator.calculateIssueDay(LocalDateTime.now()));
 
         return AboutToStartOrSubmitCallbackResponse.builder()
                    .data(data)
