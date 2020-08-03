@@ -87,7 +87,7 @@
     "PreConditionState(s)": "CREATED",
     "PostConditionState": "*",
     "SecurityClassification": "Public",
-    "ShowSummary": "N",
+    "ShowSummary": "Y",
     "ShowEventNotes": "N"
   }
 ]
