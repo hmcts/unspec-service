@@ -1,7 +1,8 @@
 package uk.gov.hmcts.reform.unspec.config;
 
 import org.flywaydb.core.Flyway;
-import org.skife.jdbi.v2.DBI;
+import org.jdbi.v3.core.Jdbi;
+import org.jdbi.v3.sqlobject.SqlObjectPlugin;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceProperties;
 import org.springframework.boot.context.properties.ConfigurationProperties;
@@ -16,7 +17,7 @@ import uk.gov.hmcts.reform.unspec.repositories.ReferenceNumberRepository;
 import javax.sql.DataSource;
 
 @Configuration
-@ConditionalOnProperty("database.migration.enabled")
+@ConditionalOnProperty("reference.database.enabled")
 public class DatabaseConfiguration {
 
     @Bean
@@ -33,17 +34,15 @@ public class DatabaseConfiguration {
     }
 
     @Bean
-    public TransactionAwareDataSourceProxy transactionAwareDataSourceProxy(DataSource dataSource) {
+    public TransactionAwareDataSourceProxy dataSourceProxy(DataSource dataSource) {
         TransactionAwareDataSourceProxy dataSourceProxy = new TransactionAwareDataSourceProxy(dataSource);
         migrateFlyway(dataSourceProxy);
         return dataSourceProxy;
     }
 
     @Bean
-    public PlatformTransactionManager transactionManager(
-        TransactionAwareDataSourceProxy transactionAwareDataSourceProxy
-    ) {
-        return new DataSourceTransactionManager(transactionAwareDataSourceProxy);
+    public PlatformTransactionManager transactionManager(TransactionAwareDataSourceProxy dataSourceProxy) {
+        return new DataSourceTransactionManager(dataSourceProxy);
     }
 
     private void migrateFlyway(DataSource dataSource) {
@@ -55,12 +54,14 @@ public class DatabaseConfiguration {
     }
 
     @Bean
-    public DBI dbi(TransactionAwareDataSourceProxy transactionAwareDataSourceProxy) {
-        return new DBI(transactionAwareDataSourceProxy);
+    public Jdbi dbi(TransactionAwareDataSourceProxy dataSourceProxy) {
+        Jdbi jdbi = Jdbi.create(dataSourceProxy);
+        jdbi.installPlugin(new SqlObjectPlugin());
+        return jdbi;
     }
 
     @Bean
-    public ReferenceNumberRepository referenceNumberRepository(DBI dbi) {
+    public ReferenceNumberRepository referenceNumberRepository(Jdbi dbi) {
         return dbi.onDemand(ReferenceNumberRepository.class);
     }
 }

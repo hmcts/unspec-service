@@ -11,7 +11,7 @@ import uk.gov.hmcts.reform.ccd.client.model.AboutToStartOrSubmitCallbackResponse
 import uk.gov.hmcts.reform.ccd.client.model.SubmittedCallbackResponse;
 import uk.gov.hmcts.reform.unspec.callback.CallbackParams;
 import uk.gov.hmcts.reform.unspec.callback.CallbackType;
-import uk.gov.hmcts.reform.unspec.config.DatabaseConfiguration;
+import uk.gov.hmcts.reform.unspec.config.MockDatabaseConfiguration;
 import uk.gov.hmcts.reform.unspec.model.ClaimValue;
 import uk.gov.hmcts.reform.unspec.repositories.ReferenceNumberRepository;
 
@@ -31,7 +31,7 @@ import static uk.gov.hmcts.reform.unspec.helpers.DateFormatHelper.formatLocalDat
 @SpringBootTest(classes = {
     CreateClaimCallbackHandler.class,
     JacksonAutoConfiguration.class,
-    DatabaseConfiguration.class
+    MockDatabaseConfiguration.class
 })
 class CreateClaimCallbackHandlerTest extends BaseCallbackHandlerTest {
 
