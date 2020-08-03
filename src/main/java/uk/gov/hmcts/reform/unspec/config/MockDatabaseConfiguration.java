@@ -6,7 +6,7 @@ import org.springframework.context.annotation.Configuration;
 import uk.gov.hmcts.reform.unspec.repositories.ReferenceNumberRepository;
 
 @Configuration
-@ConditionalOnProperty(value = "database.migration.enabled", havingValue = "false")
+@ConditionalOnProperty(value = "reference.database.enabled", havingValue = "false")
 public class MockDatabaseConfiguration {
 
     @Bean
