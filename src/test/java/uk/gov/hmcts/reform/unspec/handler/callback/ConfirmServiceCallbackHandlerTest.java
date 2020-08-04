@@ -77,7 +77,7 @@ class ConfirmServiceCallbackHandlerTest extends BaseCallbackHandlerTest {
         @Test
         void shouldReturnExpectedResponse_whenDateEntry() {
             Map<String, Object> data = new HashMap<>();
-            data.put("serviceMethod", "POST");
+            data.put("serviceMethod", Map.of("type", "POST"));
             data.put("serviceDate", "2099-06-23");
 
             CallbackParams params = callbackParamsOf(data, CallbackType.ABOUT_TO_SUBMIT);
@@ -89,7 +89,7 @@ class ConfirmServiceCallbackHandlerTest extends BaseCallbackHandlerTest {
                 Map.of(
                     "deemedDateOfService", LocalDate.of(2099, 6, 25),
                     "responseDeadline", LocalDateTime.of(2099, 7, 9, 16, 0),
-                    "serviceMethod", "POST",
+                    "serviceMethod", Map.of("type", "POST"),
                     "serviceDate", "2099-06-23"
                 ));
         }
@@ -97,7 +97,7 @@ class ConfirmServiceCallbackHandlerTest extends BaseCallbackHandlerTest {
         @Test
         void shouldReturnExpectedResponse_whenDateAndTimeEntry() {
             Map<String, Object> data = new HashMap<>();
-            data.put("serviceMethod", "FAX");
+            data.put("serviceMethod", Map.of("type", "FAX"));
             data.put("serviceDateAndTime", "2099-06-23T15:00:00");
 
             CallbackParams params = callbackParamsOf(data, CallbackType.ABOUT_TO_SUBMIT);
@@ -109,7 +109,7 @@ class ConfirmServiceCallbackHandlerTest extends BaseCallbackHandlerTest {
                 Map.of(
                     "deemedDateOfService", LocalDate.of(2099, 6, 23),
                     "responseDeadline", LocalDateTime.of(2099, 7, 7, 16, 0),
-                    "serviceMethod", "FAX",
+                    "serviceMethod", Map.of("type", "FAX"),
                     "serviceDateAndTime", "2099-06-23T15:00:00"
                 ));
         }

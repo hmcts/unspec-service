@@ -11,7 +11,7 @@ import java.time.LocalDate;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @ExtendWith(SpringExtension.class)
-class ServiceMethodTypeTypeTest {
+class ServiceMethodTypeTest {
 
     @Nested
     class ExpectedDays {
