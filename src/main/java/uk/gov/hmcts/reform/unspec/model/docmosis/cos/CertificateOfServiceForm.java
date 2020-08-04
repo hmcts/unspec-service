@@ -29,11 +29,11 @@ public class CertificateOfServiceForm implements DocmosisData {
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy")
     @JsonSerialize(using = LocalDateSerializer.class)
-    private final LocalDate issueDate;
+    private final LocalDate dateServed;
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy")
     @JsonSerialize(using = LocalDateSerializer.class)
-    private final LocalDate submittedOn;
+    private final LocalDate deemedDateOfService;
     private final String applicantName;
     private final String respondentName;
     private final Representative respondentRepresentative;

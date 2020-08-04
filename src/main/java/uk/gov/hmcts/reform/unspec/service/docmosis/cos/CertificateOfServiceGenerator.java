@@ -20,7 +20,6 @@ import uk.gov.hmcts.reform.unspec.service.docmosis.TemplateDataGenerator;
 import uk.gov.hmcts.reform.unspec.service.documentmanagement.DocumentManagementService;
 import uk.gov.hmcts.reform.unspec.utils.CaseNameUtils;
 
-import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -46,7 +45,6 @@ public class CertificateOfServiceGenerator extends TemplateDataGenerator<Certifi
                             .build())
         .build(); //TODO Rep details need to be picked from reference data
     public static final String TEMP_REFERENCE_NUMBER = "000LR001"; //TODO Need to agree a way to get
-    public static final LocalDate TEMP_SUBMITTED_ON = LocalDate.now(); //TODO: Not populated yet in case data
 
     private final DocumentManagementService documentManagementService;
     private final DocumentGeneratorService documentGeneratorService;
@@ -71,8 +69,8 @@ public class CertificateOfServiceGenerator extends TemplateDataGenerator<Certifi
             .caseName(CaseNameUtils.toCaseName.apply(caseData))
             .referenceNumber(TEMP_REFERENCE_NUMBER)
             .solicitorReferences(prepareSolicitorReferences(caseData.getSolicitorReferences()))
-            .issueDate(caseData.getClaimIssuedDate())
-            .submittedOn(TEMP_SUBMITTED_ON)
+            .dateServed(caseData.getServiceDate())
+            .deemedDateOfService(caseData.getDeemedDateOfService())
             .applicantName(CaseNameUtils.fetchClaimantName(caseData))
             .respondentName(CaseNameUtils.fetchDefendantName(caseData))
             .respondentRepresentative(TEMP_REPRESENTATIVE)
