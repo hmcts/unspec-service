@@ -1,15 +1,19 @@
 package uk.gov.hmcts.reform.unspec.handler.callback;
 
+import com.google.common.collect.ImmutableMap;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.jackson.JacksonAutoConfiguration;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import uk.gov.hmcts.reform.ccd.client.model.AboutToStartOrSubmitCallbackResponse;
 import uk.gov.hmcts.reform.ccd.client.model.SubmittedCallbackResponse;
 import uk.gov.hmcts.reform.unspec.callback.CallbackParams;
 import uk.gov.hmcts.reform.unspec.callback.CallbackType;
 import uk.gov.hmcts.reform.unspec.enums.ServedDocuments;
+import uk.gov.hmcts.reform.unspec.service.DeadlinesCalculator;
+import uk.gov.hmcts.reform.unspec.service.WorkingDayIndicator;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -18,12 +22,21 @@ import java.util.List;
 import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.when;
 
-@SpringBootTest(classes = {ConfirmServiceCallbackHandler.class, JacksonAutoConfiguration.class})
+@SpringBootTest(classes = {
+    ConfirmServiceCallbackHandler.class,
+    JacksonAutoConfiguration.class,
+    DeadlinesCalculator.class
+})
 class ConfirmServiceCallbackHandlerTest extends BaseCallbackHandlerTest {
 
     @Autowired
     private ConfirmServiceCallbackHandler handler;
+
+    @MockBean
+    WorkingDayIndicator workingDayIndicator;
 
     @Nested
     class AboutToStartCallback {
@@ -76,6 +89,8 @@ class ConfirmServiceCallbackHandlerTest extends BaseCallbackHandlerTest {
 
         @Test
         void shouldReturnExpectedResponse_whenValidData() {
+            when(workingDayIndicator.isWorkingDay(any(LocalDate.class))).thenReturn(true);
+
             Map<String, Object> data = new HashMap<>();
             data.put("serviceMethod", "POST");
             data.put("serviceDate", "2099-06-23");
@@ -100,8 +115,11 @@ class ConfirmServiceCallbackHandlerTest extends BaseCallbackHandlerTest {
 
         @Test
         void shouldReturnExpectedResponse_whenValidData() {
-            Map<String, Object> data = new HashMap<>();
-            data.put("deemedDateOfService", "2099-06-25");
+
+            Map<String, Object> data = ImmutableMap.of(
+                "deemedDateOfService", "2099-06-25",
+                "responseDeadline", "2099-07-09T16:00:00"
+            );
 
             CallbackParams params = callbackParamsOf(data, CallbackType.SUBMITTED);
 

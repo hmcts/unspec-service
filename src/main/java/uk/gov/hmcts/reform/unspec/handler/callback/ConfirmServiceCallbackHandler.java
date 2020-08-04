@@ -14,6 +14,7 @@ import uk.gov.hmcts.reform.unspec.callback.CaseEvent;
 import uk.gov.hmcts.reform.unspec.enums.ServedDocuments;
 import uk.gov.hmcts.reform.unspec.enums.ServiceMethod;
 import uk.gov.hmcts.reform.unspec.model.CaseData;
+import uk.gov.hmcts.reform.unspec.service.DeadlinesCalculator;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -36,6 +37,7 @@ public class ConfirmServiceCallbackHandler extends CallbackHandler {
     private static final List<CaseEvent> EVENTS = Collections.singletonList(CONFIRM_SERVICE);
 
     private final ObjectMapper mapper;
+    private final DeadlinesCalculator deadlinesCalculator;
 
     @Override
     protected Map<CallbackType, Callback> callbacks() {
@@ -59,8 +61,8 @@ public class ConfirmServiceCallbackHandler extends CallbackHandler {
         data.put("servedDocuments", servedDocuments);
 
         return AboutToStartOrSubmitCallbackResponse.builder()
-                   .data(data)
-                   .build();
+            .data(data)
+            .build();
     }
 
     private CallbackResponse checkServedDocumentsOtherHasWhiteSpace(CallbackParams callbackParams) {
@@ -73,9 +75,9 @@ public class ConfirmServiceCallbackHandler extends CallbackHandler {
         }
 
         return AboutToStartOrSubmitCallbackResponse.builder()
-                   .data(data)
-                   .errors(errors)
-                   .build();
+            .data(data)
+            .errors(errors)
+            .build();
     }
 
     private CallbackResponse addResponseDatesToCase(CallbackParams callbackParams) {
@@ -83,12 +85,9 @@ public class ConfirmServiceCallbackHandler extends CallbackHandler {
         CaseData caseData = mapper.convertValue(data, CaseData.class);
 
         ServiceMethod serviceMethod = caseData.getServiceMethod();
-
-        // TODO: this field will be different (date / date time) in CCD depending on service method.
         LocalDate serviceDate = caseData.getServiceDate();
-
-        LocalDate deemedDateOfService = serviceMethod.getDeemedDateOfService(serviceDate);
-        LocalDateTime responseDeadline = addFourteenDays(deemedDateOfService);
+        LocalDate deemedDateOfService = deadlinesCalculator.calculateDeemedDateOfService(serviceDate, serviceMethod);
+        LocalDateTime responseDeadline = deadlinesCalculator.calculateDefendantResponseDeadline(deemedDateOfService);
 
         data.put("deemedDateOfService", deemedDateOfService);
         data.put("responseDeadline", responseDeadline);
@@ -104,7 +103,7 @@ public class ConfirmServiceCallbackHandler extends CallbackHandler {
 
         LocalDate deemedDateOfService = caseData.getDeemedDateOfService();
         String formattedDeemedDateOfService = formatLocalDate(deemedDateOfService, DATE);
-        String responseDeadlineDate = formatLocalDateTime(addFourteenDays(deemedDateOfService), DATE_TIME_AT);
+        String responseDeadlineDate = formatLocalDateTime(caseData.getResponseDeadline(), DATE_TIME_AT);
         String certificateOfServiceLink = "http://www.google.com";
 
         String body = format("<br /> Deemed date of service: %s."
@@ -117,9 +116,5 @@ public class ConfirmServiceCallbackHandler extends CallbackHandler {
             .confirmationHeader("# You've confirmed service")
             .confirmationBody(body)
             .build();
-    }
-
-    private LocalDateTime addFourteenDays(LocalDate deemedDateOfService) {
-        return deemedDateOfService.plusDays(14).atTime(16, 0);
     }
 }
