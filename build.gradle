@@ -215,9 +215,14 @@ dependencies {
   implementation group: 'org.springframework.boot', name: 'spring-boot-starter-aop'
   implementation group: 'org.springframework.boot', name: 'spring-boot-starter-json'
   implementation group: 'org.springframework.boot', name: 'spring-boot-starter-quartz'
+  implementation group: 'org.springframework.boot', name: 'spring-boot-starter-jdbc'
 
   implementation group: 'io.springfox', name: 'springfox-swagger2', version: versions.springfoxSwagger
   implementation group: 'io.springfox', name: 'springfox-swagger-ui', version: versions.springfoxSwagger
+  implementation group: 'org.postgresql', name: 'postgresql', version: '42.2.14'
+  implementation group: 'org.jdbi', name: 'jdbi3-sqlobject', version: '3.14.1'
+  implementation group: 'org.jdbi', name: 'jdbi3-spring4', version: '3.14.1'
+  implementation group: 'org.flywaydb', name: 'flyway-core', version: '6.5.3'
 
   implementation group: 'uk.gov.hmcts.reform', name: 'logging', version: versions.reformLogging
   implementation group: 'uk.gov.hmcts.reform', name: 'logging-appinsights', version: versions.reformLogging
@@ -241,7 +246,7 @@ dependencies {
   implementation group: 'org.springframework.boot', name: 'spring-boot-starter-oauth2-resource-server'
   implementation group: 'com.nimbusds', name: 'nimbus-jose-jwt', version: '8.19'
   implementation group: 'io.jsonwebtoken', name: 'jjwt', version: '0.9.1'
-  implementation group: 'uk.gov.hmcts.reform', name: 'idam-client', version: '1.5.4'
+  implementation group: 'uk.gov.hmcts.reform', name: 'idam-client', version: '1.5.5'
 
   implementation group: 'org.apache.logging.log4j', name: 'log4j-api', version: '2.13.3'
   implementation group: 'org.apache.logging.log4j', name: 'log4j-to-slf4j', version: '2.13.3'
@@ -251,7 +256,7 @@ dependencies {
 
   implementation group: 'org.elasticsearch', name: 'elasticsearch', version: '7.8.0'
 
-  testImplementation group: 'org.mockito', name: 'mockito-core', version: '3.4.4'
+  testImplementation group: 'org.mockito', name: 'mockito-core', version: '3.4.6'
   testImplementation group: 'org.mockito', name: 'mockito-junit-jupiter', version: '3.4.6'
 
   compile group: 'uk.gov.hmcts.reform', name: 'fees-java-client', version: '0.0.6'
@@ -268,7 +273,7 @@ dependencies {
     exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
   }
 
-  testImplementation 'org.mockito:mockito-inline:3.4.4'
+  testImplementation 'org.mockito:mockito-inline:3.4.6'
 
   integrationTestImplementation sourceSets.main.runtimeClasspath
   integrationTestImplementation sourceSets.test.runtimeClasspath
