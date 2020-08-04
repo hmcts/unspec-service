@@ -1,15 +1,18 @@
 package uk.gov.hmcts.reform.unspec.config;
 
+import org.flywaydb.core.Flyway;
 import org.jdbi.v3.core.Jdbi;
 import org.jdbi.v3.sqlobject.SqlObjectPlugin;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.boot.autoconfigure.jdbc.DataSourceProperties;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
-import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.jdbc.datasource.TransactionAwareDataSourceProxy;
+import org.springframework.transaction.PlatformTransactionManager;
 import uk.gov.hmcts.reform.unspec.repositories.ReferenceNumberRepository;
 
 import javax.sql.DataSource;
@@ -18,21 +21,42 @@ import javax.sql.DataSource;
 @ConditionalOnProperty("reference.database.enabled")
 public class DatabaseConfiguration {
 
+    @Value("${reference.database.migration}")
+    public String performDbMigration;
+
+    @Bean
     @Primary
-    @ConfigurationProperties(prefix = "spring.datasource")
+    @ConfigurationProperties("spring.datasource")
+    public DataSourceProperties dataSourceProperties() {
+        return new DataSourceProperties();
+    }
+
+    @Primary
     @Bean
     public DataSource dataSource() {
-        return new DriverManagerDataSource();
+        return dataSourceProperties().initializeDataSourceBuilder().build();
     }
 
     @Bean
     public TransactionAwareDataSourceProxy dataSourceProxy(DataSource dataSource) {
-        return new TransactionAwareDataSourceProxy(dataSource);
+        TransactionAwareDataSourceProxy dataSourceProxy = new TransactionAwareDataSourceProxy(dataSource);
+        if (Boolean.parseBoolean(performDbMigration)) {
+            migrateFlyway(dataSourceProxy);
+        }
+        return dataSourceProxy;
     }
 
     @Bean
-    public DataSourceTransactionManager transactionManager(TransactionAwareDataSourceProxy dataSourceProxy) {
+    public PlatformTransactionManager transactionManager(TransactionAwareDataSourceProxy dataSourceProxy) {
         return new DataSourceTransactionManager(dataSourceProxy);
+    }
+
+    private void migrateFlyway(DataSource dataSource) {
+        Flyway.configure()
+            .dataSource(dataSource)
+            .locations("/")
+            .load()
+            .migrate();
     }
 
     @Bean
