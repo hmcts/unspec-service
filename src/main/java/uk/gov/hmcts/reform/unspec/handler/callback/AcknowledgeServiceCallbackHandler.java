@@ -59,6 +59,7 @@ public class AcknowledgeServiceCallbackHandler extends CallbackHandler {
                    .errors(errors)
                    .build();
     }
+
     private CallbackResponse setNewResponseDeadline(CallbackParams callbackParams) {
         Map<String, Object> data = callbackParams.getRequest().getCaseDetails().getData();
         LocalDateTime responseDeadline = mapper.convertValue(data.get(RESPONSE_DEADLINE), LocalDateTime.class);
