@@ -68,6 +68,8 @@ core_case_data:
 
 spring:
   profiles: local
+  flyway:
+    enabled: false
 
 fees:
   api:

@@ -9,14 +9,24 @@ import java.time.LocalTime;
 
 @Getter
 @RequiredArgsConstructor
-public enum ServiceMethod {
-    POST(2),
-    DOCUMENT_EXCHANGE(2),
-    FAX(0),
-    EMAIL(0),
-    OTHER(2);
+public enum ServiceMethodType {
+    POST(2, DateOrDateTime.DATE),
+    DOCUMENT_EXCHANGE(2, DateOrDateTime.DATE),
+    FAX(0, DateOrDateTime.DATE_TIME),
+    EMAIL(0, DateOrDateTime.DATE_TIME),
+    OTHER(2, DateOrDateTime.DATE_TIME);
 
     private final int days;
+    private final DateOrDateTime dateOrDateTime;
+
+    private enum DateOrDateTime {
+        DATE,
+        DATE_TIME
+    }
+
+    public boolean requiresDateEntry() {
+        return this.dateOrDateTime == DateOrDateTime.DATE;
+    }
 
     public LocalDate getDeemedDateOfService(LocalDateTime serviceTime) {
         if (this == FAX || this == EMAIL) {
@@ -26,9 +36,5 @@ public enum ServiceMethod {
         }
 
         return serviceTime.toLocalDate().plusDays(this.days);
-    }
-
-    public LocalDate getDeemedDateOfService(LocalDate serviceTime) {
-        return getDeemedDateOfService(serviceTime.atStartOfDay());
     }
 }
