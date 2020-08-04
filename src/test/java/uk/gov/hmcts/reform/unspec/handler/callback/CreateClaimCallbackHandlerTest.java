@@ -6,14 +6,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.jackson.JacksonAutoConfiguration;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import uk.gov.hmcts.reform.ccd.client.model.AboutToStartOrSubmitCallbackResponse;
 import uk.gov.hmcts.reform.ccd.client.model.SubmittedCallbackResponse;
 import uk.gov.hmcts.reform.unspec.callback.CallbackParams;
 import uk.gov.hmcts.reform.unspec.callback.CallbackType;
-import uk.gov.hmcts.reform.unspec.config.MockDatabaseConfiguration;
 import uk.gov.hmcts.reform.unspec.model.ClaimValue;
-import uk.gov.hmcts.reform.unspec.repositories.ReferenceNumberRepository;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -28,19 +25,13 @@ import static uk.gov.hmcts.reform.unspec.enums.ClaimType.PERSONAL_INJURY_WORK;
 import static uk.gov.hmcts.reform.unspec.helpers.DateFormatHelper.DATE_TIME_AT;
 import static uk.gov.hmcts.reform.unspec.helpers.DateFormatHelper.formatLocalDateTime;
 
-@SpringBootTest(classes = {
-    CreateClaimCallbackHandler.class,
-    JacksonAutoConfiguration.class,
-    MockDatabaseConfiguration.class
-})
+@SpringBootTest(classes = {CreateClaimCallbackHandler.class, JacksonAutoConfiguration.class})
 class CreateClaimCallbackHandlerTest extends BaseCallbackHandlerTest {
 
     @Autowired
     private CreateClaimCallbackHandler handler;
     @Value("${unspecified.response-pack-url}")
     private String responsePackLink;
-    @MockBean
-    private ReferenceNumberRepository referenceNumberRepository;
 
     @Nested
     class MidEventCallback {
