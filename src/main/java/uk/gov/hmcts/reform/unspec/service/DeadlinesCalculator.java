@@ -52,7 +52,6 @@ public class DeadlinesCalculator {
         while (!workingDayIndicator.isWorkingDay(date)) {
             date = date.plusDays(1);
         }
-
         return date;
     }
 }

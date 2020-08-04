@@ -31,7 +31,6 @@ public class IssueDateCalculator {
         while (!workingDayIndicator.isWorkingDay(date)) {
             date = date.plusDays(1);
         }
-
         return date;
     }
 

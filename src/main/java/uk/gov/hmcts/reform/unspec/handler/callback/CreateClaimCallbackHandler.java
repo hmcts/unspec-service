@@ -13,6 +13,7 @@ import uk.gov.hmcts.reform.unspec.callback.CallbackType;
 import uk.gov.hmcts.reform.unspec.callback.CaseEvent;
 import uk.gov.hmcts.reform.unspec.enums.ClaimType;
 import uk.gov.hmcts.reform.unspec.model.ClaimValue;
+import uk.gov.hmcts.reform.unspec.service.DeadlinesCalculator;
 import uk.gov.hmcts.reform.unspec.service.IssueDateCalculator;
 
 import java.time.LocalDate;
@@ -36,14 +37,17 @@ public class CreateClaimCallbackHandler extends CallbackHandler {
     private final ObjectMapper mapper;
     private final String responsePackLink;
     private final IssueDateCalculator issueDateCalculator;
+    private final DeadlinesCalculator deadlinesCalculator;
 
     public CreateClaimCallbackHandler(
         ObjectMapper mapper,
         IssueDateCalculator issueDateCalculator,
+        DeadlinesCalculator deadlinesCalculator,
         @Value("${unspecified.response-pack-url}") String responsePackLink
     ) {
         this.mapper = mapper;
         this.issueDateCalculator = issueDateCalculator;
+        this.deadlinesCalculator = deadlinesCalculator;
         this.responsePackLink = responsePackLink;
     }
 
@@ -77,18 +81,25 @@ public class CreateClaimCallbackHandler extends CallbackHandler {
         }
 
         return AboutToStartOrSubmitCallbackResponse.builder()
-                   .data(data)
-                   .errors(errors)
-                   .build();
+            .data(data)
+            .errors(errors)
+            .build();
     }
 
     private AboutToStartOrSubmitCallbackResponse addIssuedDate(CallbackParams callbackParams) {
         Map<String, Object> data = callbackParams.getRequest().getCaseDetails().getData();
-        data.put("claimIssuedDate", issueDateCalculator.calculateIssueDay(LocalDateTime.now()));
+        LocalDate issueDate = issueDateCalculator.calculateIssueDay(LocalDateTime.now());
+
+        data.put("claimSubmittedDateTime", LocalDateTime.now());
+        data.put("claimIssuedDate", issueDate);
+        data.put(
+            "confirmationOfServiceDeadline",
+            deadlinesCalculator.calculateConfirmationOfServiceDeadline(issueDate)
+        );
 
         return AboutToStartOrSubmitCallbackResponse.builder()
-                   .data(data)
-                   .build();
+            .data(data)
+            .build();
     }
 
     private SubmittedCallbackResponse buildConfirmation(CallbackParams callbackParams) {
@@ -106,8 +117,8 @@ public class CreateClaimCallbackHandler extends CallbackHandler {
                 + " 4pm if you're doing this on the due day", documentLink, responsePackLink, formattedServiceDeadline);
 
         return SubmittedCallbackResponse.builder()
-                   .confirmationHeader(format("# Your claim has been issued\n## Claim number: %s", claimNumber))
-                   .confirmationBody(body)
-                   .build();
+            .confirmationHeader(format("# Your claim has been issued\n## Claim number: %s", claimNumber))
+            .confirmationBody(body)
+            .build();
     }
 }

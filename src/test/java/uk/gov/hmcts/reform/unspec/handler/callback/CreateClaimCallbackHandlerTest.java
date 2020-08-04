@@ -12,6 +12,7 @@ import uk.gov.hmcts.reform.ccd.client.model.SubmittedCallbackResponse;
 import uk.gov.hmcts.reform.unspec.callback.CallbackParams;
 import uk.gov.hmcts.reform.unspec.callback.CallbackType;
 import uk.gov.hmcts.reform.unspec.model.ClaimValue;
+import uk.gov.hmcts.reform.unspec.service.DeadlinesCalculator;
 import uk.gov.hmcts.reform.unspec.service.IssueDateCalculator;
 
 import java.math.BigDecimal;
@@ -39,6 +40,8 @@ class CreateClaimCallbackHandlerTest extends BaseCallbackHandlerTest {
 
     @MockBean
     IssueDateCalculator issueDateCalculator;
+    @MockBean
+    DeadlinesCalculator deadlinesCalculator;
 
     @Nested
     class MidEventCallback {
@@ -92,14 +95,21 @@ class CreateClaimCallbackHandlerTest extends BaseCallbackHandlerTest {
     class AboutToSubmitCallback {
 
         @Test
-        void shouldAddClaimIssuedDate_whenInvoked() {
+        void shouldAddClaimIssuedDateAndSubmittedAt_whenInvoked() {
             when(issueDateCalculator.calculateIssueDay(any(LocalDateTime.class))).thenReturn(LocalDate.now());
+            when(deadlinesCalculator.calculateConfirmationOfServiceDeadline(any(LocalDate.class)))
+                .thenReturn(LocalDate.now().atTime(23, 59, 59));
             CallbackParams params = callbackParamsOf(new HashMap<>(), CallbackType.ABOUT_TO_SUBMIT);
 
             AboutToStartOrSubmitCallbackResponse response = (AboutToStartOrSubmitCallbackResponse) handler
                 .handle(params);
 
             assertThat(response.getData()).containsEntry("claimIssuedDate", LocalDate.now());
+            assertThat(response.getData()).containsEntry(
+                "confirmationOfServiceDeadline",
+                LocalDate.now().atTime(23, 59, 59)
+            );
+            assertThat(response.getData()).containsKey("claimSubmittedDateTime");
         }
     }
 
