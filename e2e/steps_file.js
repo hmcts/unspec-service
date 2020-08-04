@@ -19,6 +19,10 @@ const serviceMethodPage = require('./pages/confirmService/serviceMethod.page');
 const serviceLocationPage = require('./pages/confirmService/serviceLocation.page');
 const serviceDatePage = require('./pages/confirmService/serviceDate.page');
 
+const confirmNameAndAddressPage = require('./pages/acknowledgeSerivce/confirmNameAndAddress.page');
+const confirmDetailsPage = require('./pages/acknowledgeSerivce/confirmDetails.page');
+const responseIntentionPage = require('./pages/acknowledgeSerivce/responseIntention.page');
+
 const proposeDeadline = require('./pages/requestExtension/proposeDeadline.page');
 const extensionAlreadyAgreed = require('./pages/requestExtension/extensionAlreadyAgreed.page');
 
@@ -85,6 +89,20 @@ module.exports = function () {
       this.waitForText('Confirm service');
       await this.retryUntilExists(() => this.click('Confirm service'), 'ccd-markdown');
       this.see('You\'ve confirmed service');
+      this.click('Close and Return to case details');
+      this.waitForElement(CASE_HEADER);
+    },
+
+    async acknowledgeService() {
+      await caseViewPage.startEvent('Acknowledge service');
+      await confirmNameAndAddressPage.verifyDetails();
+      await confirmDetailsPage.confirmReference();
+      await responseIntentionPage.selectResponseIntention();
+
+      this.waitForText('Acknowledge service');
+      await this.retryUntilExists(() => this.click('Acknowledge service'), 'ccd-markdown');
+      this.see('You\'ve acknowledged service');
+      //TODO: verify displayed response date
       this.click('Close and Return to case details');
       this.waitForElement(CASE_HEADER);
     },
