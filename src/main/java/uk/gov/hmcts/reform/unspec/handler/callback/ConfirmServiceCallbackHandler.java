@@ -12,8 +12,8 @@ import uk.gov.hmcts.reform.unspec.callback.CallbackParams;
 import uk.gov.hmcts.reform.unspec.callback.CallbackType;
 import uk.gov.hmcts.reform.unspec.callback.CaseEvent;
 import uk.gov.hmcts.reform.unspec.enums.ServedDocuments;
-import uk.gov.hmcts.reform.unspec.model.ServiceMethod;
 import uk.gov.hmcts.reform.unspec.model.CaseData;
+import uk.gov.hmcts.reform.unspec.model.ServiceMethod;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -59,8 +59,8 @@ public class ConfirmServiceCallbackHandler extends CallbackHandler {
         data.put("servedDocuments", servedDocuments);
 
         return AboutToStartOrSubmitCallbackResponse.builder()
-                   .data(data)
-                   .build();
+            .data(data)
+            .build();
     }
 
     private CallbackResponse checkServedDocumentsOtherHasWhiteSpace(CallbackParams callbackParams) {
@@ -73,9 +73,9 @@ public class ConfirmServiceCallbackHandler extends CallbackHandler {
         }
 
         return AboutToStartOrSubmitCallbackResponse.builder()
-                   .data(data)
-                   .errors(errors)
-                   .build();
+            .data(data)
+            .errors(errors)
+            .build();
     }
 
     private CallbackResponse addResponseDatesToCase(CallbackParams callbackParams) {
