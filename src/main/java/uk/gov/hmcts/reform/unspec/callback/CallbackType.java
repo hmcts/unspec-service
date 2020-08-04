@@ -11,7 +11,8 @@ public enum CallbackType {
     ABOUT_TO_START("about-to-start"),
     ABOUT_TO_SUBMIT("about-to-submit"),
     SUBMITTED("submitted"),
-    MID("mid");
+    MID("mid"),
+    SECONDARY_MID("secondary-mid");
 
     private final String value;
 
