@@ -6,7 +6,6 @@ import org.mockito.Mock;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Set;
@@ -19,8 +18,8 @@ import static org.mockito.Mockito.when;
 @ExtendWith(SpringExtension.class)
 class PublicHolidaysCollectionTest {
 
-    private static final String BANK_HOLIDAY_1 = "2020-12-24";
-    private static final String BANK_HOLIDAY_2 = "2011-12-25";
+    private static final LocalDate BANK_HOLIDAY_1 = LocalDate.of(2020, 12, 24);
+    private static final LocalDate BANK_HOLIDAY_2 = LocalDate.of(2020, 12, 25);
 
     @Mock
     private BankHolidaysApi bankHolidaysApi;
@@ -34,8 +33,8 @@ class PublicHolidaysCollectionTest {
 
         assertAll(
             "Bank holidays",
-            () -> assertThat(response.contains(toDate(BANK_HOLIDAY_1))),
-            () -> assertThat(response.contains(toDate(BANK_HOLIDAY_2)))
+            () -> assertThat(response.contains(BANK_HOLIDAY_1)),
+            () -> assertThat(response.contains(BANK_HOLIDAY_2))
         );
     }
 
@@ -62,14 +61,10 @@ class PublicHolidaysCollectionTest {
         return expResponse;
     }
 
-    private static BankHolidays.Division.EventDate createItem(String date) {
+    private static BankHolidays.Division.EventDate createItem(LocalDate date) {
         BankHolidays.Division.EventDate item = new BankHolidays.Division.EventDate();
         item.date = date;
 
         return item;
-    }
-
-    private static LocalDate toDate(String dateString) {
-        return LocalDate.parse(dateString, DateTimeFormatter.ofPattern("yyyy-MM-dd"));
     }
 }
