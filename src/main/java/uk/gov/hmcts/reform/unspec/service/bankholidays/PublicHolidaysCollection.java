@@ -4,7 +4,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -23,12 +22,10 @@ public class PublicHolidaysCollection {
     }
 
     private Set<LocalDate> retrieveAllPublicHolidays() {
-        BankHolidays value = bankHolidaysApi.retrieveAll();
+        BankHolidays bankHolidays = bankHolidaysApi.retrieveAll();
 
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern(BankHolidays.Division.EventDate.FORMAT);
-
-        return value.englandAndWales.events.stream()
-            .map(item -> LocalDate.parse(item.date, formatter))
+        return bankHolidays.englandAndWales.events.stream()
+            .map(item -> item.date)
             .collect(Collectors.toSet());
     }
 

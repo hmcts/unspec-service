@@ -44,7 +44,7 @@ class WorkingDayIndicatorTest {
     private static final LocalDate SATURDAY = LocalDate.of(2017, 6, 10);
     private static final LocalDate SUNDAY = LocalDate.of(2017, 6, 11);
 
-    static class WeekDays implements ArgumentsProvider {
+    static class WeekDaysArgumentProvider implements ArgumentsProvider {
 
         @Override
         public Stream<Arguments> provideArguments(ExtensionContext context) {
@@ -58,7 +58,7 @@ class WorkingDayIndicatorTest {
         }
     }
 
-    static class Weekend implements ArgumentsProvider {
+    static class WeekendArgumentsProvider implements ArgumentsProvider {
 
         @Override
         public Stream<Arguments> provideArguments(ExtensionContext context) {
@@ -85,7 +85,7 @@ class WorkingDayIndicatorTest {
     class ForWeekdays {
 
         @ParameterizedTest
-        @ArgumentsSource(WeekDays.class)
+        @ArgumentsSource(WeekDaysArgumentProvider.class)
         void shouldReturnTrue_whenWeekday(LocalDate weekday) {
             when(publicHolidaysApiClient.getPublicHolidays()).thenReturn(Collections.emptySet());
 
@@ -97,7 +97,7 @@ class WorkingDayIndicatorTest {
     class ForWeekend {
 
         @ParameterizedTest
-        @ArgumentsSource(Weekend.class)
+        @ArgumentsSource(WeekendArgumentsProvider.class)
         void shouldReturnFalse_whenWeekend(LocalDate weekend) {
             assertFalse(service.isWorkingDay(weekend));
         }
@@ -108,11 +108,10 @@ class WorkingDayIndicatorTest {
 
         @Test
         void shouldReturnFalseForOneBankHoliday_whenThereIsOneBankHolidayInCollection() {
-            LocalDate bankHoliday = BANK_HOLIDAY;
             when(publicHolidaysApiClient.getPublicHolidays())
-                .thenReturn(new HashSet<>(singletonList(bankHoliday)));
+                .thenReturn(new HashSet<>(singletonList(BANK_HOLIDAY)));
 
-            assertFalse(service.isWorkingDay(bankHoliday));
+            assertFalse(service.isWorkingDay(BANK_HOLIDAY));
         }
 
         @Test
