@@ -2,6 +2,7 @@ package uk.gov.hmcts.reform.unspec.handler.callback;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import uk.gov.hmcts.reform.ccd.client.model.AboutToStartOrSubmitCallbackResponse;
 import uk.gov.hmcts.reform.ccd.client.model.CallbackResponse;
@@ -14,6 +15,7 @@ import uk.gov.hmcts.reform.unspec.callback.CaseEvent;
 import uk.gov.hmcts.reform.unspec.enums.ServedDocuments;
 import uk.gov.hmcts.reform.unspec.model.CaseData;
 import uk.gov.hmcts.reform.unspec.model.ServiceMethod;
+import uk.gov.hmcts.reform.unspec.validation.groups.ConfirmServiceDateGroup;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -21,6 +23,9 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
+import javax.validation.ConstraintViolation;
+import javax.validation.Validator;
 
 import static java.lang.String.format;
 import static uk.gov.hmcts.reform.unspec.callback.CaseEvent.CONFIRM_SERVICE;
@@ -30,18 +35,19 @@ import static uk.gov.hmcts.reform.unspec.helpers.DateFormatHelper.formatLocalDat
 import static uk.gov.hmcts.reform.unspec.helpers.DateFormatHelper.formatLocalDateTime;
 
 @Service
-@RequiredArgsConstructor
+@RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class ConfirmServiceCallbackHandler extends CallbackHandler {
 
     private static final List<CaseEvent> EVENTS = Collections.singletonList(CONFIRM_SERVICE);
-
     private final ObjectMapper mapper;
+    private final Validator validator;
 
     @Override
     protected Map<CallbackType, Callback> callbacks() {
         return Map.of(
             CallbackType.ABOUT_TO_START, this::prepopulateServedDocuments,
             CallbackType.MID, this::checkServedDocumentsOtherHasWhiteSpace,
+            CallbackType.MID_SECONDARY, this::validateServiceDate,
             CallbackType.ABOUT_TO_SUBMIT, this::addResponseDatesToCase,
             CallbackType.SUBMITTED, this::buildConfirmation
         );
@@ -71,6 +77,19 @@ public class ConfirmServiceCallbackHandler extends CallbackHandler {
         if (servedDocumentsOther != null && servedDocumentsOther.toString().isBlank()) {
             errors.add("CONTENT TBC: please enter a valid value for other documents");
         }
+
+        return AboutToStartOrSubmitCallbackResponse.builder()
+            .data(data)
+            .errors(errors)
+            .build();
+    }
+
+    private CallbackResponse validateServiceDate(CallbackParams callbackParams) {
+        Map<String, Object> data = callbackParams.getRequest().getCaseDetails().getData();
+        CaseData caseData = mapper.convertValue(data, CaseData.class);
+        List<String> errors = validator.validate(caseData, ConfirmServiceDateGroup.class).stream()
+            .map(ConstraintViolation::getMessage)
+            .collect(Collectors.toList());
 
         return AboutToStartOrSubmitCallbackResponse.builder()
             .data(data)
