@@ -44,7 +44,7 @@ public class CertificateOfServiceGenerator extends TemplateDataGenerator<Certifi
                             .postCode("NP204AG")
                             .build())
         .build(); //TODO Rep details need to be picked from reference data
-    public static final String TEMP_REFERENCE_NUMBER = "000LR001"; //TODO Need to agree a way to get
+    public static final String TEMP_REFERENCE_NUMBER = "000LR095"; //TODO Need to agree a way to get
 
     private final DocumentManagementService documentManagementService;
     private final DocumentGeneratorService documentGeneratorService;
@@ -98,9 +98,11 @@ public class CertificateOfServiceGenerator extends TemplateDataGenerator<Certifi
     }
 
     public String prepareDocumentList(List<ServedDocuments> servedDocuments, String otherServedDocuments) {
-        return servedDocuments.stream()
+        String withoutOther = servedDocuments.stream()
+            .filter(doc -> doc != OTHER)
             .map(ServedDocuments::getLabel)
-            .map(label -> label.replace(OTHER.getLabel(), "Other - " + otherServedDocuments))
             .collect(Collectors.joining("\n"));
+
+        return servedDocuments.contains(OTHER) ? withoutOther + "\nOther - " + otherServedDocuments : withoutOther;
     }
 }
