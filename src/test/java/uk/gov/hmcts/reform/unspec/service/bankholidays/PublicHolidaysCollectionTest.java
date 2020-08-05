@@ -33,8 +33,8 @@ class PublicHolidaysCollectionTest {
 
         assertAll(
             "Bank holidays",
-            () -> assertThat(response.contains(BANK_HOLIDAY_1)),
-            () -> assertThat(response.contains(BANK_HOLIDAY_2))
+            () -> assertThat(response).contains(BANK_HOLIDAY_1),
+            () -> assertThat(response).contains(BANK_HOLIDAY_2)
         );
     }
 
