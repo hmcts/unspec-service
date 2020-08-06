@@ -29,12 +29,18 @@ public enum ServiceMethodType {
     }
 
     public LocalDate getDeemedDateOfService(LocalDateTime serviceTime) {
-        if (this == FAX || this == EMAIL) {
-            if (serviceTime.toLocalTime().isAfter(LocalTime.of(15, 59, 59))) {
-                return serviceTime.toLocalDate().plusDays(1);
-            }
+        if (isFaxOrEmail() && isAfter4pm(serviceTime)) {
+            return serviceTime.toLocalDate().plusDays(1);
         }
 
         return serviceTime.toLocalDate().plusDays(this.days);
+    }
+
+    private boolean isFaxOrEmail() {
+        return this == FAX || this == EMAIL;
+    }
+
+    private boolean isAfter4pm(LocalDateTime serviceTime) {
+        return serviceTime.toLocalTime().isAfter(LocalTime.of(15, 59, 59));
     }
 }
