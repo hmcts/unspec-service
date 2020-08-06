@@ -26,7 +26,6 @@ public class CaseData {
     private final LocalDateTime serviceDateAndTime;
 
     private final LocalDate claimIssuedDate;
-
     private final LocalDate deemedDateOfService;
     private final LocalDateTime responseDeadline;
     private final List<ServedDocuments> servedDocuments;
