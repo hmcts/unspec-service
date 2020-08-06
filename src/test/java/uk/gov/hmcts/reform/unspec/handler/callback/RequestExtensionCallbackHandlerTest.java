@@ -5,10 +5,12 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.jackson.JacksonAutoConfiguration;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import uk.gov.hmcts.reform.ccd.client.model.AboutToStartOrSubmitCallbackResponse;
 import uk.gov.hmcts.reform.ccd.client.model.SubmittedCallbackResponse;
 import uk.gov.hmcts.reform.unspec.callback.CallbackParams;
 import uk.gov.hmcts.reform.unspec.callback.CallbackType;
+import uk.gov.hmcts.reform.unspec.service.DeadlinesCalculator;
 import uk.gov.hmcts.reform.unspec.validation.RequestExtensionValidator;
 
 import java.time.LocalDate;
@@ -21,6 +23,8 @@ import static java.lang.String.format;
 import static java.time.LocalDate.now;
 import static java.util.Collections.emptyMap;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.when;
 import static uk.gov.hmcts.reform.unspec.handler.callback.RequestExtensionCallbackHandler.ALREADY_AGREED;
 import static uk.gov.hmcts.reform.unspec.handler.callback.RequestExtensionCallbackHandler.EXTENSION_ALREADY_AGREED;
 import static uk.gov.hmcts.reform.unspec.handler.callback.RequestExtensionCallbackHandler.NOT_AGREED;
@@ -40,8 +44,11 @@ class RequestExtensionCallbackHandlerTest extends BaseCallbackHandlerTest {
     @Autowired
     private RequestExtensionCallbackHandler handler;
 
+    @MockBean
+    DeadlinesCalculator deadlinesCalculator;
+
     @Nested
-    class AboutToSubmitCallback {
+    class AboutToStartCallback {
 
         @Test
         void shouldReturnError_whenExtensionIsAlreadyRequested() {
@@ -100,6 +107,58 @@ class RequestExtensionCallbackHandlerTest extends BaseCallbackHandlerTest {
                 .handle(params);
 
             assertThat(response.getErrors()).isEmpty();
+        }
+    }
+
+    @Nested
+    class AboutToSubmitCallback {
+
+        @Test
+        void shouldUpdateResponseDeadlineToProposedDeadline_whenExtensionAlreadyAgreed() {
+            LocalDate proposedDeadline = now().plusDays(14);
+            LocalDateTime responseDeadline = now().atTime(16, 0);
+            when(deadlinesCalculator.calculateFirstWorkingDay(any(LocalDate.class)))
+                .thenReturn(proposedDeadline);
+
+            CallbackParams params = callbackParamsOf(
+                new HashMap<>() {
+                    {
+                        put(PROPOSED_DEADLINE, proposedDeadline);
+                        put(EXTENSION_ALREADY_AGREED, "Yes");
+                        put(RESPONSE_DEADLINE, responseDeadline);
+                    }
+                },
+                CallbackType.ABOUT_TO_SUBMIT
+            );
+
+            AboutToStartOrSubmitCallbackResponse response = (AboutToStartOrSubmitCallbackResponse) handler
+                .handle(params);
+
+            assertThat(response.getData().get(RESPONSE_DEADLINE)).isEqualTo(proposedDeadline.atTime(16, 0));
+        }
+
+        @Test
+        void shouldNotUpdateResponseDeadline_whenExtensionIsNotAlreadyAgreed() {
+            LocalDate proposedDeadline = now().plusDays(14);
+            LocalDateTime responseDeadline = now().atTime(16, 0);
+            when(deadlinesCalculator.calculateFirstWorkingDay(any(LocalDate.class)))
+                .thenReturn(proposedDeadline);
+
+            CallbackParams params = callbackParamsOf(
+                new HashMap<>() {
+                    {
+                        put(PROPOSED_DEADLINE, proposedDeadline);
+                        put(EXTENSION_ALREADY_AGREED, "No");
+                        put(RESPONSE_DEADLINE, responseDeadline);
+                    }
+                },
+                CallbackType.ABOUT_TO_SUBMIT
+            );
+
+            AboutToStartOrSubmitCallbackResponse response = (AboutToStartOrSubmitCallbackResponse) handler
+                .handle(params);
+
+            assertThat(response.getData().get(RESPONSE_DEADLINE)).isEqualTo(responseDeadline);
         }
     }
 

@@ -1,6 +1,7 @@
 package uk.gov.hmcts.reform.unspec.handler.callback;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import uk.gov.hmcts.reform.ccd.client.model.AboutToStartOrSubmitCallbackResponse;
 import uk.gov.hmcts.reform.ccd.client.model.CallbackResponse;
@@ -11,6 +12,7 @@ import uk.gov.hmcts.reform.unspec.callback.CallbackParams;
 import uk.gov.hmcts.reform.unspec.callback.CallbackType;
 import uk.gov.hmcts.reform.unspec.callback.CaseEvent;
 import uk.gov.hmcts.reform.unspec.enums.YesOrNo;
+import uk.gov.hmcts.reform.unspec.service.DeadlinesCalculator;
 import uk.gov.hmcts.reform.unspec.validation.RequestExtensionValidator;
 
 import java.time.LocalDate;
@@ -26,6 +28,7 @@ import static uk.gov.hmcts.reform.unspec.helpers.DateFormatHelper.DATE;
 import static uk.gov.hmcts.reform.unspec.helpers.DateFormatHelper.formatLocalDateTime;
 
 @Service
+@RequiredArgsConstructor
 public class RespondExtensionCallbackHandler extends CallbackHandler {
 
     private static final List<CaseEvent> EVENTS = Collections.singletonList(RESPOND_EXTENSION);
@@ -38,11 +41,7 @@ public class RespondExtensionCallbackHandler extends CallbackHandler {
 
     private final ObjectMapper mapper;
     private final RequestExtensionValidator validator;
-
-    public RespondExtensionCallbackHandler(ObjectMapper mapper, RequestExtensionValidator validator) {
-        this.mapper = mapper;
-        this.validator = validator;
-    }
+    private final DeadlinesCalculator deadlinesCalculator;
 
     @Override
     protected Map<CallbackType, Callback> callbacks() {
@@ -93,12 +92,18 @@ public class RespondExtensionCallbackHandler extends CallbackHandler {
 
         if (proposedDeadlineAccepted == YesOrNo.YES) {
             newDeadline = mapToDate(data, PROPOSED_DEADLINE);
-            data.put(RESPONSE_DEADLINE, newDeadline.atTime(16, 0));
+            data.put(
+                RESPONSE_DEADLINE,
+                deadlinesCalculator.calculateFirstWorkingDay(newDeadline).atTime(16, 0)
+            );
         }
 
         if (providedCounterDate == YesOrNo.YES) {
             newDeadline = mapToDate(data, COUNTER_DEADLINE);
-            data.put(RESPONSE_DEADLINE, newDeadline.atTime(16, 0));
+            data.put(
+                RESPONSE_DEADLINE,
+                deadlinesCalculator.calculateFirstWorkingDay(newDeadline).atTime(16, 0)
+            );
         }
 
         return AboutToStartOrSubmitCallbackResponse.builder()

@@ -5,11 +5,13 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.jackson.JacksonAutoConfiguration;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import uk.gov.hmcts.reform.ccd.client.model.AboutToStartOrSubmitCallbackResponse;
 import uk.gov.hmcts.reform.ccd.client.model.SubmittedCallbackResponse;
 import uk.gov.hmcts.reform.unspec.callback.CallbackParams;
 import uk.gov.hmcts.reform.unspec.callback.CallbackType;
 import uk.gov.hmcts.reform.unspec.enums.YesOrNo;
+import uk.gov.hmcts.reform.unspec.service.DeadlinesCalculator;
 import uk.gov.hmcts.reform.unspec.validation.RequestExtensionValidator;
 
 import java.time.LocalDate;
@@ -21,6 +23,8 @@ import static com.google.common.collect.ImmutableMap.of;
 import static java.lang.String.format;
 import static java.time.LocalDate.now;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.when;
 import static uk.gov.hmcts.reform.unspec.helpers.DateFormatHelper.DATE;
 import static uk.gov.hmcts.reform.unspec.helpers.DateFormatHelper.formatLocalDateTime;
 
@@ -37,6 +41,9 @@ class RespondExtensionCallbackHandlerTest extends BaseCallbackHandlerTest {
 
     @Autowired
     private RespondExtensionCallbackHandler handler;
+
+    @MockBean
+    DeadlinesCalculator deadlinesCalculator;
 
     @Nested
     class AboutToStartCallback {
@@ -122,6 +129,9 @@ class RespondExtensionCallbackHandlerTest extends BaseCallbackHandlerTest {
         @Test
         void shouldUpdateResponseDeadlineToProposedDeadline_whenAcceptIsYes() {
             LocalDate proposedDeadline = now().plusDays(14);
+            when(deadlinesCalculator.calculateFirstWorkingDay(any(LocalDate.class)))
+                .thenReturn(proposedDeadline);
+
             Map<String, Object> map = new HashMap<>();
             map.put(PROPOSED_DEADLINE, proposedDeadline);
             map.put(RESPONSE_DEADLINE, now().atTime(16, 0));
@@ -139,6 +149,9 @@ class RespondExtensionCallbackHandlerTest extends BaseCallbackHandlerTest {
         void shouldUpdateResponseDeadlineToCounterDate_whenAcceptIsNoAndCounterIsYes() {
             LocalDateTime responseDeadline = now().atTime(16, 0);
 
+            when(deadlinesCalculator.calculateFirstWorkingDay(any(LocalDate.class)))
+                .thenReturn(responseDeadline.plusDays(8).toLocalDate());
+
             Map<String, Object> map = new HashMap<>();
             map.put(RESPONSE_DEADLINE, responseDeadline);
             map.put(PROPOSED_DEADLINE, responseDeadline.plusDays(14).toLocalDate());
@@ -151,7 +164,7 @@ class RespondExtensionCallbackHandlerTest extends BaseCallbackHandlerTest {
             AboutToStartOrSubmitCallbackResponse response =
                 (AboutToStartOrSubmitCallbackResponse) handler.handle(params);
 
-            assertThat(response.getData().get(RESPONSE_DEADLINE)).isEqualTo(responseDeadline.plusDays(7));
+            assertThat(response.getData().get(RESPONSE_DEADLINE)).isEqualTo(responseDeadline.plusDays(8));
         }
 
         @Test
