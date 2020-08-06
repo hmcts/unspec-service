@@ -249,7 +249,7 @@ dependencies {
   implementation group: 'org.springframework.boot', name: 'spring-boot-starter-oauth2-resource-server'
   implementation group: 'com.nimbusds', name: 'nimbus-jose-jwt', version: '8.19'
   implementation group: 'io.jsonwebtoken', name: 'jjwt', version: '0.9.1'
-  implementation group: 'uk.gov.hmcts.reform', name: 'idam-client', version: '1.5.4'
+  implementation group: 'uk.gov.hmcts.reform', name: 'idam-client', version: '1.5.5'
 
   implementation group: 'org.apache.logging.log4j', name: 'log4j-api', version: '2.13.3'
   implementation group: 'org.apache.logging.log4j', name: 'log4j-to-slf4j', version: '2.13.3'
@@ -257,8 +257,10 @@ dependencies {
   implementation group: 'org.apache.tomcat.embed', name: 'tomcat-embed-core', version: '9.0.37'
   implementation group: 'org.apache.tomcat.embed', name: 'tomcat-embed-websocket', version: '9.0.37'
 
-  testImplementation group: 'org.mockito', name: 'mockito-core', version: '3.4.4'
-  testImplementation group: 'org.mockito', name: 'mockito-junit-jupiter', version: '3.4.4'
+  implementation group: 'org.elasticsearch', name: 'elasticsearch', version: '7.8.1'
+
+  testImplementation group: 'org.mockito', name: 'mockito-core', version: '3.4.6'
+  testImplementation group: 'org.mockito', name: 'mockito-junit-jupiter', version: '3.4.6'
 
   testAnnotationProcessor group: 'org.projectlombok', name: 'lombok', version: versions.lombok
   testCompileOnly group: 'org.projectlombok', name: 'lombok', version: versions.lombok
@@ -269,7 +271,7 @@ dependencies {
     exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
   }
 
-  testImplementation 'org.mockito:mockito-inline:3.4.4'
+  testImplementation 'org.mockito:mockito-inline:3.4.6'
 
   integrationTestImplementation sourceSets.main.runtimeClasspath
   integrationTestImplementation sourceSets.test.runtimeClasspath

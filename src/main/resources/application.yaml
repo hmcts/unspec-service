@@ -1,12 +1,6 @@
 server:
   port: 4000
 
-logging:
-  level:
-    org:
-      springframework:
-        security: DEBUG
-
 management:
   health:
     probes:
@@ -62,6 +56,13 @@ idam:
 
 document_management:
   userRoles: "caseworker-civil,caseworker-civil-solicitor"
+
+bankHolidays:
+  api:
+    url: https://www.gov.uk
+
+nonworking-days:
+  datafile: /data/non-working_days.dat
 
 unspecified:
   response-pack-url: https://formfinder.hmctsformfinder.justice.gov.uk/n9-eng.pdf

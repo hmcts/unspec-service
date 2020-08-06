@@ -3,8 +3,6 @@ package uk.gov.hmcts.reform.unspec.service.docmosis.sealedclaim;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import uk.gov.hmcts.reform.unspec.callback.CallbackParams;
-import uk.gov.hmcts.reform.unspec.helpers.CaseDetailsConverter;
 import uk.gov.hmcts.reform.unspec.model.Address;
 import uk.gov.hmcts.reform.unspec.model.CaseData;
 import uk.gov.hmcts.reform.unspec.model.Party;
@@ -24,7 +22,6 @@ import uk.gov.hmcts.reform.unspec.utils.CaseNameUtils;
 import java.time.LocalDate;
 import java.util.List;
 
-import static uk.gov.hmcts.reform.unspec.callback.CallbackParams.Params.BEARER_TOKEN;
 import static uk.gov.hmcts.reform.unspec.service.docmosis.DocmosisTemplates.N1;
 import static uk.gov.hmcts.reform.unspec.utils.PartyNameUtils.getPartyNameBasedOnType;
 
@@ -54,14 +51,11 @@ public class SealedClaimFormGenerator extends TemplateDataGenerator<SealedClaimF
     public static final String REFERENCE_NUMBER = "000LR095"; //TODO Need to agree a way to get
     private final DocumentManagementService documentManagementService;
     private final DocumentGeneratorService documentGeneratorService;
-    private final CaseDetailsConverter caseDetailsConverter;
 
-    public CaseDocument generate(CallbackParams callbackParams) {
-        CaseData caseData = caseDetailsConverter.toCaseData(callbackParams.getRequest().getCaseDetails());
+    public CaseDocument generate(CaseData caseData, String authorisation) {
         SealedClaimForm templateData = getTemplateData(caseData);
 
         DocmosisDocument docmosisDocument = documentGeneratorService.generateDocmosisDocument(templateData, N1);
-        String authorisation = callbackParams.getParams().get(BEARER_TOKEN).toString();
         return documentManagementService.uploadDocument(
             authorisation,
             new PDF(getFileName(caseData), docmosisDocument.getBytes(), DocumentType.SEALED_CLAIM)
@@ -86,7 +80,7 @@ public class SealedClaimFormGenerator extends TemplateDataGenerator<SealedClaimF
             .issueDate(caseData.getClaimIssuedDate())
             .submittedOn(LocalDate.of(2020, 9, 29))
             .claimantExternalReference(caseData.getSolicitorReferences().getClaimantReference())
-            .defendantExternalReference(caseData.getSolicitorReferences().getClaimantReference())
+            .defendantExternalReference(caseData.getSolicitorReferences().getDefendantReference())
             .caseName(CaseNameUtils.toCaseName.apply(caseData))
             .build();
     }

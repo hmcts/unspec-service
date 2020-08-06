@@ -30,6 +30,7 @@ import java.util.List;
 import java.util.Map;
 
 import static java.lang.String.format;
+import static uk.gov.hmcts.reform.unspec.callback.CallbackParams.Params.BEARER_TOKEN;
 import static uk.gov.hmcts.reform.unspec.callback.CaseEvent.CREATE_CASE;
 import static uk.gov.hmcts.reform.unspec.enums.AllocatedTrack.getAllocatedTrack;
 import static uk.gov.hmcts.reform.unspec.helpers.DateFormatHelper.DATE_TIME_AT;
@@ -88,10 +89,17 @@ public class CreateClaimCallbackHandler extends CallbackHandler {
 
     private CallbackResponse issueClaim(CallbackParams callbackParams) {
         CaseDetails caseDetails = callbackParams.getRequest().getCaseDetails();
-        CaseDocument sealedClaim = sealedClaimFormGenerator.generate(callbackParams);
+        LocalDate issueDate = LocalDate.now();
+        CaseData caseData = caseDetailsConverter.toCaseData(callbackParams.getRequest().getCaseDetails());
+
+        CaseDocument sealedClaim = sealedClaimFormGenerator.generate(
+            caseData.toBuilder().claimIssuedDate(issueDate).build(),
+            callbackParams.getParams().get(BEARER_TOKEN).toString()
+        );
+
         Map<String, Object> data = caseDetails.getData();
         data.put("systemGeneratedCaseDocuments", ElementUtils.wrapElements(sealedClaim));
-        data.put("claimIssuedDate", LocalDate.now());
+        data.put("claimIssuedDate", issueDate);
 
         return AboutToStartOrSubmitCallbackResponse.builder()
             .data(data)
