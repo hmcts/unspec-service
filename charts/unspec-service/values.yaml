@@ -12,7 +12,7 @@ java:
   image: 'hmctspublic.azurecr.io/unspec/service:latest'
   ingressHost: unspec-service-{{ .Values.global.environment }}.service.core-compute-{{ .Values.global.environment }}.internal
   aadIdentityName: unspec
-  environment:
+    environment:
     IDAM_CLIENT_ID: unspec-service
     IDAM_CLIENT_REDIRECT_URI: https://unspec-service-{{ .Values.global.environment }}.service.core-compute-{{ .Values.global.environment }}.internal/oauth2/callback
     IDAM_API_URL: https://idam-api.{{ .Values.global.environment }}.platform.hmcts.net

@@ -12,7 +12,7 @@ import uk.gov.hmcts.reform.unspec.service.UserService;
 
 import java.util.Map;
 
-public class BaseCallbackHandlerTest {
+public abstract class BaseCallbackHandlerTest {
 
     public static final Long CASE_ID = 1594901956117591L;
     @MockBean
