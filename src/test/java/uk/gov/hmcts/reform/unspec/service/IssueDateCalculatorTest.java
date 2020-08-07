@@ -44,7 +44,6 @@ class IssueDateCalculatorTest {
 
         @Test
         void shouldBeIssuedTheSameDay_whenSubmittedOnWeekdayMorning() {
-
             noHolidays();
 
             LocalDate issueDate = calculator.calculateIssueDay(WEEKDAY_MORNING);
@@ -54,7 +53,6 @@ class IssueDateCalculatorTest {
 
         @Test
         void shouldBeIssuedNextDay_whenSubmittedOnMondayEvening() {
-
             noHolidays();
 
             LocalDate issueDate = calculator.calculateIssueDay(WEEKDAY_EVENING);
@@ -64,7 +62,6 @@ class IssueDateCalculatorTest {
 
         @Test
         void shouldBeIssuedAfterWeekend_whenSubmittedOnFridayEvening() {
-
             // Sat, Sun, Mon
             when(workingDayIndicator.isWorkingDay(any())).thenReturn(NO, NO, YES);
 
@@ -75,7 +72,6 @@ class IssueDateCalculatorTest {
 
         @Test
         void shouldBeIssuedAfterWeekend_whenSubmittedOnSaturdayMorning() {
-
             // Sat, Sun, Mon
             when(workingDayIndicator.isWorkingDay(any())).thenReturn(NO, NO, YES);
 
@@ -86,7 +82,6 @@ class IssueDateCalculatorTest {
 
         @Test
         void shouldBeIssuedNextDay_whenSubmittedOnSundayMorning() {
-
             // Sun, Mon
             when(workingDayIndicator.isWorkingDay(any())).thenReturn(NO, YES);
 
@@ -105,7 +100,6 @@ class IssueDateCalculatorTest {
 
         @Test
         void shouldBeIssuedOnTuesdayInFourDays_whenSubmittedOnGoodFridayMorning() {
-
             // Fri, Sat, Sun, Mon, Tue
             when(workingDayIndicator.isWorkingDay(any())).thenReturn(NO, NO, NO, NO, YES);
 
@@ -116,7 +110,6 @@ class IssueDateCalculatorTest {
 
         @Test
         void shouldBeIssuedOnTuesdayInFiveDays_whenSubmittedOnGoodThursdayEvening() {
-
             // Fri, Sat, Sun, Mon, Tue
             when(workingDayIndicator.isWorkingDay(any())).thenReturn(NO, NO, NO, NO, YES);
 
@@ -127,7 +120,6 @@ class IssueDateCalculatorTest {
 
         @Test
         void shouldBeIssuedOnTuesday_whenSubmittedOnSaturdayMorningBankHolidayOnMonday() {
-
             // Sat, Sun, Mon, Tue
             when(workingDayIndicator.isWorkingDay(any())).thenReturn(NO, NO, NO, YES);
 
@@ -138,7 +130,6 @@ class IssueDateCalculatorTest {
 
         @Test
         void shouldBeIssuedOnTuesday_whenSubmittedOnSaturdayEveningBankHolidayOnMonday() {
-
             // Sun, Mon, Tue
             when(workingDayIndicator.isWorkingDay(any())).thenReturn(NO, NO, YES);
 
@@ -149,7 +140,6 @@ class IssueDateCalculatorTest {
 
         @Test
         void shouldBeIssuedOnTuesday_whenSubmittedOnSundayMorningBankHolidayOnMonday() {
-
             // Sun, Mon, Tue
             when(workingDayIndicator.isWorkingDay(any())).thenReturn(NO, NO, YES);
 
@@ -160,7 +150,6 @@ class IssueDateCalculatorTest {
 
         @Test
         void shouldBeIssuedOnTuesday_whenSubmittedOnSundayEveningBankHolidayOnMonday() {
-
             // Mon, Tue
             when(workingDayIndicator.isWorkingDay(any())).thenReturn(NO, YES);
 

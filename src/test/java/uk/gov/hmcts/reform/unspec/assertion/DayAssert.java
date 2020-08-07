@@ -27,7 +27,6 @@ public class DayAssert extends AbstractAssert<DayAssert, LocalDate> {
         if (day == DayOfWeek.SATURDAY || day == DayOfWeek.SUNDAY) {
             failWithMessage("Expected weekday but was <%s>", actual.getDayOfWeek());
         }
-
         return this;
     }
 
@@ -57,7 +56,6 @@ public class DayAssert extends AbstractAssert<DayAssert, LocalDate> {
         if (actual.getDayOfWeek() != expectedDay) {
             failWithMessage("Expected <%s> but was <%s>", expectedDay, actual.getDayOfWeek());
         }
-
         return this;
     }
 
@@ -67,7 +65,6 @@ public class DayAssert extends AbstractAssert<DayAssert, LocalDate> {
         if (!actual.isEqual(date)) {
             failWithMessage("Expected <%s> but was <%s>", date.toString(), actual.toString());
         }
-
         return this;
     }
 
@@ -83,7 +80,6 @@ public class DayAssert extends AbstractAssert<DayAssert, LocalDate> {
         if (actuallyDaysBetween != expectedDiff) {
             failWithMessage("Expected <%d> but was <%d>", expectedDiff, actuallyDaysBetween);
         }
-
         return this;
     }
 

@@ -21,7 +21,6 @@ public class IssueDateCalculator {
     private final WorkingDayIndicator workingDayIndicator;
 
     public LocalDate calculateIssueDay(LocalDateTime dateTime) {
-
         LocalDate date = dateTime.toLocalDate();
 
         if (isTooLateForToday(dateTime)) {

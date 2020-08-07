@@ -67,7 +67,6 @@ public class DeadlinesCalculatorTest {
         @ParameterizedTest
         @EnumSource(value = ServiceMethodType.class, names = {"POST", "DOCUMENT_EXCHANGE", "FAX", "EMAIL", "OTHER"})
         void shouldReturnExpectedDays_whenTimeIsBefore4pm(ServiceMethodType methodType) {
-
             LocalDate dateOfService = LocalDate.of(2020, AUGUST, 3);
 
             LocalDate deemedDateOfService = calculator.calculateDeemedDateOfService(dateOfService, methodType);
@@ -87,7 +86,6 @@ public class DeadlinesCalculatorTest {
         @ParameterizedTest
         @EnumSource(value = ServiceMethodType.class, names = {"POST", "DOCUMENT_EXCHANGE", "OTHER"})
         void shouldReturnPlusTwoDays_whenTimeIsAfter4pm(ServiceMethodType methodType) {
-
             LocalDate dateOfService = LocalDate.of(2020, AUGUST, 3);
 
             LocalDate deemedDateOfService = calculator.calculateDeemedDateOfService(dateOfService, methodType);

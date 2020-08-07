@@ -55,10 +55,7 @@ public class RequestExtensionCallbackHandler extends CallbackHandler {
 
     private CallbackResponse updateResponseDeadline(CallbackParams callbackParams) {
         Map<String, Object> data = callbackParams.getRequest().getCaseDetails().getData();
-        LocalDate proposedDeadline = mapper.convertValue(
-            data.get(PROPOSED_DEADLINE),
-            LocalDate.class
-        );
+        LocalDate proposedDeadline = mapper.convertValue(data.get(PROPOSED_DEADLINE), LocalDate.class);
         YesOrNo extensionAlreadyAgreed = mapper.convertValue(data.get(EXTENSION_ALREADY_AGREED), YesOrNo.class);
         if (extensionAlreadyAgreed == YES) {
             data.put(RESPONSE_DEADLINE, proposedDeadline.atTime(16, 0));
