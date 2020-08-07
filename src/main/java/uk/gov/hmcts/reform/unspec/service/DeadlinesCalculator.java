@@ -3,14 +3,14 @@ package uk.gov.hmcts.reform.unspec.service;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import uk.gov.hmcts.reform.unspec.enums.ServiceMethod;
+import uk.gov.hmcts.reform.unspec.enums.ServiceMethodType;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 
-import static uk.gov.hmcts.reform.unspec.enums.ServiceMethod.EMAIL;
-import static uk.gov.hmcts.reform.unspec.enums.ServiceMethod.FAX;
+import static uk.gov.hmcts.reform.unspec.enums.ServiceMethodType.EMAIL;
+import static uk.gov.hmcts.reform.unspec.enums.ServiceMethodType.FAX;
 
 @Service
 @RequiredArgsConstructor
@@ -23,19 +23,27 @@ public class DeadlinesCalculator {
 
     public LocalDate calculateDeemedDateOfService(
         @NonNull LocalDateTime dateOfService,
-        @NonNull ServiceMethod serviceMethod
+        @NonNull ServiceMethodType serviceMethodType
     ) {
-        if ((serviceMethod == FAX || serviceMethod == EMAIL) && dateOfService.getHour() >= 16) {
+        if (isFaxOrEmail(serviceMethodType) && is4pmOrAfter(dateOfService)) {
             return dateOfService.toLocalDate().plusDays(1);
         }
-        return dateOfService.toLocalDate().plusDays(serviceMethod.getDays());
+        return dateOfService.toLocalDate().plusDays(serviceMethodType.getDays());
     }
 
     public LocalDate calculateDeemedDateOfService(
         @NonNull LocalDate dateOfService,
-        @NonNull ServiceMethod serviceMethod
+        @NonNull ServiceMethodType serviceMethod
     ) {
         return calculateDeemedDateOfService(dateOfService.atStartOfDay(), serviceMethod);
+    }
+
+    private boolean is4pmOrAfter(@NonNull LocalDateTime dateOfService) {
+        return dateOfService.getHour() >= 16;
+    }
+
+    private boolean isFaxOrEmail(@NonNull ServiceMethodType serviceMethod) {
+        return serviceMethod == FAX || serviceMethod == EMAIL;
     }
 
     public LocalDateTime calculateDefendantResponseDeadline(@NonNull LocalDate deemedDateOfService) {

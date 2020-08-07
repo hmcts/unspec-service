@@ -12,8 +12,8 @@ import uk.gov.hmcts.reform.unspec.callback.CallbackParams;
 import uk.gov.hmcts.reform.unspec.callback.CallbackType;
 import uk.gov.hmcts.reform.unspec.callback.CaseEvent;
 import uk.gov.hmcts.reform.unspec.enums.ServedDocuments;
-import uk.gov.hmcts.reform.unspec.enums.ServiceMethod;
 import uk.gov.hmcts.reform.unspec.model.CaseData;
+import uk.gov.hmcts.reform.unspec.model.ServiceMethod;
 import uk.gov.hmcts.reform.unspec.service.DeadlinesCalculator;
 
 import java.time.LocalDate;
@@ -85,8 +85,15 @@ public class ConfirmServiceCallbackHandler extends CallbackHandler {
         CaseData caseData = mapper.convertValue(data, CaseData.class);
 
         ServiceMethod serviceMethod = caseData.getServiceMethod();
-        LocalDate serviceDate = caseData.getServiceDate();
-        LocalDate deemedDateOfService = deadlinesCalculator.calculateDeemedDateOfService(serviceDate, serviceMethod);
+        LocalDateTime serviceDate;
+
+        if (serviceMethod.requiresDateEntry()) {
+            serviceDate = caseData.getServiceDate().atStartOfDay();
+        } else {
+            serviceDate = caseData.getServiceDateAndTime();
+        }
+        LocalDate deemedDateOfService = deadlinesCalculator.calculateDeemedDateOfService(
+            serviceDate, serviceMethod.getType());
         LocalDateTime responseDeadline = deadlinesCalculator.calculateDefendantResponseDeadline(deemedDateOfService);
 
         data.put("deemedDateOfService", deemedDateOfService);

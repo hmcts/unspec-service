@@ -81,9 +81,9 @@ public class CreateClaimCallbackHandler extends CallbackHandler {
         }
 
         return AboutToStartOrSubmitCallbackResponse.builder()
-            .data(data)
-            .errors(errors)
-            .build();
+                   .data(data)
+                   .errors(errors)
+                   .build();
     }
 
     private AboutToStartOrSubmitCallbackResponse addIssuedDate(CallbackParams callbackParams) {
@@ -98,8 +98,8 @@ public class CreateClaimCallbackHandler extends CallbackHandler {
         );
 
         return AboutToStartOrSubmitCallbackResponse.builder()
-            .data(data)
-            .build();
+                   .data(data)
+                   .build();
     }
 
     private SubmittedCallbackResponse buildConfirmation(CallbackParams callbackParams) {
@@ -117,8 +117,8 @@ public class CreateClaimCallbackHandler extends CallbackHandler {
                 + " 4pm if you're doing this on the due day", documentLink, responsePackLink, formattedServiceDeadline);
 
         return SubmittedCallbackResponse.builder()
-            .confirmationHeader(format("# Your claim has been issued\n## Claim number: %s", claimNumber))
-            .confirmationBody(body)
-            .build();
+                   .confirmationHeader(format("# Your claim has been issued%n## Claim number: %s", claimNumber))
+                   .confirmationBody(body)
+                   .build();
     }
 }

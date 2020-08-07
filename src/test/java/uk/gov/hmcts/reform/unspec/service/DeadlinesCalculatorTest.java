@@ -13,7 +13,7 @@ import org.junit.jupiter.params.provider.ArgumentsSource;
 import org.junit.jupiter.params.provider.EnumSource;
 import org.mockito.Mock;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
-import uk.gov.hmcts.reform.unspec.enums.ServiceMethod;
+import uk.gov.hmcts.reform.unspec.enums.ServiceMethodType;
 import uk.gov.hmcts.reform.unspec.helpers.ResourceReader;
 import uk.gov.hmcts.reform.unspec.service.bankholidays.BankHolidays;
 import uk.gov.hmcts.reform.unspec.service.bankholidays.BankHolidaysApi;
@@ -37,7 +37,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.when;
 import static uk.gov.hmcts.reform.unspec.assertion.DayAssert.assertThat;
-import static uk.gov.hmcts.reform.unspec.enums.ServiceMethod.EMAIL;
+import static uk.gov.hmcts.reform.unspec.enums.ServiceMethodType.EMAIL;
 
 @ExtendWith(SpringExtension.class)
 public class DeadlinesCalculatorTest {
@@ -65,32 +65,32 @@ public class DeadlinesCalculatorTest {
     class DeemedDateOfService {
 
         @ParameterizedTest
-        @EnumSource(value = ServiceMethod.class, names = {"POST", "DOCUMENT_EXCHANGE", "FAX", "EMAIL", "OTHER"})
-        void shouldReturnExpectedDays_whenTimeIsBefore4pm(ServiceMethod serviceMethod) {
+        @EnumSource(value = ServiceMethodType.class, names = {"POST", "DOCUMENT_EXCHANGE", "FAX", "EMAIL", "OTHER"})
+        void shouldReturnExpectedDays_whenTimeIsBefore4pm(ServiceMethodType methodType) {
 
             LocalDate dateOfService = LocalDate.of(2020, AUGUST, 3);
 
-            LocalDate deemedDateOfService = calculator.calculateDeemedDateOfService(dateOfService, serviceMethod);
+            LocalDate deemedDateOfService = calculator.calculateDeemedDateOfService(dateOfService, methodType);
 
-            assertThat(deemedDateOfService).isTheSame(dateOfService.plusDays(serviceMethod.getDays()));
+            assertThat(deemedDateOfService).isTheSame(dateOfService.plusDays(methodType.getDays()));
         }
 
         @ParameterizedTest
-        @EnumSource(value = ServiceMethod.class, names = {"EMAIL", "FAX"})
-        void shouldReturnPlusOneDays_whenTimeIsAfter4pm(ServiceMethod serviceMethod) {
+        @EnumSource(value = ServiceMethodType.class, names = {"EMAIL", "FAX"})
+        void shouldReturnPlusOneDays_whenTimeIsAfter4pm(ServiceMethodType methodType) {
             LocalDate dateTime = LocalDate.of(2000, 1, 1);
 
-            assertThat(calculator.calculateDeemedDateOfService(dateTime.atTime(16, 0), serviceMethod))
+            assertThat(calculator.calculateDeemedDateOfService(dateTime.atTime(16, 0), methodType))
                 .isEqualTo(dateTime.plusDays(1));
         }
 
         @ParameterizedTest
-        @EnumSource(value = ServiceMethod.class, names = {"POST", "DOCUMENT_EXCHANGE", "OTHER"})
-        void shouldReturnPlusTwoDays_whenTimeIsAfter4pm(ServiceMethod serviceMethod) {
+        @EnumSource(value = ServiceMethodType.class, names = {"POST", "DOCUMENT_EXCHANGE", "OTHER"})
+        void shouldReturnPlusTwoDays_whenTimeIsAfter4pm(ServiceMethodType methodType) {
 
             LocalDate dateOfService = LocalDate.of(2020, AUGUST, 3);
 
-            LocalDate deemedDateOfService = calculator.calculateDeemedDateOfService(dateOfService, serviceMethod);
+            LocalDate deemedDateOfService = calculator.calculateDeemedDateOfService(dateOfService, methodType);
 
             assertThat(deemedDateOfService).isTheSame(dateOfService.plusDays(2));
         }
