@@ -125,7 +125,7 @@ class RequestExtensionCallbackHandlerTest extends BaseCallbackHandlerTest {
             AboutToStartOrSubmitCallbackResponse response = (AboutToStartOrSubmitCallbackResponse) handler
                 .handle(params);
 
-            assertThat(response.getData().get(RESPONSE_DEADLINE)).isEqualTo(proposedDeadline.atTime(16, 0));
+            assertThat(response.getData()).containsEntry(RESPONSE_DEADLINE, proposedDeadline.atTime(16, 0));
         }
 
         @Test
@@ -147,7 +147,7 @@ class RequestExtensionCallbackHandlerTest extends BaseCallbackHandlerTest {
             AboutToStartOrSubmitCallbackResponse response = (AboutToStartOrSubmitCallbackResponse) handler
                 .handle(params);
 
-            assertThat(response.getData().get(RESPONSE_DEADLINE)).isEqualTo(responseDeadline);
+            assertThat(response.getData()).containsEntry(RESPONSE_DEADLINE, responseDeadline);
         }
     }
 

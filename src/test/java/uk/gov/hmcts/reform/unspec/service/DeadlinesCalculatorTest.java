@@ -109,9 +109,10 @@ public class DeadlinesCalculatorTest {
 
         @Test
         void shouldThrowNullPointerException_whenServiceMethodIsNull() {
+            LocalDate dateOfService = LocalDate.now();
             Exception exception = assertThrows(
                 NullPointerException.class,
-                () -> calculator.calculateDeemedDateOfService(LocalDate.now(), null)
+                () -> calculator.calculateDeemedDateOfService(dateOfService, null)
             );
 
             assertEquals("serviceMethod is marked non-null but is null", exception.getMessage());
