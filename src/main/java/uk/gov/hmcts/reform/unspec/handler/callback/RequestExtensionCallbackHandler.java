@@ -13,7 +13,6 @@ import uk.gov.hmcts.reform.unspec.callback.CallbackParams;
 import uk.gov.hmcts.reform.unspec.callback.CallbackType;
 import uk.gov.hmcts.reform.unspec.callback.CaseEvent;
 import uk.gov.hmcts.reform.unspec.enums.YesOrNo;
-import uk.gov.hmcts.reform.unspec.service.DeadlinesCalculator;
 import uk.gov.hmcts.reform.unspec.validation.RequestExtensionValidator;
 
 import java.time.LocalDate;
@@ -43,7 +42,6 @@ public class RequestExtensionCallbackHandler extends CallbackHandler {
 
     private final ObjectMapper mapper;
     private final RequestExtensionValidator validator;
-    private final DeadlinesCalculator deadlinesCalculator;
 
     @Override
     protected Map<CallbackType, Callback> callbacks() {
@@ -63,10 +61,7 @@ public class RequestExtensionCallbackHandler extends CallbackHandler {
         );
         YesOrNo extensionAlreadyAgreed = mapper.convertValue(data.get(EXTENSION_ALREADY_AGREED), YesOrNo.class);
         if (extensionAlreadyAgreed == YES) {
-            data.put(
-                RESPONSE_DEADLINE,
-                deadlinesCalculator.calculateFirstWorkingDay(proposedDeadline).atTime(16, 0)
-            );
+            data.put(RESPONSE_DEADLINE, proposedDeadline.atTime(16, 0));
         }
         return AboutToStartOrSubmitCallbackResponse.builder()
             .data(data)
