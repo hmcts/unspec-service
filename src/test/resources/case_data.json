@@ -39,7 +39,9 @@
   "courtLocation": {
     "preferredCourt": "The court location"
   },
-  "serviceMethod": "POST",
+  "serviceMethod": {
+    "type": "POST"
+  },
   "servedDocuments": [
     "PARTICULARS_OF_CLAIM",
     "CLAIM_FORM",
