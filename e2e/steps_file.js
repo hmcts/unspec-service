@@ -102,7 +102,6 @@ module.exports = function () {
       this.waitForText('Acknowledge service');
       await this.retryUntilExists(() => this.click('Acknowledge service'), 'ccd-markdown');
       this.see('You\'ve acknowledged service');
-      //TODO: verify displayed response date
       this.click('Close and Return to case details');
       this.waitForElement(CASE_HEADER);
     },
