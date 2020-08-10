@@ -88,7 +88,7 @@ class ConfirmServiceCallbackHandlerTest extends BaseCallbackHandlerTest {
             private final LocalDate futureDate = today.plusYears(1);
 
             @Test
-            void shouldReturnNoErrors_WhenServiceDateInPastAndAfterIssueDate() {
+            void shouldReturnNoErrors_whenServiceDateInPastAndAfterIssueDate() {
                 Map<String, Object> data = new HashMap<>();
                 data.put("serviceMethod", Map.of("type", "POST"));
                 data.put("serviceDate", claimIssueDate.plusDays(1));
@@ -103,7 +103,7 @@ class ConfirmServiceCallbackHandlerTest extends BaseCallbackHandlerTest {
             }
 
             @Test
-            void shouldReturnNoErrors_WhenServiceDateIsTodayAndAfterIssueDate() {
+            void shouldReturnNoErrors_whenServiceDateIsTodayAndAfterIssueDate() {
                 Map<String, Object> data = new HashMap<>();
                 data.put("serviceMethod", Map.of("type", "POST"));
                 data.put("serviceDate", today);
@@ -118,7 +118,7 @@ class ConfirmServiceCallbackHandlerTest extends BaseCallbackHandlerTest {
             }
 
             @Test
-            void shouldReturnError_WhenServiceDateInFuture() {
+            void shouldReturnError_whenServiceDateInFuture() {
                 Map<String, Object> data = new HashMap<>();
                 data.put("serviceMethod", Map.of("type", "POST"));
                 data.put("serviceDate", futureDate);
@@ -133,7 +133,7 @@ class ConfirmServiceCallbackHandlerTest extends BaseCallbackHandlerTest {
             }
 
             @Test
-            void shouldReturnError_WhenServiceDateIsBeforeClaimIssueDate() {
+            void shouldReturnError_whenServiceDateIsBeforeClaimIssueDate() {
                 Map<String, Object> data = new HashMap<>();
                 data.put("serviceMethod", Map.of("type", "POST"));
                 data.put("serviceDate", claimIssueDate.minusDays(1));
@@ -155,7 +155,7 @@ class ConfirmServiceCallbackHandlerTest extends BaseCallbackHandlerTest {
             private final LocalDateTime futureDate = today.plusYears(1);
 
             @Test
-            void shouldReturnNoErrors_WhenServiceDateInPastAndAfterIssueDate() {
+            void shouldReturnNoErrors_whenServiceDateInPastAndAfterIssueDate() {
                 Map<String, Object> data = new HashMap<>();
                 data.put("serviceMethod", Map.of("type", "FAX"));
                 data.put("serviceDateAndTime", claimIssueDate.plusDays(1).atTime(12, 0));
@@ -170,7 +170,7 @@ class ConfirmServiceCallbackHandlerTest extends BaseCallbackHandlerTest {
             }
 
             @Test
-            void shouldReturnNoErrors_WhenServiceDateIsTodayAndAfterIssueDate() {
+            void shouldReturnNoErrors_whenServiceDateIsTodayAndAfterIssueDate() {
                 Map<String, Object> data = new HashMap<>();
                 data.put("serviceMethod", Map.of("type", "FAX"));
                 data.put("serviceDateAndTime", today);
@@ -185,7 +185,7 @@ class ConfirmServiceCallbackHandlerTest extends BaseCallbackHandlerTest {
             }
 
             @Test
-            void shouldReturnError_WhenServiceDateInFuture() {
+            void shouldReturnError_whenServiceDateInFuture() {
                 Map<String, Object> data = new HashMap<>();
                 data.put("serviceMethod", Map.of("type", "FAX"));
                 data.put("serviceDateAndTime", futureDate);
@@ -200,7 +200,7 @@ class ConfirmServiceCallbackHandlerTest extends BaseCallbackHandlerTest {
             }
 
             @Test
-            void shouldReturnError_WhenServiceDateIsBeforeClaimIssueDate() {
+            void shouldReturnError_whenServiceDateIsBeforeClaimIssueDate() {
                 Map<String, Object> data = new HashMap<>();
                 data.put("serviceMethod", Map.of("type", "FAX"));
                 data.put("serviceDateAndTime", claimIssueDate.atTime(12, 0).minusDays(1));

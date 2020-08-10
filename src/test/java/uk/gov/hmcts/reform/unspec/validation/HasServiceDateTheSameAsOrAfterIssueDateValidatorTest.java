@@ -16,7 +16,7 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @ExtendWith(MockitoExtension.class)
-class HasServiceDateAfterIssueDateValidatorTest {
+class HasServiceDateTheSameAsOrAfterIssueDateValidatorTest {
 
     public static final LocalDate NOW = LocalDate.now();
 
@@ -24,7 +24,7 @@ class HasServiceDateAfterIssueDateValidatorTest {
     ConstraintValidatorContext constraintValidatorContext;
 
     @InjectMocks
-    private HasServiceDateAfterIssueDateValidator validator;
+    private HasServiceDateTheSameAsOrAfterIssueDateValidator validator;
 
     @Test
     void shouldReturnFalse_WhenServiceDateIsBeforeIssueDate() {

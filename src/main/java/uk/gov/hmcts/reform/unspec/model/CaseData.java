@@ -4,7 +4,7 @@ import lombok.Builder;
 import lombok.Data;
 import uk.gov.hmcts.reform.unspec.enums.ServedDocuments;
 import uk.gov.hmcts.reform.unspec.validation.groups.ConfirmServiceDateGroup;
-import uk.gov.hmcts.reform.unspec.validation.interfaces.HasServiceDateAfterIssueDate;
+import uk.gov.hmcts.reform.unspec.validation.interfaces.HasServiceDateTheSameAsOrAfterIssueDate;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -13,7 +13,7 @@ import javax.validation.constraints.PastOrPresent;
 
 @Data
 @Builder
-@HasServiceDateAfterIssueDate(groups = ConfirmServiceDateGroup.class)
+@HasServiceDateTheSameAsOrAfterIssueDate(groups = ConfirmServiceDateGroup.class)
 public class CaseData {
 
     private final ClaimValue claimValue;
