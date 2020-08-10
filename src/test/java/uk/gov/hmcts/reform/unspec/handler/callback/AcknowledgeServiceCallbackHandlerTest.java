@@ -6,6 +6,7 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.jackson.JacksonAutoConfiguration;
+import org.springframework.boot.autoconfigure.validation.ValidationAutoConfiguration;
 import org.springframework.boot.test.context.SpringBootTest;
 import uk.gov.hmcts.reform.ccd.client.model.AboutToStartOrSubmitCallbackResponse;
 import uk.gov.hmcts.reform.ccd.client.model.SubmittedCallbackResponse;
@@ -19,7 +20,11 @@ import java.util.Map;
 import static java.time.LocalDateTime.now;
 import static org.assertj.core.api.Assertions.assertThat;
 
-@SpringBootTest(classes = {AcknowledgeServiceCallbackHandler.class, JacksonAutoConfiguration.class})
+@SpringBootTest(classes = {
+    AcknowledgeServiceCallbackHandler.class,
+    JacksonAutoConfiguration.class,
+    ValidationAutoConfiguration.class
+})
 class AcknowledgeServiceCallbackHandlerTest extends BaseCallbackHandlerTest {
 
     @Autowired
@@ -60,6 +65,7 @@ class AcknowledgeServiceCallbackHandlerTest extends BaseCallbackHandlerTest {
         @Test
         void shouldReturnNoError_whenDateOfBirthIsNotProvided() {
             Map<String, Object> data = new HashMap<>();
+            data.put("respondent", Map.of("otherField", "some value"));
 
             CallbackParams params = callbackParamsOf(data, CallbackType.MID);
 
