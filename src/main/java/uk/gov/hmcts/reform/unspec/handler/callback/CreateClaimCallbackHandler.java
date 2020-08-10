@@ -127,7 +127,7 @@ public class CreateClaimCallbackHandler extends CallbackHandler {
         );
 
         return SubmittedCallbackResponse.builder()
-            .confirmationHeader(format("# Your claim has been issued\n## Claim number: %s", claimNumber))
+            .confirmationHeader(format("# Your claim has been issued%n## Claim number: %s", claimNumber))
             .confirmationBody(body)
             .build();
     }

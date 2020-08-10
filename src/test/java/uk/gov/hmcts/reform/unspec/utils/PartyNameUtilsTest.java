@@ -10,8 +10,8 @@ class PartyNameUtilsTest {
 
     @Test
     public void shouldThrowNullPointer_whenPartyTypeIsNull() {
-        assertThrows(NullPointerException.class, () ->
-            PartyNameUtils.getPartyNameBasedOnType(Party.builder().type(null).build()));
+        Party party = Party.builder().type(null).build();
+        assertThrows(NullPointerException.class, () -> PartyNameUtils.getPartyNameBasedOnType(party));
     }
 
     @Test
@@ -22,7 +22,7 @@ class PartyNameUtilsTest {
             .individualLastName("Martin")
             .type(Party.Type.INDIVIDUAL).build();
 
-        assertEquals(PartyNameUtils.getPartyNameBasedOnType(individual), "Mr Jacob Martin");
+        assertEquals("Mr Jacob Martin", PartyNameUtils.getPartyNameBasedOnType(individual));
     }
 
     @Test
@@ -32,7 +32,7 @@ class PartyNameUtilsTest {
             .individualLastName("Martin")
             .type(Party.Type.INDIVIDUAL).build();
 
-        assertEquals(PartyNameUtils.getPartyNameBasedOnType(individual), "Jacob Martin");
+        assertEquals("Jacob Martin", PartyNameUtils.getPartyNameBasedOnType(individual));
     }
 
     @Test
@@ -41,7 +41,7 @@ class PartyNameUtilsTest {
             .companyName("XYZ Company House")
             .type(Party.Type.COMPANY).build();
 
-        assertEquals(PartyNameUtils.getPartyNameBasedOnType(individual), "XYZ Company House");
+        assertEquals("XYZ Company House", PartyNameUtils.getPartyNameBasedOnType(individual));
     }
 
     @Test
@@ -50,7 +50,7 @@ class PartyNameUtilsTest {
             .organisationName("ABC Solutions")
             .type(Party.Type.ORGANISATION).build();
 
-        assertEquals(PartyNameUtils.getPartyNameBasedOnType(organisation), "ABC Solutions");
+        assertEquals("ABC Solutions", PartyNameUtils.getPartyNameBasedOnType(organisation));
     }
 
     @Test
@@ -61,6 +61,6 @@ class PartyNameUtilsTest {
             .soleTraderLastName("Martin")
             .type(Party.Type.SOLE_TRADER).build();
 
-        assertEquals(PartyNameUtils.getPartyNameBasedOnType(soleTrader), "Mr Jacob Martin");
+        assertEquals("Mr Jacob Martin", PartyNameUtils.getPartyNameBasedOnType(soleTrader));
     }
 }

@@ -12,9 +12,9 @@ import uk.gov.hmcts.reform.unspec.callback.CallbackParams;
 import uk.gov.hmcts.reform.unspec.callback.CallbackType;
 import uk.gov.hmcts.reform.unspec.callback.CaseEvent;
 import uk.gov.hmcts.reform.unspec.enums.ServedDocuments;
-import uk.gov.hmcts.reform.unspec.enums.ServiceMethod;
 import uk.gov.hmcts.reform.unspec.helpers.CaseDetailsConverter;
 import uk.gov.hmcts.reform.unspec.model.CaseData;
+import uk.gov.hmcts.reform.unspec.model.ServiceMethod;
 import uk.gov.hmcts.reform.unspec.model.common.Element;
 import uk.gov.hmcts.reform.unspec.model.documents.CaseDocument;
 import uk.gov.hmcts.reform.unspec.model.documents.DocumentType;
@@ -93,11 +93,14 @@ public class ConfirmServiceCallbackHandler extends CallbackHandler {
 
     private CallbackResponse prepareCertificateOfService(CallbackParams callbackParams) {
         CaseData caseData = caseDetailsConverter.toCaseData(callbackParams.getRequest().getCaseDetails());
-
         ServiceMethod serviceMethod = caseData.getServiceMethod();
+        LocalDateTime serviceDate;
+        if (serviceMethod.requiresDateEntry()) {
+            serviceDate = caseData.getServiceDate().atStartOfDay();
+        } else {
+            serviceDate = caseData.getServiceDateAndTime();
+        }
         Map<String, Object> data = callbackParams.getRequest().getCaseDetails().getData();
-        // TODO: this field will be different (date / date time) in CCD depending on service method.
-        LocalDate serviceDate = caseData.getServiceDate();
 
         LocalDate deemedDateOfService = serviceMethod.getDeemedDateOfService(serviceDate);
         LocalDateTime responseDeadline = addFourteenDays(deemedDateOfService);

@@ -74,7 +74,7 @@ public class CertificateOfServiceGenerator extends TemplateDataGenerator<Certifi
             .applicantName(CaseNameUtils.fetchClaimantName(caseData))
             .respondentName(CaseNameUtils.fetchDefendantName(caseData))
             .respondentRepresentative(TEMP_REPRESENTATIVE)
-            .serviceMethod(caseData.getServiceMethod().getLabel())
+            .serviceMethod(caseData.getServiceMethod().getType().getLabel())
             .servedLocation(prepareServedLocation(caseData.getServiceLocation()))
             .documentsServed(prepareDocumentList(caseData.getServedDocuments(), caseData.getServedDocumentsOther()))
             .statementOfTruth(caseData.getClaimStatementOfTruth())

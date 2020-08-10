@@ -4,7 +4,6 @@ import lombok.Builder;
 import lombok.Data;
 import uk.gov.hmcts.reform.unspec.enums.ClaimType;
 import uk.gov.hmcts.reform.unspec.enums.ServedDocuments;
-import uk.gov.hmcts.reform.unspec.enums.ServiceMethod;
 import uk.gov.hmcts.reform.unspec.model.common.Element;
 import uk.gov.hmcts.reform.unspec.model.documents.CaseDocument;
 
@@ -32,6 +31,7 @@ public class CaseData {
     private final List<Element<CaseDocument>> systemGeneratedCaseDocuments;
     private final ServiceMethod serviceMethod;
     private final LocalDate serviceDate;
+    private final LocalDateTime serviceDateAndTime;
     private final LocalDate claimIssuedDate;
     private final LocalDate deemedDateOfService;
     private final LocalDateTime responseDeadline;

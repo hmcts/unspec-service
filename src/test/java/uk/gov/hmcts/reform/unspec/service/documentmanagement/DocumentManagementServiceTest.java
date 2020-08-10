@@ -153,7 +153,7 @@ class DocumentManagementServiceTest {
 
             DocumentUploadException documentManagementException = assertThrows(
                 DocumentUploadException.class,
-                () -> documentManagementService.uploadDocument(anyString(), document)
+                () -> documentManagementService.uploadDocument(BEARER_TOKEN, document)
             );
 
             assertEquals(
