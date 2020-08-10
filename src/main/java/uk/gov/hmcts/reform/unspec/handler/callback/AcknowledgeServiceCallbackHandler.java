@@ -12,6 +12,7 @@ import uk.gov.hmcts.reform.unspec.callback.CallbackParams;
 import uk.gov.hmcts.reform.unspec.callback.CallbackType;
 import uk.gov.hmcts.reform.unspec.callback.CaseEvent;
 import uk.gov.hmcts.reform.unspec.model.Party;
+import uk.gov.hmcts.reform.unspec.service.WorkingDayIndicator;
 import uk.gov.hmcts.reform.unspec.validation.groups.DateOfBirthGroup;
 
 import java.time.LocalDate;
@@ -19,7 +20,6 @@ import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import javax.validation.ConstraintViolation;
 import javax.validation.Validator;
 
@@ -39,6 +39,7 @@ public class AcknowledgeServiceCallbackHandler extends CallbackHandler {
 
     private final ObjectMapper mapper;
     private final Validator validator;
+    private final WorkingDayIndicator workingDayIndicator;
 
     @Override
     protected Map<CallbackType, Callback> callbacks() {
@@ -71,8 +72,9 @@ public class AcknowledgeServiceCallbackHandler extends CallbackHandler {
         Map<String, Object> data = callbackParams.getRequest().getCaseDetails().getData();
         LocalDateTime responseDeadline = mapper.convertValue(data.get(RESPONSE_DEADLINE), LocalDateTime.class);
 
-        //TODO: use working day calculation logic
-        data.put(RESPONSE_DEADLINE, responseDeadline.plusDays(14));
+        LocalDate newResponseDate = workingDayIndicator.getNextWorkingDay(responseDeadline.plusDays(14).toLocalDate());
+
+        data.put(RESPONSE_DEADLINE, newResponseDate.atTime(16, 0));
 
         return AboutToStartOrSubmitCallbackResponse.builder()
                    .data(data)
@@ -95,10 +97,5 @@ public class AcknowledgeServiceCallbackHandler extends CallbackHandler {
             .confirmationHeader("# You've acknowledged service")
             .confirmationBody(body)
             .build();
-    }
-
-    private LocalDate getDateOfBirth(Party respondent) {
-        return Optional.ofNullable(respondent.getIndividualDateOfBirth())
-            .orElse(respondent.getSoleTraderDateOfBirth());
     }
 }

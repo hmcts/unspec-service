@@ -1,31 +1,42 @@
 package uk.gov.hmcts.reform.unspec.handler.callback;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.jackson.JacksonAutoConfiguration;
 import org.springframework.boot.autoconfigure.validation.ValidationAutoConfiguration;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 import uk.gov.hmcts.reform.ccd.client.model.AboutToStartOrSubmitCallbackResponse;
 import uk.gov.hmcts.reform.ccd.client.model.SubmittedCallbackResponse;
 import uk.gov.hmcts.reform.unspec.callback.CallbackParams;
 import uk.gov.hmcts.reform.unspec.callback.CallbackType;
+import uk.gov.hmcts.reform.unspec.service.WorkingDayIndicator;
 
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
 
-import static java.time.LocalDateTime.now;
+import static java.time.LocalDate.now;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.when;
 
+@ExtendWith(SpringExtension.class)
 @SpringBootTest(classes = {
     AcknowledgeServiceCallbackHandler.class,
     JacksonAutoConfiguration.class,
     ValidationAutoConfiguration.class
 })
 class AcknowledgeServiceCallbackHandlerTest extends BaseCallbackHandlerTest {
+
+    @MockBean
+    private WorkingDayIndicator workingDayIndicator;
 
     @Autowired
     private AcknowledgeServiceCallbackHandler handler;
@@ -80,10 +91,15 @@ class AcknowledgeServiceCallbackHandlerTest extends BaseCallbackHandlerTest {
     @Nested
     class AboutToSubmitCallback {
 
+        @BeforeEach
+        void setup() {
+            when(workingDayIndicator.getNextWorkingDay(any())).thenReturn(now().plusDays(14));
+        }
+
         @Test
         void shouldSetNewResponseDeadline_whenInvoked() {
             Map<String, Object> data = new HashMap<>();
-            LocalDateTime responseDeadline = now();
+            LocalDateTime responseDeadline = now().atTime(16, 0);
             data.put("responseDeadline", responseDeadline);
 
             CallbackParams params = callbackParamsOf(data, CallbackType.ABOUT_TO_SUBMIT);
