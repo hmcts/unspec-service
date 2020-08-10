@@ -6,19 +6,26 @@ import org.springframework.stereotype.Service;
 import uk.gov.hmcts.reform.ccd.client.model.AboutToStartOrSubmitCallbackResponse;
 import uk.gov.hmcts.reform.ccd.client.model.CallbackResponse;
 import uk.gov.hmcts.reform.ccd.client.model.SubmittedCallbackResponse;
-import uk.gov.hmcts.reform.unspec.callback.*;
-import uk.gov.hmcts.reform.unspec.model.CaseData;
+import uk.gov.hmcts.reform.unspec.callback.Callback;
+import uk.gov.hmcts.reform.unspec.callback.CallbackHandler;
+import uk.gov.hmcts.reform.unspec.callback.CallbackParams;
+import uk.gov.hmcts.reform.unspec.callback.CallbackType;
+import uk.gov.hmcts.reform.unspec.callback.CaseEvent;
 import uk.gov.hmcts.reform.unspec.model.Party;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
 import static java.lang.String.format;
 import static java.time.LocalDate.now;
 import static uk.gov.hmcts.reform.unspec.callback.CaseEvent.ACKNOWLEDGE_SERVICE;
-import static uk.gov.hmcts.reform.unspec.helpers.DateFormatHelper.*;
-import static uk.gov.hmcts.reform.unspec.helpers.DateFormatHelper.DATE_TIME_AT;
+import static uk.gov.hmcts.reform.unspec.helpers.DateFormatHelper.DATE;
+import static uk.gov.hmcts.reform.unspec.helpers.DateFormatHelper.formatLocalDateTime;
 
 @Service
 @RequiredArgsConstructor
@@ -50,6 +57,7 @@ public class AcknowledgeServiceCallbackHandler extends CallbackHandler {
         List<String> errors = new ArrayList<>();
 
         //TODO: single place for all dates validation
+        //TODO: use validator on on respondent group @PastOrPresent annotation on dob field.
         Optional.ofNullable(getDateOfBirth(respondent))
             .filter(date -> date.isAfter(now()))
             .ifPresent(bool -> errors.add("The date entered cannot be in the future"));
