@@ -61,7 +61,7 @@
     "CaseFieldID": "claimant",
     "ListElementCode": "individualDateOfBirth",
     "FieldDisplayOrder": 5,
-    "DisplayContext": "MANDATORY"
+    "DisplayContext": "OPTIONAL"
   },
   {
     "LiveFrom": "01/01/2017",
@@ -124,7 +124,7 @@
     "CaseFieldID": "claimant",
     "ListElementCode": "soleTraderDateOfBirth",
     "FieldDisplayOrder": 12,
-    "DisplayContext": "MANDATORY"
+    "DisplayContext": "OPTIONAL"
   },
   {
     "LiveFrom": "01/01/2017",
@@ -228,19 +228,19 @@
   },
   {
     "LiveFrom": "01/01/2017",
-    "ID": "Defendant",
+    "ID": "Claimant",
     "CaseEventID": "CREATE_CLAIM",
     "CaseFieldID": "respondent",
-    "ListElementCode": "companyName",
+    "ListElementCode": "individualDateOfBirth",
     "FieldDisplayOrder": 5,
-    "DisplayContext": "MANDATORY"
+    "DisplayContext": "OPTIONAL"
   },
   {
     "LiveFrom": "01/01/2017",
     "ID": "Defendant",
     "CaseEventID": "CREATE_CLAIM",
     "CaseFieldID": "respondent",
-    "ListElementCode": "organisationName",
+    "ListElementCode": "companyName",
     "FieldDisplayOrder": 6,
     "DisplayContext": "MANDATORY"
   },
@@ -249,8 +249,17 @@
     "ID": "Defendant",
     "CaseEventID": "CREATE_CLAIM",
     "CaseFieldID": "respondent",
-    "ListElementCode": "soleTraderTitle",
+    "ListElementCode": "organisationName",
     "FieldDisplayOrder": 7,
+    "DisplayContext": "MANDATORY"
+  },
+  {
+    "LiveFrom": "01/01/2017",
+    "ID": "Defendant",
+    "CaseEventID": "CREATE_CLAIM",
+    "CaseFieldID": "respondent",
+    "ListElementCode": "soleTraderTitle",
+    "FieldDisplayOrder": 8,
     "DisplayContext": "OPTIONAL"
   },
   {
@@ -259,15 +268,6 @@
     "CaseEventID": "CREATE_CLAIM",
     "CaseFieldID": "respondent",
     "ListElementCode": "soleTraderFirstName",
-    "FieldDisplayOrder": 8,
-    "DisplayContext": "MANDATORY"
-  },
-  {
-    "LiveFrom": "01/01/2017",
-    "ID": "Defendant",
-    "CaseEventID": "CREATE_CLAIM",
-    "CaseFieldID": "respondent",
-    "ListElementCode": "soleTraderLastName",
     "FieldDisplayOrder": 9,
     "DisplayContext": "MANDATORY"
   },
@@ -276,17 +276,8 @@
     "ID": "Defendant",
     "CaseEventID": "CREATE_CLAIM",
     "CaseFieldID": "respondent",
-    "ListElementCode": "soleTraderTradingAs",
+    "ListElementCode": "soleTraderLastName",
     "FieldDisplayOrder": 10,
-    "DisplayContext": "OPTIONAL"
-  },
-  {
-    "LiveFrom": "01/01/2017",
-    "ID": "Defendant",
-    "CaseEventID": "CREATE_CLAIM",
-    "CaseFieldID": "respondent",
-    "ListElementCode": "primaryAddress.AddressLine1",
-    "FieldDisplayOrder": 11,
     "DisplayContext": "MANDATORY"
   },
   {
@@ -294,7 +285,16 @@
     "ID": "Defendant",
     "CaseEventID": "CREATE_CLAIM",
     "CaseFieldID": "respondent",
-    "ListElementCode": "primaryAddress.AddressLine2",
+    "ListElementCode": "soleTraderTradingAs",
+    "FieldDisplayOrder": 11,
+    "DisplayContext": "OPTIONAL"
+  },
+  {
+    "LiveFrom": "01/01/2017",
+    "ID": "Claimant",
+    "CaseEventID": "CREATE_CLAIM",
+    "CaseFieldID": "respondent",
+    "ListElementCode": "soleTraderDateOfBirth",
     "FieldDisplayOrder": 12,
     "DisplayContext": "OPTIONAL"
   },
@@ -303,16 +303,16 @@
     "ID": "Defendant",
     "CaseEventID": "CREATE_CLAIM",
     "CaseFieldID": "respondent",
-    "ListElementCode": "primaryAddress.AddressLine3",
+    "ListElementCode": "primaryAddress.AddressLine1",
     "FieldDisplayOrder": 13,
-    "DisplayContext": "OPTIONAL"
+    "DisplayContext": "MANDATORY"
   },
   {
     "LiveFrom": "01/01/2017",
     "ID": "Defendant",
     "CaseEventID": "CREATE_CLAIM",
     "CaseFieldID": "respondent",
-    "ListElementCode": "primaryAddress.PostTown",
+    "ListElementCode": "primaryAddress.AddressLine2",
     "FieldDisplayOrder": 14,
     "DisplayContext": "OPTIONAL"
   },
@@ -321,7 +321,7 @@
     "ID": "Defendant",
     "CaseEventID": "CREATE_CLAIM",
     "CaseFieldID": "respondent",
-    "ListElementCode": "primaryAddress.County",
+    "ListElementCode": "primaryAddress.AddressLine3",
     "FieldDisplayOrder": 15,
     "DisplayContext": "OPTIONAL"
   },
@@ -330,7 +330,7 @@
     "ID": "Defendant",
     "CaseEventID": "CREATE_CLAIM",
     "CaseFieldID": "respondent",
-    "ListElementCode": "primaryAddress.Country",
+    "ListElementCode": "primaryAddress.PostTown",
     "FieldDisplayOrder": 16,
     "DisplayContext": "OPTIONAL"
   },
@@ -339,8 +339,26 @@
     "ID": "Defendant",
     "CaseEventID": "CREATE_CLAIM",
     "CaseFieldID": "respondent",
-    "ListElementCode": "primaryAddress.PostCode",
+    "ListElementCode": "primaryAddress.County",
     "FieldDisplayOrder": 17,
+    "DisplayContext": "OPTIONAL"
+  },
+  {
+    "LiveFrom": "01/01/2017",
+    "ID": "Defendant",
+    "CaseEventID": "CREATE_CLAIM",
+    "CaseFieldID": "respondent",
+    "ListElementCode": "primaryAddress.Country",
+    "FieldDisplayOrder": 18,
+    "DisplayContext": "OPTIONAL"
+  },
+  {
+    "LiveFrom": "01/01/2017",
+    "ID": "Defendant",
+    "CaseEventID": "CREATE_CLAIM",
+    "CaseFieldID": "respondent",
+    "ListElementCode": "primaryAddress.PostCode",
+    "FieldDisplayOrder": 19,
     "DisplayContext": "MANDATORY"
   },
   {
