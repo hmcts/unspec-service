@@ -61,7 +61,7 @@
     "CaseFieldID": "claimant",
     "ListElementCode": "individualDateOfBirth",
     "FieldDisplayOrder": 5,
-    "DisplayContext": "MANDATORY"
+    "DisplayContext": "OPTIONAL"
   },
   {
     "LiveFrom": "01/01/2017",
@@ -124,7 +124,7 @@
     "CaseFieldID": "claimant",
     "ListElementCode": "soleTraderDateOfBirth",
     "FieldDisplayOrder": 12,
-    "DisplayContext": "MANDATORY"
+    "DisplayContext": "OPTIONAL"
   },
   {
     "LiveFrom": "01/01/2017",
@@ -233,7 +233,7 @@
     "CaseFieldID": "respondent",
     "ListElementCode": "individualDateOfBirth",
     "FieldDisplayOrder": 5,
-    "DisplayContext": "MANDATORY"
+    "DisplayContext": "OPTIONAL"
   },
   {
     "LiveFrom": "01/01/2017",
@@ -296,7 +296,7 @@
     "CaseFieldID": "respondent",
     "ListElementCode": "soleTraderDateOfBirth",
     "FieldDisplayOrder": 12,
-    "DisplayContext": "MANDATORY"
+    "DisplayContext": "OPTIONAL"
   },
   {
     "LiveFrom": "01/01/2017",
