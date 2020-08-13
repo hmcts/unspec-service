@@ -1,0 +1,59 @@
+[
+  {
+    "LiveFrom": "01/01/2017",
+    "CaseTypeID": "UNSPECIFIED_CLAIMS",
+    "CaseEventID": "DEFENDANT_RESPONSE",
+    "CaseFieldID": "respondentResponseType",
+    "PageDisplayOrder": 1,
+    "PageFieldDisplayOrder": 1,
+    "DisplayContext": "MANDATORY",
+    "PageID": "RespondentResponseType",
+    "ShowSummaryChangeOption": "Y"
+  },
+  {
+    "LiveFrom": "01/01/2017",
+    "CaseTypeID": "UNSPECIFIED_CLAIMS",
+    "CaseEventID": "DEFENDANT_RESPONSE",
+    "CaseFieldID": "responseHandOffLabel",
+    "PageDisplayOrder": 1,
+    "PageFieldDisplayOrder": 2,
+    "DisplayContext": "READONLY",
+    "PageID": "RespondentResponseType",
+    "FieldShowCondition": "respondentResponseType=\"FULL_ADMISSION\" OR respondentResponseType=\"PART_ADMISSION\" OR respondentResponseType=\"COUNTER_CLAIM\"",
+    "ShowSummaryChangeOption": "Y"
+  },
+  {
+    "LiveFrom": "01/01/2017",
+    "CaseTypeID": "UNSPECIFIED_CLAIMS",
+    "CaseEventID": "DEFENDANT_RESPONSE",
+    "CaseFieldID": "respondentResponseDocument",
+    "PageDisplayOrder": 2,
+    "PageFieldDisplayOrder": 1,
+    "DisplayContext": "COMPLEX",
+    "PageID": "Upload",
+    "ShowSummaryChangeOption": "Y"
+  },
+  {
+    "LiveFrom": "01/01/2017",
+    "CaseTypeID": "UNSPECIFIED_CLAIMS",
+    "CaseEventID": "DEFENDANT_RESPONSE",
+    "CaseFieldID": "solicitorReferences",
+    "PageLabel": "Confirm defendant details",
+    "PageDisplayOrder": 3,
+    "PageFieldDisplayOrder": 1,
+    "DisplayContext": "COMPLEX",
+    "PageID": "ConfirmDetails",
+    "ShowSummaryChangeOption": "Y"
+  },
+  {
+    "LiveFrom": "01/01/2017",
+    "CaseTypeID": "UNSPECIFIED_CLAIMS",
+    "CaseEventID": "DEFENDANT_RESPONSE",
+    "CaseFieldID": "respondent",
+    "PageDisplayOrder": 3,
+    "PageFieldDisplayOrder": 2,
+    "DisplayContext": "COMPLEX",
+    "PageID": "ConfirmDetails",
+    "ShowSummaryChangeOption": "Y"
+  }
+]

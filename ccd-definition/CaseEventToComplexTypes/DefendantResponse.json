@@ -1,0 +1,44 @@
+[
+  {
+    "LiveFrom": "01/01/2017",
+    "ID": "ResponseDocumentFile",
+    "CaseEventID": "DEFENDANT_RESPONSE",
+    "CaseFieldID": "respondentResponseDocument",
+    "ListElementCode": "responseDocument",
+    "FieldDisplayOrder": 1,
+    "DisplayContext": "MANDATORY"
+  },
+  {
+    "LiveFrom": "01/01/2017",
+    "ID": "SolicitorReferences",
+    "CaseEventID": "DEFENDANT_RESPONSE",
+    "CaseFieldID": "solicitorReferences",
+    "ListElementCode": "defendantReference",
+    "FieldDisplayOrder": 1,
+    "DisplayContext": "OPTIONAL"
+  },
+  {
+    "LiveFrom": "01/01/2017",
+    "ID": "Party",
+    "CaseEventID": "DEFENDANT_RESPONSE",
+    "CaseFieldID": "respondent",
+    "ListElementCode": "individualDateOfBirth",
+    "EventElementLabel" : "Defendant's date of birth",
+    "EventHintText" : "You must enter this if you know it.",
+    "FieldDisplayOrder": 2,
+    "DisplayContext": "OPTIONAL",
+    "FieldShowCondition": "respondent.type=\"INDIVIDUAL\""
+  },
+  {
+    "LiveFrom": "01/01/2017",
+    "ID": "Party",
+    "CaseEventID": "DEFENDANT_RESPONSE",
+    "CaseFieldID": "respondent",
+    "ListElementCode": "soleTraderDateOfBirth",
+    "EventElementLabel" : "Defendant's date of birth",
+    "EventHintText" : "You must enter this if you know it.",
+    "FieldDisplayOrder": 2,
+    "DisplayContext": "OPTIONAL",
+    "FieldShowCondition": "respondent.type=\"SOLE_TRADER\""
+  }
+]
