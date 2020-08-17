@@ -271,5 +271,21 @@
     "Label": "Upload your response",
     "FieldType": "ResponseDocumentFile",
     "SecurityClassification": "Public"
+  },
+  {
+    "LiveFrom": "01/01/2017",
+    "CaseTypeID": "UNSPECIFIED_CLAIMS",
+    "ID": "respondentDetails",
+    "Label": "The claimant has provided the following name and address for the defendant.\n\nIf this is not correct, you should contact the claimant's legal representative.\n\n**Name:**\n${respondent.companyName}${respondent.organisationName}${respondent.soleTraderTitle}${respondent.individualTitle} ${respondent.individualFirstName}${respondent.soleTraderFirstName} ${respondent.individualLastName}${respondent.soleTraderLastName} ${respondent.soleTraderTradingAs}\n\n**Address:**<br />\n${respondent.primaryAddress.AddressLine1}<br />${respondent.primaryAddress.AddressLine2}<br />${respondent.primaryAddress.AddressLine3}<br />${respondent.primaryAddress.PostTown}<br />${respondent.primaryAddress.County}<br />${respondent.primaryAddress.PostCode}",
+    "FieldType": "Label",
+    "SecurityClassification": "Public"
+  },
+  {
+    "LiveFrom": "01/01/2017",
+    "CaseTypeID": "UNSPECIFIED_CLAIMS",
+    "ID": "claimantResponseDeadline",
+    "Label": "Claimant response deadline",
+    "FieldType": "DateTime",
+    "SecurityClassification": "Public"
   }
 ]

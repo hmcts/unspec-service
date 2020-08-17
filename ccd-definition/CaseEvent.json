@@ -87,6 +87,7 @@
     "PreConditionState(s)": "CREATED",
     "PostConditionState": "AWAITING_CLAIMANT_INTENTION",
     "SecurityClassification": "Public",
+    "CallBackURLSubmittedEvent": "${CCD_DEF_CASE_SERVICE_BASE_URL}/cases/callbacks/submitted",
     "ShowSummary": "Y",
     "ShowEventNotes": "N",
     "EndButtonLabel": "Submit response"
