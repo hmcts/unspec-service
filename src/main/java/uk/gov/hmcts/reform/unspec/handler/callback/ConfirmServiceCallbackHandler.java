@@ -18,6 +18,7 @@ import uk.gov.hmcts.reform.unspec.model.ServiceMethod;
 import uk.gov.hmcts.reform.unspec.model.common.Element;
 import uk.gov.hmcts.reform.unspec.model.documents.CaseDocument;
 import uk.gov.hmcts.reform.unspec.model.documents.DocumentType;
+import uk.gov.hmcts.reform.unspec.service.DeadlinesCalculator;
 import uk.gov.hmcts.reform.unspec.service.docmosis.cos.CertificateOfServiceGenerator;
 import uk.gov.hmcts.reform.unspec.validation.groups.ConfirmServiceDateGroup;
 
@@ -55,6 +56,7 @@ public class ConfirmServiceCallbackHandler extends CallbackHandler {
     private final Validator validator;
     private final CertificateOfServiceGenerator certificateOfServiceGenerator;
     private final CaseDetailsConverter caseDetailsConverter;
+    private final DeadlinesCalculator deadlinesCalculator;
 
     @Override
     protected Map<CallbackType, Callback> callbacks() {
@@ -122,8 +124,10 @@ public class ConfirmServiceCallbackHandler extends CallbackHandler {
         }
         Map<String, Object> data = callbackParams.getRequest().getCaseDetails().getData();
 
-        LocalDate deemedDateOfService = serviceMethod.getDeemedDateOfService(serviceDate);
-        LocalDateTime responseDeadline = addFourteenDays(deemedDateOfService);
+        LocalDate deemedDateOfService = deadlinesCalculator.calculateDeemedDateOfService(
+            serviceDate, serviceMethod.getType());
+        LocalDateTime responseDeadline = deadlinesCalculator.calculateDefendantResponseDeadline(deemedDateOfService);
+
         data.put("deemedDateOfService", deemedDateOfService);
         data.put("responseDeadline", responseDeadline);
 
@@ -154,7 +158,7 @@ public class ConfirmServiceCallbackHandler extends CallbackHandler {
 
         LocalDate deemedDateOfService = caseData.getDeemedDateOfService();
         String formattedDeemedDateOfService = formatLocalDate(deemedDateOfService, DATE);
-        String responseDeadlineDate = formatLocalDateTime(addFourteenDays(deemedDateOfService), DATE_TIME_AT);
+        String responseDeadlineDate = formatLocalDateTime(caseData.getResponseDeadline(), DATE_TIME_AT);
         Long documentSize = unwrapElements(caseData.getSystemGeneratedCaseDocuments()).stream()
             .filter(c -> c.getDocumentType() == DocumentType.CERTIFICATE_OF_SERVICE)
             .findFirst()
@@ -173,9 +177,5 @@ public class ConfirmServiceCallbackHandler extends CallbackHandler {
             .confirmationHeader("# You've confirmed service")
             .confirmationBody(body)
             .build();
-    }
-
-    private LocalDateTime addFourteenDays(LocalDate deemedDateOfService) {
-        return deemedDateOfService.plusDays(14).atTime(16, 0);
     }
 }

@@ -41,6 +41,7 @@ public class CaseData {
     @PastOrPresent(message = "The date must not be in the future", groups = ConfirmServiceDateGroup.class)
     private final LocalDateTime serviceDateAndTime;
 
+    private final LocalDateTime claimSubmittedDateTime;
     private final LocalDate claimIssuedDate;
     private final LocalDate deemedDateOfService;
     private final LocalDateTime responseDeadline;
