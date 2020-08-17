@@ -27,17 +27,17 @@ class HasServiceDateTheSameAsOrAfterIssueDateValidatorTest {
     private HasServiceDateTheSameAsOrAfterIssueDateValidator validator;
 
     @Test
-    void shouldReturnFalse_WhenServiceDateIsBeforeIssueDate() {
+    void shouldReturnFalse_whenServiceDateIsBeforeIssueDate() {
         assertFalse(validator.isValid(buildCaseDataWithServiceDateOf(NOW.minusDays(5)), constraintValidatorContext));
     }
 
     @Test
-    void shouldReturnTrue_WhenServiceDateIsOnIssueDate() {
+    void shouldReturnTrue_whenServiceDateIsOnIssueDate() {
         assertTrue(validator.isValid(buildCaseDataWithServiceDateOf(NOW), constraintValidatorContext));
     }
 
     @Test
-    void shouldReturnTrue_WhenServiceDateIsAfterIssueDate() {
+    void shouldReturnTrue_whenServiceDateIsAfterIssueDate() {
         assertTrue(validator.isValid(buildCaseDataWithServiceDateOf(NOW.plusDays(5)), constraintValidatorContext));
     }
 
