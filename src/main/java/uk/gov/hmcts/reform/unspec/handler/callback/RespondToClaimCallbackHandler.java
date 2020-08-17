@@ -12,15 +12,18 @@ import uk.gov.hmcts.reform.unspec.callback.CallbackParams;
 import uk.gov.hmcts.reform.unspec.callback.CallbackType;
 import uk.gov.hmcts.reform.unspec.callback.CaseEvent;
 import uk.gov.hmcts.reform.unspec.model.Party;
+import uk.gov.hmcts.reform.unspec.validation.groups.DateOfBirthGroup;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import javax.validation.ConstraintViolation;
 import javax.validation.Validator;
 
 import static java.lang.String.format;
+import static java.util.stream.Collectors.toList;
 import static uk.gov.hmcts.reform.unspec.callback.CaseEvent.DEFENDANT_RESPONSE;
 import static uk.gov.hmcts.reform.unspec.helpers.DateFormatHelper.DATE;
 import static uk.gov.hmcts.reform.unspec.helpers.DateFormatHelper.formatLocalDateTime;
@@ -30,11 +33,11 @@ import static uk.gov.hmcts.reform.unspec.helpers.DateFormatHelper.formatLocalDat
 public class RespondToClaimCallbackHandler extends CallbackHandler {
 
     private static final List<CaseEvent> EVENTS = Collections.singletonList(DEFENDANT_RESPONSE);
-    private static final String RESPONDENT = "respondent";
-    private static final String CLAIMANT_RESPONSE_DEADLINE = "claimantResponseDeadline";
+    public static final String RESPONDENT = "respondent";
+    public static final String CLAIMANT_RESPONSE_DEADLINE = "claimantResponseDeadline";
 
     private final ObjectMapper mapper;
-//    private final Validator validator;
+    private final Validator validator;
 
     @Override
     protected Map<CallbackType, Callback> callbacks() {
@@ -48,13 +51,13 @@ public class RespondToClaimCallbackHandler extends CallbackHandler {
     private CallbackResponse validateDateOfBirth(CallbackParams callbackParams) {
         Map<String, Object> data = callbackParams.getRequest().getCaseDetails().getData();
         Party respondent = mapper.convertValue(data.get(RESPONDENT), Party.class);
-//        List<String> errors = validator.validate(respondent, DateOfBirthGroup.class).stream()
-//            .map(ConstraintViolation::getMessage)
-//            .collect(toList());
+        List<String> errors = validator.validate(respondent, DateOfBirthGroup.class).stream()
+            .map(ConstraintViolation::getMessage)
+            .collect(toList());
 
         return AboutToStartOrSubmitCallbackResponse.builder()
             .data(data)
-            .errors(Collections.emptyList())
+            .errors(errors)
             .build();
     }
 
@@ -75,7 +78,8 @@ public class RespondToClaimCallbackHandler extends CallbackHandler {
     }
 
     private SubmittedCallbackResponse buildConfirmation(CallbackParams callbackParams) {
-        LocalDateTime responseDeadline = LocalDateTime.now();
+        Map<String, Object> data = callbackParams.getRequest().getCaseDetails().getData();
+        LocalDateTime responseDeadline = mapper.convertValue(data.get(CLAIMANT_RESPONSE_DEADLINE), LocalDateTime.class);
 
         String claimNumber = "TBC";
 
