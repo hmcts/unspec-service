@@ -1,6 +1,5 @@
 package uk.gov.hmcts.reform.unspec.handler.callback;
 
-
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -115,8 +114,8 @@ class RespondToClaimCallbackHandlerTest extends BaseCallbackHandlerTest {
             assertThat(response).isEqualToComparingFieldByField(
                 SubmittedCallbackResponse.builder()
                     .confirmationHeader(format("# You've submitted your response%n## Claim number: TBC"))
-                    .confirmationBody("<br />The claimant has until 1 January 2030 to proceed. " +
-                                          "We will let you know when they respond.")
+                    .confirmationBody("<br />The claimant has until 1 January 2030 to proceed. "
+                                          + "We will let you know when they respond.")
                     .build());
         }
     }

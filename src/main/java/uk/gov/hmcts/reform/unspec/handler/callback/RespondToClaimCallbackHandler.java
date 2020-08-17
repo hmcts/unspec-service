@@ -56,7 +56,6 @@ public class RespondToClaimCallbackHandler extends CallbackHandler {
             .collect(toList());
 
         return AboutToStartOrSubmitCallbackResponse.builder()
-            .data(data)
             .errors(errors)
             .build();
     }
