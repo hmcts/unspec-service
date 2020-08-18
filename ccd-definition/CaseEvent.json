@@ -99,7 +99,7 @@
     "ID": "DEFENDANT_RESPONSE",
     "Name": "Respond to claim",
     "Description": "Defendant response to claim",
-    "DisplayOrder": 6,
+    "DisplayOrder": 7,
     "PreConditionState(s)": "CREATED",
     "PostConditionState": "AWAITING_CLAIMANT_INTENTION",
     "SecurityClassification": "Public",
