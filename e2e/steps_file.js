@@ -19,6 +19,10 @@ const serviceMethodPage = require('./pages/confirmService/serviceMethod.page');
 const serviceLocationPage = require('./pages/confirmService/serviceLocation.page');
 const serviceDatePage = require('./pages/confirmService/serviceDate.page');
 
+const confirmNameAndAddressPage = require('./pages/acknowledgeSerivce/confirmNameAndAddress.page');
+const confirmDetailsPage = require('./pages/acknowledgeSerivce/confirmDetails.page');
+const responseIntentionPage = require('./pages/acknowledgeSerivce/responseIntention.page');
+
 const proposeDeadline = require('./pages/requestExtension/proposeDeadline.page');
 const extensionAlreadyAgreed = require('./pages/requestExtension/extensionAlreadyAgreed.page');
 
@@ -37,6 +41,7 @@ const party = require('./fragments/party');
 
 const baseUrl = process.env.URL || 'http://localhost:3333';
 const signedInSelector = 'exui-header';
+const CASE_HEADER = 'ccd-case-header > h1';
 
 module.exports = function () {
   return actor({
@@ -55,9 +60,9 @@ module.exports = function () {
     },
 
     grabCaseNumber: async function () {
-      this.waitForElement('ccd-case-header > h1');
+      this.waitForElement(CASE_HEADER);
 
-      return await this.grabTextFrom('ccd-case-header > h1');
+      return await this.grabTextFrom(CASE_HEADER);
     },
 
     async createCase() {
@@ -91,7 +96,20 @@ module.exports = function () {
       await this.retryUntilExists(() => this.click('Confirm service'), 'ccd-markdown');
       this.see('You\'ve confirmed service');
       this.click('Close and Return to case details');
-      this.waitForElement('ccd-case-header > h1');
+      this.waitForElement(CASE_HEADER);
+    },
+
+    async acknowledgeService() {
+      await caseViewPage.startEvent('Acknowledge service');
+      await confirmNameAndAddressPage.verifyDetails();
+      await confirmDetailsPage.confirmReference();
+      await responseIntentionPage.selectResponseIntention();
+
+      this.waitForText('Acknowledge service');
+      await this.retryUntilExists(() => this.click('Acknowledge service'), 'ccd-markdown');
+      this.see('You\'ve acknowledged service');
+      this.click('Close and Return to case details');
+      this.waitForElement(CASE_HEADER);
     },
 
     async requestExtension() {
@@ -103,7 +121,7 @@ module.exports = function () {
       await this.retryUntilExists(() => this.click('Ask for extension'), 'ccd-markdown');
       this.see('You asked for extra time to respond');
       this.click('Close and Return to case details');
-      this.waitForElement('ccd-case-header > h1');
+      this.waitForElement(CASE_HEADER);
     },
 
     async respondToExtension() {
@@ -116,7 +134,7 @@ module.exports = function () {
       await this.retryUntilExists(() => this.click('Respond to request'), 'ccd-markdown');
       this.see('You\'ve responded to the request for more time');
       this.click('Close and Return to case details');
-      this.waitForElement('ccd-case-header > h1');
+      this.waitForElement(CASE_HEADER);
     },
 
     async respondToClaim() {

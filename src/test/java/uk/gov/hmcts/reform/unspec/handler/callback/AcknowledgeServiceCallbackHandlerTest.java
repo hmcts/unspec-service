@@ -1,5 +1,6 @@
 package uk.gov.hmcts.reform.unspec.handler.callback;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -9,31 +10,36 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.jackson.JacksonAutoConfiguration;
 import org.springframework.boot.autoconfigure.validation.ValidationAutoConfiguration;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import uk.gov.hmcts.reform.ccd.client.model.AboutToStartOrSubmitCallbackResponse;
 import uk.gov.hmcts.reform.ccd.client.model.SubmittedCallbackResponse;
 import uk.gov.hmcts.reform.unspec.callback.CallbackParams;
 import uk.gov.hmcts.reform.unspec.callback.CallbackType;
+import uk.gov.hmcts.reform.unspec.service.WorkingDayIndicator;
 
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
 
-import static java.lang.String.format;
 import static java.time.LocalDate.now;
 import static org.assertj.core.api.Assertions.assertThat;
-import static uk.gov.hmcts.reform.unspec.handler.callback.RespondToClaimCallbackHandler.CLAIMANT_RESPONSE_DEADLINE;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(classes = {
-    RespondToClaimCallbackHandler.class,
+    AcknowledgeServiceCallbackHandler.class,
     JacksonAutoConfiguration.class,
     ValidationAutoConfiguration.class
 })
-class RespondToClaimCallbackHandlerTest extends BaseCallbackHandlerTest {
+class AcknowledgeServiceCallbackHandlerTest extends BaseCallbackHandlerTest {
+
+    @MockBean
+    private WorkingDayIndicator workingDayIndicator;
 
     @Autowired
-    private RespondToClaimCallbackHandler handler;
+    private AcknowledgeServiceCallbackHandler handler;
 
     @Nested
     class MidEventCallback {
@@ -63,6 +69,7 @@ class RespondToClaimCallbackHandlerTest extends BaseCallbackHandlerTest {
             AboutToStartOrSubmitCallbackResponse response = (AboutToStartOrSubmitCallbackResponse) handler
                 .handle(params);
 
+            assertThat(response.getData()).isEqualTo(data);
             assertThat(response.getErrors()).isEmpty();
         }
 
@@ -76,6 +83,7 @@ class RespondToClaimCallbackHandlerTest extends BaseCallbackHandlerTest {
             AboutToStartOrSubmitCallbackResponse response = (AboutToStartOrSubmitCallbackResponse) handler
                 .handle(params);
 
+            assertThat(response.getData()).isEqualTo(data);
             assertThat(response.getErrors()).isEmpty();
         }
     }
@@ -83,17 +91,23 @@ class RespondToClaimCallbackHandlerTest extends BaseCallbackHandlerTest {
     @Nested
     class AboutToSubmitCallback {
 
+        @BeforeEach
+        void setup() {
+            when(workingDayIndicator.getNextWorkingDay(any())).thenReturn(now().plusDays(14));
+        }
+
         @Test
-        void shouldSetClaimantResponseDeadline_whenInvoked() {
+        void shouldSetNewResponseDeadline_whenInvoked() {
             Map<String, Object> data = new HashMap<>();
-            LocalDateTime claimantResponseDeadline = now().atTime(16, 0);
+            LocalDateTime responseDeadline = now().atTime(16, 0);
+            data.put("responseDeadline", responseDeadline);
 
             CallbackParams params = callbackParamsOf(data, CallbackType.ABOUT_TO_SUBMIT);
 
             AboutToStartOrSubmitCallbackResponse response = (AboutToStartOrSubmitCallbackResponse) handler
                 .handle(params);
 
-            assertThat(response.getData()).isEqualTo(Map.of(CLAIMANT_RESPONSE_DEADLINE, claimantResponseDeadline));
+            assertThat(response.getData()).isEqualTo(Map.of("responseDeadline", responseDeadline.plusDays(14)));
         }
     }
 
@@ -103,7 +117,7 @@ class RespondToClaimCallbackHandlerTest extends BaseCallbackHandlerTest {
         @Test
         void shouldReturnExpectedResponse_whenInvoked() {
             Map<String, Object> data = new HashMap<>();
-            data.put(CLAIMANT_RESPONSE_DEADLINE, "2030-01-01T16:00:00");
+            data.put("responseDeadline", "2030-01-01T16:00:00");
 
             CallbackParams params = callbackParamsOf(data, CallbackType.SUBMITTED);
 
@@ -111,9 +125,9 @@ class RespondToClaimCallbackHandlerTest extends BaseCallbackHandlerTest {
 
             assertThat(response).isEqualToComparingFieldByField(
                 SubmittedCallbackResponse.builder()
-                    .confirmationHeader(format("# You've submitted your response%n## Claim number: TBC"))
-                    .confirmationBody("<br />The claimant has until 1 January 2030 to proceed. "
-                                          + "We will let you know when they respond.")
+                    .confirmationHeader("# You've acknowledged service")
+                    .confirmationBody("<br />You need to respond before 4pm on 1 January 2030."
+                                          + "\n\n[Download the Acknowledgement of Service form](http://www.google.com)")
                     .build());
         }
     }
