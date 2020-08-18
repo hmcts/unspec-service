@@ -26,6 +26,12 @@ const respondToExtensionPage = require('./pages/respondExtension/respond.page');
 const counterExtensionPage = require('./pages/respondExtension/counter.page');
 const rejectionReasonPage = require('./pages/respondExtension/reason.page');
 
+const responseConfirmNameAndAddressPage = require('./pages/respondToClaim/confirmNameAndAddress.page');
+const responseConfirmDetailsPage = require('./pages/respondToClaim/confirmDetails.page');
+const responseTypePage = require('./pages/respondToClaim/responseType.page');
+const uploadResponsePage = require('./pages/respondToClaim/uploadResponseDocument.page');
+
+
 const statementOfTruth = require('./fragments/statementOfTruth');
 const party = require('./fragments/party');
 
@@ -111,6 +117,20 @@ module.exports = function () {
       this.see('You\'ve responded to the request for more time');
       this.click('Close and Return to case details');
       this.waitForElement('ccd-case-header > h1');
+    },
+
+    async respondToClaim() {
+      await caseViewPage.startEvent('Respond to claim');
+
+      await responseTypePage.selectFullDefence();
+      await uploadResponsePage.uploadResponseDocuments(config.testFile);
+      await responseConfirmNameAndAddressPage.verifyDetails();
+      await responseConfirmDetailsPage.confirmReference();
+
+      this.waitForText('Submit response');
+      await this.retryUntilExists(() => this.click('Submit response'), 'ccd-markdown');
+      this.see('You\'ve submitted your response');
+      this.click('Close and Return to case details');
     },
 
     async clickContinue() {
