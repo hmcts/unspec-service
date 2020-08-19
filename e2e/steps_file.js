@@ -20,7 +20,7 @@ const serviceLocationPage = require('./pages/confirmService/serviceLocation.page
 const serviceDatePage = require('./pages/confirmService/serviceDate.page');
 
 const confirmNameAndAddressPage = require('./pages/acknowledgeSerivce/confirmNameAndAddress.page');
-const confirmDetailsPage = require('./pages/acknowledgeSerivce/confirmDetails.page');
+const confirmDetailsPage = require('./pages/confirmDetails.page');
 const responseIntentionPage = require('./pages/acknowledgeSerivce/responseIntention.page');
 
 const proposeDeadline = require('./pages/requestExtension/proposeDeadline.page');
@@ -31,7 +31,6 @@ const counterExtensionPage = require('./pages/respondExtension/counter.page');
 const rejectionReasonPage = require('./pages/respondExtension/reason.page');
 
 const responseConfirmNameAndAddressPage = require('./pages/respondToClaim/confirmNameAndAddress.page');
-const responseConfirmDetailsPage = require('./pages/respondToClaim/confirmDetails.page');
 const responseTypePage = require('./pages/respondToClaim/responseType.page');
 const uploadResponsePage = require('./pages/respondToClaim/uploadResponseDocument.page');
 
@@ -143,7 +142,7 @@ module.exports = function () {
       await responseTypePage.selectFullDefence();
       await uploadResponsePage.uploadResponseDocuments(config.testFile);
       await responseConfirmNameAndAddressPage.verifyDetails();
-      await responseConfirmDetailsPage.confirmReference();
+      await confirmDetailsPage.confirmReference();
 
       this.waitForText('Submit response');
       await this.retryUntilExists(() => this.click('Submit response'), 'ccd-markdown');

@@ -14,6 +14,7 @@ import uk.gov.hmcts.reform.ccd.client.model.AboutToStartOrSubmitCallbackResponse
 import uk.gov.hmcts.reform.ccd.client.model.SubmittedCallbackResponse;
 import uk.gov.hmcts.reform.unspec.callback.CallbackParams;
 import uk.gov.hmcts.reform.unspec.callback.CallbackType;
+import uk.gov.hmcts.reform.unspec.validation.DateOfBirthValidator;
 
 import java.time.LocalDateTime;
 import java.util.HashMap;
@@ -28,7 +29,8 @@ import static uk.gov.hmcts.reform.unspec.handler.callback.RespondToClaimCallback
 @SpringBootTest(classes = {
     RespondToClaimCallbackHandler.class,
     JacksonAutoConfiguration.class,
-    ValidationAutoConfiguration.class
+    ValidationAutoConfiguration.class,
+    DateOfBirthValidator.class
 })
 class RespondToClaimCallbackHandlerTest extends BaseCallbackHandlerTest {
 
@@ -93,7 +95,7 @@ class RespondToClaimCallbackHandlerTest extends BaseCallbackHandlerTest {
             AboutToStartOrSubmitCallbackResponse response = (AboutToStartOrSubmitCallbackResponse) handler
                 .handle(params);
 
-            assertThat(response.getData()).isEqualTo(Map.of(CLAIMANT_RESPONSE_DEADLINE, claimantResponseDeadline));
+            assertThat(response.getData()).containsEntry(CLAIMANT_RESPONSE_DEADLINE, claimantResponseDeadline);
         }
     }
 

@@ -17,6 +17,7 @@ import uk.gov.hmcts.reform.ccd.client.model.SubmittedCallbackResponse;
 import uk.gov.hmcts.reform.unspec.callback.CallbackParams;
 import uk.gov.hmcts.reform.unspec.callback.CallbackType;
 import uk.gov.hmcts.reform.unspec.service.WorkingDayIndicator;
+import uk.gov.hmcts.reform.unspec.validation.DateOfBirthValidator;
 
 import java.time.LocalDateTime;
 import java.util.HashMap;
@@ -31,7 +32,8 @@ import static org.mockito.Mockito.when;
 @SpringBootTest(classes = {
     AcknowledgeServiceCallbackHandler.class,
     JacksonAutoConfiguration.class,
-    ValidationAutoConfiguration.class
+    ValidationAutoConfiguration.class,
+    DateOfBirthValidator.class
 })
 class AcknowledgeServiceCallbackHandlerTest extends BaseCallbackHandlerTest {
 

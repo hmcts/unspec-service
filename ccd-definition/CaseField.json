@@ -302,7 +302,7 @@
     "CaseTypeID": "UNSPECIFIED_CLAIMS",
     "ID": "respondentResponseDocument",
     "Label": "Upload your response",
-    "FieldType": "ResponseDocumentFile",
+    "FieldType": "ResponseDocument",
     "SecurityClassification": "Public"
   },
   {
