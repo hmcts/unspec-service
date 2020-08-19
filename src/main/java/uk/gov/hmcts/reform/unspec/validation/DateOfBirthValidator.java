@@ -17,8 +17,8 @@ public class DateOfBirthValidator {
 
     private final Validator validator;
 
-    public List<String> validate(Party respondent) {
-        return validator.validate(respondent, DateOfBirthGroup.class).stream()
+    public List<String> validate(Party party) {
+        return validator.validate(party, DateOfBirthGroup.class).stream()
             .map(ConstraintViolation::getMessage)
             .collect(toList());
     }
