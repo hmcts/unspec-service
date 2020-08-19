@@ -37,6 +37,11 @@ public class RespondToClaimCallbackHandler extends CallbackHandler {
     private final DateOfBirthValidator dateOfBirthValidator;
 
     @Override
+    public List<CaseEvent> handledEvents() {
+        return EVENTS;
+    }
+
+    @Override
     protected Map<CallbackType, Callback> callbacks() {
         return Map.of(
             CallbackType.MID, this::validateDateOfBirth,
@@ -64,11 +69,6 @@ public class RespondToClaimCallbackHandler extends CallbackHandler {
         return AboutToStartOrSubmitCallbackResponse.builder()
             .data(data)
             .build();
-    }
-
-    @Override
-    public List<CaseEvent> handledEvents() {
-        return EVENTS;
     }
 
     private SubmittedCallbackResponse buildConfirmation(CallbackParams callbackParams) {

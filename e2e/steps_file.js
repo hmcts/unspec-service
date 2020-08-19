@@ -20,7 +20,7 @@ const serviceLocationPage = require('./pages/confirmService/serviceLocation.page
 const serviceDatePage = require('./pages/confirmService/serviceDate.page');
 
 const confirmNameAndAddressPage = require('./pages/acknowledgeSerivce/confirmNameAndAddress.page');
-const confirmDetailsPage = require('./pages/confirmDetails.page');
+const confirmDetailsPage = require('./fragments/confirmDetails.page');
 const responseIntentionPage = require('./pages/acknowledgeSerivce/responseIntention.page');
 
 const proposeDeadline = require('./pages/requestExtension/proposeDeadline.page');

@@ -67,19 +67,6 @@ class RespondToClaimCallbackHandlerTest extends BaseCallbackHandlerTest {
 
             assertThat(response.getErrors()).isEmpty();
         }
-
-        @Test
-        void shouldReturnNoError_whenDateOfBirthIsNotProvided() {
-            Map<String, Object> data = new HashMap<>();
-            data.put("respondent", Map.of("otherField", "some value"));
-
-            CallbackParams params = callbackParamsOf(data, CallbackType.MID);
-
-            AboutToStartOrSubmitCallbackResponse response = (AboutToStartOrSubmitCallbackResponse) handler
-                .handle(params);
-
-            assertThat(response.getErrors()).isEmpty();
-        }
     }
 
     @Nested
