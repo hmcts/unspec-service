@@ -3,7 +3,7 @@
     "LiveFrom": "01/01/2017",
     "CaseTypeID": "UNSPECIFIED_CLAIMS",
     "CaseEventID": "DEFENDANT_RESPONSE",
-    "CaseFieldID": "respondentResponseType",
+    "CaseFieldID": "respondent1ClaimResponseType",
     "PageDisplayOrder": 1,
     "PageFieldDisplayOrder": 1,
     "DisplayContext": "MANDATORY",
@@ -19,19 +19,19 @@
     "PageFieldDisplayOrder": 2,
     "DisplayContext": "READONLY",
     "PageID": "RespondentResponseType",
-    "FieldShowCondition": "respondentResponseType=\"FULL_ADMISSION\" OR respondentResponseType=\"PART_ADMISSION\" OR respondentResponseType=\"COUNTER_CLAIM\"",
+    "FieldShowCondition": "respondent1ClaimResponseType=\"FULL_ADMISSION\" OR respondent1ClaimResponseType=\"PART_ADMISSION\" OR respondent1ClaimResponseType=\"COUNTER_CLAIM\"",
     "ShowSummaryChangeOption": "N"
   },
   {
     "LiveFrom": "01/01/2017",
     "CaseTypeID": "UNSPECIFIED_CLAIMS",
     "CaseEventID": "DEFENDANT_RESPONSE",
-    "CaseFieldID": "respondentResponseDocument",
+    "CaseFieldID": "respondent1ClaimResponseDocument",
     "PageDisplayOrder": 2,
     "PageFieldDisplayOrder": 1,
     "DisplayContext": "COMPLEX",
     "PageID": "Upload",
-    "PageShowCondition": "respondentResponseType=\"FULL_DEFENCE\"",
+    "PageShowCondition": "respondent1ClaimResponseType=\"FULL_DEFENCE\"",
     "ShowSummaryChangeOption": "Y"
   },
   {
@@ -44,7 +44,7 @@
     "PageFieldDisplayOrder": 1,
     "DisplayContext": "READONLY",
     "PageID": "ConfirmNameAddress",
-    "PageShowCondition": "respondentResponseType=\"FULL_DEFENCE\"",
+    "PageShowCondition": "respondent1ClaimResponseType=\"FULL_DEFENCE\"",
     "ShowSummaryChangeOption": "N"
   },
   {
@@ -69,7 +69,7 @@
     "PageFieldDisplayOrder": 2,
     "DisplayContext": "COMPLEX",
     "PageID": "ConfirmDetails",
-    "PageShowCondition": "respondentResponseType=\"FULL_DEFENCE\"",
+    "PageShowCondition": "respondent1ClaimResponseType=\"FULL_DEFENCE\"",
     "ShowSummaryChangeOption": "Y"
   }
 ]

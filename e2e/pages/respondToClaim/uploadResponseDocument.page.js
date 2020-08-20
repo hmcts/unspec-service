@@ -4,7 +4,7 @@ module.exports = {
 
   fields: {
     respondentResponseDocument: {
-      id: '#respondentResponseDocument_file'
+      id: '#respondent1ClaimResponseDocument_file'
     }
   },
 

@@ -31,7 +31,7 @@ public class RespondToClaimCallbackHandler extends CallbackHandler {
 
     private static final List<CaseEvent> EVENTS = Collections.singletonList(DEFENDANT_RESPONSE);
     public static final String RESPONDENT = "respondent";
-    public static final String CLAIMANT_RESPONSE_DEADLINE = "claimantResponseDeadline";
+    public static final String CLAIMANT_RESPONSE_DEADLINE = "applicantSolicitorResponseDeadlineToRespondentSolicitor1";
 
     private final ObjectMapper mapper;
     private final DateOfBirthValidator dateOfBirthValidator;

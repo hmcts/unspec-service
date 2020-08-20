@@ -283,7 +283,7 @@
   {
     "LiveFrom": "01/01/2017",
     "CaseTypeID": "UNSPECIFIED_CLAIMS",
-    "ID": "respondentResponseType",
+    "ID": "respondent1ClaimResponseType",
     "Label": "The defendant:",
     "FieldType": "FixedRadioList",
     "FieldTypeParameter": "ResponseType",
@@ -300,7 +300,7 @@
   {
     "LiveFrom": "01/01/2017",
     "CaseTypeID": "UNSPECIFIED_CLAIMS",
-    "ID": "respondentResponseDocument",
+    "ID": "respondent1ClaimResponseDocument",
     "Label": "Upload your response",
     "FieldType": "ResponseDocument",
     "SecurityClassification": "Public"
@@ -316,7 +316,7 @@
   {
     "LiveFrom": "01/01/2017",
     "CaseTypeID": "UNSPECIFIED_CLAIMS",
-    "ID": "claimantResponseDeadline",
+    "ID": "applicantSolicitorResponseDeadlineToRespondentSolicitor1",
     "Label": "Claimant response deadline",
     "FieldType": "DateTime",
     "SecurityClassification": "Public"

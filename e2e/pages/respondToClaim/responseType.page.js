@@ -3,8 +3,8 @@ const {I} = inject();
 module.exports = {
 
   fields: {
-    respondentResponseType: {
-      id: '#respondentResponseType',
+    respondent1ClaimResponseType: {
+      id: '#respondent1ClaimResponseType',
       options: {
         fullDefence: 'Rejects all of the claim',
         fullAdmission: 'Admits all of the claim',
@@ -15,9 +15,9 @@ module.exports = {
   },
 
   async selectFullDefence() {
-    I.waitForElement(this.fields.respondentResponseType.id);
-    await within(this.fields.respondentResponseType.id, () => {
-      I.click(this.fields.respondentResponseType.options.fullDefence);
+    I.waitForElement(this.fields.respondent1ClaimResponseType.id);
+    await within(this.fields.respondent1ClaimResponseType.id, () => {
+      I.click(this.fields.respondent1ClaimResponseType.options.fullDefence);
     });
 
     await I.clickContinue();
