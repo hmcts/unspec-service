@@ -50,12 +50,14 @@
     "LiveFrom": "01/01/2017",
     "CaseTypeID": "UNSPECIFIED_CLAIMS",
     "CaseEventID": "RESPOND_EXTENSION",
-    "CaseFieldID": "respondentSolicitor1claimResponseExtensionLabelCurrentDeadline",
+    "CaseFieldID": "responseDeadline",
     "PageFieldDisplayOrder": 1,
     "DisplayContext": "READONLY",
     "PageID": "Counter",
     "PageDisplayOrder": 2,
     "PageColumnNumber": 1,
+    "CaseEventFieldLabel": "Your current deadline is",
+    "DisplayContextParameter" : "#DATETIMEDISPLAY(dd MMM yyyy HH:mm)",
     "ShowSummaryChangeOption": "N"
   },
   {

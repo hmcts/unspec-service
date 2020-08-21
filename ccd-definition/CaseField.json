@@ -232,14 +232,6 @@
   {
     "LiveFrom": "01/01/2017",
     "CaseTypeID": "UNSPECIFIED_CLAIMS",
-    "ID": "respondentSolicitor1claimResponseExtensionLabelCurrentDeadline",
-    "Label": "Your current deadline is \n\n **${responseDeadline}**",
-    "FieldType": "Label",
-    "SecurityClassification": "Public"
-  },
-  {
-    "LiveFrom": "01/01/2017",
-    "CaseTypeID": "UNSPECIFIED_CLAIMS",
     "ID": "respondentSolicitor1claimResponseExtensionCounter",
     "Label": "Would you like to set a different extended deadline?",
     "FieldType": "YesOrNo",
