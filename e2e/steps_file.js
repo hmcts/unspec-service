@@ -34,6 +34,8 @@ const responseConfirmNameAndAddressPage = require('./pages/respondToClaim/confir
 const responseTypePage = require('./pages/respondToClaim/responseType.page');
 const uploadResponsePage = require('./pages/respondToClaim/uploadResponseDocument.page');
 
+const proceedPage = require('./pages/respondToDefence/proceed.page');
+const uploadResponseDocumentPage = require('./pages/respondToDefence/uploadResponseDocument.page');
 
 const statementOfTruth = require('./fragments/statementOfTruth');
 const party = require('./fragments/party');
@@ -147,6 +149,18 @@ module.exports = function () {
       this.waitForText('Submit response');
       await this.retryUntilExists(() => this.click('Submit response'), 'ccd-markdown');
       this.see('You\'ve submitted your response');
+      this.click('Close and Return to case details');
+    },
+
+    async respondToDefence() {
+      await caseViewPage.startEvent('View and respond to defence');
+
+      await proceedPage.proceedWithClaim();
+      await uploadResponseDocumentPage.uploadResponseDocuments(config.testFile);
+
+      this.waitForText('Submit your response');
+      await this.retryUntilExists(() => this.click('Submit your response'), 'ccd-markdown');
+      this.see('You\'ve decided to proceed with the claim');
       this.click('Close and Return to case details');
     },
 
