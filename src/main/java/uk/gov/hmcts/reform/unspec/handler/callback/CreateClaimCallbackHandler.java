@@ -18,6 +18,7 @@ import uk.gov.hmcts.reform.unspec.model.CaseData;
 import uk.gov.hmcts.reform.unspec.model.ClaimValue;
 import uk.gov.hmcts.reform.unspec.model.documents.CaseDocument;
 import uk.gov.hmcts.reform.unspec.model.documents.DocumentType;
+import uk.gov.hmcts.reform.unspec.repositories.ReferenceNumberRepository;
 import uk.gov.hmcts.reform.unspec.service.DeadlinesCalculator;
 import uk.gov.hmcts.reform.unspec.service.IssueDateCalculator;
 import uk.gov.hmcts.reform.unspec.service.docmosis.sealedclaim.SealedClaimFormGenerator;
@@ -54,6 +55,7 @@ public class CreateClaimCallbackHandler extends CallbackHandler {
     private final CaseDetailsConverter caseDetailsConverter;
     private final IssueDateCalculator issueDateCalculator;
     private final DeadlinesCalculator deadlinesCalculator;
+    private final ReferenceNumberRepository referenceNumberRepository;
 
     @Override
     protected Map<CallbackType, Callback> callbacks() {
@@ -109,6 +111,7 @@ public class CreateClaimCallbackHandler extends CallbackHandler {
             deadlinesCalculator.calculateConfirmationOfServiceDeadline(issueDate)
         );
         data.put("systemGeneratedCaseDocuments", ElementUtils.wrapElements(sealedClaim));
+        data.put("legacyReferenceNumber", referenceNumberRepository.getReferenceNumber());
 
         return AboutToStartOrSubmitCallbackResponse.builder()
             .data(data)

@@ -279,5 +279,13 @@
     "FieldType": "FixedRadioList",
     "FieldTypeParameter": "ResponseIntention",
     "SecurityClassification": "Public"
+  },
+  {
+    "LiveFrom": "01/01/2017",
+    "CaseTypeID": "UNSPECIFIED_CLAIMS",
+    "ID": "legacyReferenceNumber",
+    "FieldType": "Text",
+    "Label": "CaseMan Reference number",
+    "SecurityClassification": "Public"
   }
 ]
