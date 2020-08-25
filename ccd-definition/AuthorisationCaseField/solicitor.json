@@ -240,7 +240,7 @@
   {
     "LiveFrom": "01/01/2017",
     "CaseTypeID": "UNSPECIFIED_CLAIMS",
-    "CaseFieldID": "legacyReferenceNumber",
+    "CaseFieldID": "legacyCaseReference",
     "UserRole": "caseworker-civil-solicitor",
     "CRUD": "CRU"
   }

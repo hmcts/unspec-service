@@ -36,7 +36,7 @@
     "TabID": "ClaimDetails",
     "TabLabel": "Claim Details",
     "TabDisplayOrder": 2,
-    "CaseFieldID": "legacyReferenceNumber",
+    "CaseFieldID": "legacyCaseReference",
     "TabFieldDisplayOrder": 1
   }
 ]

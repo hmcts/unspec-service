@@ -111,7 +111,7 @@ public class CreateClaimCallbackHandler extends CallbackHandler {
             deadlinesCalculator.calculateConfirmationOfServiceDeadline(issueDate)
         );
         data.put("systemGeneratedCaseDocuments", ElementUtils.wrapElements(sealedClaim));
-        data.put("legacyReferenceNumber", referenceNumberRepository.getReferenceNumber());
+        data.put("legacyCaseReference", referenceNumberRepository.getReferenceNumber());
 
         return AboutToStartOrSubmitCallbackResponse.builder()
             .data(data)
