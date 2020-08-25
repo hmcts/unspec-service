@@ -128,7 +128,7 @@ public class CreateClaimCallbackHandler extends CallbackHandler {
 
         LocalDateTime serviceDeadline = LocalDate.now().plusDays(112).atTime(23, 59);
         String formattedServiceDeadline = formatLocalDateTime(serviceDeadline, DATE_TIME_AT);
-        String claimNumber = "TBC";
+        String claimNumber = caseData.getLegacyCaseReference();
 
         String body = format(
             CONFIRMATION_SUMMARY,
