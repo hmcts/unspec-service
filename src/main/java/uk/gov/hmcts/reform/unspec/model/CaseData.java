@@ -6,11 +6,13 @@ import uk.gov.hmcts.reform.unspec.enums.ClaimType;
 import uk.gov.hmcts.reform.unspec.enums.ServedDocuments;
 import uk.gov.hmcts.reform.unspec.model.common.Element;
 import uk.gov.hmcts.reform.unspec.model.documents.CaseDocument;
+import uk.gov.hmcts.reform.unspec.validation.groups.ClaimWithdrawalDateGroup;
 import uk.gov.hmcts.reform.unspec.validation.groups.ConfirmServiceDateGroup;
 import uk.gov.hmcts.reform.unspec.validation.interfaces.HasServiceDateTheSameAsOrAfterIssueDate;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.List;
 import javax.validation.constraints.PastOrPresent;
 
@@ -51,4 +53,7 @@ public class CaseData {
     private final ServiceLocation serviceLocation;
     private final ServedDocumentFiles servedDocumentFiles;
     private final String servedDocumentsOther;
+
+    @PastOrPresent(message = "The date must not be in the future", groups = ClaimWithdrawalDateGroup.class)
+    private final Date claimWithdrawalDate;
 }
