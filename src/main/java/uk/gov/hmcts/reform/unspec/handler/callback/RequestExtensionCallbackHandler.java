@@ -93,7 +93,7 @@ public class RequestExtensionCallbackHandler extends CallbackHandler {
             LocalDate.class
         );
         YesOrNo extensionAlreadyAgreed = mapper.convertValue(data.get(EXTENSION_ALREADY_AGREED), YesOrNo.class);
-        String claimNumber = mapper.convertValue(data.get(LEGACY_CASE_REFERENCE), String.class);
+        String claimNumber = data.get(LEGACY_CASE_REFERENCE).toString();
 
         LocalDate responseDeadline = mapper.convertValue(
             data.get(RESPONSE_DEADLINE),

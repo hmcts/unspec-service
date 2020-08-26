@@ -108,7 +108,7 @@ public class RespondExtensionCallbackHandler extends CallbackHandler {
         Map<String, Object> data = callbackParams.getRequest().getCaseDetails().getData();
         LocalDateTime responseDeadline = mapToDateTime(data, RESPONSE_DEADLINE);
 
-        String claimNumber = mapper.convertValue(data.get(LEGACY_CASE_REFERENCE), String.class);
+        String claimNumber = data.get(LEGACY_CASE_REFERENCE).toString();
 
         String body = format(
             "<br />The defendant must respond before 4pm on %s", formatLocalDateTime(responseDeadline, DATE));
