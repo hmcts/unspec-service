@@ -1,17 +1,28 @@
 [
   {
     "ID": "CourtLocation",
-    "ListElementCode": "applicantPreferredCourt",
-    "FieldType": "Text",
-    "ElementLabel": "Court name",
+    "ListElementCode": "option",
+    "FieldType": "FixedRadioList",
+    "FieldTypeParameter": "CourtChoice",
+    "ElementLabel": "Location",
     "HintText": "This should be your preferred County Court hearing centre.",
-    "SecurityClassification": "Public"
+    "SecurityClassification": "Public",
+    "Comment": "list element code in this file should not point to applicant / respondent"
   },
   {
     "ID": "CourtLocation",
-    "ListElementCode": "labelPreferredCourt",
+    "ListElementCode": "courtName",
+    "FieldType": "Text",
+    "ElementLabel": "Court name",
+    "SecurityClassification": "Public",
+    "FieldShowCondition": "option = \"OTHER\""
+  },
+  {
+    "ID": "CourtLocation",
+    "ListElementCode": "label",
     "FieldType": "Label",
     "ElementLabel": "<a target=\"_blank\" href=\"https://courttribunalfinder.service.gov.uk/search/postcode?aol=Money+claims&amp;spoe=nearest\">Find a hearing centre</a> (opens in a new window)",
-    "SecurityClassification": "Public"
+    "SecurityClassification": "Public",
+    "FieldShowCondition": "option = \"OTHER\""
   }
 ]

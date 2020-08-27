@@ -26,8 +26,8 @@
   {
     "LiveFrom": "01/01/2017",
     "CaseTypeID": "UNSPECIFIED_CLAIMS",
-    "ID": "courtLocation",
-    "Label": "Choose court location",
+    "ID": "applicantSolicitor1PreferredCourtLocation",
+    "Label": "Choose a court location",
     "FieldType": "CourtLocation",
     "SecurityClassification": "Public"
   },

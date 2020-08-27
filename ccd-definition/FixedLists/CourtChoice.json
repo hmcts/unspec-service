@@ -1,0 +1,23 @@
+[
+  {
+    "LiveFrom": "01/01/2017",
+    "ID": "CourtChoice",
+    "ListElementCode": "BIRKENHEAD",
+    "ListElement": "Birkenhead",
+    "DisplayOrder": 1
+  },
+  {
+    "LiveFrom": "01/01/2017",
+    "ID": "CourtChoice",
+    "ListElementCode": "LIVERPOOL",
+    "ListElement": "Liverpool",
+    "DisplayOrder": 2
+  },
+  {
+    "LiveFrom": "01/01/2017",
+    "ID": "CourtChoice",
+    "ListElementCode": "OTHER",
+    "ListElement": "Other",
+    "DisplayOrder": 3
+  }
+]

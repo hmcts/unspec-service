@@ -23,7 +23,7 @@ public class CaseData {
 
     private final Long ccdCaseReference;
     private final SolicitorReferences solicitorReferences;
-    private final CourtLocation courtLocation;
+    private final CourtLocation applicantSolicitor1PreferredCourtLocation;
     private final Party claimant;
     private final Party claimant2;
     private final Party respondent;

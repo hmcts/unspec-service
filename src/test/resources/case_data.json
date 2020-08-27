@@ -36,8 +36,9 @@
     "higherValue": "100000"
   },
   "serviceDate": "2020-06-23",
-  "courtLocation": {
-    "preferredCourt": "The court location"
+  "applicantSolicitor1PreferredCourtLocation": {
+    "option": "OTHER",
+    "courtName": "The court location"
   },
   "serviceMethod": {
     "type": "POST"

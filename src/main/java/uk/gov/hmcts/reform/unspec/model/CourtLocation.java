@@ -1,18 +1,17 @@
 package uk.gov.hmcts.reform.unspec.model;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Builder;
 import lombok.Data;
+import uk.gov.hmcts.reform.unspec.enums.CourtChoice;
 
 @Data
 @Builder
 public class CourtLocation {
 
-    private final String applicantPreferredCourt;
+    private final CourtChoice option;
+    private final String courtName;
 
-    @JsonCreator
-    CourtLocation(@JsonProperty("applicantPreferredCourt") String applicantPreferredCourt) {
-        this.applicantPreferredCourt = applicantPreferredCourt;
+    public String getCourtName() {
+        return option == CourtChoice.OTHER ? courtName : "";
     }
 }
