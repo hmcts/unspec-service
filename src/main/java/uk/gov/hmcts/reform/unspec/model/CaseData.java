@@ -6,14 +6,13 @@ import uk.gov.hmcts.reform.unspec.enums.ClaimType;
 import uk.gov.hmcts.reform.unspec.enums.ServedDocuments;
 import uk.gov.hmcts.reform.unspec.model.common.Element;
 import uk.gov.hmcts.reform.unspec.model.documents.CaseDocument;
-import uk.gov.hmcts.reform.unspec.validation.groups.ClaimWithdrawalDateGroup;
 import uk.gov.hmcts.reform.unspec.validation.groups.ConfirmServiceDateGroup;
 import uk.gov.hmcts.reform.unspec.validation.interfaces.HasServiceDateTheSameAsOrAfterIssueDate;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.Date;
 import java.util.List;
+import javax.validation.Valid;
 import javax.validation.constraints.PastOrPresent;
 
 import static uk.gov.hmcts.reform.unspec.service.docmosis.sealedclaim.SealedClaimFormGenerator.REFERENCE_NUMBER;
@@ -54,6 +53,6 @@ public class CaseData {
     private final ServedDocumentFiles servedDocumentFiles;
     private final String servedDocumentsOther;
 
-    @PastOrPresent(message = "The date must not be in the future", groups = ClaimWithdrawalDateGroup.class)
-    private final Date claimWithdrawalDate;
+    @Valid
+    private final CloseClaim withdrawClaim;
 }

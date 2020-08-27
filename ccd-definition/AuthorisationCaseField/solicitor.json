@@ -240,14 +240,7 @@
   {
     "LiveFrom": "01/01/2017",
     "CaseTypeID": "UNSPECIFIED_CLAIMS",
-    "CaseFieldID": "claimWithdrawalDate",
-    "UserRole": "caseworker-civil-solicitor",
-    "CRUD": "CRU"
-  },
-  {
-    "LiveFrom": "01/01/2017",
-    "CaseTypeID": "UNSPECIFIED_CLAIMS",
-    "CaseFieldID": "claimWithdrawalReason",
+    "CaseFieldID": "withdrawClaim",
     "UserRole": "caseworker-civil-solicitor",
     "CRUD": "CRU"
   }

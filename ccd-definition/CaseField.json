@@ -283,19 +283,9 @@
   {
     "LiveFrom": "01/01/2017",
     "CaseTypeID": "UNSPECIFIED_CLAIMS",
-    "ID": "claimWithdrawalDate",
-    "Label": "Enter the date from which you want the claim to be withdrawn",
-    "HintText": "The date must be today's date or earlier.",
-    "FieldType": "Date",
-    "SecurityClassification": "Public"
-  },
-  {
-    "LiveFrom": "01/01/2017",
-    "CaseTypeID": "UNSPECIFIED_CLAIMS",
-    "ID": "claimWithdrawalReason",
-    "Label": "Explain the reason for withdrawal",
-    "HintText": "Briefly describe why you are withdrawing the claim.",
-    "FieldType": "TextArea",
+    "ID": "withdrawClaim",
+    "Label": "Withdraw claim",
+    "FieldType": "CloseClaim",
     "SecurityClassification": "Public"
   }
 ]

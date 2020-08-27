@@ -10,6 +10,7 @@ import uk.gov.hmcts.reform.ccd.client.model.AboutToStartOrSubmitCallbackResponse
 import uk.gov.hmcts.reform.unspec.callback.CallbackParams;
 import uk.gov.hmcts.reform.unspec.callback.CallbackType;
 import uk.gov.hmcts.reform.unspec.helpers.CaseDetailsConverter;
+import uk.gov.hmcts.reform.unspec.model.CloseClaim;
 
 import java.time.LocalDate;
 import java.util.HashMap;
@@ -33,7 +34,7 @@ class WithdrawClaimCallbackHandlerTest extends BaseCallbackHandlerTest {
         @Test
         void shouldReturnErrors_whenDateInFuture() {
             HashMap<String, Object> data = new HashMap<>();
-            data.put("claimWithdrawalDate", LocalDate.now().plusDays(1));
+            data.put("withdrawClaim", CloseClaim.builder().date(LocalDate.now().plusDays(1)).build());
             CallbackParams params = callbackParamsOf(data, CallbackType.MID);
 
             AboutToStartOrSubmitCallbackResponse response =
@@ -45,7 +46,7 @@ class WithdrawClaimCallbackHandlerTest extends BaseCallbackHandlerTest {
         @Test
         void shouldReturnNoErrors_whenDateInPast() {
             HashMap<String, Object> data = new HashMap<>();
-            data.put("claimWithdrawalDate", LocalDate.now().minusDays(1));
+            data.put("withdrawClaim", CloseClaim.builder().date(LocalDate.now().minusDays(1)).build());
             CallbackParams params = callbackParamsOf(data, CallbackType.MID);
 
             AboutToStartOrSubmitCallbackResponse response =
