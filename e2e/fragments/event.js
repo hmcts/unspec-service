@@ -7,7 +7,7 @@ module.exports = {
 
   async submit(buttonText, expectedMessage) {
     I.waitForText(buttonText);
-    await I.retryUntilExists(() => this.click(buttonText), CONFIRMATION_HEADER);
+    await I.retryUntilExists(() => I.click(buttonText), CONFIRMATION_HEADER);
     I.see(expectedMessage);
   },
 
