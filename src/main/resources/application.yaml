@@ -89,6 +89,12 @@ reference:
 spring:
   profiles: local
 
+  datasource:
+    driverClassName: org.postgresql.Driver
+    username: ${CMC_DB_USERNAME:ccd}
+    password: ${CMC_DB_PASSWORD:ccd}
+    url: jdbc:postgresql://${CMC_DB_HOST:localhost}:${CMC_DB_PORT:5050}/${CMC_DB_NAME:cmc}
+
 fees:
   api:
     url: http://localhost:8765
