@@ -37,6 +37,7 @@ const uploadResponsePage = require('./pages/respondToClaim/uploadResponseDocumen
 
 const statementOfTruth = require('./fragments/statementOfTruth');
 const party = require('./fragments/party');
+const event = require('./fragments/event');
 
 const baseUrl = process.env.URL || 'http://localhost:3333';
 const signedInSelector = 'exui-header';
@@ -76,7 +77,8 @@ module.exports = function () {
       await claimTypePage.selectClaimType();
       await claimValuePage.enterClaimValue();
       await statementOfTruth.enterNameAndRole('claim');
-      await this.submitEvent('Issue claim', 'Your claim has been issued');
+      await event.submit('Issue claim', 'Your claim has been issued');
+      await event.returnToCaseDetails();
     },
 
     async confirmService() {
@@ -87,7 +89,8 @@ module.exports = function () {
       await serviceLocationPage.selectUsualResidence();
       await serviceDatePage.enterServiceDate();
       await statementOfTruth.enterNameAndRole('service');
-      await this.submitEvent('Confirm service', 'You\'ve confirmed service');
+      await event.submit('Confirm service', 'You\'ve confirmed service');
+      await event.returnToCaseDetails();
     },
 
     async acknowledgeService() {
@@ -95,14 +98,16 @@ module.exports = function () {
       await confirmNameAndAddressPage.verifyDetails();
       await confirmDetailsPage.confirmReference();
       await responseIntentionPage.selectResponseIntention();
-      await this.submitEvent('Acknowledge service', 'You\'ve acknowledged service');
+      await event.submit('Acknowledge service', 'You\'ve acknowledged service');
+      await event.returnToCaseDetails();
     },
 
     async requestExtension() {
       await caseViewPage.startEvent('Request extension');
       await proposeDeadline.enterExtensionProposedDeadline();
       await extensionAlreadyAgreed.selectAlreadyAgreed();
-      await this.submitEvent('Ask for extension', 'You asked for extra time to respond');
+      await event.submit('Ask for extension', 'You asked for extra time to respond');
+      await event.returnToCaseDetails();
     },
 
     async respondToExtension() {
@@ -110,7 +115,8 @@ module.exports = function () {
       await respondToExtensionPage.selectDoNotAccept();
       await counterExtensionPage.enterCounterDate();
       await rejectionReasonPage.enterResponse();
-      await this.submitEvent('Respond to request', 'You\'ve responded to the request for more time');
+      await event.submit('Respond to request', 'You\'ve responded to the request for more time');
+      await event.returnToCaseDetails();
     },
 
     async respondToClaim() {
@@ -119,19 +125,12 @@ module.exports = function () {
       await uploadResponsePage.uploadResponseDocuments(config.testFile);
       await responseConfirmNameAndAddressPage.verifyDetails();
       await confirmDetailsPage.confirmReference();
-      await this.submitEvent('Submit response', 'You\'ve submitted your response');
+      await event.submit('Submit response', 'You\'ve submitted your response');
+      await event.returnToCaseDetails();
     },
 
     async clickContinue() {
       await this.click('Continue');
-    },
-
-    async submitEvent(buttonText, expectedMessage) {
-      this.waitForText(buttonText);
-      await this.retryUntilExists(() => this.click(buttonText), 'ccd-markdown');
-      this.see(expectedMessage);
-      this.click('Close and Return to case details');
-      this.waitForElement(CASE_HEADER);
     },
 
     /**
