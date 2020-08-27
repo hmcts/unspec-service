@@ -27,7 +27,7 @@
     "EventHintText" : "You must enter this if you know it.",
     "FieldDisplayOrder": 2,
     "DisplayContext": "OPTIONAL",
-    "FieldShowCondition": "respondent.type=\"INDIVIDUAL\""
+    "FieldShowCondition": "respondent1.type=\"INDIVIDUAL\""
   },
   {
     "LiveFrom": "01/01/2017",
@@ -39,7 +39,7 @@
     "EventHintText" : "You must enter this if you know it.",
     "FieldDisplayOrder": 2,
     "DisplayContext": "OPTIONAL",
-    "FieldShowCondition": "respondent.type=\"SOLE_TRADER\""
+    "FieldShowCondition": "respondent1.type=\"SOLE_TRADER\""
   },
   {
     "LiveFrom": "01/01/2017",

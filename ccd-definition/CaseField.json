@@ -165,7 +165,7 @@
   {
     "LiveFrom": "01/01/2017",
     "CaseTypeID": "UNSPECIFIED_CLAIMS",
-    "ID": "serviceStatementOfTruthToRespondentSolicitor1",
+    "ID": "applicant1ServiceStatementOfTruthToRespondentSolicitor1",
     "Label": "Statement of truth",
     "FieldType": "StatementOfTruth",
     "SecurityClassification": "Public"
@@ -267,7 +267,7 @@
     "LiveFrom": "01/01/2017",
     "CaseTypeID": "UNSPECIFIED_CLAIMS",
     "ID": "defendantDetails",
-    "Label": "The claimant has provided the following name and address for the defendant.\n\nIf this is not correct, you should contact the claimant's legal representative.\n\n**Name:** ${respondent.individualTitle}${respondent.soleTraderTitle}${respondent.companyName}${respondent.organisationName} ${respondent.individualFirstName}${respondent.soleTraderFirstName} ${respondent.individualLastName}${respondent.soleTraderLastName} ${respondent.soleTraderTradingAs}\n\n\n\n**Address:**<br />\r\n${respondent.primaryAddress.AddressLine1}<br />${respondent.primaryAddress.AddressLine2}<br />${respondent.primaryAddress.AddressLine3}<br />${respondent.primaryAddress.PostTown}<br />${respondent.primaryAddress.County}<br />${respondent.primaryAddress.PostCode}",
+    "Label": "The claimant has provided the following name and address for the defendant.\n\nIf this is not correct, you should contact the claimant's legal representative.\n\n**Name:** ${respondent1.individualTitle}${respondent1.soleTraderTitle}${respondent1.companyName}${respondent1.organisationName} ${respondent1.individualFirstName}${respondent1.soleTraderFirstName} ${respondent1.individualLastName}${respondent1.soleTraderLastName} ${respondent1.soleTraderTradingAs}\n\n\n\n**Address:**<br />\r\n${respondent1.primaryAddress.AddressLine1}<br />${respondent1.primaryAddress.AddressLine2}<br />${respondent1.primaryAddress.AddressLine3}<br />${respondent1.primaryAddress.PostTown}<br />${respondent1.primaryAddress.County}<br />${respondent1.primaryAddress.PostCode}",
     "FieldType": "Label",
     "SecurityClassification": "Public"
   },
@@ -309,7 +309,7 @@
     "LiveFrom": "01/01/2017",
     "CaseTypeID": "UNSPECIFIED_CLAIMS",
     "ID": "respondentDetails",
-    "Label": "The claimant has provided the following name and address for the defendant.\n\nIf this is not correct, you should contact the claimant's legal representative.\n\n**Name:**\n${respondent.companyName}${respondent.organisationName}${respondent.soleTraderTitle}${respondent.individualTitle} ${respondent.individualFirstName}${respondent.soleTraderFirstName} ${respondent.individualLastName}${respondent.soleTraderLastName} ${respondent.soleTraderTradingAs}\n\n**Address:**<br />\n${respondent.primaryAddress.AddressLine1}<br />${respondent.primaryAddress.AddressLine2}<br />${respondent.primaryAddress.AddressLine3}<br />${respondent.primaryAddress.PostTown}<br />${respondent.primaryAddress.County}<br />${respondent.primaryAddress.PostCode}",
+    "Label": "The claimant has provided the following name and address for the defendant.\n\nIf this is not correct, you should contact the claimant's legal representative.\n\n**Name:**\n${respondent1.companyName}${respondent1.organisationName}${respondent1.soleTraderTitle}${respondent1.individualTitle} ${respondent1.individualFirstName}${respondent1.soleTraderFirstName} ${respondent1.individualLastName}${respondent1.soleTraderLastName} ${respondent1.soleTraderTradingAs}\n\n**Address:**<br />\n${respondent1.primaryAddress.AddressLine1}<br />${respondent1.primaryAddress.AddressLine2}<br />${respondent1.primaryAddress.AddressLine3}<br />${respondent1.primaryAddress.PostTown}<br />${respondent1.primaryAddress.County}<br />${respondent1.primaryAddress.PostCode}",
     "FieldType": "Label",
     "SecurityClassification": "Public"
   },

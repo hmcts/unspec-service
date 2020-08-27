@@ -31,7 +31,7 @@ public class CaseData {
     private final ClaimValue claimValue;
     private final ClaimType claimType;
     private final StatementOfTruth applicantSolicitor1ClaimStatementOfTruth;
-    private final StatementOfTruth serviceStatementOfTruthToRespondentSolicitor1;
+    private final StatementOfTruth applicant1ServiceStatementOfTruthToRespondentSolicitor1;
     private final List<Element<CaseDocument>> systemGeneratedCaseDocuments;
     private final ServiceMethod serviceMethodToRespondentSolicitor1;
 
