@@ -158,7 +158,10 @@ public class ConfirmServiceCallbackHandler extends CallbackHandler {
 
         LocalDate deemedDateOfService = caseData.getDeemedServiceDateToRespondentSolicitor1();
         String formattedDeemedDateOfService = formatLocalDate(deemedDateOfService, DATE);
-        String responseDeadlineDate = formatLocalDateTime(caseData.getRespondentSolicitor1ResponseDeadline(), DATE_TIME_AT);
+        String responseDeadlineDate = formatLocalDateTime(
+            caseData.getRespondentSolicitor1ResponseDeadline(),
+            DATE_TIME_AT
+        );
         Long documentSize = unwrapElements(caseData.getSystemGeneratedCaseDocuments()).stream()
             .filter(c -> c.getDocumentType() == DocumentType.CERTIFICATE_OF_SERVICE)
             .findFirst()

@@ -95,7 +95,10 @@ class AcknowledgeServiceCallbackHandlerTest extends BaseCallbackHandlerTest {
             AboutToStartOrSubmitCallbackResponse response = (AboutToStartOrSubmitCallbackResponse) handler
                 .handle(params);
 
-            assertThat(response.getData()).isEqualTo(Map.of("respondentSolicitor1ResponseDeadline", responseDeadline.plusDays(14)));
+            assertThat(response.getData()).isEqualTo(Map.of(
+                "respondentSolicitor1ResponseDeadline",
+                responseDeadline.plusDays(14)
+            ));
         }
     }
 
