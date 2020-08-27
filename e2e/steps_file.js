@@ -76,10 +76,7 @@ module.exports = function () {
       await claimTypePage.selectClaimType();
       await claimValuePage.enterClaimValue();
       await statementOfTruth.enterNameAndRole('claim');
-      this.waitForText('Issue claim');
-      await this.retryUntilExists(() => this.click('Issue claim'), 'ccd-markdown');
-      this.see('Your claim has been issued');
-      this.click('Close and Return to case details');
+      await this.submitEvent('Issue claim', 'Your claim has been issued');
     },
 
     async confirmService() {
@@ -90,12 +87,7 @@ module.exports = function () {
       await serviceLocationPage.selectUsualResidence();
       await serviceDatePage.enterServiceDate();
       await statementOfTruth.enterNameAndRole('service');
-
-      this.waitForText('Confirm service');
-      await this.retryUntilExists(() => this.click('Confirm service'), 'ccd-markdown');
-      this.see('You\'ve confirmed service');
-      this.click('Close and Return to case details');
-      this.waitForElement(CASE_HEADER);
+      await this.submitEvent('Confirm service', 'You\'ve confirmed service');
     },
 
     async acknowledgeService() {
@@ -103,24 +95,14 @@ module.exports = function () {
       await confirmNameAndAddressPage.verifyDetails();
       await confirmDetailsPage.confirmReference();
       await responseIntentionPage.selectResponseIntention();
-
-      this.waitForText('Acknowledge service');
-      await this.retryUntilExists(() => this.click('Acknowledge service'), 'ccd-markdown');
-      this.see('You\'ve acknowledged service');
-      this.click('Close and Return to case details');
-      this.waitForElement(CASE_HEADER);
+      await this.submitEvent('Acknowledge service', 'You\'ve acknowledged service');
     },
 
     async requestExtension() {
       await caseViewPage.startEvent('Request extension');
       await proposeDeadline.enterExtensionProposedDeadline();
       await extensionAlreadyAgreed.selectAlreadyAgreed();
-
-      this.waitForText('Ask for extension');
-      await this.retryUntilExists(() => this.click('Ask for extension'), 'ccd-markdown');
-      this.see('You asked for extra time to respond');
-      this.click('Close and Return to case details');
-      this.waitForElement(CASE_HEADER);
+      await this.submitEvent('Ask for extension', 'You asked for extra time to respond');
     },
 
     async respondToExtension() {
@@ -128,31 +110,28 @@ module.exports = function () {
       await respondToExtensionPage.selectDoNotAccept();
       await counterExtensionPage.enterCounterDate();
       await rejectionReasonPage.enterResponse();
-
-      this.waitForText('Respond to request');
-      await this.retryUntilExists(() => this.click('Respond to request'), 'ccd-markdown');
-      this.see('You\'ve responded to the request for more time');
-      this.click('Close and Return to case details');
-      this.waitForElement(CASE_HEADER);
+      await this.submitEvent('Respond to request', 'You\'ve responded to the request for more time');
     },
 
     async respondToClaim() {
       await caseViewPage.startEvent('Respond to claim');
-
       await responseTypePage.selectFullDefence();
       await uploadResponsePage.uploadResponseDocuments(config.testFile);
       await responseConfirmNameAndAddressPage.verifyDetails();
       await confirmDetailsPage.confirmReference();
-
-      this.waitForText('Submit response');
-      await this.retryUntilExists(() => this.click('Submit response'), 'ccd-markdown');
-      this.see('You\'ve submitted your response');
-      this.click('Close and Return to case details');
-      this.waitForElement(CASE_HEADER);
+      await this.submitEvent('Submit response', 'You\'ve submitted your response');
     },
 
     async clickContinue() {
       await this.click('Continue');
+    },
+
+    async submitEvent(buttonText, expectedMessage) {
+      this.waitForText(buttonText);
+      await this.retryUntilExists(() => this.click(buttonText), 'ccd-markdown');
+      this.see(expectedMessage);
+      this.click('Close and Return to case details');
+      this.waitForElement(CASE_HEADER);
     },
 
     /**
