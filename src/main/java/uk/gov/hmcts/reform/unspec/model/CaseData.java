@@ -55,4 +55,7 @@ public class CaseData {
 
     @Valid
     private final CloseClaim withdrawClaim;
+
+    @Valid
+    private final CloseClaim discontinueClaim;
 }
