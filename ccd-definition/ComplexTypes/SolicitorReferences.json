@@ -1,14 +1,14 @@
 [
   {
     "ID": "SolicitorReferences",
-    "ListElementCode": "claimantReference",
+    "ListElementCode": "applicantSolicitor1Reference",
     "FieldType": "Text",
     "ElementLabel": "Claimant's legal representative's reference",
     "SecurityClassification": "Public"
   },
   {
     "ID": "SolicitorReferences",
-    "ListElementCode": "defendantReference",
+    "ListElementCode": "respondentSolicitor1Reference",
     "FieldType": "Text",
     "ElementLabel": "Defendant's legal representative's reference",
     "SecurityClassification": "Public"

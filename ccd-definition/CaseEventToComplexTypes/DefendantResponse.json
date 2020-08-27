@@ -13,7 +13,7 @@
     "ID": "SolicitorReferences",
     "CaseEventID": "DEFENDANT_RESPONSE",
     "CaseFieldID": "solicitorReferences",
-    "ListElementCode": "defendantReference",
+    "ListElementCode": "respondentSolicitor1Reference",
     "FieldDisplayOrder": 1,
     "DisplayContext": "OPTIONAL"
   },
@@ -46,10 +46,10 @@
     "ID": "SolicitorReferences",
     "CaseEventID": "DEFENDANT_RESPONSE",
     "CaseFieldID": "solicitorReferences",
-    "ListElementCode": "claimantReference",
+    "ListElementCode": "applicantSolicitor1Reference",
     "FieldDisplayOrder": 3,
     "DisplayContext": "OPTIONAL",
-    "FieldShowCondition": "defendantReference=\"DO_NOT_SHOW\"",
+    "FieldShowCondition": "respondentSolicitor1Reference=\"DO_NOT_SHOW\"",
     "Comment": "Required for hiding field on CYA page",
     "ShowSummary": "N"
   },
@@ -61,7 +61,7 @@
     "ListElementCode": "type",
     "FieldDisplayOrder": 3,
     "DisplayContext": "OPTIONAL",
-    "FieldShowCondition": "defendantReference=\"DO_NOT_SHOW\"",
+    "FieldShowCondition": "respondentSolicitor1Reference=\"DO_NOT_SHOW\"",
     "Comment": "Required for hiding field on CYA page",
     "ShowSummary": "N"
   },
@@ -73,7 +73,7 @@
     "ListElementCode": "individualTitle",
     "FieldDisplayOrder": 3,
     "DisplayContext": "OPTIONAL",
-    "FieldShowCondition": "defendantReference=\"DO_NOT_SHOW\"",
+    "FieldShowCondition": "respondentSolicitor1Reference=\"DO_NOT_SHOW\"",
     "Comment": "Required for hiding field on CYA page",
     "ShowSummary": "N"
   },
@@ -85,7 +85,7 @@
     "ListElementCode": "soleTraderTitle",
     "FieldDisplayOrder": 3,
     "DisplayContext": "OPTIONAL",
-    "FieldShowCondition": "defendantReference=\"DO_NOT_SHOW\"",
+    "FieldShowCondition": "respondentSolicitor1Reference=\"DO_NOT_SHOW\"",
     "Comment": "Required for hiding field on CYA page",
     "ShowSummary": "N"
   },
@@ -97,7 +97,7 @@
     "ListElementCode": "individualFirstName",
     "FieldDisplayOrder": 3,
     "DisplayContext": "OPTIONAL",
-    "FieldShowCondition": "defendantReference=\"DO_NOT_SHOW\"",
+    "FieldShowCondition": "respondentSolicitor1Reference=\"DO_NOT_SHOW\"",
     "Comment": "Required for hiding field on CYA page",
     "ShowSummary": "N"
   },
@@ -109,7 +109,7 @@
     "ListElementCode": "soleTraderFirstName",
     "FieldDisplayOrder": 3,
     "DisplayContext": "OPTIONAL",
-    "FieldShowCondition": "defendantReference=\"DO_NOT_SHOW\"",
+    "FieldShowCondition": "respondentSolicitor1Reference=\"DO_NOT_SHOW\"",
     "Comment": "Required for hiding field on CYA page",
     "ShowSummary": "N"
   },
@@ -121,7 +121,7 @@
     "ListElementCode": "individualLastName",
     "FieldDisplayOrder": 3,
     "DisplayContext": "OPTIONAL",
-    "FieldShowCondition": "defendantReference=\"DO_NOT_SHOW\"",
+    "FieldShowCondition": "respondentSolicitor1Reference=\"DO_NOT_SHOW\"",
     "Comment": "Required for hiding field on CYA page",
     "ShowSummary": "N"
   },
@@ -133,7 +133,7 @@
     "ListElementCode": "soleTraderLastName",
     "FieldDisplayOrder": 3,
     "DisplayContext": "OPTIONAL",
-    "FieldShowCondition": "defendantReference=\"DO_NOT_SHOW\"",
+    "FieldShowCondition": "respondentSolicitor1Reference=\"DO_NOT_SHOW\"",
     "Comment": "Required for hiding field on CYA page",
     "ShowSummary": "N"
   },
@@ -145,7 +145,7 @@
     "ListElementCode": "soleTraderTradingAs",
     "FieldDisplayOrder": 3,
     "DisplayContext": "OPTIONAL",
-    "FieldShowCondition": "defendantReference=\"DO_NOT_SHOW\"",
+    "FieldShowCondition": "respondentSolicitor1Reference=\"DO_NOT_SHOW\"",
     "Comment": "Required for hiding field on CYA page",
     "ShowSummary": "N"
   },
@@ -157,7 +157,7 @@
     "ListElementCode": "companyName",
     "FieldDisplayOrder": 3,
     "DisplayContext": "OPTIONAL",
-    "FieldShowCondition": "defendantReference=\"DO_NOT_SHOW\"",
+    "FieldShowCondition": "respondentSolicitor1Reference=\"DO_NOT_SHOW\"",
     "Comment": "Required for hiding field on CYA page",
     "ShowSummary": "N"
   },
@@ -169,7 +169,7 @@
     "ListElementCode": "organisationName",
     "FieldDisplayOrder": 3,
     "DisplayContext": "OPTIONAL",
-    "FieldShowCondition": "defendantReference=\"DO_NOT_SHOW\"",
+    "FieldShowCondition": "respondentSolicitor1Reference=\"DO_NOT_SHOW\"",
     "Comment": "Required for hiding field on CYA page",
     "ShowSummary": "N"
   },
@@ -181,7 +181,7 @@
     "ListElementCode": "primaryAddress",
     "FieldDisplayOrder": 3,
     "DisplayContext": "OPTIONAL",
-    "FieldShowCondition": "defendantReference=\"DO_NOT_SHOW\"",
+    "FieldShowCondition": "respondentSolicitor1Reference=\"DO_NOT_SHOW\"",
     "Comment": "Required for hiding field on CYA page",
     "ShowSummary": "N"
   }

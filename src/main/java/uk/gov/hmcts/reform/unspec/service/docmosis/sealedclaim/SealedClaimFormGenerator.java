@@ -77,8 +77,8 @@ public class SealedClaimFormGenerator implements TemplateDataGenerator<SealedCla
             .referenceNumber(REFERENCE_NUMBER)
             .issueDate(caseData.getClaimIssuedDate())
             .submittedOn(caseData.getClaimSubmittedDateTime().toLocalDate())
-            .claimantExternalReference(caseData.getSolicitorReferences().getClaimantReference())
-            .defendantExternalReference(caseData.getSolicitorReferences().getDefendantReference())
+            .claimantExternalReference(caseData.getSolicitorReferences().getApplicantSolicitor1Reference())
+            .defendantExternalReference(caseData.getSolicitorReferences().getRespondentSolicitor1Reference())
             .caseName(CaseNameUtils.toCaseName.apply(caseData))
             .build();
     }
