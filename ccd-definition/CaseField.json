@@ -34,7 +34,7 @@
   {
     "LiveFrom": "01/01/2017",
     "CaseTypeID": "UNSPECIFIED_CLAIMS",
-    "ID": "claimant",
+    "ID": "applicant1",
     "Label": "Claimant details",
     "FieldType": "Party",
     "SecurityClassification": "Public"
@@ -42,7 +42,7 @@
   {
     "LiveFrom": "01/01/2017",
     "CaseTypeID": "UNSPECIFIED_CLAIMS",
-    "ID": "respondent",
+    "ID": "respondent1",
     "Label": "Defendant details",
     "FieldType": "Party",
     "SecurityClassification": "Public"
@@ -76,7 +76,7 @@
   {
     "LiveFrom": "01/01/2017",
     "CaseTypeID": "UNSPECIFIED_CLAIMS",
-    "ID": "claimStatementOfTruth",
+    "ID": "applicantSolicitor1ClaimStatementOfTruth",
     "Label": "Statement of truth",
     "FieldType": "StatementOfTruth",
     "SecurityClassification": "Public"
@@ -133,7 +133,7 @@
   {
     "LiveFrom": "01/01/2017",
     "CaseTypeID": "UNSPECIFIED_CLAIMS",
-    "ID": "serviceMethod",
+    "ID": "serviceMethodToRespondentSolicitor1",
     "Label": "How did you serve the documents?",
     "FieldType": "ServiceMethod",
     "SecurityClassification": "Public"
@@ -141,7 +141,7 @@
   {
     "LiveFrom": "01/01/2017",
     "CaseTypeID": "UNSPECIFIED_CLAIMS",
-    "ID": "serviceLocation",
+    "ID": "serviceLocationToRespondentSolicitor1",
     "Label": "Where did you serve the documents?",
     "FieldType": "ServiceLocation",
     "SecurityClassification": "Public"
@@ -149,7 +149,7 @@
   {
     "LiveFrom": "01/01/2017",
     "CaseTypeID": "UNSPECIFIED_CLAIMS",
-    "ID": "serviceDate",
+    "ID": "serviceDateToRespondentSolicitor1",
     "Label": "When did you serve the documents?",
     "FieldType": "Date",
     "SecurityClassification": "Public"
@@ -157,7 +157,7 @@
   {
     "LiveFrom": "01/01/2017",
     "CaseTypeID": "UNSPECIFIED_CLAIMS",
-    "ID": "serviceDateAndTime",
+    "ID": "serviceDateTimeToRespondentSolicitor1",
     "Label": "When did you serve the documents?",
     "FieldType": "DateTime",
     "SecurityClassification": "Public"
@@ -165,7 +165,7 @@
   {
     "LiveFrom": "01/01/2017",
     "CaseTypeID": "UNSPECIFIED_CLAIMS",
-    "ID": "serviceStatementOfTruth",
+    "ID": "serviceStatementOfTruthToRespondentSolicitor1",
     "Label": "Statement of truth",
     "FieldType": "StatementOfTruth",
     "SecurityClassification": "Public"
@@ -173,7 +173,7 @@
   {
     "LiveFrom": "01/01/2017",
     "CaseTypeID": "UNSPECIFIED_CLAIMS",
-    "ID": "deemedDateOfService",
+    "ID": "deemedServiceDateToRespondentSolicitor1",
     "Label": "Deemed date of service",
     "FieldType": "Date",
     "SecurityClassification": "Public"
@@ -181,7 +181,7 @@
   {
     "LiveFrom": "01/01/2017",
     "CaseTypeID": "UNSPECIFIED_CLAIMS",
-    "ID": "responseDeadline",
+    "ID": "respondentSolicitor1ResponseDeadline",
     "Label": "Response deadline",
     "FieldType": "DateTime",
     "SecurityClassification": "Public"
@@ -274,7 +274,7 @@
   {
     "LiveFrom": "01/01/2017",
     "CaseTypeID": "UNSPECIFIED_CLAIMS",
-    "ID": "responseIntention",
+    "ID": "respondent1ClaimResponseIntentionType",
     "Label": "Response intention",
     "FieldType": "FixedRadioList",
     "FieldTypeParameter": "ResponseIntention",

@@ -50,7 +50,7 @@ class AcknowledgeServiceCallbackHandlerTest extends BaseCallbackHandlerTest {
         @ValueSource(strings = {"individualDateOfBirth", "soleTraderDateOfBirth"})
         void shouldReturnError_whenDateOfBirthIsInTheFuture(String dateOfBirthField) {
             Map<String, Object> data = new HashMap<>();
-            data.put("respondent", Map.of(dateOfBirthField, "2030-01-01"));
+            data.put("respondent1", Map.of(dateOfBirthField, "2030-01-01"));
 
             CallbackParams params = callbackParamsOf(data, CallbackType.MID);
 
@@ -64,7 +64,7 @@ class AcknowledgeServiceCallbackHandlerTest extends BaseCallbackHandlerTest {
         @ValueSource(strings = {"individualDateOfBirth", "soleTraderDateOfBirth"})
         void shouldReturnNoError_whenDateOfBirthIsInThePast(String dateOfBirthField) {
             Map<String, Object> data = new HashMap<>();
-            data.put("respondent", Map.of(dateOfBirthField, "2000-01-01"));
+            data.put("respondent1", Map.of(dateOfBirthField, "2000-01-01"));
 
             CallbackParams params = callbackParamsOf(data, CallbackType.MID);
 
@@ -88,14 +88,14 @@ class AcknowledgeServiceCallbackHandlerTest extends BaseCallbackHandlerTest {
         void shouldSetNewResponseDeadline_whenInvoked() {
             Map<String, Object> data = new HashMap<>();
             LocalDateTime responseDeadline = now().atTime(16, 0);
-            data.put("responseDeadline", responseDeadline);
+            data.put("respondentSolicitor1ResponseDeadline", responseDeadline);
 
             CallbackParams params = callbackParamsOf(data, CallbackType.ABOUT_TO_SUBMIT);
 
             AboutToStartOrSubmitCallbackResponse response = (AboutToStartOrSubmitCallbackResponse) handler
                 .handle(params);
 
-            assertThat(response.getData()).isEqualTo(Map.of("responseDeadline", responseDeadline.plusDays(14)));
+            assertThat(response.getData()).isEqualTo(Map.of("respondentSolicitor1ResponseDeadline", responseDeadline.plusDays(14)));
         }
     }
 
@@ -105,7 +105,7 @@ class AcknowledgeServiceCallbackHandlerTest extends BaseCallbackHandlerTest {
         @Test
         void shouldReturnExpectedResponse_whenInvoked() {
             Map<String, Object> data = new HashMap<>();
-            data.put("responseDeadline", "2030-01-01T16:00:00");
+            data.put("respondentSolicitor1ResponseDeadline", "2030-01-01T16:00:00");
 
             CallbackParams params = callbackParamsOf(data, CallbackType.SUBMITTED);
 
