@@ -70,7 +70,7 @@ public class SealedClaimFormGenerator implements TemplateDataGenerator<SealedCla
             .claimants(getClaimants(caseData))
             .defendants(geDefendants(caseData))
             .claimValue(caseData.getClaimValue().formData())
-            .statementOfTruth(caseData.getClaimStatementOfTruth())
+            .statementOfTruth(caseData.getApplicantSolicitor1ClaimStatementOfTruth())
             .claimDetails(TEMP_CLAIM_DETAILS)
             .hearingCourtLocation(caseData.getCourtLocation().getApplicantPreferredCourt())
             .claimantRepresentative(TEMP_REPRESENTATIVE)
@@ -84,7 +84,7 @@ public class SealedClaimFormGenerator implements TemplateDataGenerator<SealedCla
     }
 
     private List<Defendant> geDefendants(CaseData caseData) {
-        Party respondent = caseData.getRespondent();
+        Party respondent = caseData.getRespondent1();
         return List.of(Defendant.builder()
                            .name(getPartyNameBasedOnType(respondent))
                            .primaryAddress(respondent.getPrimaryAddress())
@@ -93,7 +93,7 @@ public class SealedClaimFormGenerator implements TemplateDataGenerator<SealedCla
     }
 
     private List<Claimant> getClaimants(CaseData caseData) {
-        Party applicant = caseData.getClaimant();
+        Party applicant = caseData.getApplicant1();
         return List.of(Claimant.builder()
                            .name(getPartyNameBasedOnType(applicant))
                            .primaryAddress(applicant.getPrimaryAddress())
