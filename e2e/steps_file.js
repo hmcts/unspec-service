@@ -135,7 +135,7 @@ module.exports = function () {
       await caseViewPage.startEvent('View and respond to defence');
       await proceedPage.proceedWithClaim();
       await uploadResponseDocumentPage.uploadResponseDocuments(config.testFile);
-      await event.submit('Submit response', 'You\'ve submitted your response');
+      await event.submit('Submit your response', 'You\'ve decided to proceed with the claim');
       await event.returnToCaseDetails();
     },
 
