@@ -20,13 +20,13 @@ public class CaseNameUtils {
         StringBuilder defendantNameBuilder = new StringBuilder();
         if (caseData.getRespondent2() != null) {
             defendantNameBuilder.append("1 ");
-            defendantNameBuilder.append(PartyNameUtils.getPartyNameBasedOnType(caseData.getRespondent1()));
+            defendantNameBuilder.append(caseData.getRespondent1().getPartyName());
             soleTraderCompany(caseData.getRespondent1(), defendantNameBuilder);
             defendantNameBuilder.append(" & 2 ");
-            defendantNameBuilder.append(PartyNameUtils.getPartyNameBasedOnType(caseData.getRespondent2()));
+            defendantNameBuilder.append(caseData.getRespondent2().getPartyName());
             soleTraderCompany(caseData.getRespondent2(), defendantNameBuilder);
         } else {
-            defendantNameBuilder.append(PartyNameUtils.getPartyNameBasedOnType(caseData.getRespondent1()));
+            defendantNameBuilder.append(caseData.getRespondent1().getPartyName());
             soleTraderCompany(caseData.getRespondent1(), defendantNameBuilder);
         }
 
@@ -38,13 +38,13 @@ public class CaseNameUtils {
 
         if (caseData.getApplicant2() != null) {
             claimantNameBuilder.append("1 ");
-            claimantNameBuilder.append(PartyNameUtils.getPartyNameBasedOnType(caseData.getApplicant1()));
+            claimantNameBuilder.append(caseData.getApplicant1().getPartyName());
             soleTraderCompany(caseData.getApplicant1(), claimantNameBuilder);
             claimantNameBuilder.append(" & 2 ");
-            claimantNameBuilder.append(PartyNameUtils.getPartyNameBasedOnType(caseData.getApplicant2()));
+            claimantNameBuilder.append(caseData.getApplicant2().getPartyName());
             soleTraderCompany(caseData.getApplicant2(), claimantNameBuilder);
         } else {
-            claimantNameBuilder.append(PartyNameUtils.getPartyNameBasedOnType(caseData.getApplicant1()));
+            claimantNameBuilder.append(caseData.getApplicant1().getPartyName());
             soleTraderCompany(caseData.getApplicant1(), claimantNameBuilder);
         }
 

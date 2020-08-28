@@ -21,7 +21,6 @@ import uk.gov.hmcts.reform.unspec.utils.CaseNameUtils;
 import java.util.List;
 
 import static uk.gov.hmcts.reform.unspec.service.docmosis.DocmosisTemplates.N1;
-import static uk.gov.hmcts.reform.unspec.utils.PartyNameUtils.getPartyNameBasedOnType;
 
 @Service
 @RequiredArgsConstructor
@@ -86,7 +85,7 @@ public class SealedClaimFormGenerator implements TemplateDataGenerator<SealedCla
     private List<Defendant> geDefendants(CaseData caseData) {
         Party respondent = caseData.getRespondent1();
         return List.of(Defendant.builder()
-                           .name(getPartyNameBasedOnType(respondent))
+                           .name(respondent.getPartyName())
                            .primaryAddress(respondent.getPrimaryAddress())
                            .representative(TEMP_REPRESENTATIVE)
                            .build());
@@ -95,7 +94,7 @@ public class SealedClaimFormGenerator implements TemplateDataGenerator<SealedCla
     private List<Claimant> getClaimants(CaseData caseData) {
         Party applicant = caseData.getApplicant1();
         return List.of(Claimant.builder()
-                           .name(getPartyNameBasedOnType(applicant))
+                           .name(applicant.getPartyName())
                            .primaryAddress(applicant.getPrimaryAddress())
                            .build());
     }
