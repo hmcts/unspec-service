@@ -32,3 +32,13 @@ Scenario('Solicitor reponds to extension request', async (I) => {
   await I.respondToExtension();
   await I.see(caseEventMessage('Respond to extension request'));
 });
+
+Scenario('Solicitor responds to claim', async (I) => {
+  await I.respondToClaim();
+  await I.see(caseEventMessage('Respond to claim'));
+});
+
+Scenario('Solicitor responds to defence', async (I) => {
+  await I.respondToDefence();
+  await I.see(caseEventMessage('View and respond to defence'));
+});
