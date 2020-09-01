@@ -23,3 +23,7 @@ dependencies:
     version: ~2.2.3
     repository: '@hmctspublic'
     condition: idam-pr.enabled
+  - name: camunda
+    version: 1.2.0
+    repository: '@hmctspublic'
+    condition: camunda.enabled

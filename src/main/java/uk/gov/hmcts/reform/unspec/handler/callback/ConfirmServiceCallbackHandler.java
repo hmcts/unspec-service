@@ -1,13 +1,8 @@
 package uk.gov.hmcts.reform.unspec.handler.callback;
 
 import lombok.RequiredArgsConstructor;
-import org.camunda.bpm.engine.rest.dto.VariableValueDto;
-import org.camunda.bpm.engine.rest.dto.runtime.ProcessInstanceWithVariablesDto;
-import org.camunda.bpm.engine.rest.dto.runtime.StartProcessInstanceDto;
-import org.camunda.bpm.extension.rest.client.RuntimeServiceClient;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
-import uk.gov.hmcts.reform.camunda.client.CamundaApi;
 import uk.gov.hmcts.reform.ccd.client.model.AboutToStartOrSubmitCallbackResponse;
 import uk.gov.hmcts.reform.ccd.client.model.CallbackResponse;
 import uk.gov.hmcts.reform.ccd.client.model.SubmittedCallbackResponse;
@@ -62,9 +57,6 @@ public class ConfirmServiceCallbackHandler extends CallbackHandler {
     private final CertificateOfServiceGenerator certificateOfServiceGenerator;
     private final CaseDetailsConverter caseDetailsConverter;
     private final DeadlinesCalculator deadlinesCalculator;
-    private final CamundaApi camundaApi;
-
-    private final RuntimeServiceClient client;
 
     @Override
     protected Map<CallbackType, Callback> callbacks() {
@@ -83,18 +75,6 @@ public class ConfirmServiceCallbackHandler extends CallbackHandler {
     }
 
     private CallbackResponse prepopulateServedDocuments(CallbackParams callbackParams) {
-        VariableValueDto dto = new VariableValueDto();
-        dto.setType("value");
-        dto.setValue("100");
-
-        StartProcessInstanceDto startProcessInstance = new StartProcessInstanceDto();
-        startProcessInstance.setVariables(Map.of("amount", dto));
-
-        //TODO: throws exception
-        // REST-CLIENT-001 Error during remote Camunda engine invocation of RuntimeServiceClient#startProcessByKey(String,StartProcessInstanceDto):
-        // at org.camunda.bpm.extension.rest.config.FeignErrorDecoderConfiguration$errorDecoder$1.decode(FeignErrorDecoderConfiguration.kt:62)
-        ProcessInstanceWithVariablesDto blah = client.startProcessByKey("PaymentProcess", startProcessInstance);
-
         List<ServedDocuments> servedDocuments = List.of(ServedDocuments.CLAIM_FORM);
 
         Map<String, Object> data = callbackParams.getRequest().getCaseDetails().getData();

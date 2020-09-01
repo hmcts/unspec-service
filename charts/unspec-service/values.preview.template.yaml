@@ -97,3 +97,8 @@ ccd:
   postgresql:
     persistence:
       enabled: false
+
+camunda:
+  releaseNameOverride: ${SERVICE_NAME}-camunda
+  ingressHost: camunda-${SERVICE_FQDN}
+  enabled: true

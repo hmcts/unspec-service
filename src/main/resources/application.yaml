@@ -89,10 +89,6 @@ feign:
       remoteExternalTaskService:
         url: "http://localhost:9404/engine-rest/"
 
-logging:
-  level:
-    org.camunda.bpm.extension.rest.client.RuntimeServiceClient: DEBUG
-
 camunda:
   api:
     url: ""
