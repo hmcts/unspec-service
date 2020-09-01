@@ -33,6 +33,17 @@
     "LiveFrom": "01/01/2017",
     "CaseTypeID": "UNSPECIFIED_CLAIMS",
     "Channel": "CaseWorker",
+    "TabID": "Test",
+    "TabLabel": "Test",
+    "TabDisplayOrder": 3,
+    "CaseFieldID": "responseDeadline",
+    "TabFieldDisplayOrder": 1,
+    "Comment": "Place holder so that we can use label to inject responseDeadline field in to confirm service event"
+  },
+  {
+    "LiveFrom": "01/01/2017",
+    "CaseTypeID": "UNSPECIFIED_CLAIMS",
+    "Channel": "CaseWorker",
     "TabID": "ClaimDetails",
     "TabLabel": "Claim Details",
     "TabDisplayOrder": 2,

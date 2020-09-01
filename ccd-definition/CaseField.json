@@ -242,7 +242,7 @@
     "CaseTypeID": "UNSPECIFIED_CLAIMS",
     "ID": "respondentSolicitor1claimResponseExtensionCounterDate",
     "Label": "New deadline",
-    "HintText": "This can't be later than 28 working days after the current deadline. All deadlines require a response before 4pm on the deadline day.",
+    "HintText": "This can't be later than 28 working days after the current deadline. All deadlines require a response before 23:59 on the deadline day.",
     "FieldType": "Date",
     "SecurityClassification": "Public"
   },
@@ -320,6 +320,31 @@
     "Label": "Claimant response deadline",
     "FieldType": "DateTime",
     "SecurityClassification": "Public"
+  },
+  {
+    "LiveFrom": "01/01/2017",
+    "CaseTypeID": "UNSPECIFIED_CLAIMS",
+    "ID": "applicant1ProceedWithClaim",
+    "Label": "Do you want to proceed with the claim",
+    "FieldType": "YesOrNo",
+    "SecurityClassification": "Public"
+  },
+  {
+    "LiveFrom": "01/01/2017",
+    "CaseTypeID": "UNSPECIFIED_CLAIMS",
+    "ID": "applicant1DefenceResponseDocument",
+    "Label": "Respond to the defence",
+    "FieldType": "ResponseDocument",
+    "SecurityClassification": "Public"
+  },
+  {
+    "LiveFrom": "01/01/2017",
+    "CaseTypeID": "UNSPECIFIED_CLAIMS",
+    "ID": "applicant1NotProceedingReason",
+    "Label": " ",
+    "FieldType": "NotProceedingWithClaim",
+    "SecurityClassification": "Public",
+    "Comment": "Label purposefully left blank so not to appear in the UI"
   },
   {
     "LiveFrom": "01/01/2017",
