@@ -156,3 +156,13 @@ docmosis:
   tornado:
     url: http://fake-docmosis-api
     key: fake-key
+
+feign:
+  client:
+    config:
+      remoteRuntimeService:
+        url: "http://fake/engine-rest/"
+      remoteRepositoryService:
+        url: "http://fake/engine-rest/"
+      remoteExternalTaskService:
+        url: "http://fake/engine-rest/"
