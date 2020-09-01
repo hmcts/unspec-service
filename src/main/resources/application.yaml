@@ -89,14 +89,6 @@ feign:
       remoteExternalTaskService:
         url: "http://localhost:9404/engine-rest/"
 
-logging:
-  level:
-    org.camunda.bpm.extension.rest.client.RuntimeServiceClient: DEBUG
-
-camunda:
-  api:
-    url: ""
-
 fees:
   api:
     url: http://localhost:8765
@@ -124,7 +116,6 @@ document_management:
 docmosis:
   tornado:
     url: http://localhost:5433
-    key: XXX
 
 ---
 

@@ -7,6 +7,9 @@ idam-pr:
 xui-webapp:
   enabled: false
 
+camunda:
+  enabled: false
+
 java:
   applicationPort: 4000
   image: 'hmctspublic.azurecr.io/unspec/service:latest'
