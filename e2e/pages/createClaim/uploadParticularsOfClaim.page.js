@@ -7,16 +7,12 @@ module.exports = {
   fields: {
     servedDocumentFiles: {
       options: [
-        '#servedDocumentFiles_particularsOfClaim',
-        '#servedDocumentFiles_medicalReports',
-        '#servedDocumentFiles_scheduleOfLoss',
-        '#servedDocumentFiles_certificateOfSuitability',
-        '#servedDocumentFiles_other'
+        '#servedDocumentFiles_particularsOfClaim'
       ]
     }
   },
 
-  async uploadServedDocuments(file) {
+  async upload(file) {
     await servedDocuments.upload(file, this.fields.servedDocumentFiles.options);
 
     await I.clickContinue();
