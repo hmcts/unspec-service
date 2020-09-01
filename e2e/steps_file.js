@@ -34,9 +34,12 @@ const responseConfirmNameAndAddressPage = require('./pages/respondToClaim/confir
 const responseTypePage = require('./pages/respondToClaim/responseType.page');
 const uploadResponsePage = require('./pages/respondToClaim/uploadResponseDocument.page');
 
+const proceedPage = require('./pages/respondToDefence/proceed.page');
+const uploadResponseDocumentPage = require('./pages/respondToDefence/uploadResponseDocument.page');
 
 const statementOfTruth = require('./fragments/statementOfTruth');
 const party = require('./fragments/party');
+const event = require('./fragments/event');
 
 const baseUrl = process.env.URL || 'http://localhost:3333';
 const signedInSelector = 'exui-header';
@@ -76,10 +79,8 @@ module.exports = function () {
       await claimTypePage.selectClaimType();
       await claimValuePage.enterClaimValue();
       await statementOfTruth.enterNameAndRole('claim');
-      this.waitForText('Issue claim');
-      await this.retryUntilExists(() => this.click('Issue claim'), 'ccd-markdown');
-      this.see('Your claim has been issued');
-      this.click('Close and Return to case details');
+      await event.submit('Issue claim', 'Your claim has been issued');
+      await event.returnToCaseDetails();
     },
 
     async confirmService() {
@@ -90,12 +91,8 @@ module.exports = function () {
       await serviceLocationPage.selectUsualResidence();
       await serviceDatePage.enterServiceDate();
       await statementOfTruth.enterNameAndRole('service');
-
-      this.waitForText('Confirm service');
-      await this.retryUntilExists(() => this.click('Confirm service'), 'ccd-markdown');
-      this.see('You\'ve confirmed service');
-      this.click('Close and Return to case details');
-      this.waitForElement(CASE_HEADER);
+      await event.submit('Confirm service', 'You\'ve confirmed service');
+      await event.returnToCaseDetails();
     },
 
     async acknowledgeService() {
@@ -103,24 +100,16 @@ module.exports = function () {
       await confirmNameAndAddressPage.verifyDetails();
       await confirmDetailsPage.confirmReference();
       await responseIntentionPage.selectResponseIntention();
-
-      this.waitForText('Acknowledge service');
-      await this.retryUntilExists(() => this.click('Acknowledge service'), 'ccd-markdown');
-      this.see('You\'ve acknowledged service');
-      this.click('Close and Return to case details');
-      this.waitForElement(CASE_HEADER);
+      await event.submit('Acknowledge service', 'You\'ve acknowledged service');
+      await event.returnToCaseDetails();
     },
 
     async requestExtension() {
       await caseViewPage.startEvent('Request extension');
       await proposeDeadline.enterExtensionProposedDeadline();
       await extensionAlreadyAgreed.selectAlreadyAgreed();
-
-      this.waitForText('Ask for extension');
-      await this.retryUntilExists(() => this.click('Ask for extension'), 'ccd-markdown');
-      this.see('You asked for extra time to respond');
-      this.click('Close and Return to case details');
-      this.waitForElement(CASE_HEADER);
+      await event.submit('Ask for extension', 'You asked for extra time to respond');
+      await event.returnToCaseDetails();
     },
 
     async respondToExtension() {
@@ -128,27 +117,26 @@ module.exports = function () {
       await respondToExtensionPage.selectDoNotAccept();
       await counterExtensionPage.enterCounterDate();
       await rejectionReasonPage.enterResponse();
-
-      this.waitForText('Respond to request');
-      await this.retryUntilExists(() => this.click('Respond to request'), 'ccd-markdown');
-      this.see('You\'ve responded to the request for more time');
-      this.click('Close and Return to case details');
-      this.waitForElement(CASE_HEADER);
+      await event.submit('Respond to request', 'You\'ve responded to the request for more time');
+      await event.returnToCaseDetails();
     },
 
     async respondToClaim() {
       await caseViewPage.startEvent('Respond to claim');
-
       await responseTypePage.selectFullDefence();
       await uploadResponsePage.uploadResponseDocuments(config.testFile);
       await responseConfirmNameAndAddressPage.verifyDetails();
       await confirmDetailsPage.confirmReference();
+      await event.submit('Submit response', 'You\'ve submitted your response');
+      await event.returnToCaseDetails();
+    },
 
-      this.waitForText('Submit response');
-      await this.retryUntilExists(() => this.click('Submit response'), 'ccd-markdown');
-      this.see('You\'ve submitted your response');
-      this.click('Close and Return to case details');
-      this.waitForElement(CASE_HEADER);
+    async respondToDefence() {
+      await caseViewPage.startEvent('View and respond to defence');
+      await proceedPage.proceedWithClaim();
+      await uploadResponseDocumentPage.uploadResponseDocuments(config.testFile);
+      await event.submit('Submit your response', 'You\'ve decided to proceed with the claim');
+      await event.returnToCaseDetails();
     },
 
     async clickContinue() {
