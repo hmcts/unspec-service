@@ -7,7 +7,6 @@ module.exports = {
   fields: {
     servedDocumentFiles: {
       options: [
-        '#servedDocumentFiles_particularsOfClaim',
         '#servedDocumentFiles_medicalReports',
         '#servedDocumentFiles_scheduleOfLoss',
         '#servedDocumentFiles_certificateOfSuitability',
