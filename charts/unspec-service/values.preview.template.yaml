@@ -106,3 +106,4 @@ camunda-bpm:
   java:
     releaseNameOverride: ${SERVICE_NAME}-camunda
     ingressHost: camunda-${SERVICE_FQDN}
+  keyvaults:
