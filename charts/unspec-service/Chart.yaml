@@ -25,5 +25,5 @@ dependencies:
     condition: idam-pr.enabled
   - name: camunda-bpm
     version: 0.0.9
-    repository: '@hmctsprivate'
+    repository: '@hmctspublic'
     condition: camunda.enabled
