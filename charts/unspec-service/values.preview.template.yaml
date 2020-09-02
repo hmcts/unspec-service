@@ -8,6 +8,8 @@ java:
     CORE_CASE_DATA_API_URL: http://${SERVICE_NAME}-ccd-data-store-api
     OIDC_ISSUER: https://forgerock-am.service.core-compute-idam-aat2.internal:8443/openam/oauth2/realms/root/realms/hmcts
     FEIGN_CLIENT_CONFIG_REMOTERUNTIMESERVICE_URL: camunda-${SERVICE_FQDN}/engine-rest/
+    FEIGN_CLIENT_CONFIG_REMOTEEXTERNALTASKSERVICE_URL: camunda-${SERVICE_FQDN}/engine-rest/
+    FEIGN_CLIENT_CONFIG_REMOTEREPOSITORYSERVICE_URL: camunda-${SERVICE_FQDN}/engine-rest/
 
 idam-pr:
   releaseNameOverride: ${SERVICE_NAME}-xui-idam-pr
