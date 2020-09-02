@@ -284,7 +284,7 @@ dependencies {
   implementation group: 'com.fasterxml.jackson.module', name: 'jackson-module-kotlin', version: '2.11.2'
 
   testImplementation group: 'org.mockito', name: 'mockito-core', version: '3.5.7'
-  testImplementation group: 'org.mockito', name: 'mockito-junit-jupiter', version: '3.5.7'
+  testImplementation group: 'org.mockito', name: 'mockito-junit-jupiter', version: '3.5.9'
 
   testAnnotationProcessor group: 'org.projectlombok', name: 'lombok', version: versions.lombok
   testCompileOnly group: 'org.projectlombok', name: 'lombok', version: versions.lombok
