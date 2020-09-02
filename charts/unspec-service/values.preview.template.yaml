@@ -107,6 +107,3 @@ camunda-bpm:
     disableKeyVaults: true
     releaseNameOverride: ${SERVICE_NAME}-camunda
     ingressHost: camunda-${SERVICE_FQDN}
-    image: hmctspublic.azurecr.io/camunda/bpm:latest
-    imagePullPolicy: always
-  keyvaults:
