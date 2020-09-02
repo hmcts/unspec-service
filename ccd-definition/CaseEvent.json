@@ -134,9 +134,8 @@
     "PreConditionState(s)": "CREATED",
     "PostConditionState": "CLOSED",
     "SecurityClassification": "Public",
-    "CallBackURLSubmittedEvent": "${CCD_DEF_CASE_SERVICE_BASE_URL}/cases/callbacks/submitted",
     "ShowSummary": "N",
     "ShowEventNotes": "N",
-    "EndButtonLabel": "Acknowledge service"
+    "EndButtonLabel": "Withdraw claim"
   }
 ]
