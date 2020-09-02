@@ -20,5 +20,5 @@ if [[ "${upload_http_code}" == '200' ]]; then
   exit 0
 fi
 
-echo "${filename} upload failed (${upload_response_content})"
+echo "${filename} upload failed with http code ${upload_http_code} and response (${upload_response_content})"
 exit 1;

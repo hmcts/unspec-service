@@ -98,7 +98,7 @@ ccd:
     persistence:
       enabled: false
 
-camunda:
+camunda-bpm:
+  enabled: true
   releaseNameOverride: ${SERVICE_NAME}-camunda
   ingressHost: camunda-${SERVICE_FQDN}
-  enabled: true

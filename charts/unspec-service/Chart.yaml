@@ -26,4 +26,4 @@ dependencies:
   - name: camunda-bpm
     version: 0.0.9
     repository: '@hmctspublic'
-    condition: camunda.enabled
+    condition: camunda-bpm.enabled
