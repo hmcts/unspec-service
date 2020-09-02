@@ -104,6 +104,7 @@ ccd:
 camunda-bpm:
   enabled: true
   java:
+    disableKeyVaults: true
     releaseNameOverride: ${SERVICE_NAME}-camunda
     ingressHost: camunda-${SERVICE_FQDN}
     image: hmctspublic.azurecr.io/camunda/bpm:latest
