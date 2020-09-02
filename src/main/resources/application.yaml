@@ -83,11 +83,11 @@ feign:
   client:
     config:
       remoteRuntimeService:
-        url: "http://localhost:9404/engine-rest/"
+        url: http://localhost:9404/engine-rest/
       remoteRepositoryService:
-        url: "http://localhost:9404/engine-rest/"
+        url: http://localhost:9404/engine-rest/
       remoteExternalTaskService:
-        url: "http://localhost:9404/engine-rest/"
+        url: http://localhost:9404/engine-rest/
 
 fees:
   api:
@@ -161,8 +161,8 @@ feign:
   client:
     config:
       remoteRuntimeService:
-        url: "http://fake/engine-rest/"
+        url: http://fake/engine-rest/
       remoteRepositoryService:
-        url: "http://fake/engine-rest/"
+        url: http://fake/engine-rest/
       remoteExternalTaskService:
-        url: "http://fake/engine-rest/"
+        url: http://fake/engine-rest/
