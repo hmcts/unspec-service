@@ -100,5 +100,6 @@ ccd:
 
 camunda-bpm:
   enabled: true
-  releaseNameOverride: ${SERVICE_NAME}-camunda
-  ingressHost: camunda-${SERVICE_FQDN}
+  java:
+    releaseNameOverride: ${SERVICE_NAME}-camunda
+    ingressHost: camunda-${SERVICE_FQDN}
