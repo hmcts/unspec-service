@@ -65,6 +65,7 @@
     "CaseTypeID": "UNSPECIFIED_CLAIMS",
     "CaseEventID": "DEFENDANT_RESPONSE",
     "CaseFieldID": "respondent",
+    "CaseEventFieldLabel": " ",
     "PageDisplayOrder": 4,
     "PageFieldDisplayOrder": 2,
     "DisplayContext": "COMPLEX",
