@@ -241,7 +241,7 @@ dependencies {
 
   implementation group: 'uk.gov.hmcts.reform', name: 'logging', version: versions.reformLogging
   implementation group: 'uk.gov.hmcts.reform', name: 'logging-appinsights', version: versions.reformLogging
-  implementation group: 'org.springframework.cloud', name: 'spring-cloud-starter-netflix-hystrix', version: '2.2.4.RELEASE'
+  implementation group: 'org.springframework.cloud', name: 'spring-cloud-starter-netflix-hystrix', version: '2.2.5.RELEASE'
   implementation group: 'uk.gov.hmcts.reform', name: 'properties-volume-spring-boot-starter', version: '0.1.0'
   implementation group: 'uk.gov.hmcts.reform', name: 'service-auth-provider-client', version: '3.1.2'
 
@@ -279,7 +279,7 @@ dependencies {
   implementation group: 'org.elasticsearch', name: 'elasticsearch', version: '7.9.0'
 
   testImplementation group: 'org.mockito', name: 'mockito-core', version: '3.5.7'
-  testImplementation group: 'org.mockito', name: 'mockito-junit-jupiter', version: '3.5.7'
+  testImplementation group: 'org.mockito', name: 'mockito-junit-jupiter', version: '3.5.9'
 
   testAnnotationProcessor group: 'org.projectlombok', name: 'lombok', version: versions.lombok
   testCompileOnly group: 'org.projectlombok', name: 'lombok', version: versions.lombok
@@ -290,7 +290,7 @@ dependencies {
     exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
   }
 
-  testImplementation 'org.mockito:mockito-inline:3.5.7'
+  testImplementation 'org.mockito:mockito-inline:3.5.9'
 
   testImplementation group: 'io.rest-assured', name: 'rest-assured'
 
