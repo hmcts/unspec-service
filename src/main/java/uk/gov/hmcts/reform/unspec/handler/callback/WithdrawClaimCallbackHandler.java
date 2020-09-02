@@ -4,7 +4,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import uk.gov.hmcts.reform.ccd.client.model.AboutToStartOrSubmitCallbackResponse;
 import uk.gov.hmcts.reform.ccd.client.model.CallbackResponse;
-import uk.gov.hmcts.reform.ccd.client.model.SubmittedCallbackResponse;
 import uk.gov.hmcts.reform.unspec.callback.Callback;
 import uk.gov.hmcts.reform.unspec.callback.CallbackHandler;
 import uk.gov.hmcts.reform.unspec.callback.CallbackParams;
@@ -20,7 +19,6 @@ import java.util.stream.Collectors;
 import javax.validation.ConstraintViolation;
 import javax.validation.Validator;
 
-import static java.lang.String.format;
 import static uk.gov.hmcts.reform.unspec.callback.CaseEvent.DISCONTINUE_CLAIM;
 import static uk.gov.hmcts.reform.unspec.callback.CaseEvent.WITHDRAW_CLAIM;
 
@@ -36,8 +34,7 @@ public class WithdrawClaimCallbackHandler extends CallbackHandler {
     @Override
     protected Map<CallbackType, Callback> callbacks() {
         return Map.of(
-            CallbackType.MID, this::validateWithdrawalDate,
-            CallbackType.SUBMITTED, this::buildConfirmation
+            CallbackType.MID, this::validateWithdrawalDate
         );
     }
 
@@ -55,15 +52,6 @@ public class WithdrawClaimCallbackHandler extends CallbackHandler {
 
         return AboutToStartOrSubmitCallbackResponse.builder()
             .errors(errors)
-            .build();
-    }
-
-    //TODO: not sure if confirmation is required, not currently designed or in ticket
-    private SubmittedCallbackResponse buildConfirmation(CallbackParams callbackParams) {
-        String claimNumber = "TBC";
-
-        return SubmittedCallbackResponse.builder()
-            .confirmationHeader(format("# You have withdrawn the claim %n## Claim number: %s", claimNumber))
             .build();
     }
 }
