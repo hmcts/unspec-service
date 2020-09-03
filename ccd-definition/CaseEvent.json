@@ -131,7 +131,7 @@
     "Name": "Withdraw claim",
     "Description": "Withdraw a claim",
     "DisplayOrder": 9,
-    "PreConditionState(s)": "CREATED",
+    "PreConditionState(s)": "*",
     "PostConditionState": "CLOSED",
     "SecurityClassification": "Public",
     "ShowSummary": "N",
