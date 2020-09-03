@@ -109,3 +109,6 @@ camunda-bpm:
     ingressHost: camunda-${SERVICE_FQDN}
     environment:
       CAMUNDA_DB_HOST: ${SERVICE_NAME}-postgresql
+      CAMUNDA_DB_NAME: camunda
+      CAMUNDA_DB_USER_NAME: hmcts
+      CAMUNDA_DB_PASSWORD: hmcts
