@@ -1,7 +1,6 @@
 package uk.gov.hmcts.reform.unspec.stateflow;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.statemachine.ExtendedState;
 import org.springframework.statemachine.StateContext;
 import org.springframework.statemachine.listener.StateMachineListenerAdapter;
@@ -14,9 +13,9 @@ import java.util.stream.Collectors;
 
 import static uk.gov.hmcts.reform.unspec.stateflow.StateFlowContext.EXTENDED_STATE_HISTORY_KEY;
 
+@Slf4j
 public class StateFlowListener extends StateMachineListenerAdapter<String, String> {
 
-    private static final Logger logger = LoggerFactory.getLogger(StateFlowListener.class);
     private StateContext<String, String> stateContext;
 
     @Override
@@ -35,7 +34,7 @@ public class StateFlowListener extends StateMachineListenerAdapter<String, Strin
             String message = String.format(
                 "Ambiguous transitions permitting state [%s] to move to more than one next states [%s].",
                 sourceState, permittedStates);
-            logger.error(message);
+            log.error(message);
             stateContext.getStateMachine().setStateMachineError(new IllegalStateException(message));
         }
     }
