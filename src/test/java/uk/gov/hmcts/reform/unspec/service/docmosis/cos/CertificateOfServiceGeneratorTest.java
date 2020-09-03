@@ -50,7 +50,7 @@ import static uk.gov.hmcts.reform.unspec.service.documentmanagement.DocumentMana
 class CertificateOfServiceGeneratorTest {
 
     public static final String BEARER_TOKEN = "Bearer Token";
-    public static final String REFERENCE_NUMBER = "000LR095";
+    public static final String REFERENCE_NUMBER = "000LR001";
     private final byte[] bytes = {1, 2, 3, 4, 5, 6};
     private final String fileName = format(N215.getDocumentTitle(), REFERENCE_NUMBER);
 
@@ -93,8 +93,8 @@ class CertificateOfServiceGeneratorTest {
             SolicitorReferences result = generator.prepareSolicitorReferences(solicitorReferences);
             assertAll(
                 "SolicitorReferences not provided",
-                () -> assertEquals("Not Provided", result.getClaimantReference()),
-                () -> assertEquals("Not Provided", result.getDefendantReference())
+                () -> assertEquals("Not Provided", result.getApplicantSolicitor1Reference()),
+                () -> assertEquals("Not Provided", result.getRespondentSolicitor1Reference())
             );
         }
 
@@ -102,15 +102,15 @@ class CertificateOfServiceGeneratorTest {
         void shouldPopulateProvidedValues_whenSolicitorReferencesAvailable() {
             SolicitorReferences solicitorReferences = SolicitorReferences
                 .builder()
-                .claimantReference("Claimant ref")
-                .defendantReference("Defendant ref")
+                .applicantSolicitor1Reference("Claimant ref")
+                .respondentSolicitor1Reference("Defendant ref")
                 .build();
 
             SolicitorReferences result = generator.prepareSolicitorReferences(solicitorReferences);
             assertAll(
                 "SolicitorReferences provided",
-                () -> assertEquals("Claimant ref", result.getClaimantReference()),
-                () -> assertEquals("Defendant ref", result.getDefendantReference())
+                () -> assertEquals("Claimant ref", result.getApplicantSolicitor1Reference()),
+                () -> assertEquals("Defendant ref", result.getRespondentSolicitor1Reference())
             );
         }
 
@@ -118,15 +118,15 @@ class CertificateOfServiceGeneratorTest {
         void shouldPopulateNotProvided_whenOneReferencesNotAvailable() {
             SolicitorReferences solicitorReferences = SolicitorReferences
                 .builder()
-                .claimantReference("Claimant ref")
+                .applicantSolicitor1Reference("Claimant ref")
                 .build();
 
             SolicitorReferences result = generator.prepareSolicitorReferences(solicitorReferences);
 
             assertAll(
                 "SolicitorReferences one is provided",
-                () -> assertEquals("Claimant ref", result.getClaimantReference()),
-                () -> assertEquals("Not Provided", result.getDefendantReference())
+                () -> assertEquals("Claimant ref", result.getApplicantSolicitor1Reference()),
+                () -> assertEquals("Not Provided", result.getRespondentSolicitor1Reference())
             );
         }
     }
