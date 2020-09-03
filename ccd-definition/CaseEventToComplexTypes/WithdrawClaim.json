@@ -19,6 +19,6 @@
     "EventElementLabel": "Explain the reason for withdrawal",
     "EventHintText": "Briefly describe why you are withdrawing the claim.",
     "FieldDisplayOrder": 2,
-    "DisplayContext": "MANDATORY"
+    "DisplayContext": "OPTIONAL"
   }
 ]

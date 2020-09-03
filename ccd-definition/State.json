@@ -28,7 +28,7 @@
     "CaseTypeID": "UNSPECIFIED_CLAIMS",
     "ID": "CLOSED",
     "Name": "Closed",
-    "Description": "Case is withdrawn",
+    "Description": "Case is closed",
     "DisplayOrder": 3
   }
 ]
