@@ -78,7 +78,6 @@ module.exports = function () {
       await party.enterParty('applicant1', config.address);
       await party.enterParty('respondent1', config.address);
       await claimTypePage.selectClaimType();
-      //TODO: add subtype page
       await personalInjuryTypePage.selectPersonalInjuryType();
       await claimValuePage.enterClaimValue();
       await statementOfTruth.enterNameAndRole('claim');

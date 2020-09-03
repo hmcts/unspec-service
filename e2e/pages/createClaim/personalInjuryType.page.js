@@ -3,12 +3,18 @@ const {I} = inject();
 module.exports = {
 
   fields: {
-    claimType: '#personalInjuryType',
+    personalInjuryType: {
+      id: '#personalInjuryType',
+      options: {
+        roadAccident: 'Road accident'
+      }
+    },
   },
 
   async selectPersonalInjuryType() {
-    I.waitForElement(this.fields.claimType);
-    I.selectOption(this.fields.claimType, 'Road accident');
+    await within(this.fields.personalInjuryType.id, () => {
+      I.click(this.fields.personalInjuryType.options.roadAccident);
+    });
     await I.clickContinue();
   }
 };
