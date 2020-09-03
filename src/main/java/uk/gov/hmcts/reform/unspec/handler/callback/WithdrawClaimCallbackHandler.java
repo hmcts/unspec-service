@@ -27,6 +27,7 @@ import static uk.gov.hmcts.reform.unspec.callback.CaseEvent.WITHDRAW_CLAIM;
 public class WithdrawClaimCallbackHandler extends CallbackHandler {
 
     private static final List<CaseEvent> EVENTS = List.of(WITHDRAW_CLAIM, DISCONTINUE_CLAIM);
+
     private final CaseDetailsConverter caseDetailsConverter;
     private final Validator validator;
 
