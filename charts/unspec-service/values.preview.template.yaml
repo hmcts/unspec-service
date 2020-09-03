@@ -150,4 +150,3 @@ camunda-bpm:
       CAMUNDA_DB_USER_NAME: hmcts
       CAMUNDA_DB_PASSWORD: hmcts
       CAMUNDA_BPM_DATABASE_SCHEMA_UPDATE: true
-
