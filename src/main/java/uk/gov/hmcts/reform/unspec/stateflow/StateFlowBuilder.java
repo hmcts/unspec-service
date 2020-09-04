@@ -119,7 +119,7 @@ public class StateFlowBuilder<S> {
         OnlyIfNext<S>, OnlyIf<S>,
         StateNext<S>, State<S>,
         SubflowNext<S>, Subflow<S>,
-        BuildNext<S>, Build<S> {
+        BuildNext, Build {
 
         @Override
         public CreateFlowNext<S> createFlow() {
@@ -133,9 +133,13 @@ public class StateFlowBuilder<S> {
 
         @Override
         public InitialNext<S> initial(S state) {
+            addState(state);
+            return this;
+        }
+
+        private void addState(S state) {
             checkNull(state, STATE);
             stateFlowContext.addState(fullyQualified(state));
-            return this;
         }
 
         @Override
@@ -157,8 +161,7 @@ public class StateFlowBuilder<S> {
 
         @Override
         public StateNext<S> state(S state) {
-            checkNull(state, STATE);
-            stateFlowContext.addState(fullyQualified(state));
+            addState(state);
             return this;
         }
 

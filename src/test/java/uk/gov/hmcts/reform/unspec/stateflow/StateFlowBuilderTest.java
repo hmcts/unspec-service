@@ -66,47 +66,47 @@ class StateFlowBuilderTest {
 
         @Test
         void shouldThrowIllegalArgumentException_whenInitialIsNull() {
-            Assertions.assertThrows(IllegalArgumentException.class, () -> {
-                StateFlowBuilder.<FlowState>flow("FLOW")
-                    .initial(null);
-            });
+            var flow = StateFlowBuilder.<FlowState>flow("FLOW");
+            Assertions.assertThrows(IllegalArgumentException.class, () ->
+                flow.initial(null)
+            );
         }
 
         @Test
         void shouldThrowIllegalArgumentException_whenTransitionToIsNull() {
-            Assertions.assertThrows(IllegalArgumentException.class, () -> {
-                StateFlowBuilder.<FlowState>flow("FLOW")
-                    .initial(FlowState.STATE_1)
-                    .transitionTo(null);
-            });
+            var flow = StateFlowBuilder.<FlowState>flow("FLOW")
+                .initial(FlowState.STATE_1);
+            Assertions.assertThrows(IllegalArgumentException.class, () ->
+                flow.transitionTo(null));
         }
 
         @Test
         void shouldThrowIllegalArgumentException_whenStateIsNull() {
-            Assertions.assertThrows(IllegalArgumentException.class, () -> {
-                StateFlowBuilder.<FlowState>flow("FLOW")
-                    .initial(FlowState.STATE_1)
-                    .transitionTo(FlowState.STATE_1)
-                    .state(null);
-            });
+            var flow = StateFlowBuilder.<FlowState>flow("FLOW")
+                .initial(FlowState.STATE_1)
+                .transitionTo(FlowState.STATE_1);
+            Assertions.assertThrows(IllegalArgumentException.class, () ->
+                flow.state(null)
+            );
         }
 
         @Test
         void shouldThrowIllegalArgumentException_whenOnlyIfIsNull() {
-            Assertions.assertThrows(IllegalArgumentException.class, () -> {
-                StateFlowBuilder.<FlowState>flow("FLOW")
-                    .initial(FlowState.STATE_1)
-                    .transitionTo(FlowState.STATE_1).onlyIf(null);
-            });
+            var flow = StateFlowBuilder.<FlowState>flow("FLOW")
+                .initial(FlowState.STATE_1)
+                .transitionTo(FlowState.STATE_1);
+            Assertions.assertThrows(IllegalArgumentException.class, () ->
+                flow.onlyIf(null)
+            );
         }
 
         @Test
         void shouldThrowIllegalArgumentException_whenSubflowIsNull() {
-            Assertions.assertThrows(IllegalArgumentException.class, () -> {
-                StateFlowBuilder.<FlowState>flow("FLOW")
-                    .initial(FlowState.STATE_1)
-                    .subflow(null);
-            });
+            var flow = StateFlowBuilder.<FlowState>flow("FLOW")
+                .initial(FlowState.STATE_1);
+            Assertions.assertThrows(IllegalArgumentException.class, () ->
+                flow.subflow(null)
+            );
         }
     }
 
