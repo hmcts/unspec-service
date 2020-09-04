@@ -25,6 +25,7 @@ import static java.lang.String.format;
 import static uk.gov.hmcts.reform.unspec.callback.CaseEvent.RESPOND_EXTENSION;
 import static uk.gov.hmcts.reform.unspec.helpers.DateFormatHelper.DATE;
 import static uk.gov.hmcts.reform.unspec.helpers.DateFormatHelper.formatLocalDateTime;
+import static uk.gov.hmcts.reform.unspec.service.DeadlinesCalculator.MID_NIGHT;
 
 @Service
 @RequiredArgsConstructor
@@ -32,11 +33,12 @@ public class RespondExtensionCallbackHandler extends CallbackHandler {
 
     private static final List<CaseEvent> EVENTS = Collections.singletonList(RESPOND_EXTENSION);
     public static final String COUNTER_DEADLINE = "respondentSolicitor1claimResponseExtensionCounterDate";
-    public static final String RESPONSE_DEADLINE = "responseDeadline";
+    public static final String RESPONSE_DEADLINE = "respondentSolicitor1ResponseDeadline";
     public static final String PROPOSED_DEADLINE = "respondentSolicitor1claimResponseExtensionProposedDeadline";
     public static final String EXTENSION_REASON = "respondentSolicitor1claimResponseExtensionReason";
     public static final String PROVIDED_COUNTER_DATE = "respondentSolicitor1claimResponseExtensionCounter";
     public static final String PROPOSED_DEADLINE_ACCEPTED = "respondentSolicitor1claimResponseExtensionAccepted";
+    public static final String LEGACY_CASE_REFERENCE = "legacyCaseReference";
 
     private final ObjectMapper mapper;
     private final RequestExtensionValidator validator;
@@ -90,12 +92,12 @@ public class RespondExtensionCallbackHandler extends CallbackHandler {
 
         if (proposedDeadlineAccepted == YesOrNo.YES) {
             newDeadline = mapToDate(data, PROPOSED_DEADLINE);
-            data.put(RESPONSE_DEADLINE, newDeadline.atTime(16, 0));
+            data.put(RESPONSE_DEADLINE, newDeadline.atTime(MID_NIGHT));
         }
 
         if (providedCounterDate == YesOrNo.YES) {
             newDeadline = mapToDate(data, COUNTER_DEADLINE);
-            data.put(RESPONSE_DEADLINE, newDeadline.atTime(16, 0));
+            data.put(RESPONSE_DEADLINE, newDeadline.atTime(MID_NIGHT));
         }
 
         return AboutToStartOrSubmitCallbackResponse.builder()
@@ -107,7 +109,7 @@ public class RespondExtensionCallbackHandler extends CallbackHandler {
         Map<String, Object> data = callbackParams.getRequest().getCaseDetails().getData();
         LocalDateTime responseDeadline = mapToDateTime(data, RESPONSE_DEADLINE);
 
-        String claimNumber = "TBC";
+        String claimNumber = data.get(LEGACY_CASE_REFERENCE).toString();
 
         String body = format(
             "<br />The defendant must respond before 4pm on %s", formatLocalDateTime(responseDeadline, DATE));

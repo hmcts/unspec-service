@@ -21,17 +21,16 @@ import uk.gov.hmcts.reform.unspec.utils.CaseNameUtils;
 import java.util.List;
 
 import static uk.gov.hmcts.reform.unspec.service.docmosis.DocmosisTemplates.N1;
-import static uk.gov.hmcts.reform.unspec.utils.PartyNameUtils.getPartyNameBasedOnType;
 
 @Service
 @RequiredArgsConstructor
 public class SealedClaimFormGenerator implements TemplateDataGenerator<SealedClaimForm> {
 
+    //TODO this need ui implementation to capture claim details
     public static final String TEMP_CLAIM_DETAILS = "The claimant seeks compensation from injuries and losses arising"
         + " from a road traffic accident which occurred on 1st July 2017 as a result of the negligence of the first "
         + "defendant.The claimant seeks compensation from injuries and losses arising from a road traffic accident "
         + "which occurred on 1st July 2017 as a result of the negligence of the first defendant.";
-    //TODO this need ui implementation to capture claim details
 
     private static final Representative TEMP_REPRESENTATIVE = Representative.builder()
         .contactName("MiguelSpooner")
@@ -46,7 +45,7 @@ public class SealedClaimFormGenerator implements TemplateDataGenerator<SealedCla
                             .postCode("NP204AG")
                             .build())
         .build(); //TODO Rep details need to be picked from reference data
-    public static final String REFERENCE_NUMBER = "000LR095"; //TODO Need to agree a way to get
+
     private final DocumentManagementService documentManagementService;
     private final DocumentGeneratorService documentGeneratorService;
 
@@ -70,32 +69,32 @@ public class SealedClaimFormGenerator implements TemplateDataGenerator<SealedCla
             .claimants(getClaimants(caseData))
             .defendants(geDefendants(caseData))
             .claimValue(caseData.getClaimValue().formData())
-            .statementOfTruth(caseData.getClaimStatementOfTruth())
+            .statementOfTruth(caseData.getApplicantSolicitor1ClaimStatementOfTruth())
             .claimDetails(TEMP_CLAIM_DETAILS)
             .hearingCourtLocation(caseData.getCourtLocation().getApplicantPreferredCourt())
             .claimantRepresentative(TEMP_REPRESENTATIVE)
-            .referenceNumber(REFERENCE_NUMBER)
+            .referenceNumber(caseData.getLegacyCaseReference())
             .issueDate(caseData.getClaimIssuedDate())
             .submittedOn(caseData.getClaimSubmittedDateTime().toLocalDate())
-            .claimantExternalReference(caseData.getSolicitorReferences().getClaimantReference())
-            .defendantExternalReference(caseData.getSolicitorReferences().getDefendantReference())
+            .claimantExternalReference(caseData.getSolicitorReferences().getApplicantSolicitor1Reference())
+            .defendantExternalReference(caseData.getSolicitorReferences().getRespondentSolicitor1Reference())
             .caseName(CaseNameUtils.toCaseName.apply(caseData))
             .build();
     }
 
     private List<Defendant> geDefendants(CaseData caseData) {
-        Party respondent = caseData.getRespondent();
+        Party respondent = caseData.getRespondent1();
         return List.of(Defendant.builder()
-                           .name(getPartyNameBasedOnType(respondent))
+                           .name(respondent.getPartyName())
                            .primaryAddress(respondent.getPrimaryAddress())
                            .representative(TEMP_REPRESENTATIVE)
                            .build());
     }
 
     private List<Claimant> getClaimants(CaseData caseData) {
-        Party applicant = caseData.getClaimant();
+        Party applicant = caseData.getApplicant1();
         return List.of(Claimant.builder()
-                           .name(getPartyNameBasedOnType(applicant))
+                           .name(applicant.getPartyName())
                            .primaryAddress(applicant.getPrimaryAddress())
                            .build());
     }
