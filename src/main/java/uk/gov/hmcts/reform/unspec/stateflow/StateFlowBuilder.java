@@ -133,13 +133,13 @@ public class StateFlowBuilder<S> {
 
         @Override
         public InitialNext<S> initial(S state) {
-            addState(state);
-            return this;
+            return addState(state);
         }
 
-        private void addState(S state) {
+        private Grammar<S> addState(S state) {
             checkNull(state, STATE);
             stateFlowContext.addState(fullyQualified(state));
+            return this;
         }
 
         @Override
@@ -161,8 +161,7 @@ public class StateFlowBuilder<S> {
 
         @Override
         public StateNext<S> state(S state) {
-            addState(state);
-            return this;
+            return addState(state);
         }
 
         @Override
