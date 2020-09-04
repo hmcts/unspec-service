@@ -13,6 +13,7 @@ import uk.gov.hmcts.reform.unspec.callback.CallbackParams;
 import uk.gov.hmcts.reform.unspec.callback.CallbackType;
 import uk.gov.hmcts.reform.unspec.callback.CaseEvent;
 import uk.gov.hmcts.reform.unspec.config.ClaimIssueConfiguration;
+import uk.gov.hmcts.reform.unspec.enums.ClaimSubtype;
 import uk.gov.hmcts.reform.unspec.enums.ClaimType;
 import uk.gov.hmcts.reform.unspec.helpers.CaseDetailsConverter;
 import uk.gov.hmcts.reform.unspec.model.CaseData;
@@ -38,6 +39,7 @@ import static java.lang.String.format;
 import static uk.gov.hmcts.reform.unspec.callback.CallbackParams.Params.BEARER_TOKEN;
 import static uk.gov.hmcts.reform.unspec.callback.CaseEvent.CREATE_CASE;
 import static uk.gov.hmcts.reform.unspec.enums.AllocatedTrack.getAllocatedTrack;
+import static uk.gov.hmcts.reform.unspec.enums.ClaimType.PERSONAL_INJURY;
 import static uk.gov.hmcts.reform.unspec.helpers.DateFormatHelper.DATE_TIME_AT;
 import static uk.gov.hmcts.reform.unspec.helpers.DateFormatHelper.formatLocalDateTime;
 
@@ -54,6 +56,7 @@ public class CreateClaimCallbackHandler extends CallbackHandler {
         + " 4pm if you're doing this on the due day";
     public static final String RESPONDENT = "respondent1";
     public static final String CLAIMANT = "applicant1";
+    public static final String CLAIM_TYPE = "claimType";
 
     private final ObjectMapper mapper;
     private final SealedClaimFormGenerator sealedClaimFormGenerator;
@@ -67,6 +70,7 @@ public class CreateClaimCallbackHandler extends CallbackHandler {
     protected Map<CallbackType, Callback> callbacks() {
         return Map.of(
             CallbackType.MID, this::validateClaimValues,
+            CallbackType.MID_SECONDARY, this::populateClaimSubtypeList,
             CallbackType.ABOUT_TO_SUBMIT, this::issueClaim,
             CallbackType.SUBMITTED, this::buildConfirmation
         );
@@ -95,6 +99,18 @@ public class CreateClaimCallbackHandler extends CallbackHandler {
         return AboutToStartOrSubmitCallbackResponse.builder()
             .data(data)
             .errors(errors)
+            .build();
+    }
+
+    private CallbackResponse populateClaimSubtypeList(CallbackParams callbackParams) {
+        Map<String, Object> data = callbackParams.getRequest().getCaseDetails().getData();
+        ClaimType claimType = mapper.convertValue(data.get(CLAIM_TYPE), ClaimType.class);
+        if (claimType == PERSONAL_INJURY) {
+            data.put("claimSubtype", ClaimSubtype.getDynamicList(claimType));
+        }
+
+        return AboutToStartOrSubmitCallbackResponse.builder()
+            .data(data)
             .build();
     }
 

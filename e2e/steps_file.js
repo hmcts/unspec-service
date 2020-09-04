@@ -11,7 +11,7 @@ const createCasePage = require('./pages/createClaim/createCase.page');
 const solicitorReferencesPage = require('./pages/createClaim/solicitorReferences.page');
 const chooseCourtPage = require('./pages/createClaim/chooseCourt.page');
 const claimTypePage = require('./pages/createClaim/claimType.page');
-const personalInjuryTypePage = require('./pages/createClaim/personalInjuryType.page');
+const claimSubtypePage = require('./pages/createClaim/claimSubtype.page');
 const claimValuePage = require('./pages/createClaim/claimValue.page');
 
 const servedDocumentsPage = require('./pages/confirmService/servedDocuments.page');
@@ -78,7 +78,7 @@ module.exports = function () {
       await party.enterParty('applicant1', config.address);
       await party.enterParty('respondent1', config.address);
       await claimTypePage.selectClaimType();
-      await personalInjuryTypePage.selectPersonalInjuryType();
+      await claimSubtypePage.selectSubtype();
       await claimValuePage.enterClaimValue();
       await statementOfTruth.enterNameAndRole('claim');
       await event.submit('Issue claim', 'Your claim has been issued');
