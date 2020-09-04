@@ -5,7 +5,22 @@ import org.springframework.statemachine.config.StateMachineBuilder;
 import org.springframework.statemachine.config.configurers.ExternalTransitionConfigurer;
 import org.springframework.statemachine.config.configurers.StateConfigurer;
 import uk.gov.hmcts.reform.ccd.client.model.CaseDetails;
-import uk.gov.hmcts.reform.unspec.stateflow.grammar.*;
+import uk.gov.hmcts.reform.unspec.stateflow.grammar.Build;
+import uk.gov.hmcts.reform.unspec.stateflow.grammar.BuildNext;
+import uk.gov.hmcts.reform.unspec.stateflow.grammar.CreateFlow;
+import uk.gov.hmcts.reform.unspec.stateflow.grammar.CreateFlowNext;
+import uk.gov.hmcts.reform.unspec.stateflow.grammar.CreateSubflow;
+import uk.gov.hmcts.reform.unspec.stateflow.grammar.CreateSubflowNext;
+import uk.gov.hmcts.reform.unspec.stateflow.grammar.Initial;
+import uk.gov.hmcts.reform.unspec.stateflow.grammar.InitialNext;
+import uk.gov.hmcts.reform.unspec.stateflow.grammar.OnlyIf;
+import uk.gov.hmcts.reform.unspec.stateflow.grammar.OnlyIfNext;
+import uk.gov.hmcts.reform.unspec.stateflow.grammar.State;
+import uk.gov.hmcts.reform.unspec.stateflow.grammar.StateNext;
+import uk.gov.hmcts.reform.unspec.stateflow.grammar.Subflow;
+import uk.gov.hmcts.reform.unspec.stateflow.grammar.SubflowNext;
+import uk.gov.hmcts.reform.unspec.stateflow.grammar.TransitionTo;
+import uk.gov.hmcts.reform.unspec.stateflow.grammar.TransitionToNext;
 import uk.gov.hmcts.reform.unspec.stateflow.model.Transition;
 
 import java.util.function.Consumer;
@@ -20,6 +35,20 @@ import static uk.gov.hmcts.reform.unspec.stateflow.StateFlowContext.EXTENDED_STA
  * - return the internal state engine for further processing
  */
 public class StateFlowBuilder<S> {
+
+    // The internal stateFlowContext object. Methods in the DSL work on this
+    private final String flowName;
+    private final StateFlowContext stateFlowContext;
+
+    private StateFlowBuilder(final String flowName) {
+        this.flowName = flowName;
+        this.stateFlowContext = new StateFlowContext();
+    }
+
+    private StateFlowBuilder(final String flowName, final StateFlowContext stateFlowContext) {
+        this.flowName = flowName;
+        this.stateFlowContext = stateFlowContext;
+    }
 
     public static boolean isEmpty(String string) {
         return string == null || string.length() == 0;
@@ -38,7 +67,7 @@ public class StateFlowBuilder<S> {
     }
 
     /**
-     * Start building a new flow, starting with a FLOW clause
+     * Start building a new flow, starting with a FLOW clause.
      *
      * @param flowName name of the flow
      * @return FlowNext which specifies what can come after a FLOW clause
@@ -50,8 +79,12 @@ public class StateFlowBuilder<S> {
         return stateFlowBuilder.flow();
     }
 
+    private CreateFlowNext<S> flow() {
+        return new Grammar<>();
+    }
+
     /**
-     * Start building a new subflow, starting with a SUBFLOW clause
+     * Start building a new subflow, starting with a SUBFLOW clause.
      *
      * @param flowName name of the flow
      * @return SubflowNext which specifies what can come after a SUBFLOW clause
@@ -64,31 +97,13 @@ public class StateFlowBuilder<S> {
         return stateFlowBuilder.subflow();
     }
 
-    // The internal stateFlowContext object. Methods in the DSL work on this
-    private final String flowName;
-    private final StateFlowContext stateFlowContext;
-
-    private StateFlowBuilder(final String flowName) {
-        this.flowName = flowName;
-        this.stateFlowContext = new StateFlowContext();
-    }
-
-    private StateFlowBuilder(final String flowName, final StateFlowContext stateFlowContext) {
-        this.flowName = flowName;
-        this.stateFlowContext = stateFlowContext;
+    private CreateSubflowNext<S> subflow() {
+        return new Grammar<>();
     }
 
     @Override
     public String toString() {
         return stateFlowContext.toString();
-    }
-
-    private CreateFlowNext<S> flow() {
-        return new Grammar<>();
-    }
-
-    private CreateSubflowNext<S> subflow() {
-        return new Grammar<>();
     }
 
     // Grammar

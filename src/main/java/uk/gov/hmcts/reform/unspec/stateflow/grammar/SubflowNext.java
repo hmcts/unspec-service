@@ -1,9 +1,8 @@
 package uk.gov.hmcts.reform.unspec.stateflow.grammar;
 
 /**
- * This specifies what can come after a SUBFLOW clause
+ * This specifies what can come after a SUBFLOW clause.
  */
-public interface SubflowNext<S>
-        extends State<S>, Subflow<S>, Build<S>
-{
+public interface SubflowNext<S> extends State<S>, Subflow<S>, Build<S> {
+
 }

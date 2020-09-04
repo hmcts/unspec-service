@@ -7,7 +7,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 class TransitionTest {
 
     @Test
-    void shouldConstructAnInstance_WhenNoConditionIsSpecified() {
+    void shouldConstructAnInstance_whenNoConditionIsSpecified() {
         Transition transition = new Transition("state-1", "state-2");
         assertThat(transition)
             .extracting(Transition::getSourceState, Transition::getTargetState)
@@ -18,7 +18,7 @@ class TransitionTest {
     }
 
     @Test
-    void shouldConstructAnInstance_WhenConditionIsSpecified() {
+    void shouldConstructAnInstance_whenConditionIsSpecified() {
         Transition transition = new Transition("state-1", "state-2", caseDatails -> true);
         assertThat(transition)
             .extracting(Transition::getSourceState, Transition::getTargetState, Transition::getCondition)

@@ -1,7 +1,7 @@
 package uk.gov.hmcts.reform.unspec.stateflow;
 
-import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Nested;
+import org.junit.jupiter.api.Test;
 import uk.gov.hmcts.reform.unspec.stateflow.model.Transition;
 
 import java.util.Optional;
@@ -14,7 +14,7 @@ class StateFlowContextTest {
     class GetInitialState {
 
         @Test
-        void shouldReturnEmptyInitialState_WhenNoStatesHaveBeenProvided() {
+        void shouldReturnEmptyInitialState_whenNoStatesHaveBeenProvided() {
             StateFlowContext stateFlowContext = new StateFlowContext();
             assertThat(stateFlowContext.getInitialState()).isEmpty();
         }
@@ -24,13 +24,13 @@ class StateFlowContextTest {
     class GetCurrentState {
 
         @Test
-        void shouldReturnEmptyCurrentState_WhenNoStatesHaveBeenProvided() {
+        void shouldReturnEmptyCurrentState_whenNoStatesHaveBeenProvided() {
             StateFlowContext stateFlowContext = new StateFlowContext();
             assertThat(stateFlowContext.getCurrentState()).isEmpty();
         }
 
         @Test
-        void shouldGetInitialAndCurrentState_WhenStatesHaveBeenProvided() {
+        void shouldGetInitialAndCurrentState_whenStatesHaveBeenProvided() {
             StateFlowContext stateFlowContext = new StateFlowContext();
             stateFlowContext.addState("state-1");
             stateFlowContext.addState("state-2");
@@ -45,7 +45,7 @@ class StateFlowContextTest {
     class GetCurrentTransition {
 
         @Test
-        void shouldGetCurrentTransition_WhenTransitionsHaveBeenProvided() {
+        void shouldGetCurrentTransition_whenTransitionsHaveBeenProvided() {
             StateFlowContext stateFlowContext = new StateFlowContext();
             Transition transition1 = new Transition("state-1", "state-2", claim -> true);
             Transition transition2 = new Transition("state-2", "state-3", claim -> false);
@@ -65,7 +65,7 @@ class StateFlowContextTest {
         }
 
         @Test
-        void shouldGetEmptyCurrentTransition_WhenNoTransitionsHaveBeenProvided() {
+        void shouldGetEmptyCurrentTransition_whenNoTransitionsHaveBeenProvided() {
             StateFlowContext stateFlowContext = new StateFlowContext();
             assertThat(stateFlowContext.getCurrentTransition()).isEmpty();
         }
@@ -75,7 +75,7 @@ class StateFlowContextTest {
     class GetStates {
 
         @Test
-        void shouldGetStates_WhenStatesHaveBeenProvided() {
+        void shouldGetStates_whenStatesHaveBeenProvided() {
             StateFlowContext stateFlowContext = new StateFlowContext();
             stateFlowContext.addState("state-1");
             stateFlowContext.addState("state-2");
@@ -89,7 +89,7 @@ class StateFlowContextTest {
     class GetTransitions {
 
         @Test
-        void shouldGetTransitions_WhenTransitionsHaveBeenProvided() {
+        void shouldGetTransitions_whenTransitionsHaveBeenProvided() {
             StateFlowContext stateFlowContext = new StateFlowContext();
             Transition transition1 = new Transition("state-1", "state-2", claim -> true);
             Transition transition2 = new Transition("state-2", "state-3", claim -> false);

@@ -1,9 +1,9 @@
 package uk.gov.hmcts.reform.unspec.stateflow.grammar;
 
 /**
- * This specifies what can come after a CREATE_SUBFLOW clause
+ * This specifies what can come after a CREATE_SUBFLOW clause.
  */
 public interface CreateSubflowNext<S>
-        extends TransitionTo<S>
-{
+
+    extends TransitionTo<S> {
 }

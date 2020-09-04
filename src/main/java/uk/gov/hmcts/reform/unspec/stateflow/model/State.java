@@ -6,6 +6,10 @@ public class State {
 
     private String name;
 
+    private State(String name) {
+        this.name = name;
+    }
+
     public static State from(String name) {
         return new State(name);
     }
@@ -14,18 +18,14 @@ public class State {
         return new State(ERROR);
     }
 
-    private State(String name) {
-        this.name = name;
-    }
-
     public String getName() {
         return name;
     }
 
     @Override
     public String toString() {
-        return "State{" +
-            "name='" + name + '\'' +
-            '}';
+        return "State{"
+            + "name='" + name + '\''
+            + '}';
     }
 }

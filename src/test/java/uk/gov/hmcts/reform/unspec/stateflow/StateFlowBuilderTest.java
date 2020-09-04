@@ -11,59 +11,59 @@ import java.util.function.Predicate;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-enum FlowState {
-    STATE_1,
-    STATE_2,
-    STATE_3
-}
-
-enum SubflowState {
-    STATE_1,
-    STATE_2
-}
-
 class StateFlowBuilderTest {
+
+    enum FlowState {
+        STATE_1,
+        STATE_2,
+        STATE_3
+    }
+
+    enum SubflowState {
+        STATE_1,
+        STATE_2
+    }
 
     @Nested
     class IllegalArgumentExcpt {
 
         @Test
-        void shouldThrowIllegalArgumentException_WhenFlowNameIsNull() {
+        void shouldThrowIllegalArgumentException_whenFlowNameIsNull() {
             Assertions.assertThrows(IllegalArgumentException.class, () -> {
                 StateFlowBuilder.<FlowState>flow(null);
             });
         }
 
         @Test
-        void shouldThrowIllegalArgumentException_WhenFlowNameIsEmpty() {
+        void shouldThrowIllegalArgumentException_whenFlowNameIsEmpty() {
             Assertions.assertThrows(IllegalArgumentException.class, () -> {
                 StateFlowBuilder.<FlowState>flow("");
             });
         }
 
         @Test
-        void shouldThrowIllegalArgumentException_WhenSubflowNameIsNull() {
+        void shouldThrowIllegalArgumentException_whenSubflowNameIsNull() {
             Assertions.assertThrows(IllegalArgumentException.class, () -> {
                 StateFlowBuilder.<SubflowState>subflow(null, new StateFlowContext());
             });
         }
 
         @Test
-        void shouldThrowIllegalArgumentException_WhenSubflowNameIsEmpty() {
+        void shouldThrowIllegalArgumentException_whenSubflowNameIsEmpty() {
             Assertions.assertThrows(IllegalArgumentException.class, () -> {
                 StateFlowBuilder.<SubflowState>subflow("", new StateFlowContext());
             });
         }
 
         @Test
-        void shouldThrowIllegalArgumentException_WhenStateFlowContextIsNull() {
+        void shouldThrowIllegalArgumentException_whenStateFlowContextIsNull() {
             Assertions.assertThrows(IllegalArgumentException.class, () -> {
                 StateFlowBuilder.<SubflowState>subflow("SUBFLOW", null);
             });
         }
 
         @Test
-        void shouldThrowIllegalArgumentException_WhenInitialIsNull() {
+        void shouldThrowIllegalArgumentException_whenInitialIsNull() {
             Assertions.assertThrows(IllegalArgumentException.class, () -> {
                 StateFlowBuilder.<FlowState>flow("FLOW")
                     .initial(null);
@@ -71,7 +71,7 @@ class StateFlowBuilderTest {
         }
 
         @Test
-        void shouldThrowIllegalArgumentException_WhenTransitionToIsNull() {
+        void shouldThrowIllegalArgumentException_whenTransitionToIsNull() {
             Assertions.assertThrows(IllegalArgumentException.class, () -> {
                 StateFlowBuilder.<FlowState>flow("FLOW")
                     .initial(FlowState.STATE_1)
@@ -80,7 +80,7 @@ class StateFlowBuilderTest {
         }
 
         @Test
-        void shouldThrowIllegalArgumentException_WhenStateIsNull() {
+        void shouldThrowIllegalArgumentException_whenStateIsNull() {
             Assertions.assertThrows(IllegalArgumentException.class, () -> {
                 StateFlowBuilder.<FlowState>flow("FLOW")
                     .initial(FlowState.STATE_1)
@@ -90,7 +90,7 @@ class StateFlowBuilderTest {
         }
 
         @Test
-        void shouldThrowIllegalArgumentException_WhenOnlyIfIsNull() {
+        void shouldThrowIllegalArgumentException_whenOnlyIfIsNull() {
             Assertions.assertThrows(IllegalArgumentException.class, () -> {
                 StateFlowBuilder.<FlowState>flow("FLOW")
                     .initial(FlowState.STATE_1)
@@ -99,7 +99,7 @@ class StateFlowBuilderTest {
         }
 
         @Test
-        void shouldThrowIllegalArgumentException_WhenSubflowIsNull() {
+        void shouldThrowIllegalArgumentException_whenSubflowIsNull() {
             Assertions.assertThrows(IllegalArgumentException.class, () -> {
                 StateFlowBuilder.<FlowState>flow("FLOW")
                     .initial(FlowState.STATE_1)
@@ -112,7 +112,7 @@ class StateFlowBuilderTest {
     class Build {
 
         @Test
-        void shouldBuildStateFlow_WhenTransitionIsImplicit() {
+        void shouldBuildStateFlow_whenTransitionIsImplicit() {
             StateFlow stateFlow = StateFlowBuilder.<FlowState>flow("FLOW")
                 .initial(FlowState.STATE_1)
                 .transitionTo(FlowState.STATE_2)
@@ -124,7 +124,7 @@ class StateFlowBuilderTest {
         }
 
         @Test
-        void shouldBuildStateFlow_WhenTransitionHasTrueCondition() {
+        void shouldBuildStateFlow_whenTransitionHasTrueCondition() {
             StateFlow stateFlow = StateFlowBuilder.<FlowState>flow("FLOW")
                 .initial(FlowState.STATE_1)
                 .transitionTo(FlowState.STATE_2).onlyIf(caseDetails -> true)
@@ -136,7 +136,7 @@ class StateFlowBuilderTest {
         }
 
         @Test
-        void shouldBuildStateFlow_WhenTransitionHasFalseCondition() {
+        void shouldBuildStateFlow_whenTransitionHasFalseCondition() {
             StateFlow stateFlow = StateFlowBuilder.<FlowState>flow("FLOW")
                 .initial(FlowState.STATE_1)
                 .transitionTo(FlowState.STATE_2).onlyIf(caseDetails -> false)
@@ -148,7 +148,7 @@ class StateFlowBuilderTest {
         }
 
         @Test
-        void shouldBuildStateFlow_WhenTransitionsAreMutuallyExclusive() {
+        void shouldBuildStateFlow_whenTransitionsAreMutuallyExclusive() {
             StateFlow stateFlow = StateFlowBuilder.<FlowState>flow("FLOW")
                 .initial(FlowState.STATE_1)
                 .transitionTo(FlowState.STATE_2).onlyIf(caseDetails -> false)
@@ -162,7 +162,7 @@ class StateFlowBuilderTest {
         }
 
         @Test
-        void shouldBuildStateFlow_WhenTransitionsAreMutuallyExclusiveIncludingImplicitTransitions() {
+        void shouldBuildStateFlow_whenTransitionsAreMutuallyExclusiveIncludingImplicitTransitions() {
             StateFlow stateFlow = StateFlowBuilder.<FlowState>flow("FLOW")
                 .initial(FlowState.STATE_1)
                 .transitionTo(FlowState.STATE_2).onlyIf(caseDetails -> false)
@@ -176,7 +176,7 @@ class StateFlowBuilderTest {
         }
 
         @Test
-        void shouldBuildStateFlow_WhenTransitionToMultipleStates() {
+        void shouldBuildStateFlow_whenTransitionToMultipleStates() {
             StateFlow stateFlow = StateFlowBuilder.<FlowState>flow("FLOW")
                 .initial(FlowState.STATE_1)
                 .transitionTo(FlowState.STATE_2).onlyIf(caseDetails -> true)
@@ -190,7 +190,7 @@ class StateFlowBuilderTest {
         }
 
         @Test
-        void shouldBuildStateFlow_WhenTransitionToUndefinedState() {
+        void shouldBuildStateFlow_whenTransitionToUndefinedState() {
             StateFlow stateFlow = StateFlowBuilder.<FlowState>flow("FLOW")
                 .initial(FlowState.STATE_1)
                 .transitionTo(FlowState.STATE_2).onlyIf(caseDetails -> true)
@@ -203,7 +203,7 @@ class StateFlowBuilderTest {
         }
 
         @Test
-        void shouldBuildStateFlow_WhenInitialStateHasSubflow() {
+        void shouldBuildStateFlow_whenInitialStateHasSubflow() {
             Consumer<StateFlowContext> subflow = stateFlowContext ->
                 StateFlowBuilder.<SubflowState>subflow("SUBFLOW", stateFlowContext)
                     .transitionTo(SubflowState.STATE_1)
@@ -222,7 +222,7 @@ class StateFlowBuilderTest {
         }
 
         @Test
-        void shouldBuildStateFlow_WhenTransitionHasSubflow() {
+        void shouldBuildStateFlow_whenTransitionHasSubflow() {
             Consumer<StateFlowContext> subflow = stateFlowContext ->
                 StateFlowBuilder.<SubflowState>subflow("SUBFLOW", stateFlowContext)
                     .transitionTo(SubflowState.STATE_1)
@@ -247,7 +247,7 @@ class StateFlowBuilderTest {
         }
 
         @Test
-        void shouldBuildStateFlowButSetStateMachineError_WhenConditionsOnTransitionsAreNotMutuallyExclusive() {
+        void shouldSetStateMachineError_whenConditionsOnTransitionsAreNotMutuallyExclusive() {
             StateFlow stateFlow = StateFlowBuilder.<FlowState>flow("FLOW")
                 .initial(FlowState.STATE_1)
                 .transitionTo(FlowState.STATE_2).onlyIf(caseDetails -> true)
@@ -261,7 +261,7 @@ class StateFlowBuilderTest {
         }
 
         @Test
-        void shouldBuildStateFlowButSetStateMachineError_WhenMoreThanOneTransitionsAreImplicit() {
+        void shouldSetStateMachineError_whenMoreThanOneTransitionsAreImplicit() {
             StateFlow stateFlow = StateFlowBuilder.<FlowState>flow("FLOW")
                 .initial(FlowState.STATE_1)
                 .transitionTo(FlowState.STATE_2)
@@ -275,7 +275,7 @@ class StateFlowBuilderTest {
         }
 
         @Test
-        void shouldBuildStateFlowButSetStateMachineError_WhenImplicitTransitionAndConditionalTransitionAreNotMutuallyExclusive() {
+        void shouldSetStateMachineError_whenImplicitTransitionAndConditionalTransitionAreNotMutuallyExclusive() {
             StateFlow stateFlow = StateFlowBuilder.<FlowState>flow("FLOW")
                 .initial(FlowState.STATE_1)
                 .transitionTo(FlowState.STATE_2).onlyIf(caseDetails -> true)
@@ -289,7 +289,7 @@ class StateFlowBuilderTest {
         }
 
         @Test
-        void shouldBuildStateFlowWithSubflowButSetStateMachineError_WhenAmbiguousTransitions() {
+        void shouldBuildStateFlowWithSubflowButSetStateMachineError_whenAmbiguousTransitions() {
             Consumer<StateFlowContext> subflow = stateFlowContext ->
                 StateFlowBuilder.<SubflowState>subflow("SUBFLOW", stateFlowContext)
                     .transitionTo(SubflowState.STATE_1)
@@ -345,7 +345,7 @@ class StateFlowBuilderTest {
         }
 
         @Test
-        void shouldEvaluateStateAndGetStateHistory_WhenAmbiguousTransitions() {
+        void shouldEvaluateStateAndGetStateHistory_whenAmbiguousTransitions() {
             CaseDetails caseDetails = CaseDetails.builder().build();
 
             StateFlow stateFlow = StateFlowBuilder.<FlowState>flow("FLOW")

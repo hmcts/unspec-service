@@ -5,9 +5,9 @@ import uk.gov.hmcts.reform.unspec.stateflow.StateFlowContext;
 import java.util.function.Consumer;
 
 /**
- * Represents the SUBFLOW clause
+ * Represents the SUBFLOW clause.
  */
-public interface Subflow<S>
-{
+public interface Subflow<S> {
+
     SubflowNext<S> subflow(Consumer<StateFlowContext> consumer);
 }

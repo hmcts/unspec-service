@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Optional;
 
 public class StateFlowContext {
+
     protected static String EXTENDED_STATE_CASE_KEY = "case";
     protected static String EXTENDED_STATE_HISTORY_KEY = "history";
 

@@ -8,7 +8,11 @@ import org.springframework.statemachine.state.State;
 import org.springframework.statemachine.transition.Transition;
 import uk.gov.hmcts.reform.unspec.stateflow.utils.StateMachineUtils;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import static uk.gov.hmcts.reform.unspec.stateflow.StateFlowContext.EXTENDED_STATE_HISTORY_KEY;
@@ -30,16 +34,18 @@ public class StateFlowListener extends StateMachineListenerAdapter<String, Strin
             StateMachineUtils.findPermittedTransitionsForState(stateContext, state);
         if (permittedTransitions.size() > 1) {
             String sourceState = state.getId();
-            String permittedStates = String.join( ",", toPermittedStates(permittedTransitions));
+            String permittedStates = String.join(",", toPermittedStates(permittedTransitions));
             String message = String.format(
                 "Ambiguous transitions permitting state [%s] to move to more than one next states [%s].",
-                sourceState, permittedStates);
+                sourceState, permittedStates
+            );
             log.error(message);
             stateContext.getStateMachine().setStateMachineError(new IllegalStateException(message));
         }
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public void stateChanged(State<String, String> from, State<String, String> to) {
         ExtendedState extendedState = stateContext.getStateMachine().getExtendedState();
         List<String> historyList = extendedState.get(EXTENDED_STATE_HISTORY_KEY, ArrayList.class);

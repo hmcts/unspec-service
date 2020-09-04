@@ -76,7 +76,7 @@ class StateMachineUtilsTest {
     }
 
     @Test
-    void shouldFindPermittedTransitionsForState_WhenHasNoTransitions() {
+    void shouldFindPermittedTransitionsForState_whenHasNoTransitions() {
         Transition<String, String> mockedTransition = createMockedGuardedTransition("ANOTHER_STATE", true);
         StateMachine<String, String> mockedStateMachine = createMockedStateMachine(mockedTransition);
 
@@ -88,7 +88,7 @@ class StateMachineUtilsTest {
     }
 
     @Test
-    void shouldFindPermittedTransitionsForState_WhenHasGuardedTransitionsButNoneArePermitted() {
+    void shouldFindPermittedTransitionsForState_whenHasGuardedTransitionsButNoneArePermitted() {
         Transition<String, String> mockedTransition = createMockedGuardedTransition("A_STATE", false);
         StateMachine<String, String> mockedStateMachine = createMockedStateMachine(mockedTransition);
 
@@ -100,7 +100,7 @@ class StateMachineUtilsTest {
     }
 
     @Test
-    void shouldFindPermittedTransitionsForState_WhenHasGuardedTransitionsThatArePermitted() {
+    void shouldFindPermittedTransitionsForState_whenHasGuardedTransitionsThatArePermitted() {
         Transition<String, String> mockedTransition = createMockedGuardedTransition("A_STATE", true);
         StateMachine<String, String> mockedStateMachine = createMockedStateMachine(mockedTransition);
 
@@ -113,7 +113,7 @@ class StateMachineUtilsTest {
     }
 
     @Test
-    void shouldFindPermittedTransitionsForState_WhenHasImplicitTransitions() {
+    void shouldFindPermittedTransitionsForState_whenHasImplicitTransitions() {
         Transition<String, String> mockedTransition = createMockedImplicitTransition("A_STATE");
         StateMachine<String, String> mockedStateMachine = createMockedStateMachine(mockedTransition);
 

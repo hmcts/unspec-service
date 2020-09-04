@@ -14,11 +14,11 @@ import static uk.gov.hmcts.reform.unspec.stateflow.StateFlowContext.EXTENDED_STA
 
 public class StateFlow {
 
+    private StateMachine<String, String> stateMachine;
+
     public StateFlow(StateMachine<String, String> stateMachine) {
         this.stateMachine = stateMachine;
     }
-
-    private StateMachine<String, String> stateMachine;
 
     public StateMachine<String, String> asStateMachine() {
         return stateMachine;
@@ -35,6 +35,7 @@ public class StateFlow {
         return stateMachine.hasStateMachineError() ? State.error() : State.from(stateMachine.getState().getId());
     }
 
+    @SuppressWarnings("unchecked")
     public List<State> getStateHistory() {
         List<String> historyList = stateMachine.getExtendedState().get(EXTENDED_STATE_HISTORY_KEY, ArrayList.class);
         return historyList.stream().map(State::from).collect(Collectors.toList());

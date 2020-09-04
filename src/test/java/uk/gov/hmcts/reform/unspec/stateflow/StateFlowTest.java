@@ -17,7 +17,9 @@ import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 import static uk.gov.hmcts.reform.unspec.stateflow.StateFlowContext.EXTENDED_STATE_CASE_KEY;
 import static uk.gov.hmcts.reform.unspec.stateflow.StateFlowContext.EXTENDED_STATE_HISTORY_KEY;
 
@@ -93,7 +95,7 @@ class StateFlowTest {
     class GetState {
 
         @Test
-        void shouldGetState_WhenStateMachineHasNoErrors() {
+        void shouldGetState_whenStateMachineHasNoErrors() {
             org.springframework.statemachine.state.State<String, String> mockedState = createMockedState(TEST_STATE);
             when(mockedStateMachine.hasStateMachineError()).thenReturn(false);
             when(mockedStateMachine.getState()).thenReturn(mockedState);
@@ -107,7 +109,7 @@ class StateFlowTest {
         }
 
         @Test
-        void shouldGetState_WhenStateMachineHasErrors() {
+        void shouldGetState_whenStateMachineHasErrors() {
             when(mockedStateMachine.hasStateMachineError()).thenReturn(true);
             StateFlow stateFlow = new StateFlow(mockedStateMachine);
 

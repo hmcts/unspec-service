@@ -13,11 +13,16 @@ import java.util.stream.Collectors;
 
 public class StateMachineUtils {
 
-    private static <S, E>  Predicate<Transition<S, E>> isTransitionSourceEqualTo(S state) {
+    private StateMachineUtils() {
+        //Utility class
+    }
+
+    private static <S, E> Predicate<Transition<S, E>> isTransitionSourceEqualTo(S state) {
         return transition -> transition.getSource().getId().equals(state);
     }
 
-    private static <S, E>  Predicate<Transition<S, E>> isTransitionPermitted(StateContext stateContext) {
+    @SuppressWarnings("unchecked")
+    private static <S, E> Predicate<Transition<S, E>> isTransitionPermitted(StateContext stateContext) {
         return transition -> {
             Function<StateContext<S, E>, Mono<Boolean>> guard = transition.getGuard();
             if (guard == null) {
@@ -27,7 +32,10 @@ public class StateMachineUtils {
         };
     }
 
-    public static <S, E> Collection<Transition<S, E>> findPermittedTransitionsForState(StateContext<S, E> stateContext, State<S, E> state) {
+    public static <S, E> Collection<Transition<S, E>> findPermittedTransitionsForState(
+        StateContext<S, E> stateContext,
+        State<S, E> state
+    ) {
         StateMachine<S, E> stateMachine = stateContext.getStateMachine();
 
         return stateMachine.getTransitions().stream()
