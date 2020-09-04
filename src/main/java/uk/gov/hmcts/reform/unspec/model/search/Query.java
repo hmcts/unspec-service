@@ -1,12 +1,10 @@
 package uk.gov.hmcts.reform.unspec.model.search;
 
-import net.minidev.json.JSONObject;
 import org.elasticsearch.index.query.QueryBuilder;
+import org.elasticsearch.search.builder.SearchSourceBuilder;
 
 import java.util.List;
 import java.util.Objects;
-
-import static java.util.Map.of;
 
 public class Query {
 
@@ -26,11 +24,10 @@ public class Query {
 
     @Override
     public String toString() {
-        return new JSONObject(
-            of("query", queryBuilder.toString(),
-               "_source", dataToReturn,
-               "from", startIndex
-            )
-        ).toString();
+        return new SearchSourceBuilder()
+            .query(queryBuilder)
+            .fetchSource(dataToReturn.toArray(new String[0]), null)
+            .from(startIndex)
+            .toString();
     }
 }

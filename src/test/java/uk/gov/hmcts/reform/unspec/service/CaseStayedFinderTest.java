@@ -1,13 +1,12 @@
 package uk.gov.hmcts.reform.unspec.service;
 
+import org.camunda.bpm.client.task.ExternalTask;
+import org.camunda.bpm.client.task.ExternalTaskService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.quartz.JobDetail;
-import org.quartz.JobExecutionContext;
-import org.quartz.JobKey;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import uk.gov.hmcts.reform.ccd.client.model.CaseDetails;
@@ -25,13 +24,10 @@ import static org.mockito.Mockito.when;
 class CaseStayedFinderTest {
 
     @Mock
-    private JobKey jobKey;
+    private ExternalTask externalTask;
 
     @Mock
-    private JobDetail jobDetail;
-
-    @Mock
-    private JobExecutionContext jobExecutionContext;
+    private ExternalTaskService service;
 
     @Mock
     private CaseStayedSearchService searchService;
@@ -44,9 +40,7 @@ class CaseStayedFinderTest {
 
     @BeforeEach
     void init() {
-        when(jobKey.getName()).thenReturn("testName");
-        when(jobDetail.getKey()).thenReturn(jobKey);
-        when(jobExecutionContext.getJobDetail()).thenReturn(jobDetail);
+        when(externalTask.getTopicName()).thenReturn("test");
     }
 
     @Test
@@ -60,7 +54,7 @@ class CaseStayedFinderTest {
 
         when(searchService.getCases()).thenReturn(caseDetails);
 
-        caseStayedFinder.execute(jobExecutionContext);
+        caseStayedFinder.execute(externalTask, service);
 
         verify(applicationEventPublisher).publishEvent(new MoveCaseToStayedEvent(caseId));
     }
@@ -69,7 +63,7 @@ class CaseStayedFinderTest {
     void shouldNotEmitMoveCaseToStayedEvent_WhenNoCasesFound() {
         when(searchService.getCases()).thenReturn(List.of());
 
-        caseStayedFinder.execute(jobExecutionContext);
+        caseStayedFinder.execute(externalTask, service);
 
         verifyNoInteractions(applicationEventPublisher);
     }
