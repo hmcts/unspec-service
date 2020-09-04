@@ -35,9 +35,9 @@ class StateFlowContextTest {
             stateFlowContext.addState("state-1");
             stateFlowContext.addState("state-2");
             assertThat(stateFlowContext.getInitialState()).isNotEmpty();
-            assertThat(stateFlowContext.getInitialState().get()).isEqualTo("state-1");
+            assertThat(stateFlowContext.getInitialState()).contains("state-1");
             assertThat(stateFlowContext.getCurrentState()).isNotEmpty();
-            assertThat(stateFlowContext.getCurrentState().get()).isEqualTo("state-2");
+            assertThat(stateFlowContext.getCurrentState()).contains("state-2");
         }
     }
 

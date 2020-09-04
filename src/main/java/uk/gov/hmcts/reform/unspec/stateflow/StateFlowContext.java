@@ -8,23 +8,23 @@ import java.util.Optional;
 
 public class StateFlowContext {
 
-    protected static String EXTENDED_STATE_CASE_KEY = "case";
-    protected static String EXTENDED_STATE_HISTORY_KEY = "history";
+    protected static final String EXTENDED_STATE_CASE_KEY = "case";
+    protected static final String EXTENDED_STATE_HISTORY_KEY = "history";
 
     private final List<String> states = new ArrayList<>();
 
     private final List<Transition> transitions = new ArrayList<>();
 
     Optional<String> getInitialState() {
-        return states.size() < 1 ? Optional.empty() : Optional.of(states.get(0));
+        return states.isEmpty() ? Optional.empty() : Optional.of(states.get(0));
     }
 
     Optional<String> getCurrentState() {
-        return states.size() < 1 ? Optional.empty() : Optional.of(states.get(states.size() - 1));
+        return states.isEmpty() ? Optional.empty() : Optional.of(states.get(states.size() - 1));
     }
 
     Optional<Transition> getCurrentTransition() {
-        return transitions.size() < 1 ? Optional.empty() : Optional.of(transitions.get(transitions.size() - 1));
+        return transitions.isEmpty() ? Optional.empty() : Optional.of(transitions.get(transitions.size() - 1));
     }
 
     public List<String> addState(String state) {

@@ -116,7 +116,7 @@ class StateFlowTest {
             assertThat(stateFlow.getState())
                 .extracting(State::getName)
                 .isNotNull()
-                .isEqualTo(State.ERROR);
+                .isEqualTo(State.ERROR_STATE);
         }
     }
 

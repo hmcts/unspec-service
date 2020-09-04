@@ -19,7 +19,7 @@ class StateTest {
         assertThat(State.error())
             .extracting(State::getName)
             .isNotNull()
-            .isEqualTo(State.ERROR);
+            .isEqualTo(State.ERROR_STATE);
     }
 
 }

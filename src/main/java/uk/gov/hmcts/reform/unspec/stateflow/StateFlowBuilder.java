@@ -5,6 +5,7 @@ import org.springframework.statemachine.config.StateMachineBuilder;
 import org.springframework.statemachine.config.configurers.ExternalTransitionConfigurer;
 import org.springframework.statemachine.config.configurers.StateConfigurer;
 import uk.gov.hmcts.reform.ccd.client.model.CaseDetails;
+import uk.gov.hmcts.reform.unspec.stateflow.exception.StateFlowException;
 import uk.gov.hmcts.reform.unspec.stateflow.grammar.Build;
 import uk.gov.hmcts.reform.unspec.stateflow.grammar.BuildNext;
 import uk.gov.hmcts.reform.unspec.stateflow.grammar.CreateFlow;
@@ -36,6 +37,8 @@ import static uk.gov.hmcts.reform.unspec.stateflow.StateFlowContext.EXTENDED_STA
  */
 public class StateFlowBuilder<S> {
 
+    private static final String FLOW_NAME = "flowName";
+    private static final String STATE = "state";
     // The internal stateFlowContext object. Methods in the DSL work on this
     private final String flowName;
     private final StateFlowContext stateFlowContext;
@@ -73,8 +76,8 @@ public class StateFlowBuilder<S> {
      * @return FlowNext which specifies what can come after a FLOW clause
      */
     public static <S> CreateFlowNext<S> flow(String flowName) {
-        checkNull(flowName, "flowName");
-        checkEmpty(flowName, "flowName");
+        checkNull(flowName, FLOW_NAME);
+        checkEmpty(flowName, FLOW_NAME);
         StateFlowBuilder<S> stateFlowBuilder = new StateFlowBuilder<>(flowName);
         return stateFlowBuilder.flow();
     }
@@ -90,8 +93,8 @@ public class StateFlowBuilder<S> {
      * @return SubflowNext which specifies what can come after a SUBFLOW clause
      */
     public static <S> CreateSubflowNext<S> subflow(String flowName, StateFlowContext stateFlowContext) {
-        checkNull(flowName, "flowName");
-        checkEmpty(flowName, "flowName");
+        checkNull(flowName, FLOW_NAME);
+        checkEmpty(flowName, FLOW_NAME);
         checkNull(stateFlowContext, "stateFlowContext");
         StateFlowBuilder<S> stateFlowBuilder = new StateFlowBuilder<>(flowName, stateFlowContext);
         return stateFlowBuilder.subflow();
@@ -130,14 +133,14 @@ public class StateFlowBuilder<S> {
 
         @Override
         public InitialNext<S> initial(S state) {
-            checkNull(state, "state");
+            checkNull(state, STATE);
             stateFlowContext.addState(fullyQualified(state));
             return this;
         }
 
         @Override
         public TransitionToNext<S> transitionTo(S state) {
-            checkNull(state, "state");
+            checkNull(state, STATE);
             stateFlowContext.getCurrentState()
                 .map(currentState -> new Transition(currentState, fullyQualified(state)))
                 .ifPresent(stateFlowContext::addTransition);
@@ -146,7 +149,7 @@ public class StateFlowBuilder<S> {
 
         @Override
         public OnlyIfNext<S> onlyIf(Predicate<CaseDetails> condition) {
-            checkNull(condition, "state");
+            checkNull(condition, STATE);
             stateFlowContext.getCurrentTransition()
                 .ifPresent(currentTransition -> currentTransition.setCondition(condition));
             return this;
@@ -154,7 +157,7 @@ public class StateFlowBuilder<S> {
 
         @Override
         public StateNext<S> state(S state) {
-            checkNull(state, "state");
+            checkNull(state, STATE);
             stateFlowContext.addState(fullyQualified(state));
             return this;
         }
@@ -200,7 +203,7 @@ public class StateFlowBuilder<S> {
                     }
                 }
             } catch (Exception e) {
-                throw new RuntimeException("Failed to build StateFlow internal state machine.", e);
+                throw new StateFlowException("Failed to build StateFlow internal state machine.", e);
             }
 
             // Register listener

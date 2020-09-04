@@ -84,7 +84,7 @@ class StateMachineUtilsTest {
         when(mockedState.getId()).thenReturn("A_STATE");
 
         assertThat(StateMachineUtils.findPermittedTransitionsForState(mockedStateContext, mockedState))
-            .hasSize(0);
+            .isEmpty();
     }
 
     @Test
@@ -96,7 +96,7 @@ class StateMachineUtilsTest {
         when(mockedState.getId()).thenReturn("A_STATE");
 
         assertThat(StateMachineUtils.findPermittedTransitionsForState(mockedStateContext, mockedState))
-            .hasSize(0);
+            .isEmpty();
     }
 
     @Test

@@ -2,7 +2,7 @@ package uk.gov.hmcts.reform.unspec.stateflow.model;
 
 public class State {
 
-    public static String ERROR = "ERROR";
+    public static final String ERROR_STATE = "ERROR";
 
     private String name;
 
@@ -15,7 +15,7 @@ public class State {
     }
 
     public static State error() {
-        return new State(ERROR);
+        return new State(ERROR_STATE);
     }
 
     public String getName() {

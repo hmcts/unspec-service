@@ -21,8 +21,7 @@ public class StateMachineUtils {
         return transition -> transition.getSource().getId().equals(state);
     }
 
-    @SuppressWarnings("unchecked")
-    private static <S, E> Predicate<Transition<S, E>> isTransitionPermitted(StateContext stateContext) {
+    private static <S, E> Predicate<Transition<S, E>> isTransitionPermitted(StateContext<S, E> stateContext) {
         return transition -> {
             Function<StateContext<S, E>, Mono<Boolean>> guard = transition.getGuard();
             if (guard == null) {

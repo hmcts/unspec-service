@@ -43,15 +43,17 @@ class StateFlowBuilderTest {
 
         @Test
         void shouldThrowIllegalArgumentException_whenSubflowNameIsNull() {
+            StateFlowContext stateFlowContext = new StateFlowContext();
             Assertions.assertThrows(IllegalArgumentException.class, () -> {
-                StateFlowBuilder.<SubflowState>subflow(null, new StateFlowContext());
+                StateFlowBuilder.<SubflowState>subflow(null, stateFlowContext);
             });
         }
 
         @Test
         void shouldThrowIllegalArgumentException_whenSubflowNameIsEmpty() {
+            StateFlowContext stateFlowContext = new StateFlowContext();
             Assertions.assertThrows(IllegalArgumentException.class, () -> {
-                StateFlowBuilder.<SubflowState>subflow("", new StateFlowContext());
+                StateFlowBuilder.<SubflowState>subflow("", stateFlowContext);
             });
         }
 
