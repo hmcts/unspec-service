@@ -28,6 +28,7 @@ import uk.gov.hmcts.reform.unspec.service.IssueDateCalculator;
 import uk.gov.hmcts.reform.unspec.service.docmosis.sealedclaim.SealedClaimFormGenerator;
 import uk.gov.hmcts.reform.unspec.utils.ElementUtils;
 import uk.gov.hmcts.reform.unspec.utils.PartyNameUtils;
+import uk.gov.hmcts.reform.unspec.validation.DateOfBirthValidator;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -67,12 +68,14 @@ public class CreateClaimCallbackHandler extends CallbackHandler {
     private final IssueDateCalculator issueDateCalculator;
     private final DeadlinesCalculator deadlinesCalculator;
     private final ReferenceNumberRepository referenceNumberRepository;
+    private final DateOfBirthValidator dateOfBirthValidator;
 
     @Override
     protected Map<CallbackType, Callback> callbacks() {
         return Map.of(
             CallbackType.MID, this::validateClaimValues,
-            CallbackType.MID_SECONDARY, this::populateClaimSubtypeList,
+            CallbackType.MID_SECONDARY, this::validateDateOfBirth,
+            CallbackType.MID_TERTIARY, this::populateClaimSubtypeList,
             CallbackType.ABOUT_TO_SUBMIT, this::issueClaim,
             CallbackType.SUBMITTED, this::buildConfirmation
         );
@@ -100,6 +103,16 @@ public class CreateClaimCallbackHandler extends CallbackHandler {
 
         return AboutToStartOrSubmitCallbackResponse.builder()
             .data(data)
+            .errors(errors)
+            .build();
+    }
+
+    private CallbackResponse validateDateOfBirth(CallbackParams callbackParams) {
+        Map<String, Object> data = callbackParams.getRequest().getCaseDetails().getData();
+        Party claimant = mapper.convertValue(data.get(CLAIMANT), Party.class);
+        List<String> errors = dateOfBirthValidator.validate(claimant);
+
+        return AboutToStartOrSubmitCallbackResponse.builder()
             .errors(errors)
             .build();
     }

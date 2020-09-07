@@ -6,9 +6,12 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.jackson.JacksonAutoConfiguration;
+import org.springframework.boot.autoconfigure.validation.ValidationAutoConfiguration;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import uk.gov.hmcts.reform.ccd.client.model.AboutToStartOrSubmitCallbackResponse;
@@ -30,6 +33,7 @@ import uk.gov.hmcts.reform.unspec.service.DeadlinesCalculator;
 import uk.gov.hmcts.reform.unspec.service.IssueDateCalculator;
 import uk.gov.hmcts.reform.unspec.service.docmosis.sealedclaim.SealedClaimFormGenerator;
 import uk.gov.hmcts.reform.unspec.utils.ResourceReader;
+import uk.gov.hmcts.reform.unspec.validation.DateOfBirthValidator;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -39,10 +43,12 @@ import java.util.List;
 import java.util.Map;
 
 import static java.lang.String.format;
+import static java.time.LocalDate.now;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
+import static uk.gov.hmcts.reform.unspec.callback.CallbackType.MID_SECONDARY;
 import static uk.gov.hmcts.reform.unspec.enums.AllocatedTrack.SMALL_CLAIM;
 import static uk.gov.hmcts.reform.unspec.enums.ClaimType.CLINICAL_NEGLIGENCE;
 import static uk.gov.hmcts.reform.unspec.enums.ClaimType.PERSONAL_INJURY;
@@ -58,7 +64,9 @@ import static uk.gov.hmcts.reform.unspec.service.documentmanagement.DocumentMana
     JacksonAutoConfiguration.class,
     CaseDetailsConverter.class,
     ClaimIssueConfiguration.class,
-    MockDatabaseConfiguration.class},
+    MockDatabaseConfiguration.class,
+    ValidationAutoConfiguration.class,
+    DateOfBirthValidator.class},
     properties = {"reference.database.enabled=false"})
 class CreateClaimCallbackHandlerTest extends BaseCallbackHandlerTest {
 
@@ -122,21 +130,54 @@ class CreateClaimCallbackHandlerTest extends BaseCallbackHandlerTest {
     }
 
     @Nested
+    class MidSecondaryEventCallback {
 
-    class SecondMidEventCallback {
+        @ParameterizedTest
+        @ValueSource(strings = {"individualDateOfBirth", "soleTraderDateOfBirth"})
+        void shouldReturnError_whenDateOfBirthIsInTheFuture(String dateOfBirthField) {
+            Map<String, Object> data = new HashMap<>();
+            data.put("applicant1", Map.of(dateOfBirthField, now().plusDays(1)));
+
+            CallbackParams params = callbackParamsOf(data, MID_SECONDARY);
+
+            AboutToStartOrSubmitCallbackResponse response = (AboutToStartOrSubmitCallbackResponse) handler
+                .handle(params);
+
+            assertThat(response.getErrors()).containsExactly("The date entered cannot be in the future");
+        }
+
+        @ParameterizedTest
+        @ValueSource(strings = {"individualDateOfBirth", "soleTraderDateOfBirth"})
+        void shouldReturnNoError_whenDateOfBirthIsInThePast(String dateOfBirthField) {
+            Map<String, Object> data = new HashMap<>();
+            data.put("applicant1", Map.of(dateOfBirthField, now().minusDays(1)));
+
+            CallbackParams params = callbackParamsOf(data, MID_SECONDARY);
+
+            AboutToStartOrSubmitCallbackResponse response = (AboutToStartOrSubmitCallbackResponse) handler
+                .handle(params);
+
+            assertThat(response.getErrors()).isEmpty();
+        }
+    }
+
+    @Nested
+
+    class MidTertiaryEventCallback {
 
         @Test
         void shouldReturnExpectedClaimSubtypeDynamicList_whenClaimTypeIsPersonalInjury() {
             Map<String, Object> data = new HashMap<>();
             data.put("claimType", PERSONAL_INJURY);
-            CallbackParams params = callbackParamsOf(data, CallbackType.MID_SECONDARY);
+            CallbackParams params = callbackParamsOf(data, CallbackType.MID_TERTIARY);
 
             var response = (AboutToStartOrSubmitCallbackResponse) handler.handle(params);
 
             assertThat(response.getData())
                 .isEqualTo(
                     Map.of("claimType", PERSONAL_INJURY,
-                           "claimSubtype", ClaimSubtype.getDynamicList(PERSONAL_INJURY, null)));
+                           "claimSubtype", ClaimSubtype.getDynamicList(PERSONAL_INJURY, null)
+                    ));
         }
 
         @Test
@@ -144,7 +185,7 @@ class CreateClaimCallbackHandlerTest extends BaseCallbackHandlerTest {
             Map<String, Object> data = new HashMap<>();
             data.put("claimType", CLINICAL_NEGLIGENCE);
 
-            CallbackParams params = callbackParamsOf(data, CallbackType.MID_SECONDARY);
+            CallbackParams params = callbackParamsOf(data, CallbackType.MID_TERTIARY);
 
             var response = (AboutToStartOrSubmitCallbackResponse) handler.handle(params);
 
@@ -156,7 +197,7 @@ class CreateClaimCallbackHandlerTest extends BaseCallbackHandlerTest {
             Map<String, Object> data = new HashMap<>();
             data.put("claimType", CLINICAL_NEGLIGENCE);
             data.put("claimSubtype", ClaimSubtype.getDynamicList(PERSONAL_INJURY, null));
-            CallbackParams params = callbackParamsOf(data, CallbackType.MID_SECONDARY);
+            CallbackParams params = callbackParamsOf(data, CallbackType.MID_TERTIARY);
 
             var response = (AboutToStartOrSubmitCallbackResponse) handler.handle(params);
 
@@ -173,14 +214,15 @@ class CreateClaimCallbackHandlerTest extends BaseCallbackHandlerTest {
             data.put("claimType", PERSONAL_INJURY);
             data.put("claimSubtype", claimSubtypeList);
 
-            CallbackParams params = callbackParamsOf(data, CallbackType.MID_SECONDARY);
+            CallbackParams params = callbackParamsOf(data, CallbackType.MID_TERTIARY);
 
             var response = (AboutToStartOrSubmitCallbackResponse) handler.handle(params);
 
             assertThat(response.getData())
                 .isEqualTo(
                     Map.of("claimType", PERSONAL_INJURY,
-                           "claimSubtype", claimSubtypeList));
+                           "claimSubtype", claimSubtypeList
+                    ));
         }
     }
 
@@ -189,28 +231,29 @@ class CreateClaimCallbackHandlerTest extends BaseCallbackHandlerTest {
 
         @Test
         void shouldAddClaimIssuedDateAndSubmittedAt_whenInvoked() throws JsonProcessingException {
-            when(issueDateCalculator.calculateIssueDay(any(LocalDateTime.class))).thenReturn(LocalDate.now());
+            when(issueDateCalculator.calculateIssueDay(any(LocalDateTime.class))).thenReturn(now());
             when(deadlinesCalculator.calculateConfirmationOfServiceDeadline(any(LocalDate.class)))
-                .thenReturn(LocalDate.now().atTime(23, 59, 59));
+                .thenReturn(now().atTime(23, 59, 59));
             CallbackParams params = callbackParamsOf(getCaseData(), CallbackType.ABOUT_TO_SUBMIT);
 
             AboutToStartOrSubmitCallbackResponse response = (AboutToStartOrSubmitCallbackResponse) handler
                 .handle(params);
 
+            assertThat(response.getData()).containsEntry("claimIssuedDate", now());
             assertThat(response.getData()).containsEntry("claimIssuedDate", LocalDate.now());
             assertThat(response.getData()).containsEntry("legacyCaseReference", REFERENCE_NUMBER);
             assertThat(response.getData()).containsEntry(
                 "confirmationOfServiceDeadline",
-                LocalDate.now().atTime(23, 59, 59)
+                now().atTime(23, 59, 59)
             );
             assertThat(response.getData()).containsKey("claimSubmittedDateTime");
         }
 
         @Test
         void shouldIssueClaimWithSystemGeneratedDocumentsAndDate_whenInvoked() throws JsonProcessingException {
-            when(issueDateCalculator.calculateIssueDay(any(LocalDateTime.class))).thenReturn(LocalDate.now());
+            when(issueDateCalculator.calculateIssueDay(any(LocalDateTime.class))).thenReturn(now());
             when(deadlinesCalculator.calculateConfirmationOfServiceDeadline(any(LocalDate.class)))
-                .thenReturn(LocalDate.now().atTime(23, 59, 59));
+                .thenReturn(now().atTime(23, 59, 59));
 
             CallbackParams params = callbackParamsOf(getCaseData(), CallbackType.ABOUT_TO_SUBMIT);
 
@@ -220,7 +263,7 @@ class CreateClaimCallbackHandlerTest extends BaseCallbackHandlerTest {
             assertThat(caseData.getSystemGeneratedCaseDocuments()).isNotEmpty()
                 .contains(Element.<CaseDocument>builder().value(getCaseDocument()).build());
 
-            assertThat(caseData.getClaimIssuedDate()).isEqualTo(LocalDate.now());
+            assertThat(caseData.getClaimIssuedDate()).isEqualTo(now());
         }
 
         Map<String, Object> getCaseData() throws JsonProcessingException {
@@ -250,7 +293,7 @@ class CreateClaimCallbackHandlerTest extends BaseCallbackHandlerTest {
             CallbackParams params = callbackParamsOf(data, CallbackType.SUBMITTED);
             SubmittedCallbackResponse response = (SubmittedCallbackResponse) handler.handle(params);
 
-            LocalDateTime serviceDeadline = LocalDate.now().plusDays(112).atTime(23, 59);
+            LocalDateTime serviceDeadline = now().plusDays(112).atTime(23, 59);
             String formattedServiceDeadline = formatLocalDateTime(serviceDeadline, DATE_TIME_AT);
 
             String body = format(
@@ -276,7 +319,7 @@ class CreateClaimCallbackHandlerTest extends BaseCallbackHandlerTest {
             CallbackParams params = callbackParamsOf(data, CallbackType.SUBMITTED);
             SubmittedCallbackResponse response = (SubmittedCallbackResponse) handler.handle(params);
 
-            LocalDateTime serviceDeadline = LocalDate.now().plusDays(112).atTime(23, 59);
+            LocalDateTime serviceDeadline = now().plusDays(112).atTime(23, 59);
             String formattedServiceDeadline = formatLocalDateTime(serviceDeadline, DATE_TIME_AT);
 
             String body = format(
