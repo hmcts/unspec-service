@@ -12,9 +12,8 @@ import uk.gov.hmcts.reform.unspec.validation.interfaces.HasServiceDateTheSameAsO
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
+import javax.validation.Valid;
 import javax.validation.constraints.PastOrPresent;
-
-import static uk.gov.hmcts.reform.unspec.service.docmosis.sealedclaim.SealedClaimFormGenerator.REFERENCE_NUMBER;
 
 @Data
 @Builder(toBuilder = true)
@@ -46,9 +45,14 @@ public class CaseData {
     private final LocalDate deemedServiceDateToRespondentSolicitor1;
     private final LocalDateTime respondentSolicitor1ResponseDeadline;
     private final List<ServedDocuments> servedDocuments;
-    //TODO this will be stored in database while reading sequence number of OCMC for Case man reference number
-    private final String legacyCaseReference = REFERENCE_NUMBER;
+    private final String legacyCaseReference;
     private final ServiceLocation serviceLocationToRespondentSolicitor1;
     private final ServedDocumentFiles servedDocumentFiles;
     private final String servedDocumentsOther;
+
+    @Valid
+    private final CloseClaim withdrawClaim;
+
+    @Valid
+    private final CloseClaim discontinueClaim;
 }
