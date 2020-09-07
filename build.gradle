@@ -204,7 +204,7 @@ repositories {
     url "https://dl.bintray.com/hmcts/hmcts-maven"
   }
   maven {
-    url  "http://repo.spring.io/milestone"
+    url "http://repo.spring.io/milestone"
   }
 }
 
@@ -288,6 +288,10 @@ dependencies {
   implementation group: 'org.camunda.bpm', name: 'camunda-engine-rest-core', version: '7.13.0'
   implementation group: 'com.fasterxml.jackson.module', name: 'jackson-module-kotlin', version: '2.11.2'
 
+  // JAX-B dependencies for JDK 9+
+  implementation group: 'jakarta.xml.bind', name: 'jakarta.xml.bind-api', version: '2.3.3'
+  implementation group: 'org.glassfish.jaxb', name: 'jaxb-runtime', version: '2.3.3'
+
   testImplementation group: 'org.mockito', name: 'mockito-core', version: '3.5.7'
   testImplementation group: 'org.mockito', name: 'mockito-junit-jupiter', version: '3.5.10'
 
@@ -336,7 +340,7 @@ bootJar {
 }
 
 wrapper {
-    distributionType = Wrapper.DistributionType.ALL
+  distributionType = Wrapper.DistributionType.ALL
 }
 
 project.ext {
