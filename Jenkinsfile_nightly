@@ -17,8 +17,12 @@ properties([
 @Library("Infrastructure")
 
 def type = "java"
-def product = "rpe"
-def component = "spring-boot-template"
+def product = "unspec"
+def component = "service"
+
+//def type = "java"
+//def product = "rpe"
+//def component = "spring-boot-template"
 
 withNightlyPipeline(type, product, component) {
   enableFullFunctionalTest()
