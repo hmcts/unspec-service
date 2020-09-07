@@ -22,6 +22,8 @@ import uk.gov.hmcts.reform.unspec.helpers.CaseDetailsConverter;
 import uk.gov.hmcts.reform.unspec.model.CaseData;
 import uk.gov.hmcts.reform.unspec.model.ClaimValue;
 import uk.gov.hmcts.reform.unspec.model.common.Element;
+import uk.gov.hmcts.reform.unspec.model.common.dynamiclist.DynamicList;
+import uk.gov.hmcts.reform.unspec.model.common.dynamiclist.DynamicListElement;
 import uk.gov.hmcts.reform.unspec.model.documents.CaseDocument;
 import uk.gov.hmcts.reform.unspec.model.documents.Document;
 import uk.gov.hmcts.reform.unspec.service.DeadlinesCalculator;
@@ -122,6 +124,7 @@ class CreateClaimCallbackHandlerTest extends BaseCallbackHandlerTest {
     @Nested
 
     class SecondMidEventCallback {
+
         @Test
         void shouldReturnExpectedClaimSubtypeDynamicList_whenClaimTypeIsPersonalInjury() {
             Map<String, Object> data = new HashMap<>();
@@ -133,18 +136,51 @@ class CreateClaimCallbackHandlerTest extends BaseCallbackHandlerTest {
             assertThat(response.getData())
                 .isEqualTo(
                     Map.of("claimType", PERSONAL_INJURY,
-                           "claimSubtype", ClaimSubtype.getDynamicList(PERSONAL_INJURY)));
+                           "claimSubtype", ClaimSubtype.getDynamicList(PERSONAL_INJURY, null)));
         }
 
         @Test
         void shouldNotReturnClaimSubtypeDynamicList_whenClaimTypeIsNotPersonalInjury() {
             Map<String, Object> data = new HashMap<>();
             data.put("claimType", CLINICAL_NEGLIGENCE);
+
             CallbackParams params = callbackParamsOf(data, CallbackType.MID_SECONDARY);
 
             var response = (AboutToStartOrSubmitCallbackResponse) handler.handle(params);
 
             assertThat(response.getData()).isEqualTo(Map.of("claimType", CLINICAL_NEGLIGENCE));
+        }
+
+        @Test
+        void shouldRemoveSelectedClaimSubtype_whenClaimTypeWasChanged() {
+            Map<String, Object> data = new HashMap<>();
+            data.put("claimType", CLINICAL_NEGLIGENCE);
+            data.put("claimSubtype", ClaimSubtype.getDynamicList(PERSONAL_INJURY, null));
+            CallbackParams params = callbackParamsOf(data, CallbackType.MID_SECONDARY);
+
+            var response = (AboutToStartOrSubmitCallbackResponse) handler.handle(params);
+
+            assertThat(response.getData()).isEqualTo(Map.of("claimType", CLINICAL_NEGLIGENCE));
+        }
+
+        @Test
+        void shouldKeepSelectedClaimSubtype_whenClaimTypeWasNotChanged() {
+            Map<String, Object> data = new HashMap<>();
+            DynamicList claimSubtypeList = ClaimSubtype.getDynamicList(PERSONAL_INJURY, null)
+                .toBuilder()
+                .value(DynamicListElement.builder().code("ROAD_ACCIDENT").label("Road Accident").build())
+                .build();
+            data.put("claimType", PERSONAL_INJURY);
+            data.put("claimSubtype", claimSubtypeList);
+
+            CallbackParams params = callbackParamsOf(data, CallbackType.MID_SECONDARY);
+
+            var response = (AboutToStartOrSubmitCallbackResponse) handler.handle(params);
+
+            assertThat(response.getData())
+                .isEqualTo(
+                    Map.of("claimType", PERSONAL_INJURY,
+                           "claimSubtype", claimSubtypeList));
         }
     }
 

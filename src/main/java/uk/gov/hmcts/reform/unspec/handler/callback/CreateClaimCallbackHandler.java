@@ -19,6 +19,7 @@ import uk.gov.hmcts.reform.unspec.helpers.CaseDetailsConverter;
 import uk.gov.hmcts.reform.unspec.model.CaseData;
 import uk.gov.hmcts.reform.unspec.model.ClaimValue;
 import uk.gov.hmcts.reform.unspec.model.Party;
+import uk.gov.hmcts.reform.unspec.model.common.dynamiclist.DynamicList;
 import uk.gov.hmcts.reform.unspec.model.documents.CaseDocument;
 import uk.gov.hmcts.reform.unspec.model.documents.DocumentType;
 import uk.gov.hmcts.reform.unspec.repositories.ReferenceNumberRepository;
@@ -57,6 +58,7 @@ public class CreateClaimCallbackHandler extends CallbackHandler {
     public static final String RESPONDENT = "respondent1";
     public static final String CLAIMANT = "applicant1";
     public static final String CLAIM_TYPE = "claimType";
+    public static final String CLAIM_SUBTYPE = "claimSubtype";
 
     private final ObjectMapper mapper;
     private final SealedClaimFormGenerator sealedClaimFormGenerator;
@@ -105,8 +107,10 @@ public class CreateClaimCallbackHandler extends CallbackHandler {
     private CallbackResponse populateClaimSubtypeList(CallbackParams callbackParams) {
         Map<String, Object> data = callbackParams.getRequest().getCaseDetails().getData();
         ClaimType claimType = mapper.convertValue(data.get(CLAIM_TYPE), ClaimType.class);
+        DynamicList claimSubtypesList = mapper.convertValue(data.get(CLAIM_SUBTYPE), DynamicList.class);
+        data.remove("claimSubtype");
         if (claimType == PERSONAL_INJURY) {
-            data.put("claimSubtype", ClaimSubtype.getDynamicList(claimType));
+            data.put("claimSubtype", ClaimSubtype.getDynamicList(claimType, claimSubtypesList));
         }
 
         return AboutToStartOrSubmitCallbackResponse.builder()

@@ -6,6 +6,7 @@ import uk.gov.hmcts.reform.unspec.model.common.dynamiclist.DynamicList;
 import uk.gov.hmcts.reform.unspec.model.common.dynamiclist.DynamicListElement;
 
 import java.util.Arrays;
+import java.util.Optional;
 
 import static java.util.stream.Collectors.toList;
 import static uk.gov.hmcts.reform.unspec.enums.ClaimType.PERSONAL_INJURY;
@@ -24,12 +25,18 @@ public enum ClaimSubtype {
     private final ClaimType claimType;
     private final String label;
 
-    public static DynamicList getDynamicList(ClaimType claimType) {
+    public static DynamicList getDynamicList(ClaimType claimType, DynamicList claimSubtypesList) {
+        var listItems = Arrays.stream(values())
+            .filter(claimSubtype -> claimSubtype.getClaimType() == claimType)
+            .map(ClaimSubtype::toDynamicListElement)
+            .collect(toList());
+
         return DynamicList.builder()
-            .listItems(Arrays.stream(values())
-                           .filter(claimSubtype -> claimSubtype.getClaimType() == claimType)
-                           .map(ClaimSubtype::toDynamicListElement)
-                           .collect(toList()))
+            .value(Optional.ofNullable(claimSubtypesList)
+                       .map(DynamicList::getValue)
+                       .filter(listItems::contains)
+                       .orElse(DynamicListElement.builder().build()))
+            .listItems(listItems)
             .build();
     }
 

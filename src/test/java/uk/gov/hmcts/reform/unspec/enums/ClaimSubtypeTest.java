@@ -10,6 +10,7 @@ import uk.gov.hmcts.reform.unspec.model.common.dynamiclist.DynamicListElement;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static uk.gov.hmcts.reform.unspec.enums.ClaimType.PERSONAL_INJURY;
 
 class ClaimSubtypeTest {
 
@@ -18,7 +19,7 @@ class ClaimSubtypeTest {
 
         @Test
         void shouldReturnCorrectDynamicList_whenClaimTypeIsPersonalInjury() {
-            DynamicList dynamicList = ClaimSubtype.getDynamicList(ClaimType.PERSONAL_INJURY);
+            DynamicList dynamicList = ClaimSubtype.getDynamicList(PERSONAL_INJURY, null);
 
             assertThat(dynamicList).isEqualTo(DynamicList.builder().listItems(List.of(
                 dynamicListElement("ROAD_ACCIDENT", "Road Accident"),
@@ -27,7 +28,7 @@ class ClaimSubtypeTest {
                 dynamicListElement("HOLIDAY_ILLNESS", "Holiday illness"),
                 dynamicListElement("DISEASE_CLAIM", "Disease claim"),
                 dynamicListElement("PERSONAL_INJURY_OTHER", "Personal Injury - other")
-            )).build());
+            )).value(DynamicListElement.builder().build()).build());
         }
 
         @ParameterizedTest()
@@ -35,7 +36,37 @@ class ClaimSubtypeTest {
             value = ClaimType.class,
             names = {"CLINICAL_NEGLIGENCE", "BREACH_OF_CONTRACT", "CONSUMER_CREDIT", "OTHER"})
         void shouldReturnEmptyDynamicList_whenClaimTypeIsNotPersonalInjury(ClaimType claimType) {
-            DynamicList dynamicList = ClaimSubtype.getDynamicList(claimType);
+            DynamicList dynamicList = ClaimSubtype.getDynamicList(claimType, null);
+
+            assertThat(dynamicList.getListItems()).isEmpty();
+        }
+
+        @Test
+        void shouldKeepSelectedValue_whenItBelongsToClaimType() {
+            DynamicList previouslyPopulatedDynamicList = DynamicList.builder()
+                .value(dynamicListElement("WORK_ACCIDENT", "Work accident"))
+                .build();
+            DynamicList dynamicList = ClaimSubtype.getDynamicList(PERSONAL_INJURY, previouslyPopulatedDynamicList);
+
+            assertThat(dynamicList).isEqualTo(DynamicList.builder().listItems(List.of(
+                dynamicListElement("ROAD_ACCIDENT", "Road Accident"),
+                dynamicListElement("WORK_ACCIDENT", "Work accident"),
+                dynamicListElement("PUBLIC_LIABILITY", "Public liability accident"),
+                dynamicListElement("HOLIDAY_ILLNESS", "Holiday illness"),
+                dynamicListElement("DISEASE_CLAIM", "Disease claim"),
+                dynamicListElement("PERSONAL_INJURY_OTHER", "Personal Injury - other")
+            )).value(dynamicListElement("WORK_ACCIDENT", "Work accident")).build());
+        }
+
+        @ParameterizedTest()
+        @EnumSource(
+            value = ClaimType.class,
+            names = {"CLINICAL_NEGLIGENCE", "BREACH_OF_CONTRACT", "CONSUMER_CREDIT", "OTHER"})
+        void shouldRemoveSelectedValue_whenItDoesNotBelongToClaimType(ClaimType claimType) {
+            DynamicList previouslyPopulatedDynamicList = DynamicList.builder()
+                .value(dynamicListElement("WORK_ACCIDENT", "Work accident"))
+                .build();
+            DynamicList dynamicList = ClaimSubtype.getDynamicList(claimType, previouslyPopulatedDynamicList);
 
             assertThat(dynamicList.getListItems()).isEmpty();
         }
