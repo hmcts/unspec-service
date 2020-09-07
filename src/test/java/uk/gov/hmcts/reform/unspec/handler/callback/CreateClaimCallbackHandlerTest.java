@@ -20,7 +20,6 @@ import uk.gov.hmcts.reform.unspec.callback.CallbackParams;
 import uk.gov.hmcts.reform.unspec.callback.CallbackType;
 import uk.gov.hmcts.reform.unspec.config.ClaimIssueConfiguration;
 import uk.gov.hmcts.reform.unspec.config.MockDatabaseConfiguration;
-import uk.gov.hmcts.reform.unspec.enums.ClaimSubtype;
 import uk.gov.hmcts.reform.unspec.helpers.CaseDetailsConverter;
 import uk.gov.hmcts.reform.unspec.model.CaseData;
 import uk.gov.hmcts.reform.unspec.model.ClaimValue;
@@ -48,7 +47,6 @@ import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 import static uk.gov.hmcts.reform.unspec.callback.CallbackType.MID_SECONDARY;
 import static uk.gov.hmcts.reform.unspec.enums.AllocatedTrack.SMALL_CLAIM;
-import static uk.gov.hmcts.reform.unspec.enums.ClaimType.CLINICAL_NEGLIGENCE;
 import static uk.gov.hmcts.reform.unspec.enums.ClaimType.PERSONAL_INJURY;
 import static uk.gov.hmcts.reform.unspec.handler.callback.CreateClaimCallbackHandler.CONFIRMATION_SUMMARY;
 import static uk.gov.hmcts.reform.unspec.helpers.DateFormatHelper.DATE_TIME_AT;
@@ -130,7 +128,6 @@ class CreateClaimCallbackHandlerTest extends BaseCallbackHandlerTest {
     @Nested
     class MidSecondaryEventCallback {
 
-<<<<<<< HEAD
         @ParameterizedTest
         @ValueSource(strings = {"individualDateOfBirth", "soleTraderDateOfBirth"})
         void shouldReturnError_whenDateOfBirthIsInTheFuture(String dateOfBirthField) {
@@ -160,38 +157,6 @@ class CreateClaimCallbackHandlerTest extends BaseCallbackHandlerTest {
         }
     }
 
-    @Nested
-
-    class MidTertiaryEventCallback {
-
-        @Test
-        void shouldReturnExpectedClaimSubtypeDynamicList_whenClaimTypeIsPersonalInjury() {
-            Map<String, Object> data = new HashMap<>();
-            data.put("claimType", PERSONAL_INJURY);
-            CallbackParams params = callbackParamsOf(data, CallbackType.MID_TERTIARY);
-
-            var response = (AboutToStartOrSubmitCallbackResponse) handler.handle(params);
-
-            assertThat(response.getData())
-                .isEqualTo(
-                    Map.of("claimType", PERSONAL_INJURY,
-                           "claimSubtype", ClaimSubtype.getDynamicList(PERSONAL_INJURY)));
-        }
-
-        @Test
-        void shouldNotReturnClaimSubtypeDynamicList_whenClaimTypeIsNotPersonalInjury() {
-            Map<String, Object> data = new HashMap<>();
-            data.put("claimType", CLINICAL_NEGLIGENCE);
-
-            CallbackParams params = callbackParamsOf(data, CallbackType.MID_TERTIARY);
-
-            var response = (AboutToStartOrSubmitCallbackResponse) handler.handle(params);
-
-            assertThat(response.getData()).isEqualTo(Map.of("claimType", CLINICAL_NEGLIGENCE));
-        }
-    }
-
-    @Nested
     class AboutToSubmitCallback {
 
         @Test

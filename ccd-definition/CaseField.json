@@ -71,9 +71,10 @@
   {
     "LiveFrom": "01/01/2017",
     "CaseTypeID": "UNSPECIFIED_CLAIMS",
-    "ID": "claimSubtype",
-    "Label": " ",
-    "FieldType": "DynamicList",
+    "ID": "personalInjuryType",
+    "Label": "What type of personal injury is this?",
+    "FieldType": "FixedRadioList",
+    "FieldTypeParameter": "PersonalInjuryType",
     "SecurityClassification": "Public"
   },
   {
