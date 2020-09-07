@@ -1,6 +1,7 @@
 package uk.gov.hmcts.reform.unspec.service;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import uk.gov.hmcts.reform.authorisation.generators.AuthTokenGenerator;
 import uk.gov.hmcts.reform.ccd.client.CoreCaseDataApi;
@@ -18,6 +19,7 @@ import static uk.gov.hmcts.reform.unspec.CaseDefinitionConstants.JURISDICTION;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class CoreCaseDataService {
 
     private final IdamClient idamClient;
