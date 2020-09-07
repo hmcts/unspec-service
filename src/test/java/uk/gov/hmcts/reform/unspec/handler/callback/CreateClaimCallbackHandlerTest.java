@@ -157,6 +157,7 @@ class CreateClaimCallbackHandlerTest extends BaseCallbackHandlerTest {
         }
     }
 
+    @Nested
     class AboutToSubmitCallback {
 
         @Test
