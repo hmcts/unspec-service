@@ -1,6 +1,15 @@
 #!groovy
 
 properties([
+  pipelineTriggers([cron('H 05 * * *')]),
+  parameters([
+    string(name: 'FRONTEND_URL', defaultValue: 'https://manage-case.aat.platform.hmcts.net',
+      description: 'The URL you want to run the full functional tests against'),
+  ])
+])
+
+
+properties([
   // H allow predefined but random minute see https://en.wikipedia.org/wiki/Cron#Non-standard_characters
   pipelineTriggers([cron('H 05 * * *')])
 ])
@@ -12,5 +21,10 @@ def product = "rpe"
 def component = "spring-boot-template"
 
 withNightlyPipeline(type, product, component) {
+  enableFullFunctionalTest()
   enableSlackNotifications('#rpe-build-notices')
+}
+
+after('fullFunctionalTest') {
+  archiveArtifacts allowEmptyArchive: true, artifacts: 'output/**/*'
 }
