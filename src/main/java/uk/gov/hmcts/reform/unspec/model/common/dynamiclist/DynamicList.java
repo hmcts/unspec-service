@@ -7,7 +7,7 @@ import lombok.Data;
 import java.util.List;
 
 @Data
-@Builder(toBuilder = true)
+@Builder
 public class DynamicList {
 
     private DynamicListElement value;
