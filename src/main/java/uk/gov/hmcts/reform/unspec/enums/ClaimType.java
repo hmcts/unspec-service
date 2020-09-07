@@ -6,20 +6,20 @@ import lombok.RequiredArgsConstructor;
 @Getter
 @RequiredArgsConstructor
 public enum ClaimType {
-    PERSONAL_INJURY(SubType.PERSONAL_INJURY),
-    CLINICAL_NEGLIGENCE(SubType.PERSONAL_INJURY),
-    BREACH_OF_CONTRACT(SubType.OTHER),
-    CONSUMER_CREDIT(SubType.OTHER),
-    OTHER(SubType.OTHER);
+    PERSONAL_INJURY(FeeType.LOWER),
+    CLINICAL_NEGLIGENCE(FeeType.LOWER),
+    BREACH_OF_CONTRACT(FeeType.HIGHER),
+    CONSUMER_CREDIT(FeeType.HIGHER),
+    OTHER(FeeType.HIGHER);
 
-    private final SubType subType;
+    private final FeeType feeType;
 
-    public enum SubType {
-        PERSONAL_INJURY,
-        OTHER
+    public enum FeeType {
+        LOWER,
+        HIGHER
     }
 
-    public boolean isPersonalInjury() {
-        return this.subType.equals(SubType.PERSONAL_INJURY);
+    public boolean isLowerFeeType() {
+        return this.feeType.equals(FeeType.LOWER);
     }
 }

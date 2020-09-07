@@ -22,7 +22,7 @@ class ClaimSubtypeTest {
             DynamicList dynamicList = ClaimSubtype.getDynamicList(PERSONAL_INJURY, null);
 
             assertThat(dynamicList).isEqualTo(DynamicList.builder().listItems(List.of(
-                dynamicListElement("ROAD_ACCIDENT", "Road Accident"),
+                dynamicListElement("ROAD_ACCIDENT", "Road accident"),
                 dynamicListElement("WORK_ACCIDENT", "Work accident"),
                 dynamicListElement("PUBLIC_LIABILITY", "Public liability accident"),
                 dynamicListElement("HOLIDAY_ILLNESS", "Holiday illness"),
@@ -49,7 +49,7 @@ class ClaimSubtypeTest {
             DynamicList dynamicList = ClaimSubtype.getDynamicList(PERSONAL_INJURY, previouslyPopulatedDynamicList);
 
             assertThat(dynamicList).isEqualTo(DynamicList.builder().listItems(List.of(
-                dynamicListElement("ROAD_ACCIDENT", "Road Accident"),
+                dynamicListElement("ROAD_ACCIDENT", "Road accident"),
                 dynamicListElement("WORK_ACCIDENT", "Work accident"),
                 dynamicListElement("PUBLIC_LIABILITY", "Public liability accident"),
                 dynamicListElement("HOLIDAY_ILLNESS", "Holiday illness"),

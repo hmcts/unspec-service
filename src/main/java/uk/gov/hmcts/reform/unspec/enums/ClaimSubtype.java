@@ -15,7 +15,7 @@ import static uk.gov.hmcts.reform.unspec.enums.ClaimType.PERSONAL_INJURY;
 @RequiredArgsConstructor
 public enum ClaimSubtype {
 
-    ROAD_ACCIDENT(PERSONAL_INJURY, "Road Accident"),
+    ROAD_ACCIDENT(PERSONAL_INJURY, "Road accident"),
     WORK_ACCIDENT(PERSONAL_INJURY, "Work accident"),
     PUBLIC_LIABILITY(PERSONAL_INJURY, "Public liability accident"),
     HOLIDAY_ILLNESS(PERSONAL_INJURY, "Holiday illness"),

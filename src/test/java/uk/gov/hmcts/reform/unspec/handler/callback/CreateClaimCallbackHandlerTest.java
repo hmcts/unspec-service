@@ -168,7 +168,7 @@ class CreateClaimCallbackHandlerTest extends BaseCallbackHandlerTest {
             Map<String, Object> data = new HashMap<>();
             DynamicList claimSubtypeList = ClaimSubtype.getDynamicList(PERSONAL_INJURY, null)
                 .toBuilder()
-                .value(DynamicListElement.builder().code("ROAD_ACCIDENT").label("Road Accident").build())
+                .value(DynamicListElement.builder().code("ROAD_ACCIDENT").label("Road accident").build())
                 .build();
             data.put("claimType", PERSONAL_INJURY);
             data.put("claimSubtype", claimSubtypeList);
