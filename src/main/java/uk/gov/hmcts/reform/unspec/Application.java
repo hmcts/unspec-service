@@ -9,7 +9,9 @@ import org.springframework.cloud.openfeign.EnableFeignClients;
 @SpringBootApplication
 @EnableCamundaRestClient
 @EnableCircuitBreaker
-@EnableFeignClients(basePackages = {"uk.gov.hmcts.reform.idam.client", "uk.gov.hmcts.reform.unspec"})
+@EnableFeignClients(basePackages = {"uk.gov.hmcts.reform.idam.client",
+    "uk.gov.hmcts.reform.unspec",
+    "uk.gov.service.notify"})
 @SuppressWarnings("HideUtilityClassConstructor") // Spring needs a constructor, its not a utility class
 public class Application {
 
