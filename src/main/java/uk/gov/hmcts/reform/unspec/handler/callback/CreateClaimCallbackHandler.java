@@ -80,6 +80,16 @@ public class CreateClaimCallbackHandler extends CallbackHandler {
         return EVENTS;
     }
 
+    private CallbackResponse validateDateOfBirth(CallbackParams callbackParams) {
+        Map<String, Object> data = callbackParams.getRequest().getCaseDetails().getData();
+        Party claimant = mapper.convertValue(data.get(CLAIMANT), Party.class);
+        List<String> errors = dateOfBirthValidator.validate(claimant);
+
+        return AboutToStartOrSubmitCallbackResponse.builder()
+            .errors(errors)
+            .build();
+    }
+
     private CallbackResponse validateClaimValues(CallbackParams callbackParams) {
         CaseData caseData = caseDetailsConverter.toCaseData(callbackParams.getRequest().getCaseDetails());
         List<String> errors = new ArrayList<>();
@@ -97,16 +107,6 @@ public class CreateClaimCallbackHandler extends CallbackHandler {
 
         return AboutToStartOrSubmitCallbackResponse.builder()
             .data(data)
-            .errors(errors)
-            .build();
-    }
-
-    private CallbackResponse validateDateOfBirth(CallbackParams callbackParams) {
-        Map<String, Object> data = callbackParams.getRequest().getCaseDetails().getData();
-        Party claimant = mapper.convertValue(data.get(CLAIMANT), Party.class);
-        List<String> errors = dateOfBirthValidator.validate(claimant);
-
-        return AboutToStartOrSubmitCallbackResponse.builder()
             .errors(errors)
             .build();
     }
