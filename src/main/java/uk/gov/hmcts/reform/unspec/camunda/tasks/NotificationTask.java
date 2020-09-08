@@ -13,7 +13,6 @@ import uk.gov.hmcts.reform.unspec.service.CoreCaseDataService;
 
 import java.util.HashMap;
 
-
 @Slf4j
 @Service
 public class NotificationTask implements ExternalTaskHandler {
@@ -34,8 +33,8 @@ public class NotificationTask implements ExternalTaskHandler {
 
         try {
             String topic = externalTask.getTopicName();
-            String ccdId = (String) externalTask.getAllVariables().get("ccdId");
-            String eventId = (String) externalTask.getAllVariables().get("eventId");
+            String ccdId = (String) externalTask.getAllVariables().get("ccd_case_Id");
+            String eventId = (String) externalTask.getAllVariables().get("caseEvent");
             VariableMap variables = Variables.createVariables();
             // work on task for that topic
 
