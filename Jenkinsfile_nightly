@@ -37,7 +37,6 @@ withNightlyPipeline(type, product, component) {
   env.PROXY_SERVER = params.PROXY_SERVER
 
   enableFullFunctionalTest()
-  enableSlackNotifications('#rpe-build-notices')
 }
 
 before('fullFunctionalTest') {
