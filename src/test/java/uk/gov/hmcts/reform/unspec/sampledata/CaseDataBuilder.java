@@ -1,11 +1,15 @@
 package uk.gov.hmcts.reform.unspec.sampledata;
 
 import uk.gov.hmcts.reform.unspec.enums.ClaimType;
+import uk.gov.hmcts.reform.unspec.enums.DefendantResponseType;
+import uk.gov.hmcts.reform.unspec.enums.ResponseIntention;
 import uk.gov.hmcts.reform.unspec.enums.ServedDocuments;
+import uk.gov.hmcts.reform.unspec.enums.YesOrNo;
 import uk.gov.hmcts.reform.unspec.model.CaseData;
 import uk.gov.hmcts.reform.unspec.model.ClaimValue;
 import uk.gov.hmcts.reform.unspec.model.CourtLocation;
 import uk.gov.hmcts.reform.unspec.model.Party;
+import uk.gov.hmcts.reform.unspec.model.ResponseDocument;
 import uk.gov.hmcts.reform.unspec.model.ServedDocumentFiles;
 import uk.gov.hmcts.reform.unspec.model.ServiceLocation;
 import uk.gov.hmcts.reform.unspec.model.ServiceMethod;
@@ -17,10 +21,13 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import static uk.gov.hmcts.reform.unspec.enums.ResponseIntention.FULL_DEFENCE;
 import static uk.gov.hmcts.reform.unspec.enums.ServedDocuments.CLAIM_FORM;
 import static uk.gov.hmcts.reform.unspec.enums.ServedDocuments.OTHER;
 import static uk.gov.hmcts.reform.unspec.enums.ServedDocuments.PARTICULARS_OF_CLAIM;
 import static uk.gov.hmcts.reform.unspec.enums.ServiceLocationType.BUSINESS;
+import static uk.gov.hmcts.reform.unspec.enums.YesOrNo.NO;
+import static uk.gov.hmcts.reform.unspec.enums.YesOrNo.YES;
 
 public class CaseDataBuilder {
 
@@ -47,6 +54,24 @@ public class CaseDataBuilder {
     private LocalDate serviceDateToRespondentSolicitor1;
     private LocalDateTime serviceDateTimeToRespondentSolicitor1;
     private StatementOfTruth applicant1ServiceStatementOfTruthToRespondentSolicitor1;
+    //Acknowledge Service
+    private ResponseIntention respondent1ClaimResponseIntentionType;
+    // Request Extension
+    private LocalDate respondentSolicitor1claimResponseExtensionProposedDeadline;
+    private YesOrNo respondentSolicitor1claimResponseExtensionAlreadyAgreed;
+    private String respondentSolicitor1claimResponseExtensionReason;
+    // Respond To Extension Request
+    private YesOrNo respondentSolicitor1claimResponseExtensionAccepted;
+    private YesOrNo respondentSolicitor1claimResponseExtensionCounter;
+    private LocalDate respondentSolicitor1claimResponseExtensionCounterDate;
+    private String respondentSolicitor1claimResponseExtensionRejectionReason;
+    // Defendant Response
+    private DefendantResponseType respondent1ClaimResponseType;
+    private ResponseDocument respondent1ClaimResponseDocument;
+    // Claimant Response
+    private YesOrNo applicant1ProceedWithClaim;
+    private ResponseDocument applicant1DefenceResponseDocument;
+    private String applicant1NotProceedingReason;
 
     public CaseDataBuilder atStateClaimDraft() {
         solicitorReferences = SolicitorReferences.builder()
@@ -80,7 +105,6 @@ public class CaseDataBuilder {
 
     public CaseDataBuilder atStateServiceConfirmed() {
         atStateClaimCreated();
-
         deemedServiceDateToRespondentSolicitor1 = LocalDate.now();
         respondentSolicitor1ResponseDeadline = LocalDate.now().plusDays(14).atTime(23, 59, 59);
         serviceMethodToRespondentSolicitor1 = ServiceMethodBuilder.builder().email().build();
@@ -94,36 +118,38 @@ public class CaseDataBuilder {
 
     public CaseDataBuilder atStateRespondedToClaim() {
         atStateServiceConfirmed();
-
-        //TODO: add additional fields for this state here
+        respondent1ClaimResponseType = DefendantResponseType.FULL_DEFENCE;
+        respondent1ClaimResponseDocument = ResponseDocument.builder().build();
         return this;
     }
 
     public CaseDataBuilder atStateFullDefence() {
         atStateRespondedToClaim();
-
-        //TODO: add additional fields for this state here
+        applicant1ProceedWithClaim = YES;
+        applicant1DefenceResponseDocument = ResponseDocument.builder().build();
         return this;
     }
 
     public CaseDataBuilder atStateServiceAcknowledge() {
         atStateServiceConfirmed();
-
-        //TODO: add additional fields for this state here
+        respondent1ClaimResponseIntentionType = FULL_DEFENCE;
         return this;
     }
 
     public CaseDataBuilder atStateExtensionRequested() {
         atStateServiceAcknowledge();
-
-        //TODO: add additional fields for this state here
+        respondentSolicitor1claimResponseExtensionProposedDeadline = LocalDate.now().plusDays(21);
+        respondentSolicitor1claimResponseExtensionAlreadyAgreed = NO;
+        respondentSolicitor1claimResponseExtensionReason = "Need little more time";
         return this;
     }
 
     public CaseDataBuilder atStateExtensionResponded() {
         atStateExtensionRequested();
-
-        //TODO: add additional fields for this state here
+        respondentSolicitor1claimResponseExtensionAccepted = NO;
+        respondentSolicitor1claimResponseExtensionCounter = YES;
+        respondentSolicitor1claimResponseExtensionCounterDate = LocalDate.now().plusDays(19);
+        respondentSolicitor1claimResponseExtensionRejectionReason = "This seems reasonable";
         return this;
     }
 
@@ -158,7 +184,29 @@ public class CaseDataBuilder {
             .applicant1ServiceStatementOfTruthToRespondentSolicitor1(
                 applicant1ServiceStatementOfTruthToRespondentSolicitor1
             )
-            //
+            // Acknowledge Service
+            .respondent1ClaimResponseIntentionType(respondent1ClaimResponseIntentionType)
+            // Request Extension
+            .respondentSolicitor1claimResponseExtensionProposedDeadline(
+                respondentSolicitor1claimResponseExtensionProposedDeadline
+            )
+            .respondentSolicitor1claimResponseExtensionAlreadyAgreed(
+                respondentSolicitor1claimResponseExtensionAlreadyAgreed
+            )
+            .respondentSolicitor1claimResponseExtensionReason(respondentSolicitor1claimResponseExtensionReason)
+            // Respond To Extension Request
+            .respondentSolicitor1claimResponseExtensionAccepted(respondentSolicitor1claimResponseExtensionAccepted)
+            .respondentSolicitor1claimResponseExtensionCounter(respondentSolicitor1claimResponseExtensionCounter)
+            .respondentSolicitor1claimResponseExtensionRejectionReason(
+                respondentSolicitor1claimResponseExtensionRejectionReason
+            )
+            // Defendant Response
+            .respondent1ClaimResponseType(respondent1ClaimResponseType)
+            .respondent1ClaimResponseDocument(respondent1ClaimResponseDocument)
+            // Claimant Response
+            .applicant1ProceedWithClaim(applicant1ProceedWithClaim)
+            .applicant1DefenceResponseDocument(applicant1DefenceResponseDocument)
+            .applicant1NotProceedingReason(applicant1NotProceedingReason)
             .build();
     }
 }

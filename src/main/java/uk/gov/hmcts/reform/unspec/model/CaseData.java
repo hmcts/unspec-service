@@ -3,7 +3,10 @@ package uk.gov.hmcts.reform.unspec.model;
 import lombok.Builder;
 import lombok.Data;
 import uk.gov.hmcts.reform.unspec.enums.ClaimType;
+import uk.gov.hmcts.reform.unspec.enums.DefendantResponseType;
+import uk.gov.hmcts.reform.unspec.enums.ResponseIntention;
 import uk.gov.hmcts.reform.unspec.enums.ServedDocuments;
+import uk.gov.hmcts.reform.unspec.enums.YesOrNo;
 import uk.gov.hmcts.reform.unspec.model.common.Element;
 import uk.gov.hmcts.reform.unspec.model.documents.CaseDocument;
 import uk.gov.hmcts.reform.unspec.validation.groups.ConfirmServiceDateGroup;
@@ -51,6 +54,23 @@ public class CaseData {
     private final ServiceLocation serviceLocationToRespondentSolicitor1;
     private final ServedDocumentFiles servedDocumentFiles;
     private final String servedDocumentsOther;
+    private final ResponseIntention respondent1ClaimResponseIntentionType;
+
+    private final LocalDate respondentSolicitor1claimResponseExtensionProposedDeadline;
+    private final YesOrNo respondentSolicitor1claimResponseExtensionAlreadyAgreed;
+    private final String respondentSolicitor1claimResponseExtensionReason;
+
+    private final YesOrNo respondentSolicitor1claimResponseExtensionAccepted;
+    private final YesOrNo respondentSolicitor1claimResponseExtensionCounter;
+    private final LocalDate respondentSolicitor1claimResponseExtensionCounterDate;
+    private final String respondentSolicitor1claimResponseExtensionRejectionReason;
+
+    private final DefendantResponseType respondent1ClaimResponseType;
+    private final ResponseDocument respondent1ClaimResponseDocument;
+
+    private final YesOrNo applicant1ProceedWithClaim;
+    private final ResponseDocument applicant1DefenceResponseDocument;
+    private final String applicant1NotProceedingReason;
 
     @Valid
     private final CloseClaim withdrawClaim;
