@@ -67,6 +67,7 @@ public class CaseData {
 
     private final DefendantResponseType respondent1ClaimResponseType;
     private final ResponseDocument respondent1ClaimResponseDocument;
+    private final LocalDateTime applicantSolicitorResponseDeadlineToRespondentSolicitor1;
 
     private final YesOrNo applicant1ProceedWithClaim;
     private final ResponseDocument applicant1DefenceResponseDocument;

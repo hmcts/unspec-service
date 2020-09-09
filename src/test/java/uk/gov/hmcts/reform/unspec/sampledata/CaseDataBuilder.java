@@ -68,6 +68,7 @@ public class CaseDataBuilder {
     // Defendant Response
     private DefendantResponseType respondent1ClaimResponseType;
     private ResponseDocument respondent1ClaimResponseDocument;
+    private LocalDateTime applicantSolicitorResponseDeadlineToRespondentSolicitor1;
     // Claimant Response
     private YesOrNo applicant1ProceedWithClaim;
     private ResponseDocument applicant1DefenceResponseDocument;
@@ -119,6 +120,7 @@ public class CaseDataBuilder {
     public CaseDataBuilder atStateRespondedToClaim() {
         atStateServiceConfirmed();
         respondent1ClaimResponseType = DefendantResponseType.FULL_DEFENCE;
+        applicantSolicitorResponseDeadlineToRespondentSolicitor1 = LocalDateTime.now().plusDays(120);
         respondent1ClaimResponseDocument = ResponseDocument.builder()
             .file(DocumentBuilder.builder().documentName("defendant-response.pdf").build())
             .build();
@@ -207,6 +209,9 @@ public class CaseDataBuilder {
             // Defendant Response
             .respondent1ClaimResponseType(respondent1ClaimResponseType)
             .respondent1ClaimResponseDocument(respondent1ClaimResponseDocument)
+            .applicantSolicitorResponseDeadlineToRespondentSolicitor1(
+                applicantSolicitorResponseDeadlineToRespondentSolicitor1
+            )
             // Claimant Response
             .applicant1ProceedWithClaim(applicant1ProceedWithClaim)
             .applicant1DefenceResponseDocument(applicant1DefenceResponseDocument)
