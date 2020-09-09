@@ -30,6 +30,11 @@ public class CaseData {
     private final ClaimValue claimValue;
     private final ClaimType claimType;
     private final StatementOfTruth applicantSolicitor1ClaimStatementOfTruth;
+    private final LocalDateTime claimSubmittedDateTime;
+    private final LocalDate claimIssuedDate;
+    private LocalDateTime confirmationOfServiceDeadline;
+    private final String legacyCaseReference;
+
     private final StatementOfTruth applicant1ServiceStatementOfTruthToRespondentSolicitor1;
     private final List<Element<CaseDocument>> systemGeneratedCaseDocuments;
     private final ServiceMethod serviceMethodToRespondentSolicitor1;
@@ -40,12 +45,9 @@ public class CaseData {
     @PastOrPresent(message = "The date must not be in the future", groups = ConfirmServiceDateGroup.class)
     private final LocalDateTime serviceDateTimeToRespondentSolicitor1;
 
-    private final LocalDateTime claimSubmittedDateTime;
-    private final LocalDate claimIssuedDate;
     private final LocalDate deemedServiceDateToRespondentSolicitor1;
     private final LocalDateTime respondentSolicitor1ResponseDeadline;
     private final List<ServedDocuments> servedDocuments;
-    private final String legacyCaseReference;
     private final ServiceLocation serviceLocationToRespondentSolicitor1;
     private final ServedDocumentFiles servedDocumentFiles;
     private final String servedDocumentsOther;
