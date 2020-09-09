@@ -85,7 +85,7 @@ public class CaseDataBuilder {
             .lowerValue(BigDecimal.valueOf(10000))
             .higherValue(BigDecimal.valueOf(100000))
             .build();
-        claimType = ClaimType.PERSONAL_INJURY_WORK;
+        claimType = ClaimType.PERSONAL_INJURY;
         applicant1 = PartyBuilder.builder().individual().build();
         respondent1 = PartyBuilder.builder().soleTrader().build();
         applicantSolicitor1ClaimStatementOfTruth = StatementOfTruthBuilder.builder().build();
@@ -119,14 +119,18 @@ public class CaseDataBuilder {
     public CaseDataBuilder atStateRespondedToClaim() {
         atStateServiceConfirmed();
         respondent1ClaimResponseType = DefendantResponseType.FULL_DEFENCE;
-        respondent1ClaimResponseDocument = ResponseDocument.builder().build();
+        respondent1ClaimResponseDocument = ResponseDocument.builder()
+            .file(DocumentBuilder.builder().documentName("defendant-response.pdf").build())
+            .build();
         return this;
     }
 
     public CaseDataBuilder atStateFullDefence() {
         atStateRespondedToClaim();
         applicant1ProceedWithClaim = YES;
-        applicant1DefenceResponseDocument = ResponseDocument.builder().build();
+        applicant1DefenceResponseDocument = ResponseDocument.builder()
+            .file(DocumentBuilder.builder().documentName("claimant-response.pdf").build())
+            .build();
         return this;
     }
 

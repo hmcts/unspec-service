@@ -2,7 +2,7 @@ package uk.gov.hmcts.reform.unspec.model;
 
 import lombok.Builder;
 import lombok.Data;
-import org.w3c.dom.Document;
+import uk.gov.hmcts.reform.unspec.model.documents.Document;
 
 @Data
 @Builder
