@@ -95,9 +95,7 @@ public class CaseDataBuilder {
             .higherValue(BigDecimal.valueOf(100000))
             .build();
         claimType = ClaimType.PERSONAL_INJURY;
-        claimTypeOther = "Other";
         personalInjuryType = ROAD_ACCIDENT;
-        personalInjuryTypeOther = "Other";
         applicant1 = PartyBuilder.builder().individual().build();
         respondent1 = PartyBuilder.builder().soleTrader().build();
         applicantSolicitor1ClaimStatementOfTruth = StatementOfTruthBuilder.builder().build();
