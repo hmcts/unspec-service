@@ -2,8 +2,10 @@ package uk.gov.hmcts.reform.unspec.model;
 
 import lombok.Builder;
 import lombok.Data;
+import uk.gov.hmcts.reform.unspec.enums.AllocatedTrack;
 import uk.gov.hmcts.reform.unspec.enums.ClaimType;
 import uk.gov.hmcts.reform.unspec.enums.DefendantResponseType;
+import uk.gov.hmcts.reform.unspec.enums.PersonalInjuryType;
 import uk.gov.hmcts.reform.unspec.enums.ResponseIntention;
 import uk.gov.hmcts.reform.unspec.enums.ServedDocuments;
 import uk.gov.hmcts.reform.unspec.enums.YesOrNo;
@@ -32,11 +34,15 @@ public class CaseData {
     private final Party respondent2;
     private final ClaimValue claimValue;
     private final ClaimType claimType;
+    private final String claimTypeOther;
+    private final PersonalInjuryType personalInjuryType;
+    private final String personalInjuryTypeOther;
     private final StatementOfTruth applicantSolicitor1ClaimStatementOfTruth;
     private final LocalDateTime claimSubmittedDateTime;
     private final LocalDate claimIssuedDate;
     private LocalDateTime confirmationOfServiceDeadline;
     private final String legacyCaseReference;
+    private final AllocatedTrack allocatedTrack;
 
     private final StatementOfTruth applicant1ServiceStatementOfTruthToRespondentSolicitor1;
     private final List<Element<CaseDocument>> systemGeneratedCaseDocuments;

@@ -1,7 +1,9 @@
 package uk.gov.hmcts.reform.unspec.sampledata;
 
+import uk.gov.hmcts.reform.unspec.enums.AllocatedTrack;
 import uk.gov.hmcts.reform.unspec.enums.ClaimType;
 import uk.gov.hmcts.reform.unspec.enums.DefendantResponseType;
+import uk.gov.hmcts.reform.unspec.enums.PersonalInjuryType;
 import uk.gov.hmcts.reform.unspec.enums.ResponseIntention;
 import uk.gov.hmcts.reform.unspec.enums.ServedDocuments;
 import uk.gov.hmcts.reform.unspec.enums.YesOrNo;
@@ -21,6 +23,8 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import static uk.gov.hmcts.reform.unspec.enums.AllocatedTrack.FAST_CLAIM;
+import static uk.gov.hmcts.reform.unspec.enums.PersonalInjuryType.ROAD_ACCIDENT;
 import static uk.gov.hmcts.reform.unspec.enums.ResponseIntention.FULL_DEFENCE;
 import static uk.gov.hmcts.reform.unspec.enums.ServedDocuments.CLAIM_FORM;
 import static uk.gov.hmcts.reform.unspec.enums.ServedDocuments.OTHER;
@@ -38,11 +42,15 @@ public class CaseDataBuilder {
     private Party respondent1;
     private ClaimValue claimValue;
     private ClaimType claimType;
+    private String claimTypeOther;
+    private PersonalInjuryType personalInjuryType;
+    private String personalInjuryTypeOther;
     private StatementOfTruth applicantSolicitor1ClaimStatementOfTruth;
     private LocalDateTime claimSubmittedDateTime;
     private LocalDate claimIssuedDate;
     private String legacyCaseReference;
     private LocalDateTime confirmationOfServiceDeadline;
+    private AllocatedTrack allocatedTrack;
     // Confirm Service
     private LocalDate deemedServiceDateToRespondentSolicitor1;
     private LocalDateTime respondentSolicitor1ResponseDeadline;
@@ -87,6 +95,9 @@ public class CaseDataBuilder {
             .higherValue(BigDecimal.valueOf(100000))
             .build();
         claimType = ClaimType.PERSONAL_INJURY;
+        claimTypeOther = "Other";
+        personalInjuryType = ROAD_ACCIDENT;
+        personalInjuryTypeOther = "Other";
         applicant1 = PartyBuilder.builder().individual().build();
         respondent1 = PartyBuilder.builder().soleTrader().build();
         applicantSolicitor1ClaimStatementOfTruth = StatementOfTruthBuilder.builder().build();
@@ -100,7 +111,7 @@ public class CaseDataBuilder {
         claimIssuedDate = LocalDate.now();
         confirmationOfServiceDeadline = claimIssuedDate.plusMonths(4).atTime(23, 59, 59);
         legacyCaseReference = "000LR001";
-
+        allocatedTrack = FAST_CLAIM;
         return this;
     }
 
@@ -170,10 +181,14 @@ public class CaseDataBuilder {
             .claimIssuedDate(claimIssuedDate)
             .legacyCaseReference(legacyCaseReference)
             .confirmationOfServiceDeadline(confirmationOfServiceDeadline)
+            .allocatedTrack(allocatedTrack)
             .solicitorReferences(solicitorReferences)
             .courtLocation(courtLocation)
             .claimValue(claimValue)
             .claimType(claimType)
+            .claimTypeOther(claimTypeOther)
+            .personalInjuryType(personalInjuryType)
+            .personalInjuryTypeOther(personalInjuryTypeOther)
             .applicant1(applicant1)
             .respondent1(respondent1)
             .applicantSolicitor1ClaimStatementOfTruth(applicantSolicitor1ClaimStatementOfTruth)
