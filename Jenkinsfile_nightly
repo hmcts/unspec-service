@@ -50,3 +50,4 @@ before('fullFunctionalTest') {
 after('fullFunctionalTest') {
   archiveArtifacts allowEmptyArchive: true, artifacts: 'output/**/*'
 }
+
