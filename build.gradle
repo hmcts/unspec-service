@@ -314,7 +314,9 @@ dependencies {
 
   testImplementation group: 'com.h2database', name: 'h2', version: '1.4.200'
 
-  testImplementation group: 'io.rest-assured', name: 'rest-assured'
+  testImplementation group: 'io.rest-assured', name: 'rest-assured', {
+    exclude group: 'io.rest-assured', module: 'xml-path'
+  }
 
   testCompile group: 'org.springframework.statemachine', name: 'spring-statemachine-test', version: versions.springStatemachine
 

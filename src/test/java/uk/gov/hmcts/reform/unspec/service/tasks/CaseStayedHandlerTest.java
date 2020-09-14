@@ -1,4 +1,4 @@
-package uk.gov.hmcts.reform.unspec.service;
+package uk.gov.hmcts.reform.unspec.service.tasks;
 
 import org.camunda.bpm.client.task.ExternalTask;
 import org.camunda.bpm.client.task.ExternalTaskService;
@@ -12,6 +12,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import uk.gov.hmcts.reform.ccd.client.model.CaseDetails;
 import uk.gov.hmcts.reform.unspec.event.MoveCaseToStayedEvent;
 import uk.gov.hmcts.reform.unspec.service.search.CaseStayedSearchService;
+import uk.gov.hmcts.reform.unspec.service.tasks.handler.CaseStayedHandler;
 
 import java.util.List;
 import java.util.Map;
@@ -21,7 +22,7 @@ import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(SpringExtension.class)
-class CaseStayedFinderTest {
+class CaseStayedHandlerTest {
 
     @Mock
     private ExternalTask mockExternalTask;
@@ -36,7 +37,7 @@ class CaseStayedFinderTest {
     private ApplicationEventPublisher applicationEventPublisher;
 
     @InjectMocks
-    private CaseStayedFinder caseStayedFinder;
+    private CaseStayedHandler caseStayedFinder;
 
     @BeforeEach
     void init() {

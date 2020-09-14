@@ -1,4 +1,4 @@
-package uk.gov.hmcts.reform.unspec.service;
+package uk.gov.hmcts.reform.unspec.service.tasks.handler;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -16,7 +16,7 @@ import java.util.List;
 @Slf4j
 @RequiredArgsConstructor
 @Component
-public class CaseStayedFinder implements ExternalTaskHandler {
+public class CaseStayedHandler implements ExternalTaskHandler {
 
     private final CaseStayedSearchService caseSearchService;
     private final ApplicationEventPublisher applicationEventPublisher;
