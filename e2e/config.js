@@ -1,6 +1,12 @@
+/*global process*/
+
 const defaultPassword = 'Password12';
 
 module.exports = {
+  proxyServer: process.env.PROXY_SERVER,
+  ccdDataStoreUrl: process.env.CCD_DATA_STORE_URL || 'http://localhost:4452',
+  serviceAuthProviderUrl: process.env.SERVICE_AUTH_PROVIDER_API_BASE_URL || 'http://localhost:4502',
+  s2sSecret: process.env.S2S_SECRET || 'AABBCCDDEEFFGGHH',
   solicitorUser: {
     password: defaultPassword,
     email: 'solicitor@example.com'
