@@ -118,8 +118,6 @@ ccd:
         ELASTIC_SEARCH_ENABLED: true
       keyVaults:
       ingressHost: ccd-data-store-api-${SERVICE_FQDN}
-    elastic:
-      enabled: true
   ccd-definition-store-api:
     java:
       imagePullPolicy: Always

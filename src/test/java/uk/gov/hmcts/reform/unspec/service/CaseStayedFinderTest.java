@@ -24,10 +24,10 @@ import static org.mockito.Mockito.when;
 class CaseStayedFinderTest {
 
     @Mock
-    private ExternalTask externalTask;
+    private ExternalTask mockExternalTask;
 
     @Mock
-    private ExternalTaskService service;
+    private ExternalTaskService externalTaskService;
 
     @Mock
     private CaseStayedSearchService searchService;
@@ -40,8 +40,8 @@ class CaseStayedFinderTest {
 
     @BeforeEach
     void init() {
-        when(externalTask.getTopicName()).thenReturn("test");
-        when(externalTask.getWorkerId()).thenReturn("worker");
+        when(mockExternalTask.getTopicName()).thenReturn("test");
+        when(mockExternalTask.getWorkerId()).thenReturn("worker");
     }
 
     @Test
@@ -55,31 +55,18 @@ class CaseStayedFinderTest {
 
         when(searchService.getCases()).thenReturn(caseDetails);
 
-        caseStayedFinder.execute(externalTask, service);
+        caseStayedFinder.execute(mockExternalTask, externalTaskService);
 
         verify(applicationEventPublisher).publishEvent(new MoveCaseToStayedEvent(caseId));
-        verify(service).complete(externalTask);
+        verify(externalTaskService).complete(mockExternalTask);
     }
 
     @Test
     void shouldNotEmitMoveCaseToStayedEvent_WhenNoCasesFound() {
         when(searchService.getCases()).thenReturn(List.of());
 
-        caseStayedFinder.execute(externalTask, service);
+        caseStayedFinder.execute(mockExternalTask, externalTaskService);
 
         verifyNoInteractions(applicationEventPublisher);
-    }
-
-    @Test
-    void shouldCatchError_whenException() {
-        String errorMessage = "there was an error";
-
-        when(searchService.getCases()).thenAnswer(invocation -> {
-            throw new Exception(errorMessage);
-        });
-
-        caseStayedFinder.execute(externalTask, service);
-
-        verify(service).handleFailure(externalTask, "worker", errorMessage, 0, 0L);
     }
 }

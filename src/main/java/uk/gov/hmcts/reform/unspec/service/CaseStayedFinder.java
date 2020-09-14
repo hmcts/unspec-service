@@ -24,23 +24,18 @@ public class CaseStayedFinder implements ExternalTaskHandler {
     @Override
     public void execute(ExternalTask externalTask, ExternalTaskService externalTaskService) {
         final String taskName = externalTask.getTopicName();
+
         log.info("Job {} started", taskName);
 
-        try {
-            List<CaseDetails> cases = caseSearchService.getCases();
+        List<CaseDetails> cases = caseSearchService.getCases();
 
-            log.info("Job '{}' found {} case(s)", taskName, cases.size());
+        log.info("Job '{}' found {} case(s)", taskName, cases.size());
 
-            cases.forEach(caseDetails -> applicationEventPublisher.publishEvent(
-                new MoveCaseToStayedEvent(caseDetails.getId())));
+        cases.forEach(caseDetails -> applicationEventPublisher.publishEvent(
+            new MoveCaseToStayedEvent(caseDetails.getId())));
 
-        } catch (Exception e) {
-            externalTaskService.handleFailure(externalTask, externalTask.getWorkerId(), e.getMessage(), 0, 0L);
-            log.error("Job '{}' errored due to {}", taskName, e.getMessage());
-        }
-
-        // complete task
         externalTaskService.complete(externalTask);
+
         log.info("Job '{}' finished", taskName);
     }
 }

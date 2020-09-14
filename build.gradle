@@ -293,6 +293,7 @@ dependencies {
 
   testImplementation group: 'org.mockito', name: 'mockito-core', version: '3.5.10'
   testImplementation group: 'org.mockito', name: 'mockito-junit-jupiter', version: '3.5.10'
+  testImplementation group: 'org.mockito', name: 'mockito-inline', version: '3.5.10'
 
   testAnnotationProcessor group: 'org.projectlombok', name: 'lombok', version: versions.lombok
   testCompileOnly group: 'org.projectlombok', name: 'lombok', version: versions.lombok
@@ -303,7 +304,9 @@ dependencies {
     exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
   }
 
-  testImplementation 'org.mockito:mockito-inline:3.5.10'
+  testImplementation group: 'org.camunda.bpm.extension.springboot', name: 'camunda-bpm-spring-boot-starter-test', version: '2.2.0'
+
+  testImplementation group: 'com.h2database', name: 'h2', version: '1.4.200'
 
   testImplementation group: 'io.rest-assured', name: 'rest-assured'
 

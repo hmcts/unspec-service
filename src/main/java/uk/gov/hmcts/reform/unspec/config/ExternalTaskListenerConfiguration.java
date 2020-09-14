@@ -1,7 +1,6 @@
 package uk.gov.hmcts.reform.unspec.config;
 
 import org.camunda.bpm.client.ExternalTaskClient;
-import org.camunda.bpm.client.backoff.ExponentialBackoffStrategy;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -15,13 +14,14 @@ public class ExternalTaskListenerConfiguration {
         this.baseUrl = baseUrl;
     }
 
+    //TODO: define a workerId, max tasks and a sensible backOffStrategy - i.e how long should I wait between long
+    // polling, currently it is the default exponential back off strategy (double the value until it reaches 60000ms).
+    // Default max tasks is 10, and lock time per task is 20000L. Do we need to think about authentication?
+
     @Bean
     public ExternalTaskClient client() {
         return ExternalTaskClient.create()
             .baseUrl(baseUrl)
-            .lockDuration(6000)
-            .backoffStrategy(new ExponentialBackoffStrategy(500L, 2, 30000L))
-            .maxTasks(1)
             .build();
     }
 }
