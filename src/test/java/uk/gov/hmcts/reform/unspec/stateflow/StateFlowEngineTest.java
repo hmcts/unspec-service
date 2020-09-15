@@ -1,10 +1,9 @@
 package uk.gov.hmcts.reform.unspec.stateflow;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.jackson.JacksonAutoConfiguration;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -12,12 +11,11 @@ import uk.gov.hmcts.reform.ccd.client.model.CaseDetails;
 import uk.gov.hmcts.reform.unspec.helpers.CaseDetailsConverter;
 import uk.gov.hmcts.reform.unspec.model.CaseData;
 import uk.gov.hmcts.reform.unspec.sampledata.CaseDataBuilder;
+import uk.gov.hmcts.reform.unspec.sampledata.CaseDetailsBuilder;
 import uk.gov.hmcts.reform.unspec.stateflow.model.State;
 
-import java.util.Map;
-
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static uk.gov.hmcts.reform.unspec.enums.CaseState.CREATED;
 import static uk.gov.hmcts.reform.unspec.stateflow.StateFlowEngine.FlowState.CLAIM_ISSUED;
 import static uk.gov.hmcts.reform.unspec.stateflow.StateFlowEngine.FlowState.CLAIM_STAYED;
 import static uk.gov.hmcts.reform.unspec.stateflow.StateFlowEngine.FlowState.DRAFT;
@@ -189,19 +187,30 @@ class StateFlowEngineTest {
     }
 
     @Nested
-    @SuppressWarnings("unchecked")
     class HasTransitionedTo {
 
-        @Test
-        void shouldReturnTrue_whenCaseDataAtStateExtensionRequested() {
-            CaseData caseData = CaseDataBuilder.builder().atStateExtensionRequested().build();
-            ObjectMapper mapper = new ObjectMapper()
-                .registerModule(new JavaTimeModule()).disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
-            CaseDetails caseDetails = CaseDetails.builder()
-                .data(mapper.convertValue(caseData, Map.class))
-                .state("CREATED")
+        @ParameterizedTest
+        @CsvSource({
+            "true,EXTENSION_REQUESTED",
+            "true,SERVICE_ACKNOWLEDGED",
+            "true,SERVICE_CONFIRMED",
+            "true,CLAIM_ISSUED",
+            "true,DRAFT",
+            "false,EXTENSION_RESPONDED",
+            "false,RESPONDED_TO_CLAIM",
+            "false,FULL_DEFENCE",
+            "false,CLAIM_STAYED"
+        })
+        void shouldReturnValidResult_whenCaseDataAtStateExtensionRequested(
+            boolean expected,
+            StateFlowEngine.FlowState state
+        ) {
+            CaseDetails caseDetails = CaseDetailsBuilder.builder()
+                .state(CREATED)
+                .data(CaseDataBuilder.builder().atStateExtensionRequested().build())
                 .build();
-            assertTrue(stateFlowEngine.hasTransitionedTo(caseDetails, EXTENSION_REQUESTED));
+
+            assertThat(stateFlowEngine.hasTransitionedTo(caseDetails, state)).isEqualTo(expected);
         }
     }
 }

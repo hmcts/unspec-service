@@ -13,12 +13,12 @@ public class PredicateUtils {
     }
 
     public static Predicate<CaseData> claimantIssueClaim = caseData ->
-        caseData.getClaimIssuedDate() != null &&
-            caseData.getLegacyCaseReference() != null;
+        caseData.getClaimIssuedDate() != null
+            && caseData.getLegacyCaseReference() != null;
 
     public static Predicate<CaseData> claimantConfirmService = caseData ->
-        caseData.getDeemedServiceDateToRespondentSolicitor1() != null &&
-            caseData.getRespondentSolicitor1ResponseDeadline() != null;
+        caseData.getDeemedServiceDateToRespondentSolicitor1() != null
+            && caseData.getRespondentSolicitor1ResponseDeadline() != null;
 
     public static Predicate<CaseData> defendantAcknowledgeService = caseData ->
         caseData.getRespondent1ClaimResponseIntentionType() != null;
@@ -33,8 +33,8 @@ public class PredicateUtils {
         caseData.getRespondentSolicitor1claimResponseExtensionAccepted() != null;
 
     public static Predicate<CaseData> claimantRespondToDefence = caseData ->
-        caseData.getApplicant1ProceedWithClaim() != null &&
-            caseData.getApplicant1DefenceResponseDocument() != null;
+        caseData.getApplicant1ProceedWithClaim() != null
+            && caseData.getApplicant1DefenceResponseDocument() != null;
 
     public static Predicate<CaseData> schedulerStayClaim = caseData ->
         caseData.getCcdState() == STAYED;
