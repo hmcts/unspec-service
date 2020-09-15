@@ -13,6 +13,8 @@ import uk.gov.hmcts.reform.unspec.service.search.CaseStayedSearchService;
 
 import java.util.List;
 
+import static uk.gov.hmcts.reform.unspec.helpers.ExponentialRetryTimeoutHelper.calculateExponentialRetryTimeout;
+
 @Slf4j
 @RequiredArgsConstructor
 @Component
@@ -24,18 +26,31 @@ public class CaseStayedHandler implements ExternalTaskHandler {
     @Override
     public void execute(ExternalTask externalTask, ExternalTaskService externalTaskService) {
         final String taskName = externalTask.getTopicName();
-
         log.info("Job {} started", taskName);
 
-        List<CaseDetails> cases = caseSearchService.getCases();
+        try {
+            List<CaseDetails> cases = caseSearchService.getCases();
 
-        log.info("Job '{}' found {} case(s)", taskName, cases.size());
+            log.info("Job '{}' found {} case(s)", taskName, cases.size());
 
-        cases.forEach(caseDetails -> applicationEventPublisher.publishEvent(
-            new MoveCaseToStayedEvent(caseDetails.getId())));
+            cases.forEach(caseDetails -> applicationEventPublisher.publishEvent(
+                new MoveCaseToStayedEvent(caseDetails.getId())));
+
+        } catch (Exception e) {
+            Integer retries = externalTask.getRetries();
+
+            externalTaskService.handleFailure(
+                externalTask,
+                externalTask.getWorkerId(),
+                e.getMessage(),
+                retries - 1,
+                calculateExponentialRetryTimeout(500, 3, retries)
+            );
+
+            log.error("Job '{}' errored due to {}", taskName, e.getMessage());
+        }
 
         externalTaskService.complete(externalTask);
-
         log.info("Job '{}' finished", taskName);
     }
 }
