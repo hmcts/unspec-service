@@ -36,7 +36,6 @@ public abstract class BaseCallbackHandlerTest {
                                            CallbackType type,
                                            CallbackVersion version,
                                            Map<Params, Object> params
-
     ) {
         return CallbackParams.builder()
             .type(type)
