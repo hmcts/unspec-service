@@ -13,11 +13,11 @@ module.exports = {
     const userIdCookie = await I.grabCookie('__userid__');
 
     const s2sTokenRequestBody = {
-      microservice: 'unspec_service',
-      oneTimePassword: totp(config.s2sSecret)
+      microservice: config.s2s.microservice,
+      oneTimePassword: totp(config.s2s.secret)
     };
 
-    const s2sToken = await fetch(`${config.serviceAuthProviderUrl}/lease`, {
+    const s2sToken = await fetch(`${config.s2s.authProviderUrl}/lease`, {
       method: 'POST',
       body: JSON.stringify(s2sTokenRequestBody),
       headers: {'Content-Type': 'application/json'},
@@ -32,7 +32,8 @@ module.exports = {
   },
 
   getCreateClaimToken: async apiData => {
-    return fetch(`${config.ccdDataStoreUrl}/caseworkers/${apiData.userId}/jurisdictions/CIVIL/case-types/UNSPECIFIED_CLAIMS/event-triggers/CREATE_CLAIM/token`, {
+    return fetch(`${config.ccdDataStoreUrl}/caseworkers/${apiData.userId}/jurisdictions/CIVIL/`
+    + 'case-types/UNSPECIFIED_CLAIMS/event-triggers/CREATE_CLAIM/token', {
       headers: {
         'Content-Type': 'application/json',
         'Authorization': 'Bearer ' + apiData.authToken,
@@ -43,7 +44,8 @@ module.exports = {
   },
 
   validate: async (apiData, pageId, caseData) => {
-    return fetch(`${config.ccdDataStoreUrl}/caseworkers/${apiData.userId}/jurisdictions/CIVIL/case-types/UNSPECIFIED_CLAIMS/validate?pageId=${pageId}`, {
+    return fetch(`${config.ccdDataStoreUrl}/caseworkers/${apiData.userId}/jurisdictions/CIVIL/`
+    + `case-types/UNSPECIFIED_CLAIMS/validate?pageId=${pageId}`, {
       method: 'POST',
       body: JSON.stringify({
         data: caseData,

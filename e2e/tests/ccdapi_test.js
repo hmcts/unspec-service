@@ -2,15 +2,14 @@ const config = require('../config.js');
 const apiTesting = require('../apitesting/apiTesting');
 const assert = require('assert').strict;
 
-Feature('CCD API tests @apitesting');
+Feature('CCD API tests @smoke-tests');
 
-Scenario('Sign in as solicitor user', async (I) => {
+Scenario('Create case', async (I) => {
   await I.login(config.solicitorUser);
   const apiData = await apiTesting.getApiData();
   apiData.ccdEventToken = await apiTesting.getCreateClaimToken(apiData);
 
   await validateReferences(apiData);
-  //TODO: validate claim value
   await createClaim(apiData);
 });
 
