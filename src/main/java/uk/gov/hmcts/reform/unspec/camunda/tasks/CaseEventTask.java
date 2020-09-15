@@ -15,47 +15,51 @@ import java.util.HashMap;
 
 @Slf4j
 @Service
-public class NotificationTask implements ExternalTaskHandler {
+public class CaseEventTask implements ExternalTaskHandler {
 
     private final CoreCaseDataService coreCaseDataService;
     private final ExternalTaskClient externalTaskClient;
 
-    public NotificationTask(CoreCaseDataService coreCaseDataService, ExternalTaskClient externalTaskClient) {
+    public CaseEventTask(CoreCaseDataService coreCaseDataService, ExternalTaskClient externalTaskClient) {
         this.coreCaseDataService = coreCaseDataService;
         this.externalTaskClient = externalTaskClient;
 
-        this.externalTaskClient.subscribe("sendMail").handler(this).open();
-    }
+        this.externalTaskClient
+            .subscribe("processCaseEvent")
+            .handler(this).open();
 
+    }
 
     @Override
     public void execute(ExternalTask externalTask, ExternalTaskService externalTaskService) {
-
+        Integer retries = externalTask.getRetries();
+        if (retries == null || retries == 0) {
+            retries = 3;
+        }
         try {
-            String topic = externalTask.getTopicName();
-            String ccdId = (String) externalTask.getAllVariables().get("ccd_case_Id");
-            String eventId = (String) externalTask.getAllVariables().get("caseEvent");
+            String ccdId = (String) externalTask.getAllVariables().get("CCD_ID");
+            String eventId = (String) externalTask.getAllVariables().get("CASE_EVENT");
             VariableMap variables = Variables.createVariables();
+            log.info("external task id {}", externalTask.getId());
+            log.info("process instance id {}", externalTask.getProcessInstanceId());
+            log.info("activity instance id {}", externalTask.getActivityInstanceId());
+            log.info("activity id {}", externalTask.getActivityId());
+            log.info("execution id {}", externalTask.getExecutionId());
             // work on task for that topic
 
-            log.info("coming here topic {}", topic);
             log.info("coming here case {}", ccdId);
             log.info("coming here event {}", eventId);
             coreCaseDataService.triggerEvent(Long.valueOf(ccdId), CaseEvent.valueOf(eventId));
-//                if (success) {
             externalTaskService.complete(externalTask, new HashMap<>(variables));
-//                } else {
-//                    // if the work was not successful, mark it as failed
-//                    externalTaskService.handleFailure(
-//                        task.getId(),
-//                        "externalWorkerId",
-//                        "Address could not be validated: Address database not reachable",
-//                        1, 10L * 60L * 1000L
-//                    );
-//                }
-        } catch (Exception e) {
-            //... handle exception
-        }
 
+        } catch (Exception e) {
+            externalTaskService.handleFailure(
+                externalTask,
+                "externalWorkerId",
+                "Address could not be validated: Address database not reachable",
+                retries - 1,
+                60L * 1000L
+            );
+        }
     }
 }

@@ -84,6 +84,10 @@ reference:
     enabled: true
     migration: false
 
+notifications:
+  govNotifyApiKey: ${GOV_NOTIFY_API_KEY:}
+  emailTemplates:
+    claimantClaimIssued: "1e55aae6-879e-4e63-93ce-cf4cf93636f2"
 ---
 
 spring:
@@ -133,6 +137,8 @@ docmosis:
   tornado:
     url: http://localhost:5433
 
+notifications:
+  govNotifyApiKey:  localtest-a8b1617c-8e15-49aa-a8d3-a27a243f3c45-42eab675-5173-4405-87aa-1b5110c35cee
 ---
 
 spring:
@@ -186,3 +192,5 @@ feign:
         url: http://fake/engine-rest/
       remoteExternalTaskService:
         url: http://fake/engine-rest/
+notifications:
+  govNotifyApiKey: some-gov-uk-notify-api-key
