@@ -9,6 +9,8 @@ import uk.gov.hmcts.reform.unspec.model.CaseData;
 
 import java.util.Map;
 
+import static uk.gov.hmcts.reform.unspec.enums.CaseState.CREATED;
+
 @SuppressWarnings("unchecked")
 public class CaseDetailsBuilder {
 
@@ -29,6 +31,13 @@ public class CaseDetailsBuilder {
 
     public CaseDetailsBuilder data(CaseData caseData) {
         this.data = mapper.convertValue(caseData, Map.class);
+        return this;
+    }
+
+    public CaseDetailsBuilder atStateExtensionRequested() {
+        CaseData caseData = CaseDataBuilder.builder().atStateExtensionRequested().build();
+        this.data = mapper.convertValue(caseData, Map.class);
+        this.state = CREATED.name();
         return this;
     }
 

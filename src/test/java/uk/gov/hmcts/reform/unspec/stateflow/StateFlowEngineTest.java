@@ -15,7 +15,6 @@ import uk.gov.hmcts.reform.unspec.sampledata.CaseDetailsBuilder;
 import uk.gov.hmcts.reform.unspec.stateflow.model.State;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static uk.gov.hmcts.reform.unspec.enums.CaseState.CREATED;
 import static uk.gov.hmcts.reform.unspec.stateflow.StateFlowEngine.FlowState.CLAIM_ISSUED;
 import static uk.gov.hmcts.reform.unspec.stateflow.StateFlowEngine.FlowState.CLAIM_STAYED;
 import static uk.gov.hmcts.reform.unspec.stateflow.StateFlowEngine.FlowState.DRAFT;
@@ -206,8 +205,7 @@ class StateFlowEngineTest {
             StateFlowEngine.FlowState state
         ) {
             CaseDetails caseDetails = CaseDetailsBuilder.builder()
-                .state(CREATED)
-                .data(CaseDataBuilder.builder().atStateExtensionRequested().build())
+                .atStateExtensionRequested()
                 .build();
 
             assertThat(stateFlowEngine.hasTransitionedTo(caseDetails, state)).isEqualTo(expected);
