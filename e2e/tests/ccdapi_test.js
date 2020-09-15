@@ -104,10 +104,10 @@ const createClaim = async apiData => {
   const responseBody = await response.json();
 
   assert.equal(response.status, 201);
-  assert.equal(responseBody.hasOwnProperty('id'), true);
+  assert.notEqual(Object.prototype.hasOwnProperty.call(responseBody, 'id'), true);
   assert.equal(responseBody.state, 'CREATED');
   //TODO: validate case_data
-  assert.equal(responseBody.callback_response_status_code, 200)
+  assert.equal(responseBody.callback_response_status_code, 200);
   assert.equal(responseBody.after_submit_callback_response.confirmation_header.includes('# Your claim has been issued\n## Claim number'), true);
   assert.equal(responseBody.after_submit_callback_response.confirmation_body.includes('Follow these steps to serve a claim'), true);
 

@@ -86,4 +86,4 @@ module.exports = {
       agent: PROXY_AGENT
     });
   }
-}
+};
