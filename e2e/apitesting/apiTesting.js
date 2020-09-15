@@ -4,18 +4,24 @@ const config = require('../config.js');
 const totp = require('totp-generator');
 const fetch = require('node-fetch');
 const HttpProxyAgent = require('http-proxy-agent');
+const HttpsProxyAgent = require('https-proxy-agent');
 
-const PROXY_AGENT = config.proxyServer ? new HttpProxyAgent(`http://${config.proxyServer}`) : null;
+const PROXY_AGENT = isHttp => config.proxyServer ? isHttp ? new HttpProxyAgent(`http://${config.proxyServer}`) : new HttpsProxyAgent(`http://${config.proxyServer}`) : null;
 
 module.exports = {
   getApiData: async () => {
-    const authCookie = await I.grabCookie('__auth__');
-    const userIdCookie = await I.grabCookie('__userid__');
+    const authToken = await I.grabCookie('__auth__').then(cookie => cookie.value);
 
-    console.log('AUTHcookie');
-    console.log(authCookie);
-    console.log('USERIDcookie');
-    console.log(userIdCookie);
+    const userId = await fetch(`${config.idamApiUrl}/o/userinfo`, {
+      method: 'POST',
+      body: {},
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded',
+        Authorization: `Bearer ${authToken}`
+      },
+      agent: PROXY_AGENT(false)
+    }).then(response => response.json()).then(data => data.uid);
+
     const s2sTokenRequestBody = {
       microservice: config.s2s.microservice,
       oneTimePassword: totp(config.s2s.secret)
@@ -25,15 +31,12 @@ module.exports = {
       method: 'POST',
       body: JSON.stringify(s2sTokenRequestBody),
       headers: {'Content-Type': 'application/json'},
-      agent: PROXY_AGENT
+      agent: PROXY_AGENT(true)
     }).then(response => response.text());
 
-
-    console.log('s2stoken');
-    console.log(s2sToken);
     return {
-      authToken: authCookie.value,
-      userId: userIdCookie.value,
+      authToken: authToken,
+      userId: userId,
       s2sToken: s2sToken,
     };
   },
@@ -46,7 +49,7 @@ module.exports = {
         'Authorization': 'Bearer ' + apiData.authToken,
         'ServiceAuthorization': apiData.s2sToken
       },
-      agent: PROXY_AGENT
+      agent: PROXY_AGENT(true)
     }).then(response => response.json()).then(data => data.token);
   },
 
@@ -69,7 +72,7 @@ module.exports = {
         'Authorization': `Bearer ${apiData.authToken}`,
         'ServiceAuthorization': apiData.s2sToken
       },
-      agent: PROXY_AGENT
+      agent: PROXY_AGENT(true)
     });
   },
 
@@ -92,7 +95,7 @@ module.exports = {
         'Authorization': `Bearer ${apiData.authToken}`,
         'ServiceAuthorization': apiData.s2sToken
       },
-      agent: PROXY_AGENT
+      agent: PROXY_AGENT(true)
     });
   }
 };

@@ -24,6 +24,7 @@
     "puppeteer": "^4.0.1",
     "node-fetch": "^2.6.1",
     "totp-generator": "^0.0.7",
-    "http-proxy-agent": "^4.0.1"
+    "http-proxy-agent": "^4.0.1",
+    "https-proxy-agent": "^5.0.0"
   }
 }

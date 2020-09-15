@@ -2,7 +2,7 @@ const config = require('../config.js');
 const apiTesting = require('../apitesting/apiTesting');
 const assert = require('assert').strict;
 
-Feature('CCD API tests @smoke-tests');
+Feature('CCD API tests @smoke-tests @apitesting');
 
 Scenario('Create case', async (I) => {
   await I.login(config.solicitorUser);
@@ -96,14 +96,14 @@ const createClaim = async apiData => {
     applicantSolicitor1ClaimStatementOfTruth: {
       name: 'john doe',
       role: 'test'
-    }
+    },
   };
 
   let response = await apiTesting.createClaim(apiData, caseData);
   const responseBody = await response.json();
 
   assert.equal(response.status, 201);
-  assert.notEqual(Object.prototype.hasOwnProperty.call(responseBody, 'id'), true);
+  assert.equal(Object.prototype.hasOwnProperty.call(responseBody, 'id'), true);
   assert.equal(responseBody.state, 'CREATED');
   //TODO: validate case_data
   assert.equal(responseBody.callback_response_status_code, 200);

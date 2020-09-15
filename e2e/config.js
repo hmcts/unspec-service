@@ -4,6 +4,7 @@ const defaultPassword = 'Password12';
 
 module.exports = {
   proxyServer: process.env.PROXY_SERVER,
+  idamApiUrl: process.env.IDAM_API_URL || 'http://localhost:5000',
   ccdDataStoreUrl: process.env.CCD_DATA_STORE_URL || 'http://localhost:4452',
   s2s: {
     microservice: 'unspec_service',
