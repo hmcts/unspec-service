@@ -21,7 +21,7 @@ public class ExponentialRetryTimeoutHelper {
                                                         Integer totalRetries,
                                                         Integer remainingRetries) {
         if (remainingRetries > 0 && remainingRetries <= totalRetries) {
-            return (long) (startValue * Math.pow(2, totalRetries - remainingRetries));
+            return (long) (startValue * Math.pow(2, (double) totalRetries - (double) remainingRetries));
         }
         return 0L;
     }

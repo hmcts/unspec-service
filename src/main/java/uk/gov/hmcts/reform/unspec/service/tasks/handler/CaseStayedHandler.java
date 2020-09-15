@@ -37,14 +37,14 @@ public class CaseStayedHandler implements ExternalTaskHandler {
                 new MoveCaseToStayedEvent(caseDetails.getId())));
 
         } catch (Exception e) {
-            Integer retries = externalTask.getRetries();
+            Integer remainingRetries = externalTask.getRetries();
 
             externalTaskService.handleFailure(
                 externalTask,
                 externalTask.getWorkerId(),
                 e.getMessage(),
-                retries - 1,
-                calculateExponentialRetryTimeout(500, 3, retries)
+                remainingRetries - 1,
+                calculateExponentialRetryTimeout(500, 3, remainingRetries)
             );
 
             log.error("Job '{}' errored due to {}", taskName, e.getMessage());
