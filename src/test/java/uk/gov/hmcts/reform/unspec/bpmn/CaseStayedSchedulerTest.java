@@ -10,7 +10,7 @@ import java.util.List;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 
-public class CaseStayedSchedulerTest extends BpmnBaseTest {
+class CaseStayedSchedulerTest extends BpmnBaseTest {
 
     public static final String TOPIC_NAME = "CASE_STAYED_FINDER";
 
