@@ -12,6 +12,10 @@ module.exports = {
     const authCookie = await I.grabCookie('__auth__');
     const userIdCookie = await I.grabCookie('__userid__');
 
+    console.log('AUTHcookie');
+    console.log(authCookie);
+    console.log('USERIDcookie');
+    console.log(userIdCookie);
     const s2sTokenRequestBody = {
       microservice: config.s2s.microservice,
       oneTimePassword: totp(config.s2s.secret)
@@ -24,6 +28,9 @@ module.exports = {
       agent: PROXY_AGENT
     }).then(response => response.text());
 
+
+    console.log('s2stoken');
+    console.log(s2sToken);
     return {
       authToken: authCookie.value,
       userId: userIdCookie.value,
