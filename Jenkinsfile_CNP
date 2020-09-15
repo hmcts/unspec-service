@@ -56,7 +56,7 @@ def uploadBpmnDiagrams(String env) {
   dir("${WORKSPACE}/bin") {
     sh """
     eval \$(./variables/load-${env}-environment-variables.sh)
-    ./import-bpmn-diagram.sh "case_stayed_scheduler.bpmn"
+    ./import-bpmn-diagram.sh
   """
   }
 }
