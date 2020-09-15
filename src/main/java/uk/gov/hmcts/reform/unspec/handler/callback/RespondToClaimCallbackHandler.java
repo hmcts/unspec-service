@@ -30,7 +30,7 @@ import static uk.gov.hmcts.reform.unspec.helpers.DateFormatHelper.formatLocalDat
 public class RespondToClaimCallbackHandler extends CallbackHandler {
 
     private static final List<CaseEvent> EVENTS = Collections.singletonList(DEFENDANT_RESPONSE);
-    public static final String RESPONDENT = "respondent";
+    public static final String RESPONDENT = "respondent1";
     public static final String CLAIMANT_RESPONSE_DEADLINE = "applicantSolicitorResponseDeadlineToRespondentSolicitor1";
 
     private final ObjectMapper mapper;
@@ -45,9 +45,14 @@ public class RespondToClaimCallbackHandler extends CallbackHandler {
     protected Map<CallbackType, Callback> callbacks() {
         return Map.of(
             CallbackType.MID, this::validateDateOfBirth,
+            CallbackType.MID_SECONDARY, this::emptyCallbackWorkaround,
             CallbackType.ABOUT_TO_SUBMIT, this::setClaimantResponseDeadline,
             CallbackType.SUBMITTED, this::buildConfirmation
         );
+    }
+
+    private CallbackResponse emptyCallbackWorkaround(CallbackParams callbackParams) {
+        return AboutToStartOrSubmitCallbackResponse.builder().build();
     }
 
     private CallbackResponse validateDateOfBirth(CallbackParams callbackParams) {
