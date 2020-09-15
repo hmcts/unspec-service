@@ -83,8 +83,6 @@ public class StateFlowEngine {
     public boolean hasTransitionedTo(CaseDetails caseDetails, FlowState state) {
         return evaluate(caseDetails).getStateHistory().stream()
             .map(State::getName)
-            .filter(name -> name.equals(state.fullName()))
-            .findFirst()
-            .isPresent();
+            .anyMatch(name -> name.equals(state.fullName()));
     }
 }
