@@ -75,17 +75,13 @@ class CaseStayedHandlerTest {
     void shouldCatchError_whenException() {
         String errorMessage = "there was an error";
 
-        when(mockExternalTask.getRetries()).thenReturn(2, 1);
+        when(mockExternalTask.getRetries()).thenReturn(null);
         when(searchService.getCases()).thenAnswer(invocation -> {
             throw new Exception(errorMessage);
         });
 
         caseStayedFinder.execute(mockExternalTask, externalTaskService);
 
-        verify(externalTaskService).handleFailure(mockExternalTask, "worker", errorMessage, 1, 1000L);
-
-        caseStayedFinder.execute(mockExternalTask, externalTaskService);
-
-        verify(externalTaskService).handleFailure(mockExternalTask, "worker", errorMessage, 0, 2000L);
+        verify(externalTaskService).handleFailure(mockExternalTask, "worker", errorMessage, 2, 500L);
     }
 }

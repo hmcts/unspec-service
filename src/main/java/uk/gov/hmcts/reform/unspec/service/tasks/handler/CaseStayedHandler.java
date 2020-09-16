@@ -30,27 +30,27 @@ public class CaseStayedHandler implements ExternalTaskHandler {
 
         try {
             List<CaseDetails> cases = caseSearchService.getCases();
-
             log.info("Job '{}' found {} case(s)", taskName, cases.size());
 
             cases.forEach(caseDetails -> applicationEventPublisher.publishEvent(
                 new MoveCaseToStayedEvent(caseDetails.getId())));
 
+            externalTaskService.complete(externalTask);
+            log.info("Job '{}' finished", taskName);
+
         } catch (Exception e) {
-            Integer remainingRetries = externalTask.getRetries();
+            int maxRetries = 3;
+            int remainingRetries = externalTask.getRetries() == null ? maxRetries : externalTask.getRetries();
 
             externalTaskService.handleFailure(
                 externalTask,
                 externalTask.getWorkerId(),
                 e.getMessage(),
                 remainingRetries - 1,
-                calculateExponentialRetryTimeout(500, 3, remainingRetries)
+                calculateExponentialRetryTimeout(500, maxRetries, remainingRetries)
             );
 
             log.error("Job '{}' errored due to {}", taskName, e.getMessage());
         }
-
-        externalTaskService.complete(externalTask);
-        log.info("Job '{}' finished", taskName);
     }
 }
