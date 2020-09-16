@@ -2,7 +2,7 @@ const config = require('../config.js');
 const apiTesting = require('../apitesting/apiTesting');
 const assert = require('assert').strict;
 
-Feature('CCD API tests @smoke-tests @apitesting');
+Feature('CCD API tests @api-tests');
 
 Scenario('Create case', async (I) => {
   await I.login(config.solicitorUser);
@@ -111,4 +111,5 @@ const createClaim = async apiData => {
   assert.equal(responseBody.after_submit_callback_response.confirmation_body.includes('Follow these steps to serve a claim'), true);
 
   //TODO: assert expected behaviour for invalid case data
+  console.log('CREATED CASE ID: ' + responseBody.id);
 };
