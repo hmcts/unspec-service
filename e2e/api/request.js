@@ -3,40 +3,39 @@ const config = require('../config.js');
 const restHelper = require('../api/restHelper.js');
 const totp = require('totp-generator');
 
+const ccdDataStoreBaseUrl = () => `${config.url.ccdDataStore}/caseworkers/${tokens.userId}/jurisdictions/${config.definition.jurisdiction}/case-types/${config.definition.caseType}`;
+const tokens = {};
+
 module.exports = {
-  getTokens: async (user) => {
-    const authToken = await restHelper.request(
-      `${config.idamApiUrl}/loginUser?username=${user.email}&password=${user.password}`,
+  setupTokens: async (user) => {
+    tokens.userAuth = await restHelper.request(`${config.url.idamApi}/loginUser?username=${user.email}&password=${user.password}`,
       {'Content-Type': 'application/x-www-form-urlencoded'})
       .then(response => response.json()).then(data => data.access_token);
 
-    const userId = await restHelper.request(
-      `${config.idamApiUrl}/o/userinfo`,
+    tokens.userId = await restHelper.request(`${config.url.idamApi}/o/userinfo`,
       {
         'Content-Type': 'application/x-www-form-urlencoded',
-        Authorization: `Bearer ${authToken}`
+        Authorization: `Bearer ${tokens.userAuth}`
       })
       .then(response => response.json()).then(data => data.uid);
 
-    const s2sToken = await restHelper.request(
-      `${config.s2s.authProviderUrl}/lease`,
+    tokens.s2sAuth = await restHelper.request(`${config.url.authProviderApi}/lease`,
       {'Content-Type': 'application/json'},
       {
         microservice: config.s2s.microservice,
         oneTimePassword: totp(config.s2s.secret)
       })
       .then(response => response.text());
-
-    return {
-      userAuth: authToken,
-      userId: userId,
-      s2sAuth: s2sToken,
-    };
   },
 
-  getCreateClaimToken: async tokens => {
-    return restHelper.request(`${config.ccdDataStoreUrl}/caseworkers/${tokens.userId}/jurisdictions/CIVIL/`
-      + 'case-types/UNSPECIFIED_CLAIMS/event-triggers/CREATE_CLAIM/token',
+  startEvent: async (eventName, caseId) => {
+    let url = ccdDataStoreBaseUrl();
+    if (caseId) {
+      url += `/cases/${caseId}`;
+    }
+    url += `/event-triggers/${eventName}/token`;
+
+    tokens.ccdEvent = await restHelper.request(url,
       {
         'Content-Type': 'application/json',
         'Authorization': `Bearer ${tokens.userAuth}`,
@@ -45,9 +44,8 @@ module.exports = {
       .then(response => response.json()).then(data => data.token);
   },
 
-  validate: async (tokens, pageId, caseData) => {
-    return restHelper.request(
-      `${config.ccdDataStoreUrl}/caseworkers/${tokens.userId}/jurisdictions/CIVIL/case-types/UNSPECIFIED_CLAIMS/validate?pageId=${pageId}`,
+  validatePage: async (eventName, pageId, caseData) => {
+    return restHelper.request(`${ccdDataStoreBaseUrl()}/validate?pageId=${eventName}${pageId}`,
       {
         'Content-Type': 'application/json',
         'Authorization': `Bearer ${tokens.userAuth}`,
@@ -56,7 +54,7 @@ module.exports = {
       {
         data: caseData,
         event: {
-          id: 'CREATE_CLAIM',
+          id: eventName,
           summary: '',
           description: ''
         },
@@ -66,9 +64,13 @@ module.exports = {
     );
   },
 
-  createClaim: async (tokens, caseData) => {
-    return restHelper.request(
-      `${config.ccdDataStoreUrl}/caseworkers/${tokens.userId}/jurisdictions/CIVIL/case-types/UNSPECIFIED_CLAIMS/cases`,
+  submitEvent: async (eventName, caseData, caseId) => {
+    let url = `${ccdDataStoreBaseUrl()}/cases`;
+    if (caseId) {
+      url += `/${caseId}/events`;
+    }
+
+    return restHelper.request(url,
       {
         'Content-Type': 'application/json',
         'Authorization': `Bearer ${tokens.userAuth}`,
@@ -77,7 +79,7 @@ module.exports = {
       {
         data: caseData,
         event: {
-          id: 'CREATE_CLAIM',
+          id: eventName,
           summary: '',
           description: ''
         },

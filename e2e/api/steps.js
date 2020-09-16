@@ -1,23 +1,47 @@
-const request = require('../api/request');
+//TODO: find another assert library
 const assert = require('assert').strict;
+
+const config = require('../config.js');
+const request = require('../api/request');
+
+let caseId;
+
+const fakeDocumentData = filename => {
+  return {
+    document_url: `${config.url.dmStore}/documents/fakeUrl`,
+    document_filename: filename,
+    document_binary_url: `${config.url.dmStore}/documents/fakeUrl/binary`,
+  };
+};
 
 module.exports = {
   createClaim: async (user) => {
-    const tokens = await request.getTokens(user);
-    tokens.ccdEvent = await request.getCreateClaimToken(tokens);
+    await request.setupTokens(user);
+    await request.startEvent('CREATE_CLAIM');
 
-    await validateReferences(tokens);
-    await createClaim(tokens);
+    //reference page validation
+    await assertValidData();
+    await assertUnknownField();
+    await assertInvalidStructure();
+
+    await submitCreateClaim();
+  },
+
+  confirmService: async () => {
+    //TODO: extract case data to separate files
+
+    // TODO: validate responses for
+    //  - start event
+    //  - validate pages
+    //  - submit event
+
+    await request.startEvent('CONFIRM_SERVICE', caseId);
+
+    await submitConfirmService();
   }
 };
 
-const validateReferences = async apiData => {
-  await assertValidData(apiData);
-  await assertUnknownField(apiData);
-  await assertInvalidStructure(apiData);
-};
-
-const assertValidData = async apiData => {
+const assertValidData = async () => {
   const caseData = {
     solicitorReferences: {
       applicantSolicitor1Reference: 'qwe',
@@ -25,21 +49,21 @@ const assertValidData = async apiData => {
     }
   };
 
-  const response = await request.validate(apiData, 'CREATE_CLAIMReferences', caseData);
+  const response = await request.validatePage('CREATE_CLAIM', 'References', caseData);
   const responseBody = await response.json();
 
   assert.equal(response.status, 200);
   assert.deepEqual(responseBody.data, caseData);
 };
 
-const assertUnknownField = async apiData => {
+const assertUnknownField = async () => {
   const caseData = {
     solicitorReferences: {
       invalidProperty: 'test'
     }
   };
 
-  const response = await request.validate(apiData, 'CREATE_CLAIMReferences', caseData);
+  const response = await request.validatePage('CREATE_CLAIM', 'References', caseData);
   const responseBody = await response.json();
 
   assert.equal(response.status, 422);
@@ -48,7 +72,7 @@ const assertUnknownField = async apiData => {
   assert.equal(responseBody.details.field_errors[0].message, 'Field is not recognised');
 };
 
-const assertInvalidStructure = async apiData => {
+const assertInvalidStructure = async () => {
   const caseData = {
     solicitorReferences: {
       respondentSolicitor1Reference: {
@@ -57,7 +81,7 @@ const assertInvalidStructure = async apiData => {
     }
   };
 
-  const response = await request.validate(apiData, 'CREATE_CLAIMReferences', caseData);
+  const response = await request.validatePage('CREATE_CLAIM', 'References', caseData);
   const responseBody = await response.json();
 
   assert.equal(response.status, 422);
@@ -66,7 +90,7 @@ const assertInvalidStructure = async apiData => {
   assert.equal(responseBody.details.field_errors[0].message, 'object is not a string');
 };
 
-const createClaim = async apiData => {
+const submitCreateClaim = async () => {
   let caseData = {
     solicitorReferences: {
       applicantSolicitor1Reference: 'claimant_solicitor_reference_1/c',
@@ -97,17 +121,45 @@ const createClaim = async apiData => {
     },
   };
 
-  let response = await request.createClaim(apiData, caseData);
+  let response = await request.submitEvent('CREATE_CLAIM', caseData);
   const responseBody = await response.json();
 
   assert.equal(response.status, 201);
   assert.equal(Object.prototype.hasOwnProperty.call(responseBody, 'id'), true);
   assert.equal(responseBody.state, 'CREATED');
-  //TODO: validate case_data
+  //TODO: validate case_data returned
   assert.equal(responseBody.callback_response_status_code, 200);
   assert.equal(responseBody.after_submit_callback_response.confirmation_header.includes('# Your claim has been issued\n## Claim number'), true);
   assert.equal(responseBody.after_submit_callback_response.confirmation_body.includes('Follow these steps to serve a claim'), true);
 
-  //TODO: assert expected behaviour for invalid case data
+  caseId = responseBody.id;
   console.log('CREATED CASE ID: ' + responseBody.id);
+};
+
+const submitConfirmService = async () => {
+  await request.submitEvent('CONFIRM_SERVICE', {
+    'servedDocuments': [
+      'CLAIM_FORM',
+      'PARTICULARS_OF_CLAIM'
+    ],
+    'servedDocumentFiles': {
+      'particularsOfClaim': [
+        {
+          'id': '74a17e06-aa49-406e-ae82-1fd40ee42b01',
+          'value': fakeDocumentData('test.pdf')
+        }
+      ]
+    },
+    'serviceMethodToRespondentSolicitor1': {
+      'type': 'POST'
+    },
+    'serviceLocationToRespondentSolicitor1': {
+      'location': 'RESIDENCE'
+    },
+    'serviceDateToRespondentSolicitor1': '2020-09-15',
+    'applicant1ServiceStatementOfTruthToRespondentSolicitor1': {
+      'name': 'mr bloggs',
+      'role': 'super solitior'
+    }
+  }, caseId);
 };
