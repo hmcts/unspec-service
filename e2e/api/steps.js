@@ -1,17 +1,15 @@
-const config = require('../config.js');
-const apiTesting = require('../apitesting/apiTesting');
+const request = require('../api/request');
 const assert = require('assert').strict;
 
-Feature('CCD API tests @api-tests');
+module.exports = {
+  createClaim: async (user) => {
+    const tokens = await request.getTokens(user);
+    tokens.ccdEvent = await request.getCreateClaimToken(tokens);
 
-Scenario('Create case', async (I) => {
-  await I.login(config.solicitorUser);
-  const apiData = await apiTesting.getApiData();
-  apiData.ccdEventToken = await apiTesting.getCreateClaimToken(apiData);
-
-  await validateReferences(apiData);
-  await createClaim(apiData);
-});
+    await validateReferences(tokens);
+    await createClaim(tokens);
+  }
+};
 
 const validateReferences = async apiData => {
   await assertValidData(apiData);
@@ -27,7 +25,7 @@ const assertValidData = async apiData => {
     }
   };
 
-  const response = await apiTesting.validate(apiData, 'CREATE_CLAIMReferences', caseData);
+  const response = await request.validate(apiData, 'CREATE_CLAIMReferences', caseData);
   const responseBody = await response.json();
 
   assert.equal(response.status, 200);
@@ -41,7 +39,7 @@ const assertUnknownField = async apiData => {
     }
   };
 
-  const response = await apiTesting.validate(apiData, 'CREATE_CLAIMReferences', caseData);
+  const response = await request.validate(apiData, 'CREATE_CLAIMReferences', caseData);
   const responseBody = await response.json();
 
   assert.equal(response.status, 422);
@@ -59,7 +57,7 @@ const assertInvalidStructure = async apiData => {
     }
   };
 
-  const response = await apiTesting.validate(apiData, 'CREATE_CLAIMReferences', caseData);
+  const response = await request.validate(apiData, 'CREATE_CLAIMReferences', caseData);
   const responseBody = await response.json();
 
   assert.equal(response.status, 422);
@@ -99,7 +97,7 @@ const createClaim = async apiData => {
     },
   };
 
-  let response = await apiTesting.createClaim(apiData, caseData);
+  let response = await request.createClaim(apiData, caseData);
   const responseBody = await response.json();
 
   assert.equal(response.status, 201);
