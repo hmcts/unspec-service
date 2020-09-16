@@ -19,6 +19,11 @@ exports.config = {
     PuppeteerHelpers: {
       require: './e2e/helpers/puppeteer_helper.js',
     },
+    REST: {
+    },
+    RestHelper: {
+      require: './e2e/helpers/rest_helper.js'
+    },
   },
   include: {
     I: './e2e/steps_file.js'

@@ -21,6 +21,11 @@
     "husky": "^4.2.5",
     "mocha-multi": "^1.1.3",
     "mochawesome": "^6.1.1",
-    "puppeteer": "^4.0.1"
+    "puppeteer": "^4.0.1",
+    "node-fetch": "^2.6.1",
+    "qs": "^6.9.4",
+    "otp": "^0.1.3",
+    "moment": "^2.25.3",
+    "axios-https-proxy-fix": "^0.17.1"
   }
 }
