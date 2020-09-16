@@ -154,7 +154,6 @@ module.exports = class RestHelper extends Helper {
 
 
   async createEvent(eventId) {
-    let url;
     // console.log('eventId>>>', eventId);
     // console.log('ccdCaseId>>>', ccdCaseId);
     // console.log('accessToken>>>', accessToken);
