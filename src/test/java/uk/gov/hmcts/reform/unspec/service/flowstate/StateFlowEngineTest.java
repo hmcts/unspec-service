@@ -1,4 +1,4 @@
-package uk.gov.hmcts.reform.unspec.stateflow;
+package uk.gov.hmcts.reform.unspec.service.flowstate;
 
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -12,18 +12,19 @@ import uk.gov.hmcts.reform.unspec.helpers.CaseDetailsConverter;
 import uk.gov.hmcts.reform.unspec.model.CaseData;
 import uk.gov.hmcts.reform.unspec.sampledata.CaseDataBuilder;
 import uk.gov.hmcts.reform.unspec.sampledata.CaseDetailsBuilder;
+import uk.gov.hmcts.reform.unspec.stateflow.StateFlow;
 import uk.gov.hmcts.reform.unspec.stateflow.model.State;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static uk.gov.hmcts.reform.unspec.stateflow.StateFlowEngine.FlowState.CLAIM_ISSUED;
-import static uk.gov.hmcts.reform.unspec.stateflow.StateFlowEngine.FlowState.CLAIM_STAYED;
-import static uk.gov.hmcts.reform.unspec.stateflow.StateFlowEngine.FlowState.DRAFT;
-import static uk.gov.hmcts.reform.unspec.stateflow.StateFlowEngine.FlowState.EXTENSION_REQUESTED;
-import static uk.gov.hmcts.reform.unspec.stateflow.StateFlowEngine.FlowState.EXTENSION_RESPONDED;
-import static uk.gov.hmcts.reform.unspec.stateflow.StateFlowEngine.FlowState.FULL_DEFENCE;
-import static uk.gov.hmcts.reform.unspec.stateflow.StateFlowEngine.FlowState.RESPONDED_TO_CLAIM;
-import static uk.gov.hmcts.reform.unspec.stateflow.StateFlowEngine.FlowState.SERVICE_ACKNOWLEDGED;
-import static uk.gov.hmcts.reform.unspec.stateflow.StateFlowEngine.FlowState.SERVICE_CONFIRMED;
+import static uk.gov.hmcts.reform.unspec.service.flowstate.MainFlowState.CLAIM_ISSUED;
+import static uk.gov.hmcts.reform.unspec.service.flowstate.MainFlowState.CLAIM_STAYED;
+import static uk.gov.hmcts.reform.unspec.service.flowstate.MainFlowState.DRAFT;
+import static uk.gov.hmcts.reform.unspec.service.flowstate.MainFlowState.EXTENSION_REQUESTED;
+import static uk.gov.hmcts.reform.unspec.service.flowstate.MainFlowState.EXTENSION_RESPONDED;
+import static uk.gov.hmcts.reform.unspec.service.flowstate.MainFlowState.FULL_DEFENCE;
+import static uk.gov.hmcts.reform.unspec.service.flowstate.MainFlowState.RESPONDED_TO_CLAIM;
+import static uk.gov.hmcts.reform.unspec.service.flowstate.MainFlowState.SERVICE_ACKNOWLEDGED;
+import static uk.gov.hmcts.reform.unspec.service.flowstate.MainFlowState.SERVICE_CONFIRMED;
 
 @SpringBootTest(classes = {
     JacksonAutoConfiguration.class,
@@ -200,10 +201,7 @@ class StateFlowEngineTest {
             "false,FULL_DEFENCE",
             "false,CLAIM_STAYED"
         })
-        void shouldReturnValidResult_whenCaseDataAtStateExtensionRequested(
-            boolean expected,
-            StateFlowEngine.FlowState state
-        ) {
+        void shouldReturnValidResult_whenCaseDataAtStateExtensionRequested(boolean expected, MainFlowState state) {
             CaseDetails caseDetails = CaseDetailsBuilder.builder()
                 .atStateExtensionRequested()
                 .build();

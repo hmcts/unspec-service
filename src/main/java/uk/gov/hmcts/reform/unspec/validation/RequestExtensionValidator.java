@@ -5,7 +5,7 @@ import com.google.common.collect.ImmutableList;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import uk.gov.hmcts.reform.ccd.client.model.CaseDetails;
-import uk.gov.hmcts.reform.unspec.stateflow.StateFlowEngine;
+import uk.gov.hmcts.reform.unspec.service.flowstate.StateFlowEngine;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -16,6 +16,7 @@ import static java.time.LocalDate.now;
 import static java.util.Collections.emptyList;
 import static uk.gov.hmcts.reform.unspec.handler.callback.RequestExtensionCallbackHandler.PROPOSED_DEADLINE;
 import static uk.gov.hmcts.reform.unspec.handler.callback.RequestExtensionCallbackHandler.RESPONSE_DEADLINE;
+import static uk.gov.hmcts.reform.unspec.service.flowstate.MainFlowState.EXTENSION_REQUESTED;
 
 @Service
 @RequiredArgsConstructor
@@ -67,6 +68,6 @@ public class RequestExtensionValidator {
     }
 
     private boolean isExtensionAlreadyRequested(CaseDetails caseDetailsBefore) {
-        return stateFlowEngine.hasTransitionedTo(caseDetailsBefore, StateFlowEngine.FlowState.EXTENSION_REQUESTED);
+        return stateFlowEngine.hasTransitionedTo(caseDetailsBefore, EXTENSION_REQUESTED);
     }
 }
