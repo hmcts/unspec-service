@@ -9,5 +9,5 @@ import javax.validation.constraints.NotEmpty;
 @Data
 public class EmailTemplates {
     @NotEmpty
-    private String claimantClaimIssued;
+    private String defendantSolicitorClaimIssued;
 }

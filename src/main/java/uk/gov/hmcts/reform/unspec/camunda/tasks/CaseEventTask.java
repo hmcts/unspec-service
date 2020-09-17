@@ -9,9 +9,11 @@ import org.camunda.bpm.engine.variable.VariableMap;
 import org.camunda.bpm.engine.variable.Variables;
 import org.springframework.stereotype.Service;
 import uk.gov.hmcts.reform.unspec.callback.CaseEvent;
+import uk.gov.hmcts.reform.unspec.model.BusinessProcess;
 import uk.gov.hmcts.reform.unspec.service.CoreCaseDataService;
 
 import java.util.HashMap;
+import java.util.Map;
 
 @Slf4j
 @Service
@@ -49,14 +51,24 @@ public class CaseEventTask implements ExternalTaskHandler {
 
             log.info("coming here case {}", ccdId);
             log.info("coming here event {}", eventId);
-            coreCaseDataService.triggerEvent(Long.valueOf(ccdId), CaseEvent.valueOf(eventId));
+//            if(eventId.equals(SEND_SEALED_CLAIM_EMAIL.getValue())){
+//                throw new Exception("Event has been failed on purpose");
+//            }
+            coreCaseDataService.triggerEvent(
+                Long.valueOf(ccdId),
+                CaseEvent.valueOf(eventId),
+                Map.of(
+                    "businessProcess",
+                    BusinessProcess.builder().taskId(externalTask.getActivityId()).build()
+                )
+            );
             externalTaskService.complete(externalTask, new HashMap<>(variables));
 
         } catch (Exception e) {
             externalTaskService.handleFailure(
                 externalTask,
-                "externalWorkerId",
-                "Address could not be validated: Address database not reachable",
+                externalTask.getWorkerId(),
+                "Event failed processing",
                 retries - 1,
                 60L * 1000L
             );

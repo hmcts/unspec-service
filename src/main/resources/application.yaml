@@ -87,7 +87,7 @@ reference:
 notifications:
   govNotifyApiKey: ${GOV_NOTIFY_API_KEY:}
   emailTemplates:
-    claimantClaimIssued: "1e55aae6-879e-4e63-93ce-cf4cf93636f2"
+    defendantSolicitorClaimIssued: "1e55aae6-879e-4e63-93ce-cf4cf93636f2"
 ---
 
 spring:
@@ -102,6 +102,7 @@ spring:
 feign:
   client:
     config:
+
       remoteRuntimeService:
         url: http://localhost:9404/engine-rest/
       remoteRepositoryService:

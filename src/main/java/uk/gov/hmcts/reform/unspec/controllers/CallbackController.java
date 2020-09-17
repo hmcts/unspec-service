@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import uk.gov.hmcts.reform.ccd.client.model.AboutToStartOrSubmitCallbackResponse;
 import uk.gov.hmcts.reform.ccd.client.model.CallbackRequest;
 import uk.gov.hmcts.reform.ccd.client.model.CallbackResponse;
 import uk.gov.hmcts.reform.unspec.callback.CallbackHandlerFactory;
@@ -55,6 +56,10 @@ public class CallbackController {
             .params(ImmutableMap.of(CallbackParams.Params.BEARER_TOKEN, authorisation))
             .version(version.orElse(null))
             .build();
+
+        if(callbackHandlerFactory.isEventAlreadyProcessed(callbackParams)){
+            return AboutToStartOrSubmitCallbackResponse.builder().build();
+        }
 
         return callbackHandlerFactory.dispatch(callbackParams);
     }
