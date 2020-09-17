@@ -56,6 +56,7 @@ module.exports = {
           summary: '',
           description: ''
         },
+        event_data: caseData,
         event_token: tokens.ccdEvent,
         ignore_warning: false
       }

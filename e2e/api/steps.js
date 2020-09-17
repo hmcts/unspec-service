@@ -1,129 +1,91 @@
-//TODO: find another assert library
 const assert = require('assert').strict;
 
-const config = require('../config.js');
-const request = require('../api/request');
+const request = require('../api/request.js');
+
+const createClaimData = require('../fixtures/createClaim.js');
+const confirmServiceData = require('../fixtures/confirmService.js');
 
 let caseId;
-
-const fakeDocumentData = filename => {
-  return {
-    document_url: `${config.url.dmStore}/documents/fakeUrl`,
-    document_filename: filename,
-    document_binary_url: `${config.url.dmStore}/documents/fakeUrl/binary`,
-  };
-};
+let data;
 
 module.exports = {
   createClaim: async (user) => {
+    data = {};
     await request.setupTokens(user);
     await request.startEvent('CREATE_CLAIM');
 
-    //reference page validation
-    await assertValidData();
-    await assertUnknownField();
-    await assertInvalidStructure();
+    await assertValidData('CREATE_CLAIM', 'References', createClaimData.valid.references);
+    await assertValidData('CREATE_CLAIM', 'Court', createClaimData.valid.court);
+    await assertValidData('CREATE_CLAIM', 'Claimant', createClaimData.valid.claimant);
+    await assertValidData('CREATE_CLAIM', 'Defendant', createClaimData.valid.defendant);
+    await assertValidData('CREATE_CLAIM', 'ClaimType', createClaimData.valid.claimType);
+    await assertValidData('CREATE_CLAIM', 'PersonalInjuryType', createClaimData.valid.personalInjuryType);
+    await assertValidData('CREATE_CLAIM', 'Upload', createClaimData.valid.upload);
+    await assertCallbackError('CREATE_CLAIM', 'ClaimValue', createClaimData.invalid.claimValue,
+      'CONTENT TBC: Higher value must not be lower than the lower value.');
+    await assertValidData('CREATE_CLAIM', 'ClaimValue', createClaimData.valid.claimValue, {allocatedTrack: 'SMALL_CLAIM'});
+    await assertValidData('CREATE_CLAIM', 'StatementOfTruth', createClaimData.valid.statementOfTruth);
 
     await submitCreateClaim();
   },
 
   confirmService: async () => {
-    //TODO: extract case data to separate files
-
-    // TODO: validate responses for
-    //  - start event
-    //  - validate pages
-    //  - submit event
-
+    data = {};
     await request.startEvent('CONFIRM_SERVICE', caseId);
 
-    await submitConfirmService();
+    // await assertValidData('CONFIRM_SERVICE', 'ServedDocuments', confirmServiceData.valid.servedDocuments);
+    // await assertValidData('CONFIRM_SERVICE', 'Upload', confirmServiceData.valid.upload);
+    // await assertValidData('CONFIRM_SERVICE', 'Method', confirmServiceData.valid.method);
+    // await assertValidData('CONFIRM_SERVICE', 'Location', confirmServiceData.valid.location);
+    // await assertCallbackError('CONFIRM_SERVICE', 'Date', confirmServiceData.invalid.date.yesterday,
+    //   'The date must not be before issue date of claim');
+    // await assertCallbackError('CONFIRM_SERVICE', 'Date', confirmServiceData.invalid.date.tomorrow,
+    //   'The date must not be in the future');
+    // await assertValidData('CONFIRM_SERVICE', 'Date', confirmServiceData.valid.date);
+    // await assertValidData('CONFIRM_SERVICE', 'StatementOfTruth', confirmServiceData.valid.statementOfTruth);
+
+    // await submitConfirmService();
   }
 };
 
-const assertValidData = async () => {
-  const caseData = {
-    solicitorReferences: {
-      applicantSolicitor1Reference: 'qwe',
-      respondentSolicitor1Reference: 'asd'
-    }
-  };
+const assertValidData = async (eventName, pageId, caseData, additionalCallbackData = {}) => {
+  data = Object.assign(data, caseData);
+  const response = await request.validatePage(eventName, pageId, data);
 
-  const response = await request.validatePage('CREATE_CLAIM', 'References', caseData);
   const responseBody = await response.json();
-
   assert.equal(response.status, 200);
-  assert.deepEqual(responseBody.data, caseData);
+  assert.deepEqual(responseBody.data, Object.assign(data, additionalCallbackData));
 };
 
-const assertUnknownField = async () => {
-  const caseData = {
-    solicitorReferences: {
-      invalidProperty: 'test'
-    }
-  };
+const assertCallbackError = async (eventName, pageId, caseData, expectedErrorMessage) => {
+  data = Object.assign(data, caseData);
+  console.log(data);
+  const response = await request.validatePage(eventName, pageId, data);
 
-  const response = await request.validatePage('CREATE_CLAIM', 'References', caseData);
   const responseBody = await response.json();
-
+  console.log(responseBody);
   assert.equal(response.status, 422);
-  assert.equal(responseBody.message, 'Case data validation failed');
-  assert.equal(responseBody.details.field_errors[0].id, 'solicitorReferences.invalidProperty');
-  assert.equal(responseBody.details.field_errors[0].message, 'Field is not recognised');
+  assert.equal(responseBody.message, 'Unable to proceed because there are one or more callback Errors or Warnings');
+  assert.equal(responseBody.callbackErrors[0], expectedErrorMessage);
 };
 
-const assertInvalidStructure = async () => {
-  const caseData = {
-    solicitorReferences: {
-      respondentSolicitor1Reference: {
-        invalidProperty: ' test'
-      }
-    }
-  };
-
-  const response = await request.validatePage('CREATE_CLAIM', 'References', caseData);
-  const responseBody = await response.json();
-
-  assert.equal(response.status, 422);
-  assert.equal(responseBody.message, 'Case data validation failed');
-  assert.equal(responseBody.details.field_errors[0].id, 'solicitorReferences.respondentSolicitor1Reference');
-  assert.equal(responseBody.details.field_errors[0].message, 'object is not a string');
-};
+// const submitEvent = async (eventName, caseData, expectedState) => {
+//   let response = await request.submitEvent(eventName, caseData);
+//   const responseBody = await response.json();
+//
+//   assert.equal(response.status, 201);
+//   assert.equal(Object.prototype.hasOwnProperty.call(responseBody, 'id'), true);
+//   assert.equal(responseBody.state, expectedState);
+//   //TODO: validate case_data returned
+//   assert.equal(responseBody.callback_response_status_code, 200);
+//   assert.equal(responseBody.after_submit_callback_response.confirmation_header.includes('# Your claim has been issued\n## Claim number'), true);
+//   assert.equal(responseBody.after_submit_callback_response.confirmation_body.includes('Follow these steps to serve a claim'), true);
+// };
 
 const submitCreateClaim = async () => {
-  let caseData = {
-    solicitorReferences: {
-      applicantSolicitor1Reference: 'claimant_solicitor_reference_1/c',
-      respondentSolicitor1Reference: 'defendant_solicitor_reference_1/d'
-    },
-    courtLocation: {
-      applicantPreferredCourt: 'Royal Courts of Justice, London'
-    },
-    applicant1: {
-      type: 'COMPANY',
-      companyName: 'Test Inc',
-      individualDateOfBirth: '2020-01-12'
-    },
-    respondent1: {
-      type: 'COMPANY',
-      companyName: 'Test Defendant Inc',
-      individualDateOfBirth: '2020-02-12'
-    },
-    claimType: 'PERSONAL_INJURY',
-    personalInjuryType: 'ROAD_ACCIDENT',
-    claimValue: {
-      lowerValue: '100',
-      higherValue: '500'
-    },
-    applicantSolicitor1ClaimStatementOfTruth: {
-      name: 'john doe',
-      role: 'test'
-    },
-  };
+  let response = await request.submitEvent('CREATE_CLAIM', data);
 
-  let response = await request.submitEvent('CREATE_CLAIM', caseData);
   const responseBody = await response.json();
-
   assert.equal(response.status, 201);
   assert.equal(Object.prototype.hasOwnProperty.call(responseBody, 'id'), true);
   assert.equal(responseBody.state, 'CREATED');
@@ -134,32 +96,4 @@ const submitCreateClaim = async () => {
 
   caseId = responseBody.id;
   console.log('CREATED CASE ID: ' + responseBody.id);
-};
-
-const submitConfirmService = async () => {
-  await request.submitEvent('CONFIRM_SERVICE', {
-    'servedDocuments': [
-      'CLAIM_FORM',
-      'PARTICULARS_OF_CLAIM'
-    ],
-    'servedDocumentFiles': {
-      'particularsOfClaim': [
-        {
-          'id': '74a17e06-aa49-406e-ae82-1fd40ee42b01',
-          'value': fakeDocumentData('test.pdf')
-        }
-      ]
-    },
-    'serviceMethodToRespondentSolicitor1': {
-      'type': 'POST'
-    },
-    'serviceLocationToRespondentSolicitor1': {
-      'location': 'RESIDENCE'
-    },
-    'serviceDateToRespondentSolicitor1': '2020-09-15',
-    'applicant1ServiceStatementOfTruthToRespondentSolicitor1': {
-      'name': 'mr bloggs',
-      'role': 'super solitior'
-    }
-  }, caseId);
 };
