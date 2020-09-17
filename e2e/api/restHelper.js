@@ -11,7 +11,6 @@ const PROXY_AGENT = url => config.proxyServer
     : new HttpsProxyAgent(PROXY_SERVER)
   : null;
 
-
 module.exports = {
   request: async (url, headers, body, method = 'POST') => {
     return fetch(url, {
