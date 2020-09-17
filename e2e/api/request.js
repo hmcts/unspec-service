@@ -24,7 +24,8 @@ module.exports = {
       `${config.url.idamApi}/o/userinfo`,
       {
         'Content-Type': 'application/x-www-form-urlencoded',
-        'Authorization': `Bearer ${tokens.userAuth}`})
+        'Authorization': `Bearer ${tokens.userAuth}`
+      })
       .then(response => response.json()).then(data => data.uid);
 
     tokens.s2sAuth = await restHelper.request(
@@ -32,7 +33,8 @@ module.exports = {
       {'Content-Type': 'application/json'},
       {
         microservice: config.s2s.microservice,
-        oneTimePassword: totp(config.s2s.secret)})
+        oneTimePassword: totp(config.s2s.secret)
+      })
       .then(response => response.text());
   },
 
@@ -51,14 +53,9 @@ module.exports = {
     return restHelper.request(`${getCcdDataStoreBaseUrl()}/validate?pageId=${eventName}${pageId}`, getRequestHeaders(),
       {
         data: caseData,
-        event: {
-          id: eventName,
-          summary: '',
-          description: ''
-        },
+        event: {id: eventName},
         event_data: caseData,
-        event_token: tokens.ccdEvent,
-        ignore_warning: false
+        event_token: tokens.ccdEvent
       }
     );
   },
@@ -72,16 +69,9 @@ module.exports = {
     return restHelper.request(url, getRequestHeaders(),
       {
         data: caseData,
-        event: {
-          id: eventName,
-          summary: '',
-          description: ''
-        },
+        event: {id: eventName},
         event_data: caseData,
-        event_token: tokens.ccdEvent,
-        ignore_warning: false,
-        draft_id: caseId ? undefined : null,
-        case_reference: caseId ?? undefined
+        event_token: tokens.ccdEvent
       });
   }
 };
