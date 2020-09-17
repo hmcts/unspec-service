@@ -9,28 +9,7 @@
   {
     "LiveFrom": "01/01/2017",
     "CaseTypeID": "UNSPECIFIED_CLAIMS",
-    "CaseEventID": "SEND_SEALED_CLAIM_EMAIL",
-    "UserRole": "caseworker-civil-systemupdate",
-    "CRUD": "CRU"
-  },
-  {
-    "LiveFrom": "01/01/2017",
-    "CaseTypeID": "UNSPECIFIED_CLAIMS",
-    "CaseEventID": "GENERATE_SEALED_CLAIM",
-    "UserRole": "caseworker-civil-systemupdate",
-    "CRUD": "CRU"
-  },
-  {
-    "LiveFrom": "01/01/2017",
-    "CaseTypeID": "UNSPECIFIED_CLAIMS",
-    "CaseEventID": "CALCULATE_CLAIM_FEE",
-    "UserRole": "caseworker-civil-systemupdate",
-    "CRUD": "CRU"
-  },
-  {
-    "LiveFrom": "01/01/2017",
-    "CaseTypeID": "UNSPECIFIED_CLAIMS",
-    "CaseEventID": "GENERATE_BPA_PAYMENT",
+    "CaseEventID": "NOTIFY_DEFENDANT_SOLICITOR_FOR_CLAIM_ISSUE",
     "UserRole": "caseworker-civil-systemupdate",
     "CRUD": "CRU"
   }

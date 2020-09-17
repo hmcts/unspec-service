@@ -34,6 +34,8 @@ import static uk.gov.hmcts.reform.unspec.utils.PartyNameUtils.getPartyNameBasedO
 @RequiredArgsConstructor
 public class ClaimIssueNotificationHandler extends CallbackHandler {
     private static final List<CaseEvent> EVENTS = List.of(NOTIFY_DEFENDANT_SOLICITOR_FOR_CLAIM_ISSUE);
+    public static final String NOTIFY_DEFENDANT_SOLICITOR_FOR_CLAIM_ISSUE_TASK_ID
+        = "NotifyDefendantSolicitorForClaimIssue";
 
     private final NotificationService notificationService;
     private final NotificationsProperties notificationsProperties;
@@ -48,7 +50,7 @@ public class ClaimIssueNotificationHandler extends CallbackHandler {
 
     @Override
     public String camundaTaskId() {
-        return "NotifyDefendantSolicitorForClaimIssue";
+        return NOTIFY_DEFENDANT_SOLICITOR_FOR_CLAIM_ISSUE_TASK_ID;
     }
 
     @Override
@@ -60,7 +62,7 @@ public class ClaimIssueNotificationHandler extends CallbackHandler {
         CaseData caseData = caseDetailsConverter.toCaseData(callbackParams.getRequest().getCaseDetails());
 
         notificationService.sendMail(
-            caseData.getServiceMethodToRespondentSolicitor1().getEmail(),
+            caseData.getServiceMethodToRespondentSolicitor1().getEmail(), //TODO need correct email address here
             notificationsProperties.getEmailTemplates().getDefendantSolicitorClaimIssued(),
             addProperties(caseData),
             "defendant-solicitor-issue-notification-" + caseData.getLegacyCaseReference()
