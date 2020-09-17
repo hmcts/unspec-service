@@ -6,11 +6,10 @@ const createClaimData = require('../fixtures/createClaim.js');
 const confirmServiceData = require('../fixtures/confirmService.js');
 
 let caseId;
-let data;
+let caseData = {};
 
 module.exports = {
   createClaim: async (user) => {
-    data = {};
     await request.setupTokens(user);
     await request.startEvent('CREATE_CLAIM');
 
@@ -26,74 +25,66 @@ module.exports = {
     await assertValidData('CREATE_CLAIM', 'ClaimValue', createClaimData.valid.claimValue, {allocatedTrack: 'SMALL_CLAIM'});
     await assertValidData('CREATE_CLAIM', 'StatementOfTruth', createClaimData.valid.statementOfTruth);
 
-    await submitCreateClaim();
+    await assertSubmittedEvent('CREATE_CLAIM', 'CREATED', {
+      header: 'Your claim has been issued',
+      body: 'Follow these steps to serve a claim'
+    });
   },
 
   confirmService: async () => {
-    data = {};
     await request.startEvent('CONFIRM_SERVICE', caseId);
 
-    // await assertValidData('CONFIRM_SERVICE', 'ServedDocuments', confirmServiceData.valid.servedDocuments);
-    // await assertValidData('CONFIRM_SERVICE', 'Upload', confirmServiceData.valid.upload);
-    // await assertValidData('CONFIRM_SERVICE', 'Method', confirmServiceData.valid.method);
-    // await assertValidData('CONFIRM_SERVICE', 'Location', confirmServiceData.valid.location);
-    // await assertCallbackError('CONFIRM_SERVICE', 'Date', confirmServiceData.invalid.date.yesterday,
-    //   'The date must not be before issue date of claim');
-    // await assertCallbackError('CONFIRM_SERVICE', 'Date', confirmServiceData.invalid.date.tomorrow,
-    //   'The date must not be in the future');
-    // await assertValidData('CONFIRM_SERVICE', 'Date', confirmServiceData.valid.date);
-    // await assertValidData('CONFIRM_SERVICE', 'StatementOfTruth', confirmServiceData.valid.statementOfTruth);
+    await assertValidData('CONFIRM_SERVICE', 'ServedDocuments', confirmServiceData.valid.servedDocuments);
+    await assertValidData('CONFIRM_SERVICE', 'Upload', confirmServiceData.valid.upload);
+    await assertValidData('CONFIRM_SERVICE', 'Method', confirmServiceData.valid.method);
+    await assertValidData('CONFIRM_SERVICE', 'Location', confirmServiceData.valid.location);
+    await assertCallbackError('CONFIRM_SERVICE', 'Date', confirmServiceData.invalid.date.yesterday,
+      'The date must not be before issue date of claim');
+    await assertCallbackError('CONFIRM_SERVICE', 'Date', confirmServiceData.invalid.date.tomorrow,
+      'The date must not be in the future');
+    await assertValidData('CONFIRM_SERVICE', 'Date', confirmServiceData.valid.date);
+    await assertValidData('CONFIRM_SERVICE', 'StatementOfTruth', confirmServiceData.valid.statementOfTruth);
 
-    // await submitConfirmService();
+    await assertSubmittedEvent('CONFIRM_SERVICE', 'CREATED', {
+      header: 'You\'ve confirmed service',
+      body: 'Deemed date of service'
+    });
   }
 };
 
-const assertValidData = async (eventName, pageId, caseData, additionalCallbackData = {}) => {
-  data = Object.assign(data, caseData);
-  const response = await request.validatePage(eventName, pageId, data);
-
+const assertValidData = async (eventName, pageId, eventData, expectedDataSetByCallback = {}) => {
+  caseData = Object.assign(caseData, eventData);
+  const response = await request.validatePage(eventName, pageId, caseData);
   const responseBody = await response.json();
+  caseData = Object.assign(caseData, expectedDataSetByCallback);
+
   assert.equal(response.status, 200);
-  assert.deepEqual(responseBody.data, Object.assign(data, additionalCallbackData));
+  assert.deepEqual(responseBody.data, caseData);
 };
 
-const assertCallbackError = async (eventName, pageId, caseData, expectedErrorMessage) => {
-  data = Object.assign(data, caseData);
-  console.log(data);
-  const response = await request.validatePage(eventName, pageId, data);
-
+const assertCallbackError = async (eventName, pageId, eventData, expectedErrorMessage) => {
+  caseData = Object.assign(caseData, eventData);
+  const response = await request.validatePage(eventName, pageId, caseData);
   const responseBody = await response.json();
-  console.log(responseBody);
+
   assert.equal(response.status, 422);
   assert.equal(responseBody.message, 'Unable to proceed because there are one or more callback Errors or Warnings');
   assert.equal(responseBody.callbackErrors[0], expectedErrorMessage);
 };
 
-// const submitEvent = async (eventName, caseData, expectedState) => {
-//   let response = await request.submitEvent(eventName, caseData);
-//   const responseBody = await response.json();
-//
-//   assert.equal(response.status, 201);
-//   assert.equal(Object.prototype.hasOwnProperty.call(responseBody, 'id'), true);
-//   assert.equal(responseBody.state, expectedState);
-//   //TODO: validate case_data returned
-//   assert.equal(responseBody.callback_response_status_code, 200);
-//   assert.equal(responseBody.after_submit_callback_response.confirmation_header.includes('# Your claim has been issued\n## Claim number'), true);
-//   assert.equal(responseBody.after_submit_callback_response.confirmation_body.includes('Follow these steps to serve a claim'), true);
-// };
-
-const submitCreateClaim = async () => {
-  let response = await request.submitEvent('CREATE_CLAIM', data);
-
+const assertSubmittedEvent = async (eventName, expectedState, submittedCallbackResponse) => {
+  const response = await request.submitEvent(eventName, caseData, caseId);
   const responseBody = await response.json();
-  assert.equal(response.status, 201);
-  assert.equal(Object.prototype.hasOwnProperty.call(responseBody, 'id'), true);
-  assert.equal(responseBody.state, 'CREATED');
-  //TODO: validate case_data returned
-  assert.equal(responseBody.callback_response_status_code, 200);
-  assert.equal(responseBody.after_submit_callback_response.confirmation_header.includes('# Your claim has been issued\n## Claim number'), true);
-  assert.equal(responseBody.after_submit_callback_response.confirmation_body.includes('Follow these steps to serve a claim'), true);
 
-  caseId = responseBody.id;
-  console.log('CREATED CASE ID: ' + responseBody.id);
+  assert.equal(response.status, 201);
+  assert.equal(responseBody.state, expectedState);
+  assert.equal(responseBody.callback_response_status_code, 200);
+  assert.equal(responseBody.after_submit_callback_response.confirmation_header.includes(submittedCallbackResponse.header), true);
+  assert.equal(responseBody.after_submit_callback_response.confirmation_body.includes(submittedCallbackResponse.body), true);
+
+  caseData = Object.assign(caseData, responseBody.case_data);
+  if (eventName === 'CREATE_CLAIM') {
+    caseId = responseBody.id;
+    console.log('Case created: ' + caseId);
+  }
 };

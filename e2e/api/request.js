@@ -77,9 +77,11 @@ module.exports = {
           summary: '',
           description: ''
         },
+        event_data: caseData,
         event_token: tokens.ccdEvent,
         ignore_warning: false,
-        draft_id: null
+        draft_id: caseId ? undefined : null,
+        case_reference: caseId ?? undefined
       });
   }
 };
