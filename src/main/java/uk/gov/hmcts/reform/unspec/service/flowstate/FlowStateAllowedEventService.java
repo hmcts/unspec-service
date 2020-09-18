@@ -2,6 +2,7 @@ package uk.gov.hmcts.reform.unspec.service.flowstate;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import uk.gov.hmcts.reform.ccd.client.model.CaseDetails;
 import uk.gov.hmcts.reform.unspec.callback.CaseEvent;
 import uk.gov.hmcts.reform.unspec.model.CaseData;
 import uk.gov.hmcts.reform.unspec.stateflow.StateFlow;
@@ -16,9 +17,11 @@ import static uk.gov.hmcts.reform.unspec.callback.CaseEvent.CLAIMANT_RESPONSE;
 import static uk.gov.hmcts.reform.unspec.callback.CaseEvent.CONFIRM_SERVICE;
 import static uk.gov.hmcts.reform.unspec.callback.CaseEvent.CREATE_CASE;
 import static uk.gov.hmcts.reform.unspec.callback.CaseEvent.DEFENDANT_RESPONSE;
+import static uk.gov.hmcts.reform.unspec.callback.CaseEvent.DISCONTINUE_CLAIM;
 import static uk.gov.hmcts.reform.unspec.callback.CaseEvent.MOVE_TO_STAYED;
 import static uk.gov.hmcts.reform.unspec.callback.CaseEvent.REQUEST_EXTENSION;
 import static uk.gov.hmcts.reform.unspec.callback.CaseEvent.RESPOND_EXTENSION;
+import static uk.gov.hmcts.reform.unspec.callback.CaseEvent.WITHDRAW_CLAIM;
 import static uk.gov.hmcts.reform.unspec.service.flowstate.MainFlowState.CLAIM_ISSUED;
 import static uk.gov.hmcts.reform.unspec.service.flowstate.MainFlowState.CLAIM_STAYED;
 import static uk.gov.hmcts.reform.unspec.service.flowstate.MainFlowState.DRAFT;
@@ -36,15 +39,32 @@ public class FlowStateAllowedEventService {
     private final StateFlowEngine stateFlowEngine;
 
     private static final Map<String, List<CaseEvent>> ALLOWED_EVENTS_ON_FLOW_STATE = Map.of(
-        DRAFT.fullName(), List.of(CREATE_CASE),
-        CLAIM_ISSUED.fullName(), List.of(MOVE_TO_STAYED, CONFIRM_SERVICE),
-        CLAIM_STAYED.fullName(), emptyList(),
-        SERVICE_CONFIRMED.fullName(), List.of(ACKNOWLEDGE_SERVICE, DEFENDANT_RESPONSE),
-        SERVICE_ACKNOWLEDGED.fullName(), List.of(REQUEST_EXTENSION, DEFENDANT_RESPONSE),
-        EXTENSION_REQUESTED.fullName(), List.of(DEFENDANT_RESPONSE, RESPOND_EXTENSION),
-        EXTENSION_RESPONDED.fullName(), List.of(DEFENDANT_RESPONSE),
-        RESPONDED_TO_CLAIM.fullName(), List.of(CLAIMANT_RESPONSE),
-        FULL_DEFENCE.fullName(), emptyList()
+        DRAFT.fullName(),
+        List.of(CREATE_CASE, WITHDRAW_CLAIM, DISCONTINUE_CLAIM),
+
+        CLAIM_ISSUED.fullName(),
+        List.of(MOVE_TO_STAYED, CONFIRM_SERVICE, WITHDRAW_CLAIM, DISCONTINUE_CLAIM),
+
+        CLAIM_STAYED.fullName(),
+        List.of(WITHDRAW_CLAIM, DISCONTINUE_CLAIM),
+
+        SERVICE_CONFIRMED.fullName(),
+        List.of(ACKNOWLEDGE_SERVICE, DEFENDANT_RESPONSE, WITHDRAW_CLAIM, DISCONTINUE_CLAIM),
+
+        SERVICE_ACKNOWLEDGED.fullName(),
+        List.of(REQUEST_EXTENSION, DEFENDANT_RESPONSE, WITHDRAW_CLAIM, DISCONTINUE_CLAIM),
+
+        EXTENSION_REQUESTED.fullName(),
+        List.of(DEFENDANT_RESPONSE, RESPOND_EXTENSION, WITHDRAW_CLAIM, DISCONTINUE_CLAIM),
+
+        EXTENSION_RESPONDED.fullName(),
+        List.of(DEFENDANT_RESPONSE, WITHDRAW_CLAIM, DISCONTINUE_CLAIM),
+
+        RESPONDED_TO_CLAIM.fullName(),
+        List.of(CLAIMANT_RESPONSE, WITHDRAW_CLAIM, DISCONTINUE_CLAIM),
+
+        FULL_DEFENCE.fullName(),
+        List.of(WITHDRAW_CLAIM, DISCONTINUE_CLAIM)
     );
 
     public MainFlowState getFlowState(CaseData caseData) {
@@ -60,6 +80,11 @@ public class FlowStateAllowedEventService {
         return ALLOWED_EVENTS_ON_FLOW_STATE
             .getOrDefault(stateFullName, emptyList())
             .contains(caseEvent);
+    }
+
+    public boolean isAllowed(CaseDetails caseDetails, CaseEvent caseEvent) {
+        StateFlow stateFlow = stateFlowEngine.evaluate(caseDetails);
+        return isAllowed(stateFlow.getState().getName(), caseEvent);
     }
 
     public List<String> getAllowedStates(CaseEvent caseEvent) {
