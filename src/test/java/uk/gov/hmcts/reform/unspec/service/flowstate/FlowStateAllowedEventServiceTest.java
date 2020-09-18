@@ -13,10 +13,12 @@ import org.junit.jupiter.params.provider.EnumSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.jackson.JacksonAutoConfiguration;
 import org.springframework.boot.test.context.SpringBootTest;
+import uk.gov.hmcts.reform.ccd.client.model.CaseDetails;
 import uk.gov.hmcts.reform.unspec.callback.CaseEvent;
 import uk.gov.hmcts.reform.unspec.helpers.CaseDetailsConverter;
 import uk.gov.hmcts.reform.unspec.model.CaseData;
 import uk.gov.hmcts.reform.unspec.sampledata.CaseDataBuilder;
+import uk.gov.hmcts.reform.unspec.sampledata.CaseDetailsBuilder;
 
 import java.util.stream.Stream;
 
@@ -222,6 +224,57 @@ class FlowStateAllowedEventServiceTest {
         void shouldReturnValidStates_whenCaseEventIsGiven(CaseEvent caseEvent, String... flowStates) {
             assertThat(flowStateAllowedEventService.getAllowedStates(caseEvent))
                 .containsExactlyInAnyOrder(flowStates);
+        }
+    }
+
+    static class GetAllowedStatesForCaseDetailsArguments implements ArgumentsProvider {
+
+        @Override
+        @SneakyThrows
+        public Stream<? extends Arguments> provideArguments(ExtensionContext context) {
+            return Stream.of(
+                Arguments.of(
+                    true,
+                    CaseDetailsBuilder.builder().atStateExtensionRequested().build(),
+                    DEFENDANT_RESPONSE
+                ),
+                Arguments.of(true, CaseDetailsBuilder.builder().atStateExtensionRequested().build(), RESPOND_EXTENSION),
+                Arguments.of(true, CaseDetailsBuilder.builder().atStateExtensionRequested().build(), WITHDRAW_CLAIM),
+                Arguments.of(true, CaseDetailsBuilder.builder().atStateExtensionRequested().build(), DISCONTINUE_CLAIM),
+                Arguments.of(false, CaseDetailsBuilder.builder().atStateExtensionRequested().build(), CREATE_CASE),
+                Arguments.of(
+                    false,
+                    CaseDetailsBuilder.builder().atStateExtensionRequested().build(),
+                    CLAIMANT_RESPONSE
+                ),
+
+                Arguments.of(true, CaseDetailsBuilder.builder().atStateServiceAcknowledge().build(), REQUEST_EXTENSION),
+                Arguments.of(true, CaseDetailsBuilder.builder().atStateServiceAcknowledge().build(), WITHDRAW_CLAIM),
+                Arguments.of(
+                    true,
+                    CaseDetailsBuilder.builder().atStateServiceAcknowledge().build(),
+                    DEFENDANT_RESPONSE
+                ),
+                Arguments.of(true, CaseDetailsBuilder.builder().atStateServiceAcknowledge().build(), DISCONTINUE_CLAIM),
+                Arguments.of(false, CaseDetailsBuilder.builder().atStateServiceAcknowledge().build(), CREATE_CASE),
+                Arguments.of(false, CaseDetailsBuilder.builder().atStateServiceAcknowledge().build(), CONFIRM_SERVICE),
+                Arguments.of(false, CaseDetailsBuilder.builder().atStateServiceAcknowledge().build(), CLAIMANT_RESPONSE)
+            );
+        }
+    }
+
+    @Nested
+    class IsEventAllowedOnCaseDetails {
+
+        @ParameterizedTest
+        @ArgumentsSource(GetAllowedStatesForCaseDetailsArguments.class)
+        void shouldReturnValidStates_whenCaseEventIsGiven(
+            boolean expected,
+            CaseDetails caseDetails,
+            CaseEvent caseEvent
+        ) {
+            assertThat(flowStateAllowedEventService.isAllowed(caseDetails, caseEvent))
+                .isEqualTo(expected);
         }
     }
 }
