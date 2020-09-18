@@ -9,6 +9,7 @@ import javax.validation.constraints.NotNull;
 @Validated
 @Data
 public class NotificationsProperties {
+
     @NotEmpty
     private String govNotifyApiKey;
 

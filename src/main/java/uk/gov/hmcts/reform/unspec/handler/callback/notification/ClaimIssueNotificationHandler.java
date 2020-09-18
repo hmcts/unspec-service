@@ -33,6 +33,7 @@ import static uk.gov.hmcts.reform.unspec.utils.PartyNameUtils.getPartyNameBasedO
 @Service
 @RequiredArgsConstructor
 public class ClaimIssueNotificationHandler extends CallbackHandler {
+
     private static final List<CaseEvent> EVENTS = List.of(NOTIFY_DEFENDANT_SOLICITOR_FOR_CLAIM_ISSUE);
     public static final String NOTIFY_DEFENDANT_SOLICITOR_FOR_CLAIM_ISSUE_TASK_ID
         = "NotifyDefendantSolicitorForClaimIssue";

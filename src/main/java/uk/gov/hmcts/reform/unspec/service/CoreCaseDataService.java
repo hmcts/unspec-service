@@ -1,8 +1,7 @@
 package uk.gov.hmcts.reform.unspec.service;
 
-import com.google.common.collect.Maps;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
+import org.elasticsearch.search.builder.SearchSourceBuilder;
 import org.springframework.stereotype.Service;
 import uk.gov.hmcts.reform.authorisation.generators.AuthTokenGenerator;
 import uk.gov.hmcts.reform.ccd.client.CoreCaseDataApi;
@@ -13,7 +12,6 @@ import uk.gov.hmcts.reform.ccd.client.model.StartEventResponse;
 import uk.gov.hmcts.reform.idam.client.IdamClient;
 import uk.gov.hmcts.reform.unspec.callback.CaseEvent;
 import uk.gov.hmcts.reform.unspec.config.SystemUpdateUserConfiguration;
-import uk.gov.hmcts.reform.unspec.model.search.Query;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -23,7 +21,6 @@ import static uk.gov.hmcts.reform.unspec.CaseDefinitionConstants.JURISDICTION;
 
 @Service
 @RequiredArgsConstructor
-@Slf4j
 public class CoreCaseDataService {
 
     private final IdamClient idamClient;
@@ -61,7 +58,7 @@ public class CoreCaseDataService {
         );
     }
 
-    public SearchResult searchCases(Query query) {
+    public SearchResult searchCases(SearchSourceBuilder query) {
         String userToken = idamClient.getAccessToken(userConfig.getUserName(), userConfig.getPassword());
 
         return coreCaseDataApi.searchCases(userToken, authTokenGenerator.generate(), CASE_TYPE, query.toString());

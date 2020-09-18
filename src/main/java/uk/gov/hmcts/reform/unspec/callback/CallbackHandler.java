@@ -28,7 +28,7 @@ public abstract class CallbackHandler {
         }
         BusinessProcess businessProcess = caseData.getBusinessProcess();
 
-        return businessProcess!= null && camundaTaskId().equals(businessProcess.getTaskId());
+        return businessProcess != null && camundaTaskId().equals(businessProcess.getTaskId());
     }
 
     public void register(Map<String, CallbackHandler> handlers) {

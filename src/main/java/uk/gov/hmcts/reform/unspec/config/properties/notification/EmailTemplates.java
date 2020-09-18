@@ -8,6 +8,7 @@ import javax.validation.constraints.NotEmpty;
 @Validated
 @Data
 public class EmailTemplates {
+
     @NotEmpty
     private String defendantSolicitorClaimIssued;
 }

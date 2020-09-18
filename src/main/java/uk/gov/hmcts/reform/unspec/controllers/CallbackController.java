@@ -57,7 +57,7 @@ public class CallbackController {
             .version(version.orElse(null))
             .build();
 
-        if(callbackHandlerFactory.isEventAlreadyProcessed(callbackParams)){
+        if (callbackHandlerFactory.isEventAlreadyProcessed(callbackParams)) {
             return AboutToStartOrSubmitCallbackResponse.builder().build();
         }
 

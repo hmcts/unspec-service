@@ -6,6 +6,7 @@ import lombok.Data;
 @Data
 @Builder
 public class BusinessProcess {
+
     private final String processInstanceId;
     private final BusinessProcessStatus status;
     private final String taskId;

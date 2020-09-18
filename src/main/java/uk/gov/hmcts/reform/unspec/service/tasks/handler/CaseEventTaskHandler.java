@@ -1,43 +1,35 @@
-package uk.gov.hmcts.reform.unspec.camunda.tasks;
+package uk.gov.hmcts.reform.unspec.service.tasks.handler;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.camunda.bpm.client.ExternalTaskClient;
 import org.camunda.bpm.client.task.ExternalTask;
 import org.camunda.bpm.client.task.ExternalTaskHandler;
 import org.camunda.bpm.client.task.ExternalTaskService;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 import uk.gov.hmcts.reform.unspec.callback.CaseEvent;
 import uk.gov.hmcts.reform.unspec.model.BusinessProcess;
 import uk.gov.hmcts.reform.unspec.service.CoreCaseDataService;
 
 import java.util.Map;
 
+import static uk.gov.hmcts.reform.unspec.helpers.ExponentialRetryTimeoutHelper.calculateExponentialRetryTimeout;
+
 @Slf4j
-@Service
-public class CaseEventTask implements ExternalTaskHandler {
+@RequiredArgsConstructor
+@Component
+public class CaseEventTaskHandler implements ExternalTaskHandler {
 
     private final CoreCaseDataService coreCaseDataService;
-    private final ExternalTaskClient externalTaskClient;
-
-    public CaseEventTask(CoreCaseDataService coreCaseDataService, ExternalTaskClient externalTaskClient) {
-        this.coreCaseDataService = coreCaseDataService;
-        this.externalTaskClient = externalTaskClient;
-
-        this.externalTaskClient
-            .subscribe("processCaseEvent")
-            .handler(this).open();
-
-    }
 
     @Override
     public void execute(ExternalTask externalTask, ExternalTaskService externalTaskService) {
-        Integer retries = externalTask.getRetries();
-        if (retries == null || retries == 0) {
-            retries = 3;
-        }
+        final String taskName = externalTask.getTopicName();
+        log.info("Job {} started", taskName);
+
         try {
-            String ccdId = (String) externalTask.getAllVariables().get("CCD_ID");
-            String eventId = (String) externalTask.getAllVariables().get("CASE_EVENT");
+            Map<String, Object> allVariables = externalTask.getAllVariables();
+            String ccdId = (String) allVariables.get("CCD_ID");
+            String eventId = (String) allVariables.get("CASE_EVENT");
 
             coreCaseDataService.triggerEvent(
                 Long.valueOf(ccdId),
@@ -48,15 +40,21 @@ public class CaseEventTask implements ExternalTaskHandler {
                 )
             );
             externalTaskService.complete(externalTask);
+            log.info("Job '{}' finished", taskName);
 
         } catch (Exception e) {
+            int maxRetries = 3;
+            int remainingRetries = externalTask.getRetries() == null ? maxRetries : externalTask.getRetries();
+
             externalTaskService.handleFailure(
                 externalTask,
                 externalTask.getWorkerId(),
                 "Event failed processing",
-                retries - 1,
-                60L * 1000L
+                remainingRetries - 1,
+                calculateExponentialRetryTimeout(500, maxRetries, remainingRetries)
             );
+
+            log.error("Job '{}' errored due to {}", taskName, e.getMessage());
         }
     }
 }
