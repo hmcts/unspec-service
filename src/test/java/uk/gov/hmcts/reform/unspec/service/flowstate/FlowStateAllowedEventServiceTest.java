@@ -162,7 +162,7 @@ class FlowStateAllowedEventServiceTest {
             MainFlowState flowState,
             CaseEvent caseEvent
         ) {
-            assertTrue(flowStateAllowedEventService.isAllowed(flowState.fullName(), caseEvent));
+            assertTrue(flowStateAllowedEventService.isAllowedOnState(flowState.fullName(), caseEvent));
         }
 
         @ParameterizedTest
@@ -174,7 +174,7 @@ class FlowStateAllowedEventServiceTest {
             MainFlowState flowState,
             CaseEvent caseEvent
         ) {
-            assertFalse(flowStateAllowedEventService.isAllowed(flowState.fullName(), caseEvent));
+            assertFalse(flowStateAllowedEventService.isAllowedOnState(flowState.fullName(), caseEvent));
         }
     }
 

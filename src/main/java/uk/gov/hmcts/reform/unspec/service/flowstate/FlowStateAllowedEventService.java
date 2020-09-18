@@ -76,7 +76,7 @@ public class FlowStateAllowedEventService {
         return ALLOWED_EVENTS_ON_FLOW_STATE.getOrDefault(stateFullName, emptyList());
     }
 
-    public boolean isAllowed(String stateFullName, CaseEvent caseEvent) {
+    public boolean isAllowedOnState(String stateFullName, CaseEvent caseEvent) {
         return ALLOWED_EVENTS_ON_FLOW_STATE
             .getOrDefault(stateFullName, emptyList())
             .contains(caseEvent);
@@ -84,7 +84,7 @@ public class FlowStateAllowedEventService {
 
     public boolean isAllowed(CaseDetails caseDetails, CaseEvent caseEvent) {
         StateFlow stateFlow = stateFlowEngine.evaluate(caseDetails);
-        return isAllowed(stateFlow.getState().getName(), caseEvent);
+        return isAllowedOnState(stateFlow.getState().getName(), caseEvent);
     }
 
     public List<String> getAllowedStates(CaseEvent caseEvent) {
