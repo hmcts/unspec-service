@@ -67,7 +67,7 @@ class CaseEventTaskHandlerTest {
         doThrow(new RuntimeException(errorMessage))
             .when(coreCaseDataService)
             .triggerEvent(eq(CASE_ID), eq(NOTIFY_DEFENDANT_SOLICITOR_FOR_CLAIM_ISSUE), anyMap());
-        
+
         caseEventTaskHandler.execute(mockExternalTask, externalTaskService);
 
         verify(externalTaskService).handleFailure(mockExternalTask, "worker", errorMessage, 2, 500L);
