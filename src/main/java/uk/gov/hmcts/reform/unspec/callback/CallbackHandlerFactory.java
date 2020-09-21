@@ -2,8 +2,10 @@ package uk.gov.hmcts.reform.unspec.callback;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import uk.gov.hmcts.reform.ccd.client.model.AboutToStartOrSubmitCallbackResponse;
 import uk.gov.hmcts.reform.ccd.client.model.CallbackResponse;
 import uk.gov.hmcts.reform.unspec.helpers.CaseDetailsConverter;
+import uk.gov.hmcts.reform.unspec.model.CaseData;
 
 import java.util.Arrays;
 import java.util.HashMap;
@@ -25,16 +27,14 @@ public class CallbackHandlerFactory {
     public CallbackResponse dispatch(CallbackParams callbackParams) {
         String eventId = callbackParams.getRequest().getEventId();
         return ofNullable(eventHandlers.get(eventId))
-            .map(h -> h.handle(callbackParams))
+            .map(h -> processEvent(callbackParams, h))
             .orElseThrow(() -> new CallbackException("Could not handle callback for event " + eventId));
     }
 
-    public boolean isEventAlreadyProcessed(CallbackParams callbackParams) {
-        String eventId = callbackParams.getRequest().getEventId();
-        return ofNullable(eventHandlers.get(eventId))
-            .filter(h -> h.isEventAlreadyProcessed(caseDetailsConverter
-                                                       .toCaseData(callbackParams.getRequest().getCaseDetails())))
-            .isPresent();
-
+    private CallbackResponse processEvent(CallbackParams callbackParams, CallbackHandler handler) {
+        CaseData caseData = caseDetailsConverter.toCaseData(callbackParams.getRequest().getCaseDetails());
+        return handler.isEventAlreadyProcessed(caseData)
+            ? AboutToStartOrSubmitCallbackResponse.builder().build()
+            : handler.handle(callbackParams);
     }
 }

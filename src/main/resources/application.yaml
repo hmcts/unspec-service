@@ -102,7 +102,6 @@ spring:
 feign:
   client:
     config:
-
       remoteRuntimeService:
         url: http://localhost:9404/engine-rest/
       remoteRepositoryService:

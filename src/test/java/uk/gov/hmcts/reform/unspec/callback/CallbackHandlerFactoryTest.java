@@ -20,8 +20,6 @@ import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static uk.gov.hmcts.reform.unspec.callback.CallbackType.ABOUT_TO_SUBMIT;
@@ -34,7 +32,12 @@ import static uk.gov.hmcts.reform.unspec.callback.CaseEvent.NOTIFY_DEFENDANT_SOL
 class CallbackHandlerFactoryTest {
 
     public static final String BEARER_TOKEN = "Bearer Token";
-    public static final CallbackResponse RESPONSE = AboutToStartOrSubmitCallbackResponse.builder().build();
+    public static final CallbackResponse EVENT_HANDLED_RESPONSE = AboutToStartOrSubmitCallbackResponse.builder()
+        .data(Map.of("state", "created"))
+        .build();
+
+    public static final CallbackResponse ALREADY_HANDLED_EVENT_RESPONSE = AboutToStartOrSubmitCallbackResponse.builder()
+        .build();
 
     private CallbackHandler createCaseCallbackHandler = new CallbackHandler() {
         @Override
@@ -45,7 +48,7 @@ class CallbackHandlerFactoryTest {
         }
 
         private CallbackResponse createCitizenClaim(CallbackParams callbackParams) {
-            return RESPONSE;
+            return EVENT_HANDLED_RESPONSE;
         }
 
         @Override
@@ -63,7 +66,7 @@ class CallbackHandlerFactoryTest {
         }
 
         private CallbackResponse sendSealedClaim(CallbackParams callbackParams) {
-            return RESPONSE;
+            return EVENT_HANDLED_RESPONSE;
         }
 
         @Override
@@ -85,7 +88,8 @@ class CallbackHandlerFactoryTest {
     @BeforeEach
     void setUp() {
         callbackHandlerFactory = new CallbackHandlerFactory(caseDetailsConverter, createCaseCallbackHandler,
-                                                            sendSealedClaimCallbackHandler);
+                                                            sendSealedClaimCallbackHandler
+        );
     }
 
     @Test
@@ -106,7 +110,7 @@ class CallbackHandlerFactoryTest {
     }
 
     @Test
-    void shouldDispatchCallback_whenValidCaseEvent() {
+    void shouldProcessEvent_whenValidCaseEvent() {
         CallbackRequest callbackRequest = CallbackRequest
             .builder()
             .eventId(CREATE_CASE.getValue())
@@ -120,11 +124,11 @@ class CallbackHandlerFactoryTest {
 
         CallbackResponse callbackResponse = callbackHandlerFactory.dispatch(params);
 
-        assertEquals(RESPONSE, callbackResponse);
+        assertEquals(EVENT_HANDLED_RESPONSE, callbackResponse);
     }
 
     @Test
-    void shouldBeTrue_whenEventIsAlreadyProcessed() {
+    void shouldNotProcessEventAgain_whenEventIsAlreadyProcessed() {
         CallbackRequest callbackRequest = CallbackRequest
             .builder()
             .eventId(NOTIFY_DEFENDANT_SOLICITOR_FOR_CLAIM_ISSUE.getValue())
@@ -143,11 +147,13 @@ class CallbackHandlerFactoryTest {
             .params(ImmutableMap.of(CallbackParams.Params.BEARER_TOKEN, BEARER_TOKEN))
             .build();
 
-        assertTrue(callbackHandlerFactory.isEventAlreadyProcessed(params));
+        CallbackResponse callbackResponse = callbackHandlerFactory.dispatch(params);
+
+        assertEquals(ALREADY_HANDLED_EVENT_RESPONSE, callbackResponse);
     }
 
     @Test
-    void shouldBeFalse_whenEventIsNotAlreadyProcessed() {
+    void shouldProcessEvent_whenEventIsNotAlreadyProcessed() {
         CallbackRequest callbackRequest = CallbackRequest
             .builder()
             .eventId(NOTIFY_DEFENDANT_SOLICITOR_FOR_CLAIM_ISSUE.getValue())
@@ -166,11 +172,13 @@ class CallbackHandlerFactoryTest {
             .params(ImmutableMap.of(CallbackParams.Params.BEARER_TOKEN, BEARER_TOKEN))
             .build();
 
-        assertFalse(callbackHandlerFactory.isEventAlreadyProcessed(params));
+        CallbackResponse callbackResponse = callbackHandlerFactory.dispatch(params);
+
+        assertEquals(EVENT_HANDLED_RESPONSE, callbackResponse);
     }
 
     @Test
-    void shouldBeFalse_whenEventHasNoCamundaTask() {
+    void shouldProcessEvent_whenEventHasNoCamundaTask() {
         CallbackRequest callbackRequest = CallbackRequest
             .builder()
             .eventId(CREATE_CASE.getValue())
@@ -189,6 +197,8 @@ class CallbackHandlerFactoryTest {
             .params(ImmutableMap.of(CallbackParams.Params.BEARER_TOKEN, BEARER_TOKEN))
             .build();
 
-        assertFalse(callbackHandlerFactory.isEventAlreadyProcessed(params));
+        CallbackResponse callbackResponse = callbackHandlerFactory.dispatch(params);
+
+        assertEquals(EVENT_HANDLED_RESPONSE, callbackResponse);
     }
 }

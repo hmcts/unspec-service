@@ -11,7 +11,7 @@ import static java.util.Optional.ofNullable;
 
 public abstract class CallbackHandler {
 
-    public static final String DEFAULT = "default";
+    private static final String DEFAULT = "default";
 
     protected abstract Map<CallbackType, Callback> callbacks();
 
