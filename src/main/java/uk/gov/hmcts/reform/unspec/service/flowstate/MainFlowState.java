@@ -1,6 +1,6 @@
 package uk.gov.hmcts.reform.unspec.service.flowstate;
 
-public enum MainFlowState {
+public enum MainFlowState implements FlowState {
     DRAFT,
     CLAIM_ISSUED,
     CLAIM_STAYED,
@@ -13,12 +13,8 @@ public enum MainFlowState {
 
     public static final String FLOW_NAME = "MAIN";
 
+    @Override
     public String fullName() {
         return FLOW_NAME + "." + name();
-    }
-
-    public static MainFlowState fromFullName(String fullName) {
-        int lastIndexOfDot = fullName.lastIndexOf('.');
-        return MainFlowState.valueOf(fullName.substring(lastIndexOfDot + 1));
     }
 }

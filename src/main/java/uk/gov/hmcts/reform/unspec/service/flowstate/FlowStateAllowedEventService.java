@@ -67,9 +67,9 @@ public class FlowStateAllowedEventService {
         List.of(WITHDRAW_CLAIM, DISCONTINUE_CLAIM)
     );
 
-    public MainFlowState getFlowState(CaseData caseData) {
+    public FlowState getFlowState(CaseData caseData) {
         StateFlow stateFlow = stateFlowEngine.evaluate(caseData);
-        return MainFlowState.fromFullName(stateFlow.getState().getName());
+        return FlowState.fromFullName(stateFlow.getState().getName());
     }
 
     public List<CaseEvent> getAllowedEvents(String stateFullName) {
