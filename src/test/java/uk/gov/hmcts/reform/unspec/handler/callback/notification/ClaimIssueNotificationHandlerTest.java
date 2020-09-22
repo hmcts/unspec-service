@@ -19,7 +19,6 @@ import uk.gov.hmcts.reform.unspec.service.NotificationService;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.HashMap;
 import java.util.Map;
 
 import static org.mockito.ArgumentMatchers.anyMap;
@@ -55,16 +54,17 @@ class ClaimIssueNotificationHandlerTest extends BaseCallbackHandlerTest {
 
         @Test
         void shouldNotifyDefendantSolicitor_whenInvoked() {
-            Map<String, Object> data = new HashMap<>();
-            data.put("businessProcess", BusinessProcess.builder()
-                .taskId(NOTIFY_DEFENDANT_SOLICITOR_FOR_CLAIM_ISSUE_TASK_ID)
-                .build());
             String solicitorEmail = "solicitor@example.com";
-            data.put("serviceMethodToRespondentSolicitor1", Map.of("email", solicitorEmail));
-            data.put("legacyCaseReference", "000LR001");
-            data.put("applicant1", PartyBuilder.builder().individual().build());
-            data.put("claimIssuedDate", LocalDate.now());
-            data.put("respondentSolicitor1ResponseDeadline", LocalDateTime.now());
+            Map<String, Object> data = Map.of(
+                "businessProcess",
+                BusinessProcess.builder().taskId(NOTIFY_DEFENDANT_SOLICITOR_FOR_CLAIM_ISSUE_TASK_ID).build(),
+                "serviceMethodToRespondentSolicitor1",
+                Map.of("email", solicitorEmail),
+                "legacyCaseReference", "000LR001",
+                "applicant1", PartyBuilder.builder().individual().build(),
+                "claimIssuedDate", LocalDate.now(),
+                "respondentSolicitor1ResponseDeadline", LocalDateTime.now()
+            );
 
             CallbackParams params = callbackParamsOf(data, CallbackType.ABOUT_TO_SUBMIT);
 
