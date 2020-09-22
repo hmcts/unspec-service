@@ -138,7 +138,7 @@ docmosis:
     url: http://localhost:5433
 
 notifications:
-  govNotifyApiKey:  localtest-a8b1617c-8e15-49aa-a8d3-a27a243f3c45-42eab675-5173-4405-87aa-1b5110c35cee
+  govNotifyApiKey:  unspec-a8b1617c-8e15-49aa-a8d3-a27a243f3c45-62103421-281e-4f28-ae70-74dff6a1a76f
 ---
 
 spring:
