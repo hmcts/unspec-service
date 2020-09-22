@@ -1,11 +1,13 @@
 package uk.gov.hmcts.reform.unspec.callback;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.ImmutableMap;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.jackson.JacksonAutoConfiguration;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.context.TestConfiguration;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Import;
 import uk.gov.hmcts.reform.ccd.client.model.AboutToStartOrSubmitCallbackResponse;
 import uk.gov.hmcts.reform.ccd.client.model.CallbackRequest;
 import uk.gov.hmcts.reform.ccd.client.model.CallbackResponse;
@@ -24,7 +26,12 @@ import static uk.gov.hmcts.reform.unspec.callback.CallbackVersion.V_2;
 import static uk.gov.hmcts.reform.unspec.callback.CaseEvent.CREATE_CASE;
 import static uk.gov.hmcts.reform.unspec.callback.CaseEvent.NOTIFY_DEFENDANT_SOLICITOR_FOR_CLAIM_ISSUE;
 
-@ExtendWith(MockitoExtension.class)
+@SpringBootTest(classes = {
+    CallbackHandlerFactory.class,
+    JacksonAutoConfiguration.class},
+    properties = {"spring.main.allow-bean-definition-overriding=true"}
+)
+@Import(CallbackHandlerFactoryTest.OverrideBean.class)
 class CallbackHandlerFactoryTest {
 
     public static final String BEARER_TOKEN = "Bearer Token";
@@ -35,58 +42,62 @@ class CallbackHandlerFactoryTest {
     public static final CallbackResponse ALREADY_HANDLED_EVENT_RESPONSE = AboutToStartOrSubmitCallbackResponse.builder()
         .build();
 
-    private CallbackHandler createCaseCallbackHandler = new CallbackHandler() {
-        @Override
-        protected Map<CallbackType, Callback> callbacks() {
-            return ImmutableMap.of(
-                ABOUT_TO_SUBMIT, this::createCitizenClaim
-            );
+    @TestConfiguration
+    public static class OverrideBean {
+        @Bean
+        public CallbackHandler createCaseCallbackHandler() {
+
+            return new CallbackHandler() {
+                @Override
+                protected Map<CallbackType, Callback> callbacks() {
+                    return ImmutableMap.of(
+                        ABOUT_TO_SUBMIT, this::createCitizenClaim
+                    );
+                }
+
+                private CallbackResponse createCitizenClaim(CallbackParams callbackParams) {
+                    return EVENT_HANDLED_RESPONSE;
+                }
+
+                @Override
+                public List<CaseEvent> handledEvents() {
+                    return Collections.singletonList(CREATE_CASE);
+                }
+            };
         }
 
-        private CallbackResponse createCitizenClaim(CallbackParams callbackParams) {
-            return EVENT_HANDLED_RESPONSE;
+        @Bean
+        public CallbackHandler sendSealedClaimCallbackHandler() {
+
+            return new CallbackHandler() {
+                @Override
+                protected Map<CallbackType, Callback> callbacks() {
+                    return ImmutableMap.of(
+                        ABOUT_TO_SUBMIT, this::sendSealedClaim
+                    );
+                }
+
+                private CallbackResponse sendSealedClaim(CallbackParams callbackParams) {
+                    return EVENT_HANDLED_RESPONSE;
+                }
+
+                @Override
+                public String camundaTaskId() {
+                    return "SealedClaimEmailTaskId";
+                }
+
+                @Override
+                public List<CaseEvent> handledEvents() {
+                    return Collections.singletonList(NOTIFY_DEFENDANT_SOLICITOR_FOR_CLAIM_ISSUE);
+                }
+            };
         }
-
-        @Override
-        public List<CaseEvent> handledEvents() {
-            return Collections.singletonList(CREATE_CASE);
-        }
-    };
-
-    private CallbackHandler sendSealedClaimCallbackHandler = new CallbackHandler() {
-        @Override
-        protected Map<CallbackType, Callback> callbacks() {
-            return ImmutableMap.of(
-                ABOUT_TO_SUBMIT, this::sendSealedClaim
-            );
-        }
-
-        private CallbackResponse sendSealedClaim(CallbackParams callbackParams) {
-            return EVENT_HANDLED_RESPONSE;
-        }
-
-        @Override
-        public String camundaTaskId() {
-            return "SealedClaimEmailTaskId";
-        }
-
-        @Override
-        public List<CaseEvent> handledEvents() {
-            return Collections.singletonList(NOTIFY_DEFENDANT_SOLICITOR_FOR_CLAIM_ISSUE);
-        }
-    };
-
-    private CallbackHandlerFactory callbackHandlerFactory;
-
-    @BeforeEach
-    void setUp() {
-        callbackHandlerFactory = new CallbackHandlerFactory(new ObjectMapper(),
-                                                            createCaseCallbackHandler,
-                                                            sendSealedClaimCallbackHandler);
     }
 
-    @Test
+    @Autowired
+    private CallbackHandlerFactory callbackHandlerFactory;
 
+    @Test
     void shouldThrowCallbackException_whenUnknownEvent() {
         CallbackRequest callbackRequest = CallbackRequest
             .builder()
