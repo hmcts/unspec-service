@@ -16,6 +16,7 @@ import uk.gov.hmcts.reform.unspec.service.NotificationService;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import static uk.gov.hmcts.reform.unspec.callback.CaseEvent.NOTIFY_DEFENDANT_SOLICITOR_FOR_CLAIM_ISSUE;
 import static uk.gov.hmcts.reform.unspec.config.properties.notification.NotificationTemplateParameters.CLAIMANT_NAME;
@@ -63,7 +64,8 @@ public class ClaimIssueNotificationHandler extends CallbackHandler {
         CaseData caseData = caseDetailsConverter.toCaseData(callbackParams.getRequest().getCaseDetails());
 
         notificationService.sendMail(
-            caseData.getServiceMethodToRespondentSolicitor1().getEmail(), //TODO need correct email address here
+            Optional.ofNullable(caseData.getServiceMethodToRespondentSolicitor1().getEmail())
+                .orElse("dharmendra.kumar@hmcts.net"), //TODO need correct email address here
             notificationsProperties.getEmailTemplates().getDefendantSolicitorClaimIssued(),
             addProperties(caseData),
             "defendant-solicitor-issue-notification-" + caseData.getLegacyCaseReference()

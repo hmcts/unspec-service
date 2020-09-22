@@ -1,5 +1,6 @@
 package uk.gov.hmcts.reform.unspec.callback;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.ImmutableMap;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -79,10 +80,13 @@ class CallbackHandlerFactoryTest {
 
     @BeforeEach
     void setUp() {
-        callbackHandlerFactory = new CallbackHandlerFactory(createCaseCallbackHandler, sendSealedClaimCallbackHandler);
+        callbackHandlerFactory = new CallbackHandlerFactory(new ObjectMapper(),
+                                                            createCaseCallbackHandler,
+                                                            sendSealedClaimCallbackHandler);
     }
 
     @Test
+
     void shouldThrowCallbackException_whenUnknownEvent() {
         CallbackRequest callbackRequest = CallbackRequest
             .builder()

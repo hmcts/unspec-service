@@ -37,7 +37,7 @@ class CaseEventTaskTest extends BpmnBaseTest {
 
         assertThat(lockedExternalTasks).hasSize(1);
         assertThat(lockedExternalTasks.get(0).getVariables())
-            .containsEntry("CCD_ID", "1600354499803313")
+            .containsEntry("CCD_ID", "1600774271669709")
             .containsEntry("CASE_EVENT", "NOTIFY_DEFENDANT_SOLICITOR_FOR_CLAIM_ISSUE")
         ;
 
