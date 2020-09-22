@@ -19,7 +19,7 @@ public class CallbackControllerTest extends BaseIntegrationTest {
     @SneakyThrows
     public void shouldReturnNotFoundWhenCallbackHandlerIsNotImplemented() {
         CallbackRequest callbackRequest = CallbackRequest.builder()
-            .eventId(CaseEvent.CREATE_CASE.getValue())
+            .eventId(CaseEvent.CREATE_CLAIM.name())
             .caseDetails(CaseDetails.builder()
                              .id(CASE_ID)
                              .data(convertToMap(CaseDataBuilder.builder().atStateClaimCreated().build()))
