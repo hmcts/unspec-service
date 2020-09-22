@@ -32,7 +32,7 @@ public class Party {
     private final LocalDate soleTraderDateOfBirth;
     private final Address primaryAddress;
     private final String partyName;
-    private final String typeDisplayValue;
+    private final String partyTypeDisplayValue;
 
     public enum Type {
         INDIVIDUAL,

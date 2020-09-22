@@ -200,7 +200,7 @@ class CreateClaimCallbackHandlerTest extends BaseCallbackHandlerTest {
         }
 
         @Test
-        void shouldUpdateRespondentAndApplicantWithPartyNameAndTypeDisplayValue_whenInvoked() {
+        void shouldUpdateRespondentAndApplicantWithPartyNameAndPartyTypeDisplayValue_whenInvoked() {
             when(issueDateCalculator.calculateIssueDay(any(LocalDateTime.class))).thenReturn(now());
             when(deadlinesCalculator.calculateConfirmationOfServiceDeadline(any(LocalDate.class)))
                 .thenReturn(now().atTime(23, 59, 59));
@@ -211,11 +211,11 @@ class CreateClaimCallbackHandlerTest extends BaseCallbackHandlerTest {
 
             assertThat(response.getData()).extracting("respondent1").extracting("partyName").isEqualTo(
                 getPartyNameBasedOnType(caseData.getRespondent1()));
-            assertThat(response.getData()).extracting("respondent1").extracting("typeDisplayValue").isEqualTo(
+            assertThat(response.getData()).extracting("respondent1").extracting("partyTypeDisplayValue").isEqualTo(
                 caseData.getRespondent1().getType().getDisplayValue());
             assertThat(response.getData()).extracting("applicant1").extracting("partyName").isEqualTo(
                 getPartyNameBasedOnType(caseData.getApplicant1()));
-            assertThat(response.getData()).extracting("applicant1").extracting("typeDisplayValue").isEqualTo(
+            assertThat(response.getData()).extracting("applicant1").extracting("partyTypeDisplayValue").isEqualTo(
                 caseData.getApplicant1().getType().getDisplayValue());
         }
 

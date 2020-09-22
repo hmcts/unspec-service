@@ -154,7 +154,7 @@ public class CreateClaimCallbackHandler extends CallbackHandler {
 
         return party.toBuilder()
             .partyName(PartyNameUtils.getPartyNameBasedOnType(party))
-            .typeDisplayValue(party.getType().getDisplayValue())
+            .partyTypeDisplayValue(party.getType().getDisplayValue())
             .build();
     }
 
