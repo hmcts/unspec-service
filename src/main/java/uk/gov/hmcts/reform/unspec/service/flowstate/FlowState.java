@@ -13,11 +13,10 @@ public interface FlowState {
         int lastIndexOfDot = fullName.lastIndexOf('.');
         String flowStateName = fullName.substring(lastIndexOfDot + 1);
         String flowName = fullName.substring(0, lastIndexOfDot);
-        switch (flowName) {
-            case "MAIN":
-                return MainFlowState.valueOf(flowStateName);
-            default:
-                throw new IllegalArgumentException("Invalid flow name:" + flowName);
+        if (flowName.equals("MAIN")) {
+            return MainFlowState.valueOf(flowStateName);
+        } else {
+            throw new IllegalArgumentException("Invalid flow name:" + flowName);
         }
     }
 }
