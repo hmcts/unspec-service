@@ -4,11 +4,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import uk.gov.hmcts.reform.ccd.client.model.AboutToStartOrSubmitCallbackResponse;
 import uk.gov.hmcts.reform.ccd.client.model.CallbackResponse;
-import uk.gov.hmcts.reform.unspec.helpers.CaseDetailsConverter;
-import uk.gov.hmcts.reform.unspec.model.CaseData;
+import uk.gov.hmcts.reform.unspec.model.BusinessProcess;
 
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.Map;
 
 import static java.util.Optional.ofNullable;
 
@@ -16,11 +16,9 @@ import static java.util.Optional.ofNullable;
 public class CallbackHandlerFactory {
 
     private final HashMap<String, CallbackHandler> eventHandlers = new HashMap<>();
-    private final CaseDetailsConverter caseDetailsConverter;
 
     @Autowired
-    public CallbackHandlerFactory(CaseDetailsConverter caseDetailsConverter, CallbackHandler... beans) {
-        this.caseDetailsConverter = caseDetailsConverter;
+    public CallbackHandlerFactory(CallbackHandler... beans) {
         Arrays.asList(beans).forEach(bean -> bean.register(eventHandlers));
     }
 
@@ -32,8 +30,8 @@ public class CallbackHandlerFactory {
     }
 
     private CallbackResponse processEvent(CallbackParams callbackParams, CallbackHandler handler) {
-        CaseData caseData = caseDetailsConverter.toCaseData(callbackParams.getRequest().getCaseDetails());
-        return handler.isEventAlreadyProcessed(caseData)
+        Map<String, Object> data = callbackParams.getRequest().getCaseDetails().getData();
+        return handler.isEventAlreadyProcessed((BusinessProcess) data.get("businessProcess"))
             ? AboutToStartOrSubmitCallbackResponse.builder().build()
             : handler.handle(callbackParams);
     }

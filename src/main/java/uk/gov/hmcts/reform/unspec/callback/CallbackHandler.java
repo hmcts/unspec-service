@@ -2,7 +2,6 @@ package uk.gov.hmcts.reform.unspec.callback;
 
 import uk.gov.hmcts.reform.ccd.client.model.CallbackResponse;
 import uk.gov.hmcts.reform.unspec.model.BusinessProcess;
-import uk.gov.hmcts.reform.unspec.model.CaseData;
 
 import java.util.List;
 import java.util.Map;
@@ -21,12 +20,11 @@ public abstract class CallbackHandler {
         return DEFAULT;
     }
 
-    public boolean isEventAlreadyProcessed(CaseData caseData) {
+    public boolean isEventAlreadyProcessed(BusinessProcess businessProcess) {
         if (camundaTaskId().equals(DEFAULT)) {
 
             return false;
         }
-        BusinessProcess businessProcess = caseData.getBusinessProcess();
 
         return businessProcess != null && camundaTaskId().equals(businessProcess.getTaskId());
     }
