@@ -12,6 +12,9 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class QueryTest {
 
+    public static final String EXPECTED_QUERY =
+        "{\"query\": {\"match_all\": {\"boost\": 1.0 }}, \"_source\": [\"reference\",\"other field\"], \"from\": 0}";
+
     @Test
     void shouldThrowException_WhenIndexLessThan0() {
         assertThrows(IllegalArgumentException.class, () ->
@@ -32,7 +35,6 @@ class QueryTest {
     void shouldFormatSourceInCorrectFormat_whenListOfItems() throws JSONException {
         Query query = new Query(matchAllQuery(), List.of("reference", "other field"), 0);
 
-        JSONAssert.assertEquals("{\"query\": {\"match_all\": {\"boost\": 1.0 }}, " +
-            "\"_source\": [\"reference\",\"other field\"], \"from\": 0}", query.toString(), true);
+        JSONAssert.assertEquals(EXPECTED_QUERY, query.toString(), true);
     }
 }
