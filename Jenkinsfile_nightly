@@ -29,9 +29,19 @@ def type = "java"
 def product = "unspec"
 def component = "service"
 
-//def type = "java"
-//def product = "rpe"
-//def component = "spring-boot-template"
+static Map<String, Object> secret(String secretName, String envVariable) {
+  [$class     : 'AzureKeyVaultSecret',
+   secretType : 'Secret',
+   name       : secretName,
+   envVariable: envVariable
+  ]
+}
+
+def secrets = [
+  'unspec-${env}': [
+    secret('microservicekey-unspec-service', 'S2S_SECRET')
+  ]
+]
 
 withNightlyPipeline(type, product, component) {
   env.URL = params.FRONTEND_URL
