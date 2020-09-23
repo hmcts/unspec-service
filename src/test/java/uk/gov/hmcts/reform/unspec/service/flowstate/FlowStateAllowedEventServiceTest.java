@@ -35,15 +35,15 @@ import static uk.gov.hmcts.reform.unspec.callback.CaseEvent.MOVE_TO_STAYED;
 import static uk.gov.hmcts.reform.unspec.callback.CaseEvent.REQUEST_EXTENSION;
 import static uk.gov.hmcts.reform.unspec.callback.CaseEvent.RESPOND_EXTENSION;
 import static uk.gov.hmcts.reform.unspec.callback.CaseEvent.WITHDRAW_CLAIM;
-import static uk.gov.hmcts.reform.unspec.service.flowstate.MainFlowState.CLAIM_ISSUED;
-import static uk.gov.hmcts.reform.unspec.service.flowstate.MainFlowState.CLAIM_STAYED;
-import static uk.gov.hmcts.reform.unspec.service.flowstate.MainFlowState.DRAFT;
-import static uk.gov.hmcts.reform.unspec.service.flowstate.MainFlowState.EXTENSION_REQUESTED;
-import static uk.gov.hmcts.reform.unspec.service.flowstate.MainFlowState.EXTENSION_RESPONDED;
-import static uk.gov.hmcts.reform.unspec.service.flowstate.MainFlowState.FULL_DEFENCE;
-import static uk.gov.hmcts.reform.unspec.service.flowstate.MainFlowState.RESPONDED_TO_CLAIM;
-import static uk.gov.hmcts.reform.unspec.service.flowstate.MainFlowState.SERVICE_ACKNOWLEDGED;
-import static uk.gov.hmcts.reform.unspec.service.flowstate.MainFlowState.SERVICE_CONFIRMED;
+import static uk.gov.hmcts.reform.unspec.service.flowstate.FlowState.Main.CLAIM_ISSUED;
+import static uk.gov.hmcts.reform.unspec.service.flowstate.FlowState.Main.CLAIM_STAYED;
+import static uk.gov.hmcts.reform.unspec.service.flowstate.FlowState.Main.DRAFT;
+import static uk.gov.hmcts.reform.unspec.service.flowstate.FlowState.Main.EXTENSION_REQUESTED;
+import static uk.gov.hmcts.reform.unspec.service.flowstate.FlowState.Main.EXTENSION_RESPONDED;
+import static uk.gov.hmcts.reform.unspec.service.flowstate.FlowState.Main.FULL_DEFENCE;
+import static uk.gov.hmcts.reform.unspec.service.flowstate.FlowState.Main.RESPONDED_TO_CLAIM;
+import static uk.gov.hmcts.reform.unspec.service.flowstate.FlowState.Main.SERVICE_ACKNOWLEDGED;
+import static uk.gov.hmcts.reform.unspec.service.flowstate.FlowState.Main.SERVICE_CONFIRMED;
 
 @SpringBootTest(classes = {
     JacksonAutoConfiguration.class,
@@ -80,7 +80,7 @@ class FlowStateAllowedEventServiceTest {
 
         @ParameterizedTest(name = "{index} => should return flow state {1} when case data {0}")
         @ArgumentsSource(GetFlowStateArguments.class)
-        void shouldReturnValidState_whenCaseDataProvided(CaseData caseData, MainFlowState flowState) {
+        void shouldReturnValidState_whenCaseDataProvided(CaseData caseData, FlowState.Main flowState) {
             assertThat(flowStateAllowedEventService.getFlowState(caseData))
                 .isEqualTo(flowState);
         }
@@ -132,8 +132,8 @@ class FlowStateAllowedEventServiceTest {
         }
 
         @ParameterizedTest
-        @EnumSource(value = MainFlowState.class, names = {"CLAIM_STAYED", "FULL_DEFENCE"})
-        void shouldReturnValidEvents_whenFlowStateIsClaimStayedOrFullDefence(MainFlowState state) {
+        @EnumSource(value = FlowState.Main.class, names = {"CLAIM_STAYED", "FULL_DEFENCE"})
+        void shouldReturnValidEvents_whenFlowStateIsClaimStayedOrFullDefence(FlowState.Main state) {
             assertThat(flowStateAllowedEventService.getAllowedEvents(state.fullName()))
                 .containsExactlyInAnyOrder(WITHDRAW_CLAIM, DISCONTINUE_CLAIM);
         }
@@ -159,7 +159,7 @@ class FlowStateAllowedEventServiceTest {
             "RESPONDED_TO_CLAIM,DISCONTINUE_CLAIM"
         })
         void shouldReturnTrue_whenEventIsAllowedAtGivenState(
-            MainFlowState flowState,
+            FlowState.Main flowState,
             CaseEvent caseEvent
         ) {
             assertTrue(flowStateAllowedEventService.isAllowedOnState(flowState.fullName(), caseEvent));
@@ -171,7 +171,7 @@ class FlowStateAllowedEventServiceTest {
             "FULL_DEFENCE,ACKNOWLEDGE_SERVICE"
         })
         void shouldReturnFalse_whenEventIsNotAllowedAtGivenState(
-            MainFlowState flowState,
+            FlowState.Main flowState,
             CaseEvent caseEvent
         ) {
             assertFalse(flowStateAllowedEventService.isAllowedOnState(flowState.fullName(), caseEvent));

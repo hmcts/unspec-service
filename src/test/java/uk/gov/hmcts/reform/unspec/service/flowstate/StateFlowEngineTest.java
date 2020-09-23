@@ -16,15 +16,15 @@ import uk.gov.hmcts.reform.unspec.stateflow.StateFlow;
 import uk.gov.hmcts.reform.unspec.stateflow.model.State;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static uk.gov.hmcts.reform.unspec.service.flowstate.MainFlowState.CLAIM_ISSUED;
-import static uk.gov.hmcts.reform.unspec.service.flowstate.MainFlowState.CLAIM_STAYED;
-import static uk.gov.hmcts.reform.unspec.service.flowstate.MainFlowState.DRAFT;
-import static uk.gov.hmcts.reform.unspec.service.flowstate.MainFlowState.EXTENSION_REQUESTED;
-import static uk.gov.hmcts.reform.unspec.service.flowstate.MainFlowState.EXTENSION_RESPONDED;
-import static uk.gov.hmcts.reform.unspec.service.flowstate.MainFlowState.FULL_DEFENCE;
-import static uk.gov.hmcts.reform.unspec.service.flowstate.MainFlowState.RESPONDED_TO_CLAIM;
-import static uk.gov.hmcts.reform.unspec.service.flowstate.MainFlowState.SERVICE_ACKNOWLEDGED;
-import static uk.gov.hmcts.reform.unspec.service.flowstate.MainFlowState.SERVICE_CONFIRMED;
+import static uk.gov.hmcts.reform.unspec.service.flowstate.FlowState.Main.CLAIM_ISSUED;
+import static uk.gov.hmcts.reform.unspec.service.flowstate.FlowState.Main.CLAIM_STAYED;
+import static uk.gov.hmcts.reform.unspec.service.flowstate.FlowState.Main.DRAFT;
+import static uk.gov.hmcts.reform.unspec.service.flowstate.FlowState.Main.EXTENSION_REQUESTED;
+import static uk.gov.hmcts.reform.unspec.service.flowstate.FlowState.Main.EXTENSION_RESPONDED;
+import static uk.gov.hmcts.reform.unspec.service.flowstate.FlowState.Main.FULL_DEFENCE;
+import static uk.gov.hmcts.reform.unspec.service.flowstate.FlowState.Main.RESPONDED_TO_CLAIM;
+import static uk.gov.hmcts.reform.unspec.service.flowstate.FlowState.Main.SERVICE_ACKNOWLEDGED;
+import static uk.gov.hmcts.reform.unspec.service.flowstate.FlowState.Main.SERVICE_CONFIRMED;
 
 @SpringBootTest(classes = {
     JacksonAutoConfiguration.class,
@@ -201,7 +201,7 @@ class StateFlowEngineTest {
             "false,FULL_DEFENCE",
             "false,CLAIM_STAYED"
         })
-        void shouldReturnValidResult_whenCaseDataAtStateExtensionRequested(boolean expected, MainFlowState state) {
+        void shouldReturnValidResult_whenCaseDataAtStateExtensionRequested(boolean expected, FlowState.Main state) {
             CaseDetails caseDetails = CaseDetailsBuilder.builder()
                 .atStateExtensionRequested()
                 .build();

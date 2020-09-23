@@ -11,8 +11,8 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 class FlowStateTest {
 
     @ParameterizedTest
-    @EnumSource(value = MainFlowState.class)
-    void shouldReturnValidFlowState_whenMainFlowStateName(MainFlowState flowState) {
+    @EnumSource(value = FlowState.Main.class)
+    void shouldReturnValidFlowState_whenMainFlowStateName(FlowState.Main flowState) {
         assertThat(FlowState.fromFullName(flowState.fullName()))
             .isEqualTo(flowState);
     }

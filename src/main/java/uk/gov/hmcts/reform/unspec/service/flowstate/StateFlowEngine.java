@@ -17,16 +17,16 @@ import static uk.gov.hmcts.reform.unspec.service.flowstate.FlowPredicate.defenda
 import static uk.gov.hmcts.reform.unspec.service.flowstate.FlowPredicate.defendantAskForAnExtension;
 import static uk.gov.hmcts.reform.unspec.service.flowstate.FlowPredicate.defendantRespondToClaim;
 import static uk.gov.hmcts.reform.unspec.service.flowstate.FlowPredicate.schedulerStayClaim;
-import static uk.gov.hmcts.reform.unspec.service.flowstate.MainFlowState.CLAIM_ISSUED;
-import static uk.gov.hmcts.reform.unspec.service.flowstate.MainFlowState.CLAIM_STAYED;
-import static uk.gov.hmcts.reform.unspec.service.flowstate.MainFlowState.DRAFT;
-import static uk.gov.hmcts.reform.unspec.service.flowstate.MainFlowState.EXTENSION_REQUESTED;
-import static uk.gov.hmcts.reform.unspec.service.flowstate.MainFlowState.EXTENSION_RESPONDED;
-import static uk.gov.hmcts.reform.unspec.service.flowstate.MainFlowState.FLOW_NAME;
-import static uk.gov.hmcts.reform.unspec.service.flowstate.MainFlowState.FULL_DEFENCE;
-import static uk.gov.hmcts.reform.unspec.service.flowstate.MainFlowState.RESPONDED_TO_CLAIM;
-import static uk.gov.hmcts.reform.unspec.service.flowstate.MainFlowState.SERVICE_ACKNOWLEDGED;
-import static uk.gov.hmcts.reform.unspec.service.flowstate.MainFlowState.SERVICE_CONFIRMED;
+import static uk.gov.hmcts.reform.unspec.service.flowstate.FlowState.Main.CLAIM_ISSUED;
+import static uk.gov.hmcts.reform.unspec.service.flowstate.FlowState.Main.CLAIM_STAYED;
+import static uk.gov.hmcts.reform.unspec.service.flowstate.FlowState.Main.DRAFT;
+import static uk.gov.hmcts.reform.unspec.service.flowstate.FlowState.Main.EXTENSION_REQUESTED;
+import static uk.gov.hmcts.reform.unspec.service.flowstate.FlowState.Main.EXTENSION_RESPONDED;
+import static uk.gov.hmcts.reform.unspec.service.flowstate.FlowState.Main.FLOW_NAME;
+import static uk.gov.hmcts.reform.unspec.service.flowstate.FlowState.Main.FULL_DEFENCE;
+import static uk.gov.hmcts.reform.unspec.service.flowstate.FlowState.Main.RESPONDED_TO_CLAIM;
+import static uk.gov.hmcts.reform.unspec.service.flowstate.FlowState.Main.SERVICE_ACKNOWLEDGED;
+import static uk.gov.hmcts.reform.unspec.service.flowstate.FlowState.Main.SERVICE_CONFIRMED;
 
 @Component
 @RequiredArgsConstructor
@@ -35,7 +35,7 @@ public class StateFlowEngine {
     private final CaseDetailsConverter caseDetailsConverter;
 
     public StateFlow build() {
-        return StateFlowBuilder.<MainFlowState>flow(FLOW_NAME)
+        return StateFlowBuilder.<FlowState.Main>flow(FLOW_NAME)
             .initial(DRAFT)
                 .transitionTo(CLAIM_ISSUED).onlyIf(claimantIssueClaim)
             .state(CLAIM_ISSUED)
@@ -66,7 +66,7 @@ public class StateFlowEngine {
         return build().evaluate(caseData);
     }
 
-    public boolean hasTransitionedTo(CaseDetails caseDetails, MainFlowState state) {
+    public boolean hasTransitionedTo(CaseDetails caseDetails, FlowState.Main state) {
         return evaluate(caseDetails).getStateHistory().stream()
             .map(State::getName)
             .anyMatch(name -> name.equals(state.fullName()));
