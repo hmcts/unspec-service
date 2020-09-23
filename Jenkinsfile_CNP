@@ -104,16 +104,18 @@ withPipeline(type, product, component) {
       ./bin/import-ccd-definition.sh
     """
 
-    env.IDAM_API_URL = "https://idam-api.aat.platform.hmcts.net"
-    env.SERVICE_AUTH_PROVIDER_API_BASE_URL = "http://rpe-service-auth-provider-aat.service.core-compute-aat.internal"
-    env.CCD_DATA_STORE_URL = "http://ccd-data-store-api-unspec-service-pr-${CHANGE_ID}.service.core-compute-preview.internal"
-    env.DM_STORE_URL = "http://dm-store-aat.service.core-compute-aat.internal"
     env.URL="https://xui-unspec-service-pr-${CHANGE_ID}.service.core-compute-preview.internal"
   }
 
   after('smoketest:preview') {
     steps.archiveArtifacts allowEmptyArchive: true, artifacts: 'output/**/*'
-    sh "./gradlew runApiTests"
+  }
+
+  before('functionalTest:preview') {
+    env.IDAM_API_URL = "https://idam-api.aat.platform.hmcts.net"
+    env.SERVICE_AUTH_PROVIDER_API_BASE_URL = "http://rpe-service-auth-provider-aat.service.core-compute-aat.internal"
+    env.CCD_DATA_STORE_URL = "http://ccd-data-store-api-unspec-service-pr-${CHANGE_ID}.service.core-compute-preview.internal"
+    env.DM_STORE_URL = "http://dm-store-aat.service.core-compute-aat.internal"
   }
 
   after('functionalTest:preview') {
@@ -121,10 +123,6 @@ withPipeline(type, product, component) {
   }
 
   before('smoketest:aat') {
-    env.IDAM_API_URL = "https://idam-api.aat.platform.hmcts.net"
-    env.SERVICE_AUTH_PROVIDER_API_BASE_URL = "http://rpe-service-auth-provider-aat.service.core-compute-aat.internal"
-    env.CCD_DATA_STORE_URL = "http://ccd-data-store-api-aat.service.core-compute-aat.internal"
-    env.DM_STORE_URL = "http://dm-store-aat.service.core-compute-aat.internal"
     env.URL = "https://manage-case.aat.platform.hmcts.net"
     archiveCoreCaseDataDefinitions('staging')
     uploadCoreCaseDataDefinitions('staging')
@@ -132,7 +130,13 @@ withPipeline(type, product, component) {
 
   after('smoketest:aat') {
     steps.archiveArtifacts allowEmptyArchive: true, artifacts: 'output/**/*'
-    sh "./gradlew runApiTests"
+  }
+
+  before('functionalTest:aat') {
+    env.IDAM_API_URL = "https://idam-api.aat.platform.hmcts.net"
+    env.SERVICE_AUTH_PROVIDER_API_BASE_URL = "http://rpe-service-auth-provider-aat.service.core-compute-aat.internal"
+    env.CCD_DATA_STORE_URL = "http://ccd-data-store-api-aat.service.core-compute-aat.internal"
+    env.DM_STORE_URL = "http://dm-store-aat.service.core-compute-aat.internal"
   }
 
   after('functionalTest:aat') {
