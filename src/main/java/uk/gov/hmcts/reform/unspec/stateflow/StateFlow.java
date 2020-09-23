@@ -1,7 +1,8 @@
 package uk.gov.hmcts.reform.unspec.stateflow;
 
 import org.springframework.statemachine.StateMachine;
-import uk.gov.hmcts.reform.ccd.client.model.CaseDetails;
+import uk.gov.hmcts.reform.unspec.model.CaseData;
+import uk.gov.hmcts.reform.unspec.stateflow.exception.StateFlowException;
 import uk.gov.hmcts.reform.unspec.stateflow.model.State;
 
 import java.util.ArrayList;
@@ -24,15 +25,18 @@ public class StateFlow {
         return stateMachine;
     }
 
-    public StateFlow evaluate(CaseDetails claim) {
+    public StateFlow evaluate(CaseData caseData) {
         Map<Object, Object> variables = stateMachine.getExtendedState().getVariables();
-        variables.put(EXTENDED_STATE_CASE_KEY, claim);
+        variables.put(EXTENDED_STATE_CASE_KEY, caseData);
         stateMachine.startReactively().block();
         return this;
     }
 
     public State getState() {
-        return stateMachine.hasStateMachineError() ? State.error() : State.from(stateMachine.getState().getId());
+        if (stateMachine.hasStateMachineError()) {
+            throw new StateFlowException("The state machine is at error state.");
+        }
+        return State.from(stateMachine.getState().getId());
     }
 
     @SuppressWarnings("unchecked")

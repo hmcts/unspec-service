@@ -8,7 +8,8 @@ import org.springframework.statemachine.ExtendedState;
 import org.springframework.statemachine.StateMachine;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import reactor.core.publisher.Mono;
-import uk.gov.hmcts.reform.ccd.client.model.CaseDetails;
+import uk.gov.hmcts.reform.unspec.model.CaseData;
+import uk.gov.hmcts.reform.unspec.stateflow.exception.StateFlowException;
 import uk.gov.hmcts.reform.unspec.stateflow.model.State;
 
 import java.util.ArrayList;
@@ -16,6 +17,8 @@ import java.util.Arrays;
 import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
@@ -81,12 +84,12 @@ class StateFlowTest {
             when(mockedStateMachine.getExtendedState()).thenReturn(mockedExtendedState);
             when(mockedStateMachine.startReactively()).thenReturn(mockedMono);
 
-            CaseDetails caseDetails = CaseDetails.builder().build();
+            CaseData caseData = CaseData.builder().build();
 
             StateFlow stateFlow = new StateFlow(mockedStateMachine);
 
-            assertThat(stateFlow.evaluate(caseDetails)).isSameAs(stateFlow);
-            verify(mockedVariables).put(eq(EXTENDED_STATE_CASE_KEY), eq(caseDetails));
+            assertThat(stateFlow.evaluate(caseData)).isSameAs(stateFlow);
+            verify(mockedVariables).put(eq(EXTENDED_STATE_CASE_KEY), eq(caseData));
             verify(mockedMono).block();
         }
     }
@@ -109,14 +112,15 @@ class StateFlowTest {
         }
 
         @Test
-        void shouldGetState_whenStateMachineHasErrors() {
+        void shouldThrowStateFlowException_whenStateMachineHasErrors() {
             when(mockedStateMachine.hasStateMachineError()).thenReturn(true);
             StateFlow stateFlow = new StateFlow(mockedStateMachine);
 
-            assertThat(stateFlow.getState())
-                .extracting(State::getName)
-                .isNotNull()
-                .isEqualTo(State.ERROR_STATE);
+            Exception exception = assertThrows(StateFlowException.class, () -> stateFlow.getState());
+            String expectedMessage = "The state machine is at error state.";
+            String actualMessage = exception.getMessage();
+
+            assertEquals(expectedMessage, actualMessage);
         }
     }
 
