@@ -1,10 +1,13 @@
 package uk.gov.hmcts.reform.unspec.model.search;
 
 import org.elasticsearch.index.query.QueryBuilders;
+import org.json.JSONException;
 import org.junit.jupiter.api.Test;
+import org.skyscreamer.jsonassert.JSONAssert;
 
 import java.util.List;
 
+import static org.elasticsearch.index.query.QueryBuilders.matchAllQuery;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class QueryTest {
@@ -23,5 +26,13 @@ class QueryTest {
                          new Query(null, List.of(), 0),
                      "QueryBuilder cannot be null in search"
         );
+    }
+
+    @Test
+    void shouldFormatSourceInCorrectFormat_whenListOfItems() throws JSONException {
+        Query query = new Query(matchAllQuery(), List.of("reference", "other field"), 0);
+
+        JSONAssert.assertEquals("{\"query\": {\"match_all\": {\"boost\": 1.0 }}, " +
+            "\"_source\": [\"reference\",\"other field\"], \"from\": 0}", query.toString(), true);
     }
 }
