@@ -7,6 +7,7 @@ import uk.gov.hmcts.reform.ccd.client.model.AboutToStartOrSubmitCallbackResponse
 import uk.gov.hmcts.reform.ccd.client.model.CallbackResponse;
 import uk.gov.hmcts.reform.ccd.client.model.CaseDetails;
 import uk.gov.hmcts.reform.ccd.client.model.SubmittedCallbackResponse;
+import uk.gov.hmcts.reform.unspec.advice.EventAllowed;
 import uk.gov.hmcts.reform.unspec.callback.Callback;
 import uk.gov.hmcts.reform.unspec.callback.CallbackHandler;
 import uk.gov.hmcts.reform.unspec.callback.CallbackParams;
@@ -68,11 +69,17 @@ public class CreateClaimCallbackHandler extends CallbackHandler {
     @Override
     protected Map<CallbackType, Callback> callbacks() {
         return Map.of(
+            CallbackType.ABOUT_TO_START, this::aboutToStart,
             CallbackType.MID, this::validateClaimValues,
             CallbackType.MID_SECONDARY, this::validateDateOfBirth,
             CallbackType.ABOUT_TO_SUBMIT, this::issueClaim,
             CallbackType.SUBMITTED, this::buildConfirmation
         );
+    }
+
+    @EventAllowed(caseEvent = CREATE_CASE)
+    private CallbackResponse aboutToStart(CallbackParams callbackParams) {
+        return AboutToStartOrSubmitCallbackResponse.builder().build();
     }
 
     @Override
