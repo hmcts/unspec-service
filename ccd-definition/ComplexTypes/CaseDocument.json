@@ -41,5 +41,13 @@
     "FieldType": "Text",
     "ElementLabel": "Uploaded by",
     "SecurityClassification": "Public"
+  },
+  ,
+  {
+    "ID": "CaseDocument",
+    "ListElementCode": "testField",
+    "FieldType": "Text",
+    "ElementLabel": "Uploaded by",
+    "SecurityClassification": "Public"
   }
 ]
