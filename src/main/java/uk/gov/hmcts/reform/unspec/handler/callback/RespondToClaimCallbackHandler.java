@@ -11,8 +11,7 @@ import uk.gov.hmcts.reform.unspec.callback.CallbackHandler;
 import uk.gov.hmcts.reform.unspec.callback.CallbackParams;
 import uk.gov.hmcts.reform.unspec.callback.CallbackType;
 import uk.gov.hmcts.reform.unspec.callback.CaseEvent;
-import uk.gov.hmcts.reform.unspec.model.Party;
-import uk.gov.hmcts.reform.unspec.validation.DateOfBirthValidator;
+import uk.gov.hmcts.reform.unspec.helpers.PartyDateOfBirthHelper;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -30,11 +29,11 @@ import static uk.gov.hmcts.reform.unspec.helpers.DateFormatHelper.formatLocalDat
 public class RespondToClaimCallbackHandler extends CallbackHandler {
 
     private static final List<CaseEvent> EVENTS = Collections.singletonList(DEFENDANT_RESPONSE);
-    public static final String RESPONDENT = "respondent1";
+    public static final String RESPONDENT_1 = "respondent1";
     public static final String CLAIMANT_RESPONSE_DEADLINE = "applicantSolicitorResponseDeadlineToRespondentSolicitor1";
 
     private final ObjectMapper mapper;
-    private final DateOfBirthValidator dateOfBirthValidator;
+    private final PartyDateOfBirthHelper dateOfBirthHelper;
 
     @Override
     public List<CaseEvent> handledEvents() {
@@ -56,12 +55,8 @@ public class RespondToClaimCallbackHandler extends CallbackHandler {
     }
 
     private CallbackResponse validateDateOfBirth(CallbackParams callbackParams) {
-        Map<String, Object> data = callbackParams.getRequest().getCaseDetails().getData();
-        Party respondent = mapper.convertValue(data.get(RESPONDENT), Party.class);
-        List<String> errors = dateOfBirthValidator.validate(respondent);
-
         return AboutToStartOrSubmitCallbackResponse.builder()
-            .errors(errors)
+            .errors(dateOfBirthHelper.validateDateOfBirth(callbackParams, RESPONDENT_1))
             .build();
     }
 

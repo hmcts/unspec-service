@@ -15,6 +15,7 @@ import uk.gov.hmcts.reform.unspec.callback.CaseEvent;
 import uk.gov.hmcts.reform.unspec.config.ClaimIssueConfiguration;
 import uk.gov.hmcts.reform.unspec.enums.ClaimType;
 import uk.gov.hmcts.reform.unspec.helpers.CaseDetailsConverter;
+import uk.gov.hmcts.reform.unspec.helpers.PartyDateOfBirthHelper;
 import uk.gov.hmcts.reform.unspec.model.CaseData;
 import uk.gov.hmcts.reform.unspec.model.ClaimValue;
 import uk.gov.hmcts.reform.unspec.model.Party;
@@ -26,7 +27,6 @@ import uk.gov.hmcts.reform.unspec.service.IssueDateCalculator;
 import uk.gov.hmcts.reform.unspec.service.docmosis.sealedclaim.SealedClaimFormGenerator;
 import uk.gov.hmcts.reform.unspec.utils.ElementUtils;
 import uk.gov.hmcts.reform.unspec.utils.PartyNameUtils;
-import uk.gov.hmcts.reform.unspec.validation.DateOfBirthValidator;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -54,16 +54,16 @@ public class CreateClaimCallbackHandler extends CallbackHandler {
         + "\n* Confirm service online within 21 days of sending the form, particulars and response pack, before"
         + " 4pm if you're doing this on the due day";
     public static final String RESPONDENT = "respondent1";
-    public static final String CLAIMANT = "applicant1";
+    public static final String APPLICANT_1 = "applicant1";
 
-    private final ObjectMapper mapper;
     private final SealedClaimFormGenerator sealedClaimFormGenerator;
     private final ClaimIssueConfiguration claimIssueConfiguration;
     private final CaseDetailsConverter caseDetailsConverter;
     private final IssueDateCalculator issueDateCalculator;
     private final DeadlinesCalculator deadlinesCalculator;
     private final ReferenceNumberRepository referenceNumberRepository;
-    private final DateOfBirthValidator dateOfBirthValidator;
+    private final PartyDateOfBirthHelper dateOfBirthHelper;
+    private final ObjectMapper mapper;
 
     @Override
     protected Map<CallbackType, Callback> callbacks() {
@@ -81,12 +81,8 @@ public class CreateClaimCallbackHandler extends CallbackHandler {
     }
 
     private CallbackResponse validateDateOfBirth(CallbackParams callbackParams) {
-        Map<String, Object> data = callbackParams.getRequest().getCaseDetails().getData();
-        Party claimant = mapper.convertValue(data.get(CLAIMANT), Party.class);
-        List<String> errors = dateOfBirthValidator.validate(claimant);
-
         return AboutToStartOrSubmitCallbackResponse.builder()
-            .errors(errors)
+            .errors(dateOfBirthHelper.validateDateOfBirth(callbackParams, APPLICANT_1))
             .build();
     }
 
@@ -119,7 +115,7 @@ public class CreateClaimCallbackHandler extends CallbackHandler {
         String referenceNumber = referenceNumberRepository.getReferenceNumber();
 
         Party respondent = updatePartyWithPartyName(caseDetails.getData().get(RESPONDENT));
-        Party applicant = updatePartyWithPartyName(caseDetails.getData().get(CLAIMANT));
+        Party applicant = updatePartyWithPartyName(caseDetails.getData().get(APPLICANT_1));
         CaseDocument sealedClaim = sealedClaimFormGenerator.generate(
             caseData.toBuilder()
                 .claimIssuedDate(issueDate)
@@ -141,7 +137,7 @@ public class CreateClaimCallbackHandler extends CallbackHandler {
         data.put("systemGeneratedCaseDocuments", ElementUtils.wrapElements(sealedClaim));
 
         data.put(RESPONDENT, respondent);
-        data.put(CLAIMANT, applicant);
+        data.put(APPLICANT_1, applicant);
         data.put("legacyCaseReference", referenceNumber);
 
         return AboutToStartOrSubmitCallbackResponse.builder()

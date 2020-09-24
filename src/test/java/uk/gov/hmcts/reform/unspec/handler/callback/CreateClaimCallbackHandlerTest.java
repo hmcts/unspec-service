@@ -19,6 +19,7 @@ import uk.gov.hmcts.reform.unspec.callback.CallbackType;
 import uk.gov.hmcts.reform.unspec.config.ClaimIssueConfiguration;
 import uk.gov.hmcts.reform.unspec.config.MockDatabaseConfiguration;
 import uk.gov.hmcts.reform.unspec.helpers.CaseDetailsConverter;
+import uk.gov.hmcts.reform.unspec.helpers.PartyDateOfBirthHelper;
 import uk.gov.hmcts.reform.unspec.model.CaseData;
 import uk.gov.hmcts.reform.unspec.model.ClaimValue;
 import uk.gov.hmcts.reform.unspec.model.common.Element;
@@ -60,7 +61,8 @@ import static uk.gov.hmcts.reform.unspec.utils.PartyNameUtils.getPartyNameBasedO
     ClaimIssueConfiguration.class,
     MockDatabaseConfiguration.class,
     ValidationAutoConfiguration.class,
-    DateOfBirthValidator.class},
+    DateOfBirthValidator.class,
+    PartyDateOfBirthHelper.class},
     properties = {"reference.database.enabled=false"})
 class CreateClaimCallbackHandlerTest extends BaseCallbackHandlerTest {
 

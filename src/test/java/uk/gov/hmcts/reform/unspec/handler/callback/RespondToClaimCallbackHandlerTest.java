@@ -14,6 +14,7 @@ import uk.gov.hmcts.reform.ccd.client.model.AboutToStartOrSubmitCallbackResponse
 import uk.gov.hmcts.reform.ccd.client.model.SubmittedCallbackResponse;
 import uk.gov.hmcts.reform.unspec.callback.CallbackParams;
 import uk.gov.hmcts.reform.unspec.callback.CallbackType;
+import uk.gov.hmcts.reform.unspec.helpers.PartyDateOfBirthHelper;
 import uk.gov.hmcts.reform.unspec.validation.DateOfBirthValidator;
 
 import java.time.LocalDateTime;
@@ -30,7 +31,8 @@ import static uk.gov.hmcts.reform.unspec.handler.callback.RespondToClaimCallback
     RespondToClaimCallbackHandler.class,
     JacksonAutoConfiguration.class,
     ValidationAutoConfiguration.class,
-    DateOfBirthValidator.class
+    DateOfBirthValidator.class,
+    PartyDateOfBirthHelper.class
 })
 class RespondToClaimCallbackHandlerTest extends BaseCallbackHandlerTest {
 
