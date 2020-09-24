@@ -24,6 +24,7 @@ import uk.gov.hmcts.reform.unspec.model.search.Query;
 import java.util.List;
 import java.util.Map;
 
+import static java.util.Collections.emptyList;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -110,7 +111,7 @@ class CoreCaseDataServiceTest {
 
         @Test
         void shouldReturnCases_WhenSearchingCasesAsSystemUpdateUser() {
-            Query query = new Query(QueryBuilders.matchQuery("field", "value"), List.of(), 0);
+            Query query = new Query(QueryBuilders.matchQuery("field", "value"), emptyList(), 0);
 
             List<CaseDetails> cases = List.of(CaseDetails.builder().id(1L).build());
             SearchResult searchResult = SearchResult.builder().cases(cases).build();

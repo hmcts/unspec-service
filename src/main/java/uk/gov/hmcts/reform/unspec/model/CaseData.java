@@ -2,8 +2,14 @@ package uk.gov.hmcts.reform.unspec.model;
 
 import lombok.Builder;
 import lombok.Data;
+import uk.gov.hmcts.reform.unspec.enums.AllocatedTrack;
+import uk.gov.hmcts.reform.unspec.enums.CaseState;
 import uk.gov.hmcts.reform.unspec.enums.ClaimType;
+import uk.gov.hmcts.reform.unspec.enums.DefendantResponseType;
+import uk.gov.hmcts.reform.unspec.enums.PersonalInjuryType;
+import uk.gov.hmcts.reform.unspec.enums.ResponseIntention;
 import uk.gov.hmcts.reform.unspec.enums.ServedDocuments;
+import uk.gov.hmcts.reform.unspec.enums.YesOrNo;
 import uk.gov.hmcts.reform.unspec.model.common.Element;
 import uk.gov.hmcts.reform.unspec.model.documents.CaseDocument;
 import uk.gov.hmcts.reform.unspec.validation.groups.ConfirmServiceDateGroup;
@@ -12,9 +18,8 @@ import uk.gov.hmcts.reform.unspec.validation.interfaces.HasServiceDateTheSameAsO
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
+import javax.validation.Valid;
 import javax.validation.constraints.PastOrPresent;
-
-import static uk.gov.hmcts.reform.unspec.service.docmosis.sealedclaim.SealedClaimFormGenerator.REFERENCE_NUMBER;
 
 @Data
 @Builder(toBuilder = true)
@@ -22,33 +27,63 @@ import static uk.gov.hmcts.reform.unspec.service.docmosis.sealedclaim.SealedClai
 public class CaseData {
 
     private final Long ccdCaseReference;
+    private final CaseState ccdState;
     private final SolicitorReferences solicitorReferences;
     private final CourtLocation courtLocation;
-    private final Party claimant;
-    private final Party claimant2;
-    private final Party respondent;
+    private final Party applicant1;
+    private final Party applicant2;
+    private final Party respondent1;
     private final Party respondent2;
     private final ClaimValue claimValue;
     private final ClaimType claimType;
-    private final StatementOfTruth claimStatementOfTruth;
-    private final StatementOfTruth serviceStatementOfTruth;
-    private final List<Element<CaseDocument>> systemGeneratedCaseDocuments;
-    private final ServiceMethod serviceMethod;
-
-    @PastOrPresent(message = "The date must not be in the future", groups = ConfirmServiceDateGroup.class)
-    private final LocalDate serviceDate;
-
-    @PastOrPresent(message = "The date must not be in the future", groups = ConfirmServiceDateGroup.class)
-    private final LocalDateTime serviceDateAndTime;
-
+    private final String claimTypeOther;
+    private final PersonalInjuryType personalInjuryType;
+    private final String personalInjuryTypeOther;
+    private final StatementOfTruth applicantSolicitor1ClaimStatementOfTruth;
     private final LocalDateTime claimSubmittedDateTime;
     private final LocalDate claimIssuedDate;
-    private final LocalDate deemedDateOfService;
-    private final LocalDateTime responseDeadline;
+    private LocalDateTime confirmationOfServiceDeadline;
+    private final String legacyCaseReference;
+    private final AllocatedTrack allocatedTrack;
+
+    private final StatementOfTruth applicant1ServiceStatementOfTruthToRespondentSolicitor1;
+    private final List<Element<CaseDocument>> systemGeneratedCaseDocuments;
+    private final ServiceMethod serviceMethodToRespondentSolicitor1;
+
+    @PastOrPresent(message = "The date must not be in the future", groups = ConfirmServiceDateGroup.class)
+    private final LocalDate serviceDateToRespondentSolicitor1;
+
+    @PastOrPresent(message = "The date must not be in the future", groups = ConfirmServiceDateGroup.class)
+    private final LocalDateTime serviceDateTimeToRespondentSolicitor1;
+
+    private final LocalDate deemedServiceDateToRespondentSolicitor1;
+    private final LocalDateTime respondentSolicitor1ResponseDeadline;
     private final List<ServedDocuments> servedDocuments;
-    //TODO this will be stored in database while reading sequence number of OCMC for Case man reference number
-    private final String legacyCaseReference = REFERENCE_NUMBER;
-    private final ServiceLocation serviceLocation;
+    private final ServiceLocation serviceLocationToRespondentSolicitor1;
     private final ServedDocumentFiles servedDocumentFiles;
     private final String servedDocumentsOther;
+    private final ResponseIntention respondent1ClaimResponseIntentionType;
+
+    private final LocalDate respondentSolicitor1claimResponseExtensionProposedDeadline;
+    private final YesOrNo respondentSolicitor1claimResponseExtensionAlreadyAgreed;
+    private final String respondentSolicitor1claimResponseExtensionReason;
+
+    private final YesOrNo respondentSolicitor1claimResponseExtensionAccepted;
+    private final YesOrNo respondentSolicitor1claimResponseExtensionCounter;
+    private final LocalDate respondentSolicitor1claimResponseExtensionCounterDate;
+    private final String respondentSolicitor1claimResponseExtensionRejectionReason;
+
+    private final DefendantResponseType respondent1ClaimResponseType;
+    private final ResponseDocument respondent1ClaimResponseDocument;
+    private final LocalDateTime applicantSolicitorResponseDeadlineToRespondentSolicitor1;
+
+    private final YesOrNo applicant1ProceedWithClaim;
+    private final ResponseDocument applicant1DefenceResponseDocument;
+    private final String applicant1NotProceedingReason;
+
+    @Valid
+    private final CloseClaim withdrawClaim;
+
+    @Valid
+    private final CloseClaim discontinueClaim;
 }

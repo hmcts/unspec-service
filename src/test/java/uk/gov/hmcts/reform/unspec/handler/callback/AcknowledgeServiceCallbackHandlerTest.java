@@ -17,6 +17,7 @@ import uk.gov.hmcts.reform.ccd.client.model.SubmittedCallbackResponse;
 import uk.gov.hmcts.reform.unspec.callback.CallbackParams;
 import uk.gov.hmcts.reform.unspec.callback.CallbackType;
 import uk.gov.hmcts.reform.unspec.service.WorkingDayIndicator;
+import uk.gov.hmcts.reform.unspec.validation.DateOfBirthValidator;
 
 import java.time.LocalDateTime;
 import java.util.HashMap;
@@ -26,12 +27,14 @@ import static java.time.LocalDate.now;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
+import static uk.gov.hmcts.reform.unspec.service.DeadlinesCalculator.MID_NIGHT;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(classes = {
     AcknowledgeServiceCallbackHandler.class,
     JacksonAutoConfiguration.class,
-    ValidationAutoConfiguration.class
+    ValidationAutoConfiguration.class,
+    DateOfBirthValidator.class
 })
 class AcknowledgeServiceCallbackHandlerTest extends BaseCallbackHandlerTest {
 
@@ -48,7 +51,7 @@ class AcknowledgeServiceCallbackHandlerTest extends BaseCallbackHandlerTest {
         @ValueSource(strings = {"individualDateOfBirth", "soleTraderDateOfBirth"})
         void shouldReturnError_whenDateOfBirthIsInTheFuture(String dateOfBirthField) {
             Map<String, Object> data = new HashMap<>();
-            data.put("respondent", Map.of(dateOfBirthField, "2030-01-01"));
+            data.put("respondent1", Map.of(dateOfBirthField, "2030-01-01"));
 
             CallbackParams params = callbackParamsOf(data, CallbackType.MID);
 
@@ -62,21 +65,7 @@ class AcknowledgeServiceCallbackHandlerTest extends BaseCallbackHandlerTest {
         @ValueSource(strings = {"individualDateOfBirth", "soleTraderDateOfBirth"})
         void shouldReturnNoError_whenDateOfBirthIsInThePast(String dateOfBirthField) {
             Map<String, Object> data = new HashMap<>();
-            data.put("respondent", Map.of(dateOfBirthField, "2000-01-01"));
-
-            CallbackParams params = callbackParamsOf(data, CallbackType.MID);
-
-            AboutToStartOrSubmitCallbackResponse response = (AboutToStartOrSubmitCallbackResponse) handler
-                .handle(params);
-
-            assertThat(response.getData()).isEqualTo(data);
-            assertThat(response.getErrors()).isEmpty();
-        }
-
-        @Test
-        void shouldReturnNoError_whenDateOfBirthIsNotProvided() {
-            Map<String, Object> data = new HashMap<>();
-            data.put("respondent", Map.of("otherField", "some value"));
+            data.put("respondent1", Map.of(dateOfBirthField, "2000-01-01"));
 
             CallbackParams params = callbackParamsOf(data, CallbackType.MID);
 
@@ -99,15 +88,18 @@ class AcknowledgeServiceCallbackHandlerTest extends BaseCallbackHandlerTest {
         @Test
         void shouldSetNewResponseDeadline_whenInvoked() {
             Map<String, Object> data = new HashMap<>();
-            LocalDateTime responseDeadline = now().atTime(16, 0);
-            data.put("responseDeadline", responseDeadline);
+            LocalDateTime responseDeadline = now().atTime(MID_NIGHT);
+            data.put("respondentSolicitor1ResponseDeadline", responseDeadline);
 
             CallbackParams params = callbackParamsOf(data, CallbackType.ABOUT_TO_SUBMIT);
 
             AboutToStartOrSubmitCallbackResponse response = (AboutToStartOrSubmitCallbackResponse) handler
                 .handle(params);
 
-            assertThat(response.getData()).isEqualTo(Map.of("responseDeadline", responseDeadline.plusDays(14)));
+            assertThat(response.getData()).isEqualTo(Map.of(
+                "respondentSolicitor1ResponseDeadline",
+                responseDeadline.plusDays(14)
+            ));
         }
     }
 
@@ -117,7 +109,7 @@ class AcknowledgeServiceCallbackHandlerTest extends BaseCallbackHandlerTest {
         @Test
         void shouldReturnExpectedResponse_whenInvoked() {
             Map<String, Object> data = new HashMap<>();
-            data.put("responseDeadline", "2030-01-01T16:00:00");
+            data.put("respondentSolicitor1ResponseDeadline", "2030-01-01T16:00:00");
 
             CallbackParams params = callbackParamsOf(data, CallbackType.SUBMITTED);
 

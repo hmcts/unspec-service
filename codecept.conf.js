@@ -21,7 +21,8 @@ exports.config = {
     },
   },
   include: {
-    I: './e2e/steps_file.js'
+    I: './e2e/steps_file.js',
+    api: './e2e/api/steps.js'
   },
   plugins: {
     autoDelay: {
@@ -40,6 +41,7 @@ exports.config = {
     },
   },
   mocha: {
+    bail: true,
     reporterOptions: {
       'codeceptjs-cli-reporter': {
         stdout: '-',

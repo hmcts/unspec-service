@@ -1,6 +1,6 @@
 package uk.gov.hmcts.reform.unspec.service.search;
 
-import org.elasticsearch.index.query.QueryBuilders;
+import org.elasticsearch.index.query.BoolQueryBuilder;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
@@ -17,6 +17,9 @@ import java.util.List;
 
 import static java.util.Collections.emptyList;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.elasticsearch.index.query.QueryBuilders.boolQuery;
+import static org.elasticsearch.index.query.QueryBuilders.matchQuery;
+import static org.elasticsearch.index.query.QueryBuilders.rangeQuery;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -93,12 +96,10 @@ class CaseStayedSearchServiceTest {
     }
 
     private Query buildQuery(int fromValue) {
-        return new Query(
-            QueryBuilders.boolQuery()
-                .must(QueryBuilders.rangeQuery("data.confirmationOfServiceDeadline").lt("now"))
-                .must(QueryBuilders.matchQuery("state", "CREATED")),
-            List.of("reference"),
-            fromValue
-        );
+        BoolQueryBuilder query = boolQuery()
+            .must(rangeQuery("data.confirmationOfServiceDeadline").lt("now-112d"))
+            .must(matchQuery("state", "CREATED"));
+
+        return new Query(query, List.of("reference"), fromValue);
     }
 }

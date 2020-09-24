@@ -3,6 +3,7 @@ package uk.gov.hmcts.reform.unspec.model;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Builder;
 import lombok.Data;
+import org.apache.commons.lang.StringUtils;
 import uk.gov.hmcts.reform.unspec.validation.groups.DateOfBirthGroup;
 
 import java.time.LocalDate;
@@ -30,11 +31,17 @@ public class Party {
     @PastOrPresent(message = "The date entered cannot be in the future", groups = DateOfBirthGroup.class)
     private final LocalDate soleTraderDateOfBirth;
     private final Address primaryAddress;
+    private final String partyName;
+    private final String partyTypeDisplayValue;
 
     public enum Type {
         INDIVIDUAL,
         COMPANY,
         ORGANISATION,
-        SOLE_TRADER
+        SOLE_TRADER;
+
+        public String getDisplayValue() {
+            return StringUtils.capitalize(this.name().toLowerCase().replace('_', ' '));
+        }
     }
 }

@@ -25,6 +25,7 @@ import static uk.gov.hmcts.reform.unspec.callback.CaseEvent.REQUEST_EXTENSION;
 import static uk.gov.hmcts.reform.unspec.enums.YesOrNo.YES;
 import static uk.gov.hmcts.reform.unspec.helpers.DateFormatHelper.DATE;
 import static uk.gov.hmcts.reform.unspec.helpers.DateFormatHelper.formatLocalDate;
+import static uk.gov.hmcts.reform.unspec.service.DeadlinesCalculator.MID_NIGHT;
 
 @Service
 @RequiredArgsConstructor
@@ -37,8 +38,9 @@ public class RequestExtensionCallbackHandler extends CallbackHandler {
         + "accepts or rejects your request.</p>";
 
     public static final String PROPOSED_DEADLINE = "respondentSolicitor1claimResponseExtensionProposedDeadline";
-    public static final String RESPONSE_DEADLINE = "responseDeadline";
+    public static final String RESPONSE_DEADLINE = "respondentSolicitor1ResponseDeadline";
     public static final String EXTENSION_ALREADY_AGREED = "respondentSolicitor1claimResponseExtensionAlreadyAgreed";
+    public static final String LEGACY_CASE_REFERENCE = "legacyCaseReference";
 
     private final ObjectMapper mapper;
     private final RequestExtensionValidator validator;
@@ -58,7 +60,7 @@ public class RequestExtensionCallbackHandler extends CallbackHandler {
         LocalDate proposedDeadline = mapper.convertValue(data.get(PROPOSED_DEADLINE), LocalDate.class);
         YesOrNo extensionAlreadyAgreed = mapper.convertValue(data.get(EXTENSION_ALREADY_AGREED), YesOrNo.class);
         if (extensionAlreadyAgreed == YES) {
-            data.put(RESPONSE_DEADLINE, proposedDeadline.atTime(16, 0));
+            data.put(RESPONSE_DEADLINE, proposedDeadline.atTime(MID_NIGHT));
         }
         return AboutToStartOrSubmitCallbackResponse.builder()
             .data(data)
@@ -92,7 +94,7 @@ public class RequestExtensionCallbackHandler extends CallbackHandler {
             LocalDate.class
         );
         YesOrNo extensionAlreadyAgreed = mapper.convertValue(data.get(EXTENSION_ALREADY_AGREED), YesOrNo.class);
-        String claimNumber = "TBC";
+        String claimNumber = data.get(LEGACY_CASE_REFERENCE).toString();
 
         LocalDate responseDeadline = mapper.convertValue(
             data.get(RESPONSE_DEADLINE),

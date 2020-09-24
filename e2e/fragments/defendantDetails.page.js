@@ -10,7 +10,7 @@ module.exports = {
 
   async verifyDetails() {
     I.waitForElement(this.fields.defendantDetails.id);
-    // await this.see('Example company');
+    await I.see('Example company');
 
     await I.clickContinue();
   }

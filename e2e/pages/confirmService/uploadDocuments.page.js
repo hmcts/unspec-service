@@ -1,12 +1,12 @@
 const {I} = inject();
 
+const servedDocuments = require('../../fragments/servedDocument');
+
 module.exports = {
 
   fields: {
     servedDocumentFiles: {
-      id: '#servedDocumentFiles_servedDocumentFiles',
       options: [
-        '#servedDocumentFiles_particularsOfClaim',
         '#servedDocumentFiles_medicalReports',
         '#servedDocumentFiles_scheduleOfLoss',
         '#servedDocumentFiles_certificateOfSuitability',
@@ -16,14 +16,7 @@ module.exports = {
   },
 
   async uploadServedDocuments(file) {
-    I.waitForElement(this.fields.servedDocumentFiles.id);
-    for (const fileType of this.fields.servedDocumentFiles.options) {
-      await within(fileType, async () => {
-        I.click('Add new');
-        await I.attachFile(fileType + '_0', file);
-        await I.waitForInvisible(locate('.error-message').withText('Uploading...'));
-      });
-    }
+    await servedDocuments.upload(file, this.fields.servedDocumentFiles.options);
 
     await I.clickContinue();
   },
