@@ -3,6 +3,7 @@ package uk.gov.hmcts.reform.unspec.callback;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import uk.gov.hmcts.reform.ccd.client.model.CallbackResponse;
+import uk.gov.hmcts.reform.unspec.advice.EventAllowed;
 
 import java.util.HashMap;
 import java.util.List;
@@ -19,6 +20,7 @@ public class CallbackHandlerFactory {
         beans.forEach(bean -> bean.register(eventHandlers));
     }
 
+    @EventAllowed
     public CallbackResponse dispatch(CallbackParams callbackParams) {
         String eventId = callbackParams.getRequest().getEventId();
         return ofNullable(eventHandlers.get(eventId))

@@ -19,7 +19,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static uk.gov.hmcts.reform.unspec.callback.CallbackType.ABOUT_TO_SUBMIT;
 import static uk.gov.hmcts.reform.unspec.callback.CallbackVersion.V_1;
 import static uk.gov.hmcts.reform.unspec.callback.CallbackVersion.V_2;
-import static uk.gov.hmcts.reform.unspec.callback.CaseEvent.CREATE_CASE;
+import static uk.gov.hmcts.reform.unspec.callback.CaseEvent.CREATE_CLAIM;
 
 @ExtendWith(MockitoExtension.class)
 class CallbackHandlerFactoryTest {
@@ -41,7 +41,7 @@ class CallbackHandlerFactoryTest {
 
         @Override
         public List<CaseEvent> handledEvents() {
-            return Collections.singletonList(CREATE_CASE);
+            return Collections.singletonList(CREATE_CLAIM);
         }
     };
 
@@ -73,7 +73,7 @@ class CallbackHandlerFactoryTest {
     void shouldDispatchCallback_whenValidCaseEvent() {
         CallbackRequest callbackRequest = CallbackRequest
             .builder()
-            .eventId(CREATE_CASE.getValue())
+            .eventId(CREATE_CLAIM.getValue())
             .build();
         CallbackParams params = CallbackParams.builder()
             .request(callbackRequest)

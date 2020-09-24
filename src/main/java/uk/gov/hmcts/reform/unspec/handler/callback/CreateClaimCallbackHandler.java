@@ -7,7 +7,6 @@ import uk.gov.hmcts.reform.ccd.client.model.AboutToStartOrSubmitCallbackResponse
 import uk.gov.hmcts.reform.ccd.client.model.CallbackResponse;
 import uk.gov.hmcts.reform.ccd.client.model.CaseDetails;
 import uk.gov.hmcts.reform.ccd.client.model.SubmittedCallbackResponse;
-import uk.gov.hmcts.reform.unspec.advice.EventAllowed;
 import uk.gov.hmcts.reform.unspec.callback.Callback;
 import uk.gov.hmcts.reform.unspec.callback.CallbackHandler;
 import uk.gov.hmcts.reform.unspec.callback.CallbackParams;
@@ -38,7 +37,7 @@ import java.util.Map;
 
 import static java.lang.String.format;
 import static uk.gov.hmcts.reform.unspec.callback.CallbackParams.Params.BEARER_TOKEN;
-import static uk.gov.hmcts.reform.unspec.callback.CaseEvent.CREATE_CASE;
+import static uk.gov.hmcts.reform.unspec.callback.CaseEvent.CREATE_CLAIM;
 import static uk.gov.hmcts.reform.unspec.enums.AllocatedTrack.getAllocatedTrack;
 import static uk.gov.hmcts.reform.unspec.helpers.DateFormatHelper.DATE_TIME_AT;
 import static uk.gov.hmcts.reform.unspec.helpers.DateFormatHelper.formatLocalDateTime;
@@ -47,7 +46,7 @@ import static uk.gov.hmcts.reform.unspec.helpers.DateFormatHelper.formatLocalDat
 @RequiredArgsConstructor
 public class CreateClaimCallbackHandler extends CallbackHandler {
 
-    private static final List<CaseEvent> EVENTS = Collections.singletonList(CREATE_CASE);
+    private static final List<CaseEvent> EVENTS = Collections.singletonList(CREATE_CLAIM);
     public static final String CONFIRMATION_SUMMARY = "<br />Follow these steps to serve a claim:"
         + "\n* <a href=\"%s\" target=\"_blank\">[Download the sealed claim form]</a> (PDF, %sKB)"
         + "\n* Send the form, particulars of claim and "
@@ -77,8 +76,7 @@ public class CreateClaimCallbackHandler extends CallbackHandler {
         );
     }
 
-    @EventAllowed(caseEvent = CREATE_CASE)
-    private CallbackResponse aboutToStart(CallbackParams callbackParams) {
+    public CallbackResponse aboutToStart(CallbackParams callbackParams) {
         return AboutToStartOrSubmitCallbackResponse.builder().build();
     }
 
