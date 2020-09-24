@@ -24,7 +24,6 @@ import uk.gov.hmcts.reform.unspec.repositories.ReferenceNumberRepository;
 import uk.gov.hmcts.reform.unspec.service.DeadlinesCalculator;
 import uk.gov.hmcts.reform.unspec.service.IssueDateCalculator;
 import uk.gov.hmcts.reform.unspec.service.docmosis.sealedclaim.SealedClaimFormGenerator;
-import uk.gov.hmcts.reform.unspec.utils.ElementUtils;
 import uk.gov.hmcts.reform.unspec.validation.DateOfBirthValidator;
 
 import java.time.LocalDate;
@@ -40,6 +39,8 @@ import static uk.gov.hmcts.reform.unspec.callback.CaseEvent.CREATE_CASE;
 import static uk.gov.hmcts.reform.unspec.enums.AllocatedTrack.getAllocatedTrack;
 import static uk.gov.hmcts.reform.unspec.helpers.DateFormatHelper.DATE_TIME_AT;
 import static uk.gov.hmcts.reform.unspec.helpers.DateFormatHelper.formatLocalDateTime;
+import static uk.gov.hmcts.reform.unspec.utils.ElementUtils.unwrapElements;
+import static uk.gov.hmcts.reform.unspec.utils.ElementUtils.wrapElements;
 
 @Service
 @RequiredArgsConstructor
@@ -52,8 +53,8 @@ public class CreateClaimCallbackHandler extends CallbackHandler {
         + "<a href=\"%s\" target=\"_blank\">a response pack</a> (PDF, 266 KB) to the defendant by %s"
         + "\n* Confirm service online within 21 days of sending the form, particulars and response pack, before"
         + " 4pm if you're doing this on the due day";
-    public static final String RESPONDENT = "respondent1";
-    public static final String CLAIMANT = "applicant1";
+    public static final String RESPONDENT_1 = "respondent1";
+    public static final String APPLICANT_1 = "applicant1";
 
     private final ObjectMapper mapper;
     private final SealedClaimFormGenerator sealedClaimFormGenerator;
@@ -81,7 +82,7 @@ public class CreateClaimCallbackHandler extends CallbackHandler {
 
     private CallbackResponse validateDateOfBirth(CallbackParams callbackParams) {
         Map<String, Object> data = callbackParams.getRequest().getCaseDetails().getData();
-        Party claimant = mapper.convertValue(data.get(CLAIMANT), Party.class);
+        Party claimant = mapper.convertValue(data.get(APPLICANT_1), Party.class);
         List<String> errors = dateOfBirthValidator.validate(claimant);
 
         return AboutToStartOrSubmitCallbackResponse.builder()
@@ -114,39 +115,39 @@ public class CreateClaimCallbackHandler extends CallbackHandler {
         CaseDetails caseDetails = callbackParams.getRequest().getCaseDetails();
         LocalDateTime submittedAt = LocalDateTime.now();
         LocalDate issueDate = issueDateCalculator.calculateIssueDay(submittedAt);
-        CaseData caseData = caseDetailsConverter.toCaseData(callbackParams.getRequest().getCaseDetails());
-        String referenceNumber = referenceNumberRepository.getReferenceNumber();
-
-        CaseDocument sealedClaim = sealedClaimFormGenerator.generate(
-            caseData.toBuilder()
-                .claimIssuedDate(issueDate)
-                .legacyCaseReference(referenceNumber)
-                .claimSubmittedDateTime(submittedAt)
-                .build(),
-            callbackParams.getParams().get(BEARER_TOKEN).toString()
-        );
 
         Map<String, Object> data = caseDetails.getData();
+        data.put("legacyCaseReference", referenceNumberRepository.getReferenceNumber());
         data.put("claimSubmittedDateTime", submittedAt);
         data.put("claimIssuedDate", issueDate);
         data.put(
             "confirmationOfServiceDeadline",
             deadlinesCalculator.calculateConfirmationOfServiceDeadline(issueDate)
         );
-        data.put("systemGeneratedCaseDocuments", ElementUtils.wrapElements(sealedClaim));
 
-        data.put(RESPONDENT, caseData.getRespondent1());
-        data.put(CLAIMANT, caseData.getApplicant1());
-        data.put("legacyCaseReference", referenceNumber);
+        CaseData caseData = caseDetailsConverter.toCaseData(caseDetails);
+
+        CaseDocument sealedClaim = sealedClaimFormGenerator.generate(
+            caseData,
+            callbackParams.getParams().get(BEARER_TOKEN).toString()
+        );
+
+        data.put("systemGeneratedCaseDocuments", wrapElements(sealedClaim));
+        addPartyNamesToParties(data, caseData);
 
         return AboutToStartOrSubmitCallbackResponse.builder()
             .data(data)
             .build();
     }
 
+    private void addPartyNamesToParties(Map<String, Object> data, CaseData caseData) {
+        data.put(RESPONDENT_1, caseData.getRespondent1());
+        data.put(APPLICANT_1, caseData.getApplicant1());
+    }
+
     private SubmittedCallbackResponse buildConfirmation(CallbackParams callbackParams) {
         CaseData caseData = caseDetailsConverter.toCaseData(callbackParams.getRequest().getCaseDetails());
-        Long documentSize = ElementUtils.unwrapElements(caseData.getSystemGeneratedCaseDocuments()).stream()
+        Long documentSize = unwrapElements(caseData.getSystemGeneratedCaseDocuments()).stream()
             .filter(c -> c.getDocumentType() == DocumentType.SEALED_CLAIM)
             .findFirst()
             .map(CaseDocument::getDocumentSize)
