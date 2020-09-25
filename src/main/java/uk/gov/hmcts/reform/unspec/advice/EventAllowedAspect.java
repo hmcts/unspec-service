@@ -1,7 +1,6 @@
 package uk.gov.hmcts.reform.unspec.advice;
 
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
@@ -18,7 +17,6 @@ import java.util.List;
 import static java.lang.String.format;
 import static uk.gov.hmcts.reform.unspec.callback.CallbackType.ABOUT_TO_START;
 
-@Slf4j
 @Aspect
 @Component
 @RequiredArgsConstructor
@@ -28,6 +26,7 @@ public class EventAllowedAspect {
 
     @Pointcut("execution(* *(*)) && @annotation(EventAllowed)")
     public void eventAllowedPointCut() {
+        //Pointcut no implementation required
     }
 
     @Around("eventAllowedPointCut() && args(callbackParams))")
@@ -35,9 +34,6 @@ public class EventAllowedAspect {
         ProceedingJoinPoint joinPoint,
         CallbackParams callbackParams
     ) throws Throwable {
-        log.debug("EventAllowedAspect for eventId: {} and callback type: {}",
-                  callbackParams.getRequest().getEventId(), callbackParams.getType()
-        );
         if (callbackParams.getType() != ABOUT_TO_START) {
             return joinPoint.proceed();
         }
