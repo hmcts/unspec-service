@@ -1,6 +1,7 @@
 package uk.gov.hmcts.reform.unspec.advice;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
@@ -15,7 +16,9 @@ import uk.gov.hmcts.reform.unspec.service.flowstate.FlowStateAllowedEventService
 import java.util.List;
 
 import static java.lang.String.format;
+import static uk.gov.hmcts.reform.unspec.callback.CallbackType.ABOUT_TO_START;
 
+@Slf4j
 @Aspect
 @Component
 @RequiredArgsConstructor
@@ -32,13 +35,19 @@ public class EventAllowedAspect {
         ProceedingJoinPoint joinPoint,
         CallbackParams callbackParams
     ) throws Throwable {
-        final CaseEvent caseEvent = CaseEvent.valueOf(callbackParams.getRequest().getEventId());
-        final CaseDetails caseDetails = callbackParams.getRequest().getCaseDetails();
+        log.debug("EventAllowedAspect for eventId: {} and callback type: {}",
+                  callbackParams.getRequest().getEventId(), callbackParams.getType()
+        );
+        if (callbackParams.getType() != ABOUT_TO_START) {
+            return joinPoint.proceed();
+        }
+        CaseEvent caseEvent = CaseEvent.valueOf(callbackParams.getRequest().getEventId());
+        CaseDetails caseDetails = callbackParams.getRequest().getCaseDetails();
         if (flowStateAllowedEventService.isAllowed(caseDetails, caseEvent)) {
             return joinPoint.proceed();
         } else {
             return AboutToStartOrSubmitCallbackResponse.builder()
-                .errors(List.of(format("%s is not allowed on the case", caseEvent)))
+                .errors(List.of(format("%s is not allowed on the case", caseEvent.getDisplayName())))
                 .build();
         }
     }

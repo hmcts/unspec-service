@@ -42,6 +42,7 @@ public class AcknowledgeServiceCallbackHandler extends CallbackHandler {
     @Override
     protected Map<CallbackType, Callback> callbacks() {
         return Map.of(
+            CallbackType.ABOUT_TO_START, this::aboutToStart,
             CallbackType.MID, this::validateDateOfBirth,
             CallbackType.ABOUT_TO_SUBMIT, this::setNewResponseDeadline,
             CallbackType.SUBMITTED, this::buildConfirmation
@@ -51,6 +52,10 @@ public class AcknowledgeServiceCallbackHandler extends CallbackHandler {
     @Override
     public List<CaseEvent> handledEvents() {
         return EVENTS;
+    }
+
+    public CallbackResponse aboutToStart(CallbackParams callbackParams) {
+        return AboutToStartOrSubmitCallbackResponse.builder().build();
     }
 
     private CallbackResponse validateDateOfBirth(CallbackParams callbackParams) {

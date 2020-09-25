@@ -144,7 +144,7 @@ class FlowStateAllowedEventServiceTest {
 
         @ParameterizedTest
         @CsvSource({
-            "DRAFT,CREATE_CASE",
+            "DRAFT,CREATE_CLAIM",
             "CLAIM_ISSUED,MOVE_TO_STAYED",
             "CLAIM_ISSUED,CONFIRM_SERVICE",
             "SERVICE_CONFIRMED,ACKNOWLEDGE_SERVICE",
