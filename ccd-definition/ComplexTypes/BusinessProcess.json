@@ -16,7 +16,7 @@
   },
   {
     "ID": "BusinessProcess",
-    "ListElementCode": "taskId",
+    "ListElementCode": "activityId",
     "FieldType": "Text",
     "ElementLabel": "Last successfully processed task activity id",
     "SecurityClassification": "Public"

@@ -1,6 +1,7 @@
 package uk.gov.hmcts.reform.unspec.controllers;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.SneakyThrows;
 import org.junit.jupiter.api.BeforeEach;
@@ -129,6 +130,7 @@ public abstract class BaseIntegrationTest {
 
     @SuppressWarnings("unchecked")
     protected Map<String, Object> convertToMap(CaseData caseData) {
-        return (Map<String, Object>) objectMapper.convertValue(caseData, Map.class);
+        return objectMapper.convertValue(caseData, new TypeReference<>() {
+        });
     }
 }

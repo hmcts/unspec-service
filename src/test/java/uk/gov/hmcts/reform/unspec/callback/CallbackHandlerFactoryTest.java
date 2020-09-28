@@ -18,6 +18,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
+import static java.lang.String.format;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static uk.gov.hmcts.reform.unspec.callback.CallbackType.ABOUT_TO_SUBMIT;
@@ -40,6 +41,7 @@ class CallbackHandlerFactoryTest {
         .build();
 
     public static final CallbackResponse ALREADY_HANDLED_EVENT_RESPONSE = AboutToStartOrSubmitCallbackResponse.builder()
+        .errors(List.of(format("Event %s is already processed", NOTIFY_DEFENDANT_SOLICITOR_FOR_CLAIM_ISSUE.getValue())))
         .build();
 
     @TestConfiguration
@@ -82,7 +84,7 @@ class CallbackHandlerFactoryTest {
                 }
 
                 @Override
-                public String camundaTaskId() {
+                public String camundaActivityId() {
                     return "SealedClaimEmailTaskId";
                 }
 
@@ -141,7 +143,7 @@ class CallbackHandlerFactoryTest {
             .eventId(NOTIFY_DEFENDANT_SOLICITOR_FOR_CLAIM_ISSUE.getValue())
             .caseDetails(CaseDetails.builder().data(Map.of(
                 "businessProcess",
-                BusinessProcess.builder().taskId("SealedClaimEmailTaskId").build()
+                BusinessProcess.builder().activityId("SealedClaimEmailTaskId").build()
             )).build())
             .build();
 
@@ -164,7 +166,7 @@ class CallbackHandlerFactoryTest {
             .eventId(NOTIFY_DEFENDANT_SOLICITOR_FOR_CLAIM_ISSUE.getValue())
             .caseDetails(CaseDetails.builder().data(Map.of(
                 "businessProcess",
-                BusinessProcess.builder().taskId("unProcessedTask").build()
+                BusinessProcess.builder().activityId("unProcessedTask").build()
             )).build())
             .build();
 
@@ -187,7 +189,7 @@ class CallbackHandlerFactoryTest {
             .eventId(CREATE_CASE.getValue())
             .caseDetails(CaseDetails.builder().data(Map.of(
                 "businessProcess",
-                BusinessProcess.builder().taskId("unProcessedTask").build()
+                BusinessProcess.builder().activityId("unProcessedTask").build()
             )).build())
             .build();
 

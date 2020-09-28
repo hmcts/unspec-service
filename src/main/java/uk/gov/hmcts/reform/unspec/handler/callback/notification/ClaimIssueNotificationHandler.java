@@ -51,7 +51,7 @@ public class ClaimIssueNotificationHandler extends CallbackHandler {
     }
 
     @Override
-    public String camundaTaskId() {
+    public String camundaActivityId() {
         return NOTIFY_DEFENDANT_SOLICITOR_FOR_CLAIM_ISSUE_TASK_ID;
     }
 

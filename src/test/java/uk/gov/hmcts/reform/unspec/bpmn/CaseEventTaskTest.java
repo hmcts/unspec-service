@@ -46,8 +46,5 @@ class CaseEventTaskTest extends BpmnBaseTest {
         //assert no external tasks left
         List<ExternalTask> externalTasksAfter = getExternalTasks();
         assertThat(externalTasksAfter).isEmpty();
-
-        //assert process is still active - timer event so always running
-        assertFalse(processInstance.isEnded());
     }
 }

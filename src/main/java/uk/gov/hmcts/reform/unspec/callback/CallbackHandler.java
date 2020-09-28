@@ -16,17 +16,17 @@ public abstract class CallbackHandler {
 
     public abstract List<CaseEvent> handledEvents();
 
-    public String camundaTaskId() {
+    public String camundaActivityId() {
         return DEFAULT;
     }
 
     public boolean isEventAlreadyProcessed(BusinessProcess businessProcess) {
-        if (camundaTaskId().equals(DEFAULT)) {
+        if (camundaActivityId().equals(DEFAULT)) {
 
             return false;
         }
 
-        return businessProcess != null && camundaTaskId().equals(businessProcess.getTaskId());
+        return businessProcess != null && camundaActivityId().equals(businessProcess.getActivityId());
     }
 
     public void register(Map<String, CallbackHandler> handlers) {

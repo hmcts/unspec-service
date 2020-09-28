@@ -32,7 +32,7 @@ public class CoreCaseDataService {
         triggerEvent(caseId, eventName, Map.of());
     }
 
-    public void triggerEvent(Long caseId, CaseEvent eventName, Map<String, Object> data) {
+    public void triggerEvent(Long caseId, CaseEvent eventName, Map<String, Object> contentModified) {
         String userToken = idamClient.getAccessToken(userConfig.getUserName(), userConfig.getPassword());
         String systemUpdateUserId = idamClient.getUserInfo(userToken).getUid();
 
@@ -54,7 +54,7 @@ public class CoreCaseDataService {
             CASE_TYPE,
             caseId.toString(),
             true,
-            caseDataContentFromStartEventResponse(startEventResponse, data)
+            caseDataContentFromStartEventResponse(startEventResponse, contentModified)
         );
     }
 
@@ -65,9 +65,9 @@ public class CoreCaseDataService {
     }
 
     private CaseDataContent caseDataContentFromStartEventResponse(
-        StartEventResponse startEventResponse, Map<String, Object> data) {
+        StartEventResponse startEventResponse, Map<String, Object> contentModified) {
         var payload = new HashMap<>(startEventResponse.getCaseDetails().getData());
-        payload.putAll(data);
+        payload.putAll(contentModified);
 
         return CaseDataContent.builder()
             .eventToken(startEventResponse.getToken())

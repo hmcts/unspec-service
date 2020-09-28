@@ -9,6 +9,7 @@ import uk.gov.hmcts.reform.unspec.model.BusinessProcess;
 
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import static java.util.Optional.ofNullable;
@@ -28,15 +29,17 @@ public class CallbackHandlerFactory {
     public CallbackResponse dispatch(CallbackParams callbackParams) {
         String eventId = callbackParams.getRequest().getEventId();
         return ofNullable(eventHandlers.get(eventId))
-            .map(h -> processEvent(callbackParams, h))
+            .map(h -> processEvent(h, callbackParams, eventId))
             .orElseThrow(() -> new CallbackException("Could not handle callback for event " + eventId));
     }
 
-    private CallbackResponse processEvent(CallbackParams callbackParams, CallbackHandler handler) {
+    private CallbackResponse processEvent(CallbackHandler handler, CallbackParams callbackParams, String eventId) {
         Map<String, Object> data = callbackParams.getRequest().getCaseDetails().getData();
         BusinessProcess businessProcess = objectMapper.convertValue(data.get("businessProcess"), BusinessProcess.class);
         return handler.isEventAlreadyProcessed(businessProcess)
-            ? AboutToStartOrSubmitCallbackResponse.builder().build()
+            ? AboutToStartOrSubmitCallbackResponse.builder()
+            .errors(List.of(String.format("Event %s is already processed", eventId)))
+            .build()
             : handler.handle(callbackParams);
     }
 }

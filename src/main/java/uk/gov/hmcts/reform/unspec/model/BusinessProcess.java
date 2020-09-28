@@ -9,5 +9,5 @@ public class BusinessProcess {
 
     private final String processInstanceId;
     private final BusinessProcessStatus status;
-    private final String taskId;
+    private final String activityId;
 }
