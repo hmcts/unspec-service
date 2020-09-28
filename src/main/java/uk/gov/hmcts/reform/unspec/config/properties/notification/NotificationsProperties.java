@@ -4,7 +4,6 @@ import lombok.Data;
 import org.springframework.validation.annotation.Validated;
 
 import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
 
 @Validated
 @Data
@@ -13,6 +12,6 @@ public class NotificationsProperties {
     @NotEmpty
     private String govNotifyApiKey;
 
-    @NotNull
-    private EmailTemplates emailTemplates;
+    @NotEmpty
+    private String defendantSolicitorClaimIssueEmailTemplate;
 }

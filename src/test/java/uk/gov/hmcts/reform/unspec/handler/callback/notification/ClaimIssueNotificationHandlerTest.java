@@ -1,6 +1,5 @@
 package uk.gov.hmcts.reform.unspec.handler.callback.notification;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,7 +8,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import uk.gov.hmcts.reform.unspec.callback.CallbackParams;
 import uk.gov.hmcts.reform.unspec.callback.CallbackType;
-import uk.gov.hmcts.reform.unspec.config.properties.notification.EmailTemplates;
 import uk.gov.hmcts.reform.unspec.config.properties.notification.NotificationsProperties;
 import uk.gov.hmcts.reform.unspec.handler.callback.BaseCallbackHandlerTest;
 import uk.gov.hmcts.reform.unspec.helpers.CaseDetailsConverter;
@@ -25,32 +23,26 @@ import static org.mockito.ArgumentMatchers.anyMap;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 import static uk.gov.hmcts.reform.unspec.handler.callback.notification.ClaimIssueNotificationHandler.NOTIFY_DEFENDANT_SOLICITOR_FOR_CLAIM_ISSUE_TASK_ID;
 
 @SpringBootTest(classes = {
     ClaimIssueNotificationHandler.class,
     CaseDetailsConverter.class,
+    NotificationsProperties.class,
     JacksonAutoConfiguration.class
 })
 class ClaimIssueNotificationHandlerTest extends BaseCallbackHandlerTest {
 
     @MockBean
     private NotificationService notificationService;
-    @MockBean
+    @Autowired
     private NotificationsProperties notificationsProperties;
-    private EmailTemplates emailTemplates;
 
     @Autowired
     private ClaimIssueNotificationHandler handler;
 
     @Nested
     class AboutToSubmitCallback {
-        @BeforeEach
-        void setup() {
-            emailTemplates = new EmailTemplates();
-            when(notificationsProperties.getEmailTemplates()).thenReturn(emailTemplates);
-        }
 
         @Test
         void shouldNotifyDefendantSolicitor_whenInvoked() {
@@ -72,7 +64,7 @@ class ClaimIssueNotificationHandlerTest extends BaseCallbackHandlerTest {
 
             verify(notificationService).sendMail(
                 eq(solicitorEmail),
-                eq(emailTemplates.getDefendantSolicitorClaimIssued()),
+                eq(notificationsProperties.getDefendantSolicitorClaimIssueEmailTemplate()),
                 anyMap(),
                 anyString()
             );
