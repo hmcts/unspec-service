@@ -20,7 +20,7 @@ module.exports = {
       }
     },
     claimantLitigationFriend: {
-      claimantLitigantInFriend: {
+      claimantLitigationFriend: {
         required: 'No'
       }
     },
