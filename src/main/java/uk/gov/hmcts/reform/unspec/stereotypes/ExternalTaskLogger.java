@@ -1,7 +1,6 @@
 package uk.gov.hmcts.reform.unspec.stereotypes;
 
 import lombok.extern.slf4j.Slf4j;
-import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.After;
 import org.aspectj.lang.annotation.AfterThrowing;
 import org.aspectj.lang.annotation.Aspect;
@@ -16,25 +15,24 @@ import static uk.gov.hmcts.reform.unspec.helpers.ExponentialRetryTimeoutHelper.c
 public class ExternalTaskLogger {
 
     @Before(value = "execution(* org.camunda.bpm.client.task.ExternalTaskHandler.execute(..)) && args(externalTask,..)",
-        argNames = "joinPoint, externalTask")
-    public void logExternalTaskAtStart(JoinPoint joinPoint, ExternalTask externalTask) {
+        argNames = "externalTask")
+    public void logExternalTaskAtStart(ExternalTask externalTask) {
         final String taskName = externalTask.getTopicName();
         log.info("Job {} started", taskName);
     }
 
     @After(value = "execution(* org.camunda.bpm.client.task.ExternalTaskHandler.execute(..)) && args(externalTask,..)",
-        argNames = "joinPoint, externalTask")
-    public void logExternalTaskAtEnd(JoinPoint joinPoint, ExternalTask externalTask) {
+        argNames = "externalTask")
+    public void logExternalTaskAtEnd(ExternalTask externalTask) {
         final String taskName = externalTask.getTopicName();
         log.info("Job '{}' finished", taskName);
     }
 
     @AfterThrowing(value = "execution(* org.camunda.bpm.client.task.ExternalTaskHandler.execute(..))  "
         + "&& args(externalTask,externalTaskService)",
-        argNames = "joinPoint, externalTask, externalTaskService, throwable",
+        argNames = "externalTask, externalTaskService, throwable",
         throwing = "throwable")
     public void logExternalTaskAfterError(
-        JoinPoint joinPoint,
         ExternalTask externalTask,
         ExternalTaskService externalTaskService,
         Throwable throwable
