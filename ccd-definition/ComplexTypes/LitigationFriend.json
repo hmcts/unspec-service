@@ -1,33 +1,33 @@
 [
   {
-    "ID": "LitigantInFriend",
+    "ID": "LitigationFriend",
     "ListElementCode": "required",
     "FieldType": "YesOrNo",
-    "ElementLabel": "Is the claimant a minor?",
+    "ElementLabel": "Is the claimant a child?",
     "SecurityClassification": "Public"
   },
   {
-    "ID": "LitigantInFriend",
+    "ID": "LitigationFriend",
     "ListElementCode": "fullName",
     "FieldType": "Text",
-    "ElementLabel": "Full name",
+    "ElementLabel": "Litigation friend's full name",
     "FieldShowCondition": "required = \"Yes\"",
     "SecurityClassification": "Public"
   },
   {
-    "ID": "LitigantInFriend",
+    "ID": "LitigationFriend",
     "ListElementCode": "differentAddress",
     "FieldType": "YesOrNo",
-    "ElementLabel": "Does this litigant in friend live at a different address?",
+    "ElementLabel": "Are the claimant and litigation friend address the same?",
     "FieldShowCondition": "required = \"Yes\"",
     "SecurityClassification": "Public"
   },
   {
-    "ID": "LitigantInFriend",
+    "ID": "LitigationFriend",
     "ListElementCode": "address",
     "FieldType": "AddressUK",
-    "FieldShowCondition": "required = \"Yes\" AND differentAddress = \"Yes\"",
-    "ElementLabel": "Address",
+    "FieldShowCondition": "required = \"Yes\" AND differentAddress = \"No\"",
+    "ElementLabel": "Litigation friend's address",
     "SecurityClassification": "Public"
   }
 ]

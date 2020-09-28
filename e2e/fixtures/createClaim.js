@@ -19,6 +19,11 @@ module.exports = {
         companyName: 'Test Inc'
       }
     },
+    claimantLitigationFriend: {
+      claimantLitigantInFriend: {
+        required: 'No'
+      }
+    },
     defendant: {
       respondent1: {
         type: 'ORGANISATION',

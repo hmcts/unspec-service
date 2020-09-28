@@ -44,9 +44,9 @@
   {
     "LiveFrom": "01/01/2017",
     "CaseTypeID": "UNSPECIFIED_CLAIMS",
-    "ID": "claimantLitigantInFriend",
-    "Label": "Litigant in friend",
-    "FieldType": "LitigantInFriend",
+    "ID": "claimantLitigationFriend",
+    "Label": "Claimant litigation details",
+    "FieldType": "LitigationFriend",
     "SecurityClassification": "Public"
   },
   {
