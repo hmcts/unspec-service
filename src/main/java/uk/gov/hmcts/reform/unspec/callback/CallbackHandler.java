@@ -1,5 +1,6 @@
 package uk.gov.hmcts.reform.unspec.callback;
 
+import uk.gov.hmcts.reform.ccd.client.model.AboutToStartOrSubmitCallbackResponse;
 import uk.gov.hmcts.reform.ccd.client.model.CallbackResponse;
 
 import java.util.List;
@@ -27,5 +28,9 @@ public abstract class CallbackHandler {
                     callbackParams.getRequest().getEventId(),
                     callbackParams.getType()
                 )));
+    }
+
+    protected CallbackResponse emptyCallbackResponse(CallbackParams callbackParams) {
+        return AboutToStartOrSubmitCallbackResponse.builder().build();
     }
 }

@@ -3,8 +3,6 @@ package uk.gov.hmcts.reform.unspec.handler.callback;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import uk.gov.hmcts.reform.ccd.client.model.AboutToStartOrSubmitCallbackResponse;
-import uk.gov.hmcts.reform.ccd.client.model.CallbackResponse;
 import uk.gov.hmcts.reform.ccd.client.model.SubmittedCallbackResponse;
 import uk.gov.hmcts.reform.unspec.callback.Callback;
 import uk.gov.hmcts.reform.unspec.callback.CallbackHandler;
@@ -37,13 +35,9 @@ public class RespondToDefenceCallbackHandler extends CallbackHandler {
     @Override
     protected Map<CallbackType, Callback> callbacks() {
         return Map.of(
-            CallbackType.ABOUT_TO_START, this::aboutToStart,
+            CallbackType.ABOUT_TO_START, this::emptyCallbackResponse,
             CallbackType.SUBMITTED, this::buildConfirmation
         );
-    }
-
-    public CallbackResponse aboutToStart(CallbackParams callbackParams) {
-        return AboutToStartOrSubmitCallbackResponse.builder().build();
     }
 
     private SubmittedCallbackResponse buildConfirmation(CallbackParams callbackParams) {
