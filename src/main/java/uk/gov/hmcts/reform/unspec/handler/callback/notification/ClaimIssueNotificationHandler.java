@@ -59,7 +59,7 @@ public class ClaimIssueNotificationHandler extends CallbackHandler implements No
 
         notificationService.sendMail(
             Optional.ofNullable(caseData.getServiceMethodToRespondentSolicitor1().getEmail())
-                .orElse("dharmendra.kumar@hmcts.net"), //TODO need correct email address here
+                .orElse("civilunspecified@gmail.com"), //TODO need correct email address here
             notificationsProperties.getDefendantSolicitorClaimIssueEmailTemplate(),
             addProperties(caseData),
             "defendant-solicitor-issue-notification-" + caseData.getLegacyCaseReference()
