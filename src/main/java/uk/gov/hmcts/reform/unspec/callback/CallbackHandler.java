@@ -30,7 +30,11 @@ public abstract class CallbackHandler {
                 )));
     }
 
-    @SuppressWarnings("unchecked")
+    /**
+     * To be used to return empty callback response, will be used in overriding classes.
+     * @param callbackParams This parameter is required as this is passed as reference for execute method in CallBack
+     * @return empty callback response
+     */
     protected CallbackResponse emptyCallbackResponse(CallbackParams callbackParams) {
         return AboutToStartOrSubmitCallbackResponse.builder().build();
     }
