@@ -1,6 +1,7 @@
 package uk.gov.hmcts.reform.unspec.advice;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
@@ -17,6 +18,7 @@ import java.util.List;
 import static java.lang.String.format;
 import static uk.gov.hmcts.reform.unspec.callback.CallbackType.ABOUT_TO_START;
 
+@Slf4j
 @Aspect
 @Component
 @RequiredArgsConstructor
@@ -42,8 +44,9 @@ public class EventAllowedAspect {
         if (flowStateAllowedEventService.isAllowed(caseDetails, caseEvent)) {
             return joinPoint.proceed();
         } else {
+            log.info(format("%s is not allowed on the case", caseEvent.getDisplayName()));
             return AboutToStartOrSubmitCallbackResponse.builder()
-                .errors(List.of(format("%s is not allowed on the case", caseEvent.getDisplayName())))
+                .errors(List.of("Invalid action performed"))
                 .build();
         }
     }

@@ -30,6 +30,7 @@ public abstract class CallbackHandler {
                 )));
     }
 
+    @SuppressWarnings("unchecked")
     protected CallbackResponse emptyCallbackResponse(CallbackParams callbackParams) {
         return AboutToStartOrSubmitCallbackResponse.builder().build();
     }

@@ -23,7 +23,6 @@ import uk.gov.hmcts.reform.unspec.service.flowstate.StateFlowEngine;
 
 import java.util.List;
 
-import static java.lang.String.format;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
@@ -66,7 +65,7 @@ class EventAllowedAspectTest {
     @SneakyThrows
     void shouldNotProceedToMethodInvocation_whenEventIsNotAllowed() {
         AboutToStartOrSubmitCallbackResponse response = AboutToStartOrSubmitCallbackResponse.builder()
-            .errors(List.of(format("%s is not allowed on the case", REQUEST_EXTENSION.getDisplayName())))
+            .errors(List.of("Invalid action performed"))
             .build();
         when(proceedingJoinPoint.proceed()).thenReturn(response);
 
