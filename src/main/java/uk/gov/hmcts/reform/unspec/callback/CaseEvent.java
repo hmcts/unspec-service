@@ -15,7 +15,11 @@ public enum CaseEvent {
     DEFENDANT_RESPONSE("DEFENDANT_RESPONSE", "Respond to claim"),
     CLAIMANT_RESPONSE("CLAIMANT_RESPONSE", "View and respond to defence"),
     WITHDRAW_CLAIM("WITHDRAW_CLAIM", "Withdraw claim"),
-    DISCONTINUE_CLAIM("DISCONTINUE_CLAIM", "Discontinue claim");
+    DISCONTINUE_CLAIM("DISCONTINUE_CLAIM", "Discontinue claim"),
+    NOTIFY_DEFENDANT_SOLICITOR_FOR_CLAIM_ISSUE(
+        "NOTIFY_DEFENDANT_SOLICITOR_FOR_CLAIM_ISSUE",
+        "Notify defendant solicitor"
+    );
 
     private final String value;
     private final String displayName;
