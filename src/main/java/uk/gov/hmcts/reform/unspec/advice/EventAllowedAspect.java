@@ -44,7 +44,10 @@ public class EventAllowedAspect {
         if (flowStateAllowedEventService.isAllowed(caseDetails, caseEvent)) {
             return joinPoint.proceed();
         } else {
-            log.info(format("%s is not allowed on the case", caseEvent.getDisplayName()));
+            log.info(format(
+                "%s is not allowed on the case id %s",
+                caseEvent.getDisplayName(), caseDetails.getId()
+            ));
             return AboutToStartOrSubmitCallbackResponse.builder()
                 .errors(List.of("Invalid action performed"))
                 .build();
