@@ -19,8 +19,8 @@ module.exports = {
         companyName: 'Test Inc'
       }
     },
-    claimantLitigationFriend: {
-      claimantLitigationFriend: {
+    applicant1LitigationFriend: {
+      applicant1LitigationFriend: {
         required: 'No'
       }
     },

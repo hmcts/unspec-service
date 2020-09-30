@@ -5,21 +5,21 @@ module.exports = {
 
   fields: {
     childClaimant: {
-      id: '#claimantLitigationFriend_required',
+      id: '#applicant1LitigationFriend_required',
       options: {
         yes: 'Yes',
         no: 'No'
       }
     },
-    litigationFriendName: '#claimantLitigationFriend_fullName',
+    litigationFriendName: '#applicant1LitigationFriend_fullName',
     litigantInFriendDifferentAddress: {
-      id: '#claimantLitigationFriend_differentAddress',
+      id: '#applicant1LitigationFriend_hasDifferentAddressToLitigant',
       options: {
         yes: 'Yes',
         no: 'No'
       }
     },
-    litigantInFriendAddress: '#claimantLitigationFriend_address_address'
+    litigantInFriendAddress: '#applicant1LitigationFriend_primaryAddress_primaryAddress'
   },
 
   async enterLitigantFriendWithDifferentAddressToClaimant(address) {

@@ -52,7 +52,7 @@
     "LiveFrom": "01/01/2017",
     "CaseTypeID": "UNSPECIFIED_CLAIMS",
     "CaseEventID": "CREATE_CLAIM",
-    "CaseFieldID": "claimantLitigationFriend",
+    "CaseFieldID": "applicant1LitigationFriend",
     "PageFieldDisplayOrder": 1,
     "DisplayContext": "MANDATORY",
     "PageID": "ClaimantLitigationFriend",
