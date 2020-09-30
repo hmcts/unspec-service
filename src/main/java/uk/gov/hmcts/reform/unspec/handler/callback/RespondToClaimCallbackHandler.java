@@ -12,12 +12,13 @@ import uk.gov.hmcts.reform.unspec.callback.CallbackParams;
 import uk.gov.hmcts.reform.unspec.callback.CallbackType;
 import uk.gov.hmcts.reform.unspec.callback.CaseEvent;
 import uk.gov.hmcts.reform.unspec.enums.DefendantResponseType;
-import uk.gov.hmcts.reform.unspec.model.BusinessProcess;
 import uk.gov.hmcts.reform.unspec.model.Party;
+import uk.gov.hmcts.reform.unspec.service.BusinessProcessService;
 import uk.gov.hmcts.reform.unspec.validation.DateOfBirthValidator;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -39,6 +40,7 @@ public class RespondToClaimCallbackHandler extends CallbackHandler {
 
     private final ObjectMapper mapper;
     private final DateOfBirthValidator dateOfBirthValidator;
+    private final BusinessProcessService businessProcessService;
 
     @Override
     public List<CaseEvent> handledEvents() {
@@ -77,12 +79,16 @@ public class RespondToClaimCallbackHandler extends CallbackHandler {
         data.put(CLAIMANT_RESPONSE_DEADLINE, claimantResponseDeadLine.atTime(16, 0));
 
         var response = mapper.convertValue(data.get("respondent1ClaimResponseType"), DefendantResponseType.class);
-        data.put("businessProcess", BusinessProcess.builder()
-            .activityId(response == FULL_DEFENCE ? "DefendantResponseHandling" : "CaseHandedOfflineHandling")
-            .status(READY).build());
+        List<String> errors = new ArrayList<>();
+        businessProcessService.updateBusinessProcess(
+            data,
+            response == FULL_DEFENCE ? "DefendantResponseHandling" : "CaseHandedOfflineHandling",
+            errors
+        );
 
         return AboutToStartOrSubmitCallbackResponse.builder()
             .data(data)
+            .errors(errors)
             .build();
     }
 

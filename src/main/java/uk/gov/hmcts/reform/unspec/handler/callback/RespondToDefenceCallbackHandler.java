@@ -13,8 +13,9 @@ import uk.gov.hmcts.reform.unspec.callback.CallbackType;
 import uk.gov.hmcts.reform.unspec.callback.CaseEvent;
 import uk.gov.hmcts.reform.unspec.enums.DefendantResponseType;
 import uk.gov.hmcts.reform.unspec.enums.YesOrNo;
-import uk.gov.hmcts.reform.unspec.model.BusinessProcess;
+import uk.gov.hmcts.reform.unspec.service.BusinessProcessService;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -33,6 +34,7 @@ public class RespondToDefenceCallbackHandler extends CallbackHandler {
     public static final String APPLICANT_1_PROCEEDING = "applicant1ProceedWithClaim";
 
     private final ObjectMapper mapper;
+    private final BusinessProcessService businessProcessService;
 
     @Override
     public List<CaseEvent> handledEvents() {
@@ -52,13 +54,14 @@ public class RespondToDefenceCallbackHandler extends CallbackHandler {
         Map<String, Object> data = callbackParams.getRequest().getCaseDetails().getData();
         YesOrNo proceeding = mapper.convertValue(data.get(APPLICANT_1_PROCEEDING), YesOrNo.class);
         var response = mapper.convertValue(data.get("respondent1ClaimResponseType"), DefendantResponseType.class);
+        List<String> errors = new ArrayList<>();
         if (response == FULL_DEFENCE && proceeding == YES) {
-            data.put("businessProcess",
-                     BusinessProcess.builder().activityId("CaseTransferredToLocalCourtHandling").status(READY).build());
+            businessProcessService.updateBusinessProcess(data, "CaseTransferredToLocalCourtHandling", errors);
         }
 
         return AboutToStartOrSubmitCallbackResponse.builder()
             .data(data)
+            .errors(errors)
             .build();
     }
 

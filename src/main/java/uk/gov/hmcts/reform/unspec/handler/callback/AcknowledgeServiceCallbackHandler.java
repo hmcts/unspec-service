@@ -11,13 +11,14 @@ import uk.gov.hmcts.reform.unspec.callback.CallbackHandler;
 import uk.gov.hmcts.reform.unspec.callback.CallbackParams;
 import uk.gov.hmcts.reform.unspec.callback.CallbackType;
 import uk.gov.hmcts.reform.unspec.callback.CaseEvent;
-import uk.gov.hmcts.reform.unspec.model.BusinessProcess;
 import uk.gov.hmcts.reform.unspec.model.Party;
+import uk.gov.hmcts.reform.unspec.service.BusinessProcessService;
 import uk.gov.hmcts.reform.unspec.service.WorkingDayIndicator;
 import uk.gov.hmcts.reform.unspec.validation.DateOfBirthValidator;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -40,6 +41,7 @@ public class AcknowledgeServiceCallbackHandler extends CallbackHandler {
     private final ObjectMapper mapper;
     private final DateOfBirthValidator dateOfBirthValidator;
     private final WorkingDayIndicator workingDayIndicator;
+    private final BusinessProcessService businessProcessService;
 
     @Override
     protected Map<CallbackType, Callback> callbacks() {
@@ -62,9 +64,9 @@ public class AcknowledgeServiceCallbackHandler extends CallbackHandler {
         List<String> errors = dateOfBirthValidator.validate(respondent);
 
         return AboutToStartOrSubmitCallbackResponse.builder()
-                   .data(data)
-                   .errors(errors)
-                   .build();
+            .data(data)
+            .errors(errors)
+            .build();
     }
 
     private CallbackResponse setNewResponseDeadline(CallbackParams callbackParams) {
@@ -74,12 +76,13 @@ public class AcknowledgeServiceCallbackHandler extends CallbackHandler {
         LocalDate newResponseDate = workingDayIndicator.getNextWorkingDay(responseDeadline.plusDays(14).toLocalDate());
 
         data.put(RESPONSE_DEADLINE, newResponseDate.atTime(MID_NIGHT));
-        data.put("businessProcess",
-                 BusinessProcess.builder().activityId("ServiceAcknowledgementHandling").status(READY).build());
+        List<String> errors = new ArrayList<>();
+        businessProcessService.updateBusinessProcess(data, "ServiceAcknowledgementHandling", errors);
 
         return AboutToStartOrSubmitCallbackResponse.builder()
-                   .data(data)
-                   .build();
+            .data(data)
+            .errors(errors)
+            .build();
     }
 
     private SubmittedCallbackResponse buildConfirmation(CallbackParams callbackParams) {

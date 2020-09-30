@@ -8,15 +8,10 @@ import org.camunda.bpm.client.task.ExternalTaskService;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Component;
 import uk.gov.hmcts.reform.ccd.client.model.CaseDetails;
-import uk.gov.hmcts.reform.unspec.event.MoveCaseToStayedEvent;
 import uk.gov.hmcts.reform.unspec.helpers.CaseDetailsConverter;
-import uk.gov.hmcts.reform.unspec.model.CaseData;
 import uk.gov.hmcts.reform.unspec.service.search.CaseReadySearchService;
-import uk.gov.hmcts.reform.unspec.service.search.CaseStayedSearchService;
 
 import java.util.List;
-
-import static uk.gov.hmcts.reform.unspec.helpers.ExponentialRetryTimeoutHelper.calculateExponentialRetryTimeout;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -42,10 +37,9 @@ public class CaseReadyHandler implements ExternalTaskHandler {
             //TODO: check response
             //TODO: failed -> log and move on
             //TODO: successful -> publish following CCD event:
-//        applicationEventPublisher.publishEvent(new BusinessProcessDispatchedEvent(caseDetails.getId())));
+            //applicationEventPublisher.publishEvent(new BusinessProcessDispatchedEvent(caseDetails.getId())));
             //TODO: in event handler -> move status to DISPATCHED if hasn't already progressed
         });
-
 
         externalTaskService.complete(externalTask);
         log.info("Job '{}' finished", taskName);

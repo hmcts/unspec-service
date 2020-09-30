@@ -5,7 +5,6 @@ import org.camunda.bpm.client.topic.TopicSubscriptionBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import uk.gov.hmcts.reform.unspec.service.tasks.handler.CaseReadyHandler;
-import uk.gov.hmcts.reform.unspec.service.tasks.handler.CaseStayedHandler;
 
 @Component
 public class CaseReadyExternalTaskListener {

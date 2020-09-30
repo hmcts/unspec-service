@@ -11,6 +11,7 @@ import uk.gov.hmcts.reform.unspec.callback.CallbackParams;
 import uk.gov.hmcts.reform.unspec.callback.CallbackType;
 import uk.gov.hmcts.reform.unspec.enums.YesOrNo;
 import uk.gov.hmcts.reform.unspec.helpers.CaseDetailsConverter;
+import uk.gov.hmcts.reform.unspec.service.BusinessProcessService;
 import uk.gov.hmcts.reform.unspec.service.flowstate.FlowStateAllowedEventService;
 import uk.gov.hmcts.reform.unspec.service.flowstate.StateFlowEngine;
 import uk.gov.hmcts.reform.unspec.validation.RequestExtensionValidator;
@@ -37,7 +38,8 @@ import static uk.gov.hmcts.reform.unspec.service.DeadlinesCalculator.MID_NIGHT;
     JacksonAutoConfiguration.class,
     FlowStateAllowedEventService.class,
     StateFlowEngine.class,
-    CaseDetailsConverter.class
+    CaseDetailsConverter.class,
+    BusinessProcessService.class
 })
 class RespondExtensionCallbackHandlerTest extends BaseCallbackHandlerTest {
 
