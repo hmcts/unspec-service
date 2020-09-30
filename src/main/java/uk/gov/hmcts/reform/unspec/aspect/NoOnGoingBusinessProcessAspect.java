@@ -24,7 +24,7 @@ import static uk.gov.hmcts.reform.unspec.enums.BusinessProcessStatus.FINISHED;
 @RequiredArgsConstructor
 public class NoOnGoingBusinessProcessAspect {
 
-    private static final String ERROR_MESSAGE = "There is a technical issue causing a delay. "
+    public static final String ERROR_MESSAGE = "There is a technical issue causing a delay. "
         + "You do not need to do anything. Please come back later.";
 
     private final CaseDetailsConverter caseDetailsConverter;
