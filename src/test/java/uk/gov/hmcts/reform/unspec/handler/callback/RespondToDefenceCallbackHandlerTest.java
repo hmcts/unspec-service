@@ -3,13 +3,17 @@ package uk.gov.hmcts.reform.unspec.handler.callback;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.EnumSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.jackson.JacksonAutoConfiguration;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
+import uk.gov.hmcts.reform.ccd.client.model.AboutToStartOrSubmitCallbackResponse;
 import uk.gov.hmcts.reform.ccd.client.model.SubmittedCallbackResponse;
 import uk.gov.hmcts.reform.unspec.callback.CallbackParams;
 import uk.gov.hmcts.reform.unspec.callback.CallbackType;
+import uk.gov.hmcts.reform.unspec.enums.DefendantResponseType;
 import uk.gov.hmcts.reform.unspec.enums.YesOrNo;
 
 import java.util.HashMap;
@@ -17,6 +21,7 @@ import java.util.Map;
 
 import static java.lang.String.format;
 import static org.assertj.core.api.Assertions.assertThat;
+import static uk.gov.hmcts.reform.unspec.model.BusinessProcessStatus.READY;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(classes = {
@@ -27,6 +32,58 @@ class RespondToDefenceCallbackHandlerTest extends BaseCallbackHandlerTest {
 
     @Autowired
     private RespondToDefenceCallbackHandler handler;
+
+    @Nested
+    class AboutToSubmitCallback {
+
+        @Test
+        void shouldSetCaseTransferredToLocalCourtBusinessProcessToReady_whenFullDefenceAndProceedingWithClaim() {
+            Map<String, Object> data = new HashMap<>(Map.of(
+                "respondent1ClaimResponseType", "FULL_DEFENCE",
+                "applicant1ProceedWithClaim", "Yes"
+            ));
+
+            AboutToStartOrSubmitCallbackResponse response = (AboutToStartOrSubmitCallbackResponse) handler
+                .handle(callbackParamsOf(data, CallbackType.ABOUT_TO_SUBMIT));
+
+            assertThat(response.getData()).extracting("businessProcess").extracting("status").isEqualTo(READY);
+            assertThat(response.getData()).extracting("businessProcess").extracting("activityId").isEqualTo(
+                "CaseTransferredToLocalCourtHandling");
+            assertThat(response.getData()).extracting("businessProcess").extracting("processInstanceId").isNull();
+        }
+
+        @ParameterizedTest()
+        @EnumSource(
+            value = DefendantResponseType.class,
+            names = {"FULL_ADMISSION", "PART_ADMISSION", "COUNTER_CLAIM"})
+        void shouldNotSetBusinessProcess_whenNotFullDefence(DefendantResponseType responseType) {
+            Map<String, Object> data = new HashMap<>(Map.of(
+                "respondent1ClaimResponseType", responseType,
+                "applicant1ProceedWithClaim", "Yes"
+            ));
+
+            AboutToStartOrSubmitCallbackResponse response = (AboutToStartOrSubmitCallbackResponse) handler
+                .handle(callbackParamsOf(data, CallbackType.ABOUT_TO_SUBMIT));
+
+            assertThat(response.getData()).doesNotContainKey("businessProcess");
+        }
+
+        @ParameterizedTest()
+        @EnumSource(
+            value = DefendantResponseType.class,
+            names = {"FULL_DEFENCE", "FULL_ADMISSION", "PART_ADMISSION", "COUNTER_CLAIM"})
+        void shouldNotSetBusinessProcess_whenNotProceedingWithClaim(DefendantResponseType responseType) {
+            Map<String, Object> data = new HashMap<>(Map.of(
+                "respondent1ClaimResponseType", responseType,
+                "applicant1ProceedWithClaim", "No"
+            ));
+
+            AboutToStartOrSubmitCallbackResponse response = (AboutToStartOrSubmitCallbackResponse) handler
+                .handle(callbackParamsOf(data, CallbackType.ABOUT_TO_SUBMIT));
+
+            assertThat(response.getData()).doesNotContainKey("businessProcess");
+        }
+    }
 
     @Nested
     class SubmittedCallback {

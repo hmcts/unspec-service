@@ -14,7 +14,7 @@ class CaseEventTaskTest extends BpmnBaseTest {
     public static final String TOPIC_NAME = "processCaseEvent";
 
     public CaseEventTaskTest() {
-        super("claim_issue.bpmn", "Claim_issue_event_handling");
+        super("claim_issue.bpmn", "ClaimIssueHandling");
     }
 
     @Test

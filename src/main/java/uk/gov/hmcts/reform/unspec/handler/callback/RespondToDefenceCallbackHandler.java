@@ -11,6 +11,7 @@ import uk.gov.hmcts.reform.unspec.callback.CallbackHandler;
 import uk.gov.hmcts.reform.unspec.callback.CallbackParams;
 import uk.gov.hmcts.reform.unspec.callback.CallbackType;
 import uk.gov.hmcts.reform.unspec.callback.CaseEvent;
+import uk.gov.hmcts.reform.unspec.enums.DefendantResponseType;
 import uk.gov.hmcts.reform.unspec.enums.YesOrNo;
 import uk.gov.hmcts.reform.unspec.model.BusinessProcess;
 
@@ -20,6 +21,7 @@ import java.util.Map;
 
 import static java.lang.String.format;
 import static uk.gov.hmcts.reform.unspec.callback.CaseEvent.CLAIMANT_RESPONSE;
+import static uk.gov.hmcts.reform.unspec.enums.DefendantResponseType.FULL_DEFENCE;
 import static uk.gov.hmcts.reform.unspec.enums.YesOrNo.YES;
 import static uk.gov.hmcts.reform.unspec.model.BusinessProcessStatus.READY;
 
@@ -48,7 +50,8 @@ public class RespondToDefenceCallbackHandler extends CallbackHandler {
     private CallbackResponse handleNotifications(CallbackParams callbackParams) {
         Map<String, Object> data = callbackParams.getRequest().getCaseDetails().getData();
         YesOrNo proceeding = mapper.convertValue(data.get(APPLICANT_1_PROCEEDING), YesOrNo.class);
-        if (proceeding == YES) {
+        var response = mapper.convertValue(data.get("respondent1ClaimResponseType"), DefendantResponseType.class);
+        if (response == FULL_DEFENCE && proceeding == YES) {
             data.put("businessProcess",
                      BusinessProcess.builder().activityId("CaseTransferredToLocalCourtHandling").status(READY).build());
         }

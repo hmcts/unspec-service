@@ -4,6 +4,7 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.EnumSource;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.jackson.JacksonAutoConfiguration;
@@ -14,6 +15,7 @@ import uk.gov.hmcts.reform.ccd.client.model.AboutToStartOrSubmitCallbackResponse
 import uk.gov.hmcts.reform.ccd.client.model.SubmittedCallbackResponse;
 import uk.gov.hmcts.reform.unspec.callback.CallbackParams;
 import uk.gov.hmcts.reform.unspec.callback.CallbackType;
+import uk.gov.hmcts.reform.unspec.enums.DefendantResponseType;
 import uk.gov.hmcts.reform.unspec.validation.DateOfBirthValidator;
 
 import java.time.LocalDateTime;
@@ -23,7 +25,9 @@ import java.util.Map;
 import static java.lang.String.format;
 import static java.time.LocalDate.now;
 import static org.assertj.core.api.Assertions.assertThat;
+import static uk.gov.hmcts.reform.unspec.enums.DefendantResponseType.FULL_DEFENCE;
 import static uk.gov.hmcts.reform.unspec.handler.callback.RespondToClaimCallbackHandler.CLAIMANT_RESPONSE_DEADLINE;
+import static uk.gov.hmcts.reform.unspec.model.BusinessProcessStatus.READY;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(classes = {
@@ -83,6 +87,40 @@ class RespondToClaimCallbackHandlerTest extends BaseCallbackHandlerTest {
                 .handle(params);
 
             assertThat(response.getData()).containsEntry(CLAIMANT_RESPONSE_DEADLINE, claimantResponseDeadline);
+        }
+
+        @Test
+        void shouldSetDefendantResponseBusinessProcessToReady_whenResponseIsFullDefence() {
+            Map<String, Object> data = new HashMap<>(Map.of(
+                "respondent1ClaimResponseType", FULL_DEFENCE
+            ));
+
+            AboutToStartOrSubmitCallbackResponse response = (AboutToStartOrSubmitCallbackResponse) handler
+                .handle(callbackParamsOf(data, CallbackType.ABOUT_TO_SUBMIT));
+
+            assertThat(response.getData()).extracting("businessProcess").extracting("status").isEqualTo(READY);
+            assertThat(response.getData()).extracting("businessProcess").extracting("activityId").isEqualTo(
+                "DefendantResponseHandling");
+            assertThat(response.getData()).extracting("businessProcess").extracting("processInstanceId").isNull();
+        }
+
+        @ParameterizedTest()
+        @EnumSource(
+            value = DefendantResponseType.class,
+            names = {"FULL_ADMISSION", "PART_ADMISSION", "COUNTER_CLAIM"})
+        void shouldSetCaseHandedOfflineBusinessProcessToReady_whenResponseIsNotFullDefence(
+            DefendantResponseType defendantResponse) {
+            Map<String, Object> data = new HashMap<>(Map.of(
+                "respondent1ClaimResponseType", defendantResponse
+            ));
+
+            AboutToStartOrSubmitCallbackResponse response = (AboutToStartOrSubmitCallbackResponse) handler
+                .handle(callbackParamsOf(data, CallbackType.ABOUT_TO_SUBMIT));
+
+            assertThat(response.getData()).extracting("businessProcess").extracting("status").isEqualTo(READY);
+            assertThat(response.getData()).extracting("businessProcess").extracting("activityId").isEqualTo(
+                "CaseHandedOfflineHandling");
+            assertThat(response.getData()).extracting("businessProcess").extracting("processInstanceId").isNull();
         }
     }
 

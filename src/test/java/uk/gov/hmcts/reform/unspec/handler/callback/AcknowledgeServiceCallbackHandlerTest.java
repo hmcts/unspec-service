@@ -27,6 +27,7 @@ import static java.time.LocalDate.now;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
+import static uk.gov.hmcts.reform.unspec.model.BusinessProcessStatus.READY;
 import static uk.gov.hmcts.reform.unspec.service.DeadlinesCalculator.MID_NIGHT;
 
 @ExtendWith(SpringExtension.class)
@@ -96,10 +97,23 @@ class AcknowledgeServiceCallbackHandlerTest extends BaseCallbackHandlerTest {
             AboutToStartOrSubmitCallbackResponse response = (AboutToStartOrSubmitCallbackResponse) handler
                 .handle(params);
 
-            assertThat(response.getData()).isEqualTo(Map.of(
-                "respondentSolicitor1ResponseDeadline",
-                responseDeadline.plusDays(14)
+            assertThat(response.getData()).extracting("respondentSolicitor1ResponseDeadline")
+                .isEqualTo(responseDeadline.plusDays(14));
+        }
+
+        @Test
+        void shouldSetServiceAcknowledgementBusinessProcessToReady_whenInvoked() {
+            Map<String, Object> data = new HashMap<>(Map.of(
+                "respondentSolicitor1ResponseDeadline", now().atTime(MID_NIGHT)
             ));
+
+            AboutToStartOrSubmitCallbackResponse response = (AboutToStartOrSubmitCallbackResponse) handler
+                .handle(callbackParamsOf(data, CallbackType.ABOUT_TO_SUBMIT));
+
+            assertThat(response.getData()).extracting("businessProcess").extracting("status").isEqualTo(READY);
+            assertThat(response.getData()).extracting("businessProcess").extracting("activityId").isEqualTo(
+                "ServiceAcknowledgementHandling");
+            assertThat(response.getData()).extracting("businessProcess").extracting("processInstanceId").isNull();
         }
     }
 

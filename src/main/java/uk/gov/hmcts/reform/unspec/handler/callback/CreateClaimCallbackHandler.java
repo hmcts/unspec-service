@@ -141,7 +141,7 @@ public class CreateClaimCallbackHandler extends CallbackHandler {
         data.put(CLAIMANT, caseData.getApplicant1());
         data.put("legacyCaseReference", referenceNumber);
         data.put("businessProcess",
-                 BusinessProcess.builder().activityId("Claim_issue_event_handling").status(READY).build());
+                 BusinessProcess.builder().activityId("ClaimIssueHandling").status(READY).build());
 
         return AboutToStartOrSubmitCallbackResponse.builder()
             .data(data)

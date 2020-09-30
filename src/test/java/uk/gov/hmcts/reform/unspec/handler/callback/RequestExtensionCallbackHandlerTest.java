@@ -35,6 +35,7 @@ import static uk.gov.hmcts.reform.unspec.handler.callback.RespondExtensionCallba
 import static uk.gov.hmcts.reform.unspec.helpers.DateFormatHelper.DATE;
 import static uk.gov.hmcts.reform.unspec.helpers.DateFormatHelper.formatLocalDate;
 import static uk.gov.hmcts.reform.unspec.helpers.DateFormatHelper.formatLocalDateTime;
+import static uk.gov.hmcts.reform.unspec.model.BusinessProcessStatus.READY;
 import static uk.gov.hmcts.reform.unspec.service.DeadlinesCalculator.MID_NIGHT;
 
 @SpringBootTest(classes = {
@@ -159,6 +160,17 @@ class RequestExtensionCallbackHandlerTest extends BaseCallbackHandlerTest {
                 .handle(params);
 
             assertThat(response.getData()).containsEntry(RESPONSE_DEADLINE, responseDeadline);
+        }
+
+        @Test
+        void shouldSetRequestForExtensionBusinessProcessToReady_whenInvoked() {
+            AboutToStartOrSubmitCallbackResponse response = (AboutToStartOrSubmitCallbackResponse) handler
+                .handle(callbackParamsOf(new HashMap<>(), CallbackType.ABOUT_TO_SUBMIT));
+
+            assertThat(response.getData()).extracting("businessProcess").extracting("status").isEqualTo(READY);
+            assertThat(response.getData()).extracting("businessProcess").extracting("activityId").isEqualTo(
+                "RequestForExtensionHandling");
+            assertThat(response.getData()).extracting("businessProcess").extracting("processInstanceId").isNull();
         }
     }
 
