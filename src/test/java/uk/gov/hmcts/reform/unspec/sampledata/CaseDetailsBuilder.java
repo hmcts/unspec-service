@@ -20,6 +20,7 @@ public class CaseDetailsBuilder {
 
     private String state;
     private Map<String, Object> data;
+    private Long id;
 
     public static CaseDetailsBuilder builder() {
         return new CaseDetailsBuilder();
@@ -32,6 +33,11 @@ public class CaseDetailsBuilder {
 
     public CaseDetailsBuilder data(CaseData caseData) {
         this.data = mapper.convertValue(caseData, Map.class);
+        return this;
+    }
+
+    public CaseDetailsBuilder id(Long id) {
+        this.id = id;
         return this;
     }
 
@@ -81,6 +87,7 @@ public class CaseDetailsBuilder {
         return CaseDetails.builder()
             .data(data)
             .state(state)
+            .id(id)
             .build();
     }
 }
