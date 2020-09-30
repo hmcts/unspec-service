@@ -69,6 +69,7 @@ public class CreateClaimCallbackHandler extends CallbackHandler {
     @Override
     protected Map<CallbackType, Callback> callbacks() {
         return Map.of(
+            CallbackType.ABOUT_TO_START, this::emptyCallbackResponse,
             CallbackType.MID, this::validateClaimValues,
             CallbackType.MID_SECONDARY, this::validateDateOfBirth,
             CallbackType.ABOUT_TO_SUBMIT, this::issueClaim,
