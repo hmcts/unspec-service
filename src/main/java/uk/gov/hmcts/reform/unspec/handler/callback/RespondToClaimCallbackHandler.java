@@ -77,13 +77,9 @@ public class RespondToClaimCallbackHandler extends CallbackHandler {
         data.put(CLAIMANT_RESPONSE_DEADLINE, claimantResponseDeadLine.atTime(16, 0));
 
         var response = mapper.convertValue(data.get("respondent1ClaimResponseType"), DefendantResponseType.class);
-        if (response == FULL_DEFENCE) {
-            data.put("businessProcess",
-                     BusinessProcess.builder().activityId("DefendantResponseHandling").status(READY).build());
-        } else {
-            data.put("businessProcess",
-                     BusinessProcess.builder().activityId("CaseHandedOfflineHandling").status(READY).build());
-        }
+        data.put("businessProcess", BusinessProcess.builder()
+            .activityId(response == FULL_DEFENCE ? "DefendantResponseHandling" : "CaseHandedOfflineHandling")
+            .status(READY).build());
 
         return AboutToStartOrSubmitCallbackResponse.builder()
             .data(data)

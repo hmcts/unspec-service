@@ -19,7 +19,7 @@ import java.util.Map;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static uk.gov.hmcts.reform.unspec.handler.callback.notification.NotificationData.CLAIM_REFERENCE_NUMBER;
-import static uk.gov.hmcts.reform.unspec.handler.callback.notification.NotificationData.SOLICITOR_NAME;
+import static uk.gov.hmcts.reform.unspec.handler.callback.notification.NotificationData.SOLICITOR_REFERENCE;
 
 @SpringBootTest(classes = {
     RequestForExtensionClaimantNotificationHandler.class,
@@ -60,7 +60,7 @@ class RequestForExtensionClaimantNotificationHandlerTest extends BaseCallbackHan
             verify(notificationService).sendMail(
                 "claimant-solicitor@example.com",
                 "template-id",
-                Map.of(CLAIM_REFERENCE_NUMBER, legacyCaseReference, SOLICITOR_NAME, claimantReference),
+                Map.of(CLAIM_REFERENCE_NUMBER, legacyCaseReference, SOLICITOR_REFERENCE, claimantReference),
                 "request-for-extension-claimant-notification-000LR001"
             );
         }

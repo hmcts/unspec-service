@@ -71,7 +71,7 @@ class RespondToDefenceCallbackHandlerTest extends BaseCallbackHandlerTest {
             assertThat(response.getData()).extracting("businessProcess").extracting("processInstanceId").isNull();
         }
 
-        @ParameterizedTest()
+        @ParameterizedTest
         @EnumSource(
             value = DefendantResponseType.class,
             names = {"FULL_ADMISSION", "PART_ADMISSION", "COUNTER_CLAIM"})
@@ -87,7 +87,7 @@ class RespondToDefenceCallbackHandlerTest extends BaseCallbackHandlerTest {
             assertThat(response.getData()).doesNotContainKey("businessProcess");
         }
 
-        @ParameterizedTest()
+        @ParameterizedTest
         @EnumSource(
             value = DefendantResponseType.class,
             names = {"FULL_DEFENCE", "FULL_ADMISSION", "PART_ADMISSION", "COUNTER_CLAIM"})

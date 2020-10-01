@@ -123,7 +123,7 @@ class RespondToClaimCallbackHandlerTest extends BaseCallbackHandlerTest {
             assertThat(response.getData()).extracting("businessProcess").extracting("processInstanceId").isNull();
         }
 
-        @ParameterizedTest()
+        @ParameterizedTest
         @EnumSource(
             value = DefendantResponseType.class,
             names = {"FULL_ADMISSION", "PART_ADMISSION", "COUNTER_CLAIM"})

@@ -18,12 +18,11 @@ import java.util.List;
 import java.util.Map;
 
 import static uk.gov.hmcts.reform.unspec.callback.CaseEvent.NOTIFY_APPLICANT_SOLICITOR1_FOR_CASE_TRANSFERRED_TO_LOCAL_COURT;
-import static uk.gov.hmcts.reform.unspec.handler.callback.notification.NotificationData.CLAIM_REFERENCE_NUMBER;
-import static uk.gov.hmcts.reform.unspec.handler.callback.notification.NotificationData.SOLICITOR_NAME;
 
 @Service
 @RequiredArgsConstructor
-public class CaseTransferredToLocalCourtClaimantNotificationHandler extends CallbackHandler {
+public class CaseTransferredToLocalCourtClaimantNotificationHandler extends CallbackHandler
+    implements NotificationData {
 
     private static final List<CaseEvent> EVENTS = List.of(
         NOTIFY_APPLICANT_SOLICITOR1_FOR_CASE_TRANSFERRED_TO_LOCAL_COURT);
@@ -58,13 +57,18 @@ public class CaseTransferredToLocalCourtClaimantNotificationHandler extends Call
         notificationService.sendMail(
             "claimant-solicitor@example.com",
             notificationsProperties.getSolicitorResponseToCase(),
-            Map.of(
-                CLAIM_REFERENCE_NUMBER, caseData.getLegacyCaseReference(),
-                SOLICITOR_NAME, caseData.getSolicitorReferences().getApplicantSolicitor1Reference()
-            ),
+            addProperties(caseData),
             String.format(REFERENCE_TEMPLATE, caseData.getLegacyCaseReference())
         );
 
         return AboutToStartOrSubmitCallbackResponse.builder().build();
+    }
+
+    @Override
+    public Map<String, String> addProperties(CaseData caseData) {
+        return Map.of(
+            CLAIM_REFERENCE_NUMBER, caseData.getLegacyCaseReference(),
+            SOLICITOR_REFERENCE, caseData.getSolicitorReferences().getApplicantSolicitor1Reference()
+        );
     }
 }

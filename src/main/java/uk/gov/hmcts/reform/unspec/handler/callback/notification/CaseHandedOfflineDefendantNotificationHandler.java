@@ -18,12 +18,10 @@ import java.util.List;
 import java.util.Map;
 
 import static uk.gov.hmcts.reform.unspec.callback.CaseEvent.NOTIFY_RESPONDENT_SOLICITOR1_FOR_CASE_HANDED_OFFLINE;
-import static uk.gov.hmcts.reform.unspec.handler.callback.notification.NotificationData.CLAIM_REFERENCE_NUMBER;
-import static uk.gov.hmcts.reform.unspec.handler.callback.notification.NotificationData.SOLICITOR_NAME;
 
 @Service
 @RequiredArgsConstructor
-public class CaseHandedOfflineDefendantNotificationHandler extends CallbackHandler {
+public class CaseHandedOfflineDefendantNotificationHandler extends CallbackHandler implements NotificationData  {
 
     private static final List<CaseEvent> EVENTS = List.of(NOTIFY_RESPONDENT_SOLICITOR1_FOR_CASE_HANDED_OFFLINE);
     public static final String NOTIFY_RESPONDENT_SOLICITOR1_FOR_CASE_HANDED_OFFLINE_TASK_ID =
@@ -57,17 +55,18 @@ public class CaseHandedOfflineDefendantNotificationHandler extends CallbackHandl
         notificationService.sendMail(
             "defendant-solicitor@example.com",
             notificationsProperties.getSolicitorResponseToCase(),
-            getNotificationProperties(caseData),
+            addProperties(caseData),
             String.format(REFERENCE_TEMPLATE, caseData.getLegacyCaseReference())
         );
 
         return AboutToStartOrSubmitCallbackResponse.builder().build();
     }
 
-    private Map<String, String> getNotificationProperties(CaseData caseData) {
+    @Override
+    public Map<String, String> addProperties(CaseData caseData) {
         return Map.of(
             CLAIM_REFERENCE_NUMBER, caseData.getLegacyCaseReference(),
-            SOLICITOR_NAME, caseData.getSolicitorReferences().getRespondentSolicitor1Reference()
+            SOLICITOR_REFERENCE, caseData.getSolicitorReferences().getRespondentSolicitor1Reference()
         );
     }
 }
