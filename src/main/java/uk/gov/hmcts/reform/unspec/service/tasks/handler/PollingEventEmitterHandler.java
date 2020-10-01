@@ -6,23 +6,22 @@ import org.camunda.bpm.client.task.ExternalTask;
 import org.camunda.bpm.client.task.ExternalTaskHandler;
 import org.camunda.bpm.client.task.ExternalTaskService;
 import org.camunda.bpm.engine.RuntimeService;
-import org.camunda.bpm.engine.runtime.ProcessInstance;
 import org.camunda.bpm.extension.rest.exception.RemoteProcessEngineException;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Component;
 import uk.gov.hmcts.reform.ccd.client.model.CaseDetails;
 import uk.gov.hmcts.reform.unspec.event.DispatchBusinessProcessEvent;
 import uk.gov.hmcts.reform.unspec.helpers.CaseDetailsConverter;
-import uk.gov.hmcts.reform.unspec.service.search.CaseReadySearchService;
+import uk.gov.hmcts.reform.unspec.service.search.CaseReadyBusinessProcessSearchService;
 
 import java.util.List;
 
 @Slf4j
 @RequiredArgsConstructor
 @Component
-public class CaseReadyHandler implements ExternalTaskHandler {
+public class PollingEventEmitterHandler implements ExternalTaskHandler {
 
-    private final CaseReadySearchService caseSearchService;
+    private final CaseReadyBusinessProcessSearchService caseSearchService;
     private final CaseDetailsConverter caseDetailsConverter;
     private final ApplicationEventPublisher applicationEventPublisher;
     private final RuntimeService runtimeService;
@@ -40,7 +39,7 @@ public class CaseReadyHandler implements ExternalTaskHandler {
             var businessProcess = caseData.getBusinessProcess();
             var messageName = "Message" + businessProcess.getActivityId();
             try {
-                ProcessInstance processInstance = runtimeService.createMessageCorrelation(messageName)
+                runtimeService.createMessageCorrelation(messageName)
                     .setVariable("CCD_ID", id)
                     .correlateStartMessage();
                 applicationEventPublisher.publishEvent(new DispatchBusinessProcessEvent(

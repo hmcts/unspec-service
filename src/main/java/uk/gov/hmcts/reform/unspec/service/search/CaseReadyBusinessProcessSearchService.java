@@ -10,9 +10,9 @@ import static org.elasticsearch.index.query.QueryBuilders.boolQuery;
 import static org.elasticsearch.index.query.QueryBuilders.matchQuery;
 
 @Service
-public class CaseReadySearchService extends ElasticSearchService {
+public class CaseReadyBusinessProcessSearchService extends ElasticSearchService {
 
-    public CaseReadySearchService(CoreCaseDataService coreCaseDataService) {
+    public CaseReadyBusinessProcessSearchService(CoreCaseDataService coreCaseDataService) {
         super(coreCaseDataService);
     }
 
