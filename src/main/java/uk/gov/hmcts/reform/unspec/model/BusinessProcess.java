@@ -5,7 +5,7 @@ import lombok.Data;
 import uk.gov.hmcts.reform.unspec.enums.BusinessProcessStatus;
 
 @Data
-@Builder
+@Builder(toBuilder = true)
 public class BusinessProcess {
 
     private final String processInstanceId;

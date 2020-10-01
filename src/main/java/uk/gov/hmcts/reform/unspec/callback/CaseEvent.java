@@ -16,6 +16,7 @@ public enum CaseEvent {
     CLAIMANT_RESPONSE("View and respond to defence"),
     WITHDRAW_CLAIM("Withdraw claim"),
     DISCONTINUE_CLAIM("Discontinue claim"),
+    DISPATCH_BUSINESS_PROCESS("Dispatch business process"),
     NOTIFY_RESPONDENT_SOLICITOR1_FOR_CLAIM_ISSUE("Notify claim issue"),
     NOTIFY_APPLICANT_SOLICITOR1_FOR_REQUEST_FOR_EXTENSION("Notify request for extension"),
     NOTIFY_RESPONDENT_SOLICITOR1_FOR_EXTENSION_RESPONSE("Notify extension response"),

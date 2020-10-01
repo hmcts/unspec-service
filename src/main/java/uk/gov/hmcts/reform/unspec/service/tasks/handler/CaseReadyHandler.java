@@ -11,6 +11,7 @@ import org.camunda.bpm.extension.rest.exception.RemoteProcessEngineException;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Component;
 import uk.gov.hmcts.reform.ccd.client.model.CaseDetails;
+import uk.gov.hmcts.reform.unspec.event.DispatchBusinessProcessEvent;
 import uk.gov.hmcts.reform.unspec.helpers.CaseDetailsConverter;
 import uk.gov.hmcts.reform.unspec.service.search.CaseReadySearchService;
 
@@ -36,13 +37,17 @@ public class CaseReadyHandler implements ExternalTaskHandler {
         cases.forEach(caseDetails -> {
             var caseData = caseDetailsConverter.toCaseData(caseDetails);
             var id = caseDetails.getId();
-            var messageName = "Message" + caseData.getBusinessProcess().getActivityId();
+            var businessProcess = caseData.getBusinessProcess();
+            var messageName = "Message" + businessProcess.getActivityId();
             try {
                 ProcessInstance processInstance = runtimeService.createMessageCorrelation(messageName)
                     .setVariable("CCD_ID", id)
                     .correlateStartMessage();
-                //applicationEventPublisher.publishEvent(new BusinessProcessDispatchedEvent(caseDetails.getId())));
-            } catch(RemoteProcessEngineException ex) {
+                applicationEventPublisher.publishEvent(new DispatchBusinessProcessEvent(
+                    caseDetails.getId(),
+                    businessProcess
+                ));
+            } catch (RemoteProcessEngineException ex) {
                 log.error(ex.getMessage());
             }
         });
