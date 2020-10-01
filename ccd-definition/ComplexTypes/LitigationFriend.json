@@ -16,7 +16,7 @@
   },
   {
     "ID": "LitigationFriend",
-    "ListElementCode": "hasDifferentAddressToLitigant",
+    "ListElementCode": "hasSameAddressAsLitigant",
     "FieldType": "YesOrNo",
     "ElementLabel": "Are the claimant and litigation friend address the same?",
     "FieldShowCondition": "required = \"Yes\"",
@@ -26,7 +26,7 @@
     "ID": "LitigationFriend",
     "ListElementCode": "primaryAddress",
     "FieldType": "AddressUK",
-    "FieldShowCondition": "required = \"Yes\" AND hasDifferentAddressToLitigant = \"No\"",
+    "FieldShowCondition": "required = \"Yes\" AND hasSameAddressAsLitigant = \"No\"",
     "ElementLabel": "Litigation friend's address",
     "SecurityClassification": "Public"
   }

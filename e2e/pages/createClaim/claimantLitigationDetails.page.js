@@ -13,7 +13,7 @@ module.exports = {
     },
     litigationFriendName: '#applicant1LitigationFriend_fullName',
     litigantInFriendDifferentAddress: {
-      id: '#applicant1LitigationFriend_hasDifferentAddressToLitigant',
+      id: '#applicant1LitigationFriend_hasSameAddressAsLitigant',
       options: {
         yes: 'Yes',
         no: 'No'
