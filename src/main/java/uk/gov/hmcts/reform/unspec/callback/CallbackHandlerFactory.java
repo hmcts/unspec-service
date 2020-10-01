@@ -5,7 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import uk.gov.hmcts.reform.ccd.client.model.AboutToStartOrSubmitCallbackResponse;
 import uk.gov.hmcts.reform.ccd.client.model.CallbackResponse;
-import uk.gov.hmcts.reform.unspec.advice.EventAllowed;
+import uk.gov.hmcts.reform.unspec.aspect.EventAllowed;
 import uk.gov.hmcts.reform.unspec.aspect.NoOnGoingBusinessProcess;
 import uk.gov.hmcts.reform.unspec.model.BusinessProcess;
 

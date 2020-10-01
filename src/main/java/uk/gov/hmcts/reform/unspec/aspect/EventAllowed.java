@@ -1,4 +1,4 @@
-package uk.gov.hmcts.reform.unspec.advice;
+package uk.gov.hmcts.reform.unspec.aspect;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
