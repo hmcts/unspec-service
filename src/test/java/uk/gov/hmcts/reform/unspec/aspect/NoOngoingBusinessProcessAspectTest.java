@@ -28,21 +28,21 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static uk.gov.hmcts.reform.unspec.aspect.NoOnGoingBusinessProcessAspect.ERROR_MESSAGE;
+import static uk.gov.hmcts.reform.unspec.aspect.NoOngoingBusinessProcessAspect.ERROR_MESSAGE;
 import static uk.gov.hmcts.reform.unspec.callback.CallbackType.ABOUT_TO_START;
 import static uk.gov.hmcts.reform.unspec.callback.CaseEvent.CONFIRM_SERVICE;
 import static uk.gov.hmcts.reform.unspec.callback.CaseEvent.RESPOND_EXTENSION;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(classes = {
-    NoOnGoingBusinessProcessAspect.class,
+    NoOngoingBusinessProcessAspect.class,
     JacksonAutoConfiguration.class,
     CaseDetailsConverter.class
 })
-class NoOnGoingBusinessProcessAspectTest {
+class NoOngoingBusinessProcessAspectTest {
 
     @Autowired
-    NoOnGoingBusinessProcessAspect aspect;
+    NoOngoingBusinessProcessAspect aspect;
     @MockBean
     ProceedingJoinPoint proceedingJoinPoint;
 

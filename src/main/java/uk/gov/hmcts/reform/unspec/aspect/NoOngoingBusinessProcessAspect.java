@@ -22,14 +22,14 @@ import static uk.gov.hmcts.reform.unspec.enums.BusinessProcessStatus.FINISHED;
 @Aspect
 @Component
 @RequiredArgsConstructor
-public class NoOnGoingBusinessProcessAspect {
+public class NoOngoingBusinessProcessAspect {
 
     public static final String ERROR_MESSAGE = "There is a technical issue causing a delay. "
         + "You do not need to do anything. Please come back later.";
 
     private final CaseDetailsConverter caseDetailsConverter;
 
-    @Around("execution(* *(*)) && @annotation(NoOnGoingBusinessProcess) && args(callbackParams))")
+    @Around("execution(* *(*)) && @annotation(NoOngoingBusinessProcess) && args(callbackParams))")
     public Object checkOngoingBusinessProcess(
         ProceedingJoinPoint joinPoint,
         CallbackParams callbackParams
@@ -37,7 +37,7 @@ public class NoOnGoingBusinessProcessAspect {
         CaseEvent caseEvent = CaseEvent.valueOf(callbackParams.getRequest().getEventId());
         CaseDetails caseDetails = callbackParams.getRequest().getCaseDetails();
         CaseData caseData = caseDetailsConverter.toCaseData(caseDetails);
-        if (hasNoOnGoingBusinessProcess(caseData)) {
+        if (hasNoOngoingBusinessProcess(caseData)) {
             return joinPoint.proceed();
         } else {
             log.info(format(
@@ -50,7 +50,7 @@ public class NoOnGoingBusinessProcessAspect {
         }
     }
 
-    private boolean hasNoOnGoingBusinessProcess(CaseData caseData) {
+    private boolean hasNoOngoingBusinessProcess(CaseData caseData) {
         return (caseData.getBusinessProcess() == null
             || caseData.getBusinessProcess().getStatus() == null
             || caseData.getBusinessProcess().getStatus() == FINISHED);
