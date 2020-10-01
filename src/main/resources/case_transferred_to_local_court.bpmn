@@ -1,10 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" id="Definitions_18h9iji" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="3.7.3">
   <bpmn:process id="CaseTransferredToLocalCourtHandling" isExecutable="true">
-    <bpmn:startEvent id="StartEvent_1">
-      <bpmn:outgoing>Flow_0kvxp0b</bpmn:outgoing>
-      <bpmn:outgoing>Flow_1kb0ope</bpmn:outgoing>
-    </bpmn:startEvent>
     <bpmn:sequenceFlow id="Flow_0kvxp0b" sourceRef="StartEvent_1" targetRef="CaseTransferredToLocalCourtDefendantTaskId" />
     <bpmn:endEvent id="Event_13n9twk">
       <bpmn:incoming>Flow_1xdr8bm</bpmn:incoming>
@@ -14,7 +10,6 @@
     <bpmn:serviceTask id="CaseTransferredToLocalCourtDefendantTaskId" name="Send email respondent solicitor 1" camunda:type="external" camunda:topic="processCaseEvent">
       <bpmn:extensionElements>
         <camunda:inputOutput>
-          <camunda:inputParameter name="CCD_ID">1600350694715989</camunda:inputParameter>
           <camunda:inputParameter name="CASE_EVENT">NOTIFY_RESPONDENT_SOLICITOR1_FOR_CASE_TRANSFERRED_TO_LOCAL_COURT</camunda:inputParameter>
         </camunda:inputOutput>
       </bpmn:extensionElements>
@@ -24,7 +19,6 @@
     <bpmn:serviceTask id="CaseTransferredToLocalCourtClaimantTaskId" name="Send email applicant solicitor 1" camunda:type="external" camunda:topic="processCaseEvent">
       <bpmn:extensionElements>
         <camunda:inputOutput>
-          <camunda:inputParameter name="CCD_ID">1600350694715989</camunda:inputParameter>
           <camunda:inputParameter name="CASE_EVENT">NOTIFY_APPLICANT_SOLICITOR1_FOR_CASE_TRANSFERRED_TO_LOCAL_COURT</camunda:inputParameter>
         </camunda:inputOutput>
       </bpmn:extensionElements>
@@ -33,7 +27,13 @@
     </bpmn:serviceTask>
     <bpmn:sequenceFlow id="Flow_1kb0ope" sourceRef="StartEvent_1" targetRef="CaseTransferredToLocalCourtClaimantTaskId" />
     <bpmn:sequenceFlow id="Flow_09n0gmr" sourceRef="CaseTransferredToLocalCourtClaimantTaskId" targetRef="Event_13n9twk" />
+    <bpmn:startEvent id="StartEvent_1">
+      <bpmn:outgoing>Flow_0kvxp0b</bpmn:outgoing>
+      <bpmn:outgoing>Flow_1kb0ope</bpmn:outgoing>
+      <bpmn:messageEventDefinition id="MessageEventDefinition_1oxj7lg" messageRef="Message_0ttrrz3" />
+    </bpmn:startEvent>
   </bpmn:process>
+  <bpmn:message id="Message_0ttrrz3" name="MessageCaseTransferredToLocalCourtHandling" />
   <bpmndi:BPMNDiagram id="BPMNDiagram_1">
     <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="CaseTransferredToLocalCourtHandling">
       <bpmndi:BPMNEdge id="Flow_09n0gmr_di" bpmnElement="Flow_09n0gmr">
@@ -56,9 +56,6 @@
         <di:waypoint x="215" y="117" />
         <di:waypoint x="270" y="117" />
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNShape id="_BPMNShape_StartEvent_2" bpmnElement="StartEvent_1">
-        <dc:Bounds x="179" y="99" width="36" height="36" />
-      </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Event_13n9twk_di" bpmnElement="Event_13n9twk">
         <dc:Bounds x="432" y="99" width="36" height="36" />
       </bpmndi:BPMNShape>
@@ -67,6 +64,9 @@
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Activity_13h7jgg_di" bpmnElement="CaseTransferredToLocalCourtClaimantTaskId">
         <dc:Bounds x="270" y="210" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_1diii28_di" bpmnElement="StartEvent_1">
+        <dc:Bounds x="179" y="99" width="36" height="36" />
       </bpmndi:BPMNShape>
     </bpmndi:BPMNPlane>
   </bpmndi:BPMNDiagram>
