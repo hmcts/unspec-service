@@ -55,7 +55,8 @@ public class NoOnGoingBusinessProcessAspect {
             || caseData.getBusinessProcess().getStatus() == null
             || caseData.getBusinessProcess().getStatus() == FINISHED) {
             return false;
+        } else {
+            return true;
         }
-        return true;
     }
 }
