@@ -37,7 +37,9 @@ public class NoOnGoingBusinessProcessAspect {
         CaseEvent caseEvent = CaseEvent.valueOf(callbackParams.getRequest().getEventId());
         CaseDetails caseDetails = callbackParams.getRequest().getCaseDetails();
         CaseData caseData = caseDetailsConverter.toCaseData(caseDetails);
-        if (hasOnGoingBusinessProcess(caseData)) {
+        if (hasNoOnGoingBusinessProcess(caseData)) {
+            return joinPoint.proceed();
+        } else {
             log.info(format(
                 "%s is not allowed on the case %s due to ongoing business process",
                 caseEvent.getDisplayName(), caseData.getCcdCaseReference()
@@ -45,18 +47,12 @@ public class NoOnGoingBusinessProcessAspect {
             return AboutToStartOrSubmitCallbackResponse.builder()
                 .errors(List.of(ERROR_MESSAGE))
                 .build();
-        } else {
-            return joinPoint.proceed();
         }
     }
 
-    private boolean hasOnGoingBusinessProcess(CaseData caseData) {
-        if (caseData.getBusinessProcess() == null
+    private boolean hasNoOnGoingBusinessProcess(CaseData caseData) {
+        return (caseData.getBusinessProcess() == null
             || caseData.getBusinessProcess().getStatus() == null
-            || caseData.getBusinessProcess().getStatus() == FINISHED) {
-            return false;
-        } else {
-            return true;
-        }
+            || caseData.getBusinessProcess().getStatus() == FINISHED);
     }
 }
