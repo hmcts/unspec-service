@@ -6,7 +6,6 @@ import org.camunda.bpm.client.task.ExternalTask;
 import org.camunda.bpm.client.task.ExternalTaskHandler;
 import org.camunda.bpm.client.task.ExternalTaskService;
 import org.camunda.bpm.engine.RuntimeService;
-import org.camunda.bpm.extension.rest.exception.RemoteProcessEngineException;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Component;
 import uk.gov.hmcts.reform.ccd.client.model.CaseDetails;
@@ -35,19 +34,19 @@ public class PollingEventEmitterHandler implements ExternalTaskHandler {
         log.info("Job '{}' found {} case(s)", taskName, cases.size());
         cases.forEach(caseDetails -> {
             var caseData = caseDetailsConverter.toCaseData(caseDetails);
-            var id = caseDetails.getId();
+            var caseId = caseDetails.getId();
             var businessProcess = caseData.getBusinessProcess();
             var messageName = "Message" + businessProcess.getActivityId();
             try {
                 runtimeService.createMessageCorrelation(messageName)
-                    .setVariable("CCD_ID", id)
+                    .setVariable("CCD_ID", caseId)
                     .correlateStartMessage();
                 applicationEventPublisher.publishEvent(new DispatchBusinessProcessEvent(
                     caseDetails.getId(),
                     businessProcess
                 ));
-            } catch (RemoteProcessEngineException ex) {
-                log.error(ex.getMessage());
+            } catch (Exception ex) {
+                log.error(String.format("%s task failed for case: %d, message: %s", taskName, caseId, ex.getMessage()));
             }
         });
 
