@@ -88,4 +88,9 @@ public class CaseData {
     private final CloseClaim discontinueClaim;
 
     private final BusinessProcess businessProcess;
+
+    private final OrganisationPolicy applicantSolicitor1OrganisationPolicy;
+    private final OrganisationPolicy applicantSolicitor2OrganisationPolicy;
+    private final OrganisationPolicy respondentSolicitor1OrganisationPolicy;
+    private final OrganisationPolicy respondentSolicitor2OrganisationPolicy;
 }
