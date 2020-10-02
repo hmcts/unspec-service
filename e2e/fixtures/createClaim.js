@@ -29,23 +29,20 @@ module.exports = {
         }
       }
     },
-    litigationFriend: {
-      required: 'Yes',
-      fullName: 'Bob the litigant friend',
-      hasDifferentAddressToLitigant: 'No',
-      primaryAddress: {
-        AddressLine1: `${config.address.buildingAndStreet.lineOne + ' - litigant friend'}`,
-        AddressLine2: config.address.buildingAndStreet.lineTwo,
-        AddressLine3: config.address.buildingAndStreet.lineThree,
-        PostTown: config.address.town,
-        County: config.address.county,
-        Country: config.address.country,
-        PostCode: config.address.postcode
-      }
-    },
     applicant1LitigationFriend: {
       applicant1LitigationFriend: {
-        required: 'No'
+        required: 'Yes',
+        fullName: 'Bob the litigant friend',
+        hasSameAddressAsLitigant: 'No',
+        primaryAddress: {
+          AddressLine1: `${config.address.buildingAndStreet.lineOne + ' - litigant friend'}`,
+          AddressLine2: config.address.buildingAndStreet.lineTwo,
+          AddressLine3: config.address.buildingAndStreet.lineThree,
+          PostTown: config.address.town,
+          County: config.address.county,
+          Country: config.address.country,
+          PostCode: config.address.postcode
+        }
       }
     },
     defendant: {
