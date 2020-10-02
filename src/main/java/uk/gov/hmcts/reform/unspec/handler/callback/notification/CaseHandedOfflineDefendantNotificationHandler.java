@@ -53,7 +53,7 @@ public class CaseHandedOfflineDefendantNotificationHandler extends CallbackHandl
         CaseData caseData = caseDetailsConverter.toCaseData(callbackParams.getRequest().getCaseDetails());
 
         notificationService.sendMail(
-            "defendant-solicitor@example.com",
+            notificationsProperties.getDefendantSolicitorEmail(),
             notificationsProperties.getSolicitorResponseToCase(),
             addProperties(caseData),
             String.format(REFERENCE_TEMPLATE, caseData.getLegacyCaseReference())

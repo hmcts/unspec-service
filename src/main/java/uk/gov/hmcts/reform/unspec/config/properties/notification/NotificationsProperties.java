@@ -17,4 +17,10 @@ public class NotificationsProperties {
 
     @NotEmpty
     private String solicitorResponseToCase;
+
+    @NotEmpty
+    private String claimantSolicitorEmail;
+
+    @NotEmpty
+    private String defendantSolicitorEmail;
 }

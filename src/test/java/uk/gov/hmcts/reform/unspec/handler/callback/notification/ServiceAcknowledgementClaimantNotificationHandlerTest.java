@@ -40,6 +40,8 @@ class ServiceAcknowledgementClaimantNotificationHandlerTest extends BaseCallback
         @BeforeEach
         void setup() {
             when(notificationsProperties.getSolicitorResponseToCase()).thenReturn("template-id");
+            when(notificationsProperties.getClaimantSolicitorEmail()).thenReturn("claimantsolicitor@example.com");
+            when(notificationsProperties.getDefendantSolicitorEmail()).thenReturn("defendantsolicitor@example.com");
         }
 
         @Test
@@ -58,7 +60,7 @@ class ServiceAcknowledgementClaimantNotificationHandlerTest extends BaseCallback
             handler.handle(params);
 
             verify(notificationService).sendMail(
-                "claimant-solicitor@example.com",
+                "claimantsolicitor@example.com",
                 "template-id",
                 Map.of(CLAIM_REFERENCE_NUMBER, legacyCaseReference, SOLICITOR_REFERENCE, claimantReference),
                 "service-acknowledgement-claimant-notification-000LR001"

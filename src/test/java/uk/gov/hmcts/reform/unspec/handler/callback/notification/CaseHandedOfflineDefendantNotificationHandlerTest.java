@@ -40,6 +40,8 @@ class CaseHandedOfflineDefendantNotificationHandlerTest extends BaseCallbackHand
         @BeforeEach
         void setup() {
             when(notificationsProperties.getSolicitorResponseToCase()).thenReturn("template-id");
+            when(notificationsProperties.getClaimantSolicitorEmail()).thenReturn("claimantsolicitor@example.com");
+            when(notificationsProperties.getDefendantSolicitorEmail()).thenReturn("defendantsolicitor@example.com");
         }
 
         @Test
@@ -58,7 +60,7 @@ class CaseHandedOfflineDefendantNotificationHandlerTest extends BaseCallbackHand
             handler.handle(params);
 
             verify(notificationService).sendMail(
-                "defendant-solicitor@example.com",
+                "defendantsolicitor@example.com",
                 "template-id",
                 Map.of(CLAIM_REFERENCE_NUMBER, legacyCaseReference, SOLICITOR_REFERENCE, defendantReference),
                 "case-handed-offline-defendant-notification-000LR001"

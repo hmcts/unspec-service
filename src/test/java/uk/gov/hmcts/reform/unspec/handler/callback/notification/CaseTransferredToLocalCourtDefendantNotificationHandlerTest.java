@@ -40,6 +40,8 @@ class CaseTransferredToLocalCourtDefendantNotificationHandlerTest extends BaseCa
         @BeforeEach
         void setup() {
             when(notificationsProperties.getSolicitorResponseToCase()).thenReturn("template-id");
+            when(notificationsProperties.getClaimantSolicitorEmail()).thenReturn("claimantsolicitor@example.com");
+            when(notificationsProperties.getDefendantSolicitorEmail()).thenReturn("defendantsolicitor@example.com");
         }
 
         @Test
@@ -58,7 +60,7 @@ class CaseTransferredToLocalCourtDefendantNotificationHandlerTest extends BaseCa
             handler.handle(params);
 
             verify(notificationService).sendMail(
-                "defendant-solicitor@example.com",
+                notificationsProperties.getDefendantSolicitorEmail(),
                 "template-id",
                 Map.of(CLAIM_REFERENCE_NUMBER, legacyCaseReference, SOLICITOR_REFERENCE, defendantReference),
                 "case-transferred-to-local-court-defendant-notification-000LR001"
