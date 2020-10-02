@@ -46,12 +46,12 @@ public class RequestExtensionCallbackHandler extends CallbackHandler {
     private final RequestExtensionValidator validator;
 
     @Override
-    protected Map<CallbackType, Callback> callbacks() {
+    protected Map<String, Callback> callbacks() {
         return Map.of(
-            CallbackType.ABOUT_TO_START, this::aboutToStart,
-            CallbackType.MID, this::validateRequestedDeadline,
-            CallbackType.ABOUT_TO_SUBMIT, this::updateResponseDeadline,
-            CallbackType.SUBMITTED, this::buildConfirmation
+            CallbackType.ABOUT_TO_START.getValue(), this::aboutToStart,
+            CallbackType.MID.getValue(), this::validateRequestedDeadline,
+            CallbackType.ABOUT_TO_SUBMIT.getValue(), this::updateResponseDeadline,
+            CallbackType.SUBMITTED.getValue(), this::buildConfirmation
         );
     }
 

@@ -59,13 +59,13 @@ public class ConfirmServiceCallbackHandler extends CallbackHandler {
     private final DeadlinesCalculator deadlinesCalculator;
 
     @Override
-    protected Map<CallbackType, Callback> callbacks() {
+    protected Map<String, Callback> callbacks() {
         return Map.of(
-            CallbackType.ABOUT_TO_START, this::prepopulateServedDocuments,
-            CallbackType.MID, this::checkServedDocumentsOtherHasWhiteSpace,
-            CallbackType.MID_SECONDARY, this::validateServiceDate,
-            CallbackType.ABOUT_TO_SUBMIT, this::prepareCertificateOfService,
-            CallbackType.SUBMITTED, this::buildConfirmation
+            CallbackType.ABOUT_TO_START.getValue(), this::prepopulateServedDocuments,
+            CallbackType.MID.getValue(), this::checkServedDocumentsOtherHasWhiteSpace,
+            CallbackType.MID_SECONDARY.getValue(), this::validateServiceDate,
+            CallbackType.ABOUT_TO_SUBMIT.getValue(), this::prepareCertificateOfService,
+            CallbackType.SUBMITTED.getValue(), this::buildConfirmation
         );
     }
 

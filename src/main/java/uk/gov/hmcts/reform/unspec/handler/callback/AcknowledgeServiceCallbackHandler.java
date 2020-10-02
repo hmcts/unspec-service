@@ -40,12 +40,12 @@ public class AcknowledgeServiceCallbackHandler extends CallbackHandler {
     private final WorkingDayIndicator workingDayIndicator;
 
     @Override
-    protected Map<CallbackType, Callback> callbacks() {
+    protected Map<String, Callback> callbacks() {
         return Map.of(
-            CallbackType.ABOUT_TO_START, this::emptyCallbackResponse,
-            CallbackType.MID, this::validateDateOfBirth,
-            CallbackType.ABOUT_TO_SUBMIT, this::setNewResponseDeadline,
-            CallbackType.SUBMITTED, this::buildConfirmation
+            CallbackType.ABOUT_TO_START.getValue(), this::emptyCallbackResponse,
+            CallbackType.MID.getValue(), this::validateDateOfBirth,
+            CallbackType.ABOUT_TO_SUBMIT.getValue(), this::setNewResponseDeadline,
+            CallbackType.SUBMITTED.getValue(), this::buildConfirmation
         );
     }
 

@@ -38,9 +38,9 @@ public class ClaimIssueNotificationHandler extends CallbackHandler implements No
     private final CaseDetailsConverter caseDetailsConverter;
 
     @Override
-    protected Map<CallbackType, Callback> callbacks() {
+    protected Map<String, Callback> callbacks() {
         return Map.of(
-            CallbackType.ABOUT_TO_SUBMIT, this::notifyDefendantSolicitorForClaimIssue
+            CallbackType.ABOUT_TO_SUBMIT.getValue(), this::notifyDefendantSolicitorForClaimIssue
         );
     }
 

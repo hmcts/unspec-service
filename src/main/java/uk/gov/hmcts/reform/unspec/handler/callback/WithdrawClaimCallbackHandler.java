@@ -32,9 +32,9 @@ public class WithdrawClaimCallbackHandler extends CallbackHandler {
     private final Validator validator;
 
     @Override
-    protected Map<CallbackType, Callback> callbacks() {
+    protected Map<String, Callback> callbacks() {
         return Map.of(
-            CallbackType.MID, this::validateWithdrawalDate
+            CallbackType.MID.getValue(), this::validateWithdrawalDate
         );
     }
 
