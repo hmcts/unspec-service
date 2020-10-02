@@ -23,17 +23,16 @@ public class BusinessProcessService {
 
     private final ObjectMapper mapper;
 
-    public void updateBusinessProcess(Map<String, Object> data, String businessProcessEvent, List<String> errors) {
+    public List<String> updateBusinessProcess(Map<String, Object> data, String businessProcessEvent) {
         BusinessProcess businessProcess = mapper.convertValue(data.get("businessProcess"), BusinessProcess.class);
         if (Optional.ofNullable(businessProcess)
             .map(BusinessProcess::getStatus)
             .map(ERROR_STATUSES::contains)
             .orElse(false)) {
-            errors.add(ERROR_MESSAGE);
-        } else {
-            data.put("businessProcess",
-                     BusinessProcess.builder().activityId(businessProcessEvent).status(READY).build());
+            return List.of(ERROR_MESSAGE);
         }
+        data.put("businessProcess", BusinessProcess.builder().activityId(businessProcessEvent).status(READY).build());
+        return List.of();
     }
 
 }

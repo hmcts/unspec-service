@@ -1,10 +1,12 @@
 package uk.gov.hmcts.reform.unspec.handler.callback;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.jackson.JacksonAutoConfiguration;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import uk.gov.hmcts.reform.ccd.client.model.AboutToStartOrSubmitCallbackResponse;
 import uk.gov.hmcts.reform.ccd.client.model.CaseDetails;
 import uk.gov.hmcts.reform.ccd.client.model.SubmittedCallbackResponse;
@@ -21,11 +23,15 @@ import uk.gov.hmcts.reform.unspec.validation.RequestExtensionValidator;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.HashMap;
+import java.util.List;
 
 import static com.google.common.collect.ImmutableMap.of;
 import static java.lang.String.format;
 import static java.time.LocalDate.now;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 import static uk.gov.hmcts.reform.unspec.callback.CallbackType.ABOUT_TO_START;
 import static uk.gov.hmcts.reform.unspec.enums.BusinessProcessStatus.READY;
 import static uk.gov.hmcts.reform.unspec.handler.callback.RequestExtensionCallbackHandler.ALREADY_AGREED;
@@ -45,12 +51,14 @@ import static uk.gov.hmcts.reform.unspec.service.DeadlinesCalculator.MID_NIGHT;
     JacksonAutoConfiguration.class,
     FlowStateAllowedEventService.class,
     StateFlowEngine.class,
-    CaseDetailsConverter.class,
-    BusinessProcessService.class
+    CaseDetailsConverter.class
 })
 class RequestExtensionCallbackHandlerTest extends BaseCallbackHandlerTest {
 
     public static final String REFERENCE_NUMBER = "000LR001";
+
+    @MockBean
+    private BusinessProcessService businessProcessService;
 
     @Autowired
     private RequestExtensionCallbackHandler handler;
@@ -120,6 +128,11 @@ class RequestExtensionCallbackHandlerTest extends BaseCallbackHandlerTest {
     @Nested
     class AboutToSubmitCallback {
 
+        @BeforeEach
+        void setup() {
+            when(businessProcessService.updateBusinessProcess(any(), any())).thenReturn(List.of());
+        }
+
         @Test
         void shouldUpdateResponseDeadlineToProposedDeadline_whenExtensionAlreadyAgreed() {
             LocalDate proposedDeadline = now().plusDays(14);
@@ -166,13 +179,9 @@ class RequestExtensionCallbackHandlerTest extends BaseCallbackHandlerTest {
 
         @Test
         void shouldSetRequestForExtensionBusinessProcessToReady_whenInvoked() {
-            AboutToStartOrSubmitCallbackResponse response = (AboutToStartOrSubmitCallbackResponse) handler
-                .handle(callbackParamsOf(new HashMap<>(), CallbackType.ABOUT_TO_SUBMIT));
+            handler.handle(callbackParamsOf(new HashMap<>(), CallbackType.ABOUT_TO_SUBMIT));
 
-            assertThat(response.getData()).extracting("businessProcess").extracting("status").isEqualTo(READY);
-            assertThat(response.getData()).extracting("businessProcess").extracting("activityId").isEqualTo(
-                "RequestForExtensionHandling");
-            assertThat(response.getData()).extracting("businessProcess").extracting("processInstanceId").isNull();
+            verify(businessProcessService).updateBusinessProcess(new HashMap<>(), "RequestForExtensionHandling");
         }
     }
 

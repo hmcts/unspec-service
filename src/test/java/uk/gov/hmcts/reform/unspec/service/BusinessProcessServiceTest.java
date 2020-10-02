@@ -15,7 +15,6 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import uk.gov.hmcts.reform.unspec.model.BusinessProcess;
 import uk.gov.hmcts.reform.unspec.model.BusinessProcessStatus;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -36,7 +35,6 @@ public class BusinessProcessServiceTest {
     @EnumSource(value = BusinessProcessStatus.class, names = {"READY", "DISPATCHED", "STARTED"})
     void shouldAddErrorAndNotUpdateData_whenBusinessProcessStatusIsNotFinishedNorNull(BusinessProcessStatus
                                                                                           businessProcessStatus) {
-        List<String> errors = new ArrayList<>();
         BusinessProcess businessProcess =  BusinessProcess.builder()
             .activityId("someActivityId")
             .processInstanceId("someProcessInstanceId")
@@ -44,7 +42,7 @@ public class BusinessProcessServiceTest {
             .build();
         Map<String, Object> data = new HashMap<>(Map.of("businessProcess", businessProcess));
 
-        service.updateBusinessProcess(data, "someBusinessProcessEvent", errors);
+        List<String> errors = service.updateBusinessProcess(data, "someBusinessProcessEvent");
 
         assertThat(errors).containsOnly("Business Process Error");
         assertThat(data).extracting("businessProcess").isEqualTo(businessProcess);
@@ -53,11 +51,10 @@ public class BusinessProcessServiceTest {
     @ParameterizedTest
     @ArgumentsSource(GetBusinessProcessArguments.class)
     void shouldNotAddErrorAndUpdateData_whenBusinessProcessStatusFinishedOrNull(BusinessProcess businessProcess) {
-        List<String> errors = new ArrayList<>();
         Map<String, Object> data = new HashMap<>();
         data.put("businessProcess", businessProcess);
 
-        service.updateBusinessProcess(data, "someBusinessProcessEvent", errors);
+        List<String> errors = service.updateBusinessProcess(data, "someBusinessProcessEvent");
 
         assertThat(errors).isEmpty();
         assertThat(data).extracting("businessProcess").isEqualTo(

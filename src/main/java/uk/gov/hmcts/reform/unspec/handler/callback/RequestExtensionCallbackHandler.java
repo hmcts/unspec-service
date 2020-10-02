@@ -17,7 +17,6 @@ import uk.gov.hmcts.reform.unspec.service.BusinessProcessService;
 import uk.gov.hmcts.reform.unspec.validation.RequestExtensionValidator;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -66,8 +65,7 @@ public class RequestExtensionCallbackHandler extends CallbackHandler {
         if (extensionAlreadyAgreed == YES) {
             data.put(RESPONSE_DEADLINE, proposedDeadline.atTime(MID_NIGHT));
         }
-        List<String> errors = new ArrayList<>();
-        businessProcessService.updateBusinessProcess(data, "RequestForExtensionHandling", errors);
+        List<String> errors = businessProcessService.updateBusinessProcess(data, "RequestForExtensionHandling");
 
         return AboutToStartOrSubmitCallbackResponse.builder()
             .data(data)

@@ -103,8 +103,7 @@ public class RespondExtensionCallbackHandler extends CallbackHandler {
             data.put(RESPONSE_DEADLINE, newDeadline.atTime(MID_NIGHT));
         }
 
-        List<String> errors = new ArrayList<>();
-        businessProcessService.updateBusinessProcess(data, "ExtensionResponseHandling", errors);
+        List<String> errors = businessProcessService.updateBusinessProcess(data, "ExtensionResponseHandling");
 
         return AboutToStartOrSubmitCallbackResponse.builder()
             .data(data)

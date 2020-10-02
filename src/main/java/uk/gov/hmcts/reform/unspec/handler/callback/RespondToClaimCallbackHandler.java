@@ -18,7 +18,6 @@ import uk.gov.hmcts.reform.unspec.validation.DateOfBirthValidator;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -79,12 +78,8 @@ public class RespondToClaimCallbackHandler extends CallbackHandler {
         data.put(CLAIMANT_RESPONSE_DEADLINE, claimantResponseDeadLine.atTime(16, 0));
 
         var response = mapper.convertValue(data.get("respondent1ClaimResponseType"), DefendantResponseType.class);
-        List<String> errors = new ArrayList<>();
-        businessProcessService.updateBusinessProcess(
-            data,
-            response == FULL_DEFENCE ? "DefendantResponseHandling" : "CaseHandedOfflineHandling",
-            errors
-        );
+        List<String> errors = businessProcessService.updateBusinessProcess(data,
+            response == FULL_DEFENCE ? "DefendantResponseHandling" : "CaseHandedOfflineHandling");
 
         return AboutToStartOrSubmitCallbackResponse.builder()
             .data(data)

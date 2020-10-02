@@ -18,7 +18,6 @@ import uk.gov.hmcts.reform.unspec.validation.DateOfBirthValidator;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -76,8 +75,7 @@ public class AcknowledgeServiceCallbackHandler extends CallbackHandler {
         LocalDate newResponseDate = workingDayIndicator.getNextWorkingDay(responseDeadline.plusDays(14).toLocalDate());
 
         data.put(RESPONSE_DEADLINE, newResponseDate.atTime(MID_NIGHT));
-        List<String> errors = new ArrayList<>();
-        businessProcessService.updateBusinessProcess(data, "ServiceAcknowledgementHandling", errors);
+        List<String> errors = businessProcessService.updateBusinessProcess(data, "ServiceAcknowledgementHandling");
 
         return AboutToStartOrSubmitCallbackResponse.builder()
             .data(data)

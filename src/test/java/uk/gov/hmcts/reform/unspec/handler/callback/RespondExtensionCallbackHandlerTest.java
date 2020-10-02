@@ -1,10 +1,12 @@
 package uk.gov.hmcts.reform.unspec.handler.callback;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.jackson.JacksonAutoConfiguration;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import uk.gov.hmcts.reform.ccd.client.model.AboutToStartOrSubmitCallbackResponse;
 import uk.gov.hmcts.reform.ccd.client.model.SubmittedCallbackResponse;
 import uk.gov.hmcts.reform.unspec.callback.CallbackParams;
@@ -19,6 +21,7 @@ import uk.gov.hmcts.reform.unspec.validation.RequestExtensionValidator;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import static com.google.common.collect.ImmutableMap.of;
@@ -26,7 +29,9 @@ import static java.lang.String.format;
 import static java.time.LocalDate.now;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.entry;
-import static uk.gov.hmcts.reform.unspec.enums.BusinessProcessStatus.READY;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 import static uk.gov.hmcts.reform.unspec.handler.callback.RespondExtensionCallbackHandler.LEGACY_CASE_REFERENCE;
 import static uk.gov.hmcts.reform.unspec.helpers.DateFormatHelper.DATE;
 import static uk.gov.hmcts.reform.unspec.helpers.DateFormatHelper.formatLocalDateTime;
@@ -38,8 +43,7 @@ import static uk.gov.hmcts.reform.unspec.service.DeadlinesCalculator.MID_NIGHT;
     JacksonAutoConfiguration.class,
     FlowStateAllowedEventService.class,
     StateFlowEngine.class,
-    CaseDetailsConverter.class,
-    BusinessProcessService.class
+    CaseDetailsConverter.class
 })
 class RespondExtensionCallbackHandlerTest extends BaseCallbackHandlerTest {
 
@@ -47,6 +51,9 @@ class RespondExtensionCallbackHandlerTest extends BaseCallbackHandlerTest {
     public static final String COUNTER_DATE = "respondentSolicitor1claimResponseExtensionCounterDate";
     public static final String COUNTER = "respondentSolicitor1claimResponseExtensionCounter";
     public static final String REFERENCE_NUMBER = "000LR001";
+
+    @MockBean
+    private BusinessProcessService businessProcessService;
 
     @Autowired
     private RespondExtensionCallbackHandler handler;
@@ -132,6 +139,11 @@ class RespondExtensionCallbackHandlerTest extends BaseCallbackHandlerTest {
         public static final String PROPOSED_DEADLINE = "respondentSolicitor1claimResponseExtensionProposedDeadline";
         public static final String ACCEPT = "respondentSolicitor1claimResponseExtensionAccepted";
 
+        @BeforeEach
+        void setup() {
+            when(businessProcessService.updateBusinessProcess(any(), any())).thenReturn(List.of());
+        }
+
         @Test
         void shouldUpdateResponseDeadlineToProposedDeadline_whenAcceptIsYes() {
             LocalDate proposedDeadline = now().plusDays(14);
@@ -192,13 +204,9 @@ class RespondExtensionCallbackHandlerTest extends BaseCallbackHandlerTest {
                 ACCEPT, YesOrNo.NO
             ));
 
-            AboutToStartOrSubmitCallbackResponse response = (AboutToStartOrSubmitCallbackResponse) handler
-                .handle(callbackParamsOf(data, CallbackType.ABOUT_TO_SUBMIT));
+            handler.handle(callbackParamsOf(data, CallbackType.ABOUT_TO_SUBMIT));
 
-            assertThat(response.getData()).extracting("businessProcess").extracting("status").isEqualTo(READY);
-            assertThat(response.getData()).extracting("businessProcess").extracting("activityId").isEqualTo(
-                "ExtensionResponseHandling");
-            assertThat(response.getData()).extracting("businessProcess").extracting("processInstanceId").isNull();
+            verify(businessProcessService).updateBusinessProcess(data, "ExtensionResponseHandling");
         }
     }
 

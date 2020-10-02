@@ -46,6 +46,7 @@ import static java.time.LocalDate.now;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static uk.gov.hmcts.reform.unspec.callback.CallbackType.ABOUT_TO_START;
 import static uk.gov.hmcts.reform.unspec.callback.CallbackType.MID_SECONDARY;
@@ -66,8 +67,7 @@ import static uk.gov.hmcts.reform.unspec.utils.PartyNameUtils.getPartyNameBasedO
     ClaimIssueConfiguration.class,
     MockDatabaseConfiguration.class,
     ValidationAutoConfiguration.class,
-    DateOfBirthValidator.class,
-    BusinessProcessService.class},
+    DateOfBirthValidator.class},
     properties = {"reference.database.enabled=false"})
 class CreateClaimCallbackHandlerTest extends BaseCallbackHandlerTest {
 
@@ -77,6 +77,8 @@ class CreateClaimCallbackHandlerTest extends BaseCallbackHandlerTest {
         .documentType(SEALED_CLAIM)
         .build();
 
+    @MockBean
+    private BusinessProcessService businessProcessService;
     @MockBean
     private SealedClaimFormGenerator sealedClaimFormGenerator;
     @MockBean
@@ -190,6 +192,7 @@ class CreateClaimCallbackHandlerTest extends BaseCallbackHandlerTest {
 
         @BeforeEach
         void setup() {
+            when(businessProcessService.updateBusinessProcess(any(), any())).thenReturn(List.of());
             when(issueDateCalculator.calculateIssueDay(any(LocalDateTime.class))).thenReturn(now());
             when(deadlinesCalculator.calculateConfirmationOfServiceDeadline(any(LocalDate.class)))
                 .thenReturn(now().atTime(23, 59, 59));
@@ -237,12 +240,12 @@ class CreateClaimCallbackHandlerTest extends BaseCallbackHandlerTest {
 
         @Test
         void shouldSetClaimIssueBusinessProcessToReady_whenInvoked() {
-            var response = (AboutToStartOrSubmitCallbackResponse) handler.handle(params);
+            handler.handle(params);
 
-            assertThat(response.getData()).extracting("businessProcess").extracting("status").isEqualTo(READY);
-            assertThat(response.getData()).extracting("businessProcess").extracting("activityId").isEqualTo(
-                "ClaimIssueHandling");
-            assertThat(response.getData()).extracting("businessProcess").extracting("processInstanceId").isNull();
+            verify(businessProcessService).updateBusinessProcess(
+                params.getRequest().getCaseDetails().getData(),
+                "ClaimIssueHandling"
+            );
         }
 
         @SuppressWarnings("unchecked")
