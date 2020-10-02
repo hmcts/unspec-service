@@ -32,17 +32,15 @@ public class PollingEventEmitterHandler implements ExternalTaskHandler {
 
         List<CaseDetails> cases = caseSearchService.getCases();
         log.info("Job '{}' found {} case(s)", taskName, cases.size());
-        cases.forEach(caseDetails -> {
-            var caseData = caseDetailsConverter.toCaseData(caseDetails);
-            var caseId = caseDetails.getId();
+        cases.stream().map(caseDetailsConverter::toCaseData).forEach(caseData -> {
+            var caseId = caseData.getCcdCaseReference();
             var businessProcess = caseData.getBusinessProcess();
-            var messageName = "Message" + businessProcess.getActivityId();
             try {
-                runtimeService.createMessageCorrelation(messageName)
+                runtimeService.createMessageCorrelation("Message" + businessProcess.getActivityId())
                     .setVariable("CCD_ID", caseId)
                     .correlateStartMessage();
                 applicationEventPublisher.publishEvent(new DispatchBusinessProcessEvent(
-                    caseDetails.getId(),
+                    caseId,
                     businessProcess
                 ));
             } catch (Exception ex) {

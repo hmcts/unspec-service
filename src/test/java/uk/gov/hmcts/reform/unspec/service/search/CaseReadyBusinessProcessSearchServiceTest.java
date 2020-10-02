@@ -12,7 +12,7 @@ import static org.elasticsearch.index.query.QueryBuilders.matchQuery;
 class CaseReadyBusinessProcessSearchServiceTest extends ElasticSearchServiceTest {
 
     @BeforeEach
-    void setup (){
+    void setup() {
         searchService = new CaseReadyBusinessProcessSearchService(coreCaseDataService);
     }
 

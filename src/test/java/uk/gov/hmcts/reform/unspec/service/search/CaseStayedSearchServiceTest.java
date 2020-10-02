@@ -13,7 +13,7 @@ import static org.elasticsearch.index.query.QueryBuilders.rangeQuery;
 class CaseStayedSearchServiceTest extends ElasticSearchServiceTest {
 
     @BeforeEach
-    void setup (){
+    void setup() {
         searchService = new CaseStayedSearchService(coreCaseDataService);
     }
 
