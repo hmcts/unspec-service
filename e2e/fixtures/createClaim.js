@@ -43,6 +43,11 @@ module.exports = {
         PostCode: config.address.postcode
       }
     },
+    applicant1LitigationFriend: {
+      applicant1LitigationFriend: {
+        required: 'No'
+      }
+    },
     defendant: {
       respondent1: {
         type: 'ORGANISATION',
