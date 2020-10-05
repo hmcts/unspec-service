@@ -17,6 +17,10 @@ public abstract class CallbackHandler {
 
     public abstract List<CaseEvent> handledEvents();
 
+    protected String callbackKey(CallbackType type) {
+        return type.getValue();
+    }
+
     protected String callbackKey(CallbackType type, String pageId) {
         return pageId == null ? type.getValue() : type.getValue() + "-" + pageId;
     }

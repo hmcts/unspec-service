@@ -9,7 +9,6 @@ import uk.gov.hmcts.reform.ccd.client.model.SubmittedCallbackResponse;
 import uk.gov.hmcts.reform.unspec.callback.Callback;
 import uk.gov.hmcts.reform.unspec.callback.CallbackHandler;
 import uk.gov.hmcts.reform.unspec.callback.CallbackParams;
-import uk.gov.hmcts.reform.unspec.callback.CallbackType;
 import uk.gov.hmcts.reform.unspec.callback.CaseEvent;
 import uk.gov.hmcts.reform.unspec.enums.ServedDocuments;
 import uk.gov.hmcts.reform.unspec.helpers.CaseDetailsConverter;
@@ -34,6 +33,10 @@ import javax.validation.Validator;
 
 import static java.lang.String.format;
 import static uk.gov.hmcts.reform.unspec.callback.CallbackParams.Params.BEARER_TOKEN;
+import static uk.gov.hmcts.reform.unspec.callback.CallbackType.ABOUT_TO_START;
+import static uk.gov.hmcts.reform.unspec.callback.CallbackType.ABOUT_TO_SUBMIT;
+import static uk.gov.hmcts.reform.unspec.callback.CallbackType.MID;
+import static uk.gov.hmcts.reform.unspec.callback.CallbackType.SUBMITTED;
 import static uk.gov.hmcts.reform.unspec.callback.CaseEvent.CONFIRM_SERVICE;
 import static uk.gov.hmcts.reform.unspec.helpers.DateFormatHelper.DATE;
 import static uk.gov.hmcts.reform.unspec.helpers.DateFormatHelper.DATE_TIME_AT;
@@ -61,11 +64,11 @@ public class ConfirmServiceCallbackHandler extends CallbackHandler {
     @Override
     protected Map<String, Callback> callbacks() {
         return Map.of(
-            CallbackType.ABOUT_TO_START.getValue(), this::prepopulateServedDocuments,
-            CallbackType.MID.getValue(), this::checkServedDocumentsOtherHasWhiteSpace,
-            CallbackType.MID_SECONDARY.getValue(), this::validateServiceDate,
-            CallbackType.ABOUT_TO_SUBMIT.getValue(), this::prepareCertificateOfService,
-            CallbackType.SUBMITTED.getValue(), this::buildConfirmation
+            callbackKey(ABOUT_TO_START), this::prepopulateServedDocuments,
+            callbackKey(MID, "served-documents"), this::checkServedDocumentsOtherHasWhiteSpace,
+            callbackKey(MID, "service-date"), this::validateServiceDate,
+            callbackKey(ABOUT_TO_SUBMIT), this::prepareCertificateOfService,
+            callbackKey(SUBMITTED), this::buildConfirmation
         );
     }
 
