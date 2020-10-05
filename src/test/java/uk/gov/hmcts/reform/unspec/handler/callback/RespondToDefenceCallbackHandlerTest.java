@@ -85,9 +85,7 @@ class RespondToDefenceCallbackHandlerTest extends BaseCallbackHandlerTest {
         }
 
         @ParameterizedTest
-        @EnumSource(
-            value = DefendantResponseType.class,
-            names = {"FULL_ADMISSION", "PART_ADMISSION", "COUNTER_CLAIM"})
+        @EnumSource(value = DefendantResponseType.class, mode = EnumSource.Mode.EXCLUDE, names = {"FULL_DEFENCE"})
         void shouldNotSetBusinessProcess_whenNotFullDefence(DefendantResponseType responseType) {
             Map<String, Object> data = new HashMap<>(Map.of(
                 "respondent1ClaimResponseType", responseType,
@@ -100,9 +98,7 @@ class RespondToDefenceCallbackHandlerTest extends BaseCallbackHandlerTest {
         }
 
         @ParameterizedTest
-        @EnumSource(
-            value = DefendantResponseType.class,
-            names = {"FULL_DEFENCE", "FULL_ADMISSION", "PART_ADMISSION", "COUNTER_CLAIM"})
+        @EnumSource(value = DefendantResponseType.class)
         void shouldNotSetBusinessProcess_whenNotProceedingWithClaim(DefendantResponseType responseType) {
             Map<String, Object> data = new HashMap<>(Map.of(
                 "respondent1ClaimResponseType", responseType,

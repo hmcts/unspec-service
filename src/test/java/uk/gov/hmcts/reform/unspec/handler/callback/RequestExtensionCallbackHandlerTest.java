@@ -161,7 +161,7 @@ class RequestExtensionCallbackHandlerTest extends BaseCallbackHandlerTest {
             CallbackParams params = callbackParamsOf(
                 new HashMap<>(Map.of(
                     PROPOSED_DEADLINE, proposedDeadline,
-                    EXTENSION_ALREADY_AGREED, "Yes",
+                    EXTENSION_ALREADY_AGREED, "No",
                     RESPONSE_DEADLINE, responseDeadline)),
                 CallbackType.ABOUT_TO_SUBMIT
             );

@@ -32,7 +32,7 @@ public class BusinessProcessServiceTest {
     private BusinessProcessService service;
 
     @ParameterizedTest
-    @EnumSource(value = BusinessProcessStatus.class, names = {"READY", "DISPATCHED", "STARTED"})
+    @EnumSource(value = BusinessProcessStatus.class, mode = EnumSource.Mode.EXCLUDE, names = {"FINISHED"})
     void shouldAddErrorAndNotUpdateData_whenBusinessProcessStatusIsNotFinishedNorNull(BusinessProcessStatus
                                                                                           businessProcessStatus) {
         BusinessProcess businessProcess =  BusinessProcess.builder()

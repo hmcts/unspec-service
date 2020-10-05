@@ -135,9 +135,7 @@ class RespondToClaimCallbackHandlerTest extends BaseCallbackHandlerTest {
         }
 
         @ParameterizedTest
-        @EnumSource(
-            value = DefendantResponseType.class,
-            names = {"FULL_ADMISSION", "PART_ADMISSION", "COUNTER_CLAIM"})
+        @EnumSource(value = DefendantResponseType.class, mode = EnumSource.Mode.EXCLUDE, names = {"FULL_DEFENCE"})
         void shouldSetCaseHandedOfflineBusinessProcessToReady_whenResponseIsNotFullDefence(
             DefendantResponseType defendantResponse) {
             Map<String, Object> data = new HashMap<>(Map.of(

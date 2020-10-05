@@ -41,7 +41,7 @@ class DispatchBusinessProcessEventHandlerTest {
     }
 
     @ParameterizedTest
-    @EnumSource(value = BusinessProcessStatus.class, names = {"DISPATCHED", "STARTED", "FINISHED"})
+    @EnumSource(value = BusinessProcessStatus.class, mode = EnumSource.Mode.EXCLUDE, names = {"READY"})
     void shouldNotTriggerEvent_whenBusinessProcessIsNotReady(BusinessProcessStatus businessProcessStatus) {
         BusinessProcess businessProcess = BusinessProcess.builder()
             .activityId("someActivityId")
