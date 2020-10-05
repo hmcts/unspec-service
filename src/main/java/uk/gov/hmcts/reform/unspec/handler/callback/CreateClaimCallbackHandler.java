@@ -70,11 +70,11 @@ public class CreateClaimCallbackHandler extends CallbackHandler {
     @Override
     protected Map<String, Callback> callbacks() {
         return Map.of(
-            ABOUT_TO_START.getValue(), this::emptyCallbackResponse,
+            callbackKey(ABOUT_TO_START), this::emptyCallbackResponse,
             callbackKey(MID, "claim-value"), this::validateClaimValues,
             callbackKey(MID, "claimant"), this::validateDateOfBirth,
-            ABOUT_TO_SUBMIT.getValue(), this::issueClaim,
-            SUBMITTED.getValue(), this::buildConfirmation
+            callbackKey(ABOUT_TO_SUBMIT), this::issueClaim,
+            callbackKey(SUBMITTED), this::buildConfirmation
         );
     }
 
