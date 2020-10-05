@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.jackson.JacksonAutoConfiguration;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
+import uk.gov.hmcts.reform.unspec.callback.CaseEvent;
 import uk.gov.hmcts.reform.unspec.model.BusinessProcess;
 import uk.gov.hmcts.reform.unspec.model.BusinessProcessStatus;
 
@@ -21,6 +22,7 @@ import java.util.Map;
 import java.util.stream.Stream;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static uk.gov.hmcts.reform.unspec.callback.CaseEvent.CREATE_CLAIM;
 import static uk.gov.hmcts.reform.unspec.model.BusinessProcessStatus.FINISHED;
 import static uk.gov.hmcts.reform.unspec.model.BusinessProcessStatus.READY;
 
@@ -42,7 +44,7 @@ public class BusinessProcessServiceTest {
             .build();
         Map<String, Object> data = new HashMap<>(Map.of("businessProcess", businessProcess));
 
-        List<String> errors = service.updateBusinessProcess(data, "someBusinessProcessEvent");
+        List<String> errors = service.updateBusinessProcess(data, CREATE_CLAIM);
 
         assertThat(errors).containsOnly("Business Process Error");
         assertThat(data).extracting("businessProcess").isEqualTo(businessProcess);
@@ -54,7 +56,7 @@ public class BusinessProcessServiceTest {
         Map<String, Object> data = new HashMap<>();
         data.put("businessProcess", businessProcess);
 
-        List<String> errors = service.updateBusinessProcess(data, "someBusinessProcessEvent");
+        List<String> errors = service.updateBusinessProcess(data, CREATE_CLAIM);
 
         assertThat(errors).isEmpty();
         assertThat(data).extracting("businessProcess").isEqualTo(
