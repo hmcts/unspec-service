@@ -75,7 +75,7 @@ public class AcknowledgeServiceCallbackHandler extends CallbackHandler {
         LocalDate newResponseDate = workingDayIndicator.getNextWorkingDay(responseDeadline.plusDays(14).toLocalDate());
 
         data.put(RESPONSE_DEADLINE, newResponseDate.atTime(MID_NIGHT));
-        List<String> errors = businessProcessService.updateBusinessProcess(data, "ServiceAcknowledgementHandling");
+        List<String> errors = businessProcessService.updateBusinessProcess(data, ACKNOWLEDGE_SERVICE);
 
         return AboutToStartOrSubmitCallbackResponse.builder()
             .data(data)

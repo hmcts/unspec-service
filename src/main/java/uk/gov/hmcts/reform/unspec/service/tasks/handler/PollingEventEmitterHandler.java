@@ -36,7 +36,7 @@ public class PollingEventEmitterHandler implements ExternalTaskHandler {
             var caseId = caseData.getCcdCaseReference();
             var businessProcess = caseData.getBusinessProcess();
             try {
-                runtimeService.createMessageCorrelation("Message" + businessProcess.getActivityId())
+                runtimeService.createMessageCorrelation(businessProcess.getEvent())
                     .setVariable("CCD_ID", caseId)
                     .correlateStartMessage();
                 applicationEventPublisher.publishEvent(new DispatchBusinessProcessEvent(

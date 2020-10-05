@@ -56,7 +56,7 @@ public class RespondToDefenceCallbackHandler extends CallbackHandler {
         var response = mapper.convertValue(data.get("respondent1ClaimResponseType"), DefendantResponseType.class);
         List<String> errors = new ArrayList<>();
         if (response == FULL_DEFENCE && proceeding == YES) {
-            errors = businessProcessService.updateBusinessProcess(data, "CaseTransferredToLocalCourtHandling");
+            errors = businessProcessService.updateBusinessProcess(data, CLAIMANT_RESPONSE);
         }
 
         return AboutToStartOrSubmitCallbackResponse.builder()

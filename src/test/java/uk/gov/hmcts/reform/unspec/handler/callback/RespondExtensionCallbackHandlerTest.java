@@ -32,6 +32,7 @@ import static org.assertj.core.api.Assertions.entry;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import static uk.gov.hmcts.reform.unspec.callback.CaseEvent.RESPOND_EXTENSION;
 import static uk.gov.hmcts.reform.unspec.handler.callback.RespondExtensionCallbackHandler.LEGACY_CASE_REFERENCE;
 import static uk.gov.hmcts.reform.unspec.helpers.DateFormatHelper.DATE;
 import static uk.gov.hmcts.reform.unspec.helpers.DateFormatHelper.formatLocalDateTime;
@@ -206,7 +207,7 @@ class RespondExtensionCallbackHandlerTest extends BaseCallbackHandlerTest {
 
             handler.handle(callbackParamsOf(data, CallbackType.ABOUT_TO_SUBMIT));
 
-            verify(businessProcessService).updateBusinessProcess(data, "ExtensionResponseHandling");
+            verify(businessProcessService).updateBusinessProcess(data, RESPOND_EXTENSION);
         }
     }
 

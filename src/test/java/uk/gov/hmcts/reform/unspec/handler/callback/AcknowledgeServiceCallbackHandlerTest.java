@@ -35,6 +35,7 @@ import static org.mockito.Mockito.clearInvocations;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static uk.gov.hmcts.reform.unspec.callback.CallbackType.ABOUT_TO_START;
+import static uk.gov.hmcts.reform.unspec.callback.CaseEvent.ACKNOWLEDGE_SERVICE;
 import static uk.gov.hmcts.reform.unspec.service.DeadlinesCalculator.MID_NIGHT;
 
 @ExtendWith(SpringExtension.class)
@@ -136,7 +137,7 @@ class AcknowledgeServiceCallbackHandlerTest extends BaseCallbackHandlerTest {
 
             handler.handle(callbackParamsOf(data, CallbackType.ABOUT_TO_SUBMIT));
 
-            verify(businessProcessService).updateBusinessProcess(data, "ServiceAcknowledgementHandling");
+            verify(businessProcessService).updateBusinessProcess(data, ACKNOWLEDGE_SERVICE);
         }
     }
 

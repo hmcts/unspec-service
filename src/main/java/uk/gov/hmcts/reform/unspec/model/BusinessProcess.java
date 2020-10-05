@@ -11,4 +11,5 @@ public class BusinessProcess {
     private final String processInstanceId;
     private final BusinessProcessStatus status;
     private final String activityId;
+    private final String event;
 }

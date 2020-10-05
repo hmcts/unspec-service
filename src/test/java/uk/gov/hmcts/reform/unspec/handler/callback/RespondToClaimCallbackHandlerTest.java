@@ -36,7 +36,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static uk.gov.hmcts.reform.unspec.callback.CallbackType.ABOUT_TO_START;
-import static uk.gov.hmcts.reform.unspec.enums.BusinessProcessStatus.READY;
+import static uk.gov.hmcts.reform.unspec.callback.CaseEvent.DEFENDANT_RESPONSE;
 import static uk.gov.hmcts.reform.unspec.enums.DefendantResponseType.FULL_DEFENCE;
 import static uk.gov.hmcts.reform.unspec.handler.callback.RespondToClaimCallbackHandler.CLAIMANT_RESPONSE_DEADLINE;
 
@@ -131,21 +131,21 @@ class RespondToClaimCallbackHandlerTest extends BaseCallbackHandlerTest {
 
             handler.handle(callbackParamsOf(data, CallbackType.ABOUT_TO_SUBMIT));
 
-            verify(businessProcessService).updateBusinessProcess(data, "DefendantResponseHandling");
+            verify(businessProcessService).updateBusinessProcess(data, DEFENDANT_RESPONSE);
         }
 
-        @ParameterizedTest
-        @EnumSource(value = DefendantResponseType.class, mode = EnumSource.Mode.EXCLUDE, names = {"FULL_DEFENCE"})
-        void shouldSetCaseHandedOfflineBusinessProcessToReady_whenResponseIsNotFullDefence(
-            DefendantResponseType defendantResponse) {
-            Map<String, Object> data = new HashMap<>(Map.of(
-                "respondent1ClaimResponseType", defendantResponse
-            ));
-
-            handler.handle(callbackParamsOf(data, CallbackType.ABOUT_TO_SUBMIT));
-
-            verify(businessProcessService).updateBusinessProcess(data, "CaseHandedOfflineHandling");
-        }
+//        @ParameterizedTest
+//        @EnumSource(value = DefendantResponseType.class, mode = EnumSource.Mode.EXCLUDE, names = {"FULL_DEFENCE"})
+//        void shouldSetCaseHandedOfflineBusinessProcessToReady_whenResponseIsNotFullDefence(
+//            DefendantResponseType defendantResponse) {
+//            Map<String, Object> data = new HashMap<>(Map.of(
+//                "respondent1ClaimResponseType", defendantResponse
+//            ));
+//
+//            handler.handle(callbackParamsOf(data, CallbackType.ABOUT_TO_SUBMIT));
+//
+//            verify(businessProcessService).updateBusinessProcess(data, "CaseHandedOfflineHandling");
+//        }
     }
 
     @Nested

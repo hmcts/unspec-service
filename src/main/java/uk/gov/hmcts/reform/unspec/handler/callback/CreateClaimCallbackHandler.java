@@ -143,7 +143,7 @@ public class CreateClaimCallbackHandler extends CallbackHandler {
         data.put(CLAIMANT, caseData.getApplicant1());
         data.put("legacyCaseReference", referenceNumber);
 
-        List<String> errors = businessProcessService.updateBusinessProcess(data, "ClaimIssueHandling");
+        List<String> errors = businessProcessService.updateBusinessProcess(data, CREATE_CLAIM);
 
         return AboutToStartOrSubmitCallbackResponse.builder()
             .data(data)

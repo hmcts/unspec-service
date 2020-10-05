@@ -34,7 +34,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static uk.gov.hmcts.reform.unspec.callback.CallbackType.ABOUT_TO_START;
-import static uk.gov.hmcts.reform.unspec.enums.BusinessProcessStatus.READY;
+import static uk.gov.hmcts.reform.unspec.callback.CaseEvent.REQUEST_EXTENSION;
 import static uk.gov.hmcts.reform.unspec.handler.callback.RequestExtensionCallbackHandler.ALREADY_AGREED;
 import static uk.gov.hmcts.reform.unspec.handler.callback.RequestExtensionCallbackHandler.EXTENSION_ALREADY_AGREED;
 import static uk.gov.hmcts.reform.unspec.handler.callback.RequestExtensionCallbackHandler.LEGACY_CASE_REFERENCE;
@@ -176,7 +176,7 @@ class RequestExtensionCallbackHandlerTest extends BaseCallbackHandlerTest {
         void shouldSetRequestForExtensionBusinessProcessToReady_whenInvoked() {
             handler.handle(callbackParamsOf(new HashMap<>(), CallbackType.ABOUT_TO_SUBMIT));
 
-            verify(businessProcessService).updateBusinessProcess(new HashMap<>(), "RequestForExtensionHandling");
+            verify(businessProcessService).updateBusinessProcess(new HashMap<>(), REQUEST_EXTENSION);
         }
     }
 

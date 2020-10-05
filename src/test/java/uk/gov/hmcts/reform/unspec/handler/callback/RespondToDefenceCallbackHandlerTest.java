@@ -34,6 +34,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.when;
 import static uk.gov.hmcts.reform.unspec.callback.CallbackType.ABOUT_TO_START;
+import static uk.gov.hmcts.reform.unspec.callback.CaseEvent.CLAIMANT_RESPONSE;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(classes = {
@@ -81,7 +82,7 @@ class RespondToDefenceCallbackHandlerTest extends BaseCallbackHandlerTest {
 
             handler.handle(callbackParamsOf(data, CallbackType.ABOUT_TO_SUBMIT));
 
-            verify(businessProcessService).updateBusinessProcess(data, "CaseTransferredToLocalCourtHandling");
+            verify(businessProcessService).updateBusinessProcess(data, CLAIMANT_RESPONSE);
         }
 
         @ParameterizedTest

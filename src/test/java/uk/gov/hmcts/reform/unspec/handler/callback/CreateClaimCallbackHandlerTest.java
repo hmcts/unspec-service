@@ -50,6 +50,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static uk.gov.hmcts.reform.unspec.callback.CallbackType.ABOUT_TO_START;
 import static uk.gov.hmcts.reform.unspec.callback.CallbackType.MID_SECONDARY;
+import static uk.gov.hmcts.reform.unspec.callback.CaseEvent.CREATE_CLAIM;
 import static uk.gov.hmcts.reform.unspec.enums.AllocatedTrack.SMALL_CLAIM;
 import static uk.gov.hmcts.reform.unspec.enums.BusinessProcessStatus.READY;
 import static uk.gov.hmcts.reform.unspec.enums.ClaimType.PERSONAL_INJURY;
@@ -244,7 +245,7 @@ class CreateClaimCallbackHandlerTest extends BaseCallbackHandlerTest {
 
             verify(businessProcessService).updateBusinessProcess(
                 params.getRequest().getCaseDetails().getData(),
-                "ClaimIssueHandling"
+                CREATE_CLAIM
             );
         }
 

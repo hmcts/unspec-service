@@ -17,7 +17,6 @@ import uk.gov.hmcts.reform.ccd.client.model.CaseDetails;
 import uk.gov.hmcts.reform.unspec.event.DispatchBusinessProcessEvent;
 import uk.gov.hmcts.reform.unspec.helpers.CaseDetailsConverter;
 import uk.gov.hmcts.reform.unspec.model.BusinessProcess;
-import uk.gov.hmcts.reform.unspec.model.BusinessProcessStatus;
 import uk.gov.hmcts.reform.unspec.service.search.CaseReadyBusinessProcessSearchService;
 
 import java.util.List;
@@ -30,6 +29,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
+import static uk.gov.hmcts.reform.unspec.model.BusinessProcessStatus.FINISHED;
 
 @SpringBootTest(classes = {JacksonAutoConfiguration.class, CaseDetailsConverter.class})
 class PollingEventEmitterHandlerTest {
@@ -68,11 +68,11 @@ class PollingEventEmitterHandlerTest {
         when(externalTask.getTopicName()).thenReturn("test");
         when(searchService.getCases()).thenReturn(List.of(
             CaseDetails.builder().id(1L).data(
-                Map.of("businessProcess", businessProcessWithActivity("TestActivity1"))).build(),
+                Map.of("businessProcess", businessProcessWithEvent("TEST_EVENT1"))).build(),
             CaseDetails.builder().id(2L).data(
-                Map.of("businessProcess", businessProcessWithActivity("TestActivity2"))).build(),
+                Map.of("businessProcess", businessProcessWithEvent("TEST_EVENT2"))).build(),
             CaseDetails.builder().id(3L).data(
-                Map.of("businessProcess", businessProcessWithActivity("TestActivity3"))).build()
+                Map.of("businessProcess", businessProcessWithEvent("TEST_EVENT3"))).build()
         ));
         when(runtimeService.createMessageCorrelation(any())).thenReturn(messageCorrelationBuilder);
         when(messageCorrelationBuilder.setVariable(any(), any())).thenReturn(messageCorrelationBuilder);
@@ -95,20 +95,20 @@ class PollingEventEmitterHandlerTest {
         pollingEventEmitterHandler.execute(externalTask, externalTaskService);
 
         verify(searchService).getCases();
-        verify(runtimeService).createMessageCorrelation("MessageTestActivity1");
+        verify(runtimeService).createMessageCorrelation("TEST_EVENT1");
         verify(messageCorrelationBuilder).setVariable("CCD_ID", 1L);
         verify(applicationEventPublisher).publishEvent(
-            new DispatchBusinessProcessEvent(1L, businessProcessWithActivity("TestActivity1")));
+            new DispatchBusinessProcessEvent(1L, businessProcessWithEvent("TEST_EVENT1")));
 
-        verify(runtimeService).createMessageCorrelation("MessageTestActivity2");
+        verify(runtimeService).createMessageCorrelation("TEST_EVENT2");
         verify(messageCorrelationBuilder).setVariable("CCD_ID", 2L);
         verify(applicationEventPublisher).publishEvent(
-            new DispatchBusinessProcessEvent(2L, businessProcessWithActivity("TestActivity2")));
+            new DispatchBusinessProcessEvent(2L, businessProcessWithEvent("TEST_EVENT2")));
 
-        verify(runtimeService).createMessageCorrelation("MessageTestActivity3");
+        verify(runtimeService).createMessageCorrelation("TEST_EVENT3");
         verify(messageCorrelationBuilder).setVariable("CCD_ID", 3L);
         verify(applicationEventPublisher).publishEvent(
-            new DispatchBusinessProcessEvent(3L, businessProcessWithActivity("TestActivity3")));
+            new DispatchBusinessProcessEvent(3L, businessProcessWithEvent("TEST_EVENT3")));
 
         verify(messageCorrelationBuilder, times(3)).correlateStartMessage();
         verify(externalTaskService).complete(externalTask);
@@ -124,29 +124,30 @@ class PollingEventEmitterHandlerTest {
         pollingEventEmitterHandler.execute(externalTask, externalTaskService);
 
         verify(searchService).getCases();
-        verify(runtimeService).createMessageCorrelation("MessageTestActivity1");
+        verify(runtimeService).createMessageCorrelation("TEST_EVENT1");
         verify(messageCorrelationBuilder).setVariable("CCD_ID", 1L);
         verify(applicationEventPublisher).publishEvent(
-            new DispatchBusinessProcessEvent(1L, businessProcessWithActivity("TestActivity1")));
+            new DispatchBusinessProcessEvent(1L, businessProcessWithEvent("TEST_EVENT1")));
 
-        verify(runtimeService).createMessageCorrelation("MessageTestActivity2");
+        verify(runtimeService).createMessageCorrelation("TEST_EVENT2");
         verify(messageCorrelationBuilder).setVariable("CCD_ID", 2L);
 
-        verify(runtimeService).createMessageCorrelation("MessageTestActivity3");
+        verify(runtimeService).createMessageCorrelation("TEST_EVENT3");
         verify(messageCorrelationBuilder).setVariable("CCD_ID", 3L);
         verify(applicationEventPublisher).publishEvent(
-            new DispatchBusinessProcessEvent(3L, businessProcessWithActivity("TestActivity3")));
+            new DispatchBusinessProcessEvent(3L, businessProcessWithEvent("TEST_EVENT3")));
 
         verifyNoMoreInteractions(applicationEventPublisher);
         verify(messageCorrelationBuilder, times(3)).correlateStartMessage();
         verify(externalTaskService).complete(externalTask);
     }
 
-    private BusinessProcess businessProcessWithActivity(String activityId) {
+    private BusinessProcess businessProcessWithEvent(String event) {
         return BusinessProcess.builder()
-            .activityId(activityId)
+            .activityId("testActivityId")
             .processInstanceId("testInstanceId")
-            .status(BusinessProcessStatus.FINISHED)
+            .event(event)
+            .status(FINISHED)
             .build();
     }
 
