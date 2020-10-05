@@ -24,6 +24,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static com.google.common.collect.ImmutableMap.of;
 import static java.lang.String.format;
@@ -139,13 +140,10 @@ class RequestExtensionCallbackHandlerTest extends BaseCallbackHandlerTest {
             LocalDateTime responseDeadline = now().atTime(MID_NIGHT);
 
             CallbackParams params = callbackParamsOf(
-                new HashMap<>() {
-                    {
-                        put(PROPOSED_DEADLINE, proposedDeadline);
-                        put(EXTENSION_ALREADY_AGREED, "Yes");
-                        put(RESPONSE_DEADLINE, responseDeadline);
-                    }
-                },
+                new HashMap<>(Map.of(
+                    PROPOSED_DEADLINE, proposedDeadline,
+                    EXTENSION_ALREADY_AGREED, "Yes",
+                    RESPONSE_DEADLINE, responseDeadline)),
                 CallbackType.ABOUT_TO_SUBMIT
             );
 
@@ -161,13 +159,10 @@ class RequestExtensionCallbackHandlerTest extends BaseCallbackHandlerTest {
             LocalDateTime responseDeadline = now().atTime(16, 0);
 
             CallbackParams params = callbackParamsOf(
-                new HashMap<>() {
-                    {
-                        put(PROPOSED_DEADLINE, proposedDeadline);
-                        put(EXTENSION_ALREADY_AGREED, "No");
-                        put(RESPONSE_DEADLINE, responseDeadline);
-                    }
-                },
+                new HashMap<>(Map.of(
+                    PROPOSED_DEADLINE, proposedDeadline,
+                    EXTENSION_ALREADY_AGREED, "Yes",
+                    RESPONSE_DEADLINE, responseDeadline)),
                 CallbackType.ABOUT_TO_SUBMIT
             );
 

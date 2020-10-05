@@ -1,4 +1,4 @@
-package uk.gov.hmcts.reform.unspec.handler;
+package uk.gov.hmcts.reform.unspec.handler.event;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -13,11 +13,8 @@ import uk.gov.hmcts.reform.unspec.model.BusinessProcess;
 import uk.gov.hmcts.reform.unspec.model.BusinessProcessStatus;
 import uk.gov.hmcts.reform.unspec.service.CoreCaseDataService;
 
-import java.util.Map;
-
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoInteractions;
-import static uk.gov.hmcts.reform.unspec.model.BusinessProcessStatus.DISPATCHED;
 import static uk.gov.hmcts.reform.unspec.model.BusinessProcessStatus.READY;
 
 @ExtendWith(SpringExtension.class)
@@ -30,7 +27,7 @@ class DispatchBusinessProcessEventHandlerTest {
     private DispatchBusinessProcessEventHandler handler;
 
     @Test
-    void shouldTriggerEventWithExpectedParams_whenBusinessProcessIsReady() {
+    void shouldTriggerEvent_whenBusinessProcessIsReady() {
         BusinessProcess businessProcess = BusinessProcess.builder()
             .activityId("someActivityId")
             .processInstanceId("someProcessId")
@@ -40,11 +37,7 @@ class DispatchBusinessProcessEventHandlerTest {
 
         handler.dispatchBusinessProcess(event);
 
-        verify(coreCaseDataService).triggerEvent(
-            event.getCaseId(),
-            CaseEvent.DISPATCH_BUSINESS_PROCESS,
-            Map.of("businessProcess", businessProcess.toBuilder().status(DISPATCHED).build())
-        );
+        verify(coreCaseDataService).triggerEvent(event.getCaseId(), CaseEvent.DISPATCH_BUSINESS_PROCESS);
     }
 
     @ParameterizedTest
