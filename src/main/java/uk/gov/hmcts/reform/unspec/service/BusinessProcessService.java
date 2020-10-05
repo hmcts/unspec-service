@@ -23,8 +23,7 @@ public class BusinessProcessService {
     public List<String> updateBusinessProcess(Map<String, Object> data, CaseEvent caseEvent) {
         BusinessProcess businessProcess = mapper.convertValue(data.get("businessProcess"), BusinessProcess.class);
         if (hasNoOngoingBusinessProcess(businessProcess)) {
-            //TODO: set caseEvent in new event field
-            data.put("businessProcess", BusinessProcess.builder().event(caseEvent.name()).status(READY));
+            data.put("businessProcess", BusinessProcess.builder().event(caseEvent.name()).status(READY).build());
             return List.of();
         }
         return List.of(ERROR_MESSAGE);

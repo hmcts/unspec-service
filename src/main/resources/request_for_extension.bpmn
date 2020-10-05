@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" id="Definitions_18h9iji" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="3.7.3">
   <bpmn:process id="REQUEST_EXTENSION" isExecutable="true">
-    <bpmn:sequenceFlow id="Flow_0kvxp0b" sourceRef="StartEvent_1" targetRef="RequestForExtensionEmailTaskId" />
+    <bpmn:sequenceFlow id="Flow_0kvxp0b" sourceRef="StartEvent_1" targetRef="RequestForExtensionEmailActivityId" />
     <bpmn:endEvent id="Event_13n9twk">
       <bpmn:incoming>Flow_1xdr8bm</bpmn:incoming>
     </bpmn:endEvent>
-    <bpmn:sequenceFlow id="Flow_1xdr8bm" sourceRef="RequestForExtensionEmailTaskId" targetRef="Event_13n9twk" />
-    <bpmn:serviceTask id="RequestForExtensionEmailTaskId" name="SendEmail" camunda:type="external" camunda:topic="processCaseEvent">
+    <bpmn:sequenceFlow id="Flow_1xdr8bm" sourceRef="RequestForExtensionEmailActivityId" targetRef="Event_13n9twk" />
+    <bpmn:serviceTask id="RequestForExtensionEmailActivityId" name="SendEmail" camunda:type="external" camunda:topic="processCaseEvent">
       <bpmn:extensionElements>
         <camunda:inputOutput>
           <camunda:inputParameter name="CASE_EVENT">NOTIFY_APPLICANT_SOLICITOR1_FOR_REQUEST_FOR_EXTENSION</camunda:inputParameter>
@@ -31,7 +31,7 @@
         <di:waypoint x="215" y="117" />
         <di:waypoint x="270" y="117" />
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNShape id="Activity_0ipbyde_di" bpmnElement="RequestForExtensionEmailTaskId">
+      <bpmndi:BPMNShape id="Activity_0ipbyde_di" bpmnElement="RequestForExtensionEmailActivityId">
         <dc:Bounds x="270" y="77" width="100" height="80" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Event_0gu2zbr_di" bpmnElement="StartEvent_1">

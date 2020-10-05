@@ -59,7 +59,7 @@ public class BusinessProcessServiceTest {
 
         assertThat(errors).isEmpty();
         assertThat(data).extracting("businessProcess").isEqualTo(
-            BusinessProcess.builder().status(READY).activityId("someBusinessProcessEvent").build());
+            BusinessProcess.builder().status(READY).event(CREATE_CLAIM.name()).build());
     }
 
     static class GetBusinessProcessArguments implements ArgumentsProvider {
