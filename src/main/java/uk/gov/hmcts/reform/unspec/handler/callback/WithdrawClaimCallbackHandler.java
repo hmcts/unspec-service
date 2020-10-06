@@ -18,6 +18,7 @@ import java.util.stream.Collectors;
 import javax.validation.ConstraintViolation;
 import javax.validation.Validator;
 
+import static uk.gov.hmcts.reform.unspec.callback.CallbackType.ABOUT_TO_START;
 import static uk.gov.hmcts.reform.unspec.callback.CallbackType.MID;
 import static uk.gov.hmcts.reform.unspec.callback.CaseEvent.DISCONTINUE_CLAIM;
 import static uk.gov.hmcts.reform.unspec.callback.CaseEvent.WITHDRAW_CLAIM;
@@ -34,6 +35,7 @@ public class WithdrawClaimCallbackHandler extends CallbackHandler {
     @Override
     protected Map<String, Callback> callbacks() {
         return Map.of(
+            callbackKey(ABOUT_TO_START), this::emptyCallbackResponse,
             callbackKey(MID, "withdrawal-reason"), this::validateWithdrawalDate
         );
     }
