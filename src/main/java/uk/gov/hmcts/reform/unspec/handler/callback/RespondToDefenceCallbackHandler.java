@@ -11,9 +11,11 @@ import uk.gov.hmcts.reform.unspec.callback.CallbackHandler;
 import uk.gov.hmcts.reform.unspec.callback.CallbackParams;
 import uk.gov.hmcts.reform.unspec.callback.CallbackType;
 import uk.gov.hmcts.reform.unspec.callback.CaseEvent;
-import uk.gov.hmcts.reform.unspec.enums.DefendantResponseType;
 import uk.gov.hmcts.reform.unspec.enums.YesOrNo;
+import uk.gov.hmcts.reform.unspec.model.CaseData;
 import uk.gov.hmcts.reform.unspec.service.BusinessProcessService;
+import uk.gov.hmcts.reform.unspec.service.flowstate.FlowState;
+import uk.gov.hmcts.reform.unspec.service.flowstate.StateFlowEngine;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -22,8 +24,6 @@ import java.util.Map;
 
 import static java.lang.String.format;
 import static uk.gov.hmcts.reform.unspec.callback.CaseEvent.CLAIMANT_RESPONSE;
-import static uk.gov.hmcts.reform.unspec.enums.BusinessProcessStatus.READY;
-import static uk.gov.hmcts.reform.unspec.enums.DefendantResponseType.FULL_DEFENCE;
 import static uk.gov.hmcts.reform.unspec.enums.YesOrNo.YES;
 
 @Service
@@ -35,6 +35,7 @@ public class RespondToDefenceCallbackHandler extends CallbackHandler {
 
     private final ObjectMapper mapper;
     private final BusinessProcessService businessProcessService;
+    private final StateFlowEngine stateFlowEngine;
 
     @Override
     public List<CaseEvent> handledEvents() {
@@ -52,10 +53,9 @@ public class RespondToDefenceCallbackHandler extends CallbackHandler {
 
     private CallbackResponse handleNotifications(CallbackParams callbackParams) {
         Map<String, Object> data = callbackParams.getRequest().getCaseDetails().getData();
-        YesOrNo proceeding = mapper.convertValue(data.get(APPLICANT_1_PROCEEDING), YesOrNo.class);
-        var response = mapper.convertValue(data.get("respondent1ClaimResponseType"), DefendantResponseType.class);
+        CaseData caseData = mapper.convertValue(data, CaseData.class);
         List<String> errors = new ArrayList<>();
-        if (response == FULL_DEFENCE && proceeding == YES) {
+        if (stateFlowEngine.evaluate(caseData).getState().isFlowState(FlowState.Main.FULL_DEFENCE)) {
             errors = businessProcessService.updateBusinessProcess(data, CLAIMANT_RESPONSE);
         }
 

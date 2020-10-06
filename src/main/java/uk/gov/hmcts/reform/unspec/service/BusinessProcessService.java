@@ -32,7 +32,7 @@ public class BusinessProcessService {
             data.put("businessProcess", BusinessProcess.builder().camundaEvent(caseEvent.name()).status(READY).build());
             Optional.ofNullable(stateFlowState)
                 .map(State::getName)
-                .map(stateName -> data.put("stateFlowState", stateName));
+                .ifPresent(stateName -> data.put("stateFlowState", stateName));
             return List.of();
         }
         return List.of(ERROR_MESSAGE);

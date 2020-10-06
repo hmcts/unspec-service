@@ -126,7 +126,7 @@ class RespondToClaimCallbackHandlerTest extends BaseCallbackHandlerTest {
         }
 
         @Test
-        void shouldCallBusinessProcessServiceWithRespondedToClaimStateFlowState_whenResponseIsFullDefence() {
+        void shouldUpdateBusinessProcessWithRespondedToClaimStateFlowState_whenAtRespondedToClaimState() {
             CaseDetails caseDetails = CaseDetailsBuilder.builder().atStateRespondedToClaim().build();
 
             handler.handle(callbackParamsOf(caseDetails.getData(), CallbackType.ABOUT_TO_SUBMIT));
@@ -139,7 +139,7 @@ class RespondToClaimCallbackHandlerTest extends BaseCallbackHandlerTest {
         }
 
         @Test
-        void shouldCallBusinessProcessServiceWithServiceConfirmedStateFlowState_whenResponseIsNotFullDefence() {
+        void shouldUpdateBusinessProcessWithServiceConfirmedStateFlowState_whenAtServiceConfirmedState() {
             CaseDetails caseDetails = CaseDetailsBuilder.builder().atStateServiceConfirmed().build();
 
             handler.handle(callbackParamsOf(caseDetails.getData(), CallbackType.ABOUT_TO_SUBMIT));

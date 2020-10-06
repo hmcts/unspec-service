@@ -130,7 +130,7 @@ class AcknowledgeServiceCallbackHandlerTest extends BaseCallbackHandlerTest {
         }
 
         @Test
-        void shouldSetServiceAcknowledgementBusinessProcessToReady_whenInvoked() {
+        void shouldUpdateBusinessProcess_whenInvoked() {
             Map<String, Object> data = new HashMap<>(Map.of(
                 "respondentSolicitor1ResponseDeadline", now().atTime(MID_NIGHT)
             ));

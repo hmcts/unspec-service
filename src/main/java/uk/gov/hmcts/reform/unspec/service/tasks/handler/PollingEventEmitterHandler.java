@@ -40,7 +40,7 @@ public class PollingEventEmitterHandler implements ExternalTaskHandler {
                 var messageCorrelationBuilder = runtimeService
                     .createMessageCorrelation(businessProcess.getCamundaEvent()).setVariable("CCD_ID", caseId);
                 Optional.ofNullable(caseData.getStateFlowState())
-                    .map(flag -> messageCorrelationBuilder.setVariable("STATE_FLOW_STATE", flag));
+                    .ifPresent(flag -> messageCorrelationBuilder.setVariable("STATE_FLOW_STATE", flag));
                 messageCorrelationBuilder.correlateStartMessage();
                 applicationEventPublisher.publishEvent(new DispatchBusinessProcessEvent(
                     caseId,

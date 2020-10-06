@@ -26,7 +26,6 @@ import javax.validation.constraints.PastOrPresent;
 @HasServiceDateTheSameAsOrAfterIssueDate(groups = ConfirmServiceDateGroup.class)
 public class CaseData {
 
-    private final String stateFlowState;
     private final Long ccdCaseReference;
     private final CaseState ccdState;
     private final SolicitorReferences solicitorReferences;
@@ -89,4 +88,5 @@ public class CaseData {
     private final CloseClaim discontinueClaim;
 
     private final BusinessProcess businessProcess;
+    private final String stateFlowState;
 }

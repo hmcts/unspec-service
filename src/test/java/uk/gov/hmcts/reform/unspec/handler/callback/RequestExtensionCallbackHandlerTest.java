@@ -173,7 +173,7 @@ class RequestExtensionCallbackHandlerTest extends BaseCallbackHandlerTest {
         }
 
         @Test
-        void shouldSetRequestForExtensionBusinessProcessToReady_whenInvoked() {
+        void shouldUpdateBusinessProcess_whenInvoked() {
             handler.handle(callbackParamsOf(new HashMap<>(), CallbackType.ABOUT_TO_SUBMIT));
 
             verify(businessProcessService).updateBusinessProcess(new HashMap<>(), REQUEST_EXTENSION);

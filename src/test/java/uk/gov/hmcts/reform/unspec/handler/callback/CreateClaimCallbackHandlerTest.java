@@ -240,7 +240,7 @@ class CreateClaimCallbackHandlerTest extends BaseCallbackHandlerTest {
         }
 
         @Test
-        void shouldSetClaimIssueBusinessProcessToReady_whenInvoked() {
+        void shouldUpdateBusinessProcess_whenInvoked() {
             handler.handle(params);
 
             verify(businessProcessService).updateBusinessProcess(

@@ -42,7 +42,10 @@ public class DispatchBusinessProcessCallbackHandler extends CallbackHandler {
         Map<String, Object> data = callbackParams.getRequest().getCaseDetails().getData();
         BusinessProcess businessProcess = mapper.convertValue(data.get("businessProcess"), BusinessProcess.class);
         if (businessProcess.getStatus() == READY) {
-            data.put("businessProcess", businessProcess.toBuilder().status(DISPATCHED).build());
+            data.put("businessProcess", BusinessProcess.builder()
+                .camundaEvent(businessProcess.getCamundaEvent())
+                .status(DISPATCHED)
+                .build());
         }
 
         return AboutToStartOrSubmitCallbackResponse.builder()

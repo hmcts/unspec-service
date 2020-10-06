@@ -198,7 +198,7 @@ class RespondExtensionCallbackHandlerTest extends BaseCallbackHandlerTest {
         }
 
         @Test
-        void shouldSetExtensionResponseBusinessProcessToReady_whenInvoked() {
+        void shouldUpdateBusinessProcess_whenInvoked() {
             Map<String, Object> data = new HashMap<>(Map.of(
                 RESPONSE_DEADLINE, now().atTime(MID_NIGHT),
                 COUNTER, YesOrNo.NO,

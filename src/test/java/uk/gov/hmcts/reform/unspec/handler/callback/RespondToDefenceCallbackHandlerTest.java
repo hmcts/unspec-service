@@ -4,8 +4,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.EnumSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.jackson.JacksonAutoConfiguration;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -16,11 +14,12 @@ import uk.gov.hmcts.reform.ccd.client.model.CaseDetails;
 import uk.gov.hmcts.reform.ccd.client.model.SubmittedCallbackResponse;
 import uk.gov.hmcts.reform.unspec.callback.CallbackParams;
 import uk.gov.hmcts.reform.unspec.callback.CallbackType;
-import uk.gov.hmcts.reform.unspec.enums.DefendantResponseType;
 import uk.gov.hmcts.reform.unspec.enums.YesOrNo;
+import uk.gov.hmcts.reform.unspec.helpers.CaseDetailsConverter;
 import uk.gov.hmcts.reform.unspec.sampledata.CallbackParamsBuilder;
 import uk.gov.hmcts.reform.unspec.sampledata.CaseDetailsBuilder;
 import uk.gov.hmcts.reform.unspec.service.BusinessProcessService;
+import uk.gov.hmcts.reform.unspec.service.flowstate.StateFlowEngine;
 
 import java.util.HashMap;
 import java.util.List;
@@ -39,7 +38,9 @@ import static uk.gov.hmcts.reform.unspec.callback.CaseEvent.CLAIMANT_RESPONSE;
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(classes = {
     RespondToDefenceCallbackHandler.class,
-    JacksonAutoConfiguration.class
+    JacksonAutoConfiguration.class,
+    CaseDetailsConverter.class,
+    StateFlowEngine.class
 })
 class RespondToDefenceCallbackHandlerTest extends BaseCallbackHandlerTest {
 
@@ -74,42 +75,21 @@ class RespondToDefenceCallbackHandlerTest extends BaseCallbackHandlerTest {
         }
 
         @Test
-        void shouldSetCaseTransferredToLocalCourtBusinessProcessToReady_whenFullDefenceAndProceedingWithClaim() {
-            Map<String, Object> data = new HashMap<>(Map.of(
-                "respondent1ClaimResponseType", "FULL_DEFENCE",
-                "applicant1ProceedWithClaim", "Yes"
-            ));
+        void shouldUpdateBusinessProcess_whenAtFullDefenceState() {
+            CaseDetails caseDetails = CaseDetailsBuilder.builder().atStateFullDefence().build();
 
-            handler.handle(callbackParamsOf(data, CallbackType.ABOUT_TO_SUBMIT));
+            handler.handle(callbackParamsOf(caseDetails.getData(), CallbackType.ABOUT_TO_SUBMIT));
 
-            verify(businessProcessService).updateBusinessProcess(data, CLAIMANT_RESPONSE);
+            verify(businessProcessService).updateBusinessProcess(caseDetails.getData(), CLAIMANT_RESPONSE);
         }
 
-        @ParameterizedTest
-        @EnumSource(value = DefendantResponseType.class, mode = EnumSource.Mode.EXCLUDE, names = {"FULL_DEFENCE"})
-        void shouldNotSetBusinessProcess_whenNotFullDefence(DefendantResponseType responseType) {
-            Map<String, Object> data = new HashMap<>(Map.of(
-                "respondent1ClaimResponseType", responseType,
-                "applicant1ProceedWithClaim", "Yes"
-            ));
+        @Test
+        void shouldNotUpdateBusinessProcess_whenNotAtFullDefenceState() {
+            CaseDetails caseDetails = CaseDetailsBuilder.builder().atStateRespondedToClaim().build();
 
-            handler.handle(callbackParamsOf(data, CallbackType.ABOUT_TO_SUBMIT));
+            handler.handle(callbackParamsOf(caseDetails.getData(), CallbackType.ABOUT_TO_SUBMIT));
 
             verifyNoInteractions(businessProcessService);
-        }
-
-        @ParameterizedTest
-        @EnumSource(value = DefendantResponseType.class)
-        void shouldNotSetBusinessProcess_whenNotProceedingWithClaim(DefendantResponseType responseType) {
-            Map<String, Object> data = new HashMap<>(Map.of(
-                "respondent1ClaimResponseType", responseType,
-                "applicant1ProceedWithClaim", "No"
-            ));
-
-            AboutToStartOrSubmitCallbackResponse response = (AboutToStartOrSubmitCallbackResponse) handler
-                .handle(callbackParamsOf(data, CallbackType.ABOUT_TO_SUBMIT));
-
-            assertThat(response.getData()).doesNotContainKey("businessProcess");
         }
     }
 
