@@ -19,7 +19,8 @@ public enum CaseEvent {
     NOTIFY_DEFENDANT_SOLICITOR_FOR_CLAIM_ISSUE(
         "NOTIFY_DEFENDANT_SOLICITOR_FOR_CLAIM_ISSUE",
         "Notify defendant solicitor"
-    );
+    ),
+    START_BUSINESS_PROCESS("START_BUSINESS_PROCESS", "Start business process");
 
     private final String value;
     private final String displayName;

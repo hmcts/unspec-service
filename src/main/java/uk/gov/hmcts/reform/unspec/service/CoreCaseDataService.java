@@ -11,6 +11,7 @@ import uk.gov.hmcts.reform.ccd.client.model.StartEventResponse;
 import uk.gov.hmcts.reform.idam.client.IdamClient;
 import uk.gov.hmcts.reform.unspec.callback.CaseEvent;
 import uk.gov.hmcts.reform.unspec.config.SystemUpdateUserConfiguration;
+import uk.gov.hmcts.reform.unspec.model.UserDetails;
 import uk.gov.hmcts.reform.unspec.model.search.Query;
 
 import java.util.HashMap;
@@ -33,35 +34,50 @@ public class CoreCaseDataService {
     }
 
     public void triggerEvent(Long caseId, CaseEvent eventName, Map<String, Object> contentModified) {
-        String userToken = idamClient.getAccessToken(userConfig.getUserName(), userConfig.getPassword());
-        String systemUpdateUserId = idamClient.getUserInfo(userToken).getUid();
+        StartEventResponse startEventResponse = startUpdate(caseId.toString(), eventName);
+        submitUpdate(caseId.toString(), caseDataContentFromStartEventResponse(startEventResponse, contentModified));
+    }
 
-        StartEventResponse startEventResponse = coreCaseDataApi.startEventForCaseWorker(
-            userToken,
+    public StartEventResponse startUpdate(String caseId, CaseEvent eventName) {
+        UserDetails systemUpdateUser = getSystemUpdateUser();
+
+        return coreCaseDataApi.startEventForCaseWorker(
+            systemUpdateUser.getUserToken(),
             authTokenGenerator.generate(),
-            systemUpdateUserId,
+            systemUpdateUser.getUserId(),
             JURISDICTION,
             CASE_TYPE,
-            caseId.toString(),
+            caseId,
             eventName.getValue()
         );
+    }
+
+    public void submitUpdate(String caseId, CaseDataContent caseDataContent) {
+        UserDetails systemUpdateUser = getSystemUpdateUser();
 
         coreCaseDataApi.submitEventForCaseWorker(
-            userToken,
+            systemUpdateUser.getUserToken(),
             authTokenGenerator.generate(),
-            systemUpdateUserId,
+            systemUpdateUser.getUserId(),
             JURISDICTION,
             CASE_TYPE,
-            caseId.toString(),
+            caseId,
             true,
-            caseDataContentFromStartEventResponse(startEventResponse, contentModified)
+            caseDataContent
         );
     }
 
     public SearchResult searchCases(Query query) {
         String userToken = idamClient.getAccessToken(userConfig.getUserName(), userConfig.getPassword());
-
         return coreCaseDataApi.searchCases(userToken, authTokenGenerator.generate(), CASE_TYPE, query.toString());
+    }
+
+    private UserDetails getSystemUpdateUser() {
+        String userToken = idamClient.getAccessToken(userConfig.getUserName(), userConfig.getPassword());
+        return UserDetails.builder()
+            .userToken(userToken)
+            .userId(idamClient.getUserInfo(userToken).getUid())
+            .build();
     }
 
     private CaseDataContent caseDataContentFromStartEventResponse(
