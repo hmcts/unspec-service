@@ -2,12 +2,14 @@ const {I} = inject();
 
 module.exports = {
 
-  fields: {
-    draftDirections: '#respondent1DQDraftDirections',
+  fields: function (party) {
+    return {
+      draftDirections: `#${party}DQDraftDirections`,
+    };
   },
 
-  async enterDraftDirections() {
-    I.fillField(this.fields.draftDirections, 'Draft directions');
+  async enterDraftDirections(party) {
+    I.fillField(this.fields(party).draftDirections, 'Draft directions');
 
     await I.clickContinue();
   }

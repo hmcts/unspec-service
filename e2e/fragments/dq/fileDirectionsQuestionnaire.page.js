@@ -2,44 +2,45 @@ const {I} = inject();
 
 module.exports = {
 
-  fields: {
-    explainedToClient: {
-      id: '#respondent1DQFileDirectionsQuestionnaire_explainedToClient',
-      options: {
-        confirm: 'I confirm I\'ve explained to my client that they myst try to settle, the available options, and the possibility of costs sanctions if they refuse.'
-      }
-    },
-    oneMonthStay: {
-      id: '#respondent1DQFileDirectionsQuestionnaire_oneMonthStayRequested',
-      options: {
-        yes: 'Yes',
-        no: 'No'
-      }
-    },
-    reactionProtocolCompliedWith: {
-      id: '#respondent1DQFileDirectionsQuestionnaire_reactionProtocolCompliedWith',
-      options: {
-        yes: 'Yes',
-        no: 'No'
-      }
-    },
-    reactionProtocolNotCompliedWithReason: '#respondent1DQFileDirectionsQuestionnaire_reactionProtocolNotCompliedWithReason',
+  fields: function (party) {
+    return {
+      explainedToClient: {
+        id: `#${party}DQFileDirectionsQuestionnaire_explainedToClient`,
+        options: {
+          confirm: `#${party}DQFileDirectionsQuestionnaire_explainedToClient-CONFIRM`
+        }
+      },
+      oneMonthStay: {
+        id: `#${party}DQFileDirectionsQuestionnaire_oneMonthStayRequested`,
+        options: {
+          yes: 'Yes',
+          no: 'No'
+        }
+      },
+      reactionProtocolCompliedWith: {
+        id: `#${party}DQFileDirectionsQuestionnaire_reactionProtocolCompliedWith`,
+        options: {
+          yes: 'Yes',
+          no: 'No'
+        }
+      },
+      reactionProtocolNotCompliedWithReason: `#${party}DQFileDirectionsQuestionnaire_reactionProtocolNotCompliedWithReason`,
+    };
   },
 
-  async fileDirectionsQuestionnaire() {
-    I.waitForElement(this.fields.explainedToClient.id);
-    await within (this.fields.explainedToClient.id, () => {
-      I.click(this.fields.explainedToClient.options.confirm);
-    });
-    await within (this.fields.oneMonthStay.id, () => {
-      I.click(this.fields.oneMonthStay.options.no);
+  async fileDirectionsQuestionnaire(party) {
+    I.waitForElement(this.fields(party).explainedToClient.id);
+    I.checkOption(this.fields(party).explainedToClient.options.confirm);
+
+    await within(this.fields(party).oneMonthStay.id, () => {
+      I.click(this.fields(party).oneMonthStay.options.no);
     });
 
-    await within (this.fields.reactionProtocolCompliedWith.id, () => {
-      I.click(this.fields.reactionProtocolCompliedWith.options.no);
+    await within(this.fields(party).reactionProtocolCompliedWith.id, () => {
+      I.click(this.fields(party).reactionProtocolCompliedWith.options.no);
     });
 
-    I.fillField(this.fields.reactionProtocolNotCompliedWithReason, 'Reason for not complying');
+    I.fillField(this.fields(party).reactionProtocolNotCompliedWithReason, 'Reason for not complying');
 
     await I.clickContinue();
   }

@@ -2,34 +2,36 @@ const {I} = inject();
 
 module.exports = {
 
-  fields: {
-    disclosureFormFiledAndServed: {
-      id: '#respondent1DQDisclosureReport_disclosureFormFiledAndServed',
-      options: {
-        yes: 'Yes',
-        no: 'No'
-      }
-    },
-    disclosureProposalAgreed: {
-      id: '#respondent1DQDisclosureReport_disclosureProposalAgreed',
-      options: {
-        yes: 'Yes',
-        no: 'No'
-      }
-    },
-    draftOrderNumber: '#respondent1DQDisclosureReport_draftOrderNumber',
+  fields: function (party) {
+    return {
+      disclosureFormFiledAndServed: {
+        id: `#${party}DQDisclosureReport_disclosureFormFiledAndServed`,
+        options: {
+          yes: 'Yes',
+          no: 'No'
+        }
+      },
+      disclosureProposalAgreed: {
+        id: `#${party}DQDisclosureReport_disclosureProposalAgreed`,
+        options: {
+          yes: 'Yes',
+          no: 'No'
+        }
+      },
+      draftOrderNumber: `#${party}DQDisclosureReport_draftOrderNumber`,
+    };
   },
 
-  async enterDisclosureReport() {
-    await within (this.fields.disclosureFormFiledAndServed.id, () => {
-      I.click(this.fields.disclosureFormFiledAndServed.options.yes);
+  async enterDisclosureReport(party) {
+    await within (this.fields(party).disclosureFormFiledAndServed.id, () => {
+      I.click(this.fields(party).disclosureFormFiledAndServed.options.yes);
     });
 
-    await within (this.fields.disclosureProposalAgreed.id, () => {
-      I.click(this.fields.disclosureProposalAgreed.options.yes);
+    await within (this.fields(party).disclosureProposalAgreed.id, () => {
+      I.click(this.fields(party).disclosureProposalAgreed.options.yes);
     });
 
-    I.fillField(this.fields.draftOrderNumber, '123456');
+    I.fillField(this.fields(party).draftOrderNumber, '123456');
 
     await I.clickContinue();
   }

@@ -2,35 +2,37 @@ const {I} = inject();
 
 module.exports = {
 
-  fields: {
-    witnessesToAppear: {
-      id: '#respondent1DQWitnesses_witnessesToAppear',
-      options: {
-        yes: 'Yes',
-        no: 'No'
-      }
-    },
-    witnessDetails: {
-      id: '#respondent1DQWitnesses_details',
-      element: {
-        name: '#respondent1DQWitnesses_details_0_name',
-        reasonForWitness: '#respondent1DQWitnesses_details_0_fieldOfExpertise',
-      }
-    },
+  fields: function (party) {
+    return {
+      witnessesToAppear: {
+        id: `#${party}DQWitnesses_witnessesToAppear`,
+        options: {
+          yes: 'Yes',
+          no: 'No'
+        }
+      },
+      witnessDetails: {
+        id: `#${party}DQWitnesses_details`,
+        element: {
+          name: `#${party}DQWitnesses_details_0_name`,
+          reasonForWitness: `#${party}DQWitnesses_details_0_reasonForWitness`,
+        }
+      },
+    };
   },
 
-  async enterWitnessInformation() {
-    await within (this.fields.witnessesToAppear.id, () => {
-      I.click(this.fields.witnessesToAppear.options.yes);
+  async enterWitnessInformation(party) {
+    await within(this.fields(party).witnessesToAppear.id, () => {
+      I.click(this.fields(party).witnessesToAppear.options.yes);
     });
 
-    await this.addWitness();
+    await this.addWitness(party);
     await I.clickContinue();
   },
 
-  async addWitness() {
+  async addWitness(party) {
     await I.addAnotherElementToCollection();
-    I.fillField(this.fields.witnessDetails.element.name, 'John Smith');
-    I.fillField(this.fields.witnessDetails.element.reasonForWitness, 'Reason for witness');
+    I.fillField(this.fields(party).witnessDetails.element.name, 'John Smith');
+    I.fillField(this.fields(party).witnessDetails.element.reasonForWitness, 'Reason for witness');
   },
 };

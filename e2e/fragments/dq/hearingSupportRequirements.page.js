@@ -2,32 +2,31 @@ const {I} = inject();
 
 module.exports = {
 
-  fields: {
-    requirements: {
-      id: '#respondent1DQHearingSupport_requirements',
-      options: {
-        disabledAccess: 'Disabled access',
-        hearingLoop: 'Hearing loop',
-        signLanguage: 'Sign language interpreter',
-        languageInterpreter: 'Language interpreter',
-        other: 'Other support'
-      }
-    },
-    signLanguageRequired: '#respondent1DQHearingSupport_signLanguageRequired',
-    languageToBeInterpreted: '#respondent1DQHearingSupport_languageToBeInterpreted',
-    otherSupport: '#respondent1DQHearingSupport_otherSupport',
+  fields: function (party) {
+    return {
+      requirements: {
+        options: {
+          disabledAccess: `#${party}DQHearingSupport_requirements-DISABLED_ACCESS`,
+          hearingLoop: `#${party}DQHearingSupport_requirements-HEARING_LOOPS`,
+          signLanguage: `#${party}DQHearingSupport_requirements-SIGN_INTERPRETER`,
+          languageInterpreter: `#${party}DQHearingSupport_requirements-LANGUAGE_INTERPRETER`,
+          other: `#${party}DQHearingSupport_requirements-OTHER_SUPPORT`
+        }
+      },
+      signLanguageRequired: `#${party}DQHearingSupport_signLanguageRequired`,
+      languageToBeInterpreted: `#${party}DQHearingSupport_languageToBeInterpreted`,
+      otherSupport: `#${party}DQHearingSupport_otherSupport`,
+    };
   },
 
-  async selectRequirements() {
-    await within(this.fields.requirements.id, () => {
-      I.click(this.fields.requirements.options.signLanguage);
-      I.click(this.fields.requirements.options.languageInterpreter);
-      I.click(this.fields.requirements.options.other);
-    });
+  async selectRequirements(party) {
+    I.checkOption(this.fields(party).requirements.options.signLanguage);
+    I.checkOption(this.fields(party).requirements.options.languageInterpreter);
+    I.checkOption(this.fields(party).requirements.options.other);
 
-    I.fillField(this.fields.signLanguageRequired, 'A language');
-    I.fillField(this.fields.languageToBeInterpreted, 'A language');
-    I.fillField(this.fields.otherSupport, 'Some support');
+    I.fillField(this.fields(party).signLanguageRequired, 'A language');
+    I.fillField(this.fields(party).languageToBeInterpreted, 'A language');
+    I.fillField(this.fields(party).otherSupport, 'Some support');
     await I.clickContinue();
   },
 };

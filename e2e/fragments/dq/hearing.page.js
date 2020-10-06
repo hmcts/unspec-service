@@ -3,50 +3,52 @@ const date = require('../../fragments/date');
 
 module.exports = {
 
-  fields: {
-    hearingLength: {
-      id: '#respondent1DQHearing_hearingLength',
-      options: {
-        lessThanOneDay: 'Less than a day',
-        oneDay: 'One day',
-        moreThanOneDay: 'More than a day',
-      }
-    },
-    hearingLengthHours: '#respondent1DQHearing_hearingLengthHours',
-    hearingLengthDays: '#respondent1DQHearing_hearingLengthDays',
-    unavailableDatesRequired: {
-      id: '#respondent1DQHearing_unavailableDatesRequired',
-      options: {
-        yes: 'Yes',
-        no: 'No'
-      }
-    },
-    unavailableDates: {
-      id: '#respondent1DQHearing_unavailableDates',
-      element: {
-        who: '#respondent1DQHearing_unavailableDates_0_who',
-        date: '#respondent1DQHearing_unavailableDates_0_date',
-      }
-    },
+  fields: function (party) {
+    return {
+      hearingLength: {
+        id: `#${party}DQHearing_hearingLength`,
+        options: {
+          lessThanOneDay: 'Less than a day',
+          oneDay: 'One day',
+          moreThanOneDay: 'More than a day',
+        }
+      },
+      hearingLengthHours: `#${party}DQHearing_hearingLengthHours`,
+      hearingLengthDays: `#${party}DQHearing_hearingLengthDays`,
+      unavailableDatesRequired: {
+        id: `#${party}DQHearing_unavailableDatesRequired`,
+        options: {
+          yes: 'Yes',
+          no: 'No'
+        }
+      },
+      unavailableDates: {
+        id: `#${party}DQHearing_unavailableDates`,
+        element: {
+          who: `#${party}DQHearing_unavailableDates_0_who`,
+          date: `${party}DQHearing_unavailableDates_0_date`,
+        }
+      },
+    };
   },
 
-  async enterHearingInformation() {
-    await within (this.fields.hearingLength.id, () => {
-      I.click(this.fields.hearingLength.options.lessThanOneDay);
+  async enterHearingInformation(party) {
+    await within(this.fields(party).hearingLength.id, () => {
+      I.click(this.fields(party).hearingLength.options.lessThanOneDay);
     });
 
-    I.fillField(this.fields.hearingLengthHours, '5');
-    await within (this.fields.unavailableDatesRequired.id, () => {
-      I.click(this.fields.unavailableDatesRequired.options.yes);
+    I.fillField(this.fields(party).hearingLengthHours, '5');
+    await within(this.fields(party).unavailableDatesRequired.id, () => {
+      I.click(this.fields(party).unavailableDatesRequired.options.yes);
     });
 
-    await this.addUnavailableDates();
+    await this.addUnavailableDates(party);
     await I.clickContinue();
   },
 
-  async addUnavailableDates() {
+  async addUnavailableDates(party) {
     await I.addAnotherElementToCollection();
-    I.fillField(this.fields.unavailableDates.element.who, 'John Smith');
-    await date.enterDate(this.fields.unavailableDates.element.date);
+    I.fillField(this.fields(party).unavailableDates.element.who, 'John Smith');
+    await date.enterDate(this.fields(party).unavailableDates.element.date);
   },
 };

@@ -260,7 +260,7 @@
     "PageDisplayOrder": 16,
     "PageFieldDisplayOrder": 1,
     "DisplayContext": "COMPLEX",
-    "PageID": "FurtherInformation",
+    "PageID": "StatementOfTruth",
     "PageShowCondition": "respondent1ClaimResponseType=\"FULL_DEFENCE\"",
     "ShowSummaryChangeOption": "Y"
   }

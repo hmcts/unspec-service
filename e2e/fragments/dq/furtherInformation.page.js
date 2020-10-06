@@ -2,24 +2,26 @@ const {I} = inject();
 
 module.exports = {
 
-  fields: {
-    futureApplications: {
-      id: '#respondent1DQFurtherInformation_futureApplications',
-      options: {
-        yes: 'Yes',
-        no: 'No'
-      }
-    },
-    reasonForFutureApplications: '#respondent1DQFurtherInformation_reasonForFutureApplications',
-    otherInformationForJudge: '#respondent1DQFurtherInformation_otherInformationForJudge',
+  fields: function (party) {
+    return {
+      futureApplications: {
+        id: `#${party}DQFurtherInformation_futureApplications`,
+        options: {
+          yes: 'Yes',
+          no: 'No'
+        }
+      },
+      reasonForFutureApplications: `#${party}DQFurtherInformation_reasonForFutureApplications`,
+      otherInformationForJudge: `#${party}DQFurtherInformation_otherInformationForJudge`,
+    };
   },
 
-  async enterFurtherInformation() {
-    await within (this.fields.futureApplications.id, () => {
-      I.click(this.fields.futureApplications.options.yes);
+  async enterFurtherInformation(party) {
+    await within(this.fields(party).futureApplications.id, () => {
+      I.click(this.fields(party).futureApplications.options.yes);
     });
-    I.fillField(this.fields.reasonForFutureApplications, 'Reason for future applications');
-    I.fillField(this.fields.otherInformationForJudge, 'Other information for judge');
+    I.fillField(this.fields(party).reasonForFutureApplications, 'Reason for future applications');
+    I.fillField(this.fields(party).otherInformationForJudge, 'Other information for judge');
     await I.clickContinue();
   },
 };

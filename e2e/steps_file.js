@@ -5,6 +5,7 @@
 const output = require('codeceptjs').output;
 
 const config = require('./config.js');
+const parties = require('./helpers/party.js');
 const loginPage = require('./pages/login.page');
 const caseViewPage = require('./pages/caseView.page');
 const createCasePage = require('./pages/createClaim/createCase.page');
@@ -45,9 +46,9 @@ const confirmDetailsPage = require('./fragments/confirmDetails.page');
 
 // DQ fragments
 const fileDirectionsQuestionnairePage = require('./fragments/dq/fileDirectionsQuestionnaire.page');
-const disclosureOfElectronicDocumentsPage = require('./fragments/dq/disclosureOfElectrionicDocuments.page');
+// const disclosureOfElectronicDocumentsPage = require('./fragments/dq/disclosureOfElectrionicDocuments.page');
 const disclosureOfNonElectronicDocumentsPage = require('./fragments/dq/disclosureOfNonElectrionicDocuments.page');
-const disclosureReportPage = require('./fragments/dq/disclosureReport.page');
+// const disclosureReportPage = require('./fragments/dq/disclosureReport.page');
 const expertsPage = require('./fragments/dq/experts.page');
 const witnessPage = require('./fragments/dq/witnesses.page');
 const hearingPage = require('./fragments/dq/hearing.page');
@@ -145,18 +146,20 @@ module.exports = function () {
       await uploadResponsePage.uploadResponseDocuments(config.testFile);
       await defendantDetails.verifyDetails();
       await confirmDetailsPage.confirmReference();
-      await fileDirectionsQuestionnairePage.fileDirectionsQuestionnaire();
-      await disclosureOfElectronicDocumentsPage.enterDisclosureOfElectronicDocuments();
-      await disclosureOfNonElectronicDocumentsPage.enterDirectionsProposedForDisclosure();
-      await disclosureReportPage.enterDisclosureReport();
-      await expertsPage.enterExpertInformation();
-      await witnessPage.enterWitnessInformation();
-      await hearingPage.enterHearingInformation();
-      await draftDirectionsPage.enterDraftDirections();
-      await requestedCourtPage.selectSpecificCourtForHearing();
-      await hearingSupportRequirementsPage.selectRequirements();
-      await furtherInformationPage.enterFurtherInformation();
-      await statementOfTruth.enterNameAndRole('respondent1DQ');
+      await fileDirectionsQuestionnairePage.fileDirectionsQuestionnaire(parties.RESPONDENT_SOLICITOR_1);
+      // case created in e2e test is not multi claim
+      // await disclosureOfElectronicDocumentsPage.enterDisclosureOfElectronicDocuments(parties.RESPONDENT_SOLICITOR_1);
+      await disclosureOfNonElectronicDocumentsPage.enterDirectionsProposedForDisclosure(parties.RESPONDENT_SOLICITOR_1);
+      // case created in e2e test is not multi claim
+      // await disclosureReportPage.enterDisclosureReport(parties.RESPONDENT_SOLICITOR_1);
+      await expertsPage.enterExpertInformation(parties.RESPONDENT_SOLICITOR_1);
+      await witnessPage.enterWitnessInformation(parties.RESPONDENT_SOLICITOR_1);
+      await hearingPage.enterHearingInformation(parties.RESPONDENT_SOLICITOR_1);
+      await draftDirectionsPage.enterDraftDirections(parties.RESPONDENT_SOLICITOR_1);
+      await requestedCourtPage.selectSpecificCourtForHearing(parties.RESPONDENT_SOLICITOR_1);
+      await hearingSupportRequirementsPage.selectRequirements(parties.RESPONDENT_SOLICITOR_1);
+      await furtherInformationPage.enterFurtherInformation(parties.RESPONDENT_SOLICITOR_1);
+      await statementOfTruth.enterNameAndRole(parties.RESPONDENT_SOLICITOR_1 + 'DQ');
       await event.submit('Submit response', 'You\'ve submitted your response');
       await event.returnToCaseDetails();
     },
