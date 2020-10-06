@@ -88,4 +88,7 @@ public class CaseData {
     private final CloseClaim discontinueClaim;
 
     private final BusinessProcess businessProcess;
+
+    @Valid
+    private final Hearing respondent1DQHearing;
 }

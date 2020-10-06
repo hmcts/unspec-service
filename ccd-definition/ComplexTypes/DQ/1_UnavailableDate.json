@@ -1,0 +1,16 @@
+[
+  {
+    "ID": "UnavailableDate",
+    "ListElementCode": "who",
+    "FieldType": "Text",
+    "ElementLabel": "Name of unavailable person",
+    "SecurityClassification": "Public"
+  },
+  {
+    "ID": "UnavailableDate",
+    "ListElementCode": "date",
+    "FieldType": "Date",
+    "ElementLabel": "Unavailable date",
+    "SecurityClassification": "Public"
+  }
+]

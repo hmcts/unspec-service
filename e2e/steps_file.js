@@ -43,6 +43,19 @@ const event = require('./fragments/event');
 const defendantDetails = require('./fragments/defendantDetails.page');
 const confirmDetailsPage = require('./fragments/confirmDetails.page');
 
+// DQ fragments
+const fileDirectionsQuestionnairePage = require('./fragments/dq/fileDirectionsQuestionnaire.page');
+const disclosureOfElectronicDocumentsPage = require('./fragments/dq/disclosureOfElectrionicDocuments.page');
+const disclosureOfNonElectronicDocumentsPage = require('./fragments/dq/disclosureOfNonElectrionicDocuments.page');
+const disclosureReportPage = require('./fragments/dq/disclosureReport.page');
+const expertsPage = require('./fragments/dq/experts.page');
+const witnessPage = require('./fragments/dq/witnesses.page');
+const hearingPage = require('./fragments/dq/hearing.page');
+const draftDirectionsPage = require('./fragments/dq/draftDirections.page');
+const requestedCourtPage = require('./fragments/dq/requestedCourt.page');
+const hearingSupportRequirementsPage = require('./fragments/dq/hearingSupportRequirements.page');
+const furtherInformationPage = require('./fragments/dq/furtherInformation.page');
+
 const baseUrl = process.env.URL || 'http://localhost:3333';
 const signedInSelector = 'exui-header';
 const CASE_HEADER = 'ccd-case-header > h1';
@@ -132,6 +145,18 @@ module.exports = function () {
       await uploadResponsePage.uploadResponseDocuments(config.testFile);
       await defendantDetails.verifyDetails();
       await confirmDetailsPage.confirmReference();
+      await fileDirectionsQuestionnairePage.fileDirectionsQuestionnaire();
+      await disclosureOfElectronicDocumentsPage.enterDisclosureOfElectronicDocuments();
+      await disclosureOfNonElectronicDocumentsPage.enterDirectionsProposedForDisclosure();
+      await disclosureReportPage.enterDisclosureReport();
+      await expertsPage.enterExpertInformation();
+      await witnessPage.enterWitnessInformation();
+      await hearingPage.enterHearingInformation();
+      await draftDirectionsPage.enterDraftDirections();
+      await requestedCourtPage.selectSpecificCourtForHearing();
+      await hearingSupportRequirementsPage.selectRequirements();
+      await furtherInformationPage.enterFurtherInformation();
+      await statementOfTruth.enterNameAndRole('respondent1DQ');
       await event.submit('Submit response', 'You\'ve submitted your response');
       await event.returnToCaseDetails();
     },
@@ -146,6 +171,13 @@ module.exports = function () {
 
     async clickContinue() {
       await this.click('Continue');
+    },
+
+    async addAnotherElementToCollection() {
+      const numberOfElements = await this.grabNumberOfVisibleElements('.collection-title');
+      this.click('Add new');
+      this.waitNumberOfVisibleElements('.collection-title', numberOfElements + 1);
+      this.wait(0.5); // add extra time to allow slower browsers to render all fields (just extra precaution)
     },
 
     /**

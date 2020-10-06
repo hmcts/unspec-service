@@ -46,10 +46,21 @@ public class RespondToClaimCallbackHandler extends CallbackHandler {
         return Map.of(
             CallbackType.ABOUT_TO_START, this::emptyCallbackResponse,
             CallbackType.MID, this::validateDateOfBirth,
+            CallbackType.MID, this::validateUnavailableDates,
             CallbackType.MID_SECONDARY, this::emptyCallbackWorkaround,
             CallbackType.ABOUT_TO_SUBMIT, this::setClaimantResponseDeadline,
             CallbackType.SUBMITTED, this::buildConfirmation
         );
+    }
+
+    private CallbackResponse validateUnavailableDates(CallbackParams callbackParams) {
+        Map<String, Object> data = callbackParams.getRequest().getCaseDetails().getData();
+        Party respondent = mapper.convertValue(data.get("respondent1DQHearing"), Party.class);
+        List<String> errors = dateOfBirthValidator.validate(respondent);
+
+        return AboutToStartOrSubmitCallbackResponse.builder()
+            .errors(errors)
+            .build();
     }
 
     private CallbackResponse emptyCallbackWorkaround(CallbackParams callbackParams) {
