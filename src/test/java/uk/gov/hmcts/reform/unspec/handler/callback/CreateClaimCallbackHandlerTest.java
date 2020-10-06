@@ -111,6 +111,8 @@ class CreateClaimCallbackHandlerTest extends BaseCallbackHandlerTest {
     @Nested
     class MidEventClaimValueCallback {
 
+        private static final String PAGE_ID = "claim-value";
+
         @Test
         void shouldReturnExpectedErrorInMidEvent_whenValuesAreInvalid() {
             Map<String, Object> data = new HashMap<>();
@@ -131,7 +133,7 @@ class CreateClaimCallbackHandlerTest extends BaseCallbackHandlerTest {
             data.put("claimValue", ClaimValue.builder()
                 .higherValue(BigDecimal.valueOf(10)).lowerValue(BigDecimal.valueOf(1)).build());
             data.put("claimType", PERSONAL_INJURY);
-            CallbackParams params = callbackParamsOf(data, MID, "claim-value");
+            CallbackParams params = callbackParamsOf(data, MID, PAGE_ID);
 
             var response = (AboutToStartOrSubmitCallbackResponse) handler.handle(params);
 
@@ -150,13 +152,15 @@ class CreateClaimCallbackHandlerTest extends BaseCallbackHandlerTest {
     @Nested
     class MidEventClaimantCallback {
 
+        private static final String PAGE_ID = "claimant";
+
         @ParameterizedTest
         @ValueSource(strings = {"individualDateOfBirth", "soleTraderDateOfBirth"})
         void shouldReturnError_whenDateOfBirthIsInTheFuture(String dateOfBirthField) {
             Map<String, Object> data = new HashMap<>();
             data.put("applicant1", Map.of(dateOfBirthField, now().plusDays(1)));
 
-            CallbackParams params = callbackParamsOf(data, MID, "claimant");
+            CallbackParams params = callbackParamsOf(data, MID, PAGE_ID);
 
             AboutToStartOrSubmitCallbackResponse response = (AboutToStartOrSubmitCallbackResponse) handler
                 .handle(params);
@@ -170,7 +174,7 @@ class CreateClaimCallbackHandlerTest extends BaseCallbackHandlerTest {
             Map<String, Object> data = new HashMap<>();
             data.put("applicant1", Map.of(dateOfBirthField, now().minusDays(1)));
 
-            CallbackParams params = callbackParamsOf(data, MID, "claimant");
+            CallbackParams params = callbackParamsOf(data, MID, PAGE_ID);
 
             AboutToStartOrSubmitCallbackResponse response = (AboutToStartOrSubmitCallbackResponse) handler
                 .handle(params);
