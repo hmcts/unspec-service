@@ -11,8 +11,8 @@ import org.springframework.stereotype.Component;
 
 import static uk.gov.hmcts.reform.unspec.helpers.ExponentialRetryTimeoutHelper.calculateExponentialRetryTimeout;
 
-@Aspect
 @Slf4j
+@Aspect
 @Component
 public class ExternalTaskLogger {
 
