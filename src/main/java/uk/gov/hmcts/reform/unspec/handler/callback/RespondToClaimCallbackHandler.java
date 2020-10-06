@@ -19,6 +19,7 @@ import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import javax.validation.Validator;
 
 import static java.lang.String.format;
 import static uk.gov.hmcts.reform.unspec.callback.CaseEvent.DEFENDANT_RESPONSE;
@@ -35,33 +36,39 @@ public class RespondToClaimCallbackHandler extends CallbackHandler {
 
     private final ObjectMapper mapper;
     private final DateOfBirthValidator dateOfBirthValidator;
+    private final Validator validator;
 
     @Override
     public List<CaseEvent> handledEvents() {
         return EVENTS;
     }
 
+    //TODO: need CMC-801 changes, add callback to ccd-definition
     @Override
     protected Map<CallbackType, Callback> callbacks() {
         return Map.of(
             CallbackType.ABOUT_TO_START, this::emptyCallbackResponse,
             CallbackType.MID, this::validateDateOfBirth,
-            CallbackType.MID, this::validateUnavailableDates,
+    //          CallbackKey(MID, "validate-unavailable-dates"), this::validateUnavailableDates,
             CallbackType.MID_SECONDARY, this::emptyCallbackWorkaround,
             CallbackType.ABOUT_TO_SUBMIT, this::setClaimantResponseDeadline,
             CallbackType.SUBMITTED, this::buildConfirmation
         );
     }
 
-    private CallbackResponse validateUnavailableDates(CallbackParams callbackParams) {
-        Map<String, Object> data = callbackParams.getRequest().getCaseDetails().getData();
-        Party respondent = mapper.convertValue(data.get("respondent1DQHearing"), Party.class);
-        List<String> errors = dateOfBirthValidator.validate(respondent);
+    //TODO: callback to check unavailable dates logic
 
-        return AboutToStartOrSubmitCallbackResponse.builder()
-            .errors(errors)
-            .build();
-    }
+    //    private CallbackResponse validateUnavailableDates(CallbackParams callbackParams) {
+    //        Map<String, Object> data = callbackParams.getRequest().getCaseDetails().getData();
+    //        Hearing hearing = mapper.convertValue(data.get("respondent1DQHearing"), Hearing.class);
+    //        List<String> errors = validator.validate(hearing.getUnavailableDates(), UnavailableDateGroup.class).stream()
+    //            .map(ConstraintViolation::getMessage)
+    //            .collect(Collectors.toList());
+    //
+    //        return AboutToStartOrSubmitCallbackResponse.builder()
+    //            .errors(errors)
+    //            .build();
+    //    }
 
     private CallbackResponse emptyCallbackWorkaround(CallbackParams callbackParams) {
         return AboutToStartOrSubmitCallbackResponse.builder().build();
