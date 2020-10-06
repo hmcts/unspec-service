@@ -14,6 +14,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import uk.gov.hmcts.reform.unspec.model.BusinessProcess;
 import uk.gov.hmcts.reform.unspec.model.BusinessProcessStatus;
+import uk.gov.hmcts.reform.unspec.stateflow.model.State;
 
 import java.util.HashMap;
 import java.util.List;
@@ -34,7 +35,7 @@ public class BusinessProcessServiceTest {
 
     @ParameterizedTest
     @EnumSource(value = BusinessProcessStatus.class, mode = EnumSource.Mode.EXCLUDE, names = {"FINISHED"})
-    void shouldAddErrorAndNotUpdateData_whenBusinessProcessStatusIsNotFinishedNorNull(BusinessProcessStatus
+    void shouldAddErrorAndNotUpdateBusinessProcess_whenBusinessProcessStatusIsNotFinishedNorNull(BusinessProcessStatus
                                                                                           businessProcessStatus) {
         BusinessProcess businessProcess =  BusinessProcess.builder()
             .activityId("someActivityId")
@@ -46,20 +47,55 @@ public class BusinessProcessServiceTest {
         List<String> errors = service.updateBusinessProcess(data, CREATE_CLAIM);
 
         assertThat(errors).containsOnly("Business Process Error");
-        assertThat(data).extracting("businessProcess").isEqualTo(businessProcess);
+        assertThat(data).isEqualTo(Map.of("businessProcess", businessProcess));
+    }
+
+    @ParameterizedTest
+    @EnumSource(value = BusinessProcessStatus.class, mode = EnumSource.Mode.EXCLUDE, names = {"FINISHED"})
+    void shouldAddErrorAndNotSetStateFlowState_whenBusinessProcessStatusIsNotFinishedNorNull(BusinessProcessStatus
+                                                                                          businessProcessStatus) {
+        BusinessProcess businessProcess =  BusinessProcess.builder()
+            .activityId("someActivityId")
+            .processInstanceId("someProcessInstanceId")
+            .status(businessProcessStatus)
+            .build();
+        Map<String, Object> data = new HashMap<>(Map.of("businessProcess", businessProcess));
+
+        List<String> errors = service.updateBusinessProcess(data, CREATE_CLAIM, State.from("TEST.STATE"));
+
+        assertThat(errors).containsOnly("Business Process Error");
+        assertThat(data).isEqualTo(Map.of("businessProcess", businessProcess));
     }
 
     @ParameterizedTest
     @ArgumentsSource(GetBusinessProcessArguments.class)
-    void shouldNotAddErrorAndUpdateData_whenBusinessProcessStatusFinishedOrNull(BusinessProcess businessProcess) {
+    void shouldNotAddErrorAndUpdateBusinessProcess_whenBusinessProcessStatusFinishedOrNull(BusinessProcess
+                                                                                               businessProcess) {
         Map<String, Object> data = new HashMap<>();
         data.put("businessProcess", businessProcess);
 
         List<String> errors = service.updateBusinessProcess(data, CREATE_CLAIM);
 
         assertThat(errors).isEmpty();
-        assertThat(data).extracting("businessProcess").isEqualTo(
-            BusinessProcess.builder().status(READY).event(CREATE_CLAIM.name()).build());
+        assertThat(data).isEqualTo(Map.of(
+            "businessProcess", BusinessProcess.builder().status(READY).camundaEvent(CREATE_CLAIM.name()).build()
+        ));
+    }
+
+    @ParameterizedTest
+    @ArgumentsSource(GetBusinessProcessArguments.class)
+    void shouldNotAddErrorAndUpdateStateFlowState_whenBusinessProcessStatusFinishedOrNull(BusinessProcess
+                                                                                              businessProcess) {
+        Map<String, Object> data = new HashMap<>();
+        data.put("businessProcess", businessProcess);
+
+        List<String> errors = service.updateBusinessProcess(data, CREATE_CLAIM, State.from("TEST.STATE"));
+
+        assertThat(errors).isEmpty();
+        assertThat(data).isEqualTo(Map.of(
+            "businessProcess", BusinessProcess.builder().status(READY).camundaEvent(CREATE_CLAIM.name()).build(),
+            "stateFlowState", "TEST.STATE")
+        );
     }
 
     static class GetBusinessProcessArguments implements ArgumentsProvider {

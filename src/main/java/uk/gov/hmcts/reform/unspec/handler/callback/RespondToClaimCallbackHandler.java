@@ -11,9 +11,11 @@ import uk.gov.hmcts.reform.unspec.callback.CallbackHandler;
 import uk.gov.hmcts.reform.unspec.callback.CallbackParams;
 import uk.gov.hmcts.reform.unspec.callback.CallbackType;
 import uk.gov.hmcts.reform.unspec.callback.CaseEvent;
-import uk.gov.hmcts.reform.unspec.enums.DefendantResponseType;
+import uk.gov.hmcts.reform.unspec.model.CaseData;
 import uk.gov.hmcts.reform.unspec.model.Party;
 import uk.gov.hmcts.reform.unspec.service.BusinessProcessService;
+import uk.gov.hmcts.reform.unspec.service.flowstate.StateFlowEngine;
+import uk.gov.hmcts.reform.unspec.stateflow.model.State;
 import uk.gov.hmcts.reform.unspec.validation.DateOfBirthValidator;
 
 import java.time.LocalDate;
@@ -24,8 +26,6 @@ import java.util.Map;
 
 import static java.lang.String.format;
 import static uk.gov.hmcts.reform.unspec.callback.CaseEvent.DEFENDANT_RESPONSE;
-import static uk.gov.hmcts.reform.unspec.enums.BusinessProcessStatus.READY;
-import static uk.gov.hmcts.reform.unspec.enums.DefendantResponseType.FULL_DEFENCE;
 import static uk.gov.hmcts.reform.unspec.helpers.DateFormatHelper.DATE;
 import static uk.gov.hmcts.reform.unspec.helpers.DateFormatHelper.formatLocalDateTime;
 
@@ -40,6 +40,7 @@ public class RespondToClaimCallbackHandler extends CallbackHandler {
     private final ObjectMapper mapper;
     private final DateOfBirthValidator dateOfBirthValidator;
     private final BusinessProcessService businessProcessService;
+    private final StateFlowEngine stateFlowEngine;
 
     @Override
     public List<CaseEvent> handledEvents() {
@@ -73,13 +74,12 @@ public class RespondToClaimCallbackHandler extends CallbackHandler {
 
     private CallbackResponse setClaimantResponseDeadline(CallbackParams callbackParams) {
         Map<String, Object> data = callbackParams.getRequest().getCaseDetails().getData();
+        CaseData caseData = mapper.convertValue(data, CaseData.class);
         //TODO: There will be in separate ticket for response deadline when requirement is confirmed
         LocalDate claimantResponseDeadLine = LocalDate.now();
         data.put(CLAIMANT_RESPONSE_DEADLINE, claimantResponseDeadLine.atTime(16, 0));
-
-        var response = mapper.convertValue(data.get("respondent1ClaimResponseType"), DefendantResponseType.class);
-        List<String> errors = businessProcessService.updateBusinessProcess(data, DEFENDANT_RESPONSE);
-        var flag = response == FULL_DEFENCE ? "DefendantResponseHandling" : "CaseHandedOfflineHandling";
+        State stateFlowState = stateFlowEngine.evaluate(caseData).getState();
+        List<String> errors = businessProcessService.updateBusinessProcess(data, DEFENDANT_RESPONSE, stateFlowState);
 
         return AboutToStartOrSubmitCallbackResponse.builder()
             .data(data)

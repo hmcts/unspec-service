@@ -14,6 +14,7 @@ import uk.gov.hmcts.reform.unspec.helpers.CaseDetailsConverter;
 import uk.gov.hmcts.reform.unspec.service.search.CaseReadyBusinessProcessSearchService;
 
 import java.util.List;
+import java.util.Optional;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -36,9 +37,11 @@ public class PollingEventEmitterHandler implements ExternalTaskHandler {
             var caseId = caseData.getCcdCaseReference();
             var businessProcess = caseData.getBusinessProcess();
             try {
-                runtimeService.createMessageCorrelation(businessProcess.getEvent())
-                    .setVariable("CCD_ID", caseId)
-                    .correlateStartMessage();
+                var messageCorrelationBuilder = runtimeService
+                    .createMessageCorrelation(businessProcess.getCamundaEvent()).setVariable("CCD_ID", caseId);
+                Optional.ofNullable(caseData.getStateFlowState())
+                    .map(flag -> messageCorrelationBuilder.setVariable("STATE_FLOW_STATE", flag));
+                messageCorrelationBuilder.correlateStartMessage();
                 applicationEventPublisher.publishEvent(new DispatchBusinessProcessEvent(
                     caseId,
                     businessProcess

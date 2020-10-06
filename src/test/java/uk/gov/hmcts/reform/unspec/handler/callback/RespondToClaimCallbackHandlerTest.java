@@ -5,7 +5,6 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.EnumSource;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.jackson.JacksonAutoConfiguration;
@@ -18,10 +17,12 @@ import uk.gov.hmcts.reform.ccd.client.model.CaseDetails;
 import uk.gov.hmcts.reform.ccd.client.model.SubmittedCallbackResponse;
 import uk.gov.hmcts.reform.unspec.callback.CallbackParams;
 import uk.gov.hmcts.reform.unspec.callback.CallbackType;
-import uk.gov.hmcts.reform.unspec.enums.DefendantResponseType;
+import uk.gov.hmcts.reform.unspec.helpers.CaseDetailsConverter;
 import uk.gov.hmcts.reform.unspec.sampledata.CallbackParamsBuilder;
 import uk.gov.hmcts.reform.unspec.sampledata.CaseDetailsBuilder;
 import uk.gov.hmcts.reform.unspec.service.BusinessProcessService;
+import uk.gov.hmcts.reform.unspec.service.flowstate.StateFlowEngine;
+import uk.gov.hmcts.reform.unspec.stateflow.model.State;
 import uk.gov.hmcts.reform.unspec.validation.DateOfBirthValidator;
 
 import java.time.LocalDateTime;
@@ -37,7 +38,6 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static uk.gov.hmcts.reform.unspec.callback.CallbackType.ABOUT_TO_START;
 import static uk.gov.hmcts.reform.unspec.callback.CaseEvent.DEFENDANT_RESPONSE;
-import static uk.gov.hmcts.reform.unspec.enums.DefendantResponseType.FULL_DEFENCE;
 import static uk.gov.hmcts.reform.unspec.handler.callback.RespondToClaimCallbackHandler.CLAIMANT_RESPONSE_DEADLINE;
 
 @ExtendWith(SpringExtension.class)
@@ -45,7 +45,9 @@ import static uk.gov.hmcts.reform.unspec.handler.callback.RespondToClaimCallback
     RespondToClaimCallbackHandler.class,
     JacksonAutoConfiguration.class,
     ValidationAutoConfiguration.class,
-    DateOfBirthValidator.class
+    DateOfBirthValidator.class,
+    CaseDetailsConverter.class,
+    StateFlowEngine.class
 })
 class RespondToClaimCallbackHandlerTest extends BaseCallbackHandlerTest {
 
@@ -124,28 +126,30 @@ class RespondToClaimCallbackHandlerTest extends BaseCallbackHandlerTest {
         }
 
         @Test
-        void shouldSetDefendantResponseBusinessProcessToReady_whenResponseIsFullDefence() {
-            Map<String, Object> data = new HashMap<>(Map.of(
-                "respondent1ClaimResponseType", FULL_DEFENCE
-            ));
+        void shouldCallBusinessProcessServiceWithRespondedToClaimStateFlowState_whenResponseIsFullDefence() {
+            CaseDetails caseDetails = CaseDetailsBuilder.builder().atStateRespondedToClaim().build();
 
-            handler.handle(callbackParamsOf(data, CallbackType.ABOUT_TO_SUBMIT));
+            handler.handle(callbackParamsOf(caseDetails.getData(), CallbackType.ABOUT_TO_SUBMIT));
 
-            verify(businessProcessService).updateBusinessProcess(data, DEFENDANT_RESPONSE);
+            verify(businessProcessService).updateBusinessProcess(
+                caseDetails.getData(),
+                DEFENDANT_RESPONSE,
+                State.from("MAIN.RESPONDED_TO_CLAIM")
+            );
         }
 
-//        @ParameterizedTest
-//        @EnumSource(value = DefendantResponseType.class, mode = EnumSource.Mode.EXCLUDE, names = {"FULL_DEFENCE"})
-//        void shouldSetCaseHandedOfflineBusinessProcessToReady_whenResponseIsNotFullDefence(
-//            DefendantResponseType defendantResponse) {
-//            Map<String, Object> data = new HashMap<>(Map.of(
-//                "respondent1ClaimResponseType", defendantResponse
-//            ));
-//
-//            handler.handle(callbackParamsOf(data, CallbackType.ABOUT_TO_SUBMIT));
-//
-//            verify(businessProcessService).updateBusinessProcess(data, "CaseHandedOfflineHandling");
-//        }
+        @Test
+        void shouldCallBusinessProcessServiceWithServiceConfirmedStateFlowState_whenResponseIsNotFullDefence() {
+            CaseDetails caseDetails = CaseDetailsBuilder.builder().atStateServiceConfirmed().build();
+
+            handler.handle(callbackParamsOf(caseDetails.getData(), CallbackType.ABOUT_TO_SUBMIT));
+
+            verify(businessProcessService).updateBusinessProcess(
+                caseDetails.getData(),
+                DEFENDANT_RESPONSE,
+                State.from("MAIN.SERVICE_CONFIRMED")
+            );
+        }
     }
 
     @Nested
