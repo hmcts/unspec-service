@@ -35,12 +35,8 @@ class BusinessProcessServiceTest {
     @ParameterizedTest
     @EnumSource(value = BusinessProcessStatus.class, mode = EnumSource.Mode.EXCLUDE, names = {"FINISHED"})
     void shouldAddErrorAndNotUpdateBusinessProcess_whenBusinessProcessStatusIsNotFinishedNorNull(BusinessProcessStatus
-                                                                                          businessProcessStatus) {
-        BusinessProcess businessProcess =  BusinessProcess.builder()
-            .activityId("someActivityId")
-            .processInstanceId("someProcessInstanceId")
-            .status(businessProcessStatus)
-            .build();
+                                                                                          status) {
+        BusinessProcess businessProcess = buildBusinessProcessWithStatus(status);
         Map<String, Object> data = new HashMap<>(Map.of("businessProcess", businessProcess));
 
         List<String> errors = service.updateBusinessProcess(data, CREATE_CLAIM);
@@ -59,9 +55,10 @@ class BusinessProcessServiceTest {
         List<String> errors = service.updateBusinessProcess(data, CREATE_CLAIM);
 
         assertThat(errors).isEmpty();
-        assertThat(data).isEqualTo(Map.of(
-            "businessProcess", BusinessProcess.builder().status(READY).camundaEvent(CREATE_CLAIM.name()).build()
-        ));
+        assertThat(data.get("businessProcess")).extracting("status").isEqualTo(READY);
+        assertThat(data.get("businessProcess")).extracting("camundaEvent").isEqualTo(CREATE_CLAIM.name());
+        assertThat(data.get("businessProcess")).extracting("activityId").isNull();
+        assertThat(data.get("businessProcess")).extracting("processInstanceId").isNull();
     }
 
     static class GetBusinessProcessArguments implements ArgumentsProvider {
@@ -70,11 +67,19 @@ class BusinessProcessServiceTest {
         @SneakyThrows
         public Stream<? extends Arguments> provideArguments(ExtensionContext context) {
             return Stream.of(
-                Arguments.of(BusinessProcess.builder().status(FINISHED).build()),
-                Arguments.of(BusinessProcess.builder().build()),
+                Arguments.of(buildBusinessProcessWithStatus(FINISHED)),
+                Arguments.of(buildBusinessProcessWithStatus(null)),
                 Arguments.of((BusinessProcess) null)
             );
         }
     }
 
+    private static BusinessProcess buildBusinessProcessWithStatus(BusinessProcessStatus status) {
+        return BusinessProcess.builder()
+            .camundaEvent("someCamundaEvent")
+            .activityId("someActivityId")
+            .processInstanceId("someProcessInstanceId")
+            .status(status)
+            .build();
+    }
 }

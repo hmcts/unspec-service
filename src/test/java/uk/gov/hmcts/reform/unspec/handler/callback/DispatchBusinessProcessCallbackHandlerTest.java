@@ -35,26 +35,46 @@ class DispatchBusinessProcessCallbackHandlerTest extends BaseCallbackHandlerTest
         @Test
         void shouldDispatchBusinessProcess_whenStatusIsReady() {
             CallbackParams params = callbackParamsOf(
-                new HashMap<>(Map.of("businessProcess", BusinessProcess.builder().status(READY).build())),
+                new HashMap<>(Map.of("businessProcess", BusinessProcess.builder()
+                    .camundaEvent("testCamundaEvent")
+                    .activityId("testActivityId")
+                    .processInstanceId("testProcessInstanceId")
+                    .status(READY)
+                    .build())),
                 CallbackType.ABOUT_TO_SUBMIT
             );
 
             var response = (AboutToStartOrSubmitCallbackResponse) handler.handle(params);
 
             assertThat(response.getData()).extracting("businessProcess").extracting("status").isEqualTo(DISPATCHED);
+            assertThat(response.getData()).extracting("businessProcess").extracting("camundaEvent").isEqualTo(
+                "testCamundaEvent");
+            assertThat(response.getData()).extracting("businessProcess").extracting("activityId").isNull();
+            assertThat(response.getData()).extracting("businessProcess").extracting("processInstanceId").isNull();
         }
 
         @ParameterizedTest
         @EnumSource(value = BusinessProcessStatus.class, mode = EnumSource.Mode.EXCLUDE, names = {"READY"})
         void shouldNotDispatchBusinessProcess_whenStatusIsNotReady(BusinessProcessStatus status) {
             CallbackParams params = callbackParamsOf(
-                new HashMap<>(Map.of("businessProcess", BusinessProcess.builder().status(status).build())),
+                new HashMap<>(Map.of("businessProcess", BusinessProcess.builder()
+                    .camundaEvent("testCamundaEvent")
+                    .activityId("testActivityId")
+                    .processInstanceId("testProcessInstanceId")
+                    .status(status)
+                    .build())),
                 CallbackType.ABOUT_TO_SUBMIT
             );
 
             var response = (AboutToStartOrSubmitCallbackResponse) handler.handle(params);
 
             assertThat(response.getData()).extracting("businessProcess").extracting("status").isEqualTo(status);
+            assertThat(response.getData()).extracting("businessProcess").extracting("camundaEvent").isEqualTo(
+                "testCamundaEvent");
+            assertThat(response.getData()).extracting("businessProcess").extracting("activityId").isEqualTo(
+                "testActivityId");
+            assertThat(response.getData()).extracting("businessProcess").extracting("processInstanceId").isEqualTo(
+                "testProcessInstanceId");
         }
     }
 }
