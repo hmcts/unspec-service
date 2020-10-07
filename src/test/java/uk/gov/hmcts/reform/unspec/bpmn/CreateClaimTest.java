@@ -9,11 +9,11 @@ import java.util.List;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 
-class CaseEventTaskTest extends BpmnBaseTest {
+class CreateClaimTest extends BpmnBaseTest {
 
     public static final String TOPIC_NAME = "processCaseEvent";
 
-    public CaseEventTaskTest() {
+    public CreateClaimTest() {
         super("create_claim.bpmn", "CREATE_CLAIM");
     }
 
