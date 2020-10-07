@@ -7,7 +7,6 @@ import uk.gov.hmcts.reform.ccd.client.model.SubmittedCallbackResponse;
 import uk.gov.hmcts.reform.unspec.callback.Callback;
 import uk.gov.hmcts.reform.unspec.callback.CallbackHandler;
 import uk.gov.hmcts.reform.unspec.callback.CallbackParams;
-import uk.gov.hmcts.reform.unspec.callback.CallbackType;
 import uk.gov.hmcts.reform.unspec.callback.CaseEvent;
 import uk.gov.hmcts.reform.unspec.enums.YesOrNo;
 
@@ -16,6 +15,8 @@ import java.util.List;
 import java.util.Map;
 
 import static java.lang.String.format;
+import static uk.gov.hmcts.reform.unspec.callback.CallbackType.ABOUT_TO_START;
+import static uk.gov.hmcts.reform.unspec.callback.CallbackType.SUBMITTED;
 import static uk.gov.hmcts.reform.unspec.callback.CaseEvent.CLAIMANT_RESPONSE;
 
 @Service
@@ -33,10 +34,10 @@ public class RespondToDefenceCallbackHandler extends CallbackHandler {
     }
 
     @Override
-    protected Map<CallbackType, Callback> callbacks() {
+    protected Map<String, Callback> callbacks() {
         return Map.of(
-            CallbackType.ABOUT_TO_START, this::emptyCallbackResponse,
-            CallbackType.SUBMITTED, this::buildConfirmation
+            callbackKey(ABOUT_TO_START), this::emptyCallbackResponse,
+            callbackKey(SUBMITTED), this::buildConfirmation
         );
     }
 

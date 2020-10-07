@@ -92,5 +92,5 @@ public class CaseData {
     private final BusinessProcess businessProcess;
 
     @JsonUnwrapped
-    private final Respondent1DQ respondent1DQHearing;
+    private final Respondent1DQ respondent1DQ;
 }

@@ -9,19 +9,25 @@ import uk.gov.hmcts.reform.ccd.client.model.SubmittedCallbackResponse;
 import uk.gov.hmcts.reform.unspec.callback.Callback;
 import uk.gov.hmcts.reform.unspec.callback.CallbackHandler;
 import uk.gov.hmcts.reform.unspec.callback.CallbackParams;
-import uk.gov.hmcts.reform.unspec.callback.CallbackType;
 import uk.gov.hmcts.reform.unspec.callback.CaseEvent;
+import uk.gov.hmcts.reform.unspec.helpers.CaseDetailsConverter;
+import uk.gov.hmcts.reform.unspec.model.CaseData;
 import uk.gov.hmcts.reform.unspec.model.Party;
+import uk.gov.hmcts.reform.unspec.model.dq.Respondent1DQ;
 import uk.gov.hmcts.reform.unspec.validation.DateOfBirthValidator;
+import uk.gov.hmcts.reform.unspec.validation.UnavailableDateValidator;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
-import javax.validation.Validator;
 
 import static java.lang.String.format;
+import static uk.gov.hmcts.reform.unspec.callback.CallbackType.ABOUT_TO_START;
+import static uk.gov.hmcts.reform.unspec.callback.CallbackType.ABOUT_TO_SUBMIT;
+import static uk.gov.hmcts.reform.unspec.callback.CallbackType.MID;
+import static uk.gov.hmcts.reform.unspec.callback.CallbackType.SUBMITTED;
 import static uk.gov.hmcts.reform.unspec.callback.CaseEvent.DEFENDANT_RESPONSE;
 import static uk.gov.hmcts.reform.unspec.helpers.DateFormatHelper.DATE;
 import static uk.gov.hmcts.reform.unspec.helpers.DateFormatHelper.formatLocalDateTime;
@@ -36,39 +42,35 @@ public class RespondToClaimCallbackHandler extends CallbackHandler {
 
     private final ObjectMapper mapper;
     private final DateOfBirthValidator dateOfBirthValidator;
-    private final Validator validator;
+    private final UnavailableDateValidator unavailableDateValidator;
+    private final CaseDetailsConverter caseDetailsConverter;
 
     @Override
     public List<CaseEvent> handledEvents() {
         return EVENTS;
     }
 
-    //TODO: need CMC-801 changes, add callback to ccd-definition
     @Override
-    protected Map<CallbackType, Callback> callbacks() {
+    protected Map<String, Callback> callbacks() {
         return Map.of(
-            CallbackType.ABOUT_TO_START, this::emptyCallbackResponse,
-            CallbackType.MID, this::validateDateOfBirth,
-    //          CallbackKey(MID, "validate-unavailable-dates"), this::validateUnavailableDates,
-            CallbackType.MID_SECONDARY, this::emptyCallbackWorkaround,
-            CallbackType.ABOUT_TO_SUBMIT, this::setClaimantResponseDeadline,
-            CallbackType.SUBMITTED, this::buildConfirmation
+            callbackKey(ABOUT_TO_START), this::emptyCallbackResponse,
+            callbackKey(MID, "confirm-details"), this::validateDateOfBirth,
+            callbackKey(MID, "validate-unavailable-dates"), this::validateUnavailableDates,
+            callbackKey(MID, "upload"), this::emptyCallbackWorkaround,
+            callbackKey(ABOUT_TO_SUBMIT), this::setClaimantResponseDeadline,
+            callbackKey(SUBMITTED), this::buildConfirmation
         );
     }
 
-    //TODO: callback to check unavailable dates logic
+    private CallbackResponse validateUnavailableDates(CallbackParams callbackParams) {
+        CaseData caseData = caseDetailsConverter.toCaseData(callbackParams.getRequest().getCaseDetails());
+        Respondent1DQ respondent1DQ = caseData.getRespondent1DQ();
+        List<String> errors = unavailableDateValidator.validate(respondent1DQ.getHearing().getUnavailableDates());
 
-    //    private CallbackResponse validateUnavailableDates(CallbackParams callbackParams) {
-    //        Map<String, Object> data = callbackParams.getRequest().getCaseDetails().getData();
-    //        Hearing hearing = mapper.convertValue(data.get("respondent1DQHearing"), Hearing.class);
-    //        List<String> errors = validator.validate(hearing.getUnavailableDates(), UnavailableDateGroup.class).stream()
-    //            .map(ConstraintViolation::getMessage)
-    //            .collect(Collectors.toList());
-    //
-    //        return AboutToStartOrSubmitCallbackResponse.builder()
-    //            .errors(errors)
-    //            .build();
-    //    }
+        return AboutToStartOrSubmitCallbackResponse.builder()
+            .errors(errors)
+            .build();
+    }
 
     private CallbackResponse emptyCallbackWorkaround(CallbackParams callbackParams) {
         return AboutToStartOrSubmitCallbackResponse.builder().build();
