@@ -17,8 +17,8 @@ import java.util.List;
 import java.util.Map;
 
 import static uk.gov.hmcts.reform.unspec.callback.CaseEvent.DISPATCH_BUSINESS_PROCESS;
-import static uk.gov.hmcts.reform.unspec.model.BusinessProcessStatus.DISPATCHED;
-import static uk.gov.hmcts.reform.unspec.model.BusinessProcessStatus.READY;
+import static uk.gov.hmcts.reform.unspec.enums.BusinessProcessStatus.DISPATCHED;
+import static uk.gov.hmcts.reform.unspec.enums.BusinessProcessStatus.READY;
 
 @Service
 @RequiredArgsConstructor

@@ -12,8 +12,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.jackson.JacksonAutoConfiguration;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
+import uk.gov.hmcts.reform.unspec.enums.BusinessProcessStatus;
 import uk.gov.hmcts.reform.unspec.model.BusinessProcess;
-import uk.gov.hmcts.reform.unspec.model.BusinessProcessStatus;
 
 import java.util.HashMap;
 import java.util.List;
@@ -22,8 +22,8 @@ import java.util.stream.Stream;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static uk.gov.hmcts.reform.unspec.callback.CaseEvent.CREATE_CLAIM;
-import static uk.gov.hmcts.reform.unspec.model.BusinessProcessStatus.FINISHED;
-import static uk.gov.hmcts.reform.unspec.model.BusinessProcessStatus.READY;
+import static uk.gov.hmcts.reform.unspec.enums.BusinessProcessStatus.FINISHED;
+import static uk.gov.hmcts.reform.unspec.enums.BusinessProcessStatus.READY;
 
 @ExtendWith(SpringExtension.class)
 @ContextConfiguration(classes = {BusinessProcessService.class, JacksonAutoConfiguration.class})

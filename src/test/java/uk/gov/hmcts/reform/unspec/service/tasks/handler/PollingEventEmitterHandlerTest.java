@@ -29,7 +29,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
-import static uk.gov.hmcts.reform.unspec.model.BusinessProcessStatus.FINISHED;
+import static uk.gov.hmcts.reform.unspec.enums.BusinessProcessStatus.FINISHED;
 
 @SpringBootTest(classes = {JacksonAutoConfiguration.class, CaseDetailsConverter.class})
 class PollingEventEmitterHandlerTest {

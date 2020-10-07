@@ -10,15 +10,15 @@ import org.springframework.boot.test.context.SpringBootTest;
 import uk.gov.hmcts.reform.ccd.client.model.AboutToStartOrSubmitCallbackResponse;
 import uk.gov.hmcts.reform.unspec.callback.CallbackParams;
 import uk.gov.hmcts.reform.unspec.callback.CallbackType;
+import uk.gov.hmcts.reform.unspec.enums.BusinessProcessStatus;
 import uk.gov.hmcts.reform.unspec.model.BusinessProcess;
-import uk.gov.hmcts.reform.unspec.model.BusinessProcessStatus;
 
 import java.util.HashMap;
 import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static uk.gov.hmcts.reform.unspec.model.BusinessProcessStatus.DISPATCHED;
-import static uk.gov.hmcts.reform.unspec.model.BusinessProcessStatus.READY;
+import static uk.gov.hmcts.reform.unspec.enums.BusinessProcessStatus.DISPATCHED;
+import static uk.gov.hmcts.reform.unspec.enums.BusinessProcessStatus.READY;
 
 @SpringBootTest(classes = {
     DispatchBusinessProcessCallbackHandler.class,

@@ -9,8 +9,8 @@ import uk.gov.hmcts.reform.unspec.model.BusinessProcess;
 import java.util.List;
 import java.util.Map;
 
-import static uk.gov.hmcts.reform.unspec.model.BusinessProcessStatus.FINISHED;
-import static uk.gov.hmcts.reform.unspec.model.BusinessProcessStatus.READY;
+import static uk.gov.hmcts.reform.unspec.enums.BusinessProcessStatus.FINISHED;
+import static uk.gov.hmcts.reform.unspec.enums.BusinessProcessStatus.READY;
 
 @Service
 @RequiredArgsConstructor

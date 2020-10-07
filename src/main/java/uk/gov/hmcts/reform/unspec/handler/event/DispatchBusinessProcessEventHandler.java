@@ -9,7 +9,7 @@ import uk.gov.hmcts.reform.unspec.model.BusinessProcess;
 import uk.gov.hmcts.reform.unspec.service.CoreCaseDataService;
 
 import static uk.gov.hmcts.reform.unspec.callback.CaseEvent.DISPATCH_BUSINESS_PROCESS;
-import static uk.gov.hmcts.reform.unspec.model.BusinessProcessStatus.READY;
+import static uk.gov.hmcts.reform.unspec.enums.BusinessProcessStatus.READY;
 
 @Slf4j
 @Service

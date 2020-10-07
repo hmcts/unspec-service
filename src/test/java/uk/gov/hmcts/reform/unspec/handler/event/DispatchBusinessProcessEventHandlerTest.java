@@ -8,14 +8,14 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import uk.gov.hmcts.reform.unspec.callback.CaseEvent;
+import uk.gov.hmcts.reform.unspec.enums.BusinessProcessStatus;
 import uk.gov.hmcts.reform.unspec.event.DispatchBusinessProcessEvent;
 import uk.gov.hmcts.reform.unspec.model.BusinessProcess;
-import uk.gov.hmcts.reform.unspec.model.BusinessProcessStatus;
 import uk.gov.hmcts.reform.unspec.service.CoreCaseDataService;
 
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoInteractions;
-import static uk.gov.hmcts.reform.unspec.model.BusinessProcessStatus.READY;
+import static uk.gov.hmcts.reform.unspec.enums.BusinessProcessStatus.READY;
 
 @ExtendWith(SpringExtension.class)
 class DispatchBusinessProcessEventHandlerTest {

@@ -52,7 +52,6 @@ import static uk.gov.hmcts.reform.unspec.callback.CallbackType.ABOUT_TO_START;
 import static uk.gov.hmcts.reform.unspec.callback.CallbackType.MID_SECONDARY;
 import static uk.gov.hmcts.reform.unspec.callback.CaseEvent.CREATE_CLAIM;
 import static uk.gov.hmcts.reform.unspec.enums.AllocatedTrack.SMALL_CLAIM;
-import static uk.gov.hmcts.reform.unspec.enums.BusinessProcessStatus.READY;
 import static uk.gov.hmcts.reform.unspec.enums.ClaimType.PERSONAL_INJURY;
 import static uk.gov.hmcts.reform.unspec.handler.callback.CreateClaimCallbackHandler.CONFIRMATION_SUMMARY;
 import static uk.gov.hmcts.reform.unspec.helpers.DateFormatHelper.DATE_TIME_AT;
