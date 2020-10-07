@@ -1,4 +1,4 @@
-package uk.gov.hmcts.reform.unspec.enums;
+package uk.gov.hmcts.reform.unspec.enums.dq;
 
 public enum HearingLength {
     LESS_THAN_DAY,

@@ -1,9 +1,10 @@
-package uk.gov.hmcts.reform.unspec.model;
+package uk.gov.hmcts.reform.unspec.model.dq;
 
 import lombok.Builder;
 import lombok.Data;
-import uk.gov.hmcts.reform.unspec.enums.HearingLength;
+import uk.gov.hmcts.reform.unspec.enums.dq.HearingLength;
 import uk.gov.hmcts.reform.unspec.enums.YesOrNo;
+import uk.gov.hmcts.reform.unspec.model.UnavailableDate;
 import uk.gov.hmcts.reform.unspec.model.common.Element;
 
 import java.util.List;
