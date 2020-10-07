@@ -21,9 +21,9 @@ import java.util.Map;
 
 import static java.lang.String.format;
 import static uk.gov.hmcts.reform.unspec.callback.CaseEvent.CLAIMANT_RESPONSE;
+import static uk.gov.hmcts.reform.unspec.enums.BusinessProcessStatus.READY;
 import static uk.gov.hmcts.reform.unspec.enums.DefendantResponseType.FULL_DEFENCE;
 import static uk.gov.hmcts.reform.unspec.enums.YesOrNo.YES;
-import static uk.gov.hmcts.reform.unspec.model.BusinessProcessStatus.READY;
 
 @Service
 @RequiredArgsConstructor
