@@ -13,10 +13,7 @@ import javax.validation.Payload;
 @Retention(RetentionPolicy.RUNTIME)
 @Constraint(validatedBy = UnavailableDateValidator.class)
 public @interface IsPresentOrEqualToOrLessThanOneYearInTheFuture {
-
-    String message() default "The date cannot be more than a year in the future";
-
+    String message() default "The date cannot be in the past and must not be more than a year in the future";
     Class<?>[] groups() default {};
-
     Class<? extends Payload>[] payload() default {};
 }

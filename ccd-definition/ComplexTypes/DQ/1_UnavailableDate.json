@@ -11,6 +11,7 @@
     "ListElementCode": "date",
     "FieldType": "Date",
     "ElementLabel": "Unavailable date",
+    "HintText": "This date cannot be in the past and must not be more than one year in the future",
     "SecurityClassification": "Public"
   }
 ]
