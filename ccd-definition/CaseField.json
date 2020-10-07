@@ -426,13 +426,5 @@
     "Label": "Business process for camunda",
     "FieldType": "BusinessProcess",
     "SecurityClassification": "Public"
-  },
-  {
-    "LiveFrom": "01/01/2017",
-    "CaseTypeID": "UNSPECIFIED_CLAIMS",
-    "ID": "stateFlowState",
-    "Label": "State flow state",
-    "FieldType": "Text",
-    "SecurityClassification": "Public"
   }
 ]

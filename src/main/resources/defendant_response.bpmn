@@ -49,10 +49,10 @@
     </bpmn:exclusiveGateway>
     <bpmn:sequenceFlow id="Flow_16ow5zb" sourceRef="StartEvent_1" targetRef="Gateway_1q9qem9" />
     <bpmn:sequenceFlow id="Flow_17u38kw" sourceRef="Gateway_1q9qem9" targetRef="DefendantResponseActivityId">
-      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${stateFlowState == "MAIN.RESPONDED_TO_CLAIM"}</bpmn:conditionExpression>
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${false == true}</bpmn:conditionExpression>
     </bpmn:sequenceFlow>
     <bpmn:sequenceFlow id="Flow_01e5t4p" sourceRef="Gateway_1q9qem9" targetRef="CaseHandedOfflineDefendantActivityId">
-      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${stateFlowState != "MAIN.RESPONDED_TO_CLAIM"}</bpmn:conditionExpression>
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${true == true}</bpmn:conditionExpression>
     </bpmn:sequenceFlow>
     <bpmn:endEvent id="Event_0yvsxsk">
       <bpmn:incoming>Flow_0oh6jwt</bpmn:incoming>
@@ -62,6 +62,10 @@
   <bpmn:message id="Message_1xf7rku" name="DEFENDANT_RESPONSE" />
   <bpmndi:BPMNDiagram id="BPMNDiagram_1">
     <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="DEFENDANT_RESPONSE">
+      <bpmndi:BPMNEdge id="Flow_0oh6jwt_di" bpmnElement="Flow_0oh6jwt">
+        <di:waypoint x="560" y="120" />
+        <di:waypoint x="602" y="120" />
+      </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_01e5t4p_di" bpmnElement="Flow_01e5t4p">
         <di:waypoint x="260" y="212" />
         <di:waypoint x="260" y="120" />
@@ -83,30 +87,26 @@
         <di:waypoint x="500" y="237" />
         <di:waypoint x="602" y="237" />
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_0oh6jwt_di" bpmnElement="Flow_0oh6jwt">
-        <di:waypoint x="560" y="120" />
-        <di:waypoint x="602" y="120" />
-      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="Event_13n9twk_di" bpmnElement="Event_13n9twk">
+        <dc:Bounds x="602" y="219" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0ipbyde_di" bpmnElement="DefendantResponseActivityId">
+        <dc:Bounds x="400" y="197" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_1pp6fod_di" bpmnElement="StartEvent_1">
+        <dc:Bounds x="152" y="219" width="36" height="36" />
+      </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Activity_0u1unx7_di" bpmnElement="CaseHandedOfflineClaimantActivityId">
         <dc:Bounds x="460" y="80" width="100" height="80" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Activity_080rc91_di" bpmnElement="CaseHandedOfflineDefendantActivityId">
         <dc:Bounds x="320" y="80" width="100" height="80" />
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Event_0yvsxsk_di" bpmnElement="Event_0yvsxsk">
-        <dc:Bounds x="602" y="102" width="36" height="36" />
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Event_13n9twk_di" bpmnElement="Event_13n9twk">
-        <dc:Bounds x="602" y="219" width="36" height="36" />
-      </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Gateway_1q9qem9_di" bpmnElement="Gateway_1q9qem9" isMarkerVisible="true">
         <dc:Bounds x="235" y="212" width="50" height="50" />
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Event_1pp6fod_di" bpmnElement="StartEvent_1">
-        <dc:Bounds x="152" y="219" width="36" height="36" />
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Activity_0ipbyde_di" bpmnElement="DefendantResponseActivityId">
-        <dc:Bounds x="400" y="197" width="100" height="80" />
+      <bpmndi:BPMNShape id="Event_0yvsxsk_di" bpmnElement="Event_0yvsxsk">
+        <dc:Bounds x="602" y="102" width="36" height="36" />
       </bpmndi:BPMNShape>
     </bpmndi:BPMNPlane>
   </bpmndi:BPMNDiagram>

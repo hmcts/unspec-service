@@ -17,12 +17,9 @@ import uk.gov.hmcts.reform.ccd.client.model.CaseDetails;
 import uk.gov.hmcts.reform.ccd.client.model.SubmittedCallbackResponse;
 import uk.gov.hmcts.reform.unspec.callback.CallbackParams;
 import uk.gov.hmcts.reform.unspec.callback.CallbackType;
-import uk.gov.hmcts.reform.unspec.helpers.CaseDetailsConverter;
 import uk.gov.hmcts.reform.unspec.sampledata.CallbackParamsBuilder;
 import uk.gov.hmcts.reform.unspec.sampledata.CaseDetailsBuilder;
 import uk.gov.hmcts.reform.unspec.service.BusinessProcessService;
-import uk.gov.hmcts.reform.unspec.service.flowstate.StateFlowEngine;
-import uk.gov.hmcts.reform.unspec.stateflow.model.State;
 import uk.gov.hmcts.reform.unspec.validation.DateOfBirthValidator;
 
 import java.time.LocalDateTime;
@@ -46,8 +43,6 @@ import static uk.gov.hmcts.reform.unspec.handler.callback.RespondToClaimCallback
     JacksonAutoConfiguration.class,
     ValidationAutoConfiguration.class,
     DateOfBirthValidator.class,
-    CaseDetailsConverter.class,
-    StateFlowEngine.class
 })
 class RespondToClaimCallbackHandlerTest extends BaseCallbackHandlerTest {
 
@@ -126,29 +121,12 @@ class RespondToClaimCallbackHandlerTest extends BaseCallbackHandlerTest {
         }
 
         @Test
-        void shouldUpdateBusinessProcessWithRespondedToClaimStateFlowState_whenAtRespondedToClaimState() {
+        void shouldUpdateBusinessProcess_whenInvoked() {
             CaseDetails caseDetails = CaseDetailsBuilder.builder().atStateRespondedToClaim().build();
 
             handler.handle(callbackParamsOf(caseDetails.getData(), CallbackType.ABOUT_TO_SUBMIT));
 
-            verify(businessProcessService).updateBusinessProcess(
-                caseDetails.getData(),
-                DEFENDANT_RESPONSE,
-                State.from("MAIN.RESPONDED_TO_CLAIM")
-            );
-        }
-
-        @Test
-        void shouldUpdateBusinessProcessWithServiceConfirmedStateFlowState_whenAtServiceConfirmedState() {
-            CaseDetails caseDetails = CaseDetailsBuilder.builder().atStateServiceConfirmed().build();
-
-            handler.handle(callbackParamsOf(caseDetails.getData(), CallbackType.ABOUT_TO_SUBMIT));
-
-            verify(businessProcessService).updateBusinessProcess(
-                caseDetails.getData(),
-                DEFENDANT_RESPONSE,
-                State.from("MAIN.SERVICE_CONFIRMED")
-            );
+            verify(businessProcessService).updateBusinessProcess(caseDetails.getData(), DEFENDANT_RESPONSE);
         }
     }
 

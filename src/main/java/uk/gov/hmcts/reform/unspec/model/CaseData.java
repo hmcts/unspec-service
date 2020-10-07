@@ -88,5 +88,4 @@ public class CaseData {
     private final CloseClaim discontinueClaim;
 
     private final BusinessProcess businessProcess;
-    private final String stateFlowState;
 }

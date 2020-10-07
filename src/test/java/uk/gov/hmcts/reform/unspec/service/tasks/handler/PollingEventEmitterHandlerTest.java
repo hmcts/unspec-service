@@ -68,10 +68,7 @@ class PollingEventEmitterHandlerTest {
         when(externalTask.getTopicName()).thenReturn("test");
         when(searchService.getCases()).thenReturn(List.of(
             CaseDetails.builder().id(1L).data(
-                Map.of(
-                    "businessProcess", businessProcessWithCamundaEvent("TEST_EVENT1"),
-                    "stateFlowState", "TEST.STATE1"
-                )).build(),
+                Map.of("businessProcess", businessProcessWithCamundaEvent("TEST_EVENT1"))).build(),
             CaseDetails.builder().id(2L).data(
                 Map.of("businessProcess", businessProcessWithCamundaEvent("TEST_EVENT2"))).build(),
             CaseDetails.builder().id(3L).data(
@@ -100,7 +97,6 @@ class PollingEventEmitterHandlerTest {
         verify(searchService).getCases();
         verify(runtimeService).createMessageCorrelation("TEST_EVENT1");
         verify(messageCorrelationBuilder).setVariable("CCD_ID", 1L);
-        verify(messageCorrelationBuilder).setVariable("STATE_FLOW_STATE", "TEST.STATE1");
         verify(applicationEventPublisher).publishEvent(
             new DispatchBusinessProcessEvent(1L, businessProcessWithCamundaEvent("TEST_EVENT1")));
 
@@ -134,7 +130,6 @@ class PollingEventEmitterHandlerTest {
         verify(searchService).getCases();
         verify(runtimeService).createMessageCorrelation("TEST_EVENT1");
         verify(messageCorrelationBuilder).setVariable("CCD_ID", 1L);
-        verify(messageCorrelationBuilder).setVariable("STATE_FLOW_STATE", "TEST.STATE1");
         verify(applicationEventPublisher).publishEvent(
             new DispatchBusinessProcessEvent(1L, businessProcessWithCamundaEvent("TEST_EVENT1")));
 
