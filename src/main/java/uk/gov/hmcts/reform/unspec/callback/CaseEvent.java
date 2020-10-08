@@ -16,7 +16,6 @@ public enum CaseEvent {
     CLAIMANT_RESPONSE("View and respond to defence"),
     WITHDRAW_CLAIM("Withdraw claim"),
     DISCONTINUE_CLAIM("Discontinue claim"),
-    DISPATCH_BUSINESS_PROCESS("Dispatch business process"),
     NOTIFY_RESPONDENT_SOLICITOR1_FOR_CLAIM_ISSUE("Notify claim issue"),
     NOTIFY_APPLICANT_SOLICITOR1_FOR_REQUEST_FOR_EXTENSION("Notify request for extension"),
     NOTIFY_RESPONDENT_SOLICITOR1_FOR_EXTENSION_RESPONSE("Notify extension response"),
@@ -25,7 +24,8 @@ public enum CaseEvent {
     NOTIFY_RESPONDENT_SOLICITOR1_FOR_CASE_HANDED_OFFLINE("Notify handed offline"),
     NOTIFY_APPLICANT_SOLICITOR1_FOR_CASE_HANDED_OFFLINE("Notify handed offline"),
     NOTIFY_RESPONDENT_SOLICITOR1_FOR_CASE_TRANSFERRED_TO_LOCAL_COURT("Notify transferred local court"),
-    NOTIFY_APPLICANT_SOLICITOR1_FOR_CASE_TRANSFERRED_TO_LOCAL_COURT("Notify transferred local court");
+    NOTIFY_APPLICANT_SOLICITOR1_FOR_CASE_TRANSFERRED_TO_LOCAL_COURT("Notify transferred local court"),
+    DISPATCH_BUSINESS_PROCESS("Dispatch business process");
 
     private final String displayName;
 }

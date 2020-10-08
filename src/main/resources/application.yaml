@@ -196,6 +196,5 @@ feign:
       remoteExternalTaskService:
         url: http://fake/engine-rest/
 notifications:
-  govNotifyApiKey: some-gov-uk-notify-api-key
   claimantSolicitorEmail: claimantsolicitor@example.com
   defendantSolicitorEmail: defendantsolicitor@example.com
