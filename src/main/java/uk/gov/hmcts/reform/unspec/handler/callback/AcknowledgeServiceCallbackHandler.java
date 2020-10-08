@@ -10,6 +10,7 @@ import uk.gov.hmcts.reform.unspec.callback.Callback;
 import uk.gov.hmcts.reform.unspec.callback.CallbackHandler;
 import uk.gov.hmcts.reform.unspec.callback.CallbackParams;
 import uk.gov.hmcts.reform.unspec.callback.CaseEvent;
+import uk.gov.hmcts.reform.unspec.model.BusinessProcess;
 import uk.gov.hmcts.reform.unspec.model.Party;
 import uk.gov.hmcts.reform.unspec.service.WorkingDayIndicator;
 import uk.gov.hmcts.reform.unspec.validation.DateOfBirthValidator;
@@ -75,6 +76,7 @@ public class AcknowledgeServiceCallbackHandler extends CallbackHandler {
         LocalDate newResponseDate = workingDayIndicator.getNextWorkingDay(responseDeadline.plusDays(14).toLocalDate());
 
         data.put(RESPONSE_DEADLINE, newResponseDate.atTime(MID_NIGHT));
+        data.put("businessProcess", BusinessProcess.builder().activityId("ServiceAcknowledgementHandling").build());
 
         return AboutToStartOrSubmitCallbackResponse.builder()
             .data(data)
