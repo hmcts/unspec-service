@@ -48,7 +48,7 @@ import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 import static uk.gov.hmcts.reform.unspec.callback.CallbackType.ABOUT_TO_START;
 import static uk.gov.hmcts.reform.unspec.callback.CallbackType.MID_SECONDARY;
-import static uk.gov.hmcts.reform.unspec.enums.AllocatedTrack.SMALL_CLAIM;
+import static uk.gov.hmcts.reform.unspec.enums.AllocatedTrack.MULTI_CLAIM;
 import static uk.gov.hmcts.reform.unspec.enums.ClaimType.PERSONAL_INJURY;
 import static uk.gov.hmcts.reform.unspec.handler.callback.CreateClaimCallbackHandler.CONFIRMATION_SUMMARY;
 import static uk.gov.hmcts.reform.unspec.helpers.DateFormatHelper.DATE_TIME_AT;
@@ -136,14 +136,6 @@ class CreateClaimCallbackHandlerTest extends BaseCallbackHandlerTest {
             var response = (AboutToStartOrSubmitCallbackResponse) handler.handle(params);
 
             assertThat(response.getErrors()).isEmpty();
-            assertThat(response.getData())
-                .isEqualTo(
-                    Map.of(
-                        "claimValue", ClaimValue.builder()
-                            .higherValue(BigDecimal.valueOf(10)).lowerValue(BigDecimal.valueOf(1)).build(),
-                        "claimType", PERSONAL_INJURY,
-                        "allocatedTrack", SMALL_CLAIM
-                    ));
         }
     }
 
@@ -205,6 +197,13 @@ class CreateClaimCallbackHandlerTest extends BaseCallbackHandlerTest {
                 now().atTime(23, 59, 59)
             );
             assertThat(response.getData()).containsKey("claimSubmittedDateTime");
+        }
+
+        @Test
+        void shouldAddAllocatedTrack_whenInvoked() {
+            var response = (AboutToStartOrSubmitCallbackResponse) handler.handle(params);
+
+            assertThat(response.getData()).containsEntry("allocatedTrack", MULTI_CLAIM);
         }
 
         @Test
