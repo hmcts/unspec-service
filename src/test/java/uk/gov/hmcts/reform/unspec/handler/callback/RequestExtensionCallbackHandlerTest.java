@@ -26,7 +26,6 @@ import static java.lang.String.format;
 import static java.time.LocalDate.now;
 import static org.assertj.core.api.Assertions.assertThat;
 import static uk.gov.hmcts.reform.unspec.callback.CallbackType.ABOUT_TO_START;
-import static uk.gov.hmcts.reform.unspec.enums.BusinessProcessStatus.READY;
 import static uk.gov.hmcts.reform.unspec.handler.callback.RequestExtensionCallbackHandler.ALREADY_AGREED;
 import static uk.gov.hmcts.reform.unspec.handler.callback.RequestExtensionCallbackHandler.EXTENSION_ALREADY_AGREED;
 import static uk.gov.hmcts.reform.unspec.handler.callback.RequestExtensionCallbackHandler.NOT_AGREED;
@@ -167,7 +166,8 @@ class RequestExtensionCallbackHandlerTest extends BaseCallbackHandlerTest {
             AboutToStartOrSubmitCallbackResponse response = (AboutToStartOrSubmitCallbackResponse) handler
                 .handle(callbackParamsOf(new HashMap<>(), CallbackType.ABOUT_TO_SUBMIT));
 
-            assertThat(response.getData()).extracting("businessProcess").extracting("status").isEqualTo(READY);
+            //TODO: uncomment when CMC-794 is played
+            //assertThat(response.getData()).extracting("businessProcess").extracting("status").isEqualTo(READY);
             assertThat(response.getData()).extracting("businessProcess").extracting("activityId").isEqualTo(
                 "RequestForExtensionHandling");
             assertThat(response.getData()).extracting("businessProcess").extracting("processInstanceId").isNull();
