@@ -5,12 +5,15 @@ import org.springframework.stereotype.Service;
 import uk.gov.hmcts.reform.authorisation.generators.AuthTokenGenerator;
 import uk.gov.hmcts.reform.ccd.client.CoreCaseDataApi;
 import uk.gov.hmcts.reform.ccd.client.model.CaseDataContent;
+import uk.gov.hmcts.reform.ccd.client.model.CaseDetails;
 import uk.gov.hmcts.reform.ccd.client.model.Event;
 import uk.gov.hmcts.reform.ccd.client.model.SearchResult;
 import uk.gov.hmcts.reform.ccd.client.model.StartEventResponse;
 import uk.gov.hmcts.reform.idam.client.IdamClient;
 import uk.gov.hmcts.reform.unspec.callback.CaseEvent;
 import uk.gov.hmcts.reform.unspec.config.SystemUpdateUserConfiguration;
+import uk.gov.hmcts.reform.unspec.helpers.CaseDetailsConverter;
+import uk.gov.hmcts.reform.unspec.model.CaseData;
 import uk.gov.hmcts.reform.unspec.model.UserDetails;
 import uk.gov.hmcts.reform.unspec.model.search.Query;
 
@@ -28,6 +31,7 @@ public class CoreCaseDataService {
     private final CoreCaseDataApi coreCaseDataApi;
     private final SystemUpdateUserConfiguration userConfig;
     private final AuthTokenGenerator authTokenGenerator;
+    private final CaseDetailsConverter caseDetailsConverter;
 
     public void triggerEvent(Long caseId, CaseEvent eventName) {
         triggerEvent(caseId, eventName, Map.of());
@@ -52,10 +56,10 @@ public class CoreCaseDataService {
         );
     }
 
-    public void submitUpdate(String caseId, CaseDataContent caseDataContent) {
+    public CaseData submitUpdate(String caseId, CaseDataContent caseDataContent) {
         UserDetails systemUpdateUser = getSystemUpdateUser();
 
-        coreCaseDataApi.submitEventForCaseWorker(
+        CaseDetails caseDetails = coreCaseDataApi.submitEventForCaseWorker(
             systemUpdateUser.getUserToken(),
             authTokenGenerator.generate(),
             systemUpdateUser.getUserId(),
@@ -65,6 +69,7 @@ public class CoreCaseDataService {
             true,
             caseDataContent
         );
+        return caseDetailsConverter.toCaseData(caseDetails);
     }
 
     public SearchResult searchCases(Query query) {

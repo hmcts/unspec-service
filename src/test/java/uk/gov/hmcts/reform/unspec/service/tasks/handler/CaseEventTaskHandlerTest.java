@@ -15,9 +15,10 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import uk.gov.hmcts.reform.ccd.client.model.CaseDataContent;
 import uk.gov.hmcts.reform.ccd.client.model.CaseDetails;
 import uk.gov.hmcts.reform.ccd.client.model.StartEventResponse;
+import uk.gov.hmcts.reform.unspec.enums.BusinessProcessStatus;
 import uk.gov.hmcts.reform.unspec.helpers.CaseDetailsConverter;
 import uk.gov.hmcts.reform.unspec.model.BusinessProcess;
-import uk.gov.hmcts.reform.unspec.model.BusinessProcessStatus;
+import uk.gov.hmcts.reform.unspec.model.CaseData;
 import uk.gov.hmcts.reform.unspec.sampledata.CaseDataBuilder;
 import uk.gov.hmcts.reform.unspec.sampledata.CaseDetailsBuilder;
 import uk.gov.hmcts.reform.unspec.service.CoreCaseDataService;
@@ -26,7 +27,6 @@ import java.util.Map;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static uk.gov.hmcts.reform.unspec.callback.CaseEvent.NOTIFY_DEFENDANT_SOLICITOR_FOR_CLAIM_ISSUE;
@@ -69,18 +69,19 @@ class CaseEventTaskHandlerTest {
 
         @Test
         void shouldTriggerCCDEvent_whenHandlerIsExecuted() {
-            CaseDetails caseDetails = CaseDetailsBuilder.builder()
-                .data(new CaseDataBuilder().atStateClaimDraft().build().toBuilder()
-                          .businessProcess(BusinessProcess.builder().status(BusinessProcessStatus.READY).build())
-                          .build())
+            CaseData caseData = new CaseDataBuilder().atStateClaimDraft().build().toBuilder()
+                .businessProcess(BusinessProcess.builder().status(BusinessProcessStatus.READY).build())
                 .build();
+
+            CaseDetails caseDetails = CaseDetailsBuilder.builder().data(caseData).build();
 
             when(coreCaseDataService.startUpdate(
                 eq(CASE_ID.toString()),
                 eq(NOTIFY_DEFENDANT_SOLICITOR_FOR_CLAIM_ISSUE)
             )).thenReturn(StartEventResponse.builder().caseDetails(caseDetails).build());
 
-            doNothing().when(coreCaseDataService).submitUpdate(eq(CASE_ID.toString()), any(CaseDataContent.class));
+            when(coreCaseDataService.submitUpdate(eq(CASE_ID.toString()), any(CaseDataContent.class)))
+                .thenReturn(caseData);
 
             caseEventTaskHandler.execute(mockExternalTask, externalTaskService);
 
