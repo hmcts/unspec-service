@@ -23,6 +23,7 @@ import java.util.Map;
 
 import static java.lang.String.format;
 import static uk.gov.hmcts.reform.unspec.callback.CaseEvent.REQUEST_EXTENSION;
+import static uk.gov.hmcts.reform.unspec.enums.BusinessProcessStatus.READY;
 import static uk.gov.hmcts.reform.unspec.enums.YesOrNo.YES;
 import static uk.gov.hmcts.reform.unspec.helpers.DateFormatHelper.DATE;
 import static uk.gov.hmcts.reform.unspec.helpers.DateFormatHelper.formatLocalDate;
@@ -63,7 +64,8 @@ public class RequestExtensionCallbackHandler extends CallbackHandler {
         if (extensionAlreadyAgreed == YES) {
             data.put(RESPONSE_DEADLINE, proposedDeadline.atTime(MID_NIGHT));
         }
-        data.put("businessProcess", BusinessProcess.builder().activityId("RequestForExtensionHandling").build());
+        data.put("businessProcess",
+                 BusinessProcess.builder().activityId("RequestForExtensionHandling").status(READY).build());
 
         return AboutToStartOrSubmitCallbackResponse.builder()
             .data(data)

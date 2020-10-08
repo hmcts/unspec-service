@@ -25,6 +25,7 @@ import java.util.Map;
 import static java.lang.String.format;
 import static org.assertj.core.api.Assertions.assertThat;
 import static uk.gov.hmcts.reform.unspec.callback.CallbackType.ABOUT_TO_START;
+import static uk.gov.hmcts.reform.unspec.enums.BusinessProcessStatus.READY;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(classes = {
@@ -64,8 +65,7 @@ class RespondToDefenceCallbackHandlerTest extends BaseCallbackHandlerTest {
             AboutToStartOrSubmitCallbackResponse response = (AboutToStartOrSubmitCallbackResponse) handler
                 .handle(callbackParamsOf(data, CallbackType.ABOUT_TO_SUBMIT));
 
-            //TODO: uncomment when CMC-794 is played
-            //assertThat(response.getData()).extracting("businessProcess").extracting("status").isEqualTo(READY);
+            assertThat(response.getData()).extracting("businessProcess").extracting("status").isEqualTo(READY);
             assertThat(response.getData()).extracting("businessProcess").extracting("activityId").isEqualTo(
                 "CaseTransferredToLocalCourtHandling");
             assertThat(response.getData()).extracting("businessProcess").extracting("processInstanceId").isNull();

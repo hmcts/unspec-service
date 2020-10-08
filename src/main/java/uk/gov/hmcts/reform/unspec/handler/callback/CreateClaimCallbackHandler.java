@@ -39,6 +39,7 @@ import static java.lang.String.format;
 import static uk.gov.hmcts.reform.unspec.callback.CallbackParams.Params.BEARER_TOKEN;
 import static uk.gov.hmcts.reform.unspec.callback.CaseEvent.CREATE_CLAIM;
 import static uk.gov.hmcts.reform.unspec.enums.AllocatedTrack.getAllocatedTrack;
+import static uk.gov.hmcts.reform.unspec.enums.BusinessProcessStatus.READY;
 import static uk.gov.hmcts.reform.unspec.helpers.DateFormatHelper.DATE_TIME_AT;
 import static uk.gov.hmcts.reform.unspec.helpers.DateFormatHelper.formatLocalDateTime;
 
@@ -140,7 +141,7 @@ public class CreateClaimCallbackHandler extends CallbackHandler {
         data.put(RESPONDENT, caseData.getRespondent1());
         data.put(CLAIMANT, caseData.getApplicant1());
         data.put("legacyCaseReference", referenceNumber);
-        data.put("businessProcess", BusinessProcess.builder().activityId("ClaimIssueHandling").build());
+        data.put("businessProcess", BusinessProcess.builder().activityId("ClaimIssueHandling").status(READY).build());
 
         return AboutToStartOrSubmitCallbackResponse.builder()
             .data(data)

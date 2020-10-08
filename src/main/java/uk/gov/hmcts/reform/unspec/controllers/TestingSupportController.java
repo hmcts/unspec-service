@@ -22,6 +22,7 @@ import static uk.gov.hmcts.reform.unspec.callback.CaseEvent.TESTING_SUPPORT_RESE
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
 @ConditionalOnExpression("${testing.support.enabled:false}")
 public class TestingSupportController {
+
     private final CoreCaseDataService coreCaseDataService;
 
     @PostMapping("/testing-support/case/{caseId}/business-process/reset")

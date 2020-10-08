@@ -31,6 +31,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import static uk.gov.hmcts.reform.unspec.callback.CallbackType.ABOUT_TO_START;
+import static uk.gov.hmcts.reform.unspec.enums.BusinessProcessStatus.READY;
 import static uk.gov.hmcts.reform.unspec.service.DeadlinesCalculator.MID_NIGHT;
 
 @ExtendWith(SpringExtension.class)
@@ -128,8 +129,7 @@ class AcknowledgeServiceCallbackHandlerTest extends BaseCallbackHandlerTest {
             AboutToStartOrSubmitCallbackResponse response = (AboutToStartOrSubmitCallbackResponse) handler
                 .handle(callbackParamsOf(data, CallbackType.ABOUT_TO_SUBMIT));
 
-            //TODO: uncomment when CMC-794 is played
-            //assertThat(response.getData()).extracting("businessProcess").extracting("status").isEqualTo(READY);
+            assertThat(response.getData()).extracting("businessProcess").extracting("status").isEqualTo(READY);
             assertThat(response.getData()).extracting("businessProcess").extracting("activityId").isEqualTo(
                 "ServiceAcknowledgementHandling");
             assertThat(response.getData()).extracting("businessProcess").extracting("processInstanceId").isNull();
