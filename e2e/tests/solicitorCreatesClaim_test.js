@@ -1,7 +1,7 @@
 const config = require('../config.js');
 
-let caseNumber;
-const caseEventMessage = eventName => `Case ${caseNumber} has been updated with event: ${eventName}`;
+let caseId;
+const caseEventMessage = eventName => `Case ${caseId} has been updated with event: ${eventName}`;
 
 Feature('Claim creation @claim-tests');
 
@@ -9,8 +9,8 @@ Scenario('Solicitor creates claim @create-claim', async (I) => {
   await I.login(config.solicitorUser);
   await I.createCase();
 
-  caseNumber = await I.grabCaseNumber();
-  await I.see(`Case ${caseNumber.split('-').join('')} has been created.`);
+  caseId = await I.grabCaseId();
+  await I.see(`Case ${caseId} has been created.`);
 });
 
 Scenario('Solicitor confirms service', async (I) => {
