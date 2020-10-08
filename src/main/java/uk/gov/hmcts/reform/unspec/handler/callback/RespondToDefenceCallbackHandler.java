@@ -21,7 +21,6 @@ import java.util.Map;
 
 import static java.lang.String.format;
 import static uk.gov.hmcts.reform.unspec.callback.CaseEvent.CLAIMANT_RESPONSE;
-import static uk.gov.hmcts.reform.unspec.enums.BusinessProcessStatus.READY;
 import static uk.gov.hmcts.reform.unspec.enums.DefendantResponseType.FULL_DEFENCE;
 import static uk.gov.hmcts.reform.unspec.enums.YesOrNo.YES;
 
@@ -54,7 +53,7 @@ public class RespondToDefenceCallbackHandler extends CallbackHandler {
         var response = mapper.convertValue(data.get("respondent1ClaimResponseType"), DefendantResponseType.class);
         if (response == FULL_DEFENCE && proceeding == YES) {
             data.put("businessProcess",
-                     BusinessProcess.builder().activityId("CaseTransferredToLocalCourtHandling").status(READY).build());
+                     BusinessProcess.builder().activityId("CaseTransferredToLocalCourtHandling").build());
         }
 
         return AboutToStartOrSubmitCallbackResponse.builder()

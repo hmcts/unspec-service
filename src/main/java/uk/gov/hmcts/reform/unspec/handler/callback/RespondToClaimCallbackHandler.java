@@ -24,7 +24,6 @@ import java.util.Map;
 
 import static java.lang.String.format;
 import static uk.gov.hmcts.reform.unspec.callback.CaseEvent.DEFENDANT_RESPONSE;
-import static uk.gov.hmcts.reform.unspec.enums.BusinessProcessStatus.READY;
 import static uk.gov.hmcts.reform.unspec.enums.DefendantResponseType.FULL_DEFENCE;
 import static uk.gov.hmcts.reform.unspec.helpers.DateFormatHelper.DATE;
 import static uk.gov.hmcts.reform.unspec.helpers.DateFormatHelper.formatLocalDateTime;
@@ -79,7 +78,6 @@ public class RespondToClaimCallbackHandler extends CallbackHandler {
         var response = mapper.convertValue(data.get("respondent1ClaimResponseType"), DefendantResponseType.class);
         data.put("businessProcess", BusinessProcess.builder()
             .activityId(response == FULL_DEFENCE ? "DefendantResponseHandling" : "CaseHandedOfflineHandling")
-            .status(READY)
             .build());
 
         return AboutToStartOrSubmitCallbackResponse.builder()

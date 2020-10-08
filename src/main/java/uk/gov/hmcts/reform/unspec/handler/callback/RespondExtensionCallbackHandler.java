@@ -24,7 +24,6 @@ import java.util.Map;
 
 import static java.lang.String.format;
 import static uk.gov.hmcts.reform.unspec.callback.CaseEvent.RESPOND_EXTENSION;
-import static uk.gov.hmcts.reform.unspec.enums.BusinessProcessStatus.READY;
 import static uk.gov.hmcts.reform.unspec.helpers.DateFormatHelper.DATE;
 import static uk.gov.hmcts.reform.unspec.helpers.DateFormatHelper.formatLocalDateTime;
 import static uk.gov.hmcts.reform.unspec.service.DeadlinesCalculator.MID_NIGHT;
@@ -102,8 +101,7 @@ public class RespondExtensionCallbackHandler extends CallbackHandler {
             data.put(RESPONSE_DEADLINE, newDeadline.atTime(MID_NIGHT));
         }
 
-        data.put("businessProcess",
-                 BusinessProcess.builder().activityId("ExtensionResponseHandling").status(READY).build());
+        data.put("businessProcess", BusinessProcess.builder().activityId("ExtensionResponseHandling").build());
 
         return AboutToStartOrSubmitCallbackResponse.builder()
             .data(data)
