@@ -13,7 +13,6 @@ module.exports =  {
       {
         'Content-Type': 'application/json',
         'Authorization': `Bearer ${authToken}`,
-      })
-      .then(response => console.log(response));
+      });
   }
 };

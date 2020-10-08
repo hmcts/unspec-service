@@ -67,10 +67,10 @@ module.exports = function () {
       }, signedInSelector);
     },
 
-    grabCaseId: async function () {
+    grabCaseNumber: async function () {
       this.waitForElement(CASE_HEADER);
-      const caseHeaderId = await this.grabTextFrom(CASE_HEADER);
-      return caseHeaderId.split('-').join('');
+
+      return await this.grabTextFrom(CASE_HEADER);
     },
 
     async createCase() {
@@ -90,7 +90,8 @@ module.exports = function () {
       await statementOfTruth.enterNameAndRole('claim');
       await event.submit('Issue claim', 'Your claim has been issued');
       await event.returnToCaseDetails();
-      caseId = await this.grabCaseId();
+
+      caseId = (await this.grabCaseNumber()).split('-').join('').substring(1);
     },
 
     async confirmService() {

@@ -4,7 +4,6 @@ import feign.FeignException;
 import io.swagger.annotations.Api;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -19,14 +18,14 @@ import static uk.gov.hmcts.reform.unspec.callback.CaseEvent.TESTING_SUPPORT_RESE
 @Api
 @Slf4j
 @RestController
-@RequiredArgsConstructor(onConstructor = @__(@Autowired))
+@RequiredArgsConstructor
 @ConditionalOnExpression("${testing.support.enabled:false}")
 public class TestingSupportController {
 
     private final CoreCaseDataService coreCaseDataService;
 
     @PostMapping("/testing-support/case/{caseId}/business-process/reset")
-    public void populateCase(@PathVariable("caseId") Long caseId) {
+    public void resetBusinessProcess(@PathVariable("caseId") Long caseId) {
         Map<String, Object> data = new HashMap<>();
         data.put("businessProcess", null);
         try {
