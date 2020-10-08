@@ -38,6 +38,7 @@ module.exports = {
   },
 
   async enterExpertInformation(party) {
+    I.waitForElement(this.fields(party).expertRequired.id);
     await within(this.fields(party).expertRequired.id, () => {
       I.click(this.fields(party).expertRequired.options.yes);
     });
@@ -56,6 +57,7 @@ module.exports = {
 
   async addExpert(party) {
     await I.addAnotherElementToCollection();
+    I.waitForElement(this.fields(party).expertDetails.element.name);
     I.fillField(this.fields(party).expertDetails.element.name, 'John Smith');
     I.fillField(this.fields(party).expertDetails.element.fieldOfExpertise, 'Science');
     I.fillField(this.fields(party).expertDetails.element.whyRequired, 'Reason why required');

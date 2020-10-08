@@ -17,6 +17,7 @@ module.exports = {
   },
 
   async selectSpecificCourtForHearing(party) {
+    I.waitForElement(this.fields(party).requestHearingAtSpecificCourt.id);
     await within(this.fields(party).requestHearingAtSpecificCourt.id, () => {
       I.click(this.fields(party).requestHearingAtSpecificCourt.options.yes);
     });

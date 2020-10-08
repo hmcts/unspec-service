@@ -9,6 +9,7 @@ module.exports = {
   },
 
   async enterDirectionsProposedForDisclosure(party) {
+    I.waitForElement(this.fields(party).directionsProposedForDisclosure);
     I.fillField(this.fields(party).directionsProposedForDisclosure, 'Reason for no agreement');
 
     await I.clickContinue();

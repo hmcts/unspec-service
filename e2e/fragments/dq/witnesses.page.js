@@ -22,6 +22,7 @@ module.exports = {
   },
 
   async enterWitnessInformation(party) {
+    I.waitForElement(this.fields(party).witnessesToAppear.id);
     await within(this.fields(party).witnessesToAppear.id, () => {
       I.click(this.fields(party).witnessesToAppear.options.yes);
     });
@@ -32,6 +33,7 @@ module.exports = {
 
   async addWitness(party) {
     await I.addAnotherElementToCollection();
+    I.waitForElement(this.fields(party).witnessDetails.element.name);
     I.fillField(this.fields(party).witnessDetails.element.name, 'John Smith');
     I.fillField(this.fields(party).witnessDetails.element.reasonForWitness, 'Reason for witness');
   },

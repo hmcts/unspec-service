@@ -23,6 +23,7 @@ module.exports = {
   },
 
   async enterDisclosureReport(party) {
+    I.waitForElement(this.fields(party).disclosureFormFiledAndServed.id);
     await within (this.fields(party).disclosureFormFiledAndServed.id, () => {
       I.click(this.fields(party).disclosureFormFiledAndServed.options.yes);
     });

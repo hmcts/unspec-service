@@ -9,6 +9,7 @@ module.exports = {
   },
 
   async enterDraftDirections(party) {
+    I.waitForElement(this.fields(party).draftDirections);
     I.fillField(this.fields(party).draftDirections, 'Draft directions');
 
     await I.clickContinue();

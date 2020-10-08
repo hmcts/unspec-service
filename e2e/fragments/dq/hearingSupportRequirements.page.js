@@ -20,6 +20,7 @@ module.exports = {
   },
 
   async selectRequirements(party) {
+    I.waitForElement(this.fields(party).requirements.options.disabledAccess);
     I.checkOption(this.fields(party).requirements.options.signLanguage);
     I.checkOption(this.fields(party).requirements.options.languageInterpreter);
     I.checkOption(this.fields(party).requirements.options.other);

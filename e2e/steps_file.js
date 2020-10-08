@@ -46,9 +46,7 @@ const confirmDetailsPage = require('./fragments/confirmDetails.page');
 
 // DQ fragments
 const fileDirectionsQuestionnairePage = require('./fragments/dq/fileDirectionsQuestionnaire.page');
-// const disclosureOfElectronicDocumentsPage = require('./fragments/dq/disclosureOfElectrionicDocuments.page');
 const disclosureOfNonElectronicDocumentsPage = require('./fragments/dq/disclosureOfNonElectrionicDocuments.page');
-// const disclosureReportPage = require('./fragments/dq/disclosureReport.page');
 const expertsPage = require('./fragments/dq/experts.page');
 const witnessPage = require('./fragments/dq/witnesses.page');
 const hearingPage = require('./fragments/dq/hearing.page');
@@ -147,11 +145,7 @@ module.exports = function () {
       await defendantDetails.verifyDetails();
       await confirmDetailsPage.confirmReference();
       await fileDirectionsQuestionnairePage.fileDirectionsQuestionnaire(parties.RESPONDENT_SOLICITOR_1);
-      // case created in e2e test is not multi claim
-      // await disclosureOfElectronicDocumentsPage.enterDisclosureOfElectronicDocuments(parties.RESPONDENT_SOLICITOR_1);
       await disclosureOfNonElectronicDocumentsPage.enterDirectionsProposedForDisclosure(parties.RESPONDENT_SOLICITOR_1);
-      // case created in e2e test is not multi claim
-      // await disclosureReportPage.enterDisclosureReport(parties.RESPONDENT_SOLICITOR_1);
       await expertsPage.enterExpertInformation(parties.RESPONDENT_SOLICITOR_1);
       await witnessPage.enterWitnessInformation(parties.RESPONDENT_SOLICITOR_1);
       await hearingPage.enterHearingInformation(parties.RESPONDENT_SOLICITOR_1);
@@ -180,7 +174,6 @@ module.exports = function () {
       const numberOfElements = await this.grabNumberOfVisibleElements('.collection-title');
       this.click('Add new');
       this.waitNumberOfVisibleElements('.collection-title', numberOfElements + 1);
-      this.wait(0.5); // add extra time to allow slower browsers to render all fields (just extra precaution)
     },
 
     /**

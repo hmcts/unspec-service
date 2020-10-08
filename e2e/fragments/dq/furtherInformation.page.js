@@ -17,6 +17,7 @@ module.exports = {
   },
 
   async enterFurtherInformation(party) {
+    I.waitForElement(this.fields(party).futureApplications.id);
     await within(this.fields(party).futureApplications.id, () => {
       I.click(this.fields(party).futureApplications.options.yes);
     });

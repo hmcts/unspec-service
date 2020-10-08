@@ -23,6 +23,7 @@ module.exports = {
   },
 
   async enterDisclosureOfElectronicDocuments(party) {
+    I.waitForElement(this.fields(party).reachedAgreement.id);
     await within(this.fields(party).reachedAgreement.id, () => {
       I.click(this.fields(party).reachedAgreement.options.no);
     });
