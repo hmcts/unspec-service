@@ -11,6 +11,7 @@ import uk.gov.hmcts.reform.unspec.callback.CallbackHandler;
 import uk.gov.hmcts.reform.unspec.callback.CallbackParams;
 import uk.gov.hmcts.reform.unspec.callback.CaseEvent;
 import uk.gov.hmcts.reform.unspec.enums.YesOrNo;
+import uk.gov.hmcts.reform.unspec.model.BusinessProcess;
 import uk.gov.hmcts.reform.unspec.validation.RequestExtensionValidator;
 
 import java.time.LocalDate;
@@ -102,6 +103,8 @@ public class RespondExtensionCallbackHandler extends CallbackHandler {
             newDeadline = mapToDate(data, COUNTER_DEADLINE);
             data.put(RESPONSE_DEADLINE, newDeadline.atTime(MID_NIGHT));
         }
+
+        data.put("businessProcess", BusinessProcess.builder().activityId("ExtensionResponseHandling").build());
 
         return AboutToStartOrSubmitCallbackResponse.builder()
             .data(data)
