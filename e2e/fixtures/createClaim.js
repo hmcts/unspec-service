@@ -15,7 +15,6 @@ module.exports = {
       }
     },
     claimant: {
-      allocatedTrack: 'SMALL_CLAIM',
       applicant1: {
         type: 'COMPANY',
         companyName: 'Test Inc',
