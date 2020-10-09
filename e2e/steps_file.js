@@ -48,6 +48,7 @@ const confirmDetailsPage = require('./fragments/confirmDetails.page');
 
 // DQ fragments
 const fileDirectionsQuestionnairePage = require('./fragments/dq/fileDirectionsQuestionnaire.page');
+const disclosureOfElectronicDocumentsPage = require('./fragments/dq/disclosureOfElectrionicDocuments.page');
 const disclosureOfNonElectronicDocumentsPage = require('./fragments/dq/disclosureOfNonElectrionicDocuments.page');
 const expertsPage = require('./fragments/dq/experts.page');
 const witnessPage = require('./fragments/dq/witnesses.page');
@@ -156,6 +157,7 @@ module.exports = function () {
       await defendantDetails.verifyDetails();
       await confirmDetailsPage.confirmReference();
       await fileDirectionsQuestionnairePage.fileDirectionsQuestionnaire(parties.RESPONDENT_SOLICITOR_1);
+      await disclosureOfElectronicDocumentsPage.enterDisclosureOfElectronicDocuments(parties.RESPONDENT_SOLICITOR_1);
       await disclosureOfNonElectronicDocumentsPage.enterDirectionsProposedForDisclosure(parties.RESPONDENT_SOLICITOR_1);
       await expertsPage.enterExpertInformation(parties.RESPONDENT_SOLICITOR_1);
       await witnessPage.enterWitnessInformation(parties.RESPONDENT_SOLICITOR_1);
