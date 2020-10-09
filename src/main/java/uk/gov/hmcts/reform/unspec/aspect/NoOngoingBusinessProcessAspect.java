@@ -10,14 +10,13 @@ import uk.gov.hmcts.reform.ccd.client.model.AboutToStartOrSubmitCallbackResponse
 import uk.gov.hmcts.reform.ccd.client.model.CaseDetails;
 import uk.gov.hmcts.reform.unspec.callback.CallbackParams;
 import uk.gov.hmcts.reform.unspec.callback.CaseEvent;
-import uk.gov.hmcts.reform.unspec.callback.UserType;
 import uk.gov.hmcts.reform.unspec.helpers.CaseDetailsConverter;
 import uk.gov.hmcts.reform.unspec.model.CaseData;
 
 import java.util.List;
 
 import static java.lang.String.format;
-import static uk.gov.hmcts.reform.unspec.enums.BusinessProcessStatus.FINISHED;
+import static uk.gov.hmcts.reform.unspec.callback.CallbackType.SUBMITTED;
 
 @Slf4j
 @Aspect
@@ -35,10 +34,13 @@ public class NoOngoingBusinessProcessAspect {
         ProceedingJoinPoint joinPoint,
         CallbackParams callbackParams
     ) throws Throwable {
+        if (callbackParams.getType() == SUBMITTED) {
+            return joinPoint.proceed();
+        }
         CaseEvent caseEvent = CaseEvent.valueOf(callbackParams.getRequest().getEventId());
         CaseDetails caseDetails = callbackParams.getRequest().getCaseDetails();
         CaseData caseData = caseDetailsConverter.toCaseData(caseDetails);
-        if (hasNoOngoingBusinessProcess(caseData) || caseEvent.getUserType() == UserType.CAMUNDA) {
+        if (caseData.hasNoOngoingBusinessProcess() || caseEvent.isCamundaEvent()) {
             return joinPoint.proceed();
         } else {
             log.info(format(
@@ -49,11 +51,5 @@ public class NoOngoingBusinessProcessAspect {
                 .errors(List.of(ERROR_MESSAGE))
                 .build();
         }
-    }
-
-    private boolean hasNoOngoingBusinessProcess(CaseData caseData) {
-        return (caseData.getBusinessProcess() == null
-            || caseData.getBusinessProcess().getStatus() == null
-            || caseData.getBusinessProcess().getStatus() == FINISHED);
     }
 }
