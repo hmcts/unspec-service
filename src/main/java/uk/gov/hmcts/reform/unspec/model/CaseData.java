@@ -23,6 +23,8 @@ import java.util.List;
 import javax.validation.Valid;
 import javax.validation.constraints.PastOrPresent;
 
+import static uk.gov.hmcts.reform.unspec.enums.BusinessProcessStatus.FINISHED;
+
 @Data
 @Builder(toBuilder = true)
 @HasServiceDateTheSameAsOrAfterIssueDate(groups = ConfirmServiceDateGroup.class)
@@ -93,4 +95,10 @@ public class CaseData {
 
     @JsonUnwrapped
     private final Respondent1DQ respondent1DQ;
+
+    public boolean hasNoOngoingBusinessProcess() {
+        return businessProcess == null
+            || businessProcess.getStatus() == null
+            || businessProcess.getStatus() == FINISHED;
+    }
 }
