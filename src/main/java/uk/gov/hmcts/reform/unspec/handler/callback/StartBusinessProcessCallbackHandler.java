@@ -29,8 +29,8 @@ public class StartBusinessProcessCallbackHandler extends CallbackHandler {
     public static final String BUSINESS_PROCESS = "businessProcess";
 
     @Override
-    protected Map<CallbackType, Callback> callbacks() {
-        return Map.of(CallbackType.ABOUT_TO_SUBMIT, this::startBusinessProcess);
+    protected Map<String, Callback> callbacks() {
+        return Map.of(callbackKey(CallbackType.ABOUT_TO_SUBMIT), this::startBusinessProcess);
     }
 
     @Override
