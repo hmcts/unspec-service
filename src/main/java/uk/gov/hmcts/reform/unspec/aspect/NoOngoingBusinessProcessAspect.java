@@ -10,7 +10,6 @@ import uk.gov.hmcts.reform.ccd.client.model.AboutToStartOrSubmitCallbackResponse
 import uk.gov.hmcts.reform.ccd.client.model.CaseDetails;
 import uk.gov.hmcts.reform.unspec.callback.CallbackParams;
 import uk.gov.hmcts.reform.unspec.callback.CaseEvent;
-import uk.gov.hmcts.reform.unspec.callback.UserType;
 import uk.gov.hmcts.reform.unspec.helpers.CaseDetailsConverter;
 import uk.gov.hmcts.reform.unspec.model.CaseData;
 
@@ -38,7 +37,7 @@ public class NoOngoingBusinessProcessAspect {
         CaseEvent caseEvent = CaseEvent.valueOf(callbackParams.getRequest().getEventId());
         CaseDetails caseDetails = callbackParams.getRequest().getCaseDetails();
         CaseData caseData = caseDetailsConverter.toCaseData(caseDetails);
-        if (hasNoOngoingBusinessProcess(caseData) || caseEvent.getUserType() == UserType.CAMUNDA) {
+        if (hasNoOngoingBusinessProcess(caseData) || caseEvent.isCamundaEvent()) {
             return joinPoint.proceed();
         } else {
             log.info(format(

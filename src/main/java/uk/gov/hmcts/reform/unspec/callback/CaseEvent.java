@@ -38,4 +38,8 @@ public enum CaseEvent {
 
     private final String displayName;
     private final UserType userType;
+
+    public boolean isCamundaEvent() {
+        return this.getUserType() == CAMUNDA;
+    }
 }
