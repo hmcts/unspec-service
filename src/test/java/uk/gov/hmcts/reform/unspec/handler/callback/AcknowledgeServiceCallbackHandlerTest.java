@@ -35,6 +35,7 @@ import static org.mockito.Mockito.clearInvocations;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static uk.gov.hmcts.reform.unspec.callback.CallbackType.ABOUT_TO_START;
+import static uk.gov.hmcts.reform.unspec.callback.CallbackType.MID;
 import static uk.gov.hmcts.reform.unspec.callback.CaseEvent.ACKNOWLEDGE_SERVICE;
 import static uk.gov.hmcts.reform.unspec.service.DeadlinesCalculator.MID_NIGHT;
 
@@ -72,7 +73,9 @@ class AcknowledgeServiceCallbackHandlerTest extends BaseCallbackHandlerTest {
     }
 
     @Nested
-    class MidEventCallback {
+    class MidEventConfirmDetailsCallback {
+
+        private static final String PAGE_ID = "confirm-details";
 
         @ParameterizedTest
         @ValueSource(strings = {"individualDateOfBirth", "soleTraderDateOfBirth"})
@@ -80,7 +83,7 @@ class AcknowledgeServiceCallbackHandlerTest extends BaseCallbackHandlerTest {
             Map<String, Object> data = new HashMap<>();
             data.put("respondent1", Map.of(dateOfBirthField, "2030-01-01"));
 
-            CallbackParams params = callbackParamsOf(data, CallbackType.MID);
+            CallbackParams params = callbackParamsOf(data, MID, PAGE_ID);
 
             AboutToStartOrSubmitCallbackResponse response = (AboutToStartOrSubmitCallbackResponse) handler
                 .handle(params);
@@ -94,7 +97,7 @@ class AcknowledgeServiceCallbackHandlerTest extends BaseCallbackHandlerTest {
             Map<String, Object> data = new HashMap<>();
             data.put("respondent1", Map.of(dateOfBirthField, "2000-01-01"));
 
-            CallbackParams params = callbackParamsOf(data, CallbackType.MID);
+            CallbackParams params = callbackParamsOf(data, MID, PAGE_ID);
 
             AboutToStartOrSubmitCallbackResponse response = (AboutToStartOrSubmitCallbackResponse) handler
                 .handle(params);

@@ -9,7 +9,6 @@ import uk.gov.hmcts.reform.ccd.client.model.SubmittedCallbackResponse;
 import uk.gov.hmcts.reform.unspec.callback.Callback;
 import uk.gov.hmcts.reform.unspec.callback.CallbackHandler;
 import uk.gov.hmcts.reform.unspec.callback.CallbackParams;
-import uk.gov.hmcts.reform.unspec.callback.CallbackType;
 import uk.gov.hmcts.reform.unspec.callback.CaseEvent;
 import uk.gov.hmcts.reform.unspec.model.Party;
 import uk.gov.hmcts.reform.unspec.service.BusinessProcessService;
@@ -23,6 +22,10 @@ import java.util.List;
 import java.util.Map;
 
 import static java.lang.String.format;
+import static uk.gov.hmcts.reform.unspec.callback.CallbackType.ABOUT_TO_START;
+import static uk.gov.hmcts.reform.unspec.callback.CallbackType.ABOUT_TO_SUBMIT;
+import static uk.gov.hmcts.reform.unspec.callback.CallbackType.MID;
+import static uk.gov.hmcts.reform.unspec.callback.CallbackType.SUBMITTED;
 import static uk.gov.hmcts.reform.unspec.callback.CaseEvent.ACKNOWLEDGE_SERVICE;
 import static uk.gov.hmcts.reform.unspec.helpers.DateFormatHelper.DATE;
 import static uk.gov.hmcts.reform.unspec.helpers.DateFormatHelper.formatLocalDateTime;
@@ -42,12 +45,12 @@ public class AcknowledgeServiceCallbackHandler extends CallbackHandler {
     private final BusinessProcessService businessProcessService;
 
     @Override
-    protected Map<CallbackType, Callback> callbacks() {
+    protected Map<String, Callback> callbacks() {
         return Map.of(
-            CallbackType.ABOUT_TO_START, this::emptyCallbackResponse,
-            CallbackType.MID, this::validateDateOfBirth,
-            CallbackType.ABOUT_TO_SUBMIT, this::setNewResponseDeadline,
-            CallbackType.SUBMITTED, this::buildConfirmation
+            callbackKey(ABOUT_TO_START), this::emptyCallbackResponse,
+            callbackKey(MID, "confirm-details"), this::validateDateOfBirth,
+            callbackKey(ABOUT_TO_SUBMIT), this::setNewResponseDeadline,
+            callbackKey(SUBMITTED), this::buildConfirmation
         );
     }
 

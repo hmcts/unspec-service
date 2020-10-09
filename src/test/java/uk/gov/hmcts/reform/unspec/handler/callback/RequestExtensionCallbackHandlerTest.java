@@ -34,6 +34,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static uk.gov.hmcts.reform.unspec.callback.CallbackType.ABOUT_TO_START;
+import static uk.gov.hmcts.reform.unspec.callback.CallbackType.MID;
 import static uk.gov.hmcts.reform.unspec.callback.CaseEvent.REQUEST_EXTENSION;
 import static uk.gov.hmcts.reform.unspec.handler.callback.RequestExtensionCallbackHandler.ALREADY_AGREED;
 import static uk.gov.hmcts.reform.unspec.handler.callback.RequestExtensionCallbackHandler.EXTENSION_ALREADY_AGREED;
@@ -92,7 +93,9 @@ class RequestExtensionCallbackHandlerTest extends BaseCallbackHandlerTest {
     }
 
     @Nested
-    class MidCallback {
+    class MidEventProposeDeadlineCallback {
+
+        private static final String PAGE_ID = "propose-deadline";
 
         @Test
         void shouldReturnExpectedError_whenValuesAreInvalid() {
@@ -100,7 +103,8 @@ class RequestExtensionCallbackHandlerTest extends BaseCallbackHandlerTest {
                 of(PROPOSED_DEADLINE, now().minusDays(1),
                    RESPONSE_DEADLINE, now().atTime(16, 0)
                 ),
-                CallbackType.MID
+                MID,
+                PAGE_ID
             );
 
             AboutToStartOrSubmitCallbackResponse response = (AboutToStartOrSubmitCallbackResponse) handler
@@ -116,7 +120,8 @@ class RequestExtensionCallbackHandlerTest extends BaseCallbackHandlerTest {
                 of(PROPOSED_DEADLINE, now().plusDays(14),
                    RESPONSE_DEADLINE, now().atTime(16, 0)
                 ),
-                CallbackType.MID
+                MID,
+                PAGE_ID
             );
 
             AboutToStartOrSubmitCallbackResponse response = (AboutToStartOrSubmitCallbackResponse) handler
