@@ -41,7 +41,7 @@ public class StartBusinessProcessTaskHandler implements ExternalTaskHandler {
 
         StateFlow stateFlow = stateFlowEngine.evaluate(caseData);
         VariableMap variables = Variables.createVariables();
-        variables.putValue("flowState", stateFlow);
+        variables.putValue("flowState", stateFlow.getState().getName());
 
         externalTaskService.complete(externalTask, variables);
     }

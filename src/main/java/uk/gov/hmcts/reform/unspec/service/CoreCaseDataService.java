@@ -52,7 +52,7 @@ public class CoreCaseDataService {
             JURISDICTION,
             CASE_TYPE,
             caseId,
-            eventName.getValue()
+            eventName.name()
         );
     }
 

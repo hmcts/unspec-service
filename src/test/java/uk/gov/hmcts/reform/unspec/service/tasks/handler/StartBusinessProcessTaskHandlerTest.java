@@ -3,8 +3,8 @@ package uk.gov.hmcts.reform.unspec.service.tasks.handler;
 import org.camunda.bpm.client.task.ExternalTask;
 import org.camunda.bpm.client.task.ExternalTaskService;
 import org.camunda.bpm.engine.delegate.BpmnError;
+import org.camunda.bpm.engine.variable.VariableMap;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
@@ -29,10 +29,7 @@ import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyMap;
 import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.atLeast;
-import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static uk.gov.hmcts.reform.unspec.callback.CaseEvent.START_BUSINESS_PROCESS;
@@ -56,8 +53,6 @@ class StartBusinessProcessTaskHandlerTest {
     @MockBean
     private CoreCaseDataService coreCaseDataService;
     @Autowired
-    private StateFlowEngine stateFlowEngine;
-    @Autowired
     private StartBusinessProcessTaskHandler startBusinessProcessTaskHandler;
 
     @BeforeEach
@@ -71,83 +66,74 @@ class StartBusinessProcessTaskHandlerTest {
                 "CCD_ID",
                 CASE_ID.toString(),
                 "CASE_EVENT",
-                START_BUSINESS_PROCESS.getValue()
+                START_BUSINESS_PROCESS.name()
             ));
     }
 
-    @Nested
-    class SuccessHandler {
+    @Test
+    void shouldUpdateBusinessStatusToStarted_whenInputStatusIsReady() {
+        CaseData caseData = new CaseDataBuilder().atStateClaimDraft().build().toBuilder()
+            .businessProcess(BusinessProcess.builder().status(BusinessProcessStatus.READY).build())
+            .build();
+        CaseDetails caseDetails = CaseDetailsBuilder.builder()
+            .data(caseData)
+            .build();
 
-        @Test
-        void shouldUpdateBusinessStatusToStarted_whenInputStatusIsReady() {
-            CaseData caseData = new CaseDataBuilder().atStateClaimDraft().build().toBuilder()
-                .businessProcess(BusinessProcess.builder().status(BusinessProcessStatus.READY).build())
-                .build();
-            CaseDetails caseDetails = CaseDetailsBuilder.builder()
-                .data(caseData)
-                .build();
+        when(coreCaseDataService.startUpdate(eq(CASE_ID.toString()), eq(START_BUSINESS_PROCESS)))
+            .thenReturn(StartEventResponse.builder().caseDetails(caseDetails).build());
 
-            when(coreCaseDataService.startUpdate(eq(CASE_ID.toString()), eq(START_BUSINESS_PROCESS)))
-                .thenReturn(StartEventResponse.builder().caseDetails(caseDetails).build());
-
-            when(coreCaseDataService.submitUpdate(eq(CASE_ID.toString()), any(CaseDataContent.class)))
+        when(coreCaseDataService.submitUpdate(eq(CASE_ID.toString()), any(CaseDataContent.class)))
             .thenReturn(caseData);
 
-            startBusinessProcessTaskHandler.execute(mockExternalTask, externalTaskService);
+        startBusinessProcessTaskHandler.execute(mockExternalTask, externalTaskService);
 
-            verify(coreCaseDataService, atLeast(2)).startUpdate(eq(CASE_ID.toString()), eq(START_BUSINESS_PROCESS));
-            verify(coreCaseDataService).submitUpdate(eq(CASE_ID.toString()), any(CaseDataContent.class));
-            verify(externalTaskService).complete(mockExternalTask, anyMap());
-        }
-
-        @Test
-        void shouldUpdateBusinessStatusToSarted_whenInputStatusIsDispatched() {
-            CaseData caseData = new CaseDataBuilder().atStateClaimDraft().build().toBuilder()
-                .businessProcess(BusinessProcess.builder().status(BusinessProcessStatus.DISPATCHED).build())
-                .build();
-
-            CaseDetails caseDetails = CaseDetailsBuilder.builder()
-                .data(caseData)
-                .build();
-
-            when(coreCaseDataService.startUpdate(eq(CASE_ID.toString()), eq(START_BUSINESS_PROCESS)))
-                .thenReturn(StartEventResponse.builder().caseDetails(caseDetails).build());
-
-            when(coreCaseDataService.submitUpdate(eq(CASE_ID.toString()), any(CaseDataContent.class)))
-                .thenReturn(caseData);
-            startBusinessProcessTaskHandler.execute(mockExternalTask, externalTaskService);
-
-            verify(coreCaseDataService, atLeast(2)).startUpdate(eq(CASE_ID.toString()), eq(START_BUSINESS_PROCESS));
-            verify(coreCaseDataService, atLeast(1)).submitUpdate(eq(CASE_ID.toString()), any(CaseDataContent.class));
-            verify(externalTaskService).complete(mockExternalTask, anyMap());
-        }
+        verify(coreCaseDataService).startUpdate(eq(CASE_ID.toString()), eq(START_BUSINESS_PROCESS));
+        verify(coreCaseDataService).submitUpdate(eq(CASE_ID.toString()), any(CaseDataContent.class));
+        verify(externalTaskService).complete(eq(mockExternalTask), any(VariableMap.class));
     }
 
-    @Nested
-    class FailureHandler {
+    @Test
+    void shouldUpdateBusinessStatusToSarted_whenInputStatusIsDispatched() {
+        CaseData caseData = new CaseDataBuilder().atStateClaimDraft().build().toBuilder()
+            .businessProcess(BusinessProcess.builder().status(BusinessProcessStatus.DISPATCHED).build())
+            .build();
 
-        @Test
-        void shouldRaiseBpmnError_whenStatusExecutedIsStarted() {
-            CaseDetails caseDetails = CaseDetailsBuilder.builder()
-                .data(new CaseDataBuilder().atStateClaimDraft().build().toBuilder()
-                          .businessProcess(BusinessProcess.builder()
-                                               .status(BusinessProcessStatus.STARTED)
-                                               .processInstanceId(PROCESS_INSTANCE_ID)
-                                               .build())
-                          .build())
-                .build();
+        CaseDetails caseDetails = CaseDetailsBuilder.builder()
+            .data(caseData)
+            .build();
 
-            when(coreCaseDataService.startUpdate(eq(CASE_ID.toString()), eq(START_BUSINESS_PROCESS)))
-                .thenReturn(StartEventResponse.builder().caseDetails(caseDetails).build());
+        when(coreCaseDataService.startUpdate(eq(CASE_ID.toString()), eq(START_BUSINESS_PROCESS)))
+            .thenReturn(StartEventResponse.builder().caseDetails(caseDetails).build());
 
-            assertThrows(
-                BpmnError.class,
-                () -> startBusinessProcessTaskHandler.execute(mockExternalTask, externalTaskService),
-                "ABORT"
-            );
+        when(coreCaseDataService.submitUpdate(eq(CASE_ID.toString()), any(CaseDataContent.class)))
+            .thenReturn(caseData);
+        startBusinessProcessTaskHandler.execute(mockExternalTask, externalTaskService);
 
-            verify(coreCaseDataService).startUpdate(eq(CASE_ID.toString()), eq(START_BUSINESS_PROCESS));
-        }
+        verify(coreCaseDataService).startUpdate(eq(CASE_ID.toString()), eq(START_BUSINESS_PROCESS));
+        verify(coreCaseDataService).submitUpdate(eq(CASE_ID.toString()), any(CaseDataContent.class));
+        verify(externalTaskService).complete(eq(mockExternalTask), any(VariableMap.class));
     }
 
+    @Test
+    void shouldRaiseBpmnError_whenStatusExecutedIsStarted() {
+        CaseDetails caseDetails = CaseDetailsBuilder.builder()
+            .data(new CaseDataBuilder().atStateClaimDraft().build().toBuilder()
+                      .businessProcess(BusinessProcess.builder()
+                                           .status(BusinessProcessStatus.STARTED)
+                                           .processInstanceId(PROCESS_INSTANCE_ID)
+                                           .build())
+                      .build())
+            .build();
+
+        when(coreCaseDataService.startUpdate(eq(CASE_ID.toString()), eq(START_BUSINESS_PROCESS)))
+            .thenReturn(StartEventResponse.builder().caseDetails(caseDetails).build());
+
+        assertThrows(
+            BpmnError.class,
+            () -> startBusinessProcessTaskHandler.execute(mockExternalTask, externalTaskService),
+            "ABORT"
+        );
+
+        verify(coreCaseDataService).startUpdate(eq(CASE_ID.toString()), eq(START_BUSINESS_PROCESS));
+    }
 }

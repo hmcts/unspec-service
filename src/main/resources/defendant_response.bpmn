@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" id="Definitions_18h9iji" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="4.2.0">
+  <bpmn:process id="DefendantResponseHandling" isExecutable="true">
+    <bpmn:startEvent id="StartEvent_1">
+      <bpmn:outgoing>Flow_0bg4jso</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:endEvent id="Event_13n9twk">
+      <bpmn:incoming>Flow_1xdr8bm</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="Flow_1xdr8bm" sourceRef="DefendantResponseTaskId" targetRef="Event_13n9twk" />
+    <bpmn:serviceTask id="DefendantResponseTaskId" name="Send email applicant solicitor 1" camunda:type="external" camunda:topic="processCaseEvent">
+      <bpmn:extensionElements>
+        <camunda:inputOutput>
+          <camunda:inputParameter name="CCD_ID">1601986692564009</camunda:inputParameter>
+          <camunda:inputParameter name="CASE_EVENT">NOTIFY_APPLICANT_SOLICITOR1_FOR_DEFENDANT_RESPONSE</camunda:inputParameter>
+        </camunda:inputOutput>
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_1n6ur6w</bpmn:incoming>
+      <bpmn:outgoing>Flow_1xdr8bm</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:serviceTask id="Activity_1ck0oap" name="StartBusinessProcess" camunda:type="external" camunda:topic="START_BUSINESS_PROCESS">
+      <bpmn:extensionElements>
+        <camunda:inputOutput>
+          <camunda:inputParameter name="CCD_ID">1601986692564009</camunda:inputParameter>
+          <camunda:inputParameter name="CASE_EVENT">START_BUSINESS_PROCESS</camunda:inputParameter>
+        </camunda:inputOutput>
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_0bg4jso</bpmn:incoming>
+      <bpmn:outgoing>Flow_1n6ur6w</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:boundaryEvent id="Event_0w486y9" name="Abort" attachedToRef="Activity_1ck0oap">
+      <bpmn:outgoing>Flow_16pae08</bpmn:outgoing>
+      <bpmn:errorEventDefinition id="ErrorEventDefinition_0jbfi89" errorRef="Error_0g9ap8n" />
+    </bpmn:boundaryEvent>
+    <bpmn:endEvent id="Event_1likl8j" name="Aborted">
+      <bpmn:incoming>Flow_16pae08</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="Flow_16pae08" sourceRef="Event_0w486y9" targetRef="Event_1likl8j" />
+    <bpmn:sequenceFlow id="Flow_0bg4jso" sourceRef="StartEvent_1" targetRef="Activity_1ck0oap" />
+    <bpmn:sequenceFlow id="Flow_1n6ur6w" sourceRef="Activity_1ck0oap" targetRef="DefendantResponseTaskId" />
+  </bpmn:process>
+  <bpmn:error id="Error_0g9ap8n" name="StartBusinessAbort" errorCode="ABORT" />
+  <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="DefendantResponseHandling">
+      <bpmndi:BPMNEdge id="Flow_1xdr8bm_di" bpmnElement="Flow_1xdr8bm">
+        <di:waypoint x="550" y="117" />
+        <di:waypoint x="632" y="117" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_16pae08_di" bpmnElement="Flow_16pae08">
+        <di:waypoint x="330" y="175" />
+        <di:waypoint x="330" y="282" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0bg4jso_di" bpmnElement="Flow_0bg4jso">
+        <di:waypoint x="215" y="117" />
+        <di:waypoint x="280" y="117" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1n6ur6w_di" bpmnElement="Flow_1n6ur6w">
+        <di:waypoint x="380" y="117" />
+        <di:waypoint x="450" y="117" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="_BPMNShape_StartEvent_2" bpmnElement="StartEvent_1">
+        <dc:Bounds x="179" y="99" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_13n9twk_di" bpmnElement="Event_13n9twk">
+        <dc:Bounds x="632" y="99" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0ipbyde_di" bpmnElement="DefendantResponseTaskId">
+        <dc:Bounds x="450" y="77" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_1ck0oap_di" bpmnElement="Activity_1ck0oap">
+        <dc:Bounds x="280" y="77" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_1likl8j_di" bpmnElement="Event_1likl8j">
+        <dc:Bounds x="312" y="282" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="311" y="325" width="39" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_0w486y9_di" bpmnElement="Event_0w486y9">
+        <dc:Bounds x="312" y="139" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="358" y="182" width="27" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>

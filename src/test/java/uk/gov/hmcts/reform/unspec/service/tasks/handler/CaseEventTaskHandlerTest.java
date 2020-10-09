@@ -29,7 +29,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static uk.gov.hmcts.reform.unspec.callback.CaseEvent.NOTIFY_DEFENDANT_SOLICITOR_FOR_CLAIM_ISSUE;
+import static uk.gov.hmcts.reform.unspec.callback.CaseEvent.NOTIFY_RESPONDENT_SOLICITOR1_FOR_CLAIM_ISSUE;
 
 @SpringBootTest(classes = {
     CaseEventTaskHandler.class,
@@ -60,7 +60,7 @@ class CaseEventTaskHandlerTest {
                 "CCD_ID",
                 CASE_ID.toString(),
                 "CASE_EVENT",
-                NOTIFY_DEFENDANT_SOLICITOR_FOR_CLAIM_ISSUE.getValue()
+                NOTIFY_RESPONDENT_SOLICITOR1_FOR_CLAIM_ISSUE.name()
             ));
     }
 
@@ -77,7 +77,7 @@ class CaseEventTaskHandlerTest {
 
             when(coreCaseDataService.startUpdate(
                 eq(CASE_ID.toString()),
-                eq(NOTIFY_DEFENDANT_SOLICITOR_FOR_CLAIM_ISSUE)
+                eq(NOTIFY_RESPONDENT_SOLICITOR1_FOR_CLAIM_ISSUE)
             )).thenReturn(StartEventResponse.builder().caseDetails(caseDetails).build());
 
             when(coreCaseDataService.submitUpdate(eq(CASE_ID.toString()), any(CaseDataContent.class)))
@@ -87,7 +87,7 @@ class CaseEventTaskHandlerTest {
 
             verify(coreCaseDataService).startUpdate(
                 eq(CASE_ID.toString()),
-                eq(NOTIFY_DEFENDANT_SOLICITOR_FOR_CLAIM_ISSUE)
+                eq(NOTIFY_RESPONDENT_SOLICITOR1_FOR_CLAIM_ISSUE)
             );
 
             verify(coreCaseDataService).submitUpdate(eq(CASE_ID.toString()), any(CaseDataContent.class));
