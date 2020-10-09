@@ -34,7 +34,8 @@ public enum CaseEvent {
         "Notify transferred local court",
         CAMUNDA
     ),
-    START_BUSINESS_PROCESS("Start business process", CAMUNDA);
+    START_BUSINESS_PROCESS("Start business process", CAMUNDA),
+    TESTING_SUPPORT_RESET_BUSINESS_PROCESS("Reset business process", USER);
 
     private final String displayName;
     private final UserType userType;
