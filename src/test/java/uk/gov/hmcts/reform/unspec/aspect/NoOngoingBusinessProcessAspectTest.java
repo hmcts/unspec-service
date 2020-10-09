@@ -47,7 +47,7 @@ class NoOngoingBusinessProcessAspectTest {
     NoOngoingBusinessProcessAspect aspect;
 
     @Nested
-    class NormalUserEvent {
+    class UserEvent {
 
         @MockBean
         ProceedingJoinPoint proceedingJoinPoint;
@@ -124,7 +124,7 @@ class NoOngoingBusinessProcessAspectTest {
     }
 
     @Nested
-    class CamundaUserEvent {
+    class CamundaEvent {
 
         @MockBean
         ProceedingJoinPoint proceedingJoinPoint;
