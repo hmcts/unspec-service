@@ -15,7 +15,7 @@ import uk.gov.hmcts.reform.unspec.helpers.CaseDetailsConverter;
 import uk.gov.hmcts.reform.unspec.model.BusinessProcess;
 import uk.gov.hmcts.reform.unspec.model.CaseData;
 import uk.gov.hmcts.reform.unspec.model.Party;
-import uk.gov.hmcts.reform.unspec.model.dq.Respondent1DQ;
+import uk.gov.hmcts.reform.unspec.model.dq.DQ;
 import uk.gov.hmcts.reform.unspec.validation.DateOfBirthValidator;
 import uk.gov.hmcts.reform.unspec.validation.UnavailableDateValidator;
 
@@ -67,7 +67,7 @@ public class RespondToClaimCallbackHandler extends CallbackHandler {
 
     private CallbackResponse validateUnavailableDates(CallbackParams callbackParams) {
         CaseData caseData = caseDetailsConverter.toCaseData(callbackParams.getRequest().getCaseDetails());
-        Respondent1DQ respondent1DQ = caseData.getRespondent1DQ();
+        DQ respondent1DQ = caseData.getRespondent1DQ();
         List<String> errors = unavailableDateValidator.validate(respondent1DQ.getHearing().getUnavailableDates());
 
         return AboutToStartOrSubmitCallbackResponse.builder()

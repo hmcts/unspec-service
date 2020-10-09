@@ -3,7 +3,7 @@ package uk.gov.hmcts.reform.unspec.model.dq;
 import uk.gov.hmcts.reform.unspec.model.StatementOfTruth;
 import uk.gov.hmcts.reform.unspec.model.documents.Document;
 
-interface DQ {
+public interface DQ {
 
     FileDirectionsQuestionnaire getFileDirectionQuestionnaire();
 
