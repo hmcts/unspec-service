@@ -151,35 +151,9 @@ class NoOngoingBusinessProcessAspectTest {
         @SneakyThrows
         @ParameterizedTest
         @NullSource
-        @EnumSource(value = BusinessProcessStatus.class, names = "FINISHED", mode = EnumSource.Mode.INCLUDE)
+        @EnumSource(value = BusinessProcessStatus.class)
         void shouldProceedToMethodInvocation_whenBusinessProcessStatusIsNullOrFinished(BusinessProcessStatus status) {
             AboutToStartOrSubmitCallbackResponse response = AboutToStartOrSubmitCallbackResponse.builder().build();
-            when(proceedingJoinPoint.proceed()).thenReturn(response);
-
-            CallbackParams callbackParams = CallbackParamsBuilder.builder()
-                .type(ABOUT_TO_START)
-                .request(CallbackRequest.builder()
-                             .eventId(START_BUSINESS_PROCESS.name())
-                             .caseDetails(CaseDetailsBuilder.builder().data(
-                                 CaseDataBuilder.builder()
-                                     .atStateClaimCreated()
-                                     .businessProcess(BusinessProcess.builder().status(status).build())
-                                     .build()).build())
-                             .build())
-                .build();
-            Object result = aspect.checkOngoingBusinessProcess(proceedingJoinPoint, callbackParams);
-
-            assertThat(result).isEqualTo(response);
-            verify(proceedingJoinPoint).proceed();
-        }
-
-        @SneakyThrows
-        @ParameterizedTest
-        @EnumSource(value = BusinessProcessStatus.class, names = "FINISHED", mode = EnumSource.Mode.EXCLUDE)
-        void shouldProceedToMethodInvocation_whenOngoingBusinessProcess(BusinessProcessStatus status) {
-            AboutToStartOrSubmitCallbackResponse response = AboutToStartOrSubmitCallbackResponse.builder()
-                .errors(List.of(ERROR_MESSAGE))
-                .build();
             when(proceedingJoinPoint.proceed()).thenReturn(response);
 
             CallbackParams callbackParams = CallbackParamsBuilder.builder()
