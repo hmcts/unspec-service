@@ -25,6 +25,7 @@ public enum CaseEvent {
     NOTIFY_APPLICANT_SOLICITOR1_FOR_CASE_HANDED_OFFLINE("Notify handed offline"),
     NOTIFY_RESPONDENT_SOLICITOR1_FOR_CASE_TRANSFERRED_TO_LOCAL_COURT("Notify transferred local court"),
     NOTIFY_APPLICANT_SOLICITOR1_FOR_CASE_TRANSFERRED_TO_LOCAL_COURT("Notify transferred local court"),
+    TESTING_SUPPORT_RESET_BUSINESS_PROCESS("Reset business process"),
     DISPATCH_BUSINESS_PROCESS("Dispatch business process");
 
     private final String displayName;
