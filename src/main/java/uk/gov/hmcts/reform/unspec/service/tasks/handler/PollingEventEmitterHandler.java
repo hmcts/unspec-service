@@ -28,7 +28,6 @@ public class PollingEventEmitterHandler implements ExternalTaskHandler {
     @Override
     public void execute(ExternalTask externalTask, ExternalTaskService externalTaskService) {
         final String taskName = externalTask.getTopicName();
-        log.info("Job {} started", taskName);
 
         List<CaseDetails> cases = caseSearchService.getCases();
         log.info("Job '{}' found {} case(s)", taskName, cases.size());
@@ -49,6 +48,5 @@ public class PollingEventEmitterHandler implements ExternalTaskHandler {
         });
 
         externalTaskService.complete(externalTask);
-        log.info("Job '{}' finished", taskName);
     }
 }
