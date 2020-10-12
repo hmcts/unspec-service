@@ -12,8 +12,8 @@
     <bpmn:serviceTask id="CaseHandedOfflineDefendantTaskId" name="Send email respondent solicitor 1" camunda:type="external" camunda:topic="processCaseEvent">
       <bpmn:extensionElements>
         <camunda:inputOutput>
-          <camunda:inputParameter name="CCD_ID">1601986692564009</camunda:inputParameter>
-          <camunda:inputParameter name="CASE_EVENT">NOTIFY_RESPONDENT_SOLICITOR1_FOR_CASE_HANDED_OFFLINE</camunda:inputParameter>
+          <camunda:inputParameter name="caseId">1601986692564009</camunda:inputParameter>
+          <camunda:inputParameter name="caseEvent">NOTIFY_RESPONDENT_SOLICITOR1_FOR_CASE_HANDED_OFFLINE</camunda:inputParameter>
         </camunda:inputOutput>
       </bpmn:extensionElements>
       <bpmn:incoming>Flow_07i7aul</bpmn:incoming>
@@ -23,8 +23,8 @@
     <bpmn:serviceTask id="CaseHandedOfflineClaimantTaskId" name="Send email applicant solicitor 1" camunda:type="external" camunda:topic="processCaseEvent">
       <bpmn:extensionElements>
         <camunda:inputOutput>
-          <camunda:inputParameter name="CCD_ID">1601986692564009</camunda:inputParameter>
-          <camunda:inputParameter name="CASE_EVENT">NOTIFY_APPLICANT_SOLICITOR1_FOR_CASE_HANDED_OFFLINE</camunda:inputParameter>
+          <camunda:inputParameter name="caseId">1601986692564009</camunda:inputParameter>
+          <camunda:inputParameter name="caseEvent">NOTIFY_APPLICANT_SOLICITOR1_FOR_CASE_HANDED_OFFLINE</camunda:inputParameter>
         </camunda:inputOutput>
       </bpmn:extensionElements>
       <bpmn:incoming>Flow_0x8zuet</bpmn:incoming>
@@ -33,8 +33,8 @@
     <bpmn:serviceTask id="Activity_14l4zql" name="StartBusinessProcess" camunda:type="external" camunda:topic="START_BUSINESS_PROCESS">
       <bpmn:extensionElements>
         <camunda:inputOutput>
-          <camunda:inputParameter name="CCD_ID">1601986692564009</camunda:inputParameter>
-          <camunda:inputParameter name="CASE_EVENT">START_BUSINESS_PROCESS</camunda:inputParameter>
+          <camunda:inputParameter name="caseId">1601986692564009</camunda:inputParameter>
+          <camunda:inputParameter name="caseEvent">START_BUSINESS_PROCESS</camunda:inputParameter>
         </camunda:inputOutput>
       </bpmn:extensionElements>
       <bpmn:incoming>Flow_1sfazbk</bpmn:incoming>

@@ -5,7 +5,7 @@ import lombok.Data;
 
 @Data
 @Builder
-public class UserDetails {
+public class UserAuthContent {
 
     String userToken;
     String userId;

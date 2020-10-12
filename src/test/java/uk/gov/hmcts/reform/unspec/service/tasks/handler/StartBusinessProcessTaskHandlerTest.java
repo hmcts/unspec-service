@@ -61,23 +61,23 @@ class StartBusinessProcessTaskHandlerTest {
         when(mockExternalTask.getWorkerId()).thenReturn("worker");
         when(mockExternalTask.getActivityId()).thenReturn("activityId");
         when(mockExternalTask.getProcessInstanceId()).thenReturn(PROCESS_INSTANCE_ID);
+
         when(mockExternalTask.getAllVariables())
             .thenReturn(Map.of(
-                "CCD_ID",
+                "caseId",
                 CASE_ID.toString(),
-                "CASE_EVENT",
+                "caseEvent",
                 START_BUSINESS_PROCESS.name()
             ));
     }
 
     @Test
     void shouldUpdateBusinessStatusToStarted_whenInputStatusIsReady() {
-        CaseData caseData = new CaseDataBuilder().atStateClaimDraft().build().toBuilder()
+        CaseData caseData = new CaseDataBuilder().atStateClaimDraft()
             .businessProcess(BusinessProcess.builder().status(BusinessProcessStatus.READY).build())
             .build();
-        CaseDetails caseDetails = CaseDetailsBuilder.builder()
-            .data(caseData)
-            .build();
+
+        CaseDetails caseDetails = CaseDetailsBuilder.builder().data(caseData).build();
 
         when(coreCaseDataService.startUpdate(eq(CASE_ID.toString()), eq(START_BUSINESS_PROCESS)))
             .thenReturn(StartEventResponse.builder().caseDetails(caseDetails).build());
@@ -94,7 +94,7 @@ class StartBusinessProcessTaskHandlerTest {
 
     @Test
     void shouldUpdateBusinessStatusToSarted_whenInputStatusIsDispatched() {
-        CaseData caseData = new CaseDataBuilder().atStateClaimDraft().build().toBuilder()
+        CaseData caseData = new CaseDataBuilder().atStateClaimDraft()
             .businessProcess(BusinessProcess.builder().status(BusinessProcessStatus.DISPATCHED).build())
             .build();
 
@@ -117,12 +117,8 @@ class StartBusinessProcessTaskHandlerTest {
     @Test
     void shouldRaiseBpmnError_whenStatusExecutedIsStarted() {
         CaseDetails caseDetails = CaseDetailsBuilder.builder()
-            .data(new CaseDataBuilder().atStateClaimDraft().build().toBuilder()
-                      .businessProcess(BusinessProcess.builder()
-                                           .status(BusinessProcessStatus.STARTED)
-                                           .processInstanceId(PROCESS_INSTANCE_ID)
-                                           .build())
-                      .build())
+            .data(new CaseDataBuilder().atStateClaimDraft().businessProcess(BusinessProcess.builder().status(
+                BusinessProcessStatus.STARTED).processInstanceId(PROCESS_INSTANCE_ID).build()).build())
             .build();
 
         when(coreCaseDataService.startUpdate(eq(CASE_ID.toString()), eq(START_BUSINESS_PROCESS)))

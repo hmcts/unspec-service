@@ -24,13 +24,13 @@ class StartBusinessProcessCallbackHandlerTest extends BaseCallbackHandlerTest {
 
     @Autowired
     private StartBusinessProcessCallbackHandler startBusinessProcessCallbackHandler;
+
     @Autowired
     private CaseDetailsConverter caseDetailsConverter;
 
     @Test
     void shouldSetStatusStarted_whenSuccessful() {
-
-        CaseData caseData = new CaseDataBuilder().atStateClaimDraft().build().toBuilder()
+        CaseData caseData = new CaseDataBuilder().atStateClaimDraft()
             .businessProcess(BusinessProcess.builder().status(BusinessProcessStatus.READY).build()).build();
 
         CallbackParams params

@@ -14,7 +14,7 @@ import uk.gov.hmcts.reform.unspec.callback.CaseEvent;
 import uk.gov.hmcts.reform.unspec.config.SystemUpdateUserConfiguration;
 import uk.gov.hmcts.reform.unspec.helpers.CaseDetailsConverter;
 import uk.gov.hmcts.reform.unspec.model.CaseData;
-import uk.gov.hmcts.reform.unspec.model.UserDetails;
+import uk.gov.hmcts.reform.unspec.model.UserAuthContent;
 import uk.gov.hmcts.reform.unspec.model.search.Query;
 
 import java.util.HashMap;
@@ -43,7 +43,7 @@ public class CoreCaseDataService {
     }
 
     public StartEventResponse startUpdate(String caseId, CaseEvent eventName) {
-        UserDetails systemUpdateUser = getSystemUpdateUser();
+        UserAuthContent systemUpdateUser = getSystemUpdateUser();
 
         return coreCaseDataApi.startEventForCaseWorker(
             systemUpdateUser.getUserToken(),
@@ -57,7 +57,7 @@ public class CoreCaseDataService {
     }
 
     public CaseData submitUpdate(String caseId, CaseDataContent caseDataContent) {
-        UserDetails systemUpdateUser = getSystemUpdateUser();
+        UserAuthContent systemUpdateUser = getSystemUpdateUser();
 
         CaseDetails caseDetails = coreCaseDataApi.submitEventForCaseWorker(
             systemUpdateUser.getUserToken(),
@@ -77,12 +77,10 @@ public class CoreCaseDataService {
         return coreCaseDataApi.searchCases(userToken, authTokenGenerator.generate(), CASE_TYPE, query.toString());
     }
 
-    private UserDetails getSystemUpdateUser() {
+    private UserAuthContent getSystemUpdateUser() {
         String userToken = idamClient.getAccessToken(userConfig.getUserName(), userConfig.getPassword());
-        return UserDetails.builder()
-            .userToken(userToken)
-            .userId(idamClient.getUserInfo(userToken).getUid())
-            .build();
+        String userId = idamClient.getUserInfo(userToken).getUid();
+        return UserAuthContent.builder().userToken(userToken).userId(userId).build();
     }
 
     private CaseDataContent caseDataContentFromStartEventResponse(

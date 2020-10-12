@@ -10,8 +10,8 @@
     <bpmn:serviceTask id="ExtensionRequesttResponseTaskId" name="Send email respondent solicitor 1" camunda:type="external" camunda:topic="processCaseEvent">
       <bpmn:extensionElements>
         <camunda:inputOutput>
-          <camunda:inputParameter name="CCD_ID">1601986692564009</camunda:inputParameter>
-          <camunda:inputParameter name="CASE_EVENT">NOTIFY_RESPONDENT_SOLICITOR1_FOR_EXTENSION_RESPONSE</camunda:inputParameter>
+          <camunda:inputParameter name="caseId">1601986692564009</camunda:inputParameter>
+          <camunda:inputParameter name="caseEvent">NOTIFY_RESPONDENT_SOLICITOR1_FOR_EXTENSION_RESPONSE</camunda:inputParameter>
         </camunda:inputOutput>
       </bpmn:extensionElements>
       <bpmn:incoming>Flow_1xv9wkr</bpmn:incoming>
@@ -20,8 +20,8 @@
     <bpmn:serviceTask id="Activity_0iamgg9" name="StartBusinessProcess" camunda:type="external" camunda:topic="START_BUSINESS_PROCESS">
       <bpmn:extensionElements>
         <camunda:inputOutput>
-          <camunda:inputParameter name="CCD_ID">1601986692564009</camunda:inputParameter>
-          <camunda:inputParameter name="CASE_EVENT">START_BUSINESS_PROCESS</camunda:inputParameter>
+          <camunda:inputParameter name="caseId">1601986692564009</camunda:inputParameter>
+          <camunda:inputParameter name="caseEvent">START_BUSINESS_PROCESS</camunda:inputParameter>
         </camunda:inputOutput>
       </bpmn:extensionElements>
       <bpmn:incoming>Flow_1wqsxt3</bpmn:incoming>

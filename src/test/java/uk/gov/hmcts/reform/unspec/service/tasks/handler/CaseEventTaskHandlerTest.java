@@ -55,11 +55,12 @@ class CaseEventTaskHandlerTest {
         when(mockExternalTask.getTopicName()).thenReturn("test");
         when(mockExternalTask.getWorkerId()).thenReturn("worker");
         when(mockExternalTask.getActivityId()).thenReturn("activityId");
+
         when(mockExternalTask.getAllVariables())
             .thenReturn(Map.of(
-                "CCD_ID",
+                "caseId",
                 CASE_ID.toString(),
-                "CASE_EVENT",
+                "caseEvent",
                 NOTIFY_RESPONDENT_SOLICITOR1_FOR_CLAIM_ISSUE.name()
             ));
     }
@@ -69,7 +70,7 @@ class CaseEventTaskHandlerTest {
 
         @Test
         void shouldTriggerCCDEvent_whenHandlerIsExecuted() {
-            CaseData caseData = new CaseDataBuilder().atStateClaimDraft().build().toBuilder()
+            CaseData caseData = new CaseDataBuilder().atStateClaimDraft()
                 .businessProcess(BusinessProcess.builder().status(BusinessProcessStatus.READY).build())
                 .build();
 

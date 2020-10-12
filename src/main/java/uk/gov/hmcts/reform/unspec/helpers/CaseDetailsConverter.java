@@ -13,7 +13,6 @@ import java.util.Map;
 @Service
 public class CaseDetailsConverter {
 
-    private static final String DESERIALIZATION_ERROR_MESSAGE = "Failed to deserialize '%s' from JSON";
     private final ObjectMapper objectMapper;
 
     public CaseDetailsConverter(ObjectMapper objectMapper) {

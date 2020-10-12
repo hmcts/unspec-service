@@ -81,7 +81,7 @@ class CoreCaseDataServiceTest {
         private static final String EVENT_TOKEN = "eventToken";
         private static final long CASE_ID = 1L;
         private static final String USER_ID = "User1";
-        private final CaseData caseData = new CaseDataBuilder().atStateClaimDraft().build().toBuilder()
+        private final CaseData caseData = new CaseDataBuilder().atStateClaimDraft()
             .businessProcess(BusinessProcess.builder().status(BusinessProcessStatus.READY).build())
             .build();
         private final CaseDetails caseDetails = CaseDetailsBuilder.builder()
@@ -139,9 +139,7 @@ class CoreCaseDataServiceTest {
         private CaseDataContent buildCaseDataContent() {
             return CaseDataContent.builder()
                 .eventToken(EVENT_TOKEN)
-                .event(Event.builder()
-                           .id(EVENT_ID)
-                           .build())
+                .event(Event.builder().id(EVENT_ID).build())
                 .data(caseDetailsConverter.convertToMap(caseData))
                 .build();
         }

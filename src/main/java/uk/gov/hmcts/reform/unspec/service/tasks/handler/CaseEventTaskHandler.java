@@ -12,6 +12,7 @@ import uk.gov.hmcts.reform.unspec.callback.CaseEvent;
 import uk.gov.hmcts.reform.unspec.helpers.CaseDetailsConverter;
 import uk.gov.hmcts.reform.unspec.model.BusinessProcess;
 import uk.gov.hmcts.reform.unspec.model.CaseData;
+import uk.gov.hmcts.reform.unspec.model.ExternalTaskInput;
 import uk.gov.hmcts.reform.unspec.service.CoreCaseDataService;
 
 import java.util.HashMap;
@@ -27,9 +28,8 @@ public class CaseEventTaskHandler implements ExternalTaskHandler {
     @Override
     public void execute(ExternalTask externalTask, ExternalTaskService externalTaskService) {
         Map<String, Object> allVariables = externalTask.getAllVariables();
-        String ccdId = (String) allVariables.get("CCD_ID");
-        CaseEvent caseEvent = CaseEvent.valueOf((String) allVariables.get("CASE_EVENT"));
-        updateBusinessProcessActivityId(externalTask, ccdId, caseEvent);
+        ExternalTaskInput externalTaskInput = caseDetailsConverter.fromMap(allVariables, ExternalTaskInput.class);
+        updateBusinessProcessActivityId(externalTask, externalTaskInput.getCaseId(), externalTaskInput.getCaseEvent());
         externalTaskService.complete(externalTask);
     }
 

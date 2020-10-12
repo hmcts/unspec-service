@@ -3,6 +3,8 @@ package uk.gov.hmcts.reform.unspec.callback;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
+import java.util.Arrays;
+
 import static uk.gov.hmcts.reform.unspec.callback.UserType.CAMUNDA;
 import static uk.gov.hmcts.reform.unspec.callback.UserType.USER;
 
@@ -42,5 +44,12 @@ public enum CaseEvent {
 
     public boolean isCamundaEvent() {
         return this.getUserType() == CAMUNDA;
+    }
+
+    public static CaseEvent fromValue(String input) {
+        return Arrays.stream(values())
+            .filter(event -> event.name().equals(input))
+            .findFirst()
+            .orElseThrow(() -> new IllegalArgumentException("Unknown event name: " + input));
     }
 }
