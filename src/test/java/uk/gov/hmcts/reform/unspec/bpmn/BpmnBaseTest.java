@@ -6,6 +6,7 @@ import org.camunda.bpm.engine.externaltask.ExternalTask;
 import org.camunda.bpm.engine.externaltask.LockedExternalTask;
 import org.camunda.bpm.engine.management.JobDefinition;
 import org.camunda.bpm.engine.repository.Deployment;
+import org.camunda.bpm.engine.repository.ProcessDefinition;
 import org.camunda.bpm.engine.runtime.ProcessInstance;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
@@ -84,6 +85,19 @@ public abstract class BpmnBaseTest {
     }
 
     /**
+     * Retrieves a process definition which has a start message event with the messageName.
+     *
+     * @param messageName the name of the message.
+     * @return process definitions with given message start message event.
+     */
+    public ProcessDefinition getProcessDefinitionByMessage(String messageName) {
+        return engine.getRepositoryService()
+            .createProcessDefinitionQuery()
+            .messageEventSubscriptionName(messageName)
+            .singleResult();
+    }
+
+    /**
      * Fetches an external task by topic name and locks it to a worker ready for handling.
      *
      * @param topicName the name of the topic to fetch.
@@ -102,6 +116,6 @@ public abstract class BpmnBaseTest {
      * @param taskId the id of the external task to complete.
      */
     public void completeTask(String taskId) {
-        engine.getExternalTaskService().complete(taskId, "test-worker");
+        engine.getExternalTaskService().complete(taskId, WORKER_ID);
     }
 }

@@ -9,12 +9,12 @@ import java.util.List;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 
-class CreateClaimTest extends BpmnBaseTest {
+class ClaimantResponseTest extends BpmnBaseTest {
 
     public static final String TOPIC_NAME = "processCaseEvent";
 
-    public CreateClaimTest() {
-        super("camunda/create_claim.bpmn", "CREATE_CLAIM");
+    public ClaimantResponseTest() {
+        super("camunda/claimant_response.bpmn", "CLAIMANT_RESPONSE");
     }
 
     @Test
@@ -26,20 +26,28 @@ class CreateClaimTest extends BpmnBaseTest {
         assertThat(getTopics()).containsOnly(TOPIC_NAME);
 
         //assert message start event
-        assertThat(getProcessDefinitionByMessage("CREATE_CLAIM")).isNotNull();
+        assertThat(getProcessDefinitionByMessage("CLAIMANT_RESPONSE")).isNotNull();
 
         //get external tasks
         List<ExternalTask> externalTasks = getExternalTasks();
-        assertThat(externalTasks).hasSize(1);
+        assertThat(externalTasks).hasSize(2);
 
         //fetch and complete task
         List<LockedExternalTask> lockedExternalTasks = fetchAndLockTask(TOPIC_NAME);
 
         assertThat(lockedExternalTasks).hasSize(1);
         assertThat(lockedExternalTasks.get(0).getVariables())
-            .containsEntry("CASE_EVENT", "NOTIFY_RESPONDENT_SOLICITOR1_FOR_CLAIM_ISSUE");
-        assertThat(lockedExternalTasks.get(0).getActivityId()).isEqualTo("ClaimIssueEmailRespondentSolicitor1");
+            .containsEntry("CASE_EVENT", "NOTIFY_RESPONDENT_SOLICITOR1_FOR_CASE_TRANSFERRED_TO_LOCAL_COURT");
+        assertThat(lockedExternalTasks.get(0).getActivityId()).isEqualTo("ClaimantResponseEmailRespondentSolicitor1");
+        completeTask(lockedExternalTasks.get(0).getId());
 
+        //fetch and complete task
+        lockedExternalTasks = fetchAndLockTask(TOPIC_NAME);
+
+        assertThat(lockedExternalTasks).hasSize(1);
+        assertThat(lockedExternalTasks.get(0).getVariables())
+            .containsEntry("CASE_EVENT", "NOTIFY_APPLICANT_SOLICITOR1_FOR_CASE_TRANSFERRED_TO_LOCAL_COURT");
+        assertThat(lockedExternalTasks.get(0).getActivityId()).isEqualTo("ClaimantResponseEmailApplicantSolicitor1");
         completeTask(lockedExternalTasks.get(0).getId());
 
         //assert no external tasks left

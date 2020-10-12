@@ -9,12 +9,12 @@ import java.util.List;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 
-class CreateClaimTest extends BpmnBaseTest {
+class RespondExtensionTest extends BpmnBaseTest {
 
     public static final String TOPIC_NAME = "processCaseEvent";
 
-    public CreateClaimTest() {
-        super("camunda/create_claim.bpmn", "CREATE_CLAIM");
+    public RespondExtensionTest() {
+        super("camunda/respond_extension.bpmn", "RESPOND_EXTENSION");
     }
 
     @Test
@@ -26,19 +26,22 @@ class CreateClaimTest extends BpmnBaseTest {
         assertThat(getTopics()).containsOnly(TOPIC_NAME);
 
         //assert message start event
-        assertThat(getProcessDefinitionByMessage("CREATE_CLAIM")).isNotNull();
+        assertThat(getProcessDefinitionByMessage("RESPOND_EXTENSION")).isNotNull();
 
         //get external tasks
         List<ExternalTask> externalTasks = getExternalTasks();
+
+        //assert task is as expected
         assertThat(externalTasks).hasSize(1);
+        assertThat(externalTasks.get(0).getTopicName()).isEqualTo("processCaseEvent");
 
         //fetch and complete task
         List<LockedExternalTask> lockedExternalTasks = fetchAndLockTask(TOPIC_NAME);
 
         assertThat(lockedExternalTasks).hasSize(1);
         assertThat(lockedExternalTasks.get(0).getVariables())
-            .containsEntry("CASE_EVENT", "NOTIFY_RESPONDENT_SOLICITOR1_FOR_CLAIM_ISSUE");
-        assertThat(lockedExternalTasks.get(0).getActivityId()).isEqualTo("ClaimIssueEmailRespondentSolicitor1");
+            .containsEntry("CASE_EVENT", "NOTIFY_RESPONDENT_SOLICITOR1_FOR_EXTENSION_RESPONSE");
+        assertThat(lockedExternalTasks.get(0).getActivityId()).isEqualTo("RespondExtensionEmailRespondentSolicitor1");
 
         completeTask(lockedExternalTasks.get(0).getId());
 
