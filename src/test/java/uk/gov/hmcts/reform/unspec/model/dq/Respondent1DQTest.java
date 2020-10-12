@@ -1,6 +1,7 @@
 package uk.gov.hmcts.reform.unspec.model.dq;
 
 import org.junit.jupiter.api.Test;
+import uk.gov.hmcts.reform.unspec.enums.ExpertReportsSent;
 import uk.gov.hmcts.reform.unspec.enums.YesOrNo;
 import uk.gov.hmcts.reform.unspec.enums.dq.HearingLength;
 import uk.gov.hmcts.reform.unspec.enums.dq.SupportRequirements;
@@ -116,7 +117,7 @@ class Respondent1DQTest {
     private Experts experts() {
         return Experts.builder()
             .expertRequired(YesOrNo.YES)
-            .exportReportsSent(YesOrNo.YES)
+            .exportReportsSent(ExpertReportsSent.YES)
             .jointExpertSuitable(YesOrNo.YES)
             .details(wrapElements(Expert.builder()
                 .name("John Smith")

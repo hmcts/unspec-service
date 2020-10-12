@@ -3,7 +3,7 @@
     "ID": "Witness",
     "ListElementCode": "name",
     "FieldType": "Text",
-    "ElementLabel": "Witness's name",
+    "ElementLabel": "Name",
     "SecurityClassification": "Public"
   },
   {

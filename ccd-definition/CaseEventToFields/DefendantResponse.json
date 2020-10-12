@@ -164,7 +164,7 @@
     "CaseFieldID": "respondent1DQExperts",
     "PageDisplayOrder": 9,
     "PageFieldDisplayOrder": 1,
-    "DisplayContext": "MANDATORY",
+    "DisplayContext": "COMPLEX",
     "PageID": "Experts",
     "PageShowCondition": "respondent1ClaimResponseType=\"FULL_DEFENCE\"",
     "ShowSummaryChangeOption": "Y"

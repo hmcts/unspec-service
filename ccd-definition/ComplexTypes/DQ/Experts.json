@@ -9,7 +9,8 @@
   {
     "ID": "Experts",
     "ListElementCode": "exportReportsSent",
-    "FieldType": "YesOrNo",
+    "FieldType": "FixedRadioList",
+    "FieldTypeParameter": "ExpertReportsSent",
     "ElementLabel": "Have you already sent expert reports or similar to other parties?",
     "FieldShowCondition": "expertRequired = \"Yes\"",
     "SecurityClassification": "Public"
