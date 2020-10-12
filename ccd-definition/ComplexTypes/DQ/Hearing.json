@@ -4,7 +4,7 @@
     "ListElementCode": "hearingLength",
     "FieldType": "FixedRadioList",
     "FieldTypeParameter": "HearingLength",
-    "ElementLabel": "Do you want to use an expert?",
+    "ElementLabel": "How long do you estimate the hearing will take?",
     "SecurityClassification": "Public"
   },
   {
