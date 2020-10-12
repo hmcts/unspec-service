@@ -155,6 +155,19 @@ class RespondToClaimCallbackHandlerTest extends BaseCallbackHandlerTest {
 
             assertThat(response.getErrors()).isEmpty();
         }
+
+        @Test
+        void shouldReturnNoError_whenNoUnavailableDate() {
+            Map<String, Object> data = new HashMap<>();
+            data.put("respondent1DQHearing", Hearing.builder().build());
+
+            CallbackParams params = callbackParamsOf(data, MID, "validate-unavailable-dates");
+
+            AboutToStartOrSubmitCallbackResponse response = (AboutToStartOrSubmitCallbackResponse) handler
+                .handle(params);
+
+            assertThat(response.getErrors()).isEmpty();
+        }
     }
 
     @Nested
