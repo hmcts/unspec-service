@@ -14,7 +14,7 @@ class CreateClaimTest extends BpmnBaseTest {
     public static final String TOPIC_NAME = "processCaseEvent";
 
     public CreateClaimTest() {
-        super("create_claim.bpmn", "CREATE_CLAIM");
+        super("camunda/create_claim.bpmn", "CREATE_CLAIM");
     }
 
     @Test

@@ -15,7 +15,7 @@ class CaseStayedSchedulerTest extends BpmnBaseTest {
     public static final String TOPIC_NAME = "CASE_STAYED_FINDER";
 
     public CaseStayedSchedulerTest() {
-        super("case_stayed_scheduler.bpmn", "Process_05o55pg");
+        super("camunda/case_stayed_scheduler.bpmn", "Process_05o55pg");
     }
 
     @Test
