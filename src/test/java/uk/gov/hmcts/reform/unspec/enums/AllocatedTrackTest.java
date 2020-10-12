@@ -23,7 +23,7 @@ class AllocatedTrackTest {
             value = ClaimType.class,
             names = {"PERSONAL_INJURY", "CLINICAL_NEGLIGENCE"})
         void shouldAllocatePersonalInjuryClaimTypesBelow1000ToSmallClaim(ClaimType claimType) {
-            ClaimValue claimValue = claimValueWithHigherValueOf(BigDecimal.valueOf(999));
+            ClaimValue claimValue = claimValueWithStatementOfValueOf(BigDecimal.valueOf(999));
 
             AllocatedTrack track = getAllocatedTrack(claimValue, claimType);
 
@@ -35,7 +35,7 @@ class AllocatedTrackTest {
             value = ClaimType.class,
             names = {"PERSONAL_INJURY", "CLINICAL_NEGLIGENCE"})
         void shouldAllocatePersonalInjuryClaimTypesOf1000ToFastClaim(ClaimType claimType) {
-            ClaimValue claimValue = claimValueWithHigherValueOf(BigDecimal.valueOf(1000));
+            ClaimValue claimValue = claimValueWithStatementOfValueOf(BigDecimal.valueOf(1000));
 
             assertThat(getAllocatedTrack(claimValue, claimType)).isEqualTo(FAST_CLAIM);
         }
@@ -45,7 +45,7 @@ class AllocatedTrackTest {
             value = ClaimType.class,
             names = {"PERSONAL_INJURY", "CLINICAL_NEGLIGENCE"})
         void shouldAllocatePersonalInjuryClaimTypesAbove1000AndBelow25000ToFastClaim(ClaimType claimType) {
-            ClaimValue claimValue = claimValueWithHigherValueOf(BigDecimal.valueOf(25000));
+            ClaimValue claimValue = claimValueWithStatementOfValueOf(BigDecimal.valueOf(25000));
 
             assertThat(getAllocatedTrack(claimValue, claimType)).isEqualTo(FAST_CLAIM);
         }
@@ -55,7 +55,7 @@ class AllocatedTrackTest {
             value = ClaimType.class,
             names = {"PERSONAL_INJURY", "CLINICAL_NEGLIGENCE"})
         void shouldAllocatePersonalInjuryClaimTypesAbove25000ToMultiClaim(ClaimType claimType) {
-            ClaimValue claimValue = claimValueWithHigherValueOf(BigDecimal.valueOf(25001));
+            ClaimValue claimValue = claimValueWithStatementOfValueOf(BigDecimal.valueOf(25001));
 
             assertThat(getAllocatedTrack(claimValue, claimType)).isEqualTo(MULTI_CLAIM);
         }
@@ -69,7 +69,7 @@ class AllocatedTrackTest {
             value = ClaimType.class,
             names = {"BREACH_OF_CONTRACT", "CONSUMER_CREDIT", "OTHER"})
         void shouldAllocateOtherClaimTypesBelow1000ToSmallClaim(ClaimType claimType) {
-            ClaimValue claimValue = claimValueWithHigherValueOf(BigDecimal.valueOf(9999));
+            ClaimValue claimValue = claimValueWithStatementOfValueOf(BigDecimal.valueOf(9999));
 
             assertThat(getAllocatedTrack(claimValue, claimType)).isEqualTo(SMALL_CLAIM);
         }
@@ -79,7 +79,7 @@ class AllocatedTrackTest {
             value = ClaimType.class,
             names = {"BREACH_OF_CONTRACT", "CONSUMER_CREDIT", "OTHER"})
         void shouldAllocateOtherClaimTypesOf10000ToFastClaim(ClaimType claimType) {
-            ClaimValue claimValue = claimValueWithHigherValueOf(BigDecimal.valueOf(10000));
+            ClaimValue claimValue = claimValueWithStatementOfValueOf(BigDecimal.valueOf(10000));
 
             assertThat(getAllocatedTrack(claimValue, claimType)).isEqualTo(FAST_CLAIM);
         }
@@ -89,7 +89,7 @@ class AllocatedTrackTest {
             value = ClaimType.class,
             names = {"BREACH_OF_CONTRACT", "CONSUMER_CREDIT", "OTHER"})
         void shouldAllocateOtherClaimTypesAbove10000AndBelow25000ToFastClaim(ClaimType claimType) {
-            ClaimValue claimValue = claimValueWithHigherValueOf(BigDecimal.valueOf(25000));
+            ClaimValue claimValue = claimValueWithStatementOfValueOf(BigDecimal.valueOf(25000));
 
             assertThat(getAllocatedTrack(claimValue, claimType)).isEqualTo(FAST_CLAIM);
         }
@@ -99,13 +99,13 @@ class AllocatedTrackTest {
             value = ClaimType.class,
             names = {"BREACH_OF_CONTRACT", "CONSUMER_CREDIT", "OTHER"})
         void shouldAllocateOtherClaimTypesAbove25000ToMultiClaim(ClaimType claimType) {
-            ClaimValue claimValue = claimValueWithHigherValueOf(BigDecimal.valueOf(25001));
+            ClaimValue claimValue = claimValueWithStatementOfValueOf(BigDecimal.valueOf(25001));
 
             assertThat(getAllocatedTrack(claimValue, claimType)).isEqualTo(MULTI_CLAIM);
         }
     }
 
-    private ClaimValue claimValueWithHigherValueOf(BigDecimal higherValue) {
-        return ClaimValue.builder().higherValue(higherValue).build();
+    private ClaimValue claimValueWithStatementOfValueOf(BigDecimal statementOfValue) {
+        return ClaimValue.builder().statementOfValue(statementOfValue).build();
     }
 }

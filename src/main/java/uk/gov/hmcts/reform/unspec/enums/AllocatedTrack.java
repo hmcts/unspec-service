@@ -11,16 +11,16 @@ public enum AllocatedTrack {
 
     public static AllocatedTrack getAllocatedTrack(ClaimValue claimValue, ClaimType claimType) {
         if (claimType.isLowerFeeType()) {
-            if (isValueSmallerThan(claimValue.getHigherValue(), 1000)) {
+            if (isValueSmallerThan(claimValue.getStatementOfValue(), 1000)) {
                 return SMALL_CLAIM;
-            } else if (isValueWithinRange(claimValue.getHigherValue(), 1000, 25000)) {
+            } else if (isValueWithinRange(claimValue.getStatementOfValue(), 1000, 25000)) {
                 return FAST_CLAIM;
             }
         }
 
-        if (isValueSmallerThan(claimValue.getHigherValue(), 10000)) {
+        if (isValueSmallerThan(claimValue.getStatementOfValue(), 10000)) {
             return SMALL_CLAIM;
-        } else if (isValueWithinRange(claimValue.getHigherValue(), 10000, 25000)) {
+        } else if (isValueWithinRange(claimValue.getStatementOfValue(), 10000, 25000)) {
             return FAST_CLAIM;
         } else {
             return MULTI_CLAIM;

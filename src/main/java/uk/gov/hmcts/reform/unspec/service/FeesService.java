@@ -23,24 +23,24 @@ public class FeesService {
     private final FeesConfiguration feesConfiguration;
 
     public BigInteger getFeeAmountByClaimValue(ClaimValue claimValue) {
-        FeeLookupResponseDto feeLookupResponseDto = lookupFee(claimValue.getHigherValue());
+        FeeLookupResponseDto feeLookupResponseDto = lookupFee(claimValue.getStatementOfValue());
 
         return getFeeAmountInPence(feeLookupResponseDto);
     }
 
     public FeeDto getFeeDataByClaimValue(ClaimValue claimValue) {
-        FeeLookupResponseDto feeLookupResponseDto = lookupFee(claimValue.getHigherValue());
+        FeeLookupResponseDto feeLookupResponseDto = lookupFee(claimValue.getStatementOfValue());
 
         return buildFeeDto(feeLookupResponseDto);
     }
 
-    private FeeLookupResponseDto lookupFee(BigDecimal claimHigherValue) {
-        var claimHigherValuePounds = convertToPounds(claimHigherValue);
+    private FeeLookupResponseDto lookupFee(BigDecimal claimStatementOfValue) {
+        var claimStatementOfValuePounds = convertToPounds(claimStatementOfValue);
 
         return feesClient.lookupFee(
             feesConfiguration.getChannel(),
             feesConfiguration.getEvent(),
-            claimHigherValuePounds
+            claimStatementOfValuePounds
         );
     }
 
