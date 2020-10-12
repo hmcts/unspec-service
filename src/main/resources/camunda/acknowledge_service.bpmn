@@ -21,8 +21,6 @@
     </bpmn:startEvent>
   </bpmn:process>
   <bpmn:message id="Message_1xzz5sr" name="ACKNOWLEDGE_SERVICE" />
-  <bpmn:message id="Message_0kxcr6r" name="test1" />
-  <bpmn:message id="Message_1gqykci" name="test2" />
   <bpmndi:BPMNDiagram id="BPMNDiagram_1">
     <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="ACKNOWLEDGE_SERVICE">
       <bpmndi:BPMNEdge id="Flow_1xdr8bm_di" bpmnElement="Flow_1xdr8bm">
