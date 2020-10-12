@@ -10,7 +10,7 @@
     "ID": "Experts",
     "ListElementCode": "exportReportsSent",
     "FieldType": "YesOrNo",
-    "ElementLabel": "Have you already sent export reports or similar to other parties?",
+    "ElementLabel": "Have you already sent expert reports or similar to other parties?",
     "FieldShowCondition": "expertRequired = \"Yes\"",
     "SecurityClassification": "Public"
   },
