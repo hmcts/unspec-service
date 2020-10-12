@@ -14,10 +14,8 @@ import uk.gov.hmcts.reform.unspec.helpers.CaseDetailsConverter;
 import uk.gov.hmcts.reform.unspec.model.BusinessProcess;
 import uk.gov.hmcts.reform.unspec.model.CaseData;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 
 import static uk.gov.hmcts.reform.unspec.callback.CaseEvent.START_BUSINESS_PROCESS;
 
@@ -44,7 +42,7 @@ public class StartBusinessProcessCallbackHandler extends CallbackHandler {
         CaseData data = caseDetailsConverter.toCaseData(callbackParams.getRequest().getCaseDetails());
         BusinessProcess businessProcess = data.getBusinessProcess();
 
-        switch (getStatus(businessProcess)) {
+        switch (businessProcess.getStatusOrDefault()) {
             case READY:
             case DISPATCHED: {
                 businessProcess = businessProcess.toBuilder()
@@ -52,7 +50,7 @@ public class StartBusinessProcessCallbackHandler extends CallbackHandler {
                     .status(BusinessProcessStatus.STARTED)
                     .build();
 
-                Map<String, Object> output = new HashMap<>(callbackParams.getRequest().getCaseDetails().getData());
+                Map<String, Object> output = callbackParams.getRequest().getCaseDetails().getData();
                 output.put(BUSINESS_PROCESS, businessProcess);
 
                 return AboutToStartOrSubmitCallbackResponse.builder()
@@ -65,9 +63,5 @@ public class StartBusinessProcessCallbackHandler extends CallbackHandler {
                     .build();
 
         }
-    }
-
-    private BusinessProcessStatus getStatus(BusinessProcess businessProcess) {
-        return Optional.ofNullable(businessProcess.getStatus()).orElse(BusinessProcessStatus.READY);
     }
 }
