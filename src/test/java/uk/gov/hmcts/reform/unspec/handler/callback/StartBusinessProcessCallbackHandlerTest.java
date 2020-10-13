@@ -1,5 +1,7 @@
 package uk.gov.hmcts.reform.unspec.handler.callback;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.EnumSource;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +16,8 @@ import uk.gov.hmcts.reform.unspec.model.BusinessProcess;
 import uk.gov.hmcts.reform.unspec.model.CaseData;
 import uk.gov.hmcts.reform.unspec.sampledata.CaseDataBuilder;
 
+import java.util.Map;
+
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest(classes = {
@@ -27,7 +31,7 @@ class StartBusinessProcessCallbackHandlerTest extends BaseCallbackHandlerTest {
     private StartBusinessProcessCallbackHandler startBusinessProcessCallbackHandler;
 
     @Autowired
-    private CaseDetailsConverter caseDetailsConverter;
+    private ObjectMapper objectMapper;
 
     @ParameterizedTest
     @EnumSource(value = BusinessProcessStatus.class, names = {"READY", "DISPATCHED"})
@@ -35,13 +39,14 @@ class StartBusinessProcessCallbackHandlerTest extends BaseCallbackHandlerTest {
         CaseData caseData = new CaseDataBuilder().atStateClaimDraft()
             .businessProcess(BusinessProcess.builder().status(status).build()).build();
 
-        CallbackParams params
-            = callbackParamsOf(caseDetailsConverter.convertToMap(caseData), CallbackType.ABOUT_TO_SUBMIT);
+        Map<String, Object> dataMap = objectMapper.convertValue(caseData, new TypeReference<>() {
+        });
+        CallbackParams params = callbackParamsOf(dataMap, CallbackType.ABOUT_TO_SUBMIT);
 
         AboutToStartOrSubmitCallbackResponse response
             = (AboutToStartOrSubmitCallbackResponse) startBusinessProcessCallbackHandler.handle(params);
 
-        CaseData data = caseDetailsConverter.fromMap(response.getData(), CaseData.class);
+        CaseData data = objectMapper.convertValue(response.getData(), CaseData.class);
         BusinessProcess businessProcess = data.getBusinessProcess();
         assertThat(businessProcess.getStatus()).isEqualTo(BusinessProcessStatus.STARTED);
     }
@@ -52,8 +57,9 @@ class StartBusinessProcessCallbackHandlerTest extends BaseCallbackHandlerTest {
         CaseData caseData = new CaseDataBuilder().atStateClaimDraft()
             .businessProcess(BusinessProcess.builder().status(status).build()).build();
 
-        CallbackParams params
-            = callbackParamsOf(caseDetailsConverter.convertToMap(caseData), CallbackType.ABOUT_TO_SUBMIT);
+        Map<String, Object> dataMap = objectMapper.convertValue(caseData, new TypeReference<>() {
+        });
+        CallbackParams params = callbackParamsOf(dataMap, CallbackType.ABOUT_TO_SUBMIT);
 
         AboutToStartOrSubmitCallbackResponse response
             = (AboutToStartOrSubmitCallbackResponse) startBusinessProcessCallbackHandler.handle(params);

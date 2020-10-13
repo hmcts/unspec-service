@@ -1,5 +1,7 @@
 package uk.gov.hmcts.reform.unspec.service;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
@@ -30,6 +32,7 @@ import uk.gov.hmcts.reform.unspec.sampledata.CaseDataBuilder;
 import uk.gov.hmcts.reform.unspec.sampledata.CaseDetailsBuilder;
 
 import java.util.List;
+import java.util.Map;
 
 import static java.util.Collections.emptyList;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -41,7 +44,6 @@ import static org.mockito.Mockito.when;
     CoreCaseDataService.class,
     JacksonAutoConfiguration.class,
     CaseDetailsConverter.class
-
 })
 class CoreCaseDataServiceTest {
 
@@ -62,7 +64,7 @@ class CoreCaseDataServiceTest {
     private AuthTokenGenerator authTokenGenerator;
 
     @Autowired
-    private CaseDetailsConverter caseDetailsConverter;
+    private ObjectMapper objectMapper;
 
     @Autowired
     private CoreCaseDataService service;
@@ -137,10 +139,13 @@ class CoreCaseDataServiceTest {
         }
 
         private CaseDataContent buildCaseDataContent() {
+            Map<String, Object> data = objectMapper.convertValue(caseData, new TypeReference<>() {
+            });
+
             return CaseDataContent.builder()
                 .eventToken(EVENT_TOKEN)
                 .event(Event.builder().id(EVENT_ID).build())
-                .data(caseDetailsConverter.convertToMap(caseData))
+                .data(data)
                 .build();
         }
     }
