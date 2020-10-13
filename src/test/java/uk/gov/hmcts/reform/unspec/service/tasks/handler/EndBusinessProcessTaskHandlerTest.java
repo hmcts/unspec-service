@@ -68,7 +68,6 @@ class EndBusinessProcessTaskHandlerTest {
             ));
     }
 
-
     @Test
     void shouldTriggerEndBusinessProcessCCDEventAndUpdateBusinessProcessStatusToFinished_whenCalled() {
         CaseData caseData = new CaseDataBuilder().atStateClaimDraft()

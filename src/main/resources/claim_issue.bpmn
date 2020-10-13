@@ -44,7 +44,6 @@
       <bpmn:extensionElements>
         <camunda:inputOutput>
           <camunda:inputParameter name="caseId" />
-          <camunda:inputParameter name="caseEvent" />
         </camunda:inputOutput>
       </bpmn:extensionElements>
       <bpmn:incoming>Flow_1a0p25h</bpmn:incoming>

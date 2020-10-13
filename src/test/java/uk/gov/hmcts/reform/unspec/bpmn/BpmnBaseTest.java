@@ -110,6 +110,11 @@ public abstract class BpmnBaseTest {
         engine.getExternalTaskService().complete(taskId, "test-worker");
     }
 
+    /**
+     * Completes the external task with topic name END_BUSINESS_PROCESS.
+     *
+     * @param externalTask the id of the external task to complete.
+     */
     public void completeBusinessProcess(ExternalTask externalTask) {
         assertThat(externalTask.getTopicName()).isEqualTo("END_BUSINESS_PROCESS");
 

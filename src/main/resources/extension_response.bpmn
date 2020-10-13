@@ -5,7 +5,7 @@
       <bpmn:outgoing>Flow_1wqsxt3</bpmn:outgoing>
     </bpmn:startEvent>
     <bpmn:endEvent id="Event_13n9twk">
-      <bpmn:incoming>Flow_13auyms</bpmn:incoming>
+      <bpmn:incoming>Flow_0j0br43</bpmn:incoming>
     </bpmn:endEvent>
     <bpmn:serviceTask id="ExtensionRequesttResponseTaskId" name="Send email respondent solicitor 1" camunda:type="external" camunda:topic="processCaseEvent">
       <bpmn:extensionElements>
@@ -33,48 +33,65 @@
     </bpmn:boundaryEvent>
     <bpmn:sequenceFlow id="Flow_1wqsxt3" sourceRef="StartEvent_1" targetRef="Activity_0iamgg9" />
     <bpmn:sequenceFlow id="Flow_1xv9wkr" sourceRef="Activity_0iamgg9" targetRef="ExtensionRequesttResponseTaskId" />
-    <bpmn:sequenceFlow id="Flow_13auyms" sourceRef="ExtensionRequesttResponseTaskId" targetRef="Event_13n9twk" />
+    <bpmn:sequenceFlow id="Flow_13auyms" sourceRef="ExtensionRequesttResponseTaskId" targetRef="Activity_1eiqnhk" />
     <bpmn:endEvent id="Event_1afa2mh" name="Aborted">
       <bpmn:incoming>Flow_1l77nwh</bpmn:incoming>
     </bpmn:endEvent>
     <bpmn:sequenceFlow id="Flow_1l77nwh" sourceRef="Event_1q443bl" targetRef="Event_1afa2mh" />
+    <bpmn:callActivity id="Activity_1eiqnhk" name="End Business Process" calledElement="EndBusinessProcess">
+      <bpmn:extensionElements>
+        <camunda:inputOutput>
+          <camunda:inputParameter name="caseId" />
+        </camunda:inputOutput>
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_13auyms</bpmn:incoming>
+      <bpmn:outgoing>Flow_0j0br43</bpmn:outgoing>
+    </bpmn:callActivity>
+    <bpmn:sequenceFlow id="Flow_0j0br43" sourceRef="Activity_1eiqnhk" targetRef="Event_13n9twk" />
   </bpmn:process>
   <bpmn:error id="Error_10s1ouk" name="StartBusinessAbort" errorCode="ABORT" />
   <bpmndi:BPMNDiagram id="BPMNDiagram_1">
     <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="ExtensionResponseHandling">
-      <bpmndi:BPMNEdge id="Flow_1wqsxt3_di" bpmnElement="Flow_1wqsxt3">
-        <di:waypoint x="215" y="117" />
-        <di:waypoint x="280" y="117" />
+      <bpmndi:BPMNEdge id="Flow_1l77nwh_di" bpmnElement="Flow_1l77nwh">
+        <di:waypoint x="330" y="175" />
+        <di:waypoint x="330" y="272" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_13auyms_di" bpmnElement="Flow_13auyms">
+        <di:waypoint x="570" y="117" />
+        <di:waypoint x="620" y="117" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_1xv9wkr_di" bpmnElement="Flow_1xv9wkr">
         <di:waypoint x="380" y="117" />
         <di:waypoint x="470" y="117" />
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_13auyms_di" bpmnElement="Flow_13auyms">
-        <di:waypoint x="570" y="117" />
-        <di:waypoint x="692" y="117" />
+      <bpmndi:BPMNEdge id="Flow_1wqsxt3_di" bpmnElement="Flow_1wqsxt3">
+        <di:waypoint x="215" y="117" />
+        <di:waypoint x="280" y="117" />
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_1l77nwh_di" bpmnElement="Flow_1l77nwh">
-        <di:waypoint x="330" y="175" />
-        <di:waypoint x="330" y="272" />
+      <bpmndi:BPMNEdge id="Flow_0j0br43_di" bpmnElement="Flow_0j0br43">
+        <di:waypoint x="720" y="117" />
+        <di:waypoint x="762" y="117" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNShape id="_BPMNShape_StartEvent_2" bpmnElement="StartEvent_1">
         <dc:Bounds x="179" y="99" width="36" height="36" />
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Activity_0iamgg9_di" bpmnElement="Activity_0iamgg9">
-        <dc:Bounds x="280" y="77" width="100" height="80" />
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Event_13n9twk_di" bpmnElement="Event_13n9twk">
-        <dc:Bounds x="692" y="99" width="36" height="36" />
-      </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Activity_0ipbyde_di" bpmnElement="ExtensionRequesttResponseTaskId">
         <dc:Bounds x="470" y="77" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0iamgg9_di" bpmnElement="Activity_0iamgg9">
+        <dc:Bounds x="280" y="77" width="100" height="80" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Event_1afa2mh_di" bpmnElement="Event_1afa2mh">
         <dc:Bounds x="312" y="272" width="36" height="36" />
         <bpmndi:BPMNLabel>
           <dc:Bounds x="311" y="315" width="39" height="14" />
         </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_13n9twk_di" bpmnElement="Event_13n9twk">
+        <dc:Bounds x="762" y="99" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_1eiqnhk_di" bpmnElement="Activity_1eiqnhk">
+        <dc:Bounds x="620" y="77" width="100" height="80" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Event_1q443bl_di" bpmnElement="Event_1q443bl">
         <dc:Bounds x="312" y="139" width="36" height="36" />

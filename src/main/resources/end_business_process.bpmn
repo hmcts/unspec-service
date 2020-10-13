@@ -8,6 +8,11 @@
       <bpmn:incoming>Flow_1am7wn4</bpmn:incoming>
     </bpmn:endEvent>
     <bpmn:serviceTask id="EndBusinessProcessTaskId" name="End Business Process" camunda:type="external" camunda:topic="END_BUSINESS_PROCESS">
+      <bpmn:extensionElements>
+        <camunda:inputOutput>
+          <camunda:inputParameter name="caseId" />
+        </camunda:inputOutput>
+      </bpmn:extensionElements>
       <bpmn:incoming>Flow_07xgx7v</bpmn:incoming>
       <bpmn:outgoing>Flow_1am7wn4</bpmn:outgoing>
     </bpmn:serviceTask>
