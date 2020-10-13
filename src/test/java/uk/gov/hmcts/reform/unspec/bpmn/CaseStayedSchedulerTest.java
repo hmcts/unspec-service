@@ -38,10 +38,7 @@ class CaseStayedSchedulerTest extends BpmnBaseTest {
 
         //get external tasks
         List<ExternalTask> externalTasks = getExternalTasks();
-
-        //assert task is as expected
         assertThat(externalTasks).hasSize(1);
-        assertThat(externalTasks.get(0).getTopicName()).isEqualTo("CASE_STAYED_FINDER");
 
         //fetch and complete task
         List<LockedExternalTask> lockedExternalTasks = fetchAndLockTask(TOPIC_NAME);

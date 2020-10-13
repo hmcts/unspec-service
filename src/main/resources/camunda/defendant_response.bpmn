@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="Definitions_18h9iji" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="3.7.3">
-  <bpmn:process id="DEFENDANT_RESPONSE" isExecutable="true">
+  <bpmn:process id="DEFENDANT_RESPONSE_PROCESS_ID" isExecutable="true">
     <bpmn:endEvent id="Event_13n9twk">
       <bpmn:incoming>Flow_1xdr8bm</bpmn:incoming>
     </bpmn:endEvent>
@@ -69,13 +69,7 @@
   </bpmn:process>
   <bpmn:message id="Message_1xf7rku" name="DEFENDANT_RESPONSE" />
   <bpmndi:BPMNDiagram id="BPMNDiagram_1">
-    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="DEFENDANT_RESPONSE">
-      <bpmndi:BPMNShape id="TextAnnotation_18hpho5_di" bpmnElement="TextAnnotation_18hpho5">
-        <dc:Bounds x="210" y="110" width="100" height="40" />
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="TextAnnotation_0yaoqdd_di" bpmnElement="TextAnnotation_0yaoqdd">
-        <dc:Bounds x="320" y="310" width="100" height="40" />
-      </bpmndi:BPMNShape>
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="DEFENDANT_RESPONSE_PROCESS_ID">
       <bpmndi:BPMNEdge id="Flow_0oh6jwt_di" bpmnElement="Flow_0oh6jwt">
         <di:waypoint x="560" y="180" />
         <di:waypoint x="602" y="180" />
@@ -104,6 +98,9 @@
       <bpmndi:BPMNShape id="Event_13n9twk_di" bpmnElement="Event_13n9twk">
         <dc:Bounds x="602" y="279" width="36" height="36" />
       </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0ipbyde_di" bpmnElement="DefendantResponseFullDefenceEmailApplicantSolicitor1">
+        <dc:Bounds x="460" y="257" width="100" height="80" />
+      </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Event_1pp6fod_di" bpmnElement="StartEvent_1">
         <dc:Bounds x="152" y="279" width="36" height="36" />
       </bpmndi:BPMNShape>
@@ -119,8 +116,11 @@
       <bpmndi:BPMNShape id="Event_0yvsxsk_di" bpmnElement="Event_0yvsxsk">
         <dc:Bounds x="602" y="162" width="36" height="36" />
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Activity_0ipbyde_di" bpmnElement="DefendantResponseFullDefenceEmailApplicantSolicitor1">
-        <dc:Bounds x="460" y="257" width="100" height="80" />
+      <bpmndi:BPMNShape id="TextAnnotation_18hpho5_di" bpmnElement="TextAnnotation_18hpho5">
+        <dc:Bounds x="210" y="110" width="100" height="40" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="TextAnnotation_0yaoqdd_di" bpmnElement="TextAnnotation_0yaoqdd">
+        <dc:Bounds x="320" y="310" width="100" height="40" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNEdge id="Association_0uge6um_di" bpmnElement="Association_0uge6um">
         <di:waypoint x="260" y="272" />
