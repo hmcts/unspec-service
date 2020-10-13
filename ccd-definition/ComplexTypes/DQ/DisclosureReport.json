@@ -10,7 +10,7 @@
     "ID": "DisclosureReport",
     "ListElementCode": "disclosureProposalAgreed",
     "FieldType": "YesOrNo",
-    "ElementLabel": "Have you agreed a proposal in relation to disclosure that meets tge overriding objective?",
+    "ElementLabel": "Have you agreed a proposal in relation to disclosure that meets the overriding objective?",
     "SecurityClassification": "Public"
   },
   {
