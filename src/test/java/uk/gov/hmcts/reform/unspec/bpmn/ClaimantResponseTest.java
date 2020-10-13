@@ -14,7 +14,7 @@ class ClaimantResponseTest extends BpmnBaseTest {
     public static final String TOPIC_NAME = "processCaseEvent";
 
     public ClaimantResponseTest() {
-        super("camunda/claimant_response.bpmn", "CLAIMANT_RESPONSE");
+        super("claimant_response.bpmn", "CLAIMANT_RESPONSE_PROCESS_ID");
     }
 
     @Test
@@ -26,7 +26,8 @@ class ClaimantResponseTest extends BpmnBaseTest {
         assertThat(getTopics()).containsOnly(TOPIC_NAME);
 
         //assert message start event
-        assertThat(getProcessDefinitionByMessage("CLAIMANT_RESPONSE")).isNotNull();
+        assertThat(getProcessDefinitionByMessage("CLAIMANT_RESPONSE"))
+            .isEqualTo("CLAIMANT_RESPONSE_PROCESS_ID");
 
         //get external tasks
         List<ExternalTask> externalTasks = getExternalTasks();

@@ -15,7 +15,7 @@ class PollingEventEmitterSchedulerTest extends BpmnBaseTest {
     public static final String TOPIC_NAME = "POLLING_EVENT_EMITTER";
 
     public PollingEventEmitterSchedulerTest() {
-        super("camunda/polling_event_emitter_scheduler.bpmn", "PollingEventEmitterScheduler");
+        super("polling_event_emitter_scheduler.bpmn", "PollingEventEmitterScheduler");
     }
 
     @Test

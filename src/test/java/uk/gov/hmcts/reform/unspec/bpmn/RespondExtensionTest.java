@@ -14,7 +14,7 @@ class RespondExtensionTest extends BpmnBaseTest {
     public static final String TOPIC_NAME = "processCaseEvent";
 
     public RespondExtensionTest() {
-        super("camunda/respond_extension.bpmn", "RESPOND_EXTENSION");
+        super("respond_extension.bpmn", "RESPOND_EXTENSION_PROCESS_ID");
     }
 
     @Test
@@ -26,7 +26,8 @@ class RespondExtensionTest extends BpmnBaseTest {
         assertThat(getTopics()).containsOnly(TOPIC_NAME);
 
         //assert message start event
-        assertThat(getProcessDefinitionByMessage("RESPOND_EXTENSION")).isNotNull();
+        assertThat(getProcessDefinitionByMessage("RESPOND_EXTENSION"))
+            .isEqualTo("RESPOND_EXTENSION_PROCESS_ID");
 
         //get external tasks
         List<ExternalTask> externalTasks = getExternalTasks();
