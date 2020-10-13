@@ -27,6 +27,7 @@ import java.util.Map;
 public class StartBusinessProcessTaskHandler implements ExternalTaskHandler {
 
     public static final String FLOW_STATE = "flowState";
+    public static final String BUSINESS_PROCESS = "businessProcess";
     private final CoreCaseDataService coreCaseDataService;
     private final CaseDetailsConverter caseDetailsConverter;
     private final StateFlowEngine stateFlowEngine;
@@ -71,14 +72,13 @@ public class StartBusinessProcessTaskHandler implements ExternalTaskHandler {
         StartEventResponse startEventResponse,
         BusinessProcess businessProcess
     ) {
-        businessProcess = businessProcess.toBuilder().processInstanceId(externalTask.getProcessInstanceId()).build();
-
+        businessProcess = businessProcess.updateProcessInstanceId(externalTask.getProcessInstanceId());
         return coreCaseDataService.submitUpdate(ccdId, caseDataContent(startEventResponse, businessProcess));
     }
 
     private CaseDataContent caseDataContent(StartEventResponse startEventResponse, BusinessProcess businessProcess) {
         Map<String, Object> data = startEventResponse.getCaseDetails().getData();
-        data.put("businessProcess", businessProcess);
+        data.put(BUSINESS_PROCESS, businessProcess);
 
         return CaseDataContent.builder()
             .eventToken(startEventResponse.getToken())

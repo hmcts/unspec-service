@@ -43,7 +43,7 @@ import static uk.gov.hmcts.reform.unspec.callback.CaseEvent.START_BUSINESS_PROCE
 @ExtendWith(SpringExtension.class)
 class StartBusinessProcessTaskHandlerTest {
 
-    private static final Long CASE_ID = 1L;
+    private static final String CASE_ID = "1";
     public static final String PROCESS_INSTANCE_ID = "processInstanceId";
 
     @Mock
@@ -65,7 +65,7 @@ class StartBusinessProcessTaskHandlerTest {
         when(mockExternalTask.getAllVariables())
             .thenReturn(Map.of(
                 "caseId",
-                CASE_ID.toString(),
+                CASE_ID,
                 "caseEvent",
                 START_BUSINESS_PROCESS.name()
             ));
@@ -79,16 +79,16 @@ class StartBusinessProcessTaskHandlerTest {
 
         CaseDetails caseDetails = CaseDetailsBuilder.builder().data(caseData).build();
 
-        when(coreCaseDataService.startUpdate(eq(CASE_ID.toString()), eq(START_BUSINESS_PROCESS)))
+        when(coreCaseDataService.startUpdate(eq(CASE_ID), eq(START_BUSINESS_PROCESS)))
             .thenReturn(StartEventResponse.builder().caseDetails(caseDetails).build());
 
-        when(coreCaseDataService.submitUpdate(eq(CASE_ID.toString()), any(CaseDataContent.class)))
+        when(coreCaseDataService.submitUpdate(eq(CASE_ID), any(CaseDataContent.class)))
             .thenReturn(caseData);
 
         startBusinessProcessTaskHandler.execute(mockExternalTask, externalTaskService);
 
-        verify(coreCaseDataService).startUpdate(eq(CASE_ID.toString()), eq(START_BUSINESS_PROCESS));
-        verify(coreCaseDataService).submitUpdate(eq(CASE_ID.toString()), any(CaseDataContent.class));
+        verify(coreCaseDataService).startUpdate(eq(CASE_ID), eq(START_BUSINESS_PROCESS));
+        verify(coreCaseDataService).submitUpdate(eq(CASE_ID), any(CaseDataContent.class));
         verify(externalTaskService).complete(eq(mockExternalTask), any(VariableMap.class));
     }
 
@@ -102,15 +102,15 @@ class StartBusinessProcessTaskHandlerTest {
             .data(caseData)
             .build();
 
-        when(coreCaseDataService.startUpdate(eq(CASE_ID.toString()), eq(START_BUSINESS_PROCESS)))
+        when(coreCaseDataService.startUpdate(eq(CASE_ID), eq(START_BUSINESS_PROCESS)))
             .thenReturn(StartEventResponse.builder().caseDetails(caseDetails).build());
 
-        when(coreCaseDataService.submitUpdate(eq(CASE_ID.toString()), any(CaseDataContent.class)))
+        when(coreCaseDataService.submitUpdate(eq(CASE_ID), any(CaseDataContent.class)))
             .thenReturn(caseData);
         startBusinessProcessTaskHandler.execute(mockExternalTask, externalTaskService);
 
-        verify(coreCaseDataService).startUpdate(eq(CASE_ID.toString()), eq(START_BUSINESS_PROCESS));
-        verify(coreCaseDataService).submitUpdate(eq(CASE_ID.toString()), any(CaseDataContent.class));
+        verify(coreCaseDataService).startUpdate(eq(CASE_ID), eq(START_BUSINESS_PROCESS));
+        verify(coreCaseDataService).submitUpdate(eq(CASE_ID), any(CaseDataContent.class));
         verify(externalTaskService).complete(eq(mockExternalTask), any(VariableMap.class));
     }
 
@@ -121,7 +121,7 @@ class StartBusinessProcessTaskHandlerTest {
                 BusinessProcessStatus.STARTED).processInstanceId(PROCESS_INSTANCE_ID).build()).build())
             .build();
 
-        when(coreCaseDataService.startUpdate(eq(CASE_ID.toString()), eq(START_BUSINESS_PROCESS)))
+        when(coreCaseDataService.startUpdate(eq(CASE_ID), eq(START_BUSINESS_PROCESS)))
             .thenReturn(StartEventResponse.builder().caseDetails(caseDetails).build());
 
         assertThrows(
@@ -130,6 +130,6 @@ class StartBusinessProcessTaskHandlerTest {
             "ABORT"
         );
 
-        verify(coreCaseDataService).startUpdate(eq(CASE_ID.toString()), eq(START_BUSINESS_PROCESS));
+        verify(coreCaseDataService).startUpdate(eq(CASE_ID), eq(START_BUSINESS_PROCESS));
     }
 }
