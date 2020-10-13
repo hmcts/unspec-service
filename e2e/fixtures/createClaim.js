@@ -73,7 +73,7 @@ module.exports = {
     },
     claimValue: {
       claimValue: {
-        statementOfValue: '500'
+        statementOfValueInPennies: '500'
       }
     },
     statementOfTruth: {

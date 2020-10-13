@@ -81,7 +81,7 @@ class PaymentsServiceTest {
         CaseDetails caseDetails = CaseDetails.builder()
             .id(1L)
             .data(Map.of(
-                "claimValue", Map.of("statementOfValue", "500"),
+                "claimValue", Map.of("statementOfValueInPennies", "500"),
                 "pbaNumber", "PBA1234567",
                 "caseReference", "case reference",
                 "customerReference", "customer reference",
@@ -102,7 +102,7 @@ class PaymentsServiceTest {
             .fees(new FeeDto[]{FEE_DATA})
             .build();
         var expectedClaimValue = ClaimValue.builder()
-            .statementOfValue(BigDecimal.valueOf(500))
+            .statementOfValueInPennies(BigDecimal.valueOf(500))
             .build();
 
         PaymentDto paymentResponse = paymentsService.createCreditAccountPayment(caseDetails);
