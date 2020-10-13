@@ -2,7 +2,6 @@ package uk.gov.hmcts.reform.unspec.bpmn;
 
 import org.camunda.bpm.engine.externaltask.ExternalTask;
 import org.camunda.bpm.engine.externaltask.LockedExternalTask;
-import org.camunda.bpm.engine.repository.ProcessDefinition;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
