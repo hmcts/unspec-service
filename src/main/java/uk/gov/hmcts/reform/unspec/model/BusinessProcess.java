@@ -11,9 +11,9 @@ import static java.util.Optional.ofNullable;
 @Builder(toBuilder = true)
 public class BusinessProcess {
 
-    private final String processInstanceId;
-    private final BusinessProcessStatus status;
-    private final String activityId;
+    private String processInstanceId;
+    private BusinessProcessStatus status;
+    private String activityId;
 
     @JsonIgnore
     public boolean hasSimilarProcessInstanceId(String processInstanceId) {
@@ -23,5 +23,14 @@ public class BusinessProcess {
     @JsonIgnore
     public BusinessProcessStatus getStatusOrDefault() {
         return ofNullable(this.getStatus()).orElse(BusinessProcessStatus.READY);
+    }
+
+    @JsonIgnore
+    public BusinessProcess reset() {
+        this.activityId = null;
+        this.processInstanceId = null;
+        this.status = BusinessProcessStatus.FINISHED;
+
+        return this;
     }
 }

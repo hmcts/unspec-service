@@ -1,16 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" id="Definitions_0rn46su" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="4.2.0">
   <bpmn:process id="ClaimIssueHandling" isExecutable="true">
-    <bpmn:serviceTask id="SealedClaimEmailTaskId" name="Send email respondent solicitor 1" camunda:type="external" camunda:topic="processCaseEvent">
-      <bpmn:extensionElements>
-        <camunda:inputOutput>
-          <camunda:inputParameter name="caseId">1601986692564009</camunda:inputParameter>
-          <camunda:inputParameter name="caseEvent">NOTIFY_RESPONDENT_SOLICITOR1_FOR_CLAIM_ISSUE</camunda:inputParameter>
-        </camunda:inputOutput>
-      </bpmn:extensionElements>
-      <bpmn:incoming>Flow_0tvmtj7</bpmn:incoming>
-      <bpmn:outgoing>Flow_08ehj83</bpmn:outgoing>
-    </bpmn:serviceTask>
     <bpmn:sequenceFlow id="Flow_04568qf" sourceRef="Event_0t2zome" targetRef="StartBusinessProcessTaskId" />
     <bpmn:sequenceFlow id="Flow_08ehj83" sourceRef="SealedClaimEmailTaskId" targetRef="Event_1148m43" />
     <bpmn:endEvent id="Event_1148m43">
@@ -38,6 +28,27 @@
       <bpmn:incoming>Flow_0lpgwyz</bpmn:incoming>
     </bpmn:endEvent>
     <bpmn:sequenceFlow id="Flow_0lpgwyz" sourceRef="Event_0xn9cx1" targetRef="Event_0iiw102" />
+    <bpmn:serviceTask id="SealedClaimEmailTaskId" name="Send email respondent solicitor 1" camunda:type="external" camunda:topic="processCaseEvent">
+      <bpmn:extensionElements>
+        <camunda:inputOutput>
+          <camunda:inputParameter name="caseId">1601986692564009</camunda:inputParameter>
+          <camunda:inputParameter name="caseEvent">NOTIFY_RESPONDENT_SOLICITOR1_FOR_CLAIM_ISSUE</camunda:inputParameter>
+        </camunda:inputOutput>
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_0tvmtj7</bpmn:incoming>
+      <bpmn:outgoing>Flow_08ehj83</bpmn:outgoing>
+      <bpmn:outgoing>Flow_1a0p25h</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:sequenceFlow id="Flow_1a0p25h" sourceRef="SealedClaimEmailTaskId" targetRef="Activity_0019409" />
+    <bpmn:callActivity id="Activity_0019409" name="End Business Process" calledElement="EndBusinessProcess">
+      <bpmn:extensionElements>
+        <camunda:inputOutput>
+          <camunda:inputParameter name="caseId" />
+          <camunda:inputParameter name="caseEvent" />
+        </camunda:inputOutput>
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_1a0p25h</bpmn:incoming>
+    </bpmn:callActivity>
   </bpmn:process>
   <bpmn:error id="Error_0t2ju7k" name="StartBusinessAbort" errorCode="ABORT" />
   <bpmndi:BPMNDiagram id="BPMNDiagram_1">
@@ -52,17 +63,18 @@
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_08ehj83_di" bpmnElement="Flow_08ehj83">
         <di:waypoint x="540" y="120" />
-        <di:waypoint x="732" y="120" />
+        <di:waypoint x="802" y="120" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_04568qf_di" bpmnElement="Flow_04568qf">
         <di:waypoint x="188" y="120" />
         <di:waypoint x="260" y="120" />
       </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1a0p25h_di" bpmnElement="Flow_1a0p25h">
+        <di:waypoint x="540" y="120" />
+        <di:waypoint x="620" y="120" />
+      </bpmndi:BPMNEdge>
       <bpmndi:BPMNShape id="Activity_0bn79uc_di" bpmnElement="SealedClaimEmailTaskId">
         <dc:Bounds x="440" y="80" width="100" height="80" />
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Event_1148m43_di" bpmnElement="Event_1148m43">
-        <dc:Bounds x="732" y="102" width="36" height="36" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Event_0xl2o8r_di" bpmnElement="Event_0t2zome">
         <dc:Bounds x="152" y="102" width="36" height="36" />
@@ -78,6 +90,12 @@
         <bpmndi:BPMNLabel>
           <dc:Bounds x="291" y="315" width="39" height="14" />
         </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_1lmglod_di" bpmnElement="Activity_0019409">
+        <dc:Bounds x="620" y="80" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_1148m43_di" bpmnElement="Event_1148m43">
+        <dc:Bounds x="802" y="102" width="36" height="36" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Event_02d0u09_di" bpmnElement="Event_0xn9cx1">
         <dc:Bounds x="292" y="142" width="36" height="36" />

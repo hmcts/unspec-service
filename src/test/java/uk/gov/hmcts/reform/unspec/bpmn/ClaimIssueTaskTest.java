@@ -38,8 +38,7 @@ class ClaimIssueTaskTest extends BpmnBaseTest {
         assertThat(lockedExternalTasks).hasSize(1);
         assertThat(lockedExternalTasks.get(0).getVariables())
             .containsEntry("caseId", "1601986692564009")
-            .containsEntry("caseEvent", "START_BUSINESS_PROCESS")
-        ;
+            .containsEntry("caseEvent", "START_BUSINESS_PROCESS");
 
         completeTask(lockedExternalTasks.get(0).getId());
 
@@ -56,12 +55,20 @@ class ClaimIssueTaskTest extends BpmnBaseTest {
         assertThat(lockedClaimIssueExternalTasks).hasSize(1);
         assertThat(lockedClaimIssueExternalTasks.get(0).getVariables())
             .containsEntry("caseId", "1601986692564009")
-            .containsEntry("caseEvent", "NOTIFY_RESPONDENT_SOLICITOR1_FOR_CLAIM_ISSUE")
-        ;
+            .containsEntry("caseEvent", "NOTIFY_RESPONDENT_SOLICITOR1_FOR_CLAIM_ISSUE");
 
         completeTask(lockedClaimIssueExternalTasks.get(0).getId());
 
+        // END BUSINESS PROCESS
+
+        List<ExternalTask> endBusinessProcessExternalTask = getExternalTasks();
+
+        assertThat(endBusinessProcessExternalTask).hasSize(1);
+
+        completeBusinessProcess(endBusinessProcessExternalTask.get(0));
+
         //assert no external tasks left
+
         List<ExternalTask> externalTasksAfter = getExternalTasks();
         assertThat(externalTasksAfter).isEmpty();
     }
