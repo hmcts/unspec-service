@@ -81,7 +81,7 @@ module.exports = function () {
       await solicitorReferencesPage.enterReferences();
       await chooseCourtPage.enterCourt();
       await party.enterParty('applicant1', config.address);
-      await claimantLitigationDetails.enterLitigantFriendWithDifferentAddressToClaimant(config.address);
+      await claimantLitigationDetails.enterLitigantFriendWithDifferentAddressToClaimant(config.address, config.testFile);
       await party.enterParty('respondent1', config.address);
       await claimTypePage.selectClaimType();
       await personalInjuryTypePage.selectPersonalInjuryType();
@@ -158,6 +158,12 @@ module.exports = function () {
 
     async clickContinue() {
       await this.click('Continue');
+    },
+
+    async addAnotherElementToCollection() {
+      const numberOfElements = await this.grabNumberOfVisibleElements('.collection-title');
+      this.click('Add new');
+      this.waitNumberOfVisibleElements('.collection-title', numberOfElements + 1);
     },
 
     /**
