@@ -1,4 +1,4 @@
-package uk.gov.hmcts.reform.unspec.model;
+package uk.gov.hmcts.reform.unspec.service.data;
 
 import lombok.Builder;
 import lombok.Data;

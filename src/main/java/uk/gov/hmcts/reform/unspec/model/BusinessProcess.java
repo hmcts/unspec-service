@@ -16,7 +16,7 @@ public class BusinessProcess {
     private String activityId;
 
     @JsonIgnore
-    public boolean hasSimilarProcessInstanceId(String processInstanceId) {
+    public boolean hasSameProcessInstanceId(String processInstanceId) {
         return this.getProcessInstanceId().equals(processInstanceId);
     }
 
@@ -29,6 +29,7 @@ public class BusinessProcess {
     public BusinessProcess start() {
         this.status = BusinessProcessStatus.STARTED;
         this.activityId = null;
+        this.processInstanceId = null;
         return this;
     }
 

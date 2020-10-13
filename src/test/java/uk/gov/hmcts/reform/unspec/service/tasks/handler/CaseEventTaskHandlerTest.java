@@ -39,7 +39,7 @@ import static uk.gov.hmcts.reform.unspec.callback.CaseEvent.NOTIFY_RESPONDENT_SO
 @ExtendWith(SpringExtension.class)
 class CaseEventTaskHandlerTest {
 
-    private static final Long CASE_ID = 1L;
+    private static final String CASE_ID = "1";
 
     @Mock
     private ExternalTask mockExternalTask;
@@ -56,13 +56,11 @@ class CaseEventTaskHandlerTest {
         when(mockExternalTask.getWorkerId()).thenReturn("worker");
         when(mockExternalTask.getActivityId()).thenReturn("activityId");
 
-        when(mockExternalTask.getAllVariables())
-            .thenReturn(Map.of(
-                "caseId",
-                CASE_ID.toString(),
-                "caseEvent",
-                NOTIFY_RESPONDENT_SOLICITOR1_FOR_CLAIM_ISSUE.name()
-            ));
+        Map<String, Object> variables = Map.of("caseId", CASE_ID,
+                                               "caseEvent", NOTIFY_RESPONDENT_SOLICITOR1_FOR_CLAIM_ISSUE.name()
+        );
+
+        when(mockExternalTask.getAllVariables()).thenReturn(variables);
     }
 
     @Nested
@@ -76,22 +74,15 @@ class CaseEventTaskHandlerTest {
 
             CaseDetails caseDetails = CaseDetailsBuilder.builder().data(caseData).build();
 
-            when(coreCaseDataService.startUpdate(
-                eq(CASE_ID.toString()),
-                eq(NOTIFY_RESPONDENT_SOLICITOR1_FOR_CLAIM_ISSUE)
-            )).thenReturn(StartEventResponse.builder().caseDetails(caseDetails).build());
+            when(coreCaseDataService.startUpdate(eq(CASE_ID), eq(NOTIFY_RESPONDENT_SOLICITOR1_FOR_CLAIM_ISSUE)))
+                .thenReturn(StartEventResponse.builder().caseDetails(caseDetails).build());
 
-            when(coreCaseDataService.submitUpdate(eq(CASE_ID.toString()), any(CaseDataContent.class)))
-                .thenReturn(caseData);
+            when(coreCaseDataService.submitUpdate(eq(CASE_ID), any(CaseDataContent.class))).thenReturn(caseData);
 
             caseEventTaskHandler.execute(mockExternalTask, externalTaskService);
 
-            verify(coreCaseDataService).startUpdate(
-                eq(CASE_ID.toString()),
-                eq(NOTIFY_RESPONDENT_SOLICITOR1_FOR_CLAIM_ISSUE)
-            );
-
-            verify(coreCaseDataService).submitUpdate(eq(CASE_ID.toString()), any(CaseDataContent.class));
+            verify(coreCaseDataService).startUpdate(eq(CASE_ID), eq(NOTIFY_RESPONDENT_SOLICITOR1_FOR_CLAIM_ISSUE));
+            verify(coreCaseDataService).submitUpdate(eq(CASE_ID), any(CaseDataContent.class));
             verify(externalTaskService).complete(mockExternalTask);
         }
     }

@@ -79,7 +79,7 @@ class CoreCaseDataServiceTest {
         private static final String EVENT_ID = "MOVE_TO_STAYED";
         private static final String JURISDICTION = "CIVIL";
         private static final String EVENT_TOKEN = "eventToken";
-        private static final long CASE_ID = 1L;
+        private static final String CASE_ID = "1";
         private static final String USER_ID = "User1";
         private final CaseData caseData = new CaseDataBuilder().atStateClaimDraft()
             .businessProcess(BusinessProcess.builder().status(BusinessProcessStatus.READY).build())
@@ -93,7 +93,7 @@ class CoreCaseDataServiceTest {
             when(idamClient.getUserInfo(USER_AUTH_TOKEN)).thenReturn(UserInfo.builder().uid(USER_ID).build());
 
             when(coreCaseDataApi.startEventForCaseWorker(USER_AUTH_TOKEN, SERVICE_AUTH_TOKEN, USER_ID, JURISDICTION,
-                                                         CASE_TYPE, Long.toString(CASE_ID), EVENT_ID
+                                                         CASE_TYPE, CASE_ID, EVENT_ID
             )).thenReturn(buildStartEventResponse());
 
             when(coreCaseDataApi.submitEventForCaseWorker(
@@ -102,7 +102,7 @@ class CoreCaseDataServiceTest {
                 USER_ID,
                 JURISDICTION,
                 CASE_TYPE,
-                Long.toString(CASE_ID),
+                CASE_ID,
                 true,
                 buildCaseDataContent()
                  )
@@ -111,10 +111,10 @@ class CoreCaseDataServiceTest {
 
         @Test
         void shouldStartAndSubmitEvent_WhenCalled() {
-            service.triggerEvent(CASE_ID, CaseEvent.valueOf(EVENT_ID));
+            service.triggerEvent(Long.valueOf(CASE_ID), CaseEvent.valueOf(EVENT_ID));
 
             verify(coreCaseDataApi).startEventForCaseWorker(USER_AUTH_TOKEN, SERVICE_AUTH_TOKEN, USER_ID,
-                                                            JURISDICTION, CASE_TYPE, Long.toString(CASE_ID), EVENT_ID
+                                                            JURISDICTION, CASE_TYPE, CASE_ID, EVENT_ID
             );
             verify(coreCaseDataApi).submitEventForCaseWorker(
                 USER_AUTH_TOKEN,
@@ -122,7 +122,7 @@ class CoreCaseDataServiceTest {
                 USER_ID,
                 JURISDICTION,
                 CASE_TYPE,
-                Long.toString(CASE_ID),
+                CASE_ID,
                 true,
                 buildCaseDataContent()
             );

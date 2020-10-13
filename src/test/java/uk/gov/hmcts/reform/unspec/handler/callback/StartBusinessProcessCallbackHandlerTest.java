@@ -1,6 +1,7 @@
 package uk.gov.hmcts.reform.unspec.handler.callback;
 
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.EnumSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.jackson.JacksonAutoConfiguration;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -28,10 +29,11 @@ class StartBusinessProcessCallbackHandlerTest extends BaseCallbackHandlerTest {
     @Autowired
     private CaseDetailsConverter caseDetailsConverter;
 
-    @Test
-    void shouldSetStatusStarted_whenSuccessful() {
+    @ParameterizedTest
+    @EnumSource(value = BusinessProcessStatus.class, names = {"READY", "DISPATCHED"})
+    void shouldSetStatusStarted_whenInitialStateIs(BusinessProcessStatus status) {
         CaseData caseData = new CaseDataBuilder().atStateClaimDraft()
-            .businessProcess(BusinessProcess.builder().status(BusinessProcessStatus.READY).build()).build();
+            .businessProcess(BusinessProcess.builder().status(status).build()).build();
 
         CallbackParams params
             = callbackParamsOf(caseDetailsConverter.convertToMap(caseData), CallbackType.ABOUT_TO_SUBMIT);
@@ -42,5 +44,20 @@ class StartBusinessProcessCallbackHandlerTest extends BaseCallbackHandlerTest {
         CaseData data = caseDetailsConverter.fromMap(response.getData(), CaseData.class);
         BusinessProcess businessProcess = data.getBusinessProcess();
         assertThat(businessProcess.getStatus()).isEqualTo(BusinessProcessStatus.STARTED);
+    }
+
+    @ParameterizedTest
+    @EnumSource(value = BusinessProcessStatus.class, names = {"STARTED", "FINISHED"})
+    void shouldReturnErrors_whenInitialStatusIs(BusinessProcessStatus status) {
+        CaseData caseData = new CaseDataBuilder().atStateClaimDraft()
+            .businessProcess(BusinessProcess.builder().status(status).build()).build();
+
+        CallbackParams params
+            = callbackParamsOf(caseDetailsConverter.convertToMap(caseData), CallbackType.ABOUT_TO_SUBMIT);
+
+        AboutToStartOrSubmitCallbackResponse response
+            = (AboutToStartOrSubmitCallbackResponse) startBusinessProcessCallbackHandler.handle(params);
+
+        assertThat(response.getErrors()).contains("Concurrency Error");
     }
 }
