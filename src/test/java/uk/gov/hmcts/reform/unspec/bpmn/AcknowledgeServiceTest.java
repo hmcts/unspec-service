@@ -2,6 +2,7 @@ package uk.gov.hmcts.reform.unspec.bpmn;
 
 import org.camunda.bpm.engine.externaltask.ExternalTask;
 import org.camunda.bpm.engine.externaltask.LockedExternalTask;
+import org.camunda.bpm.engine.repository.ProcessDefinition;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
@@ -14,7 +15,7 @@ class AcknowledgeServiceTest extends BpmnBaseTest {
     public static final String TOPIC_NAME = "processCaseEvent";
 
     public AcknowledgeServiceTest() {
-        super("camunda/acknowledge_service.bpmn", "ACKNOWLEDGE_SERVICE");
+        super("acknowledge_service.bpmn", "ACKNOWLEDGE_SERVICE_PROCESS_ID");
     }
 
     @Test
@@ -26,7 +27,8 @@ class AcknowledgeServiceTest extends BpmnBaseTest {
         assertThat(getTopics()).containsOnly(TOPIC_NAME);
 
         //assert message start event
-        assertThat(getProcessDefinitionByMessage("ACKNOWLEDGE_SERVICE")).isNotNull();
+        assertThat(getProcessDefinitionByMessage("ACKNOWLEDGE_SERVICE").getKey())
+            .isEqualTo("ACKNOWLEDGE_SERVICE_PROCESS_ID");
 
         //get external tasks
         List<ExternalTask> externalTasks = getExternalTasks();

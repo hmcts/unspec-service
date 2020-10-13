@@ -19,6 +19,7 @@ import static org.camunda.bpm.engine.ProcessEngineConfiguration.createStandalone
 
 public abstract class BpmnBaseTest {
 
+    private static final String DIAGRAM_PATH = "camunda/%s";
     public static final String WORKER_ID = "test-worker";
     public final String bpmnFileName;
     public final String processId;
@@ -42,7 +43,10 @@ public abstract class BpmnBaseTest {
     @BeforeEach
     void setup() {
         //deploy process
-        deployment = engine.getRepositoryService().createDeployment().addClasspathResource(bpmnFileName).deploy();
+        deployment = engine.getRepositoryService()
+            .createDeployment()
+            .addClasspathResource(String.format(DIAGRAM_PATH, bpmnFileName))
+            .deploy();
         processInstance = engine.getRuntimeService().startProcessInstanceByKey(processId);
     }
 

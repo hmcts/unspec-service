@@ -14,7 +14,7 @@ class CreateClaimTest extends BpmnBaseTest {
     public static final String TOPIC_NAME = "processCaseEvent";
 
     public CreateClaimTest() {
-        super("camunda/create_claim.bpmn", "CREATE_CLAIM");
+        super("create_claim.bpmn", "CREATE_CLAIM_PROCESS_ID");
     }
 
     @Test
@@ -26,7 +26,8 @@ class CreateClaimTest extends BpmnBaseTest {
         assertThat(getTopics()).containsOnly(TOPIC_NAME);
 
         //assert message start event
-        assertThat(getProcessDefinitionByMessage("CREATE_CLAIM")).isNotNull();
+        assertThat(getProcessDefinitionByMessage("CREATE_CLAIM").getKey())
+            .isEqualTo("CREATE_CLAIM_PROCESS_ID");
 
         //get external tasks
         List<ExternalTask> externalTasks = getExternalTasks();
