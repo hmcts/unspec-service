@@ -72,8 +72,7 @@ public class StartBusinessProcessTaskHandler implements ExternalTaskHandler {
         StartEventResponse startEventResponse,
         BusinessProcess businessProcess
     ) {
-        businessProcess = businessProcess.toBuilder().processInstanceId(externalTask.getProcessInstanceId()).build();
-
+        businessProcess = businessProcess.updateProcessInstanceId(externalTask.getProcessInstanceId());
         return coreCaseDataService.submitUpdate(ccdId, caseDataContent(startEventResponse, businessProcess));
     }
 

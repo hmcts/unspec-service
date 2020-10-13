@@ -36,10 +36,7 @@ public class CaseEventTaskHandler implements ExternalTaskHandler {
     private void updateBusinessProcessActivityId(ExternalTask externalTask, String ccdId, CaseEvent caseEvent) {
         StartEventResponse startEventResponse = coreCaseDataService.startUpdate(ccdId, caseEvent);
         CaseData data = caseDetailsConverter.toCaseData(startEventResponse.getCaseDetails());
-        BusinessProcess businessProcess = data.getBusinessProcess().toBuilder()
-            .activityId(externalTask.getActivityId())
-            .build();
-
+        BusinessProcess businessProcess = data.getBusinessProcess().updateActivityId(externalTask.getActivityId());
         coreCaseDataService.submitUpdate(ccdId, caseDataContent(startEventResponse, businessProcess));
     }
 
