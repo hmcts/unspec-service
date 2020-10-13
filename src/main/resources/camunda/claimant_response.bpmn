@@ -21,14 +21,11 @@
           <camunda:inputParameter name="CASE_EVENT">NOTIFY_APPLICANT_SOLICITOR1_FOR_CASE_TRANSFERRED_TO_LOCAL_COURT</camunda:inputParameter>
         </camunda:inputOutput>
       </bpmn:extensionElements>
-      <bpmn:incoming>Flow_1kb0ope</bpmn:incoming>
       <bpmn:incoming>Flow_1xdr8bm</bpmn:incoming>
       <bpmn:outgoing>Flow_0etbo17</bpmn:outgoing>
     </bpmn:serviceTask>
-    <bpmn:sequenceFlow id="Flow_1kb0ope" sourceRef="StartEvent_1" targetRef="ClaimantResponseEmailApplicantSolicitor1" />
     <bpmn:startEvent id="StartEvent_1">
       <bpmn:outgoing>Flow_0kvxp0b</bpmn:outgoing>
-      <bpmn:outgoing>Flow_1kb0ope</bpmn:outgoing>
       <bpmn:messageEventDefinition id="MessageEventDefinition_1oxj7lg" messageRef="Message_0ttrrz3" />
     </bpmn:startEvent>
     <bpmn:sequenceFlow id="Flow_0etbo17" sourceRef="ClaimantResponseEmailApplicantSolicitor1" targetRef="Event_13n9twk" />
@@ -39,10 +36,6 @@
       <bpmndi:BPMNEdge id="Flow_0etbo17_di" bpmnElement="Flow_0etbo17">
         <di:waypoint x="510" y="117" />
         <di:waypoint x="542" y="117" />
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_1kb0ope_di" bpmnElement="Flow_1kb0ope">
-        <di:waypoint x="215" y="117" />
-        <di:waypoint x="410" y="117" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_1xdr8bm_di" bpmnElement="Flow_1xdr8bm">
         <di:waypoint x="370" y="117" />
@@ -55,14 +48,14 @@
       <bpmndi:BPMNShape id="Event_13n9twk_di" bpmnElement="Event_13n9twk">
         <dc:Bounds x="542" y="99" width="36" height="36" />
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Activity_0ipbyde_di" bpmnElement="ClaimantResponseEmailRespondentSolicitor1">
-        <dc:Bounds x="270" y="77" width="100" height="80" />
-      </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Activity_13h7jgg_di" bpmnElement="ClaimantResponseEmailApplicantSolicitor1">
         <dc:Bounds x="410" y="77" width="100" height="80" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Event_1diii28_di" bpmnElement="StartEvent_1">
         <dc:Bounds x="179" y="99" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0ipbyde_di" bpmnElement="ClaimantResponseEmailRespondentSolicitor1">
+        <dc:Bounds x="270" y="77" width="100" height="80" />
       </bpmndi:BPMNShape>
     </bpmndi:BPMNPlane>
   </bpmndi:BPMNDiagram>

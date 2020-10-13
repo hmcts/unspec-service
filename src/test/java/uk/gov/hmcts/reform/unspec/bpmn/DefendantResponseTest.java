@@ -30,10 +30,8 @@ class DefendantResponseTest extends BpmnBaseTest {
 
         //get external tasks
         List<ExternalTask> externalTasks = getExternalTasks();
-
-        //assert task is as expected
         assertThat(externalTasks).hasSize(1);
-        assertThat(externalTasks.get(0).getTopicName()).isEqualTo("processCaseEvent");
+        assertThat(externalTasks.get(0).getTopicName()).isEqualTo(TOPIC_NAME);
 
         //fetch and complete task
         List<LockedExternalTask> lockedExternalTasks = fetchAndLockTask(TOPIC_NAME);
