@@ -22,18 +22,18 @@ import static uk.gov.hmcts.reform.unspec.handler.callback.notification.Notificat
 import static uk.gov.hmcts.reform.unspec.handler.callback.notification.NotificationData.SOLICITOR_REFERENCE;
 
 @SpringBootTest(classes = {
-    CaseTransferredToLocalCourtDefendantNotificationHandler.class,
+    RespondExtensionRespondentNotificationHandler.class,
     CaseDetailsConverter.class,
     JacksonAutoConfiguration.class
 })
-class CaseTransferredToLocalCourtDefendantNotificationHandlerTest extends BaseCallbackHandlerTest {
+class RespondExtensionRespondentNotificationHandlerTest extends BaseCallbackHandlerTest {
 
     @MockBean
     private NotificationService notificationService;
     @MockBean
     private NotificationsProperties notificationsProperties;
     @Autowired
-    private CaseTransferredToLocalCourtDefendantNotificationHandler handler;
+    private RespondExtensionRespondentNotificationHandler handler;
 
     @Nested
     class AboutToSubmitCallback {
@@ -45,7 +45,7 @@ class CaseTransferredToLocalCourtDefendantNotificationHandlerTest extends BaseCa
         }
 
         @Test
-        void shouldNotifyParties_whenInvoked() {
+        void shouldNotifyDefendantSolicitor_whenInvoked() {
             String legacyCaseReference = "000LR001";
             Map<String, Object> data = Map.of("legacyCaseReference", legacyCaseReference);
 
@@ -54,10 +54,10 @@ class CaseTransferredToLocalCourtDefendantNotificationHandlerTest extends BaseCa
             handler.handle(params);
 
             verify(notificationService).sendMail(
-                notificationsProperties.getDefendantSolicitorEmail(),
+                "defendantsolicitor@example.com",
                 "template-id",
                 Map.of(CLAIM_REFERENCE_NUMBER, legacyCaseReference, SOLICITOR_REFERENCE, "defendant solicitor"),
-                "case-transferred-to-local-court-defendant-notification-000LR001"
+                "respond-extension-respondent-notification-000LR001"
             );
         }
     }

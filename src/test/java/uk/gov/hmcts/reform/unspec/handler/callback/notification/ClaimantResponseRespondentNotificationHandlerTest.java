@@ -22,18 +22,18 @@ import static uk.gov.hmcts.reform.unspec.handler.callback.notification.Notificat
 import static uk.gov.hmcts.reform.unspec.handler.callback.notification.NotificationData.SOLICITOR_REFERENCE;
 
 @SpringBootTest(classes = {
-    ServiceAcknowledgementClaimantNotificationHandler.class,
+    ClaimantResponseRespondentNotificationHandler.class,
     CaseDetailsConverter.class,
     JacksonAutoConfiguration.class
 })
-class ServiceAcknowledgementClaimantNotificationHandlerTest extends BaseCallbackHandlerTest {
+class ClaimantResponseRespondentNotificationHandlerTest extends BaseCallbackHandlerTest {
 
     @MockBean
     private NotificationService notificationService;
     @MockBean
     private NotificationsProperties notificationsProperties;
     @Autowired
-    private ServiceAcknowledgementClaimantNotificationHandler handler;
+    private ClaimantResponseRespondentNotificationHandler handler;
 
     @Nested
     class AboutToSubmitCallback {
@@ -45,7 +45,7 @@ class ServiceAcknowledgementClaimantNotificationHandlerTest extends BaseCallback
         }
 
         @Test
-        void shouldNotifyClaimantSolicitor_whenInvoked() {
+        void shouldNotifyParties_whenInvoked() {
             String legacyCaseReference = "000LR001";
             Map<String, Object> data = Map.of("legacyCaseReference", legacyCaseReference);
 
@@ -54,10 +54,10 @@ class ServiceAcknowledgementClaimantNotificationHandlerTest extends BaseCallback
             handler.handle(params);
 
             verify(notificationService).sendMail(
-                "claimantsolicitor@example.com",
+                notificationsProperties.getDefendantSolicitorEmail(),
                 "template-id",
-                Map.of(CLAIM_REFERENCE_NUMBER, legacyCaseReference, SOLICITOR_REFERENCE, "claimant solicitor"),
-                "service-acknowledgement-claimant-notification-000LR001"
+                Map.of(CLAIM_REFERENCE_NUMBER, legacyCaseReference, SOLICITOR_REFERENCE, "defendant solicitor"),
+                "claimant-response-respondent-notification-000LR001"
             );
         }
     }
