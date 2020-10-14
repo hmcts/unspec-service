@@ -21,9 +21,7 @@ import static java.util.Optional.ofNullable;
 import static uk.gov.hmcts.reform.unspec.callback.CallbackType.ABOUT_TO_SUBMIT;
 import static uk.gov.hmcts.reform.unspec.callback.CaseEvent.NOTIFY_RESPONDENT_SOLICITOR1_FOR_CLAIM_ISSUE;
 import static uk.gov.hmcts.reform.unspec.helpers.DateFormatHelper.DATE;
-import static uk.gov.hmcts.reform.unspec.helpers.DateFormatHelper.DATE_TIME_AT;
 import static uk.gov.hmcts.reform.unspec.helpers.DateFormatHelper.formatLocalDate;
-import static uk.gov.hmcts.reform.unspec.helpers.DateFormatHelper.formatLocalDateTime;
 import static uk.gov.hmcts.reform.unspec.utils.PartyNameUtils.getPartyNameBasedOnType;
 
 @Service
@@ -76,8 +74,7 @@ public class ClaimIssueNotificationHandler extends CallbackHandler implements No
             DEFENDANT_SOLICITOR_NAME, getPartyNameBasedOnType(caseData.getApplicant1()),
             DEFENDANT_NAME, getPartyNameBasedOnType(caseData.getApplicant1()),
             CLAIMANT_NAME, getPartyNameBasedOnType(caseData.getApplicant1()),
-            ISSUED_ON, formatLocalDate(caseData.getClaimIssuedDate(), DATE),
-            RESPONSE_DEADLINE, formatLocalDateTime(caseData.getRespondentSolicitor1ResponseDeadline(), DATE_TIME_AT)
+            ISSUED_ON, formatLocalDate(caseData.getClaimIssuedDate(), DATE)
         );
     }
 }
