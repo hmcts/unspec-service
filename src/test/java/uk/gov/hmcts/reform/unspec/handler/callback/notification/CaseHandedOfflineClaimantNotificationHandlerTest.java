@@ -22,6 +22,7 @@ import static org.mockito.Mockito.when;
 import static uk.gov.hmcts.reform.unspec.callback.CallbackType.ABOUT_TO_SUBMIT;
 import static uk.gov.hmcts.reform.unspec.handler.callback.notification.NotificationData.CLAIM_REFERENCE_NUMBER;
 import static uk.gov.hmcts.reform.unspec.handler.callback.notification.NotificationData.SOLICITOR_REFERENCE;
+import static uk.gov.hmcts.reform.unspec.sampledata.CaseDataBuilder.LEGACY_CASE_REFERENCE;
 
 @SpringBootTest(classes = {
     CaseHandedOfflineClaimantNotificationHandler.class,
@@ -55,7 +56,7 @@ class CaseHandedOfflineClaimantNotificationHandlerTest extends BaseCallbackHandl
             verify(notificationService).sendMail(
                 "claimantsolicitor@example.com",
                 "template-id",
-                Map.of(CLAIM_REFERENCE_NUMBER, "000LR001", SOLICITOR_REFERENCE, "claimant solicitor"),
+                Map.of(CLAIM_REFERENCE_NUMBER, LEGACY_CASE_REFERENCE, SOLICITOR_REFERENCE, "claimant solicitor"),
                 "case-handed-offline-claimant-notification-000LR001"
             );
         }
