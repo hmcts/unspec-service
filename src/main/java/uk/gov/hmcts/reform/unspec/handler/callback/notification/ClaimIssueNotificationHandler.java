@@ -16,7 +16,6 @@ import uk.gov.hmcts.reform.unspec.service.NotificationService;
 
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 
 import static java.util.Optional.ofNullable;
 import static uk.gov.hmcts.reform.unspec.callback.CallbackType.ABOUT_TO_SUBMIT;
@@ -60,7 +59,9 @@ public class ClaimIssueNotificationHandler extends CallbackHandler implements No
         CaseData caseData = caseDetailsConverter.toCaseData(callbackParams.getRequest().getCaseDetails());
 
         notificationService.sendMail(
-            ofNullable(caseData.getServiceMethodToRespondentSolicitor1()).map(ServiceMethod::getEmail).orElse("civilunspecified@gmail.com"),//TODO need correct email address here
+            ofNullable(caseData.getServiceMethodToRespondentSolicitor1())
+                .map(ServiceMethod::getEmail)
+                .orElse("civilunspecified@gmail.com"), //TODO need correct email address here
             notificationsProperties.getDefendantSolicitorClaimIssueEmailTemplate(),
             addProperties(caseData),
             "defendant-solicitor-issue-notification-" + caseData.getLegacyCaseReference()
