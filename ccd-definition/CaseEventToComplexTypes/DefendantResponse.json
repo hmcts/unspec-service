@@ -199,7 +199,7 @@
     "ID": "Experts",
     "CaseEventID": "DEFENDANT_RESPONSE",
     "CaseFieldID": "respondent1DQExperts",
-    "ListElementCode": "exportReportsSent",
+    "ListElementCode": "expertReportsSent",
     "FieldDisplayOrder": 2,
     "DisplayContext": "MANDATORY"
   },

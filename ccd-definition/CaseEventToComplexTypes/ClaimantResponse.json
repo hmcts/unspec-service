@@ -34,7 +34,7 @@
     "ID": "Experts",
     "CaseEventID": "CLAIMANT_RESPONSE",
     "CaseFieldID": "applicant1DQExperts",
-    "ListElementCode": "exportReportsSent",
+    "ListElementCode": "expertReportsSent",
     "FieldDisplayOrder": 2,
     "DisplayContext": "MANDATORY"
   },
