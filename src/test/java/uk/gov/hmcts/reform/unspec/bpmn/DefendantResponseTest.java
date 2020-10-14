@@ -14,7 +14,7 @@ class DefendantResponseTest extends BpmnBaseTest {
     }
 
     @Test
-    void shouldSuccessfullyCompleteResponseExtension() {
+    void shouldSuccessfullyCompleteDefendantResponse() {
         //assert process has started
         assertFalse(processInstance.isEnded());
 
