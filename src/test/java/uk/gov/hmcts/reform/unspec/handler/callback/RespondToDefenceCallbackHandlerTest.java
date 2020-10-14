@@ -7,6 +7,7 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.EnumSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.jackson.JacksonAutoConfiguration;
+import org.springframework.boot.autoconfigure.validation.ValidationAutoConfiguration;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import uk.gov.hmcts.reform.ccd.client.model.AboutToStartOrSubmitCallbackResponse;
@@ -16,20 +17,30 @@ import uk.gov.hmcts.reform.unspec.callback.CallbackParams;
 import uk.gov.hmcts.reform.unspec.callback.CallbackType;
 import uk.gov.hmcts.reform.unspec.enums.DefendantResponseType;
 import uk.gov.hmcts.reform.unspec.enums.YesOrNo;
+import uk.gov.hmcts.reform.unspec.helpers.CaseDetailsConverter;
+import uk.gov.hmcts.reform.unspec.model.UnavailableDate;
+import uk.gov.hmcts.reform.unspec.model.dq.Hearing;
 import uk.gov.hmcts.reform.unspec.sampledata.CallbackParamsBuilder;
 import uk.gov.hmcts.reform.unspec.sampledata.CaseDetailsBuilder;
+import uk.gov.hmcts.reform.unspec.validation.UnavailableDateValidator;
 
+import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.Map;
 
 import static java.lang.String.format;
 import static org.assertj.core.api.Assertions.assertThat;
 import static uk.gov.hmcts.reform.unspec.callback.CallbackType.ABOUT_TO_START;
+import static uk.gov.hmcts.reform.unspec.callback.CallbackType.MID;
+import static uk.gov.hmcts.reform.unspec.utils.ElementUtils.wrapElements;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(classes = {
     RespondToDefenceCallbackHandler.class,
-    JacksonAutoConfiguration.class
+    JacksonAutoConfiguration.class,
+    ValidationAutoConfiguration.class,
+    UnavailableDateValidator.class,
+    CaseDetailsConverter.class
 })
 class RespondToDefenceCallbackHandlerTest extends BaseCallbackHandlerTest {
 
@@ -48,6 +59,76 @@ class RespondToDefenceCallbackHandlerTest extends BaseCallbackHandlerTest {
                 .handle(params);
 
             assertThat(response.getErrors()).isNull();
+        }
+    }
+
+    @Nested
+    class MidEventCallbackValidateUnavailableDates {
+
+        @Test
+        void shouldReturnError_whenUnavailableDateIsMoreThanOneYearInFuture() {
+            Map<String, Object> data = new HashMap<>();
+            data.put("claimant1DQHearing", Hearing.builder()
+                .unavailableDates(wrapElements(UnavailableDate.builder()
+                                                   .date(LocalDate.now().plusYears(5))
+                                                   .build()))
+                .build());
+
+            CallbackParams params = callbackParamsOf(data, MID, "validate-unavailable-dates");
+
+            AboutToStartOrSubmitCallbackResponse response = (AboutToStartOrSubmitCallbackResponse) handler
+                .handle(params);
+
+            assertThat(response.getErrors())
+                .containsExactly("The date cannot be in the past and must not be more than a year in the future");
+        }
+
+        @Test
+        void shouldReturnError_whenUnavailableDateIsInPast() {
+            Map<String, Object> data = new HashMap<>();
+            data.put("claimant1DQHearing", Hearing.builder()
+                .unavailableDates(wrapElements(UnavailableDate.builder()
+                                                   .date(LocalDate.now().minusYears(5))
+                                                   .build()))
+                .build());
+
+            CallbackParams params = callbackParamsOf(data, MID, "validate-unavailable-dates");
+
+            AboutToStartOrSubmitCallbackResponse response = (AboutToStartOrSubmitCallbackResponse) handler
+                .handle(params);
+
+            assertThat(response.getErrors())
+                .containsExactly("The date cannot be in the past and must not be more than a year in the future");
+        }
+
+        @Test
+        void shouldReturnNoError_whenUnavailableDateIsValid() {
+            Map<String, Object> data = new HashMap<>();
+            data.put("claimant1DQHearing", Hearing.builder()
+                .unavailableDates(wrapElements(UnavailableDate.builder()
+                                                   .date(LocalDate.now().plusDays(5))
+                                                   .build()))
+                .build());
+
+            CallbackParams params = callbackParamsOf(data, MID, "validate-unavailable-dates");
+
+            AboutToStartOrSubmitCallbackResponse response = (AboutToStartOrSubmitCallbackResponse) handler
+                .handle(params);
+
+            assertThat(response.getErrors()).isEmpty();
+        }
+
+        @Test
+        void shouldReturnNoError_whenNoUnavailableDate() {
+            Map<String, Object> data = new HashMap<>();
+            data.put("claimant1DQHearing", Hearing.builder().build());
+
+            CallbackParams params = callbackParamsOf(data, MID, "validate-unavailable-dates");
+
+            AboutToStartOrSubmitCallbackResponse response = (AboutToStartOrSubmitCallbackResponse) handler
+                .handle(params);
+
+            assertThat(response.getErrors()).isEmpty();
         }
     }
 
