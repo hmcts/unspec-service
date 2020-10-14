@@ -51,7 +51,7 @@ class EventEmitterAspectTest {
     @SneakyThrows
     @ParameterizedTest
     @EnumSource(value = CallbackType.class, mode = EnumSource.Mode.EXCLUDE, names = {"SUBMITTED"})
-    void shouldNotEmitBusinessProcessEvent_whenCallbackIsNotSubmitted(CallbackType callbackType) {
+    void shouldNotEmitBusinessProcessCamundaEvent_whenCallbackIsNotSubmitted(CallbackType callbackType) {
         CallbackParams callbackParams = CallbackParamsBuilder.builder()
             .type(callbackType)
             .build();
@@ -65,7 +65,7 @@ class EventEmitterAspectTest {
     @SneakyThrows
     @ParameterizedTest
     @EnumSource(value = BusinessProcessStatus.class, mode = EnumSource.Mode.EXCLUDE, names = {"READY"})
-    void shouldNotEmitBusinessProcessEvent_whenBusinessProcessStatusIsNotReady(BusinessProcessStatus status) {
+    void shouldNotEmitBusinessProcessCamundaEvent_whenBusinessProcessStatusIsNotReady(BusinessProcessStatus status) {
         CallbackParams callbackParams = CallbackParamsBuilder.builder()
             .type(SUBMITTED)
             .request(CallbackRequest.builder().caseDetails(CaseDetails.builder().data(
@@ -80,7 +80,7 @@ class EventEmitterAspectTest {
 
     @SneakyThrows
     @Test
-    void shouldEmitBusinessProcessEvent_whenCallbackIsSubmittedAndBusinessProcessStatusIsReady() {
+    void shouldEmitBusinessProcessCamundaEvent_whenCallbackIsSubmittedAndBusinessProcessStatusIsReady() {
         CaseDetails caseDetails = CaseDetails.builder().data(
             Map.of("businessProcess", BusinessProcess.builder().status(READY).build())
         ).build();
@@ -91,7 +91,7 @@ class EventEmitterAspectTest {
 
         aspect.emitBusinessProcessEvent(proceedingJoinPoint, callbackParams);
 
-        verify(eventEmitterService).emitBusinessProcessEvent(caseDetailsConverter.toCaseData(caseDetails));
+        verify(eventEmitterService).emitBusinessProcessCamundaEvent(caseDetailsConverter.toCaseData(caseDetails));
         verify(proceedingJoinPoint).proceed();
     }
 }

@@ -16,7 +16,7 @@ public class EventEmitterService {
     private final ApplicationEventPublisher applicationEventPublisher;
     private final RuntimeService runtimeService;
 
-    public void emitBusinessProcessEvent(CaseData caseData) {
+    public void emitBusinessProcessCamundaEvent(CaseData caseData) {
         var caseId = caseData.getCcdCaseReference();
         var businessProcess = caseData.getBusinessProcess();
         var camundaEvent = businessProcess.getCamundaEvent();

@@ -16,6 +16,7 @@ import uk.gov.hmcts.reform.unspec.model.CaseData;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.when;
 
 @SpringBootTest(classes = {JacksonAutoConfiguration.class, CaseDetailsConverter.class})
@@ -47,11 +48,28 @@ class EventEmitterServiceTest {
             .ccdCaseReference(1L)
             .build();
 
-        eventEmitterService.emitBusinessProcessEvent(caseData);
+        eventEmitterService.emitBusinessProcessCamundaEvent(caseData);
 
         verify(runtimeService).createMessageCorrelation("TEST_EVENT");
         verify(messageCorrelationBuilder).setVariable("CCD_ID", 1L);
         verify(messageCorrelationBuilder).correlateStartMessage();
         verify(applicationEventPublisher).publishEvent(new DispatchBusinessProcessEvent(1L, businessProcess));
+    }
+
+    @Test
+    void shouldHandleException_whenInvoked() {
+        when(messageCorrelationBuilder.correlateStartMessage()).thenThrow(new RuntimeException());
+        var businessProcess = BusinessProcess.builder().camundaEvent("TEST_EVENT").build();
+        CaseData caseData = CaseData.builder()
+            .businessProcess(businessProcess)
+            .ccdCaseReference(1L)
+            .build();
+
+        eventEmitterService.emitBusinessProcessCamundaEvent(caseData);
+
+        verify(runtimeService).createMessageCorrelation("TEST_EVENT");
+        verify(messageCorrelationBuilder).setVariable("CCD_ID", 1L);
+        verify(messageCorrelationBuilder).correlateStartMessage();
+        verifyNoInteractions(applicationEventPublisher);
     }
 }
