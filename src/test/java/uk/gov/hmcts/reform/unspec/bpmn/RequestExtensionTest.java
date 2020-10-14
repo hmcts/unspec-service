@@ -5,16 +5,16 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
 
-class ClaimIssueTaskTest extends BpmnBaseTest {
+class RequestExtensionTest extends BpmnBaseTest {
 
-    public static final String NOTIFY_RESPONDENT_SOLICITOR_1 = "NOTIFY_RESPONDENT_SOLICITOR1_FOR_CLAIM_ISSUE";
+    public static final String NOTIFY_APPLICANT_SOLICITOR_1 = "NOTIFY_APPLICANT_SOLICITOR1_FOR_REQUEST_FOR_EXTENSION";
 
-    public ClaimIssueTaskTest() {
-        super("claim_issue.bpmn", "ClaimIssueHandling");
+    public RequestExtensionTest() {
+        super("request_for_extension.bpmn", "RequestForExtensionHandling");
     }
 
     @Test
-    void shouldSuccessfullyCompleteClaimIssue() {
+    void shouldSuccessfullyCompleteRequestExtension() {
         //assert process has started
         assertFalse(processInstance.isEnded());
 
@@ -24,7 +24,7 @@ class ClaimIssueTaskTest extends BpmnBaseTest {
 
         //complete the notification
         ExternalTask notificationTask = getNextExternalTask(PROCESS_CASE_EVENT_TOPIC);
-        completeExternalTask(notificationTask, PROCESS_CASE_EVENT_TOPIC, NOTIFY_RESPONDENT_SOLICITOR_1);
+        completeExternalTask(notificationTask, PROCESS_CASE_EVENT_TOPIC, NOTIFY_APPLICANT_SOLICITOR_1);
 
         assertNoExternalTasksLeft();
     }

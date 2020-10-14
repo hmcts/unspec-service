@@ -29,7 +29,6 @@ public class BusinessProcess {
     public BusinessProcess start() {
         this.status = BusinessProcessStatus.STARTED;
         this.activityId = null;
-        this.processInstanceId = null;
         return this;
     }
 

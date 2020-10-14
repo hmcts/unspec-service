@@ -5,16 +5,16 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
 
-class ClaimIssueTaskTest extends BpmnBaseTest {
+class ResponseExtensionTest extends BpmnBaseTest {
 
-    public static final String NOTIFY_RESPONDENT_SOLICITOR_1 = "NOTIFY_RESPONDENT_SOLICITOR1_FOR_CLAIM_ISSUE";
+    public static final String NOTIFY_RESPONDENT_SOLICITOR_1 = "NOTIFY_RESPONDENT_SOLICITOR1_FOR_EXTENSION_RESPONSE";
 
-    public ClaimIssueTaskTest() {
-        super("claim_issue.bpmn", "ClaimIssueHandling");
+    public ResponseExtensionTest() {
+        super("extension_response.bpmn", "ExtensionResponseHandling");
     }
 
     @Test
-    void shouldSuccessfullyCompleteClaimIssue() {
+    void shouldSuccessfullyCompleteResponseExtension() {
         //assert process has started
         assertFalse(processInstance.isEnded());
 

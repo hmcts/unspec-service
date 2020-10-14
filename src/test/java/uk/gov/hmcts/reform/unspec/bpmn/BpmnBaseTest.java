@@ -14,11 +14,16 @@ import org.junit.jupiter.api.BeforeEach;
 
 import java.util.List;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.camunda.bpm.engine.ProcessEngineConfiguration.createStandaloneInMemProcessEngineConfiguration;
 
 public abstract class BpmnBaseTest {
 
     public static final String WORKER_ID = "test-worker";
+    public static final String START_BUSINESS_TOPIC = "START_BUSINESS_PROCESS";
+    public static final String START_BUSINESS_EVENT = "START_BUSINESS_PROCESS";
+    public static final String PROCESS_CASE_EVENT_TOPIC = "processCaseEvent";
+
     public final String bpmnFileName;
     public final String processId;
     public Deployment deployment;
@@ -102,6 +107,47 @@ public abstract class BpmnBaseTest {
      * @param taskId the id of the external task to complete.
      */
     public void completeTask(String taskId) {
-        engine.getExternalTaskService().complete(taskId, "test-worker");
+        engine.getExternalTaskService().complete(taskId, WORKER_ID);
+    }
+
+    /**
+     * Get external task for topic name.
+     */
+    public ExternalTask getNextExternalTask(String topicName) {
+        assertThat(getTopics()).containsOnly(topicName);
+
+        List<ExternalTask> externalTasks = getExternalTasks();
+        assertThat(externalTasks).hasSize(1);
+
+        ExternalTask externalTask = externalTasks.get(0);
+        assertThat(externalTask.getTopicName()).isEqualTo(topicName);
+
+        return externalTask;
+    }
+
+    /**
+     * Completes the external task with topic name.
+     *
+     * @param externalTask the id of the external task to complete.
+     * @param topicName    is taskName.
+     * @param caseEvent    is input variable for external task.
+     */
+    public void completeExternalTask(ExternalTask externalTask, String topicName, String caseEvent) {
+        assertThat(externalTask.getTopicName()).isEqualTo(topicName);
+
+        List<LockedExternalTask> lockedProcessTask = fetchAndLockTask(topicName);
+
+        assertThat(lockedProcessTask).hasSize(1);
+
+        assertThat(lockedProcessTask.get(0).getVariables())
+            .containsEntry("caseId", "1601986692564009")
+            .containsEntry("caseEvent", caseEvent);
+
+        completeTask(lockedProcessTask.get(0).getId());
+    }
+
+    public void assertNoExternalTasksLeft() {
+        List<ExternalTask> externalTasksAfter = getExternalTasks();
+        assertThat(externalTasksAfter).isEmpty();
     }
 }
