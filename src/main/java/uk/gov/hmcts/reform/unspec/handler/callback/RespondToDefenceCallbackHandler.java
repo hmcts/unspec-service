@@ -63,7 +63,7 @@ public class RespondToDefenceCallbackHandler extends CallbackHandler {
     private CallbackResponse validateUnavailableDates(CallbackParams callbackParams) {
         CaseData caseData = caseDetailsConverter.toCaseData(callbackParams.getRequest().getCaseDetails());
         List<Element<UnavailableDate>> unavailableDates =
-            ofNullable(caseData.getClaimant1DQ().getHearing().getUnavailableDates()).orElse(emptyList());
+            ofNullable(caseData.getApplicant1DQ().getHearing().getUnavailableDates()).orElse(emptyList());
         List<String> errors = unavailableDateValidator.validate(unavailableDates);
 
         return AboutToStartOrSubmitCallbackResponse.builder()

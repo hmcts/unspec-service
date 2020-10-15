@@ -68,7 +68,7 @@ class RespondToDefenceCallbackHandlerTest extends BaseCallbackHandlerTest {
         @Test
         void shouldReturnError_whenUnavailableDateIsMoreThanOneYearInFuture() {
             Map<String, Object> data = new HashMap<>();
-            data.put("claimant1DQHearing", Hearing.builder()
+            data.put("applicant1DQHearing", Hearing.builder()
                 .unavailableDates(wrapElements(UnavailableDate.builder()
                                                    .date(LocalDate.now().plusYears(5))
                                                    .build()))
@@ -86,7 +86,7 @@ class RespondToDefenceCallbackHandlerTest extends BaseCallbackHandlerTest {
         @Test
         void shouldReturnError_whenUnavailableDateIsInPast() {
             Map<String, Object> data = new HashMap<>();
-            data.put("claimant1DQHearing", Hearing.builder()
+            data.put("applicant1DQHearing", Hearing.builder()
                 .unavailableDates(wrapElements(UnavailableDate.builder()
                                                    .date(LocalDate.now().minusYears(5))
                                                    .build()))
@@ -104,7 +104,7 @@ class RespondToDefenceCallbackHandlerTest extends BaseCallbackHandlerTest {
         @Test
         void shouldReturnNoError_whenUnavailableDateIsValid() {
             Map<String, Object> data = new HashMap<>();
-            data.put("claimant1DQHearing", Hearing.builder()
+            data.put("applicant1DQHearing", Hearing.builder()
                 .unavailableDates(wrapElements(UnavailableDate.builder()
                                                    .date(LocalDate.now().plusDays(5))
                                                    .build()))
@@ -121,7 +121,7 @@ class RespondToDefenceCallbackHandlerTest extends BaseCallbackHandlerTest {
         @Test
         void shouldReturnNoError_whenNoUnavailableDate() {
             Map<String, Object> data = new HashMap<>();
-            data.put("claimant1DQHearing", Hearing.builder().build());
+            data.put("applicant1DQHearing", Hearing.builder().build());
 
             CallbackParams params = callbackParamsOf(data, MID, "validate-unavailable-dates");
 
