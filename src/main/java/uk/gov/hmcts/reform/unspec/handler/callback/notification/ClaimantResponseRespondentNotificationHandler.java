@@ -21,14 +21,12 @@ import static uk.gov.hmcts.reform.unspec.callback.CaseEvent.NOTIFY_RESPONDENT_SO
 
 @Service
 @RequiredArgsConstructor
-public class CaseTransferredToLocalCourtDefendantNotificationHandler extends CallbackHandler
-    implements NotificationData  {
+public class ClaimantResponseRespondentNotificationHandler extends CallbackHandler implements NotificationData {
 
     private static final List<CaseEvent> EVENTS = List.of(
         NOTIFY_RESPONDENT_SOLICITOR1_FOR_CASE_TRANSFERRED_TO_LOCAL_COURT);
-    public static final String NOTIFY_RESPONDENT_SOLICITOR1_FOR_CASE_TRANSFERRED_TO_LOCAL_COURT_TASK_ID =
-        "NotifyDefendantSolicitorForCaseTransferredToLocalCourt";
-    private static final String REFERENCE_TEMPLATE = "case-transferred-to-local-court-defendant-notification-%s";
+    public static final String TASK_ID = "ClaimantResponseNotifyRespondentSolicitor1";
+    private static final String REFERENCE_TEMPLATE = "claimant-response-respondent-notification-%s";
 
     private final NotificationService notificationService;
     private final NotificationsProperties notificationsProperties;
@@ -43,7 +41,7 @@ public class CaseTransferredToLocalCourtDefendantNotificationHandler extends Cal
 
     @Override
     public String camundaActivityId() {
-        return NOTIFY_RESPONDENT_SOLICITOR1_FOR_CASE_TRANSFERRED_TO_LOCAL_COURT_TASK_ID;
+        return TASK_ID;
     }
 
     @Override

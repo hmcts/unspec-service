@@ -22,18 +22,18 @@ import static uk.gov.hmcts.reform.unspec.handler.callback.notification.Notificat
 import static uk.gov.hmcts.reform.unspec.handler.callback.notification.NotificationData.SOLICITOR_REFERENCE;
 
 @SpringBootTest(classes = {
-    ExtensionResponseDefendantNotificationHandler.class,
+    DefendantResponseApplicantNotificationHandler.class,
     CaseDetailsConverter.class,
     JacksonAutoConfiguration.class
 })
-class ExtensionResponseDefendantNotificationHandlerTest extends BaseCallbackHandlerTest {
+class DefendantResponseApplicantNotificationHandlerTest extends BaseCallbackHandlerTest {
 
     @MockBean
     private NotificationService notificationService;
     @MockBean
     private NotificationsProperties notificationsProperties;
     @Autowired
-    private ExtensionResponseDefendantNotificationHandler handler;
+    private DefendantResponseApplicantNotificationHandler handler;
 
     @Nested
     class AboutToSubmitCallback {
@@ -45,7 +45,7 @@ class ExtensionResponseDefendantNotificationHandlerTest extends BaseCallbackHand
         }
 
         @Test
-        void shouldNotifyDefendantSolicitor_whenInvoked() {
+        void shouldNotifyClaimantSolicitor_whenInvoked() {
             String legacyCaseReference = "000LR001";
             Map<String, Object> data = Map.of("legacyCaseReference", legacyCaseReference);
 
@@ -54,10 +54,10 @@ class ExtensionResponseDefendantNotificationHandlerTest extends BaseCallbackHand
             handler.handle(params);
 
             verify(notificationService).sendMail(
-                "defendantsolicitor@example.com",
+                "claimantsolicitor@example.com",
                 "template-id",
-                Map.of(CLAIM_REFERENCE_NUMBER, legacyCaseReference, SOLICITOR_REFERENCE, "defendant solicitor"),
-                "extension-response-defendant-notification-000LR001"
+                Map.of(CLAIM_REFERENCE_NUMBER, legacyCaseReference, SOLICITOR_REFERENCE, "claimant solicitor"),
+                "defendant-response-applicant-notification-000LR001"
             );
         }
     }

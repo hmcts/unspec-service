@@ -22,18 +22,18 @@ import static uk.gov.hmcts.reform.unspec.handler.callback.notification.Notificat
 import static uk.gov.hmcts.reform.unspec.handler.callback.notification.NotificationData.SOLICITOR_REFERENCE;
 
 @SpringBootTest(classes = {
-    RequestForExtensionClaimantNotificationHandler.class,
+    ClaimantResponseApplicantNotificationHandler.class,
     CaseDetailsConverter.class,
     JacksonAutoConfiguration.class
 })
-class RequestForExtensionClaimantNotificationHandlerTest extends BaseCallbackHandlerTest {
+class ClaimantResponseApplicantNotificationHandlerTest extends BaseCallbackHandlerTest {
 
     @MockBean
     private NotificationService notificationService;
     @MockBean
     private NotificationsProperties notificationsProperties;
     @Autowired
-    private RequestForExtensionClaimantNotificationHandler handler;
+    private ClaimantResponseApplicantNotificationHandler handler;
 
     @Nested
     class AboutToSubmitCallback {
@@ -45,7 +45,7 @@ class RequestForExtensionClaimantNotificationHandlerTest extends BaseCallbackHan
         }
 
         @Test
-        void shouldNotifyClaimantSolicitor_whenInvoked() {
+        void shouldNotifyParties_whenInvoked() {
             String legacyCaseReference = "000LR001";
             Map<String, Object> data = Map.of("legacyCaseReference", legacyCaseReference);
 
@@ -57,7 +57,7 @@ class RequestForExtensionClaimantNotificationHandlerTest extends BaseCallbackHan
                 "claimantsolicitor@example.com",
                 "template-id",
                 Map.of(CLAIM_REFERENCE_NUMBER, legacyCaseReference, SOLICITOR_REFERENCE, "claimant solicitor"),
-                "request-for-extension-claimant-notification-000LR001"
+                "claimant-response-applicant-notification-000LR001"
             );
         }
     }

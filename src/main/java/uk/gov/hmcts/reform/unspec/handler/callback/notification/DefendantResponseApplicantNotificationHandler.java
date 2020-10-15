@@ -21,12 +21,11 @@ import static uk.gov.hmcts.reform.unspec.callback.CaseEvent.NOTIFY_APPLICANT_SOL
 
 @Service
 @RequiredArgsConstructor
-public class DefendantResponseClaimantNotificationHandler extends CallbackHandler implements NotificationData {
+public class DefendantResponseApplicantNotificationHandler extends CallbackHandler implements NotificationData {
 
     private static final List<CaseEvent> EVENTS = List.of(NOTIFY_APPLICANT_SOLICITOR1_FOR_DEFENDANT_RESPONSE);
-    public static final String NOTIFY_APPLICANT_SOLICITOR1_FOR_DEFENDANT_RESPONSE_TASK_ID =
-        "NotifyClaimantSolicitorForDefendantResponse";
-    private static final String REFERENCE_TEMPLATE = "defendant-response-claimant-notification-%s";
+    public static final String TASK_ID = "DefendantResponseFullDefenceNotifyApplicantSolicitor1";
+    private static final String REFERENCE_TEMPLATE = "defendant-response-applicant-notification-%s";
 
     private final NotificationService notificationService;
     private final NotificationsProperties notificationsProperties;
@@ -41,7 +40,7 @@ public class DefendantResponseClaimantNotificationHandler extends CallbackHandle
 
     @Override
     public String camundaActivityId() {
-        return NOTIFY_APPLICANT_SOLICITOR1_FOR_DEFENDANT_RESPONSE_TASK_ID;
+        return TASK_ID;
     }
 
     @Override

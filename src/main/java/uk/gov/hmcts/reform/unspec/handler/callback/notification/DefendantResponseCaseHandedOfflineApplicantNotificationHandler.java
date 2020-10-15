@@ -17,16 +17,17 @@ import java.util.List;
 import java.util.Map;
 
 import static uk.gov.hmcts.reform.unspec.callback.CallbackType.ABOUT_TO_SUBMIT;
-import static uk.gov.hmcts.reform.unspec.callback.CaseEvent.NOTIFY_APPLICANT_SOLICITOR1_FOR_REQUEST_FOR_EXTENSION;
+import static uk.gov.hmcts.reform.unspec.callback.CaseEvent.NOTIFY_RESPONDENT_SOLICITOR1_FOR_CASE_HANDED_OFFLINE;
 
 @Service
 @RequiredArgsConstructor
-public class RequestForExtensionClaimantNotificationHandler extends CallbackHandler implements NotificationData {
+public class DefendantResponseCaseHandedOfflineApplicantNotificationHandler extends CallbackHandler
+    implements NotificationData {
 
-    private static final List<CaseEvent> EVENTS = List.of(NOTIFY_APPLICANT_SOLICITOR1_FOR_REQUEST_FOR_EXTENSION);
-    public static final String NOTIFY_APPLICANT_SOLICITOR1_FOR_REQUEST_FOR_EXTENSION_TASK_ID =
-        "NotifyClaimantSolicitorForRequestForExtension";
-    private static final String REFERENCE_TEMPLATE = "request-for-extension-claimant-notification-%s";
+    private static final List<CaseEvent> EVENTS = List.of(NOTIFY_RESPONDENT_SOLICITOR1_FOR_CASE_HANDED_OFFLINE);
+    public static final String TASK_ID = "DefendantResponseCaseHandedOfflineNotifyRespondentSolicitor1";
+    private static final String REFERENCE_TEMPLATE =
+        "defendant-response-case-handed-offline-respondent-notification-%s";
 
     private final NotificationService notificationService;
     private final NotificationsProperties notificationsProperties;
@@ -35,13 +36,13 @@ public class RequestForExtensionClaimantNotificationHandler extends CallbackHand
     @Override
     protected Map<String, Callback> callbacks() {
         return Map.of(
-            callbackKey(ABOUT_TO_SUBMIT), this::notifyClaimantSolicitorForRequestForExtension
+            callbackKey(ABOUT_TO_SUBMIT), this::notifyDefendantSolicitorForCaseHandedOffline
         );
     }
 
     @Override
     public String camundaActivityId() {
-        return NOTIFY_APPLICANT_SOLICITOR1_FOR_REQUEST_FOR_EXTENSION_TASK_ID;
+        return TASK_ID;
     }
 
     @Override
@@ -49,15 +50,16 @@ public class RequestForExtensionClaimantNotificationHandler extends CallbackHand
         return EVENTS;
     }
 
-    private CallbackResponse notifyClaimantSolicitorForRequestForExtension(CallbackParams callbackParams) {
+    private CallbackResponse notifyDefendantSolicitorForCaseHandedOffline(CallbackParams callbackParams) {
         CaseData caseData = caseDetailsConverter.toCaseData(callbackParams.getRequest().getCaseDetails());
 
         notificationService.sendMail(
-            notificationsProperties.getClaimantSolicitorEmail(),
+            notificationsProperties.getDefendantSolicitorEmail(),
             notificationsProperties.getSolicitorResponseToCase(),
             addProperties(caseData),
             String.format(REFERENCE_TEMPLATE, caseData.getLegacyCaseReference())
         );
+
         return AboutToStartOrSubmitCallbackResponse.builder().build();
     }
 
@@ -65,7 +67,7 @@ public class RequestForExtensionClaimantNotificationHandler extends CallbackHand
     public Map<String, String> addProperties(CaseData caseData) {
         return Map.of(
             CLAIM_REFERENCE_NUMBER, caseData.getLegacyCaseReference(),
-            SOLICITOR_REFERENCE, "claimant solicitor"
+            SOLICITOR_REFERENCE, "defendant solicitor"
         );
     }
 }

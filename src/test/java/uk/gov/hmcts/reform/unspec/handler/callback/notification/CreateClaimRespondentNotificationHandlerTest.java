@@ -20,18 +20,16 @@ import java.time.LocalDateTime;
 import java.util.Map;
 
 import static org.mockito.ArgumentMatchers.anyMap;
-import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.verify;
-import static uk.gov.hmcts.reform.unspec.handler.callback.notification.ClaimIssueNotificationHandler.NOTIFY_RESPONDENT_SOLICITOR1_FOR_CLAIM_ISSUE_TASK_ID;
 
 @SpringBootTest(classes = {
-    ClaimIssueNotificationHandler.class,
+    CreateClaimRespondentNotificationHandler.class,
     CaseDetailsConverter.class,
     NotificationsProperties.class,
     JacksonAutoConfiguration.class
 })
-class ClaimIssueNotificationHandlerTest extends BaseCallbackHandlerTest {
+class CreateClaimRespondentNotificationHandlerTest extends BaseCallbackHandlerTest {
 
     @MockBean
     private NotificationService notificationService;
@@ -39,7 +37,7 @@ class ClaimIssueNotificationHandlerTest extends BaseCallbackHandlerTest {
     private NotificationsProperties notificationsProperties;
 
     @Autowired
-    private ClaimIssueNotificationHandler handler;
+    private CreateClaimRespondentNotificationHandler handler;
 
     @Nested
     class AboutToSubmitCallback {
@@ -49,7 +47,7 @@ class ClaimIssueNotificationHandlerTest extends BaseCallbackHandlerTest {
             String solicitorEmail = "solicitor@example.com";
             Map<String, Object> data = Map.of(
                 "businessProcess",
-                BusinessProcess.builder().activityId(NOTIFY_RESPONDENT_SOLICITOR1_FOR_CLAIM_ISSUE_TASK_ID).build(),
+                BusinessProcess.builder().activityId(CreateClaimRespondentNotificationHandler.TASK_ID).build(),
                 "serviceMethodToRespondentSolicitor1",
                 Map.of("email", solicitorEmail),
                 "legacyCaseReference", "000LR001",
@@ -66,7 +64,7 @@ class ClaimIssueNotificationHandlerTest extends BaseCallbackHandlerTest {
                 eq(solicitorEmail),
                 eq(notificationsProperties.getDefendantSolicitorClaimIssueEmailTemplate()),
                 anyMap(),
-                anyString()
+                eq("create-claim-respondent-notification-000LR001")
             );
         }
     }

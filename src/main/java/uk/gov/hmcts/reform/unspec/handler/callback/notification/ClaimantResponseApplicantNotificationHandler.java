@@ -17,16 +17,16 @@ import java.util.List;
 import java.util.Map;
 
 import static uk.gov.hmcts.reform.unspec.callback.CallbackType.ABOUT_TO_SUBMIT;
-import static uk.gov.hmcts.reform.unspec.callback.CaseEvent.NOTIFY_RESPONDENT_SOLICITOR1_FOR_EXTENSION_RESPONSE;
+import static uk.gov.hmcts.reform.unspec.callback.CaseEvent.NOTIFY_APPLICANT_SOLICITOR1_FOR_CASE_TRANSFERRED_TO_LOCAL_COURT;
 
 @Service
 @RequiredArgsConstructor
-public class ExtensionResponseDefendantNotificationHandler extends CallbackHandler implements NotificationData {
+public class ClaimantResponseApplicantNotificationHandler extends CallbackHandler implements NotificationData {
 
-    private static final List<CaseEvent> EVENTS = List.of(NOTIFY_RESPONDENT_SOLICITOR1_FOR_EXTENSION_RESPONSE);
-    public static final String NOTIFY_RESPONDENT_SOLICITOR1_FOR_EXTENSION_RESPONSE_TASK_ID =
-        "NotifyDefendantSolicitorForExtensionResponse";
-    private static final String REFERENCE_TEMPLATE = "extension-response-defendant-notification-%s";
+    private static final List<CaseEvent> EVENTS = List.of(
+        NOTIFY_APPLICANT_SOLICITOR1_FOR_CASE_TRANSFERRED_TO_LOCAL_COURT);
+    public static final String TASK_ID = "ClaimantResponseNotifyApplicantSolicitor1";
+    private static final String REFERENCE_TEMPLATE = "claimant-response-applicant-notification-%s";
 
     private final NotificationService notificationService;
     private final NotificationsProperties notificationsProperties;
@@ -35,13 +35,13 @@ public class ExtensionResponseDefendantNotificationHandler extends CallbackHandl
     @Override
     protected Map<String, Callback> callbacks() {
         return Map.of(
-            callbackKey(ABOUT_TO_SUBMIT), this::notifyDefendantSolicitorForExtensionResponse
+            callbackKey(ABOUT_TO_SUBMIT), this::notifyClaimantForCaseTransferredToLocalCourt
         );
     }
 
     @Override
     public String camundaActivityId() {
-        return NOTIFY_RESPONDENT_SOLICITOR1_FOR_EXTENSION_RESPONSE_TASK_ID;
+        return TASK_ID;
     }
 
     @Override
@@ -49,15 +49,16 @@ public class ExtensionResponseDefendantNotificationHandler extends CallbackHandl
         return EVENTS;
     }
 
-    private CallbackResponse notifyDefendantSolicitorForExtensionResponse(CallbackParams callbackParams) {
+    private CallbackResponse notifyClaimantForCaseTransferredToLocalCourt(CallbackParams callbackParams) {
         CaseData caseData = caseDetailsConverter.toCaseData(callbackParams.getRequest().getCaseDetails());
 
         notificationService.sendMail(
-            notificationsProperties.getDefendantSolicitorEmail(),
+            notificationsProperties.getClaimantSolicitorEmail(),
             notificationsProperties.getSolicitorResponseToCase(),
             addProperties(caseData),
             String.format(REFERENCE_TEMPLATE, caseData.getLegacyCaseReference())
         );
+
         return AboutToStartOrSubmitCallbackResponse.builder().build();
     }
 
@@ -65,7 +66,7 @@ public class ExtensionResponseDefendantNotificationHandler extends CallbackHandl
     public Map<String, String> addProperties(CaseData caseData) {
         return Map.of(
             CLAIM_REFERENCE_NUMBER, caseData.getLegacyCaseReference(),
-            SOLICITOR_REFERENCE, "defendant solicitor"
+            SOLICITOR_REFERENCE, "claimant solicitor"
         );
     }
 }
