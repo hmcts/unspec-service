@@ -154,7 +154,7 @@
     "LiveFrom": "01/01/2017",
     "CaseTypeID": "UNSPECIFIED_CLAIMS",
     "CaseEventID": "CLAIMANT_RESPONSE",
-    "CaseFieldID": "respondent1DQWitnesses",
+    "CaseFieldID": "applicant1DQWitnesses",
     "PageDisplayOrder": 8,
     "PageFieldDisplayOrder": 1,
     "DisplayContext": "MANDATORY",
