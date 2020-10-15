@@ -4,8 +4,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.jackson.JacksonAutoConfiguration;
 import org.springframework.boot.autoconfigure.validation.ValidationAutoConfiguration;
@@ -13,25 +11,26 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import uk.gov.hmcts.reform.ccd.client.model.AboutToStartOrSubmitCallbackResponse;
-import uk.gov.hmcts.reform.ccd.client.model.CaseDetails;
 import uk.gov.hmcts.reform.ccd.client.model.SubmittedCallbackResponse;
 import uk.gov.hmcts.reform.unspec.callback.CallbackParams;
-import uk.gov.hmcts.reform.unspec.callback.CallbackType;
+import uk.gov.hmcts.reform.unspec.helpers.CaseDetailsConverter;
+import uk.gov.hmcts.reform.unspec.model.CaseData;
 import uk.gov.hmcts.reform.unspec.sampledata.CallbackParamsBuilder;
-import uk.gov.hmcts.reform.unspec.sampledata.CaseDetailsBuilder;
+import uk.gov.hmcts.reform.unspec.sampledata.CaseDataBuilder;
+import uk.gov.hmcts.reform.unspec.sampledata.PartyBuilder;
 import uk.gov.hmcts.reform.unspec.service.WorkingDayIndicator;
 import uk.gov.hmcts.reform.unspec.validation.DateOfBirthValidator;
 
-import java.time.LocalDateTime;
-import java.util.HashMap;
-import java.util.Map;
+import java.time.LocalDate;
 
 import static java.time.LocalDate.now;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import static uk.gov.hmcts.reform.unspec.callback.CallbackType.ABOUT_TO_START;
+import static uk.gov.hmcts.reform.unspec.callback.CallbackType.ABOUT_TO_SUBMIT;
 import static uk.gov.hmcts.reform.unspec.callback.CallbackType.MID;
+import static uk.gov.hmcts.reform.unspec.callback.CallbackType.SUBMITTED;
 import static uk.gov.hmcts.reform.unspec.service.DeadlinesCalculator.MID_NIGHT;
 
 @ExtendWith(SpringExtension.class)
@@ -39,7 +38,8 @@ import static uk.gov.hmcts.reform.unspec.service.DeadlinesCalculator.MID_NIGHT;
     AcknowledgeServiceCallbackHandler.class,
     JacksonAutoConfiguration.class,
     ValidationAutoConfiguration.class,
-    DateOfBirthValidator.class
+    DateOfBirthValidator.class,
+    CaseDetailsConverter.class
 })
 class AcknowledgeServiceCallbackHandlerTest extends BaseCallbackHandlerTest {
 
@@ -54,8 +54,8 @@ class AcknowledgeServiceCallbackHandlerTest extends BaseCallbackHandlerTest {
 
         @Test
         void shouldReturnNoError_WhenAboutToStartIsInvoked() {
-            CaseDetails caseDetails = CaseDetailsBuilder.builder().atStateServiceConfirmed().build();
-            CallbackParams params = CallbackParamsBuilder.builder().of(ABOUT_TO_START, caseDetails).build();
+            CaseData caseData = CaseDataBuilder.builder().atStateServiceConfirmed().build();
+            CallbackParams params = CallbackParamsBuilder.builder().of(ABOUT_TO_START, caseData).build();
 
             AboutToStartOrSubmitCallbackResponse response = (AboutToStartOrSubmitCallbackResponse) handler
                 .handle(params);
@@ -69,32 +69,59 @@ class AcknowledgeServiceCallbackHandlerTest extends BaseCallbackHandlerTest {
 
         private static final String PAGE_ID = "confirm-details";
 
-        @ParameterizedTest
-        @ValueSource(strings = {"individualDateOfBirth", "soleTraderDateOfBirth"})
-        void shouldReturnError_whenDateOfBirthIsInTheFuture(String dateOfBirthField) {
-            Map<String, Object> data = new HashMap<>();
-            data.put("respondent1", Map.of(dateOfBirthField, "2030-01-01"));
+        @Test
+        void shouldReturnError_whenIndividualDateOfBirthIsInTheFuture() {
+            CaseData caseData = CaseDataBuilder.builder().atStateServiceConfirmed()
+                .respondent1(PartyBuilder.builder().individual()
+                                 .individualDateOfBirth(LocalDate.now().plusDays(1))
+                                 .build())
+                .build();
+            CallbackParams params = CallbackParamsBuilder.builder().of(MID, caseData, PAGE_ID).build();
 
-            CallbackParams params = callbackParamsOf(data, MID, PAGE_ID);
-
-            AboutToStartOrSubmitCallbackResponse response = (AboutToStartOrSubmitCallbackResponse) handler
-                .handle(params);
+            var response = (AboutToStartOrSubmitCallbackResponse) handler.handle(params);
 
             assertThat(response.getErrors()).containsExactly("The date entered cannot be in the future");
         }
 
-        @ParameterizedTest
-        @ValueSource(strings = {"individualDateOfBirth", "soleTraderDateOfBirth"})
-        void shouldReturnNoError_whenDateOfBirthIsInThePast(String dateOfBirthField) {
-            Map<String, Object> data = new HashMap<>();
-            data.put("respondent1", Map.of(dateOfBirthField, "2000-01-01"));
+        @Test
+        void shouldReturnError_whenSoleTraderDateOfBirthIsInTheFuture() {
+            CaseData caseData = CaseDataBuilder.builder().atStateServiceConfirmed()
+                .respondent1(PartyBuilder.builder().soleTrader()
+                                 .soleTraderDateOfBirth(LocalDate.now().plusDays(1))
+                                 .build())
+                .build();
+            CallbackParams params = CallbackParamsBuilder.builder().of(MID, caseData, PAGE_ID).build();
 
-            CallbackParams params = callbackParamsOf(data, MID, PAGE_ID);
+            var response = (AboutToStartOrSubmitCallbackResponse) handler.handle(params);
 
-            AboutToStartOrSubmitCallbackResponse response = (AboutToStartOrSubmitCallbackResponse) handler
-                .handle(params);
+            assertThat(response.getErrors()).containsExactly("The date entered cannot be in the future");
+        }
 
-            assertThat(response.getData()).isEqualTo(data);
+        @Test
+        void shouldReturnNoError_whenIndividualDateOfBirthIsInThePast() {
+            CaseData caseData = CaseDataBuilder.builder().atStateServiceConfirmed()
+                .respondent1(PartyBuilder.builder().individual()
+                                 .individualDateOfBirth(LocalDate.now().minusYears(1))
+                                 .build())
+                .build();
+            CallbackParams params = CallbackParamsBuilder.builder().of(MID, caseData, PAGE_ID).build();
+
+            var response = (AboutToStartOrSubmitCallbackResponse) handler.handle(params);
+
+            assertThat(response.getErrors()).isEmpty();
+        }
+
+        @Test
+        void shouldReturnNoError_whenSoleTraderDateOfBirthIsInThePast() {
+            CaseData caseData = CaseDataBuilder.builder().atStateServiceConfirmed()
+                .respondent1(PartyBuilder.builder().soleTrader()
+                                 .soleTraderDateOfBirth(LocalDate.now().minusYears(1))
+                                 .build())
+                .build();
+            CallbackParams params = CallbackParamsBuilder.builder().of(MID, caseData, PAGE_ID).build();
+
+            var response = (AboutToStartOrSubmitCallbackResponse) handler.handle(params);
+
             assertThat(response.getErrors()).isEmpty();
         }
     }
@@ -109,27 +136,21 @@ class AcknowledgeServiceCallbackHandlerTest extends BaseCallbackHandlerTest {
 
         @Test
         void shouldSetNewResponseDeadline_whenInvoked() {
-            Map<String, Object> data = new HashMap<>();
-            LocalDateTime responseDeadline = now().atTime(MID_NIGHT);
-            data.put("respondentSolicitor1ResponseDeadline", responseDeadline);
+            CaseData caseData = CaseDataBuilder.builder().atStateServiceAcknowledge().build();
+            CallbackParams params = CallbackParamsBuilder.builder().of(ABOUT_TO_SUBMIT, caseData).build();
 
-            CallbackParams params = callbackParamsOf(data, CallbackType.ABOUT_TO_SUBMIT);
-
-            AboutToStartOrSubmitCallbackResponse response = (AboutToStartOrSubmitCallbackResponse) handler
-                .handle(params);
+            var response = (AboutToStartOrSubmitCallbackResponse) handler.handle(params);
 
             assertThat(response.getData()).extracting("respondentSolicitor1ResponseDeadline")
-                .isEqualTo(responseDeadline.plusDays(14));
+                .isEqualTo(now().atTime(MID_NIGHT).plusDays(14).toString());
         }
 
         @Test
         void shouldSetServiceAcknowledgementBusinessProcessToReady_whenInvoked() {
-            Map<String, Object> data = new HashMap<>(Map.of(
-                "respondentSolicitor1ResponseDeadline", now().atTime(MID_NIGHT)
-            ));
+            CaseData caseData = CaseDataBuilder.builder().atStateServiceAcknowledge().build();
+            CallbackParams params = CallbackParamsBuilder.builder().of(ABOUT_TO_SUBMIT, caseData).build();
 
-            AboutToStartOrSubmitCallbackResponse response = (AboutToStartOrSubmitCallbackResponse) handler
-                .handle(callbackParamsOf(data, CallbackType.ABOUT_TO_SUBMIT));
+            var response = (AboutToStartOrSubmitCallbackResponse) handler.handle(params);
 
             //TODO: uncomment when CMC-794 is played
             //assertThat(response.getData()).extracting("businessProcess").extracting("status").isEqualTo(READY);
@@ -144,17 +165,15 @@ class AcknowledgeServiceCallbackHandlerTest extends BaseCallbackHandlerTest {
 
         @Test
         void shouldReturnExpectedResponse_whenInvoked() {
-            Map<String, Object> data = new HashMap<>();
-            data.put("respondentSolicitor1ResponseDeadline", "2030-01-01T16:00:00");
-
-            CallbackParams params = callbackParamsOf(data, CallbackType.SUBMITTED);
+            CaseData caseData = CaseDataBuilder.builder().atStateServiceAcknowledge().build();
+            CallbackParams params = CallbackParamsBuilder.builder().of(SUBMITTED, caseData).build();
 
             SubmittedCallbackResponse response = (SubmittedCallbackResponse) handler.handle(params);
 
             assertThat(response).isEqualToComparingFieldByField(
                 SubmittedCallbackResponse.builder()
                     .confirmationHeader("# You've acknowledged service")
-                    .confirmationBody("<br />You need to respond before 4pm on 1 January 2030."
+                    .confirmationBody("<br />You need to respond before 4pm on 28 October 2020."
                                           + "\n\n[Download the Acknowledgement of Service form](http://www.google.com)")
                     .build());
         }

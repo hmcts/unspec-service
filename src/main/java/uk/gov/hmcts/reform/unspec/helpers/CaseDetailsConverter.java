@@ -26,4 +26,9 @@ public class CaseDetailsConverter {
         }
         return objectMapper.convertValue(data, CaseData.class);
     }
+
+    @SuppressWarnings("unchecked")
+    public Map<String, Object> toMap(CaseData caseData) {
+        return objectMapper.convertValue(caseData, Map.class);
+    }
 }

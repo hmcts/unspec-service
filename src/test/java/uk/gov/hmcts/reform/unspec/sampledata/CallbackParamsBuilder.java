@@ -28,6 +28,13 @@ public class CallbackParamsBuilder {
         return this;
     }
 
+    public CallbackParamsBuilder of(CallbackType type, CaseData caseData, String pageId) {
+        this.type = type;
+        this.caseData = caseData;
+        this.pageId = pageId;
+        return this;
+    }
+
     public CallbackParamsBuilder of(CallbackType type, CaseDetails caseDetails) {
         this.type = type;
         this.request = CallbackRequest.builder().caseDetails(caseDetails).build();
