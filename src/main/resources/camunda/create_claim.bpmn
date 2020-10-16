@@ -4,7 +4,7 @@
     <bpmn:serviceTask id="ClaimIssueEmailRespondentSolicitor1" name="Send email respondent solicitor 1" camunda:type="external" camunda:topic="processCaseEvent">
       <bpmn:extensionElements>
         <camunda:inputOutput>
-          <camunda:inputParameter name="caseEvent">NOTIFY_RESPONDENT_SOLICITOR1_FOR_CLAIM_ISSUE</camunda:inputParameter>
+          <camunda:inputParameter name="CASE_EVENT">NOTIFY_RESPONDENT_SOLICITOR1_FOR_CLAIM_ISSUE</camunda:inputParameter>
         </camunda:inputOutput>
       </bpmn:extensionElements>
       <bpmn:incoming>Flow_0tvmtj7</bpmn:incoming>
@@ -42,10 +42,6 @@
   <bpmn:error id="Error_0t2ju7k" name="StartBusinessAbort" errorCode="ABORT" />
   <bpmndi:BPMNDiagram id="BPMNDiagram_1">
     <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="CREATE_CLAIM_PROCESS_ID">
-      <bpmndi:BPMNEdge id="Flow_0tpdor1_di" bpmnElement="Flow_0tpdor1">
-        <di:waypoint x="188" y="120" />
-        <di:waypoint x="260" y="120" />
-      </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_0lpgwyz_di" bpmnElement="Flow_0lpgwyz">
         <di:waypoint x="310" y="178" />
         <di:waypoint x="310" y="272" />
@@ -58,26 +54,30 @@
         <di:waypoint x="570" y="120" />
         <di:waypoint x="712" y="120" />
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNShape id="Activity_0bn79uc_di" bpmnElement="ClaimIssueEmailRespondentSolicitor1">
-        <dc:Bounds x="470" y="80" width="100" height="80" />
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Event_1148m43_di" bpmnElement="Event_1148m43">
-        <dc:Bounds x="712" y="102" width="36" height="36" />
-      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Flow_0tpdor1_di" bpmnElement="Flow_0tpdor1">
+        <di:waypoint x="188" y="120" />
+        <di:waypoint x="260" y="120" />
+      </bpmndi:BPMNEdge>
       <bpmndi:BPMNShape id="Event_1m02c2o_di" bpmnElement="Event_0t2zome">
         <dc:Bounds x="152" y="102" width="36" height="36" />
         <bpmndi:BPMNLabel>
           <dc:Bounds x="158" y="145" width="24" height="14" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Activity_1oaugvz_di" bpmnElement="StartBusinessProcessTaskId">
-        <dc:Bounds x="260" y="80" width="100" height="80" />
-      </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Event_0iiw102_di" bpmnElement="Event_0iiw102">
         <dc:Bounds x="292" y="272" width="36" height="36" />
         <bpmndi:BPMNLabel>
           <dc:Bounds x="291" y="315" width="39" height="14" />
         </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_1oaugvz_di" bpmnElement="StartBusinessProcessTaskId">
+        <dc:Bounds x="260" y="80" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0bn79uc_di" bpmnElement="ClaimIssueEmailRespondentSolicitor1">
+        <dc:Bounds x="470" y="80" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_1148m43_di" bpmnElement="Event_1148m43">
+        <dc:Bounds x="712" y="102" width="36" height="36" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Event_02d0u09_di" bpmnElement="Event_0xn9cx1">
         <dc:Bounds x="292" y="142" width="36" height="36" />
