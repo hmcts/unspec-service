@@ -5,7 +5,7 @@ const statementOfTruth = require('../../fragments/statementOfTruth');
 module.exports = {
 
   fields: {
-    statementOfValue: '#claimValue_statementOfValue',
+    statementOfValue: '#claimValue_statementOfValueInPennies',
   },
 
   async enterClaimValue() {

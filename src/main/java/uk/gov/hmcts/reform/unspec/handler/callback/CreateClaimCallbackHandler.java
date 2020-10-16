@@ -119,7 +119,7 @@ public class CreateClaimCallbackHandler extends CallbackHandler {
         data.put(CLAIMANT, caseData.getApplicant1());
         data.put("legacyCaseReference", referenceNumber);
         data.put("businessProcess", BusinessProcess.builder().activityId("ClaimIssueHandling").build());
-        data.put("allocatedTrack", getAllocatedTrack(caseData.getClaimValue(), caseData.getClaimType()));
+        data.put("allocatedTrack", getAllocatedTrack(caseData.getClaimValue().toPounds(), caseData.getClaimType()));
 
         return AboutToStartOrSubmitCallbackResponse.builder()
             .data(data)

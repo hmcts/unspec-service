@@ -12,16 +12,18 @@ import java.math.BigDecimal;
 @Builder
 public class ClaimValue {
 
-    private final BigDecimal statementOfValue;
+    private final BigDecimal statementOfValueInPennies;
 
     @JsonCreator
-    public ClaimValue(@JsonProperty("statementOfValue") BigDecimal statementOfValue) {
-        this.statementOfValue = statementOfValue;
+    public ClaimValue(@JsonProperty("statementOfValueInPennies") BigDecimal statementOfValueInPennies) {
+        this.statementOfValueInPennies = statementOfValueInPennies;
+    }
+
+    public BigDecimal toPounds() {
+        return MonetaryConversions.penniesToPounds(this.statementOfValueInPennies);
     }
 
     public String formData() {
-        BigDecimal statementOfValue = MonetaryConversions.penniesToPounds(this.statementOfValue);
-
-        return "up to £" + statementOfValue;
+        return "up to £" + this.toPounds();
     }
 }
