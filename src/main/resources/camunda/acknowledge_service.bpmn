@@ -17,7 +17,6 @@
     <bpmn:serviceTask id="StartBusinessProcessTaskId" name="StartBusinessProcess" camunda:type="external" camunda:topic="START_BUSINESS_PROCESS">
       <bpmn:extensionElements>
         <camunda:inputOutput>
-          <camunda:inputParameter name="caseId">1601986692564009</camunda:inputParameter>
           <camunda:inputParameter name="caseEvent">START_BUSINESS_PROCESS</camunda:inputParameter>
         </camunda:inputOutput>
       </bpmn:extensionElements>

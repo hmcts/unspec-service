@@ -48,7 +48,7 @@
       <bpmn:outgoing>Flow_01e5t4p</bpmn:outgoing>
     </bpmn:exclusiveGateway>
     <bpmn:sequenceFlow id="Flow_17u38kw" sourceRef="Gateway_1q9qem9" targetRef="DefendantResponseFullDefenceEmailApplicantSolicitor1">
-      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${flowState == "MAIN.RESPONDED_TO_CLAIM"}</bpmn:conditionExpression>
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${flowState == "MAIN.FULL_DEFENCE"}</bpmn:conditionExpression>
     </bpmn:sequenceFlow>
     <bpmn:sequenceFlow id="Flow_01e5t4p" sourceRef="Gateway_1q9qem9" targetRef="DefendantResponseCaseHandedOfflineEmailRespondentSolicitor1">
       <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${flowState != "MAIN.RESPONDED_TO_CLAIM"}</bpmn:conditionExpression>

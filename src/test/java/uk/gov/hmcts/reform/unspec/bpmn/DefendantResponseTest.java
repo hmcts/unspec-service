@@ -7,7 +7,7 @@ import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertFalse;
-import static uk.gov.hmcts.reform.unspec.service.flowstate.FlowState.Main.RESPONDED_TO_CLAIM;
+import static uk.gov.hmcts.reform.unspec.service.flowstate.FlowState.Main.FULL_DEFENCE;
 import static uk.gov.hmcts.reform.unspec.service.tasks.handler.StartBusinessProcessTaskHandler.FLOW_STATE;
 
 class DefendantResponseTest extends BpmnBaseTest {
@@ -69,7 +69,7 @@ class DefendantResponseTest extends BpmnBaseTest {
         //complete the start business process
         ExternalTask startBusinessTask = getNextExternalTask(START_BUSINESS_TOPIC);
         VariableMap variables = Variables.createVariables();
-        variables.putValue(FLOW_STATE, RESPONDED_TO_CLAIM.fullName());
+        variables.putValue(FLOW_STATE, FULL_DEFENCE.fullName());
         completeExternalTask(
             startBusinessTask,
             START_BUSINESS_TOPIC,
