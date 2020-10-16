@@ -14,6 +14,7 @@ public class BusinessProcess {
     private String processInstanceId;
     private BusinessProcessStatus status;
     private String activityId;
+    private String camundaEvent;
 
     @JsonIgnore
     public boolean hasSameProcessInstanceId(String processInstanceId) {

@@ -10,12 +10,12 @@ import java.util.List;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 
-class CaseStayedSchedulerTest extends BpmnBaseTest {
+class PollingEventEmitterSchedulerTest extends BpmnBaseTest {
 
-    public static final String TOPIC_NAME = "CASE_STAYED_FINDER";
+    public static final String TOPIC_NAME = "POLLING_EVENT_EMITTER";
 
-    public CaseStayedSchedulerTest() {
-        super("case_stayed_scheduler.bpmn", "Process_05o55pg");
+    public PollingEventEmitterSchedulerTest() {
+        super("polling_event_emitter_scheduler.bpmn", "PollingEventEmitterScheduler");
     }
 
     @Test
@@ -29,20 +29,12 @@ class CaseStayedSchedulerTest extends BpmnBaseTest {
         //get jobs
         List<JobDefinition> jobDefinitions = getJobs();
 
-        //assert that job is as expected
-        assertThat(jobDefinitions).hasSize(1);
-        assertThat(jobDefinitions.get(0).getJobType()).isEqualTo("timer-start-event");
-
-        //TODO update CRON schedule.
-        assertThat(jobDefinitions.get(0).getJobConfiguration()).isEqualTo("CYCLE: 0 0/5 * * * ?");
-
         //get external tasks
         List<ExternalTask> externalTasks = getExternalTasks();
         assertThat(externalTasks).hasSize(1);
 
         //fetch and complete task
         List<LockedExternalTask> lockedExternalTasks = fetchAndLockTask(TOPIC_NAME);
-
         assertThat(lockedExternalTasks).hasSize(1);
         completeTask(lockedExternalTasks.get(0).getId());
 

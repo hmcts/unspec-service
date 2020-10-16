@@ -6,22 +6,27 @@ import org.camunda.bpm.engine.externaltask.ExternalTask;
 import org.camunda.bpm.engine.externaltask.LockedExternalTask;
 import org.camunda.bpm.engine.management.JobDefinition;
 import org.camunda.bpm.engine.repository.Deployment;
+import org.camunda.bpm.engine.repository.ProcessDefinition;
 import org.camunda.bpm.engine.runtime.ProcessInstance;
+import org.camunda.bpm.engine.variable.VariableMap;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 
 import java.util.List;
+import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.camunda.bpm.engine.ProcessEngineConfiguration.createStandaloneInMemProcessEngineConfiguration;
 
 public abstract class BpmnBaseTest {
 
+    private static final String DIAGRAM_PATH = "camunda/%s";
     public static final String WORKER_ID = "test-worker";
     public static final String START_BUSINESS_TOPIC = "START_BUSINESS_PROCESS";
     public static final String START_BUSINESS_EVENT = "START_BUSINESS_PROCESS";
+    public static final String START_BUSINESS_ACTIVITY = "StartBusinessProcessTaskId";
     public static final String PROCESS_CASE_EVENT_TOPIC = "processCaseEvent";
 
     public final String bpmnFileName;
@@ -46,7 +51,10 @@ public abstract class BpmnBaseTest {
     @BeforeEach
     void setup() {
         //deploy process
-        deployment = engine.getRepositoryService().createDeployment().addClasspathResource(bpmnFileName).deploy();
+        deployment = engine.getRepositoryService()
+            .createDeployment()
+            .addClasspathResource(String.format(DIAGRAM_PATH, bpmnFileName))
+            .deploy();
         processInstance = engine.getRuntimeService().startProcessInstanceByKey(processId);
     }
 
@@ -89,6 +97,19 @@ public abstract class BpmnBaseTest {
     }
 
     /**
+     * Retrieves a process definition which has a start message event with the messageName.
+     *
+     * @param messageName the name of the message.
+     * @return process definitions with given message start message event.
+     */
+    public ProcessDefinition getProcessDefinitionByMessage(String messageName) {
+        return engine.getRepositoryService()
+            .createProcessDefinitionQuery()
+            .messageEventSubscriptionName(messageName)
+            .singleResult();
+    }
+
+    /**
      * Fetches an external task by topic name and locks it to a worker ready for handling.
      *
      * @param topicName the name of the topic to fetch.
@@ -108,6 +129,15 @@ public abstract class BpmnBaseTest {
      */
     public void completeTask(String taskId) {
         engine.getExternalTaskService().complete(taskId, WORKER_ID);
+    }
+
+    /**
+     * Completes an external task with the given id and variables.
+     *
+     * @param taskId the id of the external task to complete.
+     */
+    public void completeTask(String taskId, VariableMap variables) {
+        engine.getExternalTaskService().complete(taskId, WORKER_ID, variables);
     }
 
     /**
@@ -132,7 +162,24 @@ public abstract class BpmnBaseTest {
      * @param topicName    is taskName.
      * @param caseEvent    is input variable for external task.
      */
-    public void completeExternalTask(ExternalTask externalTask, String topicName, String caseEvent) {
+    public void completeExternalTask(ExternalTask externalTask, String topicName, String caseEvent, String activityId) {
+        completeExternalTask(externalTask, topicName, caseEvent, activityId, null);
+    }
+
+    /**
+     * Completes the external task with topic name and variables.
+     *
+     * @param externalTask the id of the external task to complete.
+     * @param topicName    is taskName.
+     * @param caseEvent    is input variable for external task.
+     */
+    public void completeExternalTask(
+        ExternalTask externalTask,
+        String topicName,
+        String caseEvent,
+        String activityId,
+        VariableMap variables
+    ) {
         assertThat(externalTask.getTopicName()).isEqualTo(topicName);
 
         List<LockedExternalTask> lockedProcessTask = fetchAndLockTask(topicName);
@@ -140,10 +187,15 @@ public abstract class BpmnBaseTest {
         assertThat(lockedProcessTask).hasSize(1);
 
         assertThat(lockedProcessTask.get(0).getVariables())
-            .containsEntry("caseId", "1601986692564009")
             .containsEntry("caseEvent", caseEvent);
 
-        completeTask(lockedProcessTask.get(0).getId());
+        assertThat(lockedProcessTask.get(0).getActivityId()).isEqualTo(activityId);
+
+        if (Optional.ofNullable(variables).isPresent()) {
+            completeTask(lockedProcessTask.get(0).getId(), variables);
+        } else {
+            completeTask(lockedProcessTask.get(0).getId());
+        }
     }
 
     public void assertNoExternalTasksLeft() {
