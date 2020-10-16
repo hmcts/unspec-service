@@ -15,7 +15,6 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 
 import java.util.List;
-import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.camunda.bpm.engine.ProcessEngineConfiguration.createStandaloneInMemProcessEngineConfiguration;
@@ -27,7 +26,7 @@ public abstract class BpmnBaseTest {
     public static final String START_BUSINESS_TOPIC = "START_BUSINESS_PROCESS";
     public static final String START_BUSINESS_EVENT = "START_BUSINESS_PROCESS";
     public static final String START_BUSINESS_ACTIVITY = "StartBusinessProcessTaskId";
-    public static final String PROCESS_CASE_EVENT_TOPIC = "processCaseEvent";
+    public static final String PROCESS_CASE_EVENT = "processCaseEvent";
 
     public final String bpmnFileName;
     public final String processId;
@@ -143,7 +142,7 @@ public abstract class BpmnBaseTest {
     /**
      * Get external task for topic name.
      */
-    public ExternalTask getNextExternalTask(String topicName) {
+    public ExternalTask assertNextExternalTask(String topicName) {
         assertThat(getTopics()).containsOnly(topicName);
 
         List<ExternalTask> externalTasks = getExternalTasks();
@@ -161,9 +160,11 @@ public abstract class BpmnBaseTest {
      * @param externalTask the id of the external task to complete.
      * @param topicName    is taskName.
      * @param caseEvent    is input variable for external task.
+     * @param activityId   is input variable for camunda activity id.
      */
-    public void completeExternalTask(ExternalTask externalTask, String topicName, String caseEvent, String activityId) {
-        completeExternalTask(externalTask, topicName, caseEvent, activityId, null);
+    public void assertCompleteExternalTask(ExternalTask externalTask, String topicName,
+                                           String caseEvent, String activityId) {
+        assertCompleteExternalTask(externalTask, topicName, caseEvent, activityId, null);
     }
 
     /**
@@ -172,8 +173,10 @@ public abstract class BpmnBaseTest {
      * @param externalTask the id of the external task to complete.
      * @param topicName    is taskName.
      * @param caseEvent    is input variable for external task.
+     * @param activityId   is input variable for camunda activity id.
+     * @param variables    is input variable for output variable map.
      */
-    public void completeExternalTask(
+    public void assertCompleteExternalTask(
         ExternalTask externalTask,
         String topicName,
         String caseEvent,
@@ -191,11 +194,7 @@ public abstract class BpmnBaseTest {
 
         assertThat(lockedProcessTask.get(0).getActivityId()).isEqualTo(activityId);
 
-        if (Optional.ofNullable(variables).isPresent()) {
-            completeTask(lockedProcessTask.get(0).getId(), variables);
-        } else {
-            completeTask(lockedProcessTask.get(0).getId());
-        }
+        completeTask(lockedProcessTask.get(0).getId(), variables);
     }
 
     public void assertNoExternalTasksLeft() {

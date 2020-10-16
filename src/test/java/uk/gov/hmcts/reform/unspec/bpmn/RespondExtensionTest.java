@@ -25,12 +25,12 @@ class RespondExtensionTest extends BpmnBaseTest {
             .isEqualTo("RESPOND_EXTENSION_PROCESS_ID");
 
         //complete the start business process
-        ExternalTask startBusinessTask = getNextExternalTask(START_BUSINESS_TOPIC);
-        completeExternalTask(startBusinessTask, START_BUSINESS_TOPIC, START_BUSINESS_EVENT, START_BUSINESS_ACTIVITY);
+        ExternalTask startBusiness = assertNextExternalTask(START_BUSINESS_TOPIC);
+        assertCompleteExternalTask(startBusiness, START_BUSINESS_TOPIC, START_BUSINESS_EVENT, START_BUSINESS_ACTIVITY);
 
         //complete the notification
-        ExternalTask notificationTask = getNextExternalTask(PROCESS_CASE_EVENT_TOPIC);
-        completeExternalTask(notificationTask, PROCESS_CASE_EVENT_TOPIC, NOTIFY_RESPONDENT_SOLICITOR_1, ACTIVITY_ID);
+        ExternalTask notificationTask = assertNextExternalTask(PROCESS_CASE_EVENT);
+        assertCompleteExternalTask(notificationTask, PROCESS_CASE_EVENT, NOTIFY_RESPONDENT_SOLICITOR_1, ACTIVITY_ID);
 
         assertNoExternalTasksLeft();
     }

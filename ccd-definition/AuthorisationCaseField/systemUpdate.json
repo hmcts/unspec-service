@@ -67,7 +67,7 @@
     "CaseTypeID": "UNSPECIFIED_CLAIMS",
     "CaseFieldID": "personalInjuryTypeOther",
     "UserRole": "caseworker-civil-systemupdate",
-    "CRUD": "CRUD"
+    "CRUD": "R"
   },
   {
     "LiveFrom": "01/01/2017",
@@ -109,7 +109,7 @@
     "CaseTypeID": "UNSPECIFIED_CLAIMS",
     "CaseFieldID": "servedDocumentFiles",
     "UserRole": "caseworker-civil-systemupdate",
-    "CRUD": "CRUD"
+    "CRUD": "R"
   },
   {
     "LiveFrom": "01/01/2017",

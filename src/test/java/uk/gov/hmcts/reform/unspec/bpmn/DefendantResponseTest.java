@@ -7,7 +7,7 @@ import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertFalse;
-import static uk.gov.hmcts.reform.unspec.service.flowstate.FlowState.Main.FULL_DEFENCE;
+import static uk.gov.hmcts.reform.unspec.service.flowstate.FlowState.Main.RESPONDED_TO_CLAIM;
 import static uk.gov.hmcts.reform.unspec.service.tasks.handler.StartBusinessProcessTaskHandler.FLOW_STATE;
 
 class DefendantResponseTest extends BpmnBaseTest {
@@ -33,10 +33,10 @@ class DefendantResponseTest extends BpmnBaseTest {
             .isEqualTo("DEFENDANT_RESPONSE_PROCESS_ID");
 
         //complete the start business process
-        ExternalTask startBusinessTask = getNextExternalTask(START_BUSINESS_TOPIC);
+        ExternalTask startBusinessTask = assertNextExternalTask(START_BUSINESS_TOPIC);
         VariableMap variables = Variables.createVariables();
         variables.putValue(FLOW_STATE, "MAIN.OFFLINE");
-        completeExternalTask(
+        assertCompleteExternalTask(
             startBusinessTask,
             START_BUSINESS_TOPIC,
             START_BUSINESS_EVENT,
@@ -45,14 +45,14 @@ class DefendantResponseTest extends BpmnBaseTest {
         );
 
         //complete the notification to respondent
-        ExternalTask forRespondent = getNextExternalTask(PROCESS_CASE_EVENT_TOPIC);
-        completeExternalTask(forRespondent, PROCESS_CASE_EVENT_TOPIC,
-                             NOTIFY_RESPONDENT_SOLICITOR_1, RESPONDENT_ACTIVITY_ID
+        ExternalTask forRespondent = assertNextExternalTask(PROCESS_CASE_EVENT);
+        assertCompleteExternalTask(forRespondent, PROCESS_CASE_EVENT,
+                                   NOTIFY_RESPONDENT_SOLICITOR_1, RESPONDENT_ACTIVITY_ID
         );
 
         //complete the notification to claimant
-        ExternalTask forClaimant = getNextExternalTask(PROCESS_CASE_EVENT_TOPIC);
-        completeExternalTask(forClaimant, PROCESS_CASE_EVENT_TOPIC, NOTIFY_APPLICANT_SOLICITOR_1, CLAIMANT_ACTIVITY_ID);
+        ExternalTask forClaimant = assertNextExternalTask(PROCESS_CASE_EVENT);
+        assertCompleteExternalTask(forClaimant, PROCESS_CASE_EVENT, NOTIFY_APPLICANT_SOLICITOR_1, CLAIMANT_ACTIVITY_ID);
 
         assertNoExternalTasksLeft();
     }
@@ -67,11 +67,13 @@ class DefendantResponseTest extends BpmnBaseTest {
             .isEqualTo("DEFENDANT_RESPONSE_PROCESS_ID");
 
         //complete the start business process
-        ExternalTask startBusinessTask = getNextExternalTask(START_BUSINESS_TOPIC);
+        ExternalTask startBusiness = assertNextExternalTask(START_BUSINESS_TOPIC);
+
         VariableMap variables = Variables.createVariables();
-        variables.putValue(FLOW_STATE, FULL_DEFENCE.fullName());
-        completeExternalTask(
-            startBusinessTask,
+        variables.putValue(FLOW_STATE, RESPONDED_TO_CLAIM.fullName());
+
+        assertCompleteExternalTask(
+            startBusiness,
             START_BUSINESS_TOPIC,
             START_BUSINESS_EVENT,
             START_BUSINESS_ACTIVITY,
@@ -79,8 +81,8 @@ class DefendantResponseTest extends BpmnBaseTest {
         );
 
         //complete the notification to respondent
-        ExternalTask forRespondent = getNextExternalTask(PROCESS_CASE_EVENT_TOPIC);
-        completeExternalTask(forRespondent, PROCESS_CASE_EVENT_TOPIC, DEFENDANT_RESPONSE, FULL_DEFENCE_ACTIVITY_ID);
+        ExternalTask forRespondent = assertNextExternalTask(PROCESS_CASE_EVENT);
+        assertCompleteExternalTask(forRespondent, PROCESS_CASE_EVENT, DEFENDANT_RESPONSE, FULL_DEFENCE_ACTIVITY_ID);
 
         assertNoExternalTasksLeft();
     }
