@@ -22,6 +22,7 @@ import uk.gov.hmcts.reform.unspec.model.SolicitorReferences;
 import uk.gov.hmcts.reform.unspec.model.StatementOfTruth;
 import uk.gov.hmcts.reform.unspec.model.common.Element;
 import uk.gov.hmcts.reform.unspec.model.documents.CaseDocument;
+import uk.gov.hmcts.reform.unspec.model.dq.Respondent1DQ;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -48,6 +49,7 @@ public class CaseDataBuilder {
     public static final Long CASE_ID = 1594901956117591L;
     public static final LocalDate DEEMED_SERVICE_DATE = LocalDate.now();
     public static final LocalDateTime RESPONSE_DEADLINE = now().plusDays(14).atTime(23, 59, 59);
+    public static final LocalDateTime CLAIMANT_RESPONSE_DEADLINE = LocalDateTime.now().plusDays(120);
 
     // Create Claim
     private Long ccdCaseReference;
@@ -101,7 +103,14 @@ public class CaseDataBuilder {
     private BusinessProcess businessProcess;
 
     private CloseClaim withdrawClaim;
-    private CloseClaim disccontinueClaim;
+    private CloseClaim discontinueClaim;
+
+    private Respondent1DQ respondent1DQ;
+
+    public CaseDataBuilder respondent1DQ(Respondent1DQ respondent1DQ) {
+        this.respondent1DQ = respondent1DQ;
+        return this;
+    }
 
     public CaseDataBuilder applicant1ProceedWithClaim(YesOrNo yesOrNo) {
         this.applicant1ProceedWithClaim = yesOrNo;
@@ -114,7 +123,7 @@ public class CaseDataBuilder {
     }
 
     public CaseDataBuilder disccontinueClaim(CloseClaim closeClaim) {
-        this.disccontinueClaim = closeClaim;
+        this.discontinueClaim = closeClaim;
         return this;
     }
 
@@ -218,7 +227,7 @@ public class CaseDataBuilder {
     public CaseDataBuilder atStateRespondedToClaim() {
         atStateServiceConfirmed();
         respondent1ClaimResponseType = DefendantResponseType.FULL_DEFENCE;
-        applicantSolicitorResponseDeadlineToRespondentSolicitor1 = LocalDateTime.now().plusDays(120);
+        applicantSolicitorResponseDeadlineToRespondentSolicitor1 = CLAIMANT_RESPONSE_DEADLINE;
         respondent1ClaimResponseDocument = ResponseDocument.builder()
             .file(DocumentBuilder.builder().documentName("defendant-response.pdf").build())
             .build();
@@ -330,7 +339,8 @@ public class CaseDataBuilder {
             .ccdCaseReference(ccdCaseReference)
             .systemGeneratedCaseDocuments(systemGeneratedCaseDocuments)
             .withdrawClaim(withdrawClaim)
-            .discontinueClaim(disccontinueClaim)
+            .discontinueClaim(discontinueClaim)
+            .respondent1DQ(respondent1DQ)
             .build();
     }
 }
