@@ -40,6 +40,7 @@ import static uk.gov.hmcts.reform.unspec.enums.YesOrNo.YES;
 
 public class CaseDataBuilder {
 
+    public static final String LEGACY_CASE_REFERENCE = "000LR001";
     // Create Claim
     private SolicitorReferences solicitorReferences;
     private CourtLocation courtLocation;
@@ -98,8 +99,7 @@ public class CaseDataBuilder {
             .applicantPreferredCourt("The court location")
             .build();
         claimValue = ClaimValue.builder()
-            .lowerValue(BigDecimal.valueOf(10000))
-            .higherValue(BigDecimal.valueOf(100000))
+            .statementOfValueInPennies(BigDecimal.valueOf(10000000))
             .build();
         claimType = ClaimType.PERSONAL_INJURY;
         personalInjuryType = ROAD_ACCIDENT;
@@ -115,7 +115,7 @@ public class CaseDataBuilder {
         claimSubmittedDateTime = LocalDateTime.now();
         claimIssuedDate = LocalDate.now();
         confirmationOfServiceDeadline = claimIssuedDate.plusMonths(4).atTime(23, 59, 59);
-        legacyCaseReference = "000LR001";
+        legacyCaseReference = LEGACY_CASE_REFERENCE;
         allocatedTrack = FAST_CLAIM;
         ccdState = CREATED;
         return this;
