@@ -29,7 +29,7 @@ public class ClaimIssueNotificationHandler extends CallbackHandler implements No
 
     private static final List<CaseEvent> EVENTS = List.of(NOTIFY_RESPONDENT_SOLICITOR1_FOR_CLAIM_ISSUE);
     public static final String NOTIFY_RESPONDENT_SOLICITOR1_FOR_CLAIM_ISSUE_TASK_ID
-        = "NotifyDefendantSolicitorForClaimIssue";
+        = "ClaimIssueEmailRespondentSolicitor1";
 
     private final NotificationService notificationService;
     private final NotificationsProperties notificationsProperties;
