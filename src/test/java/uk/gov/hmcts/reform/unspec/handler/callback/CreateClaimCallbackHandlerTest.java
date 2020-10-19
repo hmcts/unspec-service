@@ -19,7 +19,6 @@ import uk.gov.hmcts.reform.unspec.config.ClaimIssueConfiguration;
 import uk.gov.hmcts.reform.unspec.config.MockDatabaseConfiguration;
 import uk.gov.hmcts.reform.unspec.helpers.CaseDetailsConverter;
 import uk.gov.hmcts.reform.unspec.model.CaseData;
-import uk.gov.hmcts.reform.unspec.model.ClaimValue;
 import uk.gov.hmcts.reform.unspec.model.common.Element;
 import uk.gov.hmcts.reform.unspec.model.documents.CaseDocument;
 import uk.gov.hmcts.reform.unspec.sampledata.CallbackParamsBuilder;
@@ -33,7 +32,6 @@ import uk.gov.hmcts.reform.unspec.service.IssueDateCalculator;
 import uk.gov.hmcts.reform.unspec.service.docmosis.sealedclaim.SealedClaimFormGenerator;
 import uk.gov.hmcts.reform.unspec.validation.DateOfBirthValidator;
 
-import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -108,44 +106,6 @@ class CreateClaimCallbackHandlerTest extends BaseCallbackHandlerTest {
                 .handle(params);
 
             assertThat(response.getErrors()).isNull();
-        }
-    }
-
-    @Nested
-    class MidEventClaimValueCallback {
-
-        private static final String PAGE_ID = "claim-value";
-
-        @Test
-        void shouldReturnExpectedErrorInMidEvent_whenValuesAreInvalid() {
-            CaseData caseData = CaseDataBuilder.builder().atStateClaimDraft()
-                .claimValue(ClaimValue.builder()
-                                .lowerValue(BigDecimal.valueOf(10))
-                                .higherValue(BigDecimal.valueOf(1))
-                                .build())
-                .build();
-
-            CallbackParams params = callbackParamsOf(caseData, MID, "claim-value");
-
-            var response = (AboutToStartOrSubmitCallbackResponse) handler.handle(params);
-
-            assertThat(response.getErrors())
-                .containsOnly("CONTENT TBC: Higher value must not be lower than the lower value.");
-        }
-
-        @Test
-        void shouldReturnNoErrorInMidEvent_whenValuesAreValid() {
-            CaseData caseData = CaseDataBuilder.builder().atStateClaimDraft()
-                .claimValue(ClaimValue.builder()
-                                .lowerValue(BigDecimal.valueOf(1))
-                                .higherValue(BigDecimal.valueOf(10))
-                                .build())
-                .build();
-            CallbackParams params = callbackParamsOf(caseData, MID, PAGE_ID);
-
-            var response = (AboutToStartOrSubmitCallbackResponse) handler.handle(params);
-
-            assertThat(response.getErrors()).isEmpty();
         }
     }
 
