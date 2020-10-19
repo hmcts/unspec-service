@@ -52,9 +52,8 @@ fees:
 
 payments:
   api:
-    # TODO: update once f&p onboarding is completed
-    site_id:
-    service:
+    site_id: AAA7
+    service: UNSPEC
 
 idam:
   s2s-auth:
