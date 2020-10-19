@@ -107,6 +107,31 @@ public class CaseDataBuilder {
 
     private Respondent1DQ respondent1DQ;
 
+    public CaseDataBuilder respondentSolicitor1claimResponseExtensionProposedDeadline(LocalDate responsedeadline) {
+        this.respondentSolicitor1claimResponseExtensionProposedDeadline = responsedeadline;
+        return this;
+    }
+
+    public CaseDataBuilder respondentSolicitor1ResponseDeadline(LocalDateTime respondentSolicitor1ResponseDeadline) {
+        this.respondentSolicitor1ResponseDeadline = respondentSolicitor1ResponseDeadline;
+        return this;
+    }
+
+    public CaseDataBuilder respondentSolicitor1claimResponseExtensionAccepted(YesOrNo yesOrNo) {
+        this.respondentSolicitor1claimResponseExtensionAccepted = yesOrNo;
+        return this;
+    }
+
+    public CaseDataBuilder respondentSolicitor1claimResponseExtensionCounter(YesOrNo yesOrNo) {
+        this.respondentSolicitor1claimResponseExtensionCounter = yesOrNo;
+        return this;
+    }
+
+    public CaseDataBuilder respondentSolicitor1claimResponseExtensionCounterDate(LocalDate date) {
+        this.respondentSolicitor1claimResponseExtensionCounterDate = date;
+        return this;
+    }
+
     public CaseDataBuilder respondent1DQ(Respondent1DQ respondent1DQ) {
         this.respondent1DQ = respondent1DQ;
         return this;
@@ -322,6 +347,9 @@ public class CaseDataBuilder {
             .respondentSolicitor1claimResponseExtensionCounter(respondentSolicitor1claimResponseExtensionCounter)
             .respondentSolicitor1claimResponseExtensionRejectionReason(
                 respondentSolicitor1claimResponseExtensionRejectionReason
+            )
+            .respondentSolicitor1claimResponseExtensionCounterDate(
+                respondentSolicitor1claimResponseExtensionCounterDate
             )
             // Defendant Response
             .respondent1ClaimResponseType(respondent1ClaimResponseType)
