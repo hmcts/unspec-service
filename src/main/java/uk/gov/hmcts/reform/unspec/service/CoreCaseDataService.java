@@ -14,8 +14,8 @@ import uk.gov.hmcts.reform.unspec.callback.CaseEvent;
 import uk.gov.hmcts.reform.unspec.config.SystemUpdateUserConfiguration;
 import uk.gov.hmcts.reform.unspec.helpers.CaseDetailsConverter;
 import uk.gov.hmcts.reform.unspec.model.CaseData;
-import uk.gov.hmcts.reform.unspec.model.UserAuthContent;
 import uk.gov.hmcts.reform.unspec.model.search.Query;
+import uk.gov.hmcts.reform.unspec.service.data.UserAuthContent;
 
 import java.util.HashMap;
 import java.util.Map;

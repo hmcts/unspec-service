@@ -1,5 +1,6 @@
 package uk.gov.hmcts.reform.unspec.service.tasks.handler;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.camunda.bpm.client.task.ExternalTask;
@@ -12,8 +13,8 @@ import uk.gov.hmcts.reform.ccd.client.model.StartEventResponse;
 import uk.gov.hmcts.reform.unspec.helpers.CaseDetailsConverter;
 import uk.gov.hmcts.reform.unspec.model.BusinessProcess;
 import uk.gov.hmcts.reform.unspec.model.CaseData;
-import uk.gov.hmcts.reform.unspec.model.ExternalTaskInput;
 import uk.gov.hmcts.reform.unspec.service.CoreCaseDataService;
+import uk.gov.hmcts.reform.unspec.service.data.ExternalTaskInput;
 
 import java.util.Map;
 
@@ -26,11 +27,12 @@ public class EndBusinessProcessTaskHandler implements ExternalTaskHandler {
 
     private final CoreCaseDataService coreCaseDataService;
     private final CaseDetailsConverter caseDetailsConverter;
+    private final ObjectMapper mapper;
 
     @Override
     public void execute(ExternalTask externalTask, ExternalTaskService externalTaskService) {
         Map<String, Object> allVariables = externalTask.getAllVariables();
-        ExternalTaskInput externalTaskInput = caseDetailsConverter.fromMap(allVariables, ExternalTaskInput.class);
+        ExternalTaskInput externalTaskInput = mapper.convertValue(allVariables, ExternalTaskInput.class);
         String caseId = externalTaskInput.getCaseId();
 
         StartEventResponse startEventResponse = coreCaseDataService.startUpdate(caseId, END_BUSINESS_PROCESS);
@@ -40,7 +42,6 @@ public class EndBusinessProcessTaskHandler implements ExternalTaskHandler {
 
         coreCaseDataService.submitUpdate(caseId, caseDataContent(startEventResponse, businessProcess));
         externalTaskService.complete(externalTask);
-
     }
 
     private CaseDataContent caseDataContent(StartEventResponse startEventResponse, BusinessProcess businessProcess) {

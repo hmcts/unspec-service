@@ -1,6 +1,5 @@
 package uk.gov.hmcts.reform.unspec.helpers;
 
-import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.stereotype.Service;
 import uk.gov.hmcts.reform.ccd.client.model.CaseDetails;
@@ -25,15 +24,6 @@ public class CaseDetailsConverter {
         if (caseDetails.getState() != null) {
             data.put("ccdState", CaseState.valueOf(caseDetails.getState()));
         }
-        return this.fromMap(data, CaseData.class);
-    }
-
-    public <T> T fromMap(Map<String, Object> input, Class<T> clazz) {
-        return objectMapper.convertValue(input, clazz);
-    }
-
-    public Map<String, Object> convertToMap(CaseData caseData) {
-        return objectMapper.convertValue(caseData, new TypeReference<>() {
-        });
+        return objectMapper.convertValue(data, CaseData.class);
     }
 }
