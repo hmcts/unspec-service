@@ -8,7 +8,7 @@
     <bpmn:endEvent id="Event_13n9twk">
       <bpmn:incoming>Flow_13auyms</bpmn:incoming>
     </bpmn:endEvent>
-    <bpmn:serviceTask id="RespondExtensionEmailRespondentSolicitor1" name="Send email respondent solicitor 1" camunda:type="external" camunda:topic="processCaseEvent">
+    <bpmn:serviceTask id="RespondExtensionNotifyRespondentSolicitor1" name="Notify respondent solicitor 1" camunda:type="external" camunda:topic="processCaseEvent">
       <bpmn:extensionElements>
         <camunda:inputOutput>
           <camunda:inputParameter name="caseEvent">NOTIFY_RESPONDENT_SOLICITOR1_FOR_EXTENSION_RESPONSE</camunda:inputParameter>
@@ -31,8 +31,8 @@
       <bpmn:errorEventDefinition id="ErrorEventDefinition_1jom9x6" errorRef="Error_10s1ouk" />
     </bpmn:boundaryEvent>
     <bpmn:sequenceFlow id="Flow_1wqsxt3" sourceRef="StartEvent_1" targetRef="StartBusinessProcessTaskId" />
-    <bpmn:sequenceFlow id="Flow_1xv9wkr" sourceRef="StartBusinessProcessTaskId" targetRef="RespondExtensionEmailRespondentSolicitor1" />
-    <bpmn:sequenceFlow id="Flow_13auyms" sourceRef="RespondExtensionEmailRespondentSolicitor1" targetRef="Event_13n9twk" />
+    <bpmn:sequenceFlow id="Flow_1xv9wkr" sourceRef="StartBusinessProcessTaskId" targetRef="RespondExtensionNotifyRespondentSolicitor1" />
+    <bpmn:sequenceFlow id="Flow_13auyms" sourceRef="RespondExtensionNotifyRespondentSolicitor1" targetRef="Event_13n9twk" />
     <bpmn:endEvent id="Event_1afa2mh" name="Aborted">
       <bpmn:incoming>Flow_1l77nwh</bpmn:incoming>
     </bpmn:endEvent>
@@ -67,7 +67,7 @@
       <bpmndi:BPMNShape id="Event_13n9twk_di" bpmnElement="Event_13n9twk">
         <dc:Bounds x="692" y="99" width="36" height="36" />
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Activity_0ipbyde_di" bpmnElement="RespondExtensionEmailRespondentSolicitor1">
+      <bpmndi:BPMNShape id="Activity_0ipbyde_di" bpmnElement="RespondExtensionNotifyRespondentSolicitor1">
         <dc:Bounds x="470" y="77" width="100" height="80" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Activity_0iamgg9_di" bpmnElement="StartBusinessProcessTaskId">

@@ -9,7 +9,7 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 class AcknowledgeServiceTest extends BpmnBaseTest {
 
     public static final String NOTIFY_APPLICANT_SOLICITOR_1 = "NOTIFY_APPLICANT_SOLICITOR1_FOR_SERVICE_ACKNOWLEDGEMENT";
-    public static final String ACTIVITY_ID = "AcknowledgeServiceEmailApplicantSolicitor1";
+    public static final String ACTIVITY_ID = "AcknowledgeServiceNotifyApplicantSolicitor1";
 
     public AcknowledgeServiceTest() {
         super("acknowledge_service.bpmn", "ACKNOWLEDGE_SERVICE_PROCESS_ID");

@@ -4,8 +4,8 @@
     <bpmn:endEvent id="Event_13n9twk">
       <bpmn:incoming>Flow_0etbo17</bpmn:incoming>
     </bpmn:endEvent>
-    <bpmn:sequenceFlow id="Flow_1xdr8bm" sourceRef="ClaimantResponseEmailRespondentSolicitor1" targetRef="ClaimantResponseEmailApplicantSolicitor1" />
-    <bpmn:serviceTask id="ClaimantResponseEmailRespondentSolicitor1" name="Send email respondent solicitor 1" camunda:type="external" camunda:topic="processCaseEvent">
+    <bpmn:sequenceFlow id="Flow_1xdr8bm" sourceRef="ClaimantResponseNotifyRespondentSolicitor1" targetRef="ClaimantResponseNotifyApplicantSolicitor1" />
+    <bpmn:serviceTask id="ClaimantResponseNotifyRespondentSolicitor1" name="Notify respondent solicitor 1" camunda:type="external" camunda:topic="processCaseEvent">
       <bpmn:extensionElements>
         <camunda:inputOutput>
           <camunda:inputParameter name="caseEvent">NOTIFY_RESPONDENT_SOLICITOR1_FOR_CASE_TRANSFERRED_TO_LOCAL_COURT</camunda:inputParameter>
@@ -14,7 +14,7 @@
       <bpmn:incoming>Flow_01ueyup</bpmn:incoming>
       <bpmn:outgoing>Flow_1xdr8bm</bpmn:outgoing>
     </bpmn:serviceTask>
-    <bpmn:serviceTask id="ClaimantResponseEmailApplicantSolicitor1" name="Send email applicant solicitor 1" camunda:type="external" camunda:topic="processCaseEvent">
+    <bpmn:serviceTask id="ClaimantResponseNotifyApplicantSolicitor1" name="Notify applicant solicitor 1" camunda:type="external" camunda:topic="processCaseEvent">
       <bpmn:extensionElements>
         <camunda:inputOutput>
           <camunda:inputParameter name="caseEvent">NOTIFY_APPLICANT_SOLICITOR1_FOR_CASE_TRANSFERRED_TO_LOCAL_COURT</camunda:inputParameter>
@@ -27,7 +27,7 @@
       <bpmn:outgoing>Flow_0fi4g8o</bpmn:outgoing>
       <bpmn:messageEventDefinition id="MessageEventDefinition_1oxj7lg" messageRef="Message_0ttrrz3" />
     </bpmn:startEvent>
-    <bpmn:sequenceFlow id="Flow_0etbo17" sourceRef="ClaimantResponseEmailApplicantSolicitor1" targetRef="Event_13n9twk" />
+    <bpmn:sequenceFlow id="Flow_0etbo17" sourceRef="ClaimantResponseNotifyApplicantSolicitor1" targetRef="Event_13n9twk" />
     <bpmn:serviceTask id="StartBusinessProcessTaskId" name="StartBusinessProcess" camunda:type="external" camunda:topic="START_BUSINESS_PROCESS">
       <bpmn:extensionElements>
         <camunda:inputOutput>
@@ -46,7 +46,7 @@
     </bpmn:endEvent>
     <bpmn:sequenceFlow id="Flow_1gi8v31" sourceRef="Event_0wtep5i" targetRef="Event_1ojck0c" />
     <bpmn:sequenceFlow id="Flow_0fi4g8o" sourceRef="StartEvent_1" targetRef="StartBusinessProcessTaskId" />
-    <bpmn:sequenceFlow id="Flow_01ueyup" sourceRef="StartBusinessProcessTaskId" targetRef="ClaimantResponseEmailRespondentSolicitor1" />
+    <bpmn:sequenceFlow id="Flow_01ueyup" sourceRef="StartBusinessProcessTaskId" targetRef="ClaimantResponseNotifyRespondentSolicitor1" />
   </bpmn:process>
   <bpmn:message id="Message_0ttrrz3" name="CLAIMANT_RESPONSE" />
   <bpmn:error id="Error_1alq6sw" name="StartBusinessAbort" errorCode="ABORT" />
@@ -78,10 +78,10 @@
       <bpmndi:BPMNShape id="Event_13n9twk_di" bpmnElement="Event_13n9twk">
         <dc:Bounds x="772" y="99" width="36" height="36" />
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Activity_13h7jgg_di" bpmnElement="ClaimantResponseEmailApplicantSolicitor1">
+      <bpmndi:BPMNShape id="Activity_13h7jgg_di" bpmnElement="ClaimantResponseNotifyApplicantSolicitor1">
         <dc:Bounds x="610" y="77" width="100" height="80" />
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Activity_0ipbyde_di" bpmnElement="ClaimantResponseEmailRespondentSolicitor1">
+      <bpmndi:BPMNShape id="Activity_0ipbyde_di" bpmnElement="ClaimantResponseNotifyRespondentSolicitor1">
         <dc:Bounds x="440" y="77" width="100" height="80" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Activity_0esjpvb_di" bpmnElement="StartBusinessProcessTaskId">

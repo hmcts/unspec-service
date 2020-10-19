@@ -9,7 +9,7 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 class RequestExtensionTest extends BpmnBaseTest {
 
     public static final String NOTIFY_APPLICANT_SOLICITOR_1 = "NOTIFY_APPLICANT_SOLICITOR1_FOR_REQUEST_FOR_EXTENSION";
-    private static final String ACTIVITY_ID = "RequestExtensionEmailApplicantSolicitor1";
+    private static final String ACTIVITY_ID = "RequestExtensionNotifyApplicantSolicitor1";
 
     public RequestExtensionTest() {
         super("request_extension.bpmn", "REQUEST_EXTENSION_PROCESS_ID");

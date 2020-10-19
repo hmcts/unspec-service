@@ -8,7 +8,7 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 
 class RespondExtensionTest extends BpmnBaseTest {
 
-    public static final String ACTIVITY_ID = "RespondExtensionEmailRespondentSolicitor1";
+    public static final String ACTIVITY_ID = "RespondExtensionNotifyRespondentSolicitor1";
     public static final String NOTIFY_RESPONDENT_SOLICITOR_1 = "NOTIFY_RESPONDENT_SOLICITOR1_FOR_EXTENSION_RESPONSE";
 
     public RespondExtensionTest() {
