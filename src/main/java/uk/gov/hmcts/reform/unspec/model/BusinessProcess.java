@@ -8,12 +8,13 @@ import uk.gov.hmcts.reform.unspec.enums.BusinessProcessStatus;
 import static java.util.Optional.ofNullable;
 
 @Data
-@Builder
+@Builder(toBuilder = true)
 public class BusinessProcess {
 
     private String processInstanceId;
     private BusinessProcessStatus status;
     private String activityId;
+    private final String camundaEvent;
 
     @JsonIgnore
     public boolean hasSimilarProcessInstanceId(String processInstanceId) {

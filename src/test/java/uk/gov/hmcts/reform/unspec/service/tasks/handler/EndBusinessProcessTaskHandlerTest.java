@@ -110,18 +110,4 @@ class EndBusinessProcessTaskHandlerTest {
             .data(caseDetails.getData())
             .build();
     }
-
-    @Test
-    void shouldCatchError_whenException() {
-        String errorMessage = "there was an error";
-
-        when(mockExternalTask.getRetries()).thenReturn(null);
-        when(coreCaseDataService.startUpdate(eq(CASE_ID), eq(END_BUSINESS_PROCESS))).thenAnswer(invocation -> {
-            throw new Exception(errorMessage);
-        });
-
-        handler.execute(mockExternalTask, externalTaskService);
-
-        verify(externalTaskService).handleFailure(mockExternalTask, "worker", errorMessage, 2, 500L);
-    }
 }

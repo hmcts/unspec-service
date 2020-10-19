@@ -58,10 +58,8 @@ class CaseEventTaskHandlerTest {
 
         when(mockExternalTask.getAllVariables())
             .thenReturn(Map.of(
-                "caseId",
-                CASE_ID.toString(),
-                "caseEvent",
-                NOTIFY_RESPONDENT_SOLICITOR1_FOR_CLAIM_ISSUE.name()
+                "CCD_ID", CASE_ID,
+                "CASE_EVENT", NOTIFY_RESPONDENT_SOLICITOR1_FOR_CLAIM_ISSUE.name()
             ));
     }
 

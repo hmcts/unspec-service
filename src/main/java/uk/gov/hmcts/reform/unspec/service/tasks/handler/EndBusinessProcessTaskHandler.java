@@ -18,7 +18,6 @@ import uk.gov.hmcts.reform.unspec.service.CoreCaseDataService;
 import java.util.Map;
 
 import static uk.gov.hmcts.reform.unspec.callback.CaseEvent.END_BUSINESS_PROCESS;
-import static uk.gov.hmcts.reform.unspec.helpers.ExponentialRetryTimeoutHelper.calculateExponentialRetryTimeout;
 
 @Slf4j
 @Component
@@ -34,38 +33,14 @@ public class EndBusinessProcessTaskHandler implements ExternalTaskHandler {
         ExternalTaskInput externalTaskInput = caseDetailsConverter.fromMap(allVariables, ExternalTaskInput.class);
         String caseId = externalTaskInput.getCaseId();
 
-        log.info("Ending business process on case: {}", externalTaskInput.getCaseId());
+        StartEventResponse startEventResponse = coreCaseDataService.startUpdate(caseId, END_BUSINESS_PROCESS);
 
-        try {
-            StartEventResponse startEventResponse = coreCaseDataService.startUpdate(caseId, END_BUSINESS_PROCESS);
+        CaseData data = caseDetailsConverter.toCaseData(startEventResponse.getCaseDetails());
+        BusinessProcess businessProcess = data.getBusinessProcess();
 
-            CaseData data = caseDetailsConverter.toCaseData(startEventResponse.getCaseDetails());
-            BusinessProcess businessProcess = data.getBusinessProcess();
+        coreCaseDataService.submitUpdate(caseId, caseDataContent(startEventResponse, businessProcess));
+        externalTaskService.complete(externalTask);
 
-            coreCaseDataService.submitUpdate(caseId, caseDataContent(startEventResponse, businessProcess));
-            externalTaskService.complete(externalTask);
-
-            log.info("Finished business process on case: {}", externalTaskInput.getCaseId());
-
-        } catch (Exception e) {
-            int maxRetries = 3;
-            int remainingRetries = externalTask.getRetries() == null ? maxRetries : externalTask.getRetries();
-
-            externalTaskService.handleFailure(
-                externalTask,
-                externalTask.getWorkerId(),
-                e.getMessage(),
-                remainingRetries - 1,
-                calculateExponentialRetryTimeout(500, maxRetries, remainingRetries)
-            );
-
-            log.error(
-                "Failed to end business process on case: {}.\n Reason for failure: {}.\n Remaining retries: {}",
-                externalTaskInput.getCaseId(),
-                e.getMessage(),
-                remainingRetries - 1
-            );
-        }
     }
 
     private CaseDataContent caseDataContent(StartEventResponse startEventResponse, BusinessProcess businessProcess) {
