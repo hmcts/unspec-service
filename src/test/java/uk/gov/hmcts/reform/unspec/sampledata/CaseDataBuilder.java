@@ -127,6 +127,11 @@ public class CaseDataBuilder {
         return this;
     }
 
+    public CaseDataBuilder respondentSolicitor1claimResponseExtensionAlreadyAgreed(YesOrNo yesOrNo) {
+        this.respondentSolicitor1claimResponseExtensionAlreadyAgreed = yesOrNo;
+        return this;
+    }
+
     public CaseDataBuilder respondentSolicitor1claimResponseExtensionCounterDate(LocalDate date) {
         this.respondentSolicitor1claimResponseExtensionCounterDate = date;
         return this;
@@ -194,6 +199,11 @@ public class CaseDataBuilder {
 
     public CaseDataBuilder servedDocumentsOther(String servedDocumentsOther) {
         this.servedDocumentsOther = servedDocumentsOther;
+        return this;
+    }
+
+    public CaseDataBuilder legacyCaseReference(String legacyCaseReference) {
+        this.legacyCaseReference = legacyCaseReference;
         return this;
     }
 
