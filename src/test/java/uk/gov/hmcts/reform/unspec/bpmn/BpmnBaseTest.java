@@ -27,6 +27,7 @@ public abstract class BpmnBaseTest {
     public static final String START_BUSINESS_EVENT = "START_BUSINESS_PROCESS";
     public static final String START_BUSINESS_ACTIVITY = "StartBusinessProcessTaskId";
     public static final String PROCESS_CASE_EVENT = "processCaseEvent";
+    public static final String END_BUSINESS_PROCESS = "END_BUSINESS_PROCESS";
 
     public final String bpmnFileName;
     public final String processId;
