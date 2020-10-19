@@ -121,7 +121,7 @@ class CallbackHandlerFactoryTest {
         CallbackRequest callbackRequest = CallbackRequest
             .builder()
             .eventId(CREATE_CLAIM.name())
-            .caseDetails(CaseDetails.builder().data(Map.of("state", "created")).build())
+            .caseDetailsBefore(CaseDetails.builder().data(Map.of("state", "created")).build())
             .build();
 
         CallbackParams params = CallbackParams.builder()
@@ -141,7 +141,7 @@ class CallbackHandlerFactoryTest {
         CallbackRequest callbackRequest = CallbackRequest
             .builder()
             .eventId(NOTIFY_RESPONDENT_SOLICITOR1_FOR_CLAIM_ISSUE.name())
-            .caseDetails(CaseDetails.builder().data(Map.of(
+            .caseDetailsBefore(CaseDetails.builder().data(Map.of(
                 "businessProcess",
                 BusinessProcess.builder().activityId("CreateClaimNotifyRespondentSolicitor1").build()
             )).build())
@@ -164,7 +164,7 @@ class CallbackHandlerFactoryTest {
         CallbackRequest callbackRequest = CallbackRequest
             .builder()
             .eventId(NOTIFY_RESPONDENT_SOLICITOR1_FOR_CLAIM_ISSUE.name())
-            .caseDetails(CaseDetails.builder().data(Map.of(
+            .caseDetailsBefore(CaseDetails.builder().data(Map.of(
                 "businessProcess",
                 BusinessProcess.builder().activityId("unProcessedTask").build()
             )).build())
@@ -187,7 +187,7 @@ class CallbackHandlerFactoryTest {
         CallbackRequest callbackRequest = CallbackRequest
             .builder()
             .eventId(CREATE_CLAIM.name())
-            .caseDetails(CaseDetails.builder().data(Map.of(
+            .caseDetailsBefore(CaseDetails.builder().data(Map.of(
                 "businessProcess",
                 BusinessProcess.builder().activityId("unProcessedTask").build()
             )).build())
