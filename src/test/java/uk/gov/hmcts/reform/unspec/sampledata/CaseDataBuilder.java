@@ -11,6 +11,7 @@ import uk.gov.hmcts.reform.unspec.enums.YesOrNo;
 import uk.gov.hmcts.reform.unspec.model.BusinessProcess;
 import uk.gov.hmcts.reform.unspec.model.CaseData;
 import uk.gov.hmcts.reform.unspec.model.ClaimValue;
+import uk.gov.hmcts.reform.unspec.model.CloseClaim;
 import uk.gov.hmcts.reform.unspec.model.CourtLocation;
 import uk.gov.hmcts.reform.unspec.model.Party;
 import uk.gov.hmcts.reform.unspec.model.ResponseDocument;
@@ -99,6 +100,24 @@ public class CaseDataBuilder {
     private String applicant1NotProceedingReason;
     private BusinessProcess businessProcess;
 
+    private CloseClaim withdrawClaim;
+    private CloseClaim disccontinueClaim;
+
+    public CaseDataBuilder applicant1ProceedWithClaim(YesOrNo yesOrNo) {
+        this.applicant1ProceedWithClaim = yesOrNo;
+        return this;
+    }
+
+    public CaseDataBuilder withdrawClaim(CloseClaim closeClaim) {
+        this.withdrawClaim = closeClaim;
+        return this;
+    }
+
+    public CaseDataBuilder disccontinueClaim(CloseClaim closeClaim) {
+        this.disccontinueClaim = closeClaim;
+        return this;
+    }
+
     public CaseDataBuilder claimValue(ClaimValue claimValue) {
         this.claimValue = claimValue;
         return this;
@@ -126,6 +145,16 @@ public class CaseDataBuilder {
 
     public CaseDataBuilder applicant1(Party party) {
         this.applicant1 = party;
+        return this;
+    }
+
+    public CaseDataBuilder serviceMethodToRespondentSolicitor1(ServiceMethod serviceMethodToRespondentSolicitor1) {
+        this.serviceMethodToRespondentSolicitor1 = serviceMethodToRespondentSolicitor1;
+        return this;
+    }
+
+    public CaseDataBuilder respondent1(Party party) {
+        this.respondent1 = party;
         return this;
     }
 
@@ -234,11 +263,6 @@ public class CaseDataBuilder {
         return this;
     }
 
-    public CaseDataBuilder serviceMethodToRespondentSolicitor1(ServiceMethod serviceMethodToRespondentSolicitor1) {
-        this.serviceMethodToRespondentSolicitor1 = serviceMethodToRespondentSolicitor1;
-        return this;
-    }
-
     public static CaseDataBuilder builder() {
         return new CaseDataBuilder();
     }
@@ -305,6 +329,8 @@ public class CaseDataBuilder {
             .businessProcess(businessProcess)
             .ccdCaseReference(ccdCaseReference)
             .systemGeneratedCaseDocuments(systemGeneratedCaseDocuments)
+            .withdrawClaim(withdrawClaim)
+            .discontinueClaim(disccontinueClaim)
             .build();
     }
 }
