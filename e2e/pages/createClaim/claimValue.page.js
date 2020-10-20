@@ -11,7 +11,7 @@ module.exports = {
   async enterClaimValue() {
     I.waitForElement(this.fields.statementOfValue);
     I.fillField(this.fields.statementOfValue, '30000');
-    await I.retryUntilExists(() => I.clickContinue(), statementOfTruth.fields.claim.name);
+    await I.clickContinue()
   }
 };
 

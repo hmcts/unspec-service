@@ -41,8 +41,12 @@ public class PaymentsCallbackHandler extends CallbackHandler {
     private CallbackResponse makePbaPayment(CallbackParams callbackParams) {
         var data = callbackParams.getRequest().getCaseDetails().getData();
         if (paymentsConfiguration.isEnabled()) {
-            PaymentDto paymentDto = paymentsService.createCreditAccountPayment(callbackParams.getCaseData());
-            data.put("paymentReference", paymentDto.getReference());
+            try {
+                PaymentDto paymentDto = paymentsService.createCreditAccountPayment(callbackParams.getCaseData());
+                data.put("paymentReference", paymentDto.getReference());
+            } catch (Exception e) {
+                //TODO: do nothing so camunda does not receive error and progress - handle in next PBA story
+            }
         }
 
         return AboutToStartOrSubmitCallbackResponse.builder()
