@@ -13,6 +13,7 @@ import uk.gov.hmcts.reform.payments.client.models.FeeDto;
 import uk.gov.hmcts.reform.payments.client.models.PaymentDto;
 import uk.gov.hmcts.reform.payments.client.request.CreditAccountPaymentRequest;
 import uk.gov.hmcts.reform.unspec.config.PaymentsConfiguration;
+import uk.gov.hmcts.reform.unspec.enums.PbaNumber;
 import uk.gov.hmcts.reform.unspec.model.CaseData;
 import uk.gov.hmcts.reform.unspec.model.ClaimValue;
 import uk.gov.hmcts.reform.unspec.request.RequestData;
@@ -23,6 +24,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
+import static uk.gov.hmcts.reform.unspec.enums.PbaNumber.PBA0077597;
 
 @ExtendWith(SpringExtension.class)
 @ContextConfiguration(classes = {JacksonAutoConfiguration.class})
@@ -74,9 +76,10 @@ class PaymentsServiceTest {
         CaseData caseData = CaseData.builder()
             .legacyCaseReference("000LR001")
             .ccdCaseReference(12345L)
+            .pbaNumber(PBA0077597)
             .build();
         var expectedCreditAccountPaymentRequest = CreditAccountPaymentRequest.builder()
-            .accountNumber("PBA1234567")
+            .accountNumber("PBA0077597")
             .amount(FEE_DATA.getCalculatedAmount())
             .caseReference("000LR001")
             .ccdCaseNumber("12345")

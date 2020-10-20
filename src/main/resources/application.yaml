@@ -51,6 +51,7 @@ fees:
     event: issue
 
 payments:
+  enabled: false
   api:
     site_id: AAA7
     service: UNSPEC

@@ -10,6 +10,7 @@ class CreateClaimTest extends BpmnBaseTest {
 
     public static final String NOTIFY_RESPONDENT_SOLICITOR_1 = "NOTIFY_RESPONDENT_SOLICITOR1_FOR_CLAIM_ISSUE";
     private static final String ACTIVITY_ID = "CreateClaimNotifyRespondentSolicitor1";
+    public static final String PROCESS_PAYMENT = "processPayment";
 
     public CreateClaimTest() {
         super("create_claim.bpmn", "CREATE_CLAIM_PROCESS_ID");
@@ -27,6 +28,10 @@ class CreateClaimTest extends BpmnBaseTest {
         //complete the start business process
         ExternalTask startBusiness = assertNextExternalTask(START_BUSINESS_TOPIC);
         assertCompleteExternalTask(startBusiness, START_BUSINESS_TOPIC, START_BUSINESS_EVENT, START_BUSINESS_ACTIVITY);
+
+        //complete the payment
+        ExternalTask paymentTask = assertNextExternalTask(PROCESS_PAYMENT);
+        assertCompleteExternalTask(startBusiness, PROCESS_PAYMENT, START_BUSINESS_EVENT, START_BUSINESS_ACTIVITY);
 
         //complete the notification
         ExternalTask notificationTask = assertNextExternalTask(PROCESS_CASE_EVENT);
