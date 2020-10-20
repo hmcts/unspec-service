@@ -42,6 +42,8 @@ import static java.time.LocalDate.now;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static uk.gov.hmcts.reform.unspec.callback.CallbackType.ABOUT_TO_START;
@@ -179,7 +181,8 @@ class CreateClaimCallbackHandlerTest extends BaseCallbackHandlerTest {
 
         @BeforeEach
         void setup() {
-            when(businessProcessService.updateBusinessProcess(any(), any())).thenReturn(List.of());
+            reset(businessProcessService);
+            when(businessProcessService.updateBusinessProcess(any(), any())).thenReturn(CaseData.builder().build());
             when(issueDateCalculator.calculateIssueDay(any(LocalDateTime.class))).thenReturn(now());
             when(deadlinesCalculator.calculateConfirmationOfServiceDeadline(any(LocalDate.class)))
                 .thenReturn(now().atTime(23, 59, 59));
@@ -236,10 +239,7 @@ class CreateClaimCallbackHandlerTest extends BaseCallbackHandlerTest {
         void shouldUpdateBusinessProcess_whenInvoked() {
             handler.handle(params);
 
-            verify(businessProcessService).updateBusinessProcess(
-                params.getRequest().getCaseDetails().getData(),
-                CREATE_CLAIM
-            );
+            verify(businessProcessService).updateBusinessProcess(any(CaseData.class), eq(CREATE_CLAIM));
         }
 
         @SuppressWarnings("unchecked")

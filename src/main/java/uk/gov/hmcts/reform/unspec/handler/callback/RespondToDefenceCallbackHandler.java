@@ -16,7 +16,6 @@ import uk.gov.hmcts.reform.unspec.service.BusinessProcessService;
 import uk.gov.hmcts.reform.unspec.service.flowstate.FlowState;
 import uk.gov.hmcts.reform.unspec.service.flowstate.StateFlowEngine;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -55,14 +54,12 @@ public class RespondToDefenceCallbackHandler extends CallbackHandler {
     private CallbackResponse handleNotifications(CallbackParams callbackParams) {
         CaseDetails caseDetails = callbackParams.getRequest().getCaseDetails();
         CaseData caseData = callbackParams.getCaseData();
-        List<String> errors = new ArrayList<>();
         if (fromFullName(stateFlowEngine.evaluate(caseData).getState().getName()) == FlowState.Main.FULL_DEFENCE) {
-            errors = businessProcessService.updateBusinessProcess(caseDetails.getData(), CLAIMANT_RESPONSE);
+            businessProcessService.updateBusinessProcess(caseData, CLAIMANT_RESPONSE);
         }
 
         return AboutToStartOrSubmitCallbackResponse.builder()
             .data(caseDetails.getData())
-            .errors(errors)
             .build();
     }
 

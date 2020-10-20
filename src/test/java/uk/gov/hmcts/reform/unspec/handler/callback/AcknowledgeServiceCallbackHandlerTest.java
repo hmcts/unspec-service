@@ -14,6 +14,7 @@ import uk.gov.hmcts.reform.ccd.client.model.AboutToStartOrSubmitCallbackResponse
 import uk.gov.hmcts.reform.ccd.client.model.SubmittedCallbackResponse;
 import uk.gov.hmcts.reform.unspec.callback.CallbackParams;
 import uk.gov.hmcts.reform.unspec.callback.CallbackType;
+import uk.gov.hmcts.reform.unspec.helpers.CaseDetailsConverter;
 import uk.gov.hmcts.reform.unspec.model.CaseData;
 import uk.gov.hmcts.reform.unspec.sampledata.CaseDataBuilder;
 import uk.gov.hmcts.reform.unspec.sampledata.PartyBuilder;
@@ -23,7 +24,6 @@ import uk.gov.hmcts.reform.unspec.validation.DateOfBirthValidator;
 
 import java.time.LocalDate;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import static java.lang.String.format;
@@ -140,7 +140,7 @@ class AcknowledgeServiceCallbackHandlerTest extends BaseCallbackHandlerTest {
 
         @BeforeEach
         void setup() {
-            when(businessProcessService.updateBusinessProcess(any(), any())).thenReturn(List.of());
+            when(businessProcessService.updateBusinessProcess(any(), any())).thenReturn(CaseData.builder().build());
             when(workingDayIndicator.getNextWorkingDay(any())).thenReturn(now().plusDays(14));
             clearInvocations(businessProcessService);
         }
@@ -164,7 +164,7 @@ class AcknowledgeServiceCallbackHandlerTest extends BaseCallbackHandlerTest {
             CaseData caseData = CaseDataBuilder.builder().atStateServiceAcknowledge().build();
             handler.handle(callbackParamsOf(caseData, CallbackType.ABOUT_TO_SUBMIT));
 
-            verify(businessProcessService).updateBusinessProcess(data, ACKNOWLEDGE_SERVICE);
+            verify(businessProcessService).updateBusinessProcess(caseData, ACKNOWLEDGE_SERVICE);
         }
     }
 

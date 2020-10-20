@@ -67,11 +67,10 @@ public class RequestExtensionCallbackHandler extends CallbackHandler {
         if (extensionAlreadyAgreed == YES) {
             data.put(RESPONSE_DEADLINE, proposedDeadline.atTime(MID_NIGHT));
         }
-        List<String> errors = businessProcessService.updateBusinessProcess(data, REQUEST_EXTENSION);
+        businessProcessService.updateBusinessProcess(caseData, REQUEST_EXTENSION);
 
         return AboutToStartOrSubmitCallbackResponse.builder()
             .data(data)
-            .errors(errors)
             .build();
     }
 

@@ -29,7 +29,6 @@ import uk.gov.hmcts.reform.unspec.validation.UnavailableDateValidator;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.List;
 
 import static java.lang.String.format;
 import static java.time.LocalDate.now;
@@ -221,7 +220,7 @@ class RespondToClaimCallbackHandlerTest extends BaseCallbackHandlerTest {
 
         @BeforeEach
         public void setup() {
-            when(businessProcessService.updateBusinessProcess(any(), any())).thenReturn(List.of());
+            when(businessProcessService.updateBusinessProcess(any(), any())).thenReturn(CaseData.builder().build());
         }
 
         @Test
@@ -238,11 +237,11 @@ class RespondToClaimCallbackHandlerTest extends BaseCallbackHandlerTest {
 
         @Test
         void shouldUpdateBusinessProcess_whenInvoked() {
-            CaseDetails caseDetails = CaseDetailsBuilder.builder().atStateRespondedToClaim().build();
+            CaseData caseData = CaseDataBuilder.builder().atStateRespondedToClaim().build();
 
-            handler.handle(callbackParamsOf(caseDetails.getData(), ABOUT_TO_SUBMIT));
+            handler.handle(callbackParamsOf(caseData, ABOUT_TO_SUBMIT));
 
-            verify(businessProcessService).updateBusinessProcess(caseDetails.getData(), DEFENDANT_RESPONSE);
+            verify(businessProcessService).updateBusinessProcess(caseData, DEFENDANT_RESPONSE);
         }
     }
 

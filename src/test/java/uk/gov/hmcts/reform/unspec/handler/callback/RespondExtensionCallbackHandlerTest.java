@@ -23,7 +23,6 @@ import uk.gov.hmcts.reform.unspec.validation.RequestExtensionValidator;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import static java.lang.String.format;
@@ -141,7 +140,7 @@ class RespondExtensionCallbackHandlerTest extends BaseCallbackHandlerTest {
 
         @BeforeEach
         void setup() {
-            when(businessProcessService.updateBusinessProcess(any(), any())).thenReturn(List.of());
+            when(businessProcessService.updateBusinessProcess(any(), any())).thenReturn(CaseData.builder().build());
         }
 
         @Test
@@ -202,7 +201,7 @@ class RespondExtensionCallbackHandlerTest extends BaseCallbackHandlerTest {
 
             handler.handle(callbackParamsOf(caseData, ABOUT_TO_SUBMIT));
 
-            verify(businessProcessService).updateBusinessProcess(Map.of(), RESPOND_EXTENSION);
+            verify(businessProcessService).updateBusinessProcess(caseData, RESPOND_EXTENSION);
         }
     }
 

@@ -23,8 +23,6 @@ import uk.gov.hmcts.reform.unspec.validation.RequestExtensionValidator;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.HashMap;
-import java.util.List;
 
 import static com.google.common.collect.ImmutableMap.of;
 import static java.lang.String.format;
@@ -138,7 +136,8 @@ class RequestExtensionCallbackHandlerTest extends BaseCallbackHandlerTest {
 
         @BeforeEach
         void setup() {
-            when(businessProcessService.updateBusinessProcess(any(), any())).thenReturn(List.of());
+            when(businessProcessService.updateBusinessProcess(any(), any()))
+                .thenReturn(CaseData.builder().build());
         }
 
         @Test
@@ -180,7 +179,7 @@ class RequestExtensionCallbackHandlerTest extends BaseCallbackHandlerTest {
             CaseData caseData = CaseDataBuilder.builder().atStateExtensionRequested().build();
             handler.handle(callbackParamsOf(caseData, ABOUT_TO_SUBMIT));
 
-            verify(businessProcessService).updateBusinessProcess(new HashMap<>(), REQUEST_EXTENSION);
+            verify(businessProcessService).updateBusinessProcess(caseData, REQUEST_EXTENSION);
         }
     }
 

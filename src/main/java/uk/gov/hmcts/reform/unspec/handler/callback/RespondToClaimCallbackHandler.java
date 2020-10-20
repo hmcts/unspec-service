@@ -87,11 +87,10 @@ public class RespondToClaimCallbackHandler extends CallbackHandler {
         //TODO: There will be in separate ticket for response deadline when requirement is confirmed
         LocalDate claimantResponseDeadLine = LocalDate.now();
         data.put(CLAIMANT_RESPONSE_DEADLINE, claimantResponseDeadLine.atTime(16, 0));
-        List<String> errors = businessProcessService.updateBusinessProcess(data, DEFENDANT_RESPONSE);
+        businessProcessService.updateBusinessProcess(callbackParams.getCaseData(), DEFENDANT_RESPONSE);
 
         return AboutToStartOrSubmitCallbackResponse.builder()
             .data(data)
-            .errors(errors)
             .build();
     }
 
