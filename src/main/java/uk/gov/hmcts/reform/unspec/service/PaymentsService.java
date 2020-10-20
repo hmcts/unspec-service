@@ -35,7 +35,7 @@ public class PaymentsService {
 
     private CreditAccountPaymentRequest buildRequest(CaseData caseData, FeeDto feeDto) {
         return CreditAccountPaymentRequest.builder()
-            .accountNumber("PBA1234567") //TODO: update with test account
+            .accountNumber(caseData.getPbaNumber().name())
             .amount(feeDto.getCalculatedAmount())
             .caseReference(caseData.getLegacyCaseReference())
             .ccdCaseNumber(caseData.getCcdCaseReference().toString())
