@@ -20,8 +20,8 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static uk.gov.hmcts.reform.unspec.callback.CallbackType.ABOUT_TO_SUBMIT;
 
-@SpringBootTest(classes = {PaymentCallbackHandler.class})
-public class PaymentCallbackHandlerTest extends BaseCallbackHandlerTest {
+@SpringBootTest(classes = {PaymentsCallbackHandler.class})
+public class PaymentsCallbackHandlerTest extends BaseCallbackHandlerTest {
 
     private static final String SUCCESSFUL_PAYMENT_REFERENCE = "RC-1234-1234-1234-1234";
 
@@ -32,7 +32,7 @@ public class PaymentCallbackHandlerTest extends BaseCallbackHandlerTest {
     private PaymentsService paymentsService;
 
     @Autowired
-    private PaymentCallbackHandler handler;
+    private PaymentsCallbackHandler handler;
 
     @Test
     void shouldMakePbaPayment_whenInvoked() {

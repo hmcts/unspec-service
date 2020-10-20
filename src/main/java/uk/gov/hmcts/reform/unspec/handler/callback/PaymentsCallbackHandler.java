@@ -21,7 +21,7 @@ import static uk.gov.hmcts.reform.unspec.callback.CaseEvent.MAKE_PBA_PAYMENT;
 
 @Service
 @RequiredArgsConstructor
-public class PaymentCallbackHandler extends CallbackHandler {
+public class PaymentsCallbackHandler extends CallbackHandler {
 
     private static final List<CaseEvent> EVENTS = Collections.singletonList(MAKE_PBA_PAYMENT);
 
@@ -42,7 +42,7 @@ public class PaymentCallbackHandler extends CallbackHandler {
         var data = callbackParams.getRequest().getCaseDetails().getData();
         if (paymentsConfiguration.isEnabled()) {
             PaymentDto paymentDto = paymentsService.createCreditAccountPayment(callbackParams.getCaseData());
-            data.put("paymentsReference", paymentDto.getReference());
+            data.put("paymentReference", paymentDto.getReference());
         }
 
         return AboutToStartOrSubmitCallbackResponse.builder()

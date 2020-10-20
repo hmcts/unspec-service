@@ -120,6 +120,7 @@ fees:
     url: http://localhost:8765
 
 payments:
+  enabled: true
   api:
     url: http://localhost:8765
 

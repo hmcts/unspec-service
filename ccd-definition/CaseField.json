@@ -548,5 +548,13 @@
     "FieldType": "FixedList",
     "FieldTypeParameter": "PbaNumber",
     "SecurityClassification": "Public"
+  },
+  {
+    "LiveFrom": "01/01/2017",
+    "CaseTypeID": "UNSPECIFIED_CLAIMS",
+    "ID": "paymentReference",
+    "Label": "Successful PBA payment reference",
+    "FieldType": "Text",
+    "SecurityClassification": "Public"
   }
 ]
