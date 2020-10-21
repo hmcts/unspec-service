@@ -1,6 +1,7 @@
 package uk.gov.hmcts.reform.unspec.handler.callback;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import uk.gov.hmcts.reform.ccd.client.model.AboutToStartOrSubmitCallbackResponse;
 import uk.gov.hmcts.reform.ccd.client.model.CallbackResponse;
@@ -19,6 +20,7 @@ import java.util.Map;
 import static uk.gov.hmcts.reform.unspec.callback.CallbackType.ABOUT_TO_SUBMIT;
 import static uk.gov.hmcts.reform.unspec.callback.CaseEvent.MAKE_PBA_PAYMENT;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class PaymentsCallbackHandler extends CallbackHandler {
@@ -39,13 +41,15 @@ public class PaymentsCallbackHandler extends CallbackHandler {
     }
 
     private CallbackResponse makePbaPayment(CallbackParams callbackParams) {
+        var caseData = callbackParams.getCaseData();
         var data = callbackParams.getRequest().getCaseDetails().getData();
         if (paymentsConfiguration.isEnabled()) {
             try {
-                PaymentDto paymentDto = paymentsService.createCreditAccountPayment(callbackParams.getCaseData());
+                PaymentDto paymentDto = paymentsService.createCreditAccountPayment(caseData);
                 data.put("paymentReference", paymentDto.getReference());
             } catch (Exception e) {
-                //TODO: do nothing so camunda does not receive error and progress - handle in next PBA story
+                log.error(String.format("Error when making payment for case: %s, message: %s",
+                                       caseData.getCcdCaseReference(), e.getMessage()));
             }
         }
 
