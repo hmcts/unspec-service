@@ -46,6 +46,6 @@ public class PaymentsCallbackHandlerTest extends BaseCallbackHandlerTest {
         var response = (AboutToStartOrSubmitCallbackResponse) handler.handle(params);
 
         verify(paymentsService).createCreditAccountPayment(caseData);
-        assertThat(response.getData()).extracting("paymentsReference").isEqualTo(SUCCESSFUL_PAYMENT_REFERENCE);
+        assertThat(response.getData()).extracting("paymentReference").isEqualTo(SUCCESSFUL_PAYMENT_REFERENCE);
     }
 }

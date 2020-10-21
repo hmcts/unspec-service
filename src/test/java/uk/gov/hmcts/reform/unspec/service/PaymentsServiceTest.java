@@ -13,7 +13,6 @@ import uk.gov.hmcts.reform.payments.client.models.FeeDto;
 import uk.gov.hmcts.reform.payments.client.models.PaymentDto;
 import uk.gov.hmcts.reform.payments.client.request.CreditAccountPaymentRequest;
 import uk.gov.hmcts.reform.unspec.config.PaymentsConfiguration;
-import uk.gov.hmcts.reform.unspec.enums.PbaNumber;
 import uk.gov.hmcts.reform.unspec.model.CaseData;
 import uk.gov.hmcts.reform.unspec.model.ClaimValue;
 import uk.gov.hmcts.reform.unspec.request.RequestData;
