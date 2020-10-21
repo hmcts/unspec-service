@@ -11,6 +11,8 @@ class CreateClaimTest extends BpmnBaseTest {
     public static final String NOTIFY_RESPONDENT_SOLICITOR_1 = "NOTIFY_RESPONDENT_SOLICITOR1_FOR_CLAIM_ISSUE";
     private static final String ACTIVITY_ID = "CreateClaimNotifyRespondentSolicitor1";
     public static final String PROCESS_PAYMENT = "processPayment";
+    public static final String PROCESS_CASE_EVENT_TOPIC = "processCaseEvent";
+    public static final String PROCESS_PAYMENT_TOPIC = "processPayment";
 
     public CreateClaimTest() {
         super("create_claim.bpmn", "CREATE_CLAIM_PROCESS_ID");
