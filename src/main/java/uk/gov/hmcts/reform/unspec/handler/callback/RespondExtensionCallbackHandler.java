@@ -10,6 +10,7 @@ import uk.gov.hmcts.reform.unspec.callback.CallbackHandler;
 import uk.gov.hmcts.reform.unspec.callback.CallbackParams;
 import uk.gov.hmcts.reform.unspec.callback.CaseEvent;
 import uk.gov.hmcts.reform.unspec.enums.YesOrNo;
+import uk.gov.hmcts.reform.unspec.helpers.CaseDetailsConverter;
 import uk.gov.hmcts.reform.unspec.model.CaseData;
 import uk.gov.hmcts.reform.unspec.service.BusinessProcessService;
 import uk.gov.hmcts.reform.unspec.validation.RequestExtensionValidator;
@@ -36,12 +37,11 @@ import static uk.gov.hmcts.reform.unspec.service.DeadlinesCalculator.MID_NIGHT;
 public class RespondExtensionCallbackHandler extends CallbackHandler {
 
     private static final List<CaseEvent> EVENTS = Collections.singletonList(RESPOND_EXTENSION);
-    public static final String RESPONSE_DEADLINE = "respondentSolicitor1ResponseDeadline";
     public static final String EXTENSION_REASON = "respondentSolicitor1claimResponseExtensionReason";
-    public static final String LEGACY_CASE_REFERENCE = "legacyCaseReference";
 
     private final RequestExtensionValidator validator;
     private final BusinessProcessService businessProcessService;
+    private final CaseDetailsConverter caseDetailsConverter;
 
     @Override
     protected Map<String, Callback> callbacks() {
@@ -85,26 +85,23 @@ public class RespondExtensionCallbackHandler extends CallbackHandler {
     }
 
     private CallbackResponse updateResponseDeadline(CallbackParams callbackParams) {
-        Map<String, Object> data = callbackParams.getRequest().getCaseDetails().getData();
-        CaseData caseData = callbackParams.getCaseData();
-        YesOrNo proposedDeadlineAccepted = caseData.getRespondentSolicitor1claimResponseExtensionAccepted();
-        YesOrNo providedCounterDate = caseData.getRespondentSolicitor1claimResponseExtensionCounter();
-        LocalDate newDeadline;
+        YesOrNo proposedDeadlineAccepted = callbackParams.getCaseData().getRespondentSolicitor1claimResponseExtensionAccepted();
+        YesOrNo providedCounterDate = callbackParams.getCaseData().getRespondentSolicitor1claimResponseExtensionCounter();
+        LocalDate newDeadline = callbackParams.getCaseData().getRespondentSolicitor1ResponseDeadline().toLocalDate();
 
         if (proposedDeadlineAccepted == YesOrNo.YES) {
-            newDeadline = caseData.getRespondentSolicitor1claimResponseExtensionProposedDeadline();
-            data.put(RESPONSE_DEADLINE, newDeadline.atTime(MID_NIGHT));
+            newDeadline = callbackParams.getCaseData().getRespondentSolicitor1claimResponseExtensionProposedDeadline();
         }
 
         if (providedCounterDate == YesOrNo.YES) {
-            newDeadline = caseData.getRespondentSolicitor1claimResponseExtensionCounterDate();
-            data.put(RESPONSE_DEADLINE, newDeadline.atTime(MID_NIGHT));
+            newDeadline = callbackParams.getCaseData().getRespondentSolicitor1claimResponseExtensionCounterDate();
         }
-
-        businessProcessService.updateBusinessProcess(caseData, RESPOND_EXTENSION);
+        CaseData.CaseDataBuilder caseDataBuilder = callbackParams.getCaseData().toBuilder()
+            .respondentSolicitor1ResponseDeadline(newDeadline.atTime(MID_NIGHT));
+        CaseData caseData = businessProcessService.updateBusinessProcess(caseDataBuilder.build(), RESPOND_EXTENSION);
 
         return AboutToStartOrSubmitCallbackResponse.builder()
-            .data(data)
+            .data(caseDetailsConverter.toMap(caseData))
             .build();
     }
 

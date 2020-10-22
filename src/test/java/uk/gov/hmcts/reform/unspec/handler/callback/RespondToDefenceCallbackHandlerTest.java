@@ -95,7 +95,6 @@ class RespondToDefenceCallbackHandlerTest extends BaseCallbackHandlerTest {
 
     @Nested
     class SubmittedCallback {
-        public static final String APPLICANT_1_PROCEEDING = "applicant1ProceedWithClaim";
 
         @Test
         void shouldReturnExpectedResponse_whenApplicantIsProceedingWithClaim() {

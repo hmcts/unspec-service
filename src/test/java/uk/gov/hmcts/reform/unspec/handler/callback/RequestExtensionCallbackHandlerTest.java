@@ -1,12 +1,10 @@
 package uk.gov.hmcts.reform.unspec.handler.callback;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.jackson.JacksonAutoConfiguration;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import uk.gov.hmcts.reform.ccd.client.model.AboutToStartOrSubmitCallbackResponse;
 import uk.gov.hmcts.reform.ccd.client.model.CaseDetails;
 import uk.gov.hmcts.reform.ccd.client.model.SubmittedCallbackResponse;
@@ -29,9 +27,6 @@ import static java.lang.String.format;
 import static java.time.LocalDate.now;
 import static java.time.format.DateTimeFormatter.ofPattern;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 import static uk.gov.hmcts.reform.unspec.callback.CallbackType.ABOUT_TO_START;
 import static uk.gov.hmcts.reform.unspec.callback.CallbackType.ABOUT_TO_SUBMIT;
 import static uk.gov.hmcts.reform.unspec.callback.CallbackType.MID;
@@ -55,12 +50,10 @@ import static uk.gov.hmcts.reform.unspec.service.DeadlinesCalculator.MID_NIGHT;
     JacksonAutoConfiguration.class,
     FlowStateAllowedEventService.class,
     StateFlowEngine.class,
-    CaseDetailsConverter.class
+    CaseDetailsConverter.class,
+    BusinessProcessService.class
 })
 class RequestExtensionCallbackHandlerTest extends BaseCallbackHandlerTest {
-
-    @MockBean
-    private BusinessProcessService businessProcessService;
 
     @Autowired
     private RequestExtensionCallbackHandler handler;
@@ -134,12 +127,6 @@ class RequestExtensionCallbackHandlerTest extends BaseCallbackHandlerTest {
     @Nested
     class AboutToSubmitCallback {
 
-        @BeforeEach
-        void setup() {
-            when(businessProcessService.updateBusinessProcess(any(), any()))
-                .thenReturn(CaseData.builder().build());
-        }
-
         @Test
         void shouldUpdateResponseDeadlineToProposedDeadline_whenExtensionAlreadyAgreed() {
             LocalDate proposedDeadline = now().plusDays(14);
@@ -154,7 +141,7 @@ class RequestExtensionCallbackHandlerTest extends BaseCallbackHandlerTest {
             var response = (AboutToStartOrSubmitCallbackResponse) handler.handle(params);
 
             assertThat(response.getData())
-                .containsEntry(RESPONSE_DEADLINE, proposedDeadline.atTime(MID_NIGHT));
+                .containsEntry(RESPONSE_DEADLINE, proposedDeadline.atTime(MID_NIGHT).toString());
         }
 
         @Test
@@ -177,9 +164,18 @@ class RequestExtensionCallbackHandlerTest extends BaseCallbackHandlerTest {
         @Test
         void shouldUpdateBusinessProcess_whenInvoked() {
             CaseData caseData = CaseDataBuilder.builder().atStateExtensionRequested().build();
-            handler.handle(callbackParamsOf(caseData, ABOUT_TO_SUBMIT));
+            CallbackParams params = callbackParamsOf(caseData, ABOUT_TO_SUBMIT);
+            var response = (AboutToStartOrSubmitCallbackResponse) handler.handle(params);
 
-            verify(businessProcessService).updateBusinessProcess(caseData, REQUEST_EXTENSION);
+            assertThat(response.getData())
+                .extracting("businessProcess")
+                .extracting("camundaEvent")
+                .isEqualTo(REQUEST_EXTENSION.name());
+
+            assertThat(response.getData())
+                .extracting("businessProcess")
+                .extracting("status")
+                .isEqualTo("READY");
         }
     }
 

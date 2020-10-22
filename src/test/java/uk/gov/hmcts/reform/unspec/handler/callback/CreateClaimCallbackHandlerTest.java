@@ -171,8 +171,8 @@ class CreateClaimCallbackHandlerTest extends BaseCallbackHandlerTest {
     @Nested
     class AboutToSubmitCallback {
 
-        private final LocalDate CLAIM_ISSUED_DATE = now();
-        private final LocalDateTime CONFIRMATION_OF_SERVICE_DEADLINE = now().atTime(23, 59, 59);
+        private final LocalDate claimIssuedDate = now();
+        private final LocalDateTime confirmationOfServiceDeadline = now().atTime(23, 59, 59);
 
         private CallbackParams params;
         private CaseData caseData;
@@ -180,9 +180,9 @@ class CreateClaimCallbackHandlerTest extends BaseCallbackHandlerTest {
         @BeforeEach
         void setup() {
 
-            when(issueDateCalculator.calculateIssueDay(any(LocalDateTime.class))).thenReturn(CLAIM_ISSUED_DATE);
+            when(issueDateCalculator.calculateIssueDay(any(LocalDateTime.class))).thenReturn(claimIssuedDate);
             when(deadlinesCalculator.calculateConfirmationOfServiceDeadline(any(LocalDate.class)))
-                .thenReturn(CONFIRMATION_OF_SERVICE_DEADLINE);
+                .thenReturn(confirmationOfServiceDeadline);
             caseData = CaseDataBuilder.builder().atStateClaimDraft().build();
             params = CallbackParamsBuilder.builder().of(CallbackType.ABOUT_TO_SUBMIT, caseData).build();
         }
@@ -191,11 +191,11 @@ class CreateClaimCallbackHandlerTest extends BaseCallbackHandlerTest {
         void shouldAddClaimIssuedDateAndSubmittedAt_whenInvoked() {
             var response = (AboutToStartOrSubmitCallbackResponse) handler.handle(params);
 
-            assertThat(response.getData()).containsEntry("claimIssuedDate", CLAIM_ISSUED_DATE.toString());
+            assertThat(response.getData()).containsEntry("claimIssuedDate", claimIssuedDate.toString());
             assertThat(response.getData()).containsEntry("legacyCaseReference", REFERENCE_NUMBER);
             assertThat(response.getData()).containsEntry(
                 "confirmationOfServiceDeadline",
-                CONFIRMATION_OF_SERVICE_DEADLINE.toString()
+                confirmationOfServiceDeadline.toString()
             );
             assertThat(response.getData()).containsKey("claimSubmittedDateTime");
         }

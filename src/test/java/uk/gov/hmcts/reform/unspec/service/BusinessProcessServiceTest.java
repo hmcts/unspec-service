@@ -20,6 +20,7 @@ import java.util.stream.Stream;
 import static org.assertj.core.api.Assertions.assertThat;
 import static uk.gov.hmcts.reform.unspec.callback.CaseEvent.CREATE_CLAIM;
 import static uk.gov.hmcts.reform.unspec.enums.BusinessProcessStatus.FINISHED;
+import static uk.gov.hmcts.reform.unspec.enums.BusinessProcessStatus.READY;
 
 @ExtendWith(SpringExtension.class)
 @ContextConfiguration(classes = {BusinessProcessService.class})
@@ -30,8 +31,7 @@ class BusinessProcessServiceTest {
 
     @ParameterizedTest
     @EnumSource(value = BusinessProcessStatus.class, mode = EnumSource.Mode.EXCLUDE, names = {"FINISHED"})
-    void shouldNotUpdateBusinessProcess_whenBusinessProcessStatusIsNotFinishedNorNull(BusinessProcessStatus
-                                                                                          status) {
+    void shouldNotUpdateBusinessProcess_whenBusinessProcessStatusIsNotFinishedNorNull(BusinessProcessStatus status) {
         BusinessProcess businessProcess = buildBusinessProcessWithStatus(status);
         CaseData caseData = CaseData.builder()
             .businessProcess(businessProcess)
@@ -50,7 +50,11 @@ class BusinessProcessServiceTest {
 
         CaseData caseDataUpdated = service.updateBusinessProcess(caseData, CREATE_CLAIM);
 
-        assertThat(caseDataUpdated.getBusinessProcess()).isEqualTo(businessProcess);
+        assertThat(caseDataUpdated.getBusinessProcess()).extracting("status").isEqualTo(READY);
+        assertThat(caseDataUpdated.getBusinessProcess()).extracting("camundaEvent").isEqualTo(CREATE_CLAIM.name());
+        assertThat(caseDataUpdated.getBusinessProcess()).extracting("activityId").isNull();
+        assertThat(caseDataUpdated.getBusinessProcess()).extracting("processInstanceId").isNull();
+
     }
 
     static class GetBusinessProcessArguments implements ArgumentsProvider {

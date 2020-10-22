@@ -4,13 +4,13 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import uk.gov.hmcts.reform.ccd.client.model.AboutToStartOrSubmitCallbackResponse;
 import uk.gov.hmcts.reform.ccd.client.model.CallbackResponse;
-import uk.gov.hmcts.reform.ccd.client.model.CaseDetails;
 import uk.gov.hmcts.reform.ccd.client.model.SubmittedCallbackResponse;
 import uk.gov.hmcts.reform.unspec.callback.Callback;
 import uk.gov.hmcts.reform.unspec.callback.CallbackHandler;
 import uk.gov.hmcts.reform.unspec.callback.CallbackParams;
 import uk.gov.hmcts.reform.unspec.callback.CaseEvent;
 import uk.gov.hmcts.reform.unspec.enums.YesOrNo;
+import uk.gov.hmcts.reform.unspec.helpers.CaseDetailsConverter;
 import uk.gov.hmcts.reform.unspec.model.CaseData;
 import uk.gov.hmcts.reform.unspec.service.BusinessProcessService;
 import uk.gov.hmcts.reform.unspec.service.flowstate.FlowState;
@@ -36,6 +36,7 @@ public class RespondToDefenceCallbackHandler extends CallbackHandler {
 
     private final BusinessProcessService businessProcessService;
     private final StateFlowEngine stateFlowEngine;
+    private final CaseDetailsConverter caseDetailsConverter;
 
     @Override
     public List<CaseEvent> handledEvents() {
@@ -52,14 +53,13 @@ public class RespondToDefenceCallbackHandler extends CallbackHandler {
     }
 
     private CallbackResponse handleNotifications(CallbackParams callbackParams) {
-        CaseDetails caseDetails = callbackParams.getRequest().getCaseDetails();
         CaseData caseData = callbackParams.getCaseData();
         if (fromFullName(stateFlowEngine.evaluate(caseData).getState().getName()) == FlowState.Main.FULL_DEFENCE) {
-            businessProcessService.updateBusinessProcess(caseData, CLAIMANT_RESPONSE);
+            caseData = businessProcessService.updateBusinessProcess(caseData, CLAIMANT_RESPONSE);
         }
 
         return AboutToStartOrSubmitCallbackResponse.builder()
-            .data(caseDetails.getData())
+            .data(caseDetailsConverter.toMap(caseData))
             .build();
     }
 
