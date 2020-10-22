@@ -35,16 +35,12 @@ import uk.gov.hmcts.reform.unspec.validation.DateOfBirthValidator;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Map;
 
 import static java.lang.String.format;
 import static java.time.LocalDate.now;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.reset;
-import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static uk.gov.hmcts.reform.unspec.callback.CallbackType.ABOUT_TO_START;
 import static uk.gov.hmcts.reform.unspec.callback.CallbackType.MID;
@@ -65,6 +61,7 @@ import static uk.gov.hmcts.reform.unspec.utils.PartyNameUtils.getPartyNameBasedO
     ClaimIssueConfiguration.class,
     MockDatabaseConfiguration.class,
     ValidationAutoConfiguration.class,
+    BusinessProcessService.class,
     DateOfBirthValidator.class},
     properties = {"reference.database.enabled=false"})
 class CreateClaimCallbackHandlerTest extends BaseCallbackHandlerTest {
@@ -75,8 +72,6 @@ class CreateClaimCallbackHandlerTest extends BaseCallbackHandlerTest {
         .documentType(SEALED_CLAIM)
         .build();
 
-    @MockBean
-    private BusinessProcessService businessProcessService;
     @MockBean
     private SealedClaimFormGenerator sealedClaimFormGenerator;
     @MockBean
@@ -176,29 +171,31 @@ class CreateClaimCallbackHandlerTest extends BaseCallbackHandlerTest {
     @Nested
     class AboutToSubmitCallback {
 
+        private final LocalDate CLAIM_ISSUED_DATE = now();
+        private final LocalDateTime CONFIRMATION_OF_SERVICE_DEADLINE = now().atTime(23, 59, 59);
+
         private CallbackParams params;
         private CaseData caseData;
 
         @BeforeEach
         void setup() {
-            reset(businessProcessService);
-            when(businessProcessService.updateBusinessProcess(any(), any())).thenReturn(CaseData.builder().build());
-            when(issueDateCalculator.calculateIssueDay(any(LocalDateTime.class))).thenReturn(now());
+
+            when(issueDateCalculator.calculateIssueDay(any(LocalDateTime.class))).thenReturn(CLAIM_ISSUED_DATE);
             when(deadlinesCalculator.calculateConfirmationOfServiceDeadline(any(LocalDate.class)))
-                .thenReturn(now().atTime(23, 59, 59));
+                .thenReturn(CONFIRMATION_OF_SERVICE_DEADLINE);
             caseData = CaseDataBuilder.builder().atStateClaimDraft().build();
-            params = callbackParamsOf(convertToMap(caseData), CallbackType.ABOUT_TO_SUBMIT);
+            params = CallbackParamsBuilder.builder().of(CallbackType.ABOUT_TO_SUBMIT, caseData).build();
         }
 
         @Test
         void shouldAddClaimIssuedDateAndSubmittedAt_whenInvoked() {
             var response = (AboutToStartOrSubmitCallbackResponse) handler.handle(params);
 
-            assertThat(response.getData()).containsEntry("claimIssuedDate", now());
+            assertThat(response.getData()).containsEntry("claimIssuedDate", CLAIM_ISSUED_DATE.toString());
             assertThat(response.getData()).containsEntry("legacyCaseReference", REFERENCE_NUMBER);
             assertThat(response.getData()).containsEntry(
                 "confirmationOfServiceDeadline",
-                now().atTime(23, 59, 59)
+                CONFIRMATION_OF_SERVICE_DEADLINE.toString()
             );
             assertThat(response.getData()).containsKey("claimSubmittedDateTime");
         }
@@ -207,7 +204,7 @@ class CreateClaimCallbackHandlerTest extends BaseCallbackHandlerTest {
         void shouldAddAllocatedTrack_whenInvoked() {
             var response = (AboutToStartOrSubmitCallbackResponse) handler.handle(params);
 
-            assertThat(response.getData()).containsEntry("allocatedTrack", MULTI_CLAIM);
+            assertThat(response.getData()).containsEntry("allocatedTrack", MULTI_CLAIM.name());
         }
 
         @Test
@@ -237,14 +234,17 @@ class CreateClaimCallbackHandlerTest extends BaseCallbackHandlerTest {
 
         @Test
         void shouldUpdateBusinessProcess_whenInvoked() {
-            handler.handle(params);
+            var response = (AboutToStartOrSubmitCallbackResponse) handler.handle(params);
 
-            verify(businessProcessService).updateBusinessProcess(any(CaseData.class), eq(CREATE_CLAIM));
-        }
+            assertThat(response.getData())
+                .extracting("businessProcess")
+                .extracting("camundaEvent")
+                .isEqualTo(CREATE_CLAIM.name());
 
-        @SuppressWarnings("unchecked")
-        Map<String, Object> convertToMap(CaseData caseData) {
-            return (Map<String, Object>) objectMapper.convertValue(caseData, Map.class);
+            assertThat(response.getData())
+                .extracting("businessProcess")
+                .extracting("status")
+                .isEqualTo("READY");
         }
     }
 

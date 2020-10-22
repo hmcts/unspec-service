@@ -14,6 +14,7 @@ import uk.gov.hmcts.reform.ccd.client.model.SubmittedCallbackResponse;
 import uk.gov.hmcts.reform.unspec.callback.CallbackParams;
 import uk.gov.hmcts.reform.unspec.callback.CallbackType;
 import uk.gov.hmcts.reform.unspec.enums.ServedDocuments;
+import uk.gov.hmcts.reform.unspec.helpers.CaseDetailsConverter;
 import uk.gov.hmcts.reform.unspec.model.CaseData;
 import uk.gov.hmcts.reform.unspec.model.ServiceMethod;
 import uk.gov.hmcts.reform.unspec.sampledata.CaseDataBuilder;
@@ -28,7 +29,6 @@ import java.util.List;
 import java.util.Map;
 
 import static java.lang.String.format;
-import static java.util.Collections.emptyList;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
@@ -49,7 +49,8 @@ import static uk.gov.hmcts.reform.unspec.sampledata.CaseDataBuilder.RESPONSE_DEA
     ConfirmServiceCallbackHandler.class,
     JacksonAutoConfiguration.class,
     ValidationAutoConfiguration.class,
-    DeadlinesCalculator.class
+    DeadlinesCalculator.class,
+    CaseDetailsConverter.class
 })
 class ConfirmServiceCallbackHandlerTest extends BaseCallbackHandlerTest {
 
@@ -249,11 +250,12 @@ class ConfirmServiceCallbackHandlerTest extends BaseCallbackHandlerTest {
 
             var response = (AboutToStartOrSubmitCallbackResponse) handler.handle(params);
 
-            assertThat(response.getData()).containsExactlyInAnyOrderEntriesOf(
+            assertThat(response.getData()).containsAllEntriesOf(
                 Map.of(
-                    "deemedServiceDateToRespondentSolicitor1", LocalDate.of(2099, 6, 25),
-                    "respondentSolicitor1ResponseDeadline", LocalDateTime.of(2099, 7, 9, 23, 59, 59),
-                    "systemGeneratedCaseDocuments", emptyList()
+                    "deemedServiceDateToRespondentSolicitor1",
+                    LocalDate.of(2099, 6, 25).toString(),
+                    "respondentSolicitor1ResponseDeadline",
+                    LocalDateTime.of(2099, 7, 9, 23, 59, 59).toString()
                 ));
         }
 
@@ -269,11 +271,12 @@ class ConfirmServiceCallbackHandlerTest extends BaseCallbackHandlerTest {
 
             var response = (AboutToStartOrSubmitCallbackResponse) handler.handle(params);
 
-            assertThat(response.getData()).containsExactlyInAnyOrderEntriesOf(
+            assertThat(response.getData()).containsAllEntriesOf(
                 Map.of(
-                    "deemedServiceDateToRespondentSolicitor1", LocalDate.of(2099, 6, 23),
-                    "respondentSolicitor1ResponseDeadline", LocalDateTime.of(2099, 7, 7, 23, 59, 59),
-                    "systemGeneratedCaseDocuments", emptyList()
+                    "deemedServiceDateToRespondentSolicitor1",
+                    LocalDate.of(2099, 6, 23).toString(),
+                    "respondentSolicitor1ResponseDeadline",
+                    LocalDateTime.of(2099, 7, 7, 23, 59, 59).toString()
                 ));
         }
     }

@@ -14,7 +14,7 @@ public class BusinessProcessService {
 
     public CaseData updateBusinessProcess(CaseData caseData, CaseEvent caseEvent) {
         if (caseData.hasNoOngoingBusinessProcess()) {
-            caseData.toBuilder()
+            return caseData.toBuilder()
                 .businessProcess(BusinessProcess.builder()
                                      .camundaEvent(caseEvent.name())
                                      .status(READY)
