@@ -85,23 +85,25 @@ public class RespondExtensionCallbackHandler extends CallbackHandler {
     }
 
     private CallbackResponse updateResponseDeadline(CallbackParams callbackParams) {
-        YesOrNo proposedDeadlineAccepted = callbackParams.getCaseData().getRespondentSolicitor1claimResponseExtensionAccepted();
-        YesOrNo providedCounterDate = callbackParams.getCaseData().getRespondentSolicitor1claimResponseExtensionCounter();
-        LocalDate newDeadline = callbackParams.getCaseData().getRespondentSolicitor1ResponseDeadline().toLocalDate();
+        CaseData caseData = callbackParams.getCaseData();
+        YesOrNo proposedDeadlineAccepted = caseData.getRespondentSolicitor1claimResponseExtensionAccepted();
+        YesOrNo providedCounterDate = caseData.getRespondentSolicitor1claimResponseExtensionCounter();
+        LocalDate newDeadline = caseData.getRespondentSolicitor1ResponseDeadline().toLocalDate();
 
         if (proposedDeadlineAccepted == YesOrNo.YES) {
-            newDeadline = callbackParams.getCaseData().getRespondentSolicitor1claimResponseExtensionProposedDeadline();
+            newDeadline = caseData.getRespondentSolicitor1claimResponseExtensionProposedDeadline();
         }
 
         if (providedCounterDate == YesOrNo.YES) {
-            newDeadline = callbackParams.getCaseData().getRespondentSolicitor1claimResponseExtensionCounterDate();
+            newDeadline = caseData.getRespondentSolicitor1claimResponseExtensionCounterDate();
         }
-        CaseData.CaseDataBuilder caseDataBuilder = callbackParams.getCaseData().toBuilder()
+        CaseData.CaseDataBuilder caseDataBuilder = caseData.toBuilder()
             .respondentSolicitor1ResponseDeadline(newDeadline.atTime(MID_NIGHT));
-        CaseData caseData = businessProcessService.updateBusinessProcess(caseDataBuilder.build(), RESPOND_EXTENSION);
+        CaseData updatedCaseData = businessProcessService
+            .updateBusinessProcess(caseDataBuilder.build(), RESPOND_EXTENSION);
 
         return AboutToStartOrSubmitCallbackResponse.builder()
-            .data(caseDetailsConverter.toMap(caseData))
+            .data(caseDetailsConverter.toMap(updatedCaseData))
             .build();
     }
 
