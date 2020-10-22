@@ -1,13 +1,11 @@
 package uk.gov.hmcts.reform.unspec.bpmn;
 
 import org.camunda.bpm.engine.externaltask.ExternalTask;
-import org.camunda.bpm.engine.externaltask.LockedExternalTask;
 import org.junit.jupiter.api.Test;
-
-import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static uk.gov.hmcts.reform.unspec.callback.CaseEvent.MAKE_PBA_PAYMENT;
 
 class CreateClaimTest extends BpmnBaseTest {
 
@@ -35,17 +33,12 @@ class CreateClaimTest extends BpmnBaseTest {
 
         //complete the payment
         ExternalTask paymentTask = assertNextExternalTask(PROCESS_PAYMENT);
-        assertThat(paymentTask.getTopicName()).isEqualTo(PROCESS_PAYMENT);
-
-        List<LockedExternalTask> lockedProcessTask = fetchAndLockTask(PROCESS_PAYMENT);
-        assertThat(lockedProcessTask).hasSize(1);
-        assertThat(lockedProcessTask.get(0).getActivityId()).isEqualTo(MAKE_PAYMENT_ACTIVITY_ID);
-        completeTask(lockedProcessTask.get(0).getId());
+        assertCompleteExternalTask(paymentTask, PROCESS_PAYMENT, MAKE_PBA_PAYMENT.name(), MAKE_PAYMENT_ACTIVITY_ID);
 
         //complete the notification
         ExternalTask notificationTask = assertNextExternalTask(PROCESS_CASE_EVENT);
-        assertCompleteExternalTask(notificationTask, PROCESS_CASE_EVENT, NOTIFY_RESPONDENT_SOLICITOR_1,
-                                   NOTIFY_RESPONDENT_SOLICITOR_1_ACTIVITY_ID);
+        assertCompleteExternalTask(notificationTask, PROCESS_CASE_EVENT,
+                                   NOTIFY_RESPONDENT_SOLICITOR_1, NOTIFY_RESPONDENT_SOLICITOR_1_ACTIVITY_ID);
 
         assertNoExternalTasksLeft();
     }

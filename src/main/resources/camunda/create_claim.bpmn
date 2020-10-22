@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" id="Definitions_0rn46su" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="3.7.3">
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" id="Definitions_0rn46su" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="4.2.0">
   <bpmn:process id="CREATE_CLAIM_PROCESS_ID" isExecutable="true">
     <bpmn:serviceTask id="CreateClaimNotifyRespondentSolicitor1" name="Notify respondent solicitor 1" camunda:type="external" camunda:topic="processCaseEvent">
       <bpmn:extensionElements>
@@ -39,6 +39,11 @@
     <bpmn:sequenceFlow id="Flow_0460yut" sourceRef="StartBusinessProcessTaskId" targetRef="CreateClaimMakePayment" />
     <bpmn:sequenceFlow id="Flow_05gqbfa" sourceRef="CreateClaimMakePayment" targetRef="CreateClaimNotifyRespondentSolicitor1" />
     <bpmn:serviceTask id="CreateClaimMakePayment" name="Make PBA Payment" camunda:type="external" camunda:topic="processPayment">
+      <bpmn:extensionElements>
+        <camunda:inputOutput>
+          <camunda:inputParameter name="caseEvent">MAKE_PBA_PAYMENT</camunda:inputParameter>
+        </camunda:inputOutput>
+      </bpmn:extensionElements>
       <bpmn:incoming>Flow_0460yut</bpmn:incoming>
       <bpmn:outgoing>Flow_05gqbfa</bpmn:outgoing>
     </bpmn:serviceTask>
@@ -47,6 +52,14 @@
   <bpmn:error id="Error_0t2ju7k" name="StartBusinessAbort" errorCode="ABORT" />
   <bpmndi:BPMNDiagram id="BPMNDiagram_1">
     <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="CREATE_CLAIM_PROCESS_ID">
+      <bpmndi:BPMNEdge id="Flow_05gqbfa_di" bpmnElement="Flow_05gqbfa">
+        <di:waypoint x="510" y="120" />
+        <di:waypoint x="570" y="120" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0460yut_di" bpmnElement="Flow_0460yut">
+        <di:waypoint x="360" y="120" />
+        <di:waypoint x="410" y="120" />
+      </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_0tpdor1_di" bpmnElement="Flow_0tpdor1">
         <di:waypoint x="188" y="120" />
         <di:waypoint x="260" y="120" />
@@ -59,14 +72,9 @@
         <di:waypoint x="670" y="120" />
         <di:waypoint x="712" y="120" />
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_0460yut_di" bpmnElement="Flow_0460yut">
-        <di:waypoint x="360" y="120" />
-        <di:waypoint x="410" y="120" />
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_05gqbfa_di" bpmnElement="Flow_05gqbfa">
-        <di:waypoint x="510" y="120" />
-        <di:waypoint x="570" y="120" />
-      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="Activity_0bn79uc_di" bpmnElement="CreateClaimNotifyRespondentSolicitor1">
+        <dc:Bounds x="570" y="80" width="100" height="80" />
+      </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Event_1148m43_di" bpmnElement="Event_1148m43">
         <dc:Bounds x="712" y="102" width="36" height="36" />
       </bpmndi:BPMNShape>
@@ -84,9 +92,6 @@
         <bpmndi:BPMNLabel>
           <dc:Bounds x="291" y="315" width="39" height="14" />
         </bpmndi:BPMNLabel>
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Activity_0bn79uc_di" bpmnElement="CreateClaimNotifyRespondentSolicitor1">
-        <dc:Bounds x="570" y="80" width="100" height="80" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Activity_0ykrnsw_di" bpmnElement="CreateClaimMakePayment">
         <dc:Bounds x="410" y="80" width="100" height="80" />
