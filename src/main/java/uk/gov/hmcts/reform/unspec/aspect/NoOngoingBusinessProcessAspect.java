@@ -30,10 +30,10 @@ public class NoOngoingBusinessProcessAspect {
         ProceedingJoinPoint joinPoint,
         CallbackParams callbackParams
     ) throws Throwable {
-        if (callbackParams.getType() == SUBMITTED) {
+        CaseEvent caseEvent = CaseEvent.valueOf(callbackParams.getRequest().getEventId());
+        if (callbackParams.getType() == SUBMITTED || caseEvent.isCamundaEvent()) {
             return joinPoint.proceed();
         }
-        CaseEvent caseEvent = CaseEvent.valueOf(callbackParams.getRequest().getEventId());
         CaseData caseData = callbackParams.getCaseData();
         if (caseData.hasNoOngoingBusinessProcess() || caseEvent.isCamundaEvent()) {
             return joinPoint.proceed();
