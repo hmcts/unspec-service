@@ -88,7 +88,7 @@ public class CreateClaimCallbackHandler extends CallbackHandler {
     private CallbackResponse issueClaim(CallbackParams callbackParams) {
         LocalDateTime submittedAt = LocalDateTime.now();
         LocalDate issueDate = issueDateCalculator.calculateIssueDay(submittedAt);
-        CaseData caseData = caseDetailsConverter.toCaseData(callbackParams.getRequest().getCaseDetails());
+        CaseData caseData = callbackParams.getCaseData();
         String referenceNumber = referenceNumberRepository.getReferenceNumber();
         LocalDateTime confirmationOfServiceDeadline = deadlinesCalculator.calculateConfirmationOfServiceDeadline(
             issueDate);
