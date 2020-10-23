@@ -78,10 +78,12 @@ public class ConfirmServiceCallbackHandler extends CallbackHandler {
     }
 
     private CallbackResponse prepopulateServedDocuments(CallbackParams callbackParams) {
-        List<ServedDocuments> servedDocuments = List.of(ServedDocuments.CLAIM_FORM);
+        CaseData caseData = callbackParams.getCaseData().toBuilder()
+            .servedDocuments(List.of(ServedDocuments.CLAIM_FORM))
+            .build();
 
         return AboutToStartOrSubmitCallbackResponse.builder()
-            .data(Map.of("servedDocuments", servedDocuments))
+            .data(caseDetailsConverter.toMap(caseData))
             .build();
     }
 

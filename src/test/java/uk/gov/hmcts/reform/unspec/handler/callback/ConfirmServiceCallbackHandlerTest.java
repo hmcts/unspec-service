@@ -24,7 +24,6 @@ import uk.gov.hmcts.reform.unspec.service.docmosis.cos.CertificateOfServiceGener
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -34,6 +33,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import static uk.gov.hmcts.reform.unspec.callback.CallbackType.ABOUT_TO_SUBMIT;
 import static uk.gov.hmcts.reform.unspec.callback.CallbackType.MID;
+import static uk.gov.hmcts.reform.unspec.enums.ServedDocuments.CLAIM_FORM;
 import static uk.gov.hmcts.reform.unspec.enums.ServiceMethodType.FAX;
 import static uk.gov.hmcts.reform.unspec.enums.ServiceMethodType.POST;
 import static uk.gov.hmcts.reform.unspec.handler.callback.ConfirmServiceCallbackHandler.CONFIRMATION_SUMMARY;
@@ -67,24 +67,27 @@ class ConfirmServiceCallbackHandlerTest extends BaseCallbackHandlerTest {
 
         @Test
         void shouldPrepopulateServedDocumentsList_whenInvoked() {
-            CallbackParams params = callbackParamsOf(new HashMap<>(), CallbackType.ABOUT_TO_START);
+            CaseData caseData = CaseDataBuilder.builder().atStateClaimCreated().build();
+            CallbackParams params = callbackParamsOf(caseData, CallbackType.ABOUT_TO_START);
 
             var response = (AboutToStartOrSubmitCallbackResponse) handler.handle(params);
 
             assertThat(response.getData())
-                .containsOnly(Map.entry("servedDocuments", List.of(ServedDocuments.CLAIM_FORM)));
+                .extracting("servedDocuments").isEqualTo(List.of(CLAIM_FORM.name()));
         }
     }
 
     @Nested
     class MidEventServedDocumentCallback {
 
+        private static final String PAGE_ID = "served-documents";
+
         @Test
         void shouldReturnError_whenWhitespaceInServedDocumentsOther() {
             CaseData caseData = CaseDataBuilder.builder().atStateClaimCreated()
                 .servedDocumentsOther(" ")
                 .build();
-            CallbackParams params = callbackParamsOf(caseData, MID, "served-documents");
+            CallbackParams params = callbackParamsOf(caseData, MID, PAGE_ID);
 
             var response = (AboutToStartOrSubmitCallbackResponse) handler.handle(params);
 
@@ -95,7 +98,7 @@ class ConfirmServiceCallbackHandlerTest extends BaseCallbackHandlerTest {
         @Test
         void shouldReturnNoError_whenValidServedDocumentsOther() {
             CaseData caseData = CaseDataBuilder.builder().atStateServiceConfirmed().build();
-            CallbackParams params = callbackParamsOf(caseData, MID, "served-documents");
+            CallbackParams params = callbackParamsOf(caseData, MID, PAGE_ID);
 
             var response = (AboutToStartOrSubmitCallbackResponse) handler.handle(params);
 
