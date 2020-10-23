@@ -88,21 +88,19 @@ public class RespondExtensionCallbackHandler extends CallbackHandler {
         CaseData caseData = callbackParams.getCaseData();
         YesOrNo proposedDeadlineAccepted = caseData.getRespondentSolicitor1claimResponseExtensionAccepted();
         YesOrNo providedCounterDate = caseData.getRespondentSolicitor1claimResponseExtensionCounter();
-        LocalDate newDeadline = null;
-
+        CaseData.CaseDataBuilder caseDataBuilder = caseData.toBuilder();
         if (proposedDeadlineAccepted == YesOrNo.YES) {
-            newDeadline = caseData.getRespondentSolicitor1claimResponseExtensionProposedDeadline();
+            caseDataBuilder.respondentSolicitor1ResponseDeadline(
+                caseData.getRespondentSolicitor1claimResponseExtensionProposedDeadline().atTime(MID_NIGHT)
+            );
         }
 
         if (providedCounterDate == YesOrNo.YES) {
-            newDeadline = caseData.getRespondentSolicitor1claimResponseExtensionCounterDate();
-        }
-        CaseData.CaseDataBuilder caseDataBuilder = caseData.toBuilder()
-            .respondentSolicitor1ResponseDeadline(
-                newDeadline != null
-                    ? newDeadline.atTime(MID_NIGHT)
-                    : caseData.getRespondentSolicitor1ResponseDeadline()
+            caseDataBuilder.respondentSolicitor1ResponseDeadline(
+                caseData.getRespondentSolicitor1claimResponseExtensionCounterDate().atTime(MID_NIGHT)
             );
+        }
+
         CaseData updatedCaseData = businessProcessService
             .updateBusinessProcess(caseDataBuilder.build(), RESPOND_EXTENSION);
 
