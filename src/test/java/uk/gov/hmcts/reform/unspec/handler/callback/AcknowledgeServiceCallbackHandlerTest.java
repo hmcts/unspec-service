@@ -152,7 +152,7 @@ class AcknowledgeServiceCallbackHandlerTest extends BaseCallbackHandlerTest {
 
             var response = (AboutToStartOrSubmitCallbackResponse) handler.handle(params);
 
-            assertThat(response.getData()).extracting("respondentSolicitor1ResponseDeadline", "")
+            assertThat(response.getData()).extracting("respondentSolicitor1ResponseDeadline")
                 .isEqualTo(now().atTime(MID_NIGHT).plusDays(14));
         }
 
