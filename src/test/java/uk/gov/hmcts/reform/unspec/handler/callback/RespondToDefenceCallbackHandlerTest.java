@@ -1,37 +1,49 @@
 package uk.gov.hmcts.reform.unspec.handler.callback;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.EnumSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.jackson.JacksonAutoConfiguration;
 import org.springframework.boot.autoconfigure.validation.ValidationAutoConfiguration;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import uk.gov.hmcts.reform.ccd.client.model.AboutToStartOrSubmitCallbackResponse;
 import uk.gov.hmcts.reform.ccd.client.model.CaseDetails;
 import uk.gov.hmcts.reform.ccd.client.model.SubmittedCallbackResponse;
 import uk.gov.hmcts.reform.unspec.callback.CallbackParams;
-import uk.gov.hmcts.reform.unspec.callback.CallbackType;
-import uk.gov.hmcts.reform.unspec.enums.DefendantResponseType;
-import uk.gov.hmcts.reform.unspec.enums.YesOrNo;
 import uk.gov.hmcts.reform.unspec.helpers.CaseDetailsConverter;
+import uk.gov.hmcts.reform.unspec.model.CaseData;
 import uk.gov.hmcts.reform.unspec.model.UnavailableDate;
+import uk.gov.hmcts.reform.unspec.model.dq.Applicant1DQ;
 import uk.gov.hmcts.reform.unspec.model.dq.Hearing;
 import uk.gov.hmcts.reform.unspec.sampledata.CallbackParamsBuilder;
+import uk.gov.hmcts.reform.unspec.sampledata.CaseDataBuilder;
 import uk.gov.hmcts.reform.unspec.sampledata.CaseDetailsBuilder;
+import uk.gov.hmcts.reform.unspec.service.BusinessProcessService;
+import uk.gov.hmcts.reform.unspec.service.flowstate.StateFlowEngine;
 import uk.gov.hmcts.reform.unspec.validation.UnavailableDateValidator;
 
 import java.time.LocalDate;
-import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import static java.lang.String.format;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.clearInvocations;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoInteractions;
+import static org.mockito.Mockito.when;
 import static uk.gov.hmcts.reform.unspec.callback.CallbackType.ABOUT_TO_START;
+import static uk.gov.hmcts.reform.unspec.callback.CallbackType.ABOUT_TO_SUBMIT;
 import static uk.gov.hmcts.reform.unspec.callback.CallbackType.MID;
+import static uk.gov.hmcts.reform.unspec.callback.CallbackType.SUBMITTED;
+import static uk.gov.hmcts.reform.unspec.callback.CaseEvent.CLAIMANT_RESPONSE;
+import static uk.gov.hmcts.reform.unspec.enums.YesOrNo.NO;
+import static uk.gov.hmcts.reform.unspec.enums.YesOrNo.YES;
 import static uk.gov.hmcts.reform.unspec.utils.ElementUtils.wrapElements;
 
 @ExtendWith(SpringExtension.class)
@@ -40,9 +52,14 @@ import static uk.gov.hmcts.reform.unspec.utils.ElementUtils.wrapElements;
     JacksonAutoConfiguration.class,
     ValidationAutoConfiguration.class,
     UnavailableDateValidator.class,
-    CaseDetailsConverter.class
+    CaseDetailsConverter.class,
+    BusinessProcessService.class,
+    StateFlowEngine.class
 })
 class RespondToDefenceCallbackHandlerTest extends BaseCallbackHandlerTest {
+
+    @MockBean
+    private BusinessProcessService businessProcessService;
 
     @Autowired
     private RespondToDefenceCallbackHandler handler;
@@ -67,14 +84,18 @@ class RespondToDefenceCallbackHandlerTest extends BaseCallbackHandlerTest {
 
         @Test
         void shouldReturnError_whenUnavailableDateIsMoreThanOneYearInFuture() {
-            Map<String, Object> data = new HashMap<>();
-            data.put("applicant1DQHearing", Hearing.builder()
-                .unavailableDates(wrapElements(UnavailableDate.builder()
-                                                   .date(LocalDate.now().plusYears(5))
-                                                   .build()))
-                .build());
+            CaseData.CaseDataBuilder caseDataBuilder = CaseData.builder();
+            caseDataBuilder
+                .applicant1DQ(Applicant1DQ.builder()
+                                  .applicant1DQHearing(Hearing.builder()
+                                                           .unavailableDates(wrapElements(
+                                                               UnavailableDate.builder().date(
+                                                                   LocalDate.now().plusYears(5)).build()))
+                                                           .build())
+                                  .build())
+                .build();
 
-            CallbackParams params = callbackParamsOf(data, MID, "validate-unavailable-dates");
+            CallbackParams params = callbackParamsOf(caseDataBuilder.build(), MID, "validate-unavailable-dates");
 
             AboutToStartOrSubmitCallbackResponse response = (AboutToStartOrSubmitCallbackResponse) handler
                 .handle(params);
@@ -85,14 +106,18 @@ class RespondToDefenceCallbackHandlerTest extends BaseCallbackHandlerTest {
 
         @Test
         void shouldReturnError_whenUnavailableDateIsInPast() {
-            Map<String, Object> data = new HashMap<>();
-            data.put("applicant1DQHearing", Hearing.builder()
-                .unavailableDates(wrapElements(UnavailableDate.builder()
-                                                   .date(LocalDate.now().minusYears(5))
-                                                   .build()))
-                .build());
+            CaseData.CaseDataBuilder caseDataBuilder = CaseData.builder();
+            caseDataBuilder
+                .applicant1DQ(Applicant1DQ.builder()
+                                  .applicant1DQHearing(Hearing.builder()
+                                                           .unavailableDates(wrapElements(
+                                                               UnavailableDate.builder().date(
+                                                                   LocalDate.now().minusYears(5)).build()))
+                                                           .build())
+                                  .build())
+                .build();
 
-            CallbackParams params = callbackParamsOf(data, MID, "validate-unavailable-dates");
+            CallbackParams params = callbackParamsOf(caseDataBuilder.build(), MID, "validate-unavailable-dates");
 
             AboutToStartOrSubmitCallbackResponse response = (AboutToStartOrSubmitCallbackResponse) handler
                 .handle(params);
@@ -103,14 +128,18 @@ class RespondToDefenceCallbackHandlerTest extends BaseCallbackHandlerTest {
 
         @Test
         void shouldReturnNoError_whenUnavailableDateIsValid() {
-            Map<String, Object> data = new HashMap<>();
-            data.put("applicant1DQHearing", Hearing.builder()
-                .unavailableDates(wrapElements(UnavailableDate.builder()
-                                                   .date(LocalDate.now().plusDays(5))
-                                                   .build()))
-                .build());
+            CaseData.CaseDataBuilder caseDataBuilder = CaseData.builder();
+            caseDataBuilder
+                .applicant1DQ(Applicant1DQ.builder()
+                                  .applicant1DQHearing(Hearing.builder()
+                                                           .unavailableDates(wrapElements(
+                                                               UnavailableDate.builder().date(
+                                                                   LocalDate.now().plusDays(5)).build()))
+                                                           .build())
+                                  .build())
+                .build();
 
-            CallbackParams params = callbackParamsOf(data, MID, "validate-unavailable-dates");
+            CallbackParams params = callbackParamsOf(caseDataBuilder.build(), MID, "validate-unavailable-dates");
 
             AboutToStartOrSubmitCallbackResponse response = (AboutToStartOrSubmitCallbackResponse) handler
                 .handle(params);
@@ -120,10 +149,11 @@ class RespondToDefenceCallbackHandlerTest extends BaseCallbackHandlerTest {
 
         @Test
         void shouldReturnNoError_whenNoUnavailableDate() {
-            Map<String, Object> data = new HashMap<>();
-            data.put("applicant1DQHearing", Hearing.builder().build());
+            CaseData.CaseDataBuilder caseDataBuilder = CaseData.builder();
+            caseDataBuilder
+                .applicant1DQ(Applicant1DQ.builder().applicant1DQHearing(Hearing.builder().build()).build()).build();
 
-            CallbackParams params = callbackParamsOf(data, MID, "validate-unavailable-dates");
+            CallbackParams params = callbackParamsOf(caseDataBuilder.build(), MID, "validate-unavailable-dates");
 
             AboutToStartOrSubmitCallbackResponse response = (AboutToStartOrSubmitCallbackResponse) handler
                 .handle(params);
@@ -135,53 +165,28 @@ class RespondToDefenceCallbackHandlerTest extends BaseCallbackHandlerTest {
     @Nested
     class AboutToSubmitCallback {
 
+        @BeforeEach
+        void setup() {
+            when(businessProcessService.updateBusinessProcess(any(), any())).thenReturn(List.of());
+            clearInvocations(businessProcessService);
+        }
+
         @Test
-        void shouldSetCaseTransferredToLocalCourtBusinessProcessToReady_whenFullDefenceAndProceedingWithClaim() {
-            Map<String, Object> data = new HashMap<>(Map.of(
-                "respondent1ClaimResponseType", "FULL_DEFENCE",
-                "applicant1ProceedWithClaim", "Yes"
-            ));
+        void shouldUpdateBusinessProcess_whenAtFullDefenceState() {
+            CaseData caseData = CaseDataBuilder.builder().atStateFullDefence().build();
 
-            AboutToStartOrSubmitCallbackResponse response = (AboutToStartOrSubmitCallbackResponse) handler
-                .handle(callbackParamsOf(data, CallbackType.ABOUT_TO_SUBMIT));
+            handler.handle(callbackParamsOf(caseData, ABOUT_TO_SUBMIT));
 
-            //TODO: uncomment when CMC-794 is played
-            //assertThat(response.getData()).extracting("businessProcess").extracting("status").isEqualTo(READY);
-            assertThat(response.getData()).extracting("businessProcess").extracting("activityId").isEqualTo(
-                "CaseTransferredToLocalCourtHandling");
-            assertThat(response.getData()).extracting("businessProcess").extracting("processInstanceId").isNull();
+            verify(businessProcessService).updateBusinessProcess(Map.of(), CLAIMANT_RESPONSE);
         }
 
-        @ParameterizedTest
-        @EnumSource(
-            value = DefendantResponseType.class,
-            names = {"FULL_ADMISSION", "PART_ADMISSION", "COUNTER_CLAIM"})
-        void shouldNotSetBusinessProcess_whenNotFullDefence(DefendantResponseType responseType) {
-            Map<String, Object> data = new HashMap<>(Map.of(
-                "respondent1ClaimResponseType", responseType,
-                "applicant1ProceedWithClaim", "Yes"
-            ));
+        @Test
+        void shouldNotUpdateBusinessProcess_whenNotAtFullDefenceState() {
+            CaseData caseData = CaseDataBuilder.builder().atStateRespondedToClaim().build();
 
-            AboutToStartOrSubmitCallbackResponse response = (AboutToStartOrSubmitCallbackResponse) handler
-                .handle(callbackParamsOf(data, CallbackType.ABOUT_TO_SUBMIT));
+            handler.handle(callbackParamsOf(caseData, ABOUT_TO_SUBMIT));
 
-            assertThat(response.getData()).doesNotContainKey("businessProcess");
-        }
-
-        @ParameterizedTest
-        @EnumSource(
-            value = DefendantResponseType.class,
-            names = {"FULL_DEFENCE", "FULL_ADMISSION", "PART_ADMISSION", "COUNTER_CLAIM"})
-        void shouldNotSetBusinessProcess_whenNotProceedingWithClaim(DefendantResponseType responseType) {
-            Map<String, Object> data = new HashMap<>(Map.of(
-                "respondent1ClaimResponseType", responseType,
-                "applicant1ProceedWithClaim", "No"
-            ));
-
-            AboutToStartOrSubmitCallbackResponse response = (AboutToStartOrSubmitCallbackResponse) handler
-                .handle(callbackParamsOf(data, CallbackType.ABOUT_TO_SUBMIT));
-
-            assertThat(response.getData()).doesNotContainKey("businessProcess");
+            verifyNoInteractions(businessProcessService);
         }
     }
 
@@ -191,10 +196,11 @@ class RespondToDefenceCallbackHandlerTest extends BaseCallbackHandlerTest {
 
         @Test
         void shouldReturnExpectedResponse_whenApplicantIsProceedingWithClaim() {
-            Map<String, Object> data = new HashMap<>();
-            data.put(APPLICANT_1_PROCEEDING, YesOrNo.YES);
-
-            CallbackParams params = callbackParamsOf(data, CallbackType.SUBMITTED);
+            CaseData caseData = CaseDataBuilder.builder()
+                .atStateFullDefence()
+                .applicant1ProceedWithClaim(YES)
+                .build();
+            CallbackParams params = callbackParamsOf(caseData, SUBMITTED);
 
             SubmittedCallbackResponse response = (SubmittedCallbackResponse) handler.handle(params);
 
@@ -209,10 +215,11 @@ class RespondToDefenceCallbackHandlerTest extends BaseCallbackHandlerTest {
 
         @Test
         void shouldReturnExpectedResponse_whenApplicantIsNotProceedingWithClaim() {
-            Map<String, Object> data = new HashMap<>();
-            data.put(APPLICANT_1_PROCEEDING, YesOrNo.NO);
-
-            CallbackParams params = callbackParamsOf(data, CallbackType.SUBMITTED);
+            CaseData caseData = CaseDataBuilder.builder()
+                .atStateFullDefence()
+                .applicant1ProceedWithClaim(NO)
+                .build();
+            CallbackParams params = callbackParamsOf(caseData, SUBMITTED);
 
             SubmittedCallbackResponse response = (SubmittedCallbackResponse) handler.handle(params);
 
