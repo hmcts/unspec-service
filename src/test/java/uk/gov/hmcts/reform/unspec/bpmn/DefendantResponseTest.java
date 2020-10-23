@@ -14,9 +14,9 @@ class DefendantResponseTest extends BpmnBaseTest {
 
     public static final String NOTIFY_APPLICANT_SOLICITOR_1 = "NOTIFY_APPLICANT_SOLICITOR1_FOR_CASE_HANDED_OFFLINE";
     public static final String DEFENDANT_RESPONSE = "NOTIFY_APPLICANT_SOLICITOR1_FOR_DEFENDANT_RESPONSE";
-    private static final String RESPONDENT_ACTIVITY_ID = "DefendantResponseCaseHandedOfflineEmailRespondentSolicitor1";
-    private static final String FULL_DEFENCE_ACTIVITY_ID = "DefendantResponseFullDefenceEmailApplicantSolicitor1";
-    private static final String CLAIMANT_ACTIVITY_ID = "DefendantResponseCaseHandedOfflineEmailApplicantSolicitor1";
+    private static final String RESPONDENT_ACTIVITY_ID = "DefendantResponseCaseHandedOfflineNotifyRespondentSolicitor1";
+    private static final String FULL_DEFENCE_ACTIVITY_ID = "DefendantResponseFullDefenceNotifyApplicantSolicitor1";
+    private static final String CLAIMANT_ACTIVITY_ID = "DefendantResponseCaseHandedOfflineNotifyApplicantSolicitor1";
     private static final String NOTIFY_RESPONDENT_SOLICITOR_1 = "NOTIFY_RESPONDENT_SOLICITOR1_FOR_CASE_HANDED_OFFLINE";
 
     public DefendantResponseTest() {

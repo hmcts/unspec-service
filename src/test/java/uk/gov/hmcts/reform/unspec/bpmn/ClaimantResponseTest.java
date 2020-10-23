@@ -10,10 +10,10 @@ class ClaimantResponseTest extends BpmnBaseTest {
 
     private static final String RESPONDENT_SOLICITOR_1
         = "NOTIFY_RESPONDENT_SOLICITOR1_FOR_CASE_TRANSFERRED_TO_LOCAL_COURT";
-    private static final String RESPONDENT_ACTIVITY = "ClaimantResponseEmailRespondentSolicitor1";
+    private static final String RESPONDENT_ACTIVITY = "ClaimantResponseNotifyRespondentSolicitor1";
     private static final String CLAIMANT_SOLICITOR_1
         = "NOTIFY_APPLICANT_SOLICITOR1_FOR_CASE_TRANSFERRED_TO_LOCAL_COURT";
-    private static final String CLAIMANT_ACTIVITY = "ClaimantResponseEmailApplicantSolicitor1";
+    private static final String CLAIMANT_ACTIVITY = "ClaimantResponseNotifyApplicantSolicitor1";
 
     public ClaimantResponseTest() {
         super("claimant_response.bpmn", "CLAIMANT_RESPONSE_PROCESS_ID");

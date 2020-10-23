@@ -12,6 +12,7 @@ import uk.gov.hmcts.reform.ccd.client.model.AboutToStartOrSubmitCallbackResponse
 import uk.gov.hmcts.reform.ccd.client.model.CallbackRequest;
 import uk.gov.hmcts.reform.ccd.client.model.CallbackResponse;
 import uk.gov.hmcts.reform.ccd.client.model.CaseDetails;
+import uk.gov.hmcts.reform.unspec.helpers.CaseDetailsConverter;
 import uk.gov.hmcts.reform.unspec.model.BusinessProcess;
 
 import java.util.Collections;
@@ -29,6 +30,7 @@ import static uk.gov.hmcts.reform.unspec.callback.CaseEvent.NOTIFY_RESPONDENT_SO
 
 @SpringBootTest(classes = {
     CallbackHandlerFactory.class,
+    CaseDetailsConverter.class,
     JacksonAutoConfiguration.class},
     properties = {"spring.main.allow-bean-definition-overriding=true"}
 )
@@ -85,7 +87,7 @@ class CallbackHandlerFactoryTest {
 
                 @Override
                 public String camundaActivityId() {
-                    return "ClaimIssueEmailRespondentSolicitor1";
+                    return "CreateClaimNotifyRespondentSolicitor1";
                 }
 
                 @Override
@@ -121,11 +123,7 @@ class CallbackHandlerFactoryTest {
         CallbackRequest callbackRequest = CallbackRequest
             .builder()
             .eventId(CREATE_CLAIM.name())
-            .caseDetailsBefore(CaseDetails.builder().data(Map.of(
-                "businessProcess",
-                BusinessProcess.builder().build()
-            )).build())
-            .caseDetails(CaseDetails.builder().data(Map.of("state", "created")).build())
+            .caseDetailsBefore(CaseDetails.builder().data(Map.of("state", "created")).build())
             .build();
 
         CallbackParams params = CallbackParams.builder()
@@ -147,11 +145,7 @@ class CallbackHandlerFactoryTest {
             .eventId(NOTIFY_RESPONDENT_SOLICITOR1_FOR_CLAIM_ISSUE.name())
             .caseDetailsBefore(CaseDetails.builder().data(Map.of(
                 "businessProcess",
-                BusinessProcess.builder().activityId("ClaimIssueEmailRespondentSolicitor1").build()
-            )).build())
-            .caseDetails(CaseDetails.builder().data(Map.of(
-                "businessProcess",
-                BusinessProcess.builder().activityId("ClaimIssueEmailRespondentSolicitor1").build()
+                BusinessProcess.builder().activityId("CreateClaimNotifyRespondentSolicitor1").build()
             )).build())
             .build();
 
@@ -174,9 +168,28 @@ class CallbackHandlerFactoryTest {
             .eventId(NOTIFY_RESPONDENT_SOLICITOR1_FOR_CLAIM_ISSUE.name())
             .caseDetailsBefore(CaseDetails.builder().data(Map.of(
                 "businessProcess",
-                BusinessProcess.builder().build()
+                BusinessProcess.builder().activityId("unProcessedTask").build()
             )).build())
-            .caseDetails(CaseDetails.builder().data(Map.of(
+            .build();
+
+        CallbackParams params = CallbackParams.builder()
+            .request(callbackRequest)
+            .type(ABOUT_TO_SUBMIT)
+            .version(V_1)
+            .params(ImmutableMap.of(CallbackParams.Params.BEARER_TOKEN, BEARER_TOKEN))
+            .build();
+
+        CallbackResponse callbackResponse = callbackHandlerFactory.dispatch(params);
+
+        assertEquals(EVENT_HANDLED_RESPONSE, callbackResponse);
+    }
+
+    @Test
+    void shouldProcessEvent_whenEventHasNoCamundaTask() {
+        CallbackRequest callbackRequest = CallbackRequest
+            .builder()
+            .eventId(CREATE_CLAIM.name())
+            .caseDetailsBefore(CaseDetails.builder().data(Map.of(
                 "businessProcess",
                 BusinessProcess.builder().activityId("unProcessedTask").build()
             )).build())
@@ -195,18 +208,10 @@ class CallbackHandlerFactoryTest {
     }
 
     @Test
-    void shouldProcessEvent_whenEventHasNoCamundaActivityId() {
+    void shouldProcessEvent_whenEventHasNoCaseDetailsBefore() {
         CallbackRequest callbackRequest = CallbackRequest
             .builder()
             .eventId(CREATE_CLAIM.name())
-            .caseDetailsBefore(CaseDetails.builder().data(Map.of(
-                "businessProcess",
-                BusinessProcess.builder().build()
-            )).build())
-            .caseDetails(CaseDetails.builder().data(Map.of(
-                "businessProcess",
-                BusinessProcess.builder().activityId("unProcessedTask").build()
-            )).build())
             .build();
 
         CallbackParams params = CallbackParams.builder()
