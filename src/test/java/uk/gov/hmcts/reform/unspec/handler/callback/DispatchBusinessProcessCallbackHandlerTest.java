@@ -49,20 +49,10 @@ class DispatchBusinessProcessCallbackHandlerTest extends BaseCallbackHandlerTest
 
             var response = (AboutToStartOrSubmitCallbackResponse) handler.handle(params);
 
-            assertThat(response.getData()).extracting("businessProcess")
-                .extracting("status").isEqualTo(DISPATCHED.name());
             assertThat(response.getData())
                 .extracting("businessProcess")
-                .extracting("camundaEvent")
-                .isEqualTo("testCamundaEvent");
-            assertThat(response.getData())
-                .extracting("businessProcess")
-                .extracting("activityId")
-                .isNull();
-            assertThat(response.getData())
-                .extracting("businessProcess")
-                .extracting("processInstanceId")
-                .isNull();
+                .extracting("status", "camundaEvent", "activityId", "processInstanceId")
+                .containsExactly(DISPATCHED.name(), "testCamundaEvent", null, null);
         }
 
         @ParameterizedTest

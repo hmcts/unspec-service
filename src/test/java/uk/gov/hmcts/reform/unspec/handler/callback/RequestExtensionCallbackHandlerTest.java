@@ -169,13 +169,8 @@ class RequestExtensionCallbackHandlerTest extends BaseCallbackHandlerTest {
 
             assertThat(response.getData())
                 .extracting("businessProcess")
-                .extracting("camundaEvent")
-                .isEqualTo(REQUEST_EXTENSION.name());
-
-            assertThat(response.getData())
-                .extracting("businessProcess")
-                .extracting("status")
-                .isEqualTo("READY");
+                .extracting("camundaEvent", "status")
+                .containsExactly(REQUEST_EXTENSION.name(), "READY");
         }
     }
 
