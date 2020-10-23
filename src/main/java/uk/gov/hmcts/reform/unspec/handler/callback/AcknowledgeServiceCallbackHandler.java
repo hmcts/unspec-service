@@ -71,7 +71,7 @@ public class AcknowledgeServiceCallbackHandler extends CallbackHandler {
         CaseData caseData = callbackParams.getCaseData();
         LocalDateTime responseDeadline = caseData.getRespondentSolicitor1ResponseDeadline();
         LocalDate newResponseDate = workingDayIndicator.getNextWorkingDay(responseDeadline.plusDays(14).toLocalDate());
-        CaseData.CaseDataBuilder caseDataBuilder = callbackParams.getCaseData().toBuilder()
+        CaseData.CaseDataBuilder caseDataBuilder = caseData.toBuilder()
             .respondentSolicitor1ResponseDeadline(newResponseDate.atTime(MID_NIGHT));
 
         CaseData caseDataUpdated = businessProcessService.updateBusinessProcess(
