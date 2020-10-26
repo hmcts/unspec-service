@@ -7,10 +7,8 @@ import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.springframework.stereotype.Component;
 import uk.gov.hmcts.reform.ccd.client.model.AboutToStartOrSubmitCallbackResponse;
-import uk.gov.hmcts.reform.ccd.client.model.CaseDetails;
 import uk.gov.hmcts.reform.unspec.callback.CallbackParams;
 import uk.gov.hmcts.reform.unspec.callback.CaseEvent;
-import uk.gov.hmcts.reform.unspec.helpers.CaseDetailsConverter;
 import uk.gov.hmcts.reform.unspec.model.CaseData;
 
 import java.util.List;
@@ -27,19 +25,16 @@ public class NoOngoingBusinessProcessAspect {
     public static final String ERROR_MESSAGE = "There is a technical issue causing a delay. "
         + "You do not need to do anything. Please come back later.";
 
-    private final CaseDetailsConverter caseDetailsConverter;
-
     @Around("execution(* *(*)) && @annotation(NoOngoingBusinessProcess) && args(callbackParams))")
     public Object checkOngoingBusinessProcess(
         ProceedingJoinPoint joinPoint,
         CallbackParams callbackParams
     ) throws Throwable {
-        if (callbackParams.getType() == SUBMITTED) {
+        CaseEvent caseEvent = CaseEvent.valueOf(callbackParams.getRequest().getEventId());
+        if (callbackParams.getType() == SUBMITTED || caseEvent.isCamundaEvent()) {
             return joinPoint.proceed();
         }
-        CaseEvent caseEvent = CaseEvent.valueOf(callbackParams.getRequest().getEventId());
-        CaseDetails caseDetails = callbackParams.getRequest().getCaseDetails();
-        CaseData caseData = caseDetailsConverter.toCaseData(caseDetails);
+        CaseData caseData = callbackParams.getCaseData();
         if (caseData.hasNoOngoingBusinessProcess() || caseEvent.isCamundaEvent()) {
             return joinPoint.proceed();
         } else {

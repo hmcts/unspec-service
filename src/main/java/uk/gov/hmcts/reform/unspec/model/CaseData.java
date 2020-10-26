@@ -1,5 +1,7 @@
 package uk.gov.hmcts.reform.unspec.model;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonUnwrapped;
 import lombok.Builder;
 import lombok.Data;
 import uk.gov.hmcts.reform.unspec.enums.AllocatedTrack;
@@ -12,6 +14,7 @@ import uk.gov.hmcts.reform.unspec.enums.ServedDocuments;
 import uk.gov.hmcts.reform.unspec.enums.YesOrNo;
 import uk.gov.hmcts.reform.unspec.model.common.Element;
 import uk.gov.hmcts.reform.unspec.model.documents.CaseDocument;
+import uk.gov.hmcts.reform.unspec.model.dq.Respondent1DQ;
 import uk.gov.hmcts.reform.unspec.validation.groups.ConfirmServiceDateGroup;
 import uk.gov.hmcts.reform.unspec.validation.interfaces.HasServiceDateTheSameAsOrAfterIssueDate;
 
@@ -28,7 +31,9 @@ import static uk.gov.hmcts.reform.unspec.enums.BusinessProcessStatus.FINISHED;
 @HasServiceDateTheSameAsOrAfterIssueDate(groups = ConfirmServiceDateGroup.class)
 public class CaseData {
 
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private final Long ccdCaseReference;
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private final CaseState ccdState;
     private final SolicitorReferences solicitorReferences;
     private final CourtLocation courtLocation;
@@ -90,6 +95,9 @@ public class CaseData {
     private final CloseClaim discontinueClaim;
 
     private final BusinessProcess businessProcess;
+
+    @JsonUnwrapped
+    private final Respondent1DQ respondent1DQ;
 
     public boolean hasNoOngoingBusinessProcess() {
         return businessProcess == null

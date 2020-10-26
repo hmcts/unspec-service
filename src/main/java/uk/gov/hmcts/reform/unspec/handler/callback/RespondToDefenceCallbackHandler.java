@@ -1,6 +1,5 @@
 package uk.gov.hmcts.reform.unspec.handler.callback;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import uk.gov.hmcts.reform.ccd.client.model.AboutToStartOrSubmitCallbackResponse;
@@ -10,9 +9,12 @@ import uk.gov.hmcts.reform.unspec.callback.Callback;
 import uk.gov.hmcts.reform.unspec.callback.CallbackHandler;
 import uk.gov.hmcts.reform.unspec.callback.CallbackParams;
 import uk.gov.hmcts.reform.unspec.callback.CaseEvent;
-import uk.gov.hmcts.reform.unspec.enums.DefendantResponseType;
 import uk.gov.hmcts.reform.unspec.enums.YesOrNo;
-import uk.gov.hmcts.reform.unspec.model.BusinessProcess;
+import uk.gov.hmcts.reform.unspec.helpers.CaseDetailsConverter;
+import uk.gov.hmcts.reform.unspec.model.CaseData;
+import uk.gov.hmcts.reform.unspec.service.BusinessProcessService;
+import uk.gov.hmcts.reform.unspec.service.flowstate.FlowState;
+import uk.gov.hmcts.reform.unspec.service.flowstate.StateFlowEngine;
 
 import java.util.Collections;
 import java.util.List;
@@ -23,17 +25,18 @@ import static uk.gov.hmcts.reform.unspec.callback.CallbackType.ABOUT_TO_START;
 import static uk.gov.hmcts.reform.unspec.callback.CallbackType.ABOUT_TO_SUBMIT;
 import static uk.gov.hmcts.reform.unspec.callback.CallbackType.SUBMITTED;
 import static uk.gov.hmcts.reform.unspec.callback.CaseEvent.CLAIMANT_RESPONSE;
-import static uk.gov.hmcts.reform.unspec.enums.DefendantResponseType.FULL_DEFENCE;
 import static uk.gov.hmcts.reform.unspec.enums.YesOrNo.YES;
+import static uk.gov.hmcts.reform.unspec.service.flowstate.FlowState.fromFullName;
 
 @Service
 @RequiredArgsConstructor
 public class RespondToDefenceCallbackHandler extends CallbackHandler {
 
     private static final List<CaseEvent> EVENTS = Collections.singletonList(CLAIMANT_RESPONSE);
-    public static final String APPLICANT_1_PROCEEDING = "applicant1ProceedWithClaim";
 
-    private final ObjectMapper mapper;
+    private final BusinessProcessService businessProcessService;
+    private final StateFlowEngine stateFlowEngine;
+    private final CaseDetailsConverter caseDetailsConverter;
 
     @Override
     public List<CaseEvent> handledEvents() {
@@ -50,24 +53,18 @@ public class RespondToDefenceCallbackHandler extends CallbackHandler {
     }
 
     private CallbackResponse handleNotifications(CallbackParams callbackParams) {
-        Map<String, Object> data = callbackParams.getRequest().getCaseDetails().getData();
-        YesOrNo proceeding = mapper.convertValue(data.get(APPLICANT_1_PROCEEDING), YesOrNo.class);
-        var response = mapper.convertValue(data.get("respondent1ClaimResponseType"), DefendantResponseType.class);
-        if (response == FULL_DEFENCE && proceeding == YES) {
-            data.put(
-                "businessProcess",
-                BusinessProcess.builder().activityId("CaseTransferredToLocalCourtHandling").build()
-            );
+        CaseData caseData = callbackParams.getCaseData();
+        if (fromFullName(stateFlowEngine.evaluate(caseData).getState().getName()) == FlowState.Main.FULL_DEFENCE) {
+            caseData = businessProcessService.updateBusinessProcess(caseData, CLAIMANT_RESPONSE);
         }
 
         return AboutToStartOrSubmitCallbackResponse.builder()
-            .data(data)
+            .data(caseDetailsConverter.toMap(caseData))
             .build();
     }
 
     private SubmittedCallbackResponse buildConfirmation(CallbackParams callbackParams) {
-        Map<String, Object> data = callbackParams.getRequest().getCaseDetails().getData();
-        YesOrNo proceeding = mapper.convertValue(data.get(APPLICANT_1_PROCEEDING), YesOrNo.class);
+        YesOrNo proceeding = callbackParams.getCaseData().getApplicant1ProceedWithClaim();
 
         String claimNumber = "TBC";
         String dqLink = "http://www.google.com";
