@@ -37,8 +37,8 @@ class CreateClaimTest extends BpmnBaseTest {
 
         //complete the notification
         ExternalTask notificationTask = assertNextExternalTask(PROCESS_CASE_EVENT);
-        assertCompleteExternalTask(notificationTask, PROCESS_CASE_EVENT,
-                                   NOTIFY_RESPONDENT_SOLICITOR_1, NOTIFY_RESPONDENT_SOLICITOR_1_ACTIVITY_ID);
+        assertCompleteExternalTask(notificationTask, PROCESS_CASE_EVENT, NOTIFY_RESPONDENT_SOLICITOR_1,
+                                   NOTIFY_RESPONDENT_SOLICITOR_1_ACTIVITY_ID);
 
         assertNoExternalTasksLeft();
     }

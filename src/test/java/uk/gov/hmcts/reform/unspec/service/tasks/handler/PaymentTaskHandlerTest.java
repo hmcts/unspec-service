@@ -56,10 +56,8 @@ class PaymentTaskHandlerTest {
         when(mockExternalTask.getWorkerId()).thenReturn("worker");
         when(mockExternalTask.getActivityId()).thenReturn("activityId");
 
-        Map<String, Object> variables = Map.of("caseId", CASE_ID,
-                                               "caseEvent", MAKE_PBA_PAYMENT.name()
-        );
-        when(mockExternalTask.getAllVariables()).thenReturn(variables);
+        when(mockExternalTask.getAllVariables())
+            .thenReturn(Map.of("caseId", CASE_ID, "caseEvent", MAKE_PBA_PAYMENT.name()));
     }
 
     @Nested
