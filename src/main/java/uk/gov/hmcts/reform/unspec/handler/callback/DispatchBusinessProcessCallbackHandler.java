@@ -1,6 +1,5 @@
 package uk.gov.hmcts.reform.unspec.handler.callback;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import uk.gov.hmcts.reform.ccd.client.model.AboutToStartOrSubmitCallbackResponse;
@@ -9,7 +8,9 @@ import uk.gov.hmcts.reform.unspec.callback.Callback;
 import uk.gov.hmcts.reform.unspec.callback.CallbackHandler;
 import uk.gov.hmcts.reform.unspec.callback.CallbackParams;
 import uk.gov.hmcts.reform.unspec.callback.CaseEvent;
+import uk.gov.hmcts.reform.unspec.helpers.CaseDetailsConverter;
 import uk.gov.hmcts.reform.unspec.model.BusinessProcess;
+import uk.gov.hmcts.reform.unspec.model.CaseData;
 
 import java.util.Collections;
 import java.util.List;
@@ -26,7 +27,7 @@ public class DispatchBusinessProcessCallbackHandler extends CallbackHandler {
 
     private static final List<CaseEvent> EVENTS = Collections.singletonList(DISPATCH_BUSINESS_PROCESS);
 
-    private final ObjectMapper mapper;
+    private final CaseDetailsConverter caseDetailsConverter;
 
     @Override
     protected Map<String, Callback> callbacks() {
@@ -39,17 +40,19 @@ public class DispatchBusinessProcessCallbackHandler extends CallbackHandler {
     }
 
     private CallbackResponse dispatchBusinessProcess(CallbackParams callbackParams) {
-        Map<String, Object> data = callbackParams.getRequest().getCaseDetails().getData();
-        BusinessProcess businessProcess = mapper.convertValue(data.get("businessProcess"), BusinessProcess.class);
+        CaseData caseData = callbackParams.getCaseData();
+        BusinessProcess businessProcess = caseData.getBusinessProcess();
+        CaseData.CaseDataBuilder caseDataBuilder = caseData.toBuilder();
         if (businessProcess.getStatus() == READY) {
-            data.put("businessProcess", BusinessProcess.builder()
-                .camundaEvent(businessProcess.getCamundaEvent())
-                .status(DISPATCHED)
-                .build());
+            caseDataBuilder
+                .businessProcess(BusinessProcess.builder()
+                                     .camundaEvent(businessProcess.getCamundaEvent())
+                                     .status(DISPATCHED)
+                                     .build());
         }
 
         return AboutToStartOrSubmitCallbackResponse.builder()
-            .data(data)
+            .data(caseDetailsConverter.toMap(caseDataBuilder.build()))
             .build();
     }
 }

@@ -58,8 +58,8 @@ public class ConfirmServiceCallbackHandler extends CallbackHandler {
 
     private final Validator validator;
     private final CertificateOfServiceGenerator certificateOfServiceGenerator;
-    private final CaseDetailsConverter caseDetailsConverter;
     private final DeadlinesCalculator deadlinesCalculator;
+    private final CaseDetailsConverter caseDetailsConverter;
 
     @Override
     protected Map<String, Callback> callbacks() {
@@ -78,46 +78,41 @@ public class ConfirmServiceCallbackHandler extends CallbackHandler {
     }
 
     private CallbackResponse prepopulateServedDocuments(CallbackParams callbackParams) {
-        List<ServedDocuments> servedDocuments = List.of(ServedDocuments.CLAIM_FORM);
-
-        Map<String, Object> data = callbackParams.getRequest().getCaseDetails().getData();
-        data.put("servedDocuments", servedDocuments);
+        CaseData caseData = callbackParams.getCaseData().toBuilder()
+            .servedDocuments(List.of(ServedDocuments.CLAIM_FORM))
+            .build();
 
         return AboutToStartOrSubmitCallbackResponse.builder()
-            .data(data)
+            .data(caseDetailsConverter.toMap(caseData))
             .build();
     }
 
     private CallbackResponse checkServedDocumentsOtherHasWhiteSpace(CallbackParams callbackParams) {
-        Map<String, Object> data = callbackParams.getRequest().getCaseDetails().getData();
         List<String> errors = new ArrayList<>();
-        var servedDocumentsOther = data.get("servedDocumentsOther");
+        String servedDocumentsOther = callbackParams.getCaseData().getServedDocumentsOther();
 
-        if (servedDocumentsOther != null && servedDocumentsOther.toString().isBlank()) {
+        if (servedDocumentsOther != null && servedDocumentsOther.isBlank()) {
             errors.add("CONTENT TBC: please enter a valid value for other documents");
         }
 
         return AboutToStartOrSubmitCallbackResponse.builder()
-            .data(data)
             .errors(errors)
             .build();
     }
 
     private CallbackResponse validateServiceDate(CallbackParams callbackParams) {
-        Map<String, Object> data = callbackParams.getRequest().getCaseDetails().getData();
-        CaseData caseData = caseDetailsConverter.toCaseData(callbackParams.getRequest().getCaseDetails());
+        CaseData caseData = callbackParams.getCaseData();
         List<String> errors = validator.validate(caseData, ConfirmServiceDateGroup.class).stream()
             .map(ConstraintViolation::getMessage)
             .collect(Collectors.toList());
 
         return AboutToStartOrSubmitCallbackResponse.builder()
-            .data(data)
             .errors(errors)
             .build();
     }
 
     private CallbackResponse prepareCertificateOfService(CallbackParams callbackParams) {
-        CaseData caseData = caseDetailsConverter.toCaseData(callbackParams.getRequest().getCaseDetails());
+        CaseData caseData = callbackParams.getCaseData();
         ServiceMethod serviceMethod = caseData.getServiceMethodToRespondentSolicitor1();
         LocalDateTime serviceDate;
         if (serviceMethod.requiresDateEntry()) {
@@ -125,39 +120,34 @@ public class ConfirmServiceCallbackHandler extends CallbackHandler {
         } else {
             serviceDate = caseData.getServiceDateTimeToRespondentSolicitor1();
         }
-        Map<String, Object> data = callbackParams.getRequest().getCaseDetails().getData();
-
         LocalDate deemedDateOfService = deadlinesCalculator.calculateDeemedDateOfService(
             serviceDate, serviceMethod.getType());
         LocalDateTime responseDeadline = deadlinesCalculator.calculateDefendantResponseDeadline(deemedDateOfService);
 
-        data.put("deemedServiceDateToRespondentSolicitor1", deemedDateOfService);
-        data.put("respondentSolicitor1ResponseDeadline", responseDeadline);
-
-        CaseData caseDateUpdated = caseData.toBuilder()
+        CaseData.CaseDataBuilder caseDataBuilder = caseData.toBuilder()
             .deemedServiceDateToRespondentSolicitor1(deemedDateOfService)
-            .respondentSolicitor1ResponseDeadline(responseDeadline)
-            .build();
+            .respondentSolicitor1ResponseDeadline(responseDeadline);
 
         CaseDocument certificateOfService = certificateOfServiceGenerator.generate(
-            caseDateUpdated,
+            caseDataBuilder.build(),
             callbackParams.getParams().get(BEARER_TOKEN).toString()
         );
+
         List<Element<CaseDocument>> systemGeneratedCaseDocuments = caseData.getSystemGeneratedCaseDocuments();
         if (ObjectUtils.isEmpty(systemGeneratedCaseDocuments)) {
-            data.put("systemGeneratedCaseDocuments", wrapElements(certificateOfService));
+            caseDataBuilder.systemGeneratedCaseDocuments(wrapElements(certificateOfService));
         } else {
             systemGeneratedCaseDocuments.add(element(certificateOfService));
-            data.put("systemGeneratedCaseDocuments", systemGeneratedCaseDocuments);
+            caseDataBuilder.systemGeneratedCaseDocuments(systemGeneratedCaseDocuments);
         }
 
         return AboutToStartOrSubmitCallbackResponse.builder()
-            .data(data)
+            .data(caseDetailsConverter.toMap(caseDataBuilder.build()))
             .build();
     }
 
     private SubmittedCallbackResponse buildConfirmation(CallbackParams callbackParams) {
-        CaseData caseData = caseDetailsConverter.toCaseData(callbackParams.getRequest().getCaseDetails());
+        CaseData caseData = callbackParams.getCaseData();
 
         LocalDate deemedDateOfService = caseData.getDeemedServiceDateToRespondentSolicitor1();
         String formattedDeemedDateOfService = formatLocalDate(deemedDateOfService, DATE);

@@ -25,12 +25,19 @@ public class CallbackParamsBuilder {
     public CallbackParamsBuilder of(CallbackType type, CaseData caseData) {
         this.type = type;
         this.caseData = caseData;
+        this.request = CallbackRequest.builder()
+            .caseDetails(CaseDetailsBuilder.builder()
+                             .data(caseData)
+                             .build())
+            .build();
+        this.params = Map.of(CallbackParams.Params.BEARER_TOKEN, "BEARER_TOKEN");
         return this;
     }
 
     public CallbackParamsBuilder of(CallbackType type, CaseDetails caseDetails) {
         this.type = type;
         this.request = CallbackRequest.builder().caseDetails(caseDetails).build();
+        this.params = Map.of(CallbackParams.Params.BEARER_TOKEN, "BEARER_TOKEN");
         return this;
     }
 
@@ -51,6 +58,11 @@ public class CallbackParamsBuilder {
 
     public CallbackParamsBuilder pageId(String pageId) {
         this.pageId = pageId;
+        return this;
+    }
+
+    public CallbackParamsBuilder params(Map<CallbackParams.Params, Object> params) {
+        this.params = params;
         return this;
     }
 
