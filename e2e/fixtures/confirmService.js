@@ -2,28 +2,28 @@ const dataHelper = require('../api/dataHelper.js');
 
 module.exports = {
   valid: {
-    servedDocuments: {
+    ServedDocuments: {
       servedDocuments: ['CLAIM_FORM']
     },
-    upload: {
+    Upload: {
       servedDocumentFiles: {
         particularsOfClaim: [dataHelper.document('testDocument.pdf')]
       }
     },
-    method: {
+    Method: {
       serviceMethodToRespondentSolicitor1: {
         type: 'POST'
       }
     },
-    location: {
+    Location: {
       serviceLocationToRespondentSolicitor1: {
         location: 'RESIDENCE'
       }
     },
-    date: {
+    Date: {
       serviceDateToRespondentSolicitor1: dataHelper.date()
     },
-    statementOfTruth: {
+    StatementOfTruth: {
       applicant1ServiceStatementOfTruthToRespondentSolicitor1: {
         name: 'Foo Bar',
         role: 'Service Test Solicitor',
@@ -31,7 +31,7 @@ module.exports = {
     },
   },
   invalid: {
-    date: {
+    Date: {
       yesterday: {
         serviceDateToRespondentSolicitor1: dataHelper.date(-1)
       },

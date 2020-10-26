@@ -3,18 +3,18 @@ const config = require('../config');
 
 module.exports = {
   valid: {
-    references: {
+    References: {
       solicitorReferences: {
         applicantSolicitor1Reference: 'Applicant test reference',
         respondentSolicitor1Reference: 'Respondent test reference'
       }
     },
-    court: {
+    Court: {
       courtLocation: {
         applicantPreferredCourt: 'Test Preferred Court'
       }
     },
-    claimant: {
+    Claimant: {
       applicant1: {
         type: 'COMPANY',
         companyName: 'Test Inc',
@@ -29,7 +29,7 @@ module.exports = {
         }
       }
     },
-    applicant1LitigationFriend: {
+    ClaimantLitigationFriend: {
       applicant1LitigationFriend: {
         required: 'Yes',
         fullName: 'Bob the litigant friend',
@@ -45,7 +45,7 @@ module.exports = {
         }
       }
     },
-    defendant: {
+    Defendant: {
       respondent1: {
         type: 'ORGANISATION',
         organisationName: 'Test Defendant Org',
@@ -60,23 +60,23 @@ module.exports = {
         }
       }
     },
-    claimType: {
+    ClaimType: {
       claimType: 'PERSONAL_INJURY'
     },
-    personalInjuryType: {
+    PersonalInjuryType: {
       personalInjuryType: 'ROAD_ACCIDENT'
     },
-    upload: {
+    Upload: {
       servedDocumentFiles: {
         particularsOfClaim: [dataHelper.document('testDocument.pdf')]
       }
     },
-    claimValue: {
+    ClaimValue: {
       claimValue: {
         statementOfValueInPennies: '500'
       }
     },
-    statementOfTruth: {
+    StatementOfTruth: {
       applicantSolicitor1ClaimStatementOfTruth: {
         name: 'John Doe',
         role: 'Test Solicitor'
