@@ -7,13 +7,13 @@ import org.springframework.stereotype.Component;
 import uk.gov.hmcts.reform.unspec.service.tasks.handler.CaseEventTaskHandler;
 
 @Component
-public class CaseEventExternalTaskListener {
+public abstract class CaseEventExternalTaskListener implements ExternalTaskClient {
 
     private static final String TOPIC = "processCaseEvent";
 
     @Autowired
-    private CaseEventExternalTaskListener(CaseEventTaskHandler caseEventTaskHandler, ExternalTaskClient client) {
-        TopicSubscriptionBuilder subscriptionBuilder = client.subscribe(TOPIC);
+    private CaseEventExternalTaskListener(CaseEventTaskHandler caseEventTaskHandler) {
+        TopicSubscriptionBuilder subscriptionBuilder = subscribe(TOPIC);
         subscriptionBuilder.handler(caseEventTaskHandler).open();
     }
 }

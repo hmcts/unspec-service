@@ -7,14 +7,13 @@ import org.springframework.stereotype.Component;
 import uk.gov.hmcts.reform.unspec.service.tasks.handler.StartBusinessProcessTaskHandler;
 
 @Component
-public class StartBusinessProcessExternalTaskListener {
+public abstract class StartBusinessProcessExternalTaskListener implements ExternalTaskClient {
 
     private static final String TOPIC = "START_BUSINESS_PROCESS";
 
     @Autowired
-    private StartBusinessProcessExternalTaskListener(StartBusinessProcessTaskHandler startBusinessProcessTaskHandler,
-                                                     ExternalTaskClient client) {
-        TopicSubscriptionBuilder subscriptionBuilder = client.subscribe(TOPIC);
+    private StartBusinessProcessExternalTaskListener(StartBusinessProcessTaskHandler startBusinessProcessTaskHandler) {
+        TopicSubscriptionBuilder subscriptionBuilder = subscribe(TOPIC);
         subscriptionBuilder.handler(startBusinessProcessTaskHandler).open();
     }
 }

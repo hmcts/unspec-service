@@ -7,13 +7,13 @@ import org.springframework.stereotype.Component;
 import uk.gov.hmcts.reform.unspec.service.tasks.handler.CaseStayedHandler;
 
 @Component
-public class CaseStayedExternalTaskListener {
+public abstract class CaseStayedExternalTaskListener implements ExternalTaskClient {
 
     private static final String TOPIC = "CASE_STAYED_FINDER";
 
     @Autowired
-    private CaseStayedExternalTaskListener(CaseStayedHandler caseStayedFinder, ExternalTaskClient client) {
-        TopicSubscriptionBuilder subscriptionBuilder = client.subscribe(TOPIC);
+    private CaseStayedExternalTaskListener(CaseStayedHandler caseStayedFinder) {
+        TopicSubscriptionBuilder subscriptionBuilder = subscribe(TOPIC);
         subscriptionBuilder.handler(caseStayedFinder).open();
     }
 }
