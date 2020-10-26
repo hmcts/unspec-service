@@ -32,7 +32,9 @@ public class NoOngoingBusinessProcessAspect {
     ) throws Throwable {
         CaseEvent caseEvent = CaseEvent.valueOf(callbackParams.getRequest().getEventId());
         CaseData caseData = callbackParams.getCaseData();
-        if (callbackParams.getType() == SUBMITTED || caseEvent.isCamundaEvent() || caseData.hasNoOngoingBusinessProcess()) {
+        if (callbackParams.getType() == SUBMITTED
+            || caseEvent.isCamundaEvent()
+            || caseData.hasNoOngoingBusinessProcess()) {
             return joinPoint.proceed();
         }
         log.info(format(
