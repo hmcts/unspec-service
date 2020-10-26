@@ -190,7 +190,7 @@ dependencyManagement {
   dependencies {
     dependency group: 'org.bouncycastle', name: 'bcpkix-jdk15on', version: '1.66'
     // CVE-2018-10237 - Unbounded memory allocation
-    dependencySet(group: 'com.google.guava', version: '29.0-jre') {
+    dependencySet(group: 'com.google.guava', version: '30.0-jre') {
       entry 'guava'
     }
   }
@@ -287,7 +287,7 @@ dependencies {
   implementation group: 'org.apache.tomcat.embed', name: 'tomcat-embed-core', version: '9.0.39'
   implementation group: 'org.apache.tomcat.embed', name: 'tomcat-embed-websocket', version: '9.0.39'
 
-  implementation group: 'org.elasticsearch', name: 'elasticsearch', version: '7.9.2'
+  implementation group: 'org.elasticsearch', name: 'elasticsearch', version: '7.9.3'
 
   implementation group: 'org.camunda.bpm', name: 'camunda-external-task-client', version: '1.4.0'
   implementation group: 'org.camunda.bpm.extension.rest', name: 'camunda-rest-client-spring-boot-starter', version: '0.0.4'
@@ -299,8 +299,8 @@ dependencies {
   implementation group: 'org.glassfish.jaxb', name: 'jaxb-runtime', version: '2.3.3'
 
   testImplementation group: 'org.mockito', name: 'mockito-core', version: '3.5.15'
-  testImplementation group: 'org.mockito', name: 'mockito-junit-jupiter', version: '3.5.13'
-  testImplementation group: 'org.mockito', name: 'mockito-inline', version: '3.5.13'
+  testImplementation group: 'org.mockito', name: 'mockito-junit-jupiter', version: '3.5.15'
+  testImplementation group: 'org.mockito', name: 'mockito-inline', version: '3.5.15'
 
   testAnnotationProcessor group: 'org.projectlombok', name: 'lombok', version: versions.lombok
   testCompileOnly group: 'org.projectlombok', name: 'lombok', version: versions.lombok
