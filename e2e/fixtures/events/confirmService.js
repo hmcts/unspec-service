@@ -1,4 +1,4 @@
-const dataHelper = require('../api/dataHelper.js');
+const dataHelper = require('../../api/dataHelper.js');
 
 module.exports = {
   valid: {

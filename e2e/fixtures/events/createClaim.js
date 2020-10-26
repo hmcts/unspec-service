@@ -1,5 +1,5 @@
-const dataHelper = require('../api/dataHelper');
-const config = require('../config');
+const dataHelper = require('../../api/dataHelper');
+const address = require('../address');
 
 module.exports = {
   valid: {
@@ -19,13 +19,13 @@ module.exports = {
         type: 'COMPANY',
         companyName: 'Test Inc',
         primaryAddress: {
-          AddressLine1: `${config.address.buildingAndStreet.lineOne + ' - claimant'}`,
-          AddressLine2: config.address.buildingAndStreet.lineTwo,
-          AddressLine3: config.address.buildingAndStreet.lineThree,
-          PostTown: config.address.town,
-          County: config.address.county,
-          Country: config.address.country,
-          PostCode: config.address.postcode
+          AddressLine1: `${address.buildingAndStreet.lineOne + ' - claimant'}`,
+          AddressLine2: address.buildingAndStreet.lineTwo,
+          AddressLine3: address.buildingAndStreet.lineThree,
+          PostTown: address.town,
+          County: address.county,
+          Country: address.country,
+          PostCode: address.postcode
         }
       }
     },
@@ -35,13 +35,13 @@ module.exports = {
         fullName: 'Bob the litigant friend',
         hasSameAddressAsLitigant: 'No',
         primaryAddress: {
-          AddressLine1: `${config.address.buildingAndStreet.lineOne + ' - litigant friend'}`,
-          AddressLine2: config.address.buildingAndStreet.lineTwo,
-          AddressLine3: config.address.buildingAndStreet.lineThree,
-          PostTown: config.address.town,
-          County: config.address.county,
-          Country: config.address.country,
-          PostCode: config.address.postcode
+          AddressLine1: `${address.buildingAndStreet.lineOne + ' - litigant friend'}`,
+          AddressLine2: address.buildingAndStreet.lineTwo,
+          AddressLine3: address.buildingAndStreet.lineThree,
+          PostTown: address.town,
+          County: address.county,
+          Country: address.country,
+          PostCode: address.postcode
         }
       }
     },
@@ -50,13 +50,13 @@ module.exports = {
         type: 'ORGANISATION',
         organisationName: 'Test Defendant Org',
         primaryAddress: {
-          AddressLine1: `${config.address.buildingAndStreet.lineOne + ' - defendant'}`,
-          AddressLine2: config.address.buildingAndStreet.lineTwo,
-          AddressLine3: config.address.buildingAndStreet.lineThree,
-          PostTown: config.address.town,
-          County: config.address.county,
-          Country: config.address.country,
-          PostCode: config.address.postcode
+          AddressLine1: `${address.buildingAndStreet.lineOne + ' - defendant'}`,
+          AddressLine2: address.buildingAndStreet.lineTwo,
+          AddressLine3: address.buildingAndStreet.lineThree,
+          PostTown: address.town,
+          County: address.county,
+          Country: address.country,
+          PostCode: address.postcode
         }
       }
     },

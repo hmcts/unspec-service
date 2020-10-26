@@ -58,9 +58,12 @@ const requestedCourtPage = require('./fragments/dq/requestedCourt.page');
 const hearingSupportRequirementsPage = require('./fragments/dq/hearingSupportRequirements.page');
 const furtherInformationPage = require('./fragments/dq/furtherInformation.page');
 
+const addressFixture = require('./fixtures/address.js')
+
 const baseUrl = process.env.URL || 'http://localhost:3333';
 const signedInSelector = 'exui-header';
 const CASE_HEADER = 'ccd-case-header > h1';
+const TEST_FILE_PATH = './e2e/fixtures/examplePDF.pdf';
 
 let caseId;
 
@@ -93,12 +96,12 @@ module.exports = function () {
       await this.clickContinue();
       await solicitorReferencesPage.enterReferences();
       await chooseCourtPage.enterCourt();
-      await party.enterParty('applicant1', config.address);
-      await claimantLitigationDetails.enterLitigantFriendWithDifferentAddressToClaimant(config.address, config.testFile);
-      await party.enterParty('respondent1', config.address);
+      await party.enterParty('applicant1', addressFixture);
+      await claimantLitigationDetails.enterLitigantFriendWithDifferentAddressToClaimant(addressFixture, TEST_FILE_PATH);
+      await party.enterParty('respondent1', addressFixture);
       await claimTypePage.selectClaimType();
       await personalInjuryTypePage.selectPersonalInjuryType();
-      await uploadParticularsOfClaim.upload(config.testFile);
+      await uploadParticularsOfClaim.upload(TEST_FILE_PATH);
       await claimValuePage.enterClaimValue();
       await statementOfTruth.enterNameAndRole('claim');
       await event.submit('Issue claim', 'Your claim has been issued');
@@ -111,7 +114,7 @@ module.exports = function () {
       await testingSupport.resetBusinessProcess(caseId);
       await caseViewPage.startEvent('Confirm service');
       await servedDocumentsPage.enterServedDocuments();
-      await uploadDocumentsPage.uploadServedDocuments(config.testFile);
+      await uploadDocumentsPage.uploadServedDocuments(TEST_FILE_PATH);
       await serviceMethodPage.selectPostMethod();
       await serviceLocationPage.selectUsualResidence();
       await serviceDatePage.enterServiceDate();
@@ -153,7 +156,7 @@ module.exports = function () {
       await testingSupport.resetBusinessProcess(caseId);
       await caseViewPage.startEvent('Respond to claim');
       await responseTypePage.selectFullDefence();
-      await uploadResponsePage.uploadResponseDocuments(config.testFile);
+      await uploadResponsePage.uploadResponseDocuments(TEST_FILE_PATH);
       await defendantDetails.verifyDetails();
       await confirmDetailsPage.confirmReference();
       await fileDirectionsQuestionnairePage.fileDirectionsQuestionnaire(parties.RESPONDENT_SOLICITOR_1);
@@ -175,7 +178,7 @@ module.exports = function () {
       await testingSupport.resetBusinessProcess(caseId);
       await caseViewPage.startEvent('View and respond to defence');
       await proceedPage.proceedWithClaim();
-      await uploadResponseDocumentPage.uploadResponseDocuments(config.testFile);
+      await uploadResponseDocumentPage.uploadResponseDocuments(TEST_FILE_PATH);
       await event.submit('Submit your response', 'You\'ve decided to proceed with the claim');
       await event.returnToCaseDetails();
     },
