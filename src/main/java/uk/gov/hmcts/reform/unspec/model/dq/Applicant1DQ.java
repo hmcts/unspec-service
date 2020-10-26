@@ -1,5 +1,6 @@
 package uk.gov.hmcts.reform.unspec.model.dq;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Builder;
 import lombok.Data;
 import lombok.Setter;
@@ -25,41 +26,49 @@ public class Applicant1DQ implements DQ {
     private final StatementOfTruth applicant1DQStatementOfTruth;
 
     @Override
+    @JsonProperty("applicant1DQFileDirectionsQuestionnaire")
     public FileDirectionsQuestionnaire getFileDirectionQuestionnaire() {
         return applicant1DQFileDirectionsQuestionnaire;
     }
 
     @Override
+    @JsonProperty("applicant1DQDisclosureOfElectronicDocuments")
     public DisclosureOfElectronicDocuments getDisclosureOfElectronicDocuments() {
         return applicant1DQDisclosureOfElectronicDocuments;
     }
 
     @Override
+    @JsonProperty("applicant1DQDisclosureOfNonElectronicDocuments")
     public String getDisclosureOfNonElectronicDocuments() {
         return applicant1DQDisclosureOfNonElectronicDocuments;
     }
 
     @Override
+    @JsonProperty("applicant1DQDisclosureReport")
     public DisclosureReport getDisclosureReport() {
         return applicant1DQDisclosureReport;
     }
 
     @Override
+    @JsonProperty("applicant1DQExperts")
     public Experts getExperts() {
         return applicant1DQExperts;
     }
 
     @Override
+    @JsonProperty("applicant1DQWitnesses")
     public Witnesses getWitnesses() {
         return applicant1DQWitnesses;
     }
 
     @Override
+    @JsonProperty("applicant1DQHearing")
     public Hearing getHearing() {
         return applicant1DQHearing;
     }
 
     @Override
+    @JsonProperty("applicant1DQDraftDirections")
     public Document getDraftDirections() {
         return applicant1DQDraftDirections;
     }
@@ -70,16 +79,19 @@ public class Applicant1DQ implements DQ {
     }
 
     @Override
+    @JsonProperty("applicant1DQHearingSupport")
     public HearingSupport getHearingSupport() {
         return applicant1DQHearingSupport;
     }
 
     @Override
+    @JsonProperty("applicant1DQFurtherInformation")
     public FurtherInformation getFurtherInformation() {
         return applicant1DQFurtherInformation;
     }
 
     @Override
+    @JsonProperty("applicant1DQStatementOfTruth")
     public StatementOfTruth getStatementOfTruth() {
         return applicant1DQStatementOfTruth;
     }
