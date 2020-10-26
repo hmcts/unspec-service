@@ -25,7 +25,6 @@ import uk.gov.hmcts.reform.unspec.service.UserService;
 
 import java.net.URI;
 import java.time.LocalDateTime;
-import java.time.ZoneId;
 import java.util.Optional;
 
 import static java.util.Collections.singletonList;
@@ -76,7 +75,7 @@ public class DocumentManagementService {
                                   .build())
                 .documentName(originalFileName)
                 .documentType(pdf.getDocumentType())
-                .createdDatetime(LocalDateTime.now(ZoneId.of("UTC")))
+                .createdDatetime(LocalDateTime.now())
                 .documentSize(document.size)
                 .createdBy(UNSPEC)
                 .build();
