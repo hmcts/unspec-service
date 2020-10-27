@@ -222,7 +222,7 @@ class StateFlowEngineTest {
         @ParameterizedTest(name = "{index} => should withdraw claim after claim state {0}")
         void shouldReturnValidState_whenCaseIsWithdrawnAfter(FlowState.Main flowState) {
             CaseData caseData = CaseDataBuilder.builder().withdrawClaimFrom(flowState).build();
-            System.out.println("State::" + flowState);
+
             StateFlow stateFlow = stateFlowEngine.evaluate(caseData);
 
             assertThat(FlowState.fromFullName(stateFlow.getState().getName()))
@@ -239,7 +239,7 @@ class StateFlowEngineTest {
         @ParameterizedTest(name = "{index} => should discontinue claim after claim state {0}")
         void shouldReturnValidState_whenCaseIsDiscontinuedAfter(FlowState.Main flowState) {
             CaseData caseData = CaseDataBuilder.builder().discontinueClaimFrom(flowState).build();
-            System.out.println("State::" + flowState);
+
             StateFlow stateFlow = stateFlowEngine.evaluate(caseData);
 
             assertThat(FlowState.fromFullName(stateFlow.getState().getName()))
