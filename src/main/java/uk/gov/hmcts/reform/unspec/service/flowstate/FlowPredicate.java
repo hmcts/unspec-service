@@ -4,6 +4,8 @@ import uk.gov.hmcts.reform.unspec.model.CaseData;
 
 import java.util.function.Predicate;
 
+import static java.util.Objects.isNull;
+import static uk.gov.hmcts.reform.unspec.enums.CaseState.CLOSED;
 import static uk.gov.hmcts.reform.unspec.enums.CaseState.STAYED;
 
 public class FlowPredicate {
@@ -35,6 +37,12 @@ public class FlowPredicate {
 
     public static final Predicate<CaseData> schedulerStayClaim = caseData ->
         caseData.getCcdState() == STAYED;
+
+    public static final Predicate<CaseData> claimWithdrawn = caseData ->
+        caseData.getWithdrawClaim() != null;
+
+    public static final Predicate<CaseData> claimDiscontinued = caseData ->
+        caseData.getDiscontinueClaim() != null;
 
     private FlowPredicate() {
         //Utility class

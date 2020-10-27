@@ -2,11 +2,18 @@ package uk.gov.hmcts.reform.unspec.service.flowstate;
 
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.EnumSource;
 import uk.gov.hmcts.reform.unspec.model.CaseData;
+import uk.gov.hmcts.reform.unspec.model.CloseClaim;
 import uk.gov.hmcts.reform.unspec.sampledata.CaseDataBuilder;
+
+import java.time.LocalDate;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static uk.gov.hmcts.reform.unspec.service.flowstate.FlowPredicate.claimDiscontinued;
+import static uk.gov.hmcts.reform.unspec.service.flowstate.FlowPredicate.claimWithdrawn;
 import static uk.gov.hmcts.reform.unspec.service.flowstate.FlowPredicate.claimantConfirmService;
 import static uk.gov.hmcts.reform.unspec.service.flowstate.FlowPredicate.claimantIssueClaim;
 import static uk.gov.hmcts.reform.unspec.service.flowstate.FlowPredicate.claimantRespondToDefence;
@@ -143,6 +150,48 @@ class FlowPredicateTest {
         void shouldReturnFalse_whenCaseDataAtStateFullDefence() {
             CaseData caseData = CaseDataBuilder.builder().atStateFullDefence().build();
             assertFalse(schedulerStayClaim.test(caseData));
+        }
+    }
+
+    @Nested
+    class WithdrawnClaimPredicate {
+
+        @ParameterizedTest
+        @EnumSource(value = FlowState.Main.class)
+        void shouldReturnTrue_whenCaseDataAtStateClaimWithdrawn(FlowState.Main flowState) {
+            CaseData caseData = CaseDataBuilder.builder()
+                .atState(flowState)
+                .withdrawClaim(CloseClaim.builder().date(LocalDate.now()).reason("My reason").build())
+                .build();
+            assertTrue(claimWithdrawn.test(caseData));
+        }
+
+        @ParameterizedTest
+        @EnumSource(value = FlowState.Main.class, mode = EnumSource.Mode.EXCLUDE, names = {"CLAIM_WITHDRAWN"})
+        void shouldReturnFalse_whenCaseDataIsNotAtStateClaimWithdrawn(FlowState.Main flowState) {
+            CaseData caseData = CaseDataBuilder.builder().atState(flowState).build();
+            assertFalse(claimWithdrawn.test(caseData));
+        }
+    }
+
+    @Nested
+    class DiscontinuedClaimPredicate {
+
+        @ParameterizedTest
+        @EnumSource(value = FlowState.Main.class)
+        void shouldReturnTrue_whenCaseDataAtStateClaimDiscontinued(FlowState.Main flowState) {
+            CaseData caseData = CaseDataBuilder.builder()
+                .atState(flowState)
+                .disccontinueClaim(CloseClaim.builder().date(LocalDate.now()).reason("My reason").build())
+                .build();
+            assertTrue(claimDiscontinued.test(caseData));
+        }
+
+        @ParameterizedTest
+        @EnumSource(value = FlowState.Main.class, mode = EnumSource.Mode.EXCLUDE, names = {"CLAIM_DISCONTINUED"})
+        void shouldReturnFalse_whenCaseDataIsNotAtStateClaimDiscontinued(FlowState.Main flowState) {
+            CaseData caseData = CaseDataBuilder.builder().atState(flowState).build();
+            assertFalse(claimDiscontinued.test(caseData));
         }
     }
 }
