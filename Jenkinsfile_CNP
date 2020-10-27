@@ -102,6 +102,7 @@ withPipeline(type, product, component) {
       eval \$(./bin/variables/load-preview-environment-variables.sh ${CHANGE_ID})
       ./bin/add-roles-preview.sh
       ./bin/import-ccd-definition.sh
+      ./bin/import-bpmn-diagram.sh
     """
 
     env.URL="https://xui-unspec-service-pr-${CHANGE_ID}.service.core-compute-preview.internal"
