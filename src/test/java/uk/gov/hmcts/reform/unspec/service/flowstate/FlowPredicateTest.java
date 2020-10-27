@@ -5,10 +5,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.EnumSource;
 import uk.gov.hmcts.reform.unspec.model.CaseData;
-import uk.gov.hmcts.reform.unspec.model.CloseClaim;
 import uk.gov.hmcts.reform.unspec.sampledata.CaseDataBuilder;
-
-import java.time.LocalDate;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -159,10 +156,7 @@ class FlowPredicateTest {
         @ParameterizedTest
         @EnumSource(value = FlowState.Main.class)
         void shouldReturnTrue_whenCaseDataAtStateClaimWithdrawn(FlowState.Main flowState) {
-            CaseData caseData = CaseDataBuilder.builder()
-                .atState(flowState)
-                .withdrawClaim(CloseClaim.builder().date(LocalDate.now()).reason("My reason").build())
-                .build();
+            CaseData caseData = CaseDataBuilder.builder().withdrawClaimFrom(flowState).build();
             assertTrue(claimWithdrawn.test(caseData));
         }
 
@@ -180,10 +174,7 @@ class FlowPredicateTest {
         @ParameterizedTest
         @EnumSource(value = FlowState.Main.class)
         void shouldReturnTrue_whenCaseDataAtStateClaimDiscontinued(FlowState.Main flowState) {
-            CaseData caseData = CaseDataBuilder.builder()
-                .atState(flowState)
-                .disccontinueClaim(CloseClaim.builder().date(LocalDate.now()).reason("My reason").build())
-                .build();
+            CaseData caseData = CaseDataBuilder.builder().discontinueClaimFrom(flowState).build();
             assertTrue(claimDiscontinued.test(caseData));
         }
 

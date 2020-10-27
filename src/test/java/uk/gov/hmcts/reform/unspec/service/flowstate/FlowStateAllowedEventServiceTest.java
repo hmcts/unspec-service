@@ -1,6 +1,5 @@
 package uk.gov.hmcts.reform.unspec.service.flowstate;
 
-import camundajar.impl.scala.Console;
 import lombok.SneakyThrows;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -36,10 +35,8 @@ import static uk.gov.hmcts.reform.unspec.callback.CaseEvent.MOVE_TO_STAYED;
 import static uk.gov.hmcts.reform.unspec.callback.CaseEvent.REQUEST_EXTENSION;
 import static uk.gov.hmcts.reform.unspec.callback.CaseEvent.RESPOND_EXTENSION;
 import static uk.gov.hmcts.reform.unspec.callback.CaseEvent.WITHDRAW_CLAIM;
-import static uk.gov.hmcts.reform.unspec.service.flowstate.FlowState.Main.CLAIM_DISCONTINUED;
 import static uk.gov.hmcts.reform.unspec.service.flowstate.FlowState.Main.CLAIM_ISSUED;
 import static uk.gov.hmcts.reform.unspec.service.flowstate.FlowState.Main.CLAIM_STAYED;
-import static uk.gov.hmcts.reform.unspec.service.flowstate.FlowState.Main.CLAIM_WITHDRAWN;
 import static uk.gov.hmcts.reform.unspec.service.flowstate.FlowState.Main.DRAFT;
 import static uk.gov.hmcts.reform.unspec.service.flowstate.FlowState.Main.EXTENSION_REQUESTED;
 import static uk.gov.hmcts.reform.unspec.service.flowstate.FlowState.Main.EXTENSION_RESPONDED;
@@ -65,16 +62,15 @@ class FlowStateAllowedEventServiceTest {
         @SneakyThrows
         public Stream<? extends Arguments> provideArguments(ExtensionContext context) {
             return Stream.of(
-//                Arguments.of(CaseDataBuilder.builder().atStateClaimDraft().build(), DRAFT),
-//                Arguments.of(CaseDataBuilder.builder().atStateClaimCreated().build(), CLAIM_ISSUED),
-//                Arguments.of(CaseDataBuilder.builder().atStateClaimStayed().build(), CLAIM_STAYED),
-//                Arguments.of(CaseDataBuilder.builder().atStateServiceConfirmed().build(), SERVICE_CONFIRMED),
-//                Arguments.of(CaseDataBuilder.builder().atStateServiceAcknowledge().build(), SERVICE_ACKNOWLEDGED),
-//                Arguments.of(CaseDataBuilder.builder().atStateExtensionRequested().build(), EXTENSION_REQUESTED),
-//                Arguments.of(CaseDataBuilder.builder().atStateExtensionResponded().build(), EXTENSION_RESPONDED),
-//                Arguments.of(CaseDataBuilder.builder().atStateRespondedToClaim().build(), RESPONDED_TO_CLAIM),
-//                Arguments.of(CaseDataBuilder.builder().atStateFullDefence().build(), FULL_DEFENCE),
-                Arguments.of(CaseDataBuilder.builder().atStateClaimDiscontinued().build(), CLAIM_DISCONTINUED)
+                Arguments.of(CaseDataBuilder.builder().atStateClaimDraft().build(), DRAFT),
+                Arguments.of(CaseDataBuilder.builder().atStateClaimCreated().build(), CLAIM_ISSUED),
+                Arguments.of(CaseDataBuilder.builder().atStateClaimStayed().build(), CLAIM_STAYED),
+                Arguments.of(CaseDataBuilder.builder().atStateServiceConfirmed().build(), SERVICE_CONFIRMED),
+                Arguments.of(CaseDataBuilder.builder().atStateServiceAcknowledge().build(), SERVICE_ACKNOWLEDGED),
+                Arguments.of(CaseDataBuilder.builder().atStateExtensionRequested().build(), EXTENSION_REQUESTED),
+                Arguments.of(CaseDataBuilder.builder().atStateExtensionResponded().build(), EXTENSION_RESPONDED),
+                Arguments.of(CaseDataBuilder.builder().atStateRespondedToClaim().build(), RESPONDED_TO_CLAIM),
+                Arguments.of(CaseDataBuilder.builder().atStateFullDefence().build(), FULL_DEFENCE)
             );
         }
     }
@@ -87,22 +83,6 @@ class FlowStateAllowedEventServiceTest {
         void shouldReturnValidState_whenCaseDataProvided(CaseData caseData, FlowState.Main flowState) {
             assertThat(flowStateAllowedEventService.getFlowState(caseData))
                 .isEqualTo(flowState);
-        }
-
-        @ParameterizedTest(name = "{index} => should return flow state {1} when case data {0}")
-        @EnumSource(value = FlowState.Main.class)
-        void shouldReturnValidState_whenCaseDataProvided2(FlowState.Main flowState) {
-            CaseData caseData = CaseDataBuilder.builder().atState(flowState).build();
-            assertThat(flowStateAllowedEventService.getFlowState(caseData))
-                .isEqualTo(flowState);
-        }
-
-        @Test
-        void shouldReturnValidState_whenCaseDataProvided3() {
-            CaseData caseData = CaseDataBuilder.builder().atStateClaimWithdrawn().build();
-            Console.println("caseData:" +  caseData.getDiscontinueClaim());
-            FlowState flowState = flowStateAllowedEventService.getFlowState(caseData);
-            assertThat(flowState).isEqualTo(CLAIM_WITHDRAWN);
         }
     }
 

@@ -149,11 +149,6 @@ public class CaseDataBuilder {
         return this;
     }
 
-    public CaseDataBuilder withdrawClaim(CloseClaim closeClaim) {
-        this.withdrawClaim = closeClaim;
-        return this;
-    }
-
     public CaseDataBuilder disccontinueClaim(CloseClaim closeClaim) {
         this.discontinueClaim = closeClaim;
         return this;
@@ -239,7 +234,21 @@ public class CaseDataBuilder {
     }
 
     public CaseDataBuilder atStateClaimDiscontinued() {
-        atStateServiceConfirmed();
+        atStateClaimCreated();
+        return discontinueClaim();
+    }
+
+    public CaseDataBuilder discontinueClaim() {
+        this.ccdState = CLOSED;
+        this.discontinueClaim = CloseClaim.builder()
+            .date(LocalDate.now())
+            .reason("My reason")
+            .build();
+        return this;
+    }
+
+    public CaseDataBuilder discontinueClaimFrom(FlowState.Main flowState) {
+        atState(flowState);
         this.ccdState = CLOSED;
         this.discontinueClaim = CloseClaim.builder()
             .date(LocalDate.now())
@@ -249,7 +258,26 @@ public class CaseDataBuilder {
     }
 
     public CaseDataBuilder atStateClaimWithdrawn() {
-        atStateServiceConfirmed();
+        atStateClaimCreated();
+        return withdrawClaim();
+    }
+
+    public CaseDataBuilder withdrawClaim(CloseClaim closeClaim) {
+        this.withdrawClaim = closeClaim;
+        return this;
+    }
+
+    public CaseDataBuilder withdrawClaim() {
+        this.ccdState = CLOSED;
+        this.withdrawClaim = CloseClaim.builder()
+            .date(LocalDate.now())
+            .reason("My reason")
+            .build();
+        return this;
+    }
+
+    public CaseDataBuilder withdrawClaimFrom(FlowState.Main flowState) {
+        atState(flowState);
         this.ccdState = CLOSED;
         this.withdrawClaim = CloseClaim.builder()
             .date(LocalDate.now())
