@@ -4,8 +4,8 @@ set -eu
 
 dir=$(dirname "${BASH_SOURCE[0]}")
 echo $dir
-filepath="$(realpath ".")/src/main/resources/camunda"
-
+filepath="$(realpath $dir)/../src/main/resources/camunda"
+echo $filepath
 for file in $(find ${filepath} -name '*.bpmn')
 do
   uploadResponse=$(curl --insecure -v --silent -w "\n%{http_code}" --show-error -X POST \
