@@ -87,7 +87,7 @@ public class CaseData {
 
     private final YesOrNo applicant1ProceedWithClaim;
     private final ResponseDocument applicant1DefenceResponseDocument;
-    private final String applicant1NotProceedingReason;
+    private final ApplicantNotProceedingReason applicant1NotProceedingReason;
 
     @Valid
     private final CloseClaim withdrawClaim;
