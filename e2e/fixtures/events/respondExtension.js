@@ -1,4 +1,4 @@
-const dataHelper = require('../../api/dataHelper');
+const {date} = require('../../api/dataHelper');
 
 module.exports = {
   valid: {
@@ -7,21 +7,21 @@ module.exports = {
     },
     Counter: {
       respondentSolicitor1claimResponseExtensionCounter: 'Yes',
-      respondentSolicitor1claimResponseExtensionCounterDate: dataHelper.date(31)
+      respondentSolicitor1claimResponseExtensionCounterDate: date(31)
     },
     Reason: {
-      respondentSolicitor1claimResponseExtensionRejectionReason: 'Respond faster'
+      respondentSolicitor1claimResponseExtensionRejectionReason: 'Test rejection reason'
     }
   },
   invalid: {
     Counter: {
       past: {
         respondentSolicitor1claimResponseExtensionCounter: 'Yes',
-        respondentSolicitor1claimResponseExtensionCounterDate: dataHelper.date(-1)
+        respondentSolicitor1claimResponseExtensionCounterDate: date(-1)
       },
       beforeCurrentDeadline: {
         respondentSolicitor1claimResponseExtensionCounter: 'Yes',
-        respondentSolicitor1claimResponseExtensionCounterDate: dataHelper.date(10)
+        respondentSolicitor1claimResponseExtensionCounterDate: date(10)
       }
     }
   }

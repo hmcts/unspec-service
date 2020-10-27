@@ -43,6 +43,8 @@ module.exports = {
     await request.startEvent('CONFIRM_SERVICE', caseId);
 
     deleteCaseFields('servedDocumentFiles');
+    await assertCallbackError('CONFIRM_SERVICE', 'ServedDocuments', data.confirmService.invalid.ServedDocuments.blankOtherDocuments,
+      'CONTENT TBC: please enter a valid value for other documents');
     await assertValidData('CONFIRM_SERVICE', 'ServedDocuments', data.confirmService.valid.ServedDocuments);
     await assertValidData('CONFIRM_SERVICE', 'Upload', data.confirmService.valid.Upload);
     await assertValidData('CONFIRM_SERVICE', 'Method', data.confirmService.valid.Method);
@@ -65,6 +67,8 @@ module.exports = {
     await request.startEvent('ACKNOWLEDGE_SERVICE', caseId);
 
     await assertValidData('ACKNOWLEDGE_SERVICE', 'ConfirmNameAddress', data.acknowledgeService.valid.ConfirmNameAddress);
+    await assertCallbackError('ACKNOWLEDGE_SERVICE', 'ConfirmDetails', data.acknowledgeService.invalid.ConfirmDetails.futureDateOfBirth,
+      'The date entered cannot be in the future');
     await assertValidData('ACKNOWLEDGE_SERVICE', 'ConfirmDetails', data.acknowledgeService.valid.ConfirmDetails);
     await assertValidData('ACKNOWLEDGE_SERVICE', 'ResponseIntention', data.acknowledgeService.valid.ResponseIntention);
 
@@ -87,7 +91,7 @@ module.exports = {
 
     await assertSubmittedEvent('REQUEST_EXTENSION', 'CREATED', {
       header: 'You asked for extra time to respond',
-      body: 'You asked if you can respond before'
+      body: 'You asked if you can respond before 4pm on'
     });
   },
 
@@ -105,7 +109,7 @@ module.exports = {
 
     await assertSubmittedEvent('RESPOND_EXTENSION', 'CREATED', {
       header: 'You\'ve responded to the request for more time',
-      body: 'The defendant must respond before'
+      body: 'The defendant must respond before 4pm on'
     });
   },
 
@@ -113,24 +117,18 @@ module.exports = {
     await testingSupport.resetBusinessProcess(caseId);
     await request.startEvent('DEFENDANT_RESPONSE', caseId);
 
-    await assertValidData('DEFENDANT_RESPONSE', 'RespondentResponseType', data.defendantResponse.valid.RespondentResponseType);
     deleteCaseFields('respondent1', 'solicitorReferences');
+    await assertValidData('DEFENDANT_RESPONSE', 'RespondentResponseType', data.defendantResponse.valid.RespondentResponseType);
     await assertValidData('DEFENDANT_RESPONSE', 'Upload', data.defendantResponse.valid.Upload);
     await assertValidData('DEFENDANT_RESPONSE', 'ConfirmNameAddress', data.defendantResponse.valid.ConfirmNameAddress);
+    await assertCallbackError('DEFENDANT_RESPONSE', 'ConfirmDetails', data.defendantResponse.invalid.ConfirmDetails.futureDateOfBirth,
+      'The date entered cannot be in the future');
     await assertValidData('DEFENDANT_RESPONSE', 'ConfirmDetails', data.defendantResponse.valid.ConfirmDetails);
     await assertValidData('DEFENDANT_RESPONSE', 'FileDirectionsQuestionnaire', data.defendantResponse.valid.FileDirectionsQuestionnaire);
     await assertValidData('DEFENDANT_RESPONSE', 'DisclosureOfElectronicDocuments', data.defendantResponse.valid.DisclosureOfElectronicDocuments);
     await assertValidData('DEFENDANT_RESPONSE', 'DisclosureOfNonElectronicDocuments', data.defendantResponse.valid.DisclosureOfNonElectronicDocuments);
-    //TODO: new method for ccd validation assertions
-    // -Case data validation failed
-    // +Unable to proceed because there are one or more callback Errors or Warnings
-    // await assertCallbackError('DEFENDANT_RESPONSE', 'Experts',data.defendantResponse.invalid.Experts.emptyDetails,
-    //   'Add at least 1 value');
     await assertValidData('DEFENDANT_RESPONSE', 'Experts', data.defendantResponse.valid.Experts);
-    // await assertCallbackError('DEFENDANT_RESPONSE', 'Witnesses', data.defendantResponse.invalid.Witnesses.emptyDetails,
-    //   'dunno');
     await assertValidData('DEFENDANT_RESPONSE', 'Witnesses', data.defendantResponse.valid.Witnesses);
-
     await assertCallbackError('DEFENDANT_RESPONSE', 'Hearing', data.defendantResponse.invalid.Hearing.past,
       'The date cannot be in the past and must not be more than a year in the future');
     await assertCallbackError('DEFENDANT_RESPONSE', 'Hearing', data.defendantResponse.invalid.Hearing.moreThanYear,
@@ -186,7 +184,7 @@ const assertCallbackError = async (eventName, pageId, eventData, expectedErrorMe
   assert.equal(responseBody.callbackErrors[0], expectedErrorMessage);
 };
 
-const assertSubmittedEvent = async (eventName, expectedState, submittedCallbackResponse) => {
+const assertSubmittedEvent = async (eventName, expectedState, submittedCallbackResponseContains) => {
   const response = await request.submitEvent(eventName, caseData, caseId);
   const responseBody = await response.json();
 
@@ -197,8 +195,8 @@ const assertSubmittedEvent = async (eventName, expectedState, submittedCallbackR
   assert.equal(response.status, 201);
   assert.equal(responseBody.state, expectedState);
   assert.equal(responseBody.callback_response_status_code, 200);
-  assert.equal(responseBody.after_submit_callback_response.confirmation_header.includes(submittedCallbackResponse.header), true);
-  assert.equal(responseBody.after_submit_callback_response.confirmation_body.includes(submittedCallbackResponse.body), true);
+  assert.equal(responseBody.after_submit_callback_response.confirmation_header.includes(submittedCallbackResponseContains.header), true);
+  assert.equal(responseBody.after_submit_callback_response.confirmation_body.includes(submittedCallbackResponseContains.body), true);
 
   caseData = Object.assign(caseData, responseBody.case_data);
   if (eventName === 'CREATE_CLAIM') {

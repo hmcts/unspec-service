@@ -1,12 +1,16 @@
 const address = require('../address');
+const {date} = require('../../api/dataHelper');
 
 module.exports = {
   valid: {
     ConfirmNameAddress: {},
     ConfirmDetails: {
       respondent1: {
-        type: 'ORGANISATION',
-        organisationName: 'Test Defendant Org',
+        type: 'INDIVIDUAL',
+        individualFirstName: 'John',
+        individualLastName: 'Doe',
+        individualTitle: 'Sir',
+        individualDateOfBirth: date(-1),
         primaryAddress: {
           AddressLine1: `${address.buildingAndStreet.lineOne + ' - defendant'}`,
           AddressLine2: address.buildingAndStreet.lineTwo,
@@ -26,5 +30,26 @@ module.exports = {
       respondent1ClaimResponseIntentionType: 'FULL_DEFENCE'
     }
   },
-  invalid: {}
+  invalid: {
+    ConfirmDetails: {
+      futureDateOfBirth: {
+        respondent1: {
+          type: 'INDIVIDUAL',
+          individualFirstName: 'John',
+          individualLastName: 'Doe',
+          individualTitle: 'Sir',
+          individualDateOfBirth: date(1),
+          primaryAddress: {
+            AddressLine1: `${address.buildingAndStreet.lineOne + ' - defendant'}`,
+            AddressLine2: address.buildingAndStreet.lineTwo,
+            AddressLine3: address.buildingAndStreet.lineThree,
+            PostTown: address.town,
+            County: address.county,
+            Country: address.country,
+            PostCode: address.postcode
+          }
+        }
+      }
+    }
+  }
 };

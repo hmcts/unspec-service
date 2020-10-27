@@ -1,4 +1,4 @@
-const dataHelper = require('../../api/dataHelper');
+const {date, document, element} = require('../../api/dataHelper');
 const address = require('../address');
 
 module.exports = {
@@ -8,14 +8,17 @@ module.exports = {
     },
     Upload: {
       respondent1ClaimResponseDocument: {
-        file: dataHelper.document('claimResponse.pdf')
+        file: document('claimResponse.pdf')
       }
     },
     ConfirmNameAddress: {},
     ConfirmDetails: {
       respondent1: {
-        type: 'ORGANISATION',
-        organisationName: 'Test Defendant Org',
+        type: 'INDIVIDUAL',
+        individualFirstName: 'John',
+        individualLastName: 'Doe',
+        individualTitle: 'Sir',
+        individualDateOfBirth: date(-1),
         primaryAddress: {
           AddressLine1: `${address.buildingAndStreet.lineOne + ' - defendant'}`,
           AddressLine2: address.buildingAndStreet.lineTwo,
@@ -52,27 +55,25 @@ module.exports = {
         expertRequired: 'Yes',
         exportReportsSent: 'NOT_OBTAINED',
         jointExpertSuitable: 'Yes',
-        details: [{
-          id: null,
-          value: {
+        details: [
+          element({
             name: 'John Doe',
             fieldOfExpertise: 'None',
-            whyRequired: 'I don\'t',
+            whyRequired: 'Testing',
             estimatedCost: '10000'
-          }
-        }]
+          })
+        ]
       }
     },
     Witnesses: {
       respondent1DQWitnesses: {
         witnessesToAppear: 'Yes',
-        details: [{
-          id: null,
-          value: {
+        details: [
+          element({
             name: 'John Doe',
             reasonForWitness: 'None'
-          }
-        }]
+          })
+        ]
       }
     },
     Hearing: {
@@ -80,17 +81,16 @@ module.exports = {
         hearingLength: 'MORE_THAN_DAY',
         hearingLengthDays: 5,
         unavailableDatesRequired: 'Yes',
-        unavailableDates: [{
-          id: null,
-          value: {
-            date: dataHelper.date(10),
+        unavailableDates: [
+          element({
+            date: date(10),
             who: 'Foo Bar'
-          }
-        }]
+          })
+        ]
       }
     },
     DraftDirections: {
-      respondent1DQDraftDirections: dataHelper.document('draftDirections.pdf')
+      respondent1DQDraftDirections: document('draftDirections.pdf')
     },
     RequestedCourt: {
       respondent1DQRequestedCourt: {
@@ -115,6 +115,26 @@ module.exports = {
     }
   },
   invalid: {
+    ConfirmDetails: {
+      futureDateOfBirth: {
+        respondent1: {
+          type: 'INDIVIDUAL',
+          individualFirstName: 'John',
+          individualLastName: 'Doe',
+          individualTitle: 'Sir',
+          individualDateOfBirth: date(1),
+          primaryAddress: {
+            AddressLine1: `${address.buildingAndStreet.lineOne + ' - defendant'}`,
+            AddressLine2: address.buildingAndStreet.lineTwo,
+            AddressLine3: address.buildingAndStreet.lineThree,
+            PostTown: address.town,
+            County: address.county,
+            Country: address.country,
+            PostCode: address.postcode
+          }
+        }
+      }
+    },
     Experts: {
       emptyDetails: {
         respondent1DQExperts: {
@@ -125,33 +145,18 @@ module.exports = {
         }
       }
     },
-    Witnesses: {
-      emptyDetails: {
-        respondent1DQWitnesses: {
-          witnessesToAppear: 'Yes',
-          details: [{
-            id: null,
-            value: {
-              name: 'John Doe',
-              reasonForWitness: 'None'
-            }
-          }]
-        }
-      }
-    },
     Hearing: {
       past: {
         respondent1DQHearing: {
           hearingLength: 'MORE_THAN_DAY',
           hearingLengthDays: 5,
           unavailableDatesRequired: 'Yes',
-          unavailableDates: [{
-            id: null,
-            value: {
-              date: dataHelper.date(-1),
+          unavailableDates: [
+            element({
+              date: date(-1),
               who: 'Foo Bar'
-            }
-          }]
+            })
+          ]
         }
       },
       moreThanYear: {
@@ -159,13 +164,12 @@ module.exports = {
           hearingLength: 'MORE_THAN_DAY',
           hearingLengthDays: 5,
           unavailableDatesRequired: 'Yes',
-          unavailableDates: [{
-            id: null,
-            value: {
-              date: dataHelper.date(367),
+          unavailableDates: [
+            element({
+              date: date(367),
               who: 'Foo Bar'
-            }
-          }]
+            })
+          ]
         }
       }
     },

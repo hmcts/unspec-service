@@ -1,4 +1,4 @@
-const dataHelper = require('../../api/dataHelper');
+const {document} = require('../../api/dataHelper');
 
 module.exports = {
   valid: {
@@ -7,7 +7,7 @@ module.exports = {
     },
     DefenceResponseDocument: {
       applicant1DefenceResponseDocument: {
-        file: dataHelper.document('defenceResponse.pdf')
+        file: document('defenceResponse.pdf')
       }
     }
   },

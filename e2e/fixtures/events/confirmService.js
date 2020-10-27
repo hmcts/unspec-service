@@ -1,13 +1,15 @@
-const dataHelper = require('../../api/dataHelper.js');
+const {date, document, element} = require('../../api/dataHelper.js');
 
 module.exports = {
   valid: {
     ServedDocuments: {
-      servedDocuments: ['CLAIM_FORM']
+      servedDocuments: ['CLAIM_FORM', 'OTHER'],
+      servedDocumentsOther: 'Test Document'
     },
     Upload: {
       servedDocumentFiles: {
-        particularsOfClaim: [dataHelper.documentElement('particularsOfClaim.pdf')]
+        particularsOfClaim: [element(document('particularsOfClaim.pdf'))],
+        other: [element(document('other.pdf'))]
       }
     },
     Method: {
@@ -21,7 +23,7 @@ module.exports = {
       }
     },
     Date: {
-      serviceDateToRespondentSolicitor1: dataHelper.date()
+      serviceDateToRespondentSolicitor1: date()
     },
     StatementOfTruth: {
       applicant1ServiceStatementOfTruthToRespondentSolicitor1: {
@@ -31,12 +33,18 @@ module.exports = {
     },
   },
   invalid: {
+    ServedDocuments: {
+      blankOtherDocuments: {
+        servedDocuments: ['CLAIM_FORM', 'OTHER'],
+        servedDocumentsOther: ' '
+      }
+    },
     Date: {
       yesterday: {
-        serviceDateToRespondentSolicitor1: dataHelper.date(-1)
+        serviceDateToRespondentSolicitor1: date(-1)
       },
       tomorrow: {
-        serviceDateToRespondentSolicitor1: dataHelper.date(1)
+        serviceDateToRespondentSolicitor1: date(1)
       }
     }
   }

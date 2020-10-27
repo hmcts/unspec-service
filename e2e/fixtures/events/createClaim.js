@@ -1,4 +1,4 @@
-const dataHelper = require('../../api/dataHelper');
+const {document, element} = require('../../api/dataHelper');
 const address = require('../address');
 
 module.exports = {
@@ -47,8 +47,11 @@ module.exports = {
     },
     Defendant: {
       respondent1: {
-        type: 'ORGANISATION',
-        organisationName: 'Test Defendant Org',
+        type: 'INDIVIDUAL',
+        individualFirstName: 'John',
+        individualLastName: 'Doe',
+        individualTitle: 'Sir',
+        individualDateOfBirth: null,
         primaryAddress: {
           AddressLine1: `${address.buildingAndStreet.lineOne + ' - defendant'}`,
           AddressLine2: address.buildingAndStreet.lineTwo,
@@ -68,7 +71,7 @@ module.exports = {
     },
     Upload: {
       servedDocumentFiles: {
-        particularsOfClaim: [dataHelper.documentElement('particularsOfClaim.pdf')]
+        particularsOfClaim: [element(document('particularsOfClaim.pdf'))]
       }
     },
     ClaimValue: {
