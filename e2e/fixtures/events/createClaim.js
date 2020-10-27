@@ -68,12 +68,12 @@ module.exports = {
     },
     Upload: {
       servedDocumentFiles: {
-        particularsOfClaim: [dataHelper.document('testDocument.pdf')]
+        particularsOfClaim: [dataHelper.documentElement('testDocument.pdf')]
       }
     },
     ClaimValue: {
       claimValue: {
-        statementOfValueInPennies: '500'
+        statementOfValueInPennies: '3000000'
       }
     },
     StatementOfTruth: {

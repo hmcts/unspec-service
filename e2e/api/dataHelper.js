@@ -1,15 +1,20 @@
 const uuid = require('uuid');
 const config = require('../config.js');
 
+const document = filename => {
+  return {
+    document_url: `${config.url.dmStore}/documents/fakeUrl`,
+    document_filename: filename,
+    document_binary_url: `${config.url.dmStore}/documents/fakeUrl/binary`
+  };
+};
+
 module.exports = {
-  document: filename => {
+  document,
+  documentElement: filename => {
     return {
       id: uuid.v1(),
-      value: {
-        document_url: `${config.url.dmStore}/documents/fakeUrl`,
-        document_filename: filename,
-        document_binary_url: `${config.url.dmStore}/documents/fakeUrl/binary`
-      }
+      value: document(filename)
     };
   },
   date: (days = 0) => {

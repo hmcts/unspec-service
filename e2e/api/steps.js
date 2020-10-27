@@ -4,13 +4,13 @@ const request = require('./request.js');
 const testingSupport = require('./testingSupport.js');
 
 const data = {
- createClaim: require('../fixtures/events/createClaim.js'),
- confirmService: require('../fixtures/events/confirmService.js'),
- acknowledgeService: require('../fixtures/events/acknowledgeService.js'),
- requestExtension: require('../fixtures/events/requestExtension.js'),
- respondExtension: require('../fixtures/events/respondExtension.js'),
- defendantResponse: require('../fixtures/events/defendantResponse.js'),
- claimantResponse: require('../fixtures/events/claimantResponse.js'),
+  createClaim: require('../fixtures/events/createClaim.js'),
+  confirmService: require('../fixtures/events/confirmService.js'),
+  acknowledgeService: require('../fixtures/events/acknowledgeService.js'),
+  requestExtension: require('../fixtures/events/requestExtension.js'),
+  respondExtension: require('../fixtures/events/respondExtension.js'),
+  defendantResponse: require('../fixtures/events/defendantResponse.js'),
+  claimantResponse: require('../fixtures/events/claimantResponse.js'),
 };
 
 let caseId;

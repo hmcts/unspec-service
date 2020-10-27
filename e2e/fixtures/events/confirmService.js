@@ -7,7 +7,7 @@ module.exports = {
     },
     Upload: {
       servedDocumentFiles: {
-        particularsOfClaim: [dataHelper.document('testDocument.pdf')]
+        particularsOfClaim: [dataHelper.documentElement('testDocument.pdf')]
       }
     },
     Method: {
