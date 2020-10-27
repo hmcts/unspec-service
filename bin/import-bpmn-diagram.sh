@@ -4,7 +4,7 @@ set -eu
 
 dir=$(dirname "${BASH_SOURCE[0]}")
 echo $dir
-filepath="$(realpath $dir)/../src/main/resources/camunda"
+filepath="$(realpath ".")/src/main/resources/camunda"
 echo $filepath
 for file in $(find ${filepath} -name '*.bpmn')
 do
