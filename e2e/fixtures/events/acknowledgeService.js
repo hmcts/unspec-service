@@ -22,7 +22,9 @@ module.exports = {
         respondentSolicitor1Reference: 'Respondent test reference'
       }
     },
-    ResponseIntention: {}
+    ResponseIntention: {
+      respondent1ClaimResponseIntentionType: 'FULL_DEFENCE'
+    }
   },
   invalid: {}
 };

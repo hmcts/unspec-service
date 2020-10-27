@@ -42,7 +42,7 @@ module.exports = {
     await testingSupport.resetBusinessProcess(caseId);
     await request.startEvent('CONFIRM_SERVICE', caseId);
 
-    delete caseData.servedDocumentFiles;
+    deleteCaseFields('servedDocumentFiles');
     await assertValidData('CONFIRM_SERVICE', 'ServedDocuments', data.confirmService.valid.ServedDocuments);
     await assertValidData('CONFIRM_SERVICE', 'Upload', data.confirmService.valid.Upload);
     await assertValidData('CONFIRM_SERVICE', 'Method', data.confirmService.valid.Method);
@@ -68,17 +68,27 @@ module.exports = {
     await assertValidData('ACKNOWLEDGE_SERVICE', 'ConfirmDetails', data.acknowledgeService.valid.ConfirmDetails);
     await assertValidData('ACKNOWLEDGE_SERVICE', 'ResponseIntention', data.acknowledgeService.valid.ResponseIntention);
 
-    await assertSubmittedEvent('ACKNOWLEDGE_SERVICE', 'CREATED', {});
+    await assertSubmittedEvent('ACKNOWLEDGE_SERVICE', 'CREATED', {
+      header: 'You\'ve acknowledged service',
+      body: 'You need to respond before'
+    });
   },
 
   requestExtension: async () => {
     await testingSupport.resetBusinessProcess(caseId);
     await request.startEvent('REQUEST_EXTENSION', caseId);
 
+    await assertCallbackError('REQUEST_EXTENSION', 'ProposeDeadline', data.requestExtension.invalid.ProposeDeadline.past,
+      'The proposed deadline must be a date in the future');
+    await assertCallbackError('REQUEST_EXTENSION', 'ProposeDeadline',data.requestExtension.invalid.ProposeDeadline.beforeCurrentDeadline,
+      'The proposed deadline must be after the current deadline');
     await assertValidData('REQUEST_EXTENSION', 'ProposeDeadline', data.requestExtension.valid.ProposeDeadline);
     await assertValidData('REQUEST_EXTENSION', 'ExtensionAlreadyAgreed', data.requestExtension.valid.ExtensionAlreadyAgreed);
 
-    await assertSubmittedEvent('REQUEST_EXTENSION', 'CREATED', {});
+    await assertSubmittedEvent('REQUEST_EXTENSION', 'CREATED', {
+      header: 'You asked for extra time to respond',
+      body: 'You asked if you can respond before'
+    });
   },
 
   respondExtension: async () => {
@@ -86,27 +96,45 @@ module.exports = {
     await request.startEvent('RESPOND_EXTENSION', caseId);
 
     await assertValidData('RESPOND_EXTENSION', 'Respond', data.respondExtension.valid.Respond);
+    await assertCallbackError('RESPOND_EXTENSION', 'Counter', data.respondExtension.invalid.Counter.past,
+      'The proposed deadline must be a date in the future');
+    await assertCallbackError('RESPOND_EXTENSION', 'Counter',data.respondExtension.invalid.Counter.beforeCurrentDeadline,
+      'The proposed deadline must be after the current deadline');
     await assertValidData('RESPOND_EXTENSION', 'Counter', data.respondExtension.valid.Counter);
     await assertValidData('RESPOND_EXTENSION', 'Reason', data.respondExtension.valid.Reason);
 
-    await assertSubmittedEvent('RESPOND_EXTENSION', 'CREATED', {});
+    await assertSubmittedEvent('RESPOND_EXTENSION', 'CREATED', {
+      header: 'You\'ve responded to the request for more time',
+      body: 'The defendant must respond before'
+    });
   },
 
   defendantResponse: async () => {
     await testingSupport.resetBusinessProcess(caseId);
     await request.startEvent('DEFENDANT_RESPONSE', caseId);
 
-    //TODO: check if ccd api allows validating hidden pages
     await assertValidData('DEFENDANT_RESPONSE', 'RespondentResponseType', data.defendantResponse.valid.RespondentResponseType);
+    deleteCaseFields('respondent1', 'solicitorReferences');
     await assertValidData('DEFENDANT_RESPONSE', 'Upload', data.defendantResponse.valid.Upload);
     await assertValidData('DEFENDANT_RESPONSE', 'ConfirmNameAddress', data.defendantResponse.valid.ConfirmNameAddress);
     await assertValidData('DEFENDANT_RESPONSE', 'ConfirmDetails', data.defendantResponse.valid.ConfirmDetails);
     await assertValidData('DEFENDANT_RESPONSE', 'FileDirectionsQuestionnaire', data.defendantResponse.valid.FileDirectionsQuestionnaire);
     await assertValidData('DEFENDANT_RESPONSE', 'DisclosureOfElectronicDocuments', data.defendantResponse.valid.DisclosureOfElectronicDocuments);
     await assertValidData('DEFENDANT_RESPONSE', 'DisclosureOfNonElectronicDocuments', data.defendantResponse.valid.DisclosureOfNonElectronicDocuments);
-    await assertValidData('DEFENDANT_RESPONSE', 'DisclosureReport', data.defendantResponse.valid.DisclosureReport);
+    //TODO: new method for ccd validation assertions
+    // -Case data validation failed
+    // +Unable to proceed because there are one or more callback Errors or Warnings
+    // await assertCallbackError('DEFENDANT_RESPONSE', 'Experts',data.defendantResponse.invalid.Experts.emptyDetails,
+    //   'Add at least 1 value');
     await assertValidData('DEFENDANT_RESPONSE', 'Experts', data.defendantResponse.valid.Experts);
+    // await assertCallbackError('DEFENDANT_RESPONSE', 'Witnesses', data.defendantResponse.invalid.Witnesses.emptyDetails,
+    //   'dunno');
     await assertValidData('DEFENDANT_RESPONSE', 'Witnesses', data.defendantResponse.valid.Witnesses);
+
+    await assertCallbackError('DEFENDANT_RESPONSE', 'Hearing', data.defendantResponse.invalid.Hearing.past,
+      'The date cannot be in the past and must not be more than a year in the future');
+    await assertCallbackError('DEFENDANT_RESPONSE', 'Hearing', data.defendantResponse.invalid.Hearing.moreThanYear,
+      'The date cannot be in the past and must not be more than a year in the future');
     await assertValidData('DEFENDANT_RESPONSE', 'Hearing', data.defendantResponse.valid.Hearing);
     await assertValidData('DEFENDANT_RESPONSE', 'DraftDirections', data.defendantResponse.valid.DraftDirections);
     await assertValidData('DEFENDANT_RESPONSE', 'RequestedCourt', data.defendantResponse.valid.RequestedCourt);
@@ -114,7 +142,10 @@ module.exports = {
     await assertValidData('DEFENDANT_RESPONSE', 'FurtherInformation', data.defendantResponse.valid.FurtherInformation);
     await assertValidData('DEFENDANT_RESPONSE', 'StatementOfTruth', data.defendantResponse.valid.StatementOfTruth);
 
-    await assertSubmittedEvent('DEFENDANT_RESPONSE', 'AWAITING_CLAIMANT_INTENTION', {});
+    await assertSubmittedEvent('DEFENDANT_RESPONSE', 'AWAITING_CLAIMANT_INTENTION', {
+      header: 'You\'ve submitted your response',
+      body: 'We will let you know when they respond.'
+    });
   },
 
   claimantResponse: async () => {
@@ -124,7 +155,10 @@ module.exports = {
     await assertValidData('CLAIMANT_RESPONSE', 'RespondentResponse', data.claimantResponse.valid.RespondentResponse);
     await assertValidData('CLAIMANT_RESPONSE', 'DefenceResponseDocument', data.claimantResponse.valid.DefenceResponseDocument);
 
-    await assertSubmittedEvent('AWAITING_CLAIMANT_INTENTION', 'CREATED', {});
+    await assertSubmittedEvent('CLAIMANT_RESPONSE', 'AWAITING_CLAIMANT_INTENTION', {
+      header: 'You\'ve decided to proceed with the claim',
+      body: 'We\'ll review the case. We\'ll contact you to tell you what to do next.'
+    });
   }
 };
 
@@ -133,6 +167,10 @@ const assertValidData = async (eventName, pageId, eventData, expectedDataSetByCa
   const response = await request.validatePage(eventName, pageId, caseData);
   const responseBody = await response.json();
   caseData = Object.assign(caseData, expectedDataSetByCallback);
+
+  if (response.status != 200) {
+    console.log(responseBody);
+  }
 
   assert.equal(response.status, 200);
   assert.deepEqual(responseBody.data, caseData);
@@ -152,6 +190,10 @@ const assertSubmittedEvent = async (eventName, expectedState, submittedCallbackR
   const response = await request.submitEvent(eventName, caseData, caseId);
   const responseBody = await response.json();
 
+  if (response.status != 201) {
+    console.log(responseBody);
+  }
+
   assert.equal(response.status, 201);
   assert.equal(responseBody.state, expectedState);
   assert.equal(responseBody.callback_response_status_code, 200);
@@ -163,4 +205,11 @@ const assertSubmittedEvent = async (eventName, expectedState, submittedCallbackR
     caseId = responseBody.id;
     console.log('Case created: ' + caseId);
   }
+};
+
+// Mid event will not return case fields that were already filled in another event if they're present on currently processed event.
+// This happens until these case fields are set again as a part of current event (note that this data is not removed from the case).
+// Therefore these case fields need to be removed from caseData, as caseData object is used to make assertions
+const deleteCaseFields = (...caseFields) => {
+  caseFields.forEach(caseField => delete caseData[caseField]);
 };

@@ -58,7 +58,7 @@ const requestedCourtPage = require('./fragments/dq/requestedCourt.page');
 const hearingSupportRequirementsPage = require('./fragments/dq/hearingSupportRequirements.page');
 const furtherInformationPage = require('./fragments/dq/furtherInformation.page');
 
-const addressFixture = require('./fixtures/address.js')
+const addressFixture = require('./fixtures/address.js');
 
 const baseUrl = process.env.URL || 'http://localhost:3333';
 const signedInSelector = 'exui-header';
