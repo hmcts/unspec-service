@@ -319,7 +319,7 @@
     "ID": "DISPATCH_BUSINESS_PROCESS",
     "Name": "Dispatch business process",
     "Description": "Set READY business process status to DISPATCHED",
-    "DisplayOrder": 21,
+    "DisplayOrder": 22,
     "PreConditionState(s)": "*",
     "PostConditionState": "*",
     "SecurityClassification": "Public",
