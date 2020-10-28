@@ -38,7 +38,13 @@
       <bpmn:incoming>Flow_0x2wz2v</bpmn:incoming>
     </bpmn:endEvent>
     <bpmn:sequenceFlow id="Flow_0x2wz2v" sourceRef="Activity_0471ljk" targetRef="Event_1h61h5s" />
-    <bpmn:callActivity id="Activity_0471ljk" name="End Business Process" calledElement="EndBusinessProcess">
+    <bpmn:callActivity id="Activity_0471ljk" name="End Business Process" calledElement="END_BUSINESS_PROCESS_ID">
+      <bpmn:extensionElements>
+        <camunda:properties>
+          <camunda:property name="variables" value="all" />
+        </camunda:properties>
+        <camunda:in variables="all" />
+      </bpmn:extensionElements>
       <bpmn:incoming>Flow_06qap0k</bpmn:incoming>
       <bpmn:outgoing>Flow_0x2wz2v</bpmn:outgoing>
     </bpmn:callActivity>
@@ -47,6 +53,14 @@
   <bpmn:message id="Message_07sm7e9" name="ACKNOWLEDGE_SERVICE" />
   <bpmndi:BPMNDiagram id="BPMNDiagram_1">
     <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="ACKNOWLEDGE_SERVICE_PROCESS_ID">
+      <bpmndi:BPMNEdge id="Flow_0x2wz2v_di" bpmnElement="Flow_0x2wz2v">
+        <di:waypoint x="780" y="117" />
+        <di:waypoint x="862" y="117" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_06qap0k_di" bpmnElement="Flow_06qap0k">
+        <di:waypoint x="600" y="117" />
+        <di:waypoint x="680" y="117" />
+      </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_0himnjt_di" bpmnElement="Flow_0himnjt">
         <di:waypoint x="198" y="117" />
         <di:waypoint x="320" y="117" />
@@ -58,14 +72,6 @@
       <bpmndi:BPMNEdge id="Flow_0iccpmp_di" bpmnElement="Flow_0iccpmp">
         <di:waypoint x="370" y="175" />
         <di:waypoint x="370" y="272" />
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_06qap0k_di" bpmnElement="Flow_06qap0k">
-        <di:waypoint x="600" y="117" />
-        <di:waypoint x="680" y="117" />
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_0x2wz2v_di" bpmnElement="Flow_0x2wz2v">
-        <di:waypoint x="780" y="117" />
-        <di:waypoint x="862" y="117" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNShape id="Activity_0ipbyde_di" bpmnElement="AcknowledgeServiceNotifyApplicantSolicitor1">
         <dc:Bounds x="500" y="77" width="100" height="80" />

@@ -49,6 +49,9 @@
     </bpmn:endEvent>
     <bpmn:sequenceFlow id="Flow_0tgwl48" sourceRef="Activity_1cweuly" targetRef="Event_07ek9xj" />
     <bpmn:callActivity id="Activity_1cweuly" name="End Business Process" calledElement="EndBusinessProcess">
+      <bpmn:extensionElements>
+        <camunda:in variables="all" />
+      </bpmn:extensionElements>
       <bpmn:incoming>Flow_0veyd24</bpmn:incoming>
       <bpmn:outgoing>Flow_0tgwl48</bpmn:outgoing>
     </bpmn:callActivity>
@@ -57,6 +60,14 @@
   <bpmn:error id="Error_1alq6sw" name="StartBusinessAbort" errorCode="ABORT" />
   <bpmndi:BPMNDiagram id="BPMNDiagram_1">
     <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="CLAIMANT_RESPONSE_PROCESS_ID">
+      <bpmndi:BPMNEdge id="Flow_0tgwl48_di" bpmnElement="Flow_0tgwl48">
+        <di:waypoint x="880" y="117" />
+        <di:waypoint x="952" y="117" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0veyd24_di" bpmnElement="Flow_0veyd24">
+        <di:waypoint x="710" y="117" />
+        <di:waypoint x="780" y="117" />
+      </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_01ueyup_di" bpmnElement="Flow_01ueyup">
         <di:waypoint x="370" y="117" />
         <di:waypoint x="440" y="117" />
@@ -72,14 +83,6 @@
       <bpmndi:BPMNEdge id="Flow_1xdr8bm_di" bpmnElement="Flow_1xdr8bm">
         <di:waypoint x="540" y="117" />
         <di:waypoint x="610" y="117" />
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_0veyd24_di" bpmnElement="Flow_0veyd24">
-        <di:waypoint x="710" y="117" />
-        <di:waypoint x="780" y="117" />
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_0tgwl48_di" bpmnElement="Flow_0tgwl48">
-        <di:waypoint x="880" y="117" />
-        <di:waypoint x="952" y="117" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNShape id="Activity_0ipbyde_di" bpmnElement="ClaimantResponseNotifyRespondentSolicitor1">
         <dc:Bounds x="440" y="77" width="100" height="80" />
