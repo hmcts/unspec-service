@@ -40,6 +40,10 @@ class CreateClaimTest extends BpmnBaseTest {
         assertCompleteExternalTask(notificationTask, PROCESS_CASE_EVENT, NOTIFY_RESPONDENT_SOLICITOR_1,
                                    NOTIFY_RESPONDENT_SOLICITOR_1_ACTIVITY_ID);
 
+        //end business process
+        ExternalTask endBusinessProcess = assertNextExternalTask(END_BUSINESS_PROCESS);
+        completeBusinessProcess(endBusinessProcess);
+
         assertNoExternalTasksLeft();
     }
 }
