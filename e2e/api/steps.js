@@ -18,148 +18,154 @@ let caseData = {};
 
 module.exports = {
   createClaim: async (user) => {
+    const eventName = 'CREATE_CLAIM';
     await request.setupTokens(user);
-    await request.startEvent('CREATE_CLAIM');
+    await request.startEvent(eventName);
 
-    await assertValidData('CREATE_CLAIM', 'References', data.createClaim.valid.References);
-    await assertValidData('CREATE_CLAIM', 'Court', data.createClaim.valid.Court);
-    await assertValidData('CREATE_CLAIM', 'Claimant', data.createClaim.valid.Claimant);
-    await assertValidData('CREATE_CLAIM', 'ClaimantLitigationFriend', data.createClaim.valid.ClaimantLitigationFriend);
-    await assertValidData('CREATE_CLAIM', 'Defendant', data.createClaim.valid.Defendant);
-    await assertValidData('CREATE_CLAIM', 'ClaimType', data.createClaim.valid.ClaimType);
-    await assertValidData('CREATE_CLAIM', 'PersonalInjuryType', data.createClaim.valid.PersonalInjuryType);
-    await assertValidData('CREATE_CLAIM', 'Upload', data.createClaim.valid.Upload);
-    await assertValidData('CREATE_CLAIM', 'ClaimValue', data.createClaim.valid.ClaimValue);
-    await assertValidData('CREATE_CLAIM', 'StatementOfTruth', data.createClaim.valid.StatementOfTruth);
+    await assertValidData(eventName, 'References', data.createClaim.valid.References);
+    await assertValidData(eventName, 'Court', data.createClaim.valid.Court);
+    await assertValidData(eventName, 'Claimant', data.createClaim.valid.Claimant);
+    await assertValidData(eventName, 'ClaimantLitigationFriend', data.createClaim.valid.ClaimantLitigationFriend);
+    await assertValidData(eventName, 'Defendant', data.createClaim.valid.Defendant);
+    await assertValidData(eventName, 'ClaimType', data.createClaim.valid.ClaimType);
+    await assertValidData(eventName, 'PersonalInjuryType', data.createClaim.valid.PersonalInjuryType);
+    await assertValidData(eventName, 'Upload', data.createClaim.valid.Upload);
+    await assertValidData(eventName, 'ClaimValue', data.createClaim.valid.ClaimValue);
+    await assertValidData(eventName, 'StatementOfTruth', data.createClaim.valid.StatementOfTruth);
 
-    await assertSubmittedEvent('CREATE_CLAIM', 'CREATED', {
+    await assertSubmittedEvent(eventName, 'CREATED', {
       header: 'Your claim has been issued',
       body: 'Follow these steps to serve a claim'
     });
   },
 
   confirmService: async () => {
+    const eventName = 'CONFIRM_SERVICE';
     await testingSupport.resetBusinessProcess(caseId);
-    await request.startEvent('CONFIRM_SERVICE', caseId);
+    await request.startEvent(eventName, caseId);
 
     deleteCaseFields('servedDocumentFiles');
 
-    await assertValidData('CONFIRM_SERVICE', 'ServedDocuments', data.confirmService.valid.ServedDocuments);
-    await assertValidData('CONFIRM_SERVICE', 'Upload', data.confirmService.valid.Upload);
-    await assertValidData('CONFIRM_SERVICE', 'Method', data.confirmService.valid.Method);
-    await assertValidData('CONFIRM_SERVICE', 'Location', data.confirmService.valid.Location);
-    await assertValidData('CONFIRM_SERVICE', 'Date', data.confirmService.valid.Date);
-    await assertValidData('CONFIRM_SERVICE', 'StatementOfTruth', data.confirmService.valid.StatementOfTruth);
+    await assertValidData(eventName, 'ServedDocuments', data.confirmService.valid.ServedDocuments);
+    await assertValidData(eventName, 'Upload', data.confirmService.valid.Upload);
+    await assertValidData(eventName, 'Method', data.confirmService.valid.Method);
+    await assertValidData(eventName, 'Location', data.confirmService.valid.Location);
+    await assertValidData(eventName, 'Date', data.confirmService.valid.Date);
+    await assertValidData(eventName, 'StatementOfTruth', data.confirmService.valid.StatementOfTruth);
 
-    await assertCallbackError('CONFIRM_SERVICE', 'ServedDocuments', data.confirmService.invalid.ServedDocuments.blankOtherDocuments,
+    await assertCallbackError(eventName, 'ServedDocuments', data.confirmService.invalid.ServedDocuments.blankOtherDocuments,
       'CONTENT TBC: please enter a valid value for other documents');
-    await assertCallbackError('CONFIRM_SERVICE', 'Date', data.confirmService.invalid.Date.yesterday,
+    await assertCallbackError(eventName, 'Date', data.confirmService.invalid.Date.yesterday,
       'The date must not be before issue date of claim');
-    await assertCallbackError('CONFIRM_SERVICE', 'Date', data.confirmService.invalid.Date.tomorrow,
+    await assertCallbackError(eventName, 'Date', data.confirmService.invalid.Date.tomorrow,
       'The date must not be in the future');
 
-    await assertSubmittedEvent('CONFIRM_SERVICE', 'CREATED', {
+    await assertSubmittedEvent(eventName, 'CREATED', {
       header: 'You\'ve confirmed service',
       body: 'Deemed date of service'
     });
   },
 
   acknowledgeService: async () => {
+    const eventName = 'ACKNOWLEDGE_SERVICE';
     await testingSupport.resetBusinessProcess(caseId);
-    await request.startEvent('ACKNOWLEDGE_SERVICE', caseId);
+    await request.startEvent(eventName, caseId);
 
+    await assertValidData(eventName, 'ConfirmNameAddress', data.acknowledgeService.valid.ConfirmNameAddress);
+    await assertValidData(eventName, 'ConfirmDetails', data.acknowledgeService.valid.ConfirmDetails);
+    await assertValidData(eventName, 'ResponseIntention', data.acknowledgeService.valid.ResponseIntention);
 
-    await assertValidData('ACKNOWLEDGE_SERVICE', 'ConfirmNameAddress', data.acknowledgeService.valid.ConfirmNameAddress);
-    await assertValidData('ACKNOWLEDGE_SERVICE', 'ConfirmDetails', data.acknowledgeService.valid.ConfirmDetails);
-    await assertValidData('ACKNOWLEDGE_SERVICE', 'ResponseIntention', data.acknowledgeService.valid.ResponseIntention);
-
-    await assertCallbackError('ACKNOWLEDGE_SERVICE', 'ConfirmDetails', data.acknowledgeService.invalid.ConfirmDetails.futureDateOfBirth,
+    await assertCallbackError(eventName, 'ConfirmDetails', data.acknowledgeService.invalid.ConfirmDetails.futureDateOfBirth,
       'The date entered cannot be in the future');
 
-    await assertSubmittedEvent('ACKNOWLEDGE_SERVICE', 'CREATED', {
+    await assertSubmittedEvent(eventName, 'CREATED', {
       header: 'You\'ve acknowledged service',
       body: 'You need to respond before'
     });
   },
 
   requestExtension: async () => {
+    const eventName = 'REQUEST_EXTENSION';
     await testingSupport.resetBusinessProcess(caseId);
-    await request.startEvent('REQUEST_EXTENSION', caseId);
+    await request.startEvent(eventName, caseId);
 
-    await assertValidData('REQUEST_EXTENSION', 'ProposeDeadline', data.requestExtension.valid.ProposeDeadline);
-    await assertValidData('REQUEST_EXTENSION', 'ExtensionAlreadyAgreed', data.requestExtension.valid.ExtensionAlreadyAgreed);
+    await assertValidData(eventName, 'ProposeDeadline', data.requestExtension.valid.ProposeDeadline);
+    await assertValidData(eventName, 'ExtensionAlreadyAgreed', data.requestExtension.valid.ExtensionAlreadyAgreed);
 
-    await assertCallbackError('REQUEST_EXTENSION', 'ProposeDeadline', data.requestExtension.invalid.ProposeDeadline.past,
+    await assertCallbackError(eventName, 'ProposeDeadline', data.requestExtension.invalid.ProposeDeadline.past,
       'The proposed deadline must be a date in the future');
-    await assertCallbackError('REQUEST_EXTENSION', 'ProposeDeadline',data.requestExtension.invalid.ProposeDeadline.beforeCurrentDeadline,
+    await assertCallbackError(eventName, 'ProposeDeadline',data.requestExtension.invalid.ProposeDeadline.beforeCurrentDeadline,
       'The proposed deadline must be after the current deadline');
 
-    await assertSubmittedEvent('REQUEST_EXTENSION', 'CREATED', {
+    await assertSubmittedEvent(eventName, 'CREATED', {
       header: 'You asked for extra time to respond',
       body: 'You asked if you can respond before 4pm on'
     });
   },
 
   respondExtension: async () => {
+    const eventName = 'RESPOND_EXTENSION';
     await testingSupport.resetBusinessProcess(caseId);
-    await request.startEvent('RESPOND_EXTENSION', caseId);
+    await request.startEvent(eventName, caseId);
 
-    await assertCallbackError('RESPOND_EXTENSION', 'Counter', data.respondExtension.invalid.Counter.past,
+    await assertCallbackError(eventName, 'Counter', data.respondExtension.invalid.Counter.past,
       'The proposed deadline must be a date in the future');
-    await assertCallbackError('RESPOND_EXTENSION', 'Counter',data.respondExtension.invalid.Counter.beforeCurrentDeadline,
+    await assertCallbackError(eventName, 'Counter',data.respondExtension.invalid.Counter.beforeCurrentDeadline,
       'The proposed deadline must be after the current deadline');
-    await assertValidData('RESPOND_EXTENSION', 'Respond', data.respondExtension.valid.Respond);
-    await assertValidData('RESPOND_EXTENSION', 'Counter', data.respondExtension.valid.Counter);
-    await assertValidData('RESPOND_EXTENSION', 'Reason', data.respondExtension.valid.Reason);
+    await assertValidData(eventName, 'Respond', data.respondExtension.valid.Respond);
+    await assertValidData(eventName, 'Counter', data.respondExtension.valid.Counter);
+    await assertValidData(eventName, 'Reason', data.respondExtension.valid.Reason);
 
-    await assertSubmittedEvent('RESPOND_EXTENSION', 'CREATED', {
+    await assertSubmittedEvent(eventName, 'CREATED', {
       header: 'You\'ve responded to the request for more time',
       body: 'The defendant must respond before 4pm on'
     });
   },
 
   defendantResponse: async () => {
+    const eventName = 'DEFENDANT_RESPONSE';
     await testingSupport.resetBusinessProcess(caseId);
-    await request.startEvent('DEFENDANT_RESPONSE', caseId);
+    await request.startEvent(eventName, caseId);
 
     deleteCaseFields('respondent1', 'solicitorReferences');
-    await assertValidData('DEFENDANT_RESPONSE', 'RespondentResponseType', data.defendantResponse.valid.RespondentResponseType);
-    await assertValidData('DEFENDANT_RESPONSE', 'Upload', data.defendantResponse.valid.Upload);
-    await assertValidData('DEFENDANT_RESPONSE', 'ConfirmNameAddress', data.defendantResponse.valid.ConfirmNameAddress);
-    await assertValidData('DEFENDANT_RESPONSE', 'ConfirmDetails', data.defendantResponse.valid.ConfirmDetails);
-    await assertValidData('DEFENDANT_RESPONSE', 'FileDirectionsQuestionnaire', data.defendantResponse.valid.FileDirectionsQuestionnaire);
-    await assertValidData('DEFENDANT_RESPONSE', 'DisclosureOfElectronicDocuments', data.defendantResponse.valid.DisclosureOfElectronicDocuments);
-    await assertValidData('DEFENDANT_RESPONSE', 'DisclosureOfNonElectronicDocuments', data.defendantResponse.valid.DisclosureOfNonElectronicDocuments);
-    await assertValidData('DEFENDANT_RESPONSE', 'Experts', data.defendantResponse.valid.Experts);
-    await assertValidData('DEFENDANT_RESPONSE', 'Witnesses', data.defendantResponse.valid.Witnesses);
-    await assertValidData('DEFENDANT_RESPONSE', 'Hearing', data.defendantResponse.valid.Hearing);
-    await assertValidData('DEFENDANT_RESPONSE', 'DraftDirections', data.defendantResponse.valid.DraftDirections);
-    await assertValidData('DEFENDANT_RESPONSE', 'RequestedCourt', data.defendantResponse.valid.RequestedCourt);
-    await assertValidData('DEFENDANT_RESPONSE', 'HearingSupport', data.defendantResponse.valid.HearingSupport);
-    await assertValidData('DEFENDANT_RESPONSE', 'FurtherInformation', data.defendantResponse.valid.FurtherInformation);
-    await assertValidData('DEFENDANT_RESPONSE', 'StatementOfTruth', data.defendantResponse.valid.StatementOfTruth);
-    await assertCallbackError('DEFENDANT_RESPONSE', 'ConfirmDetails', data.defendantResponse.invalid.ConfirmDetails.futureDateOfBirth,
+    await assertValidData(eventName, 'RespondentResponseType', data.defendantResponse.valid.RespondentResponseType);
+    await assertValidData(eventName, 'Upload', data.defendantResponse.valid.Upload);
+    await assertValidData(eventName, 'ConfirmNameAddress', data.defendantResponse.valid.ConfirmNameAddress);
+    await assertValidData(eventName, 'ConfirmDetails', data.defendantResponse.valid.ConfirmDetails);
+    await assertValidData(eventName, 'FileDirectionsQuestionnaire', data.defendantResponse.valid.FileDirectionsQuestionnaire);
+    await assertValidData(eventName, 'DisclosureOfElectronicDocuments', data.defendantResponse.valid.DisclosureOfElectronicDocuments);
+    await assertValidData(eventName, 'DisclosureOfNonElectronicDocuments', data.defendantResponse.valid.DisclosureOfNonElectronicDocuments);
+    await assertValidData(eventName, 'Experts', data.defendantResponse.valid.Experts);
+    await assertValidData(eventName, 'Witnesses', data.defendantResponse.valid.Witnesses);
+    await assertValidData(eventName, 'Hearing', data.defendantResponse.valid.Hearing);
+    await assertValidData(eventName, 'DraftDirections', data.defendantResponse.valid.DraftDirections);
+    await assertValidData(eventName, 'RequestedCourt', data.defendantResponse.valid.RequestedCourt);
+    await assertValidData(eventName, 'HearingSupport', data.defendantResponse.valid.HearingSupport);
+    await assertValidData(eventName, 'FurtherInformation', data.defendantResponse.valid.FurtherInformation);
+    await assertValidData(eventName, 'StatementOfTruth', data.defendantResponse.valid.StatementOfTruth);
+    await assertCallbackError(eventName, 'ConfirmDetails', data.defendantResponse.invalid.ConfirmDetails.futureDateOfBirth,
       'The date entered cannot be in the future');
-    await assertCallbackError('DEFENDANT_RESPONSE', 'Hearing', data.defendantResponse.invalid.Hearing.past,
+    await assertCallbackError(eventName, 'Hearing', data.defendantResponse.invalid.Hearing.past,
       'The date cannot be in the past and must not be more than a year in the future');
-    await assertCallbackError('DEFENDANT_RESPONSE', 'Hearing', data.defendantResponse.invalid.Hearing.moreThanYear,
+    await assertCallbackError(eventName, 'Hearing', data.defendantResponse.invalid.Hearing.moreThanYear,
       'The date cannot be in the past and must not be more than a year in the future');
 
 
-    await assertSubmittedEvent('DEFENDANT_RESPONSE', 'AWAITING_CLAIMANT_INTENTION', {
+    await assertSubmittedEvent(eventName, 'AWAITING_CLAIMANT_INTENTION', {
       header: 'You\'ve submitted your response',
       body: 'We will let you know when they respond.'
     });
   },
 
   claimantResponse: async () => {
+    const eventName = 'CLAIMANT_RESPONSE';
     await testingSupport.resetBusinessProcess(caseId);
-    await request.startEvent('CLAIMANT_RESPONSE', caseId);
+    await request.startEvent(eventName, caseId);
 
-    await assertValidData('CLAIMANT_RESPONSE', 'RespondentResponse', data.claimantResponse.valid.RespondentResponse);
-    await assertValidData('CLAIMANT_RESPONSE', 'DefenceResponseDocument', data.claimantResponse.valid.DefenceResponseDocument);
+    await assertValidData(eventName, 'RespondentResponse', data.claimantResponse.valid.RespondentResponse);
+    await assertValidData(eventName, 'DefenceResponseDocument', data.claimantResponse.valid.DefenceResponseDocument);
 
-    await assertSubmittedEvent('CLAIMANT_RESPONSE', 'AWAITING_CLAIMANT_INTENTION', {
+    await assertSubmittedEvent(eventName, 'AWAITING_CLAIMANT_INTENTION', {
       header: 'You\'ve decided to proceed with the claim',
       body: 'We\'ll review the case. We\'ll contact you to tell you what to do next.'
     });
