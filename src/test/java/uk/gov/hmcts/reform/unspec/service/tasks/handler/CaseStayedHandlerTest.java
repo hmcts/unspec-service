@@ -1,5 +1,6 @@
 package uk.gov.hmcts.reform.unspec.service.tasks.handler;
 
+import org.camunda.bpm.client.exception.NotFoundException;
 import org.camunda.bpm.client.task.ExternalTask;
 import org.camunda.bpm.client.task.ExternalTaskService;
 import org.junit.jupiter.api.BeforeEach;
@@ -16,6 +17,8 @@ import uk.gov.hmcts.reform.unspec.service.search.CaseStayedSearchService;
 import java.util.List;
 import java.util.Map;
 
+import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.when;
@@ -48,10 +51,7 @@ class CaseStayedHandlerTest {
     void shouldEmitMoveCaseToStayedEvent_whenCasesFound() {
         long caseId = 1L;
         Map<String, Object> data = Map.of("data", "some data");
-        List<CaseDetails> caseDetails = List.of(CaseDetails.builder()
-                                                    .id(caseId)
-                                                    .data(data)
-                                                    .build());
+        List<CaseDetails> caseDetails = List.of(CaseDetails.builder().id(caseId).data(data).build());
 
         when(searchService.getCases()).thenReturn(caseDetails);
 
@@ -71,7 +71,7 @@ class CaseStayedHandlerTest {
     }
 
     @Test
-    void shouldCatchError_whenException() {
+    void shouldCallHandleFailureMethod_whenExceptionFromBusinessLogic() {
         String errorMessage = "there was an error";
 
         when(mockExternalTask.getRetries()).thenReturn(null);
@@ -82,5 +82,16 @@ class CaseStayedHandlerTest {
         caseStayedFinder.execute(mockExternalTask, externalTaskService);
 
         verify(externalTaskService).handleFailure(mockExternalTask, "worker", errorMessage, 2, 500L);
+    }
+
+    @Test
+    void shouldNotCallExternalTaskService_whenExceptionOnCompleteCall() {
+        String errorMessage = "there was an error";
+
+        doThrow(new NotFoundException(errorMessage)).when(externalTaskService).complete(mockExternalTask);
+
+        caseStayedFinder.execute(mockExternalTask, externalTaskService);
+
+        verify(externalTaskService, never()).handleFailure(mockExternalTask, "worker", errorMessage, 3, 500L);
     }
 }
