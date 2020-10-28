@@ -38,7 +38,7 @@
       <bpmn:incoming>Flow_0x2wz2v</bpmn:incoming>
     </bpmn:endEvent>
     <bpmn:sequenceFlow id="Flow_0x2wz2v" sourceRef="Activity_0471ljk" targetRef="Event_1h61h5s" />
-    <bpmn:callActivity id="Activity_0471ljk" name="End Business Process" calledElement="END_BUSINESS_PROCESS_ID">
+    <bpmn:callActivity id="Activity_0471ljk" name="End Business Process" calledElement="EndBusinessProcess">
       <bpmn:extensionElements>
         <camunda:properties>
           <camunda:property name="variables" value="all" />
