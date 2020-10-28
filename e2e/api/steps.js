@@ -43,18 +43,20 @@ module.exports = {
     await request.startEvent('CONFIRM_SERVICE', caseId);
 
     deleteCaseFields('servedDocumentFiles');
-    await assertCallbackError('CONFIRM_SERVICE', 'ServedDocuments', data.confirmService.invalid.ServedDocuments.blankOtherDocuments,
-      'CONTENT TBC: please enter a valid value for other documents');
+
     await assertValidData('CONFIRM_SERVICE', 'ServedDocuments', data.confirmService.valid.ServedDocuments);
     await assertValidData('CONFIRM_SERVICE', 'Upload', data.confirmService.valid.Upload);
     await assertValidData('CONFIRM_SERVICE', 'Method', data.confirmService.valid.Method);
     await assertValidData('CONFIRM_SERVICE', 'Location', data.confirmService.valid.Location);
+    await assertValidData('CONFIRM_SERVICE', 'Date', data.confirmService.valid.Date);
+    await assertValidData('CONFIRM_SERVICE', 'StatementOfTruth', data.confirmService.valid.StatementOfTruth);
+
+    await assertCallbackError('CONFIRM_SERVICE', 'ServedDocuments', data.confirmService.invalid.ServedDocuments.blankOtherDocuments,
+      'CONTENT TBC: please enter a valid value for other documents');
     await assertCallbackError('CONFIRM_SERVICE', 'Date', data.confirmService.invalid.Date.yesterday,
       'The date must not be before issue date of claim');
     await assertCallbackError('CONFIRM_SERVICE', 'Date', data.confirmService.invalid.Date.tomorrow,
       'The date must not be in the future');
-    await assertValidData('CONFIRM_SERVICE', 'Date', data.confirmService.valid.Date);
-    await assertValidData('CONFIRM_SERVICE', 'StatementOfTruth', data.confirmService.valid.StatementOfTruth);
 
     await assertSubmittedEvent('CONFIRM_SERVICE', 'CREATED', {
       header: 'You\'ve confirmed service',
@@ -66,11 +68,13 @@ module.exports = {
     await testingSupport.resetBusinessProcess(caseId);
     await request.startEvent('ACKNOWLEDGE_SERVICE', caseId);
 
+
     await assertValidData('ACKNOWLEDGE_SERVICE', 'ConfirmNameAddress', data.acknowledgeService.valid.ConfirmNameAddress);
-    await assertCallbackError('ACKNOWLEDGE_SERVICE', 'ConfirmDetails', data.acknowledgeService.invalid.ConfirmDetails.futureDateOfBirth,
-      'The date entered cannot be in the future');
     await assertValidData('ACKNOWLEDGE_SERVICE', 'ConfirmDetails', data.acknowledgeService.valid.ConfirmDetails);
     await assertValidData('ACKNOWLEDGE_SERVICE', 'ResponseIntention', data.acknowledgeService.valid.ResponseIntention);
+
+    await assertCallbackError('ACKNOWLEDGE_SERVICE', 'ConfirmDetails', data.acknowledgeService.invalid.ConfirmDetails.futureDateOfBirth,
+      'The date entered cannot be in the future');
 
     await assertSubmittedEvent('ACKNOWLEDGE_SERVICE', 'CREATED', {
       header: 'You\'ve acknowledged service',
@@ -82,12 +86,13 @@ module.exports = {
     await testingSupport.resetBusinessProcess(caseId);
     await request.startEvent('REQUEST_EXTENSION', caseId);
 
+    await assertValidData('REQUEST_EXTENSION', 'ProposeDeadline', data.requestExtension.valid.ProposeDeadline);
+    await assertValidData('REQUEST_EXTENSION', 'ExtensionAlreadyAgreed', data.requestExtension.valid.ExtensionAlreadyAgreed);
+
     await assertCallbackError('REQUEST_EXTENSION', 'ProposeDeadline', data.requestExtension.invalid.ProposeDeadline.past,
       'The proposed deadline must be a date in the future');
     await assertCallbackError('REQUEST_EXTENSION', 'ProposeDeadline',data.requestExtension.invalid.ProposeDeadline.beforeCurrentDeadline,
       'The proposed deadline must be after the current deadline');
-    await assertValidData('REQUEST_EXTENSION', 'ProposeDeadline', data.requestExtension.valid.ProposeDeadline);
-    await assertValidData('REQUEST_EXTENSION', 'ExtensionAlreadyAgreed', data.requestExtension.valid.ExtensionAlreadyAgreed);
 
     await assertSubmittedEvent('REQUEST_EXTENSION', 'CREATED', {
       header: 'You asked for extra time to respond',
@@ -99,11 +104,11 @@ module.exports = {
     await testingSupport.resetBusinessProcess(caseId);
     await request.startEvent('RESPOND_EXTENSION', caseId);
 
-    await assertValidData('RESPOND_EXTENSION', 'Respond', data.respondExtension.valid.Respond);
     await assertCallbackError('RESPOND_EXTENSION', 'Counter', data.respondExtension.invalid.Counter.past,
       'The proposed deadline must be a date in the future');
     await assertCallbackError('RESPOND_EXTENSION', 'Counter',data.respondExtension.invalid.Counter.beforeCurrentDeadline,
       'The proposed deadline must be after the current deadline');
+    await assertValidData('RESPOND_EXTENSION', 'Respond', data.respondExtension.valid.Respond);
     await assertValidData('RESPOND_EXTENSION', 'Counter', data.respondExtension.valid.Counter);
     await assertValidData('RESPOND_EXTENSION', 'Reason', data.respondExtension.valid.Reason);
 
@@ -121,24 +126,25 @@ module.exports = {
     await assertValidData('DEFENDANT_RESPONSE', 'RespondentResponseType', data.defendantResponse.valid.RespondentResponseType);
     await assertValidData('DEFENDANT_RESPONSE', 'Upload', data.defendantResponse.valid.Upload);
     await assertValidData('DEFENDANT_RESPONSE', 'ConfirmNameAddress', data.defendantResponse.valid.ConfirmNameAddress);
-    await assertCallbackError('DEFENDANT_RESPONSE', 'ConfirmDetails', data.defendantResponse.invalid.ConfirmDetails.futureDateOfBirth,
-      'The date entered cannot be in the future');
     await assertValidData('DEFENDANT_RESPONSE', 'ConfirmDetails', data.defendantResponse.valid.ConfirmDetails);
     await assertValidData('DEFENDANT_RESPONSE', 'FileDirectionsQuestionnaire', data.defendantResponse.valid.FileDirectionsQuestionnaire);
     await assertValidData('DEFENDANT_RESPONSE', 'DisclosureOfElectronicDocuments', data.defendantResponse.valid.DisclosureOfElectronicDocuments);
     await assertValidData('DEFENDANT_RESPONSE', 'DisclosureOfNonElectronicDocuments', data.defendantResponse.valid.DisclosureOfNonElectronicDocuments);
     await assertValidData('DEFENDANT_RESPONSE', 'Experts', data.defendantResponse.valid.Experts);
     await assertValidData('DEFENDANT_RESPONSE', 'Witnesses', data.defendantResponse.valid.Witnesses);
-    await assertCallbackError('DEFENDANT_RESPONSE', 'Hearing', data.defendantResponse.invalid.Hearing.past,
-      'The date cannot be in the past and must not be more than a year in the future');
-    await assertCallbackError('DEFENDANT_RESPONSE', 'Hearing', data.defendantResponse.invalid.Hearing.moreThanYear,
-      'The date cannot be in the past and must not be more than a year in the future');
     await assertValidData('DEFENDANT_RESPONSE', 'Hearing', data.defendantResponse.valid.Hearing);
     await assertValidData('DEFENDANT_RESPONSE', 'DraftDirections', data.defendantResponse.valid.DraftDirections);
     await assertValidData('DEFENDANT_RESPONSE', 'RequestedCourt', data.defendantResponse.valid.RequestedCourt);
     await assertValidData('DEFENDANT_RESPONSE', 'HearingSupport', data.defendantResponse.valid.HearingSupport);
     await assertValidData('DEFENDANT_RESPONSE', 'FurtherInformation', data.defendantResponse.valid.FurtherInformation);
     await assertValidData('DEFENDANT_RESPONSE', 'StatementOfTruth', data.defendantResponse.valid.StatementOfTruth);
+    await assertCallbackError('DEFENDANT_RESPONSE', 'ConfirmDetails', data.defendantResponse.invalid.ConfirmDetails.futureDateOfBirth,
+      'The date entered cannot be in the future');
+    await assertCallbackError('DEFENDANT_RESPONSE', 'Hearing', data.defendantResponse.invalid.Hearing.past,
+      'The date cannot be in the past and must not be more than a year in the future');
+    await assertCallbackError('DEFENDANT_RESPONSE', 'Hearing', data.defendantResponse.invalid.Hearing.moreThanYear,
+      'The date cannot be in the past and must not be more than a year in the future');
+
 
     await assertSubmittedEvent('DEFENDANT_RESPONSE', 'AWAITING_CLAIMANT_INTENTION', {
       header: 'You\'ve submitted your response',
@@ -161,10 +167,10 @@ module.exports = {
 };
 
 const assertValidData = async (eventName, pageId, eventData, expectedDataSetByCallback = {}) => {
-  caseData = Object.assign(caseData, eventData);
+  caseData = {...caseData, ...eventData};
   const response = await request.validatePage(eventName, pageId, caseData);
   const responseBody = await response.json();
-  caseData = Object.assign(caseData, expectedDataSetByCallback);
+  caseData = {...caseData, ...expectedDataSetByCallback};
 
   if (response.status != 200) {
     console.log(responseBody);
@@ -176,8 +182,7 @@ const assertValidData = async (eventName, pageId, eventData, expectedDataSetByCa
 };
 
 const assertCallbackError = async (eventName, pageId, eventData, expectedErrorMessage) => {
-  caseData = Object.assign(caseData, eventData);
-  const response = await request.validatePage(eventName, pageId, caseData);
+  const response = await request.validatePage(eventName, pageId, {...caseData, ...eventData});
   const responseBody = await response.json();
 
   assert.equal(response.status, 422);
@@ -199,7 +204,7 @@ const assertSubmittedEvent = async (eventName, expectedState, submittedCallbackR
   assert.equal(responseBody.after_submit_callback_response.confirmation_header.includes(submittedCallbackResponseContains.header), true);
   assert.equal(responseBody.after_submit_callback_response.confirmation_body.includes(submittedCallbackResponseContains.body), true);
 
-  caseData = Object.assign(caseData, responseBody.case_data);
+  caseData = {...caseData, ...responseBody.case_data};
   if (eventName === 'CREATE_CLAIM') {
     caseId = responseBody.id;
     console.log('Case created: ' + caseId);
