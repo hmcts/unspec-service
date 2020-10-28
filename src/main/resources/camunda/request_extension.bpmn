@@ -24,7 +24,7 @@
       <bpmn:incoming>Flow_0rzybzn</bpmn:incoming>
     </bpmn:endEvent>
     <bpmn:sequenceFlow id="Flow_0rzybzn" sourceRef="Event_1a7mdpp" targetRef="Event_0n7sy1w" />
-    <bpmn:serviceTask id="RequestExtensionNotifyApplicantSolicitor1" name="Send email applicant solicitor 1" camunda:type="external" camunda:topic="processCaseEvent">
+    <bpmn:serviceTask id="RequestExtensionNotifyApplicantSolicitor1" name="Notify applicant solicitor 1" camunda:type="external" camunda:topic="processCaseEvent">
       <bpmn:extensionElements>
         <camunda:inputOutput>
           <camunda:inputParameter name="caseEvent">NOTIFY_APPLICANT_SOLICITOR1_FOR_REQUEST_FOR_EXTENSION</camunda:inputParameter>
