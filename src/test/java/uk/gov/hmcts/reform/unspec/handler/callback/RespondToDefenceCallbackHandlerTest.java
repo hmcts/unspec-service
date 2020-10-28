@@ -6,6 +6,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.jackson.JacksonAutoConfiguration;
+import org.springframework.boot.autoconfigure.validation.ValidationAutoConfiguration;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
@@ -15,14 +16,17 @@ import uk.gov.hmcts.reform.ccd.client.model.SubmittedCallbackResponse;
 import uk.gov.hmcts.reform.unspec.callback.CallbackParams;
 import uk.gov.hmcts.reform.unspec.helpers.CaseDetailsConverter;
 import uk.gov.hmcts.reform.unspec.model.CaseData;
+import uk.gov.hmcts.reform.unspec.model.UnavailableDate;
+import uk.gov.hmcts.reform.unspec.model.dq.Applicant1DQ;
+import uk.gov.hmcts.reform.unspec.model.dq.Hearing;
 import uk.gov.hmcts.reform.unspec.sampledata.CallbackParamsBuilder;
 import uk.gov.hmcts.reform.unspec.sampledata.CaseDataBuilder;
 import uk.gov.hmcts.reform.unspec.sampledata.CaseDetailsBuilder;
 import uk.gov.hmcts.reform.unspec.service.BusinessProcessService;
 import uk.gov.hmcts.reform.unspec.service.flowstate.StateFlowEngine;
+import uk.gov.hmcts.reform.unspec.validation.UnavailableDateValidator;
 
-import java.util.List;
-import java.util.Map;
+import java.time.LocalDate;
 
 import static java.lang.String.format;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -33,16 +37,21 @@ import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.when;
 import static uk.gov.hmcts.reform.unspec.callback.CallbackType.ABOUT_TO_START;
 import static uk.gov.hmcts.reform.unspec.callback.CallbackType.ABOUT_TO_SUBMIT;
+import static uk.gov.hmcts.reform.unspec.callback.CallbackType.MID;
 import static uk.gov.hmcts.reform.unspec.callback.CallbackType.SUBMITTED;
 import static uk.gov.hmcts.reform.unspec.callback.CaseEvent.CLAIMANT_RESPONSE;
 import static uk.gov.hmcts.reform.unspec.enums.YesOrNo.NO;
 import static uk.gov.hmcts.reform.unspec.enums.YesOrNo.YES;
+import static uk.gov.hmcts.reform.unspec.utils.ElementUtils.wrapElements;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(classes = {
     RespondToDefenceCallbackHandler.class,
     JacksonAutoConfiguration.class,
+    ValidationAutoConfiguration.class,
+    UnavailableDateValidator.class,
     CaseDetailsConverter.class,
+    BusinessProcessService.class,
     StateFlowEngine.class
 })
 class RespondToDefenceCallbackHandlerTest extends BaseCallbackHandlerTest {
@@ -69,11 +78,94 @@ class RespondToDefenceCallbackHandlerTest extends BaseCallbackHandlerTest {
     }
 
     @Nested
+    class MidEventCallbackValidateUnavailableDates {
+
+        @Test
+        void shouldReturnError_whenUnavailableDateIsMoreThanOneYearInFuture() {
+            CaseData.CaseDataBuilder caseDataBuilder = CaseData.builder();
+            caseDataBuilder
+                .applicant1DQ(Applicant1DQ.builder()
+                                  .applicant1DQHearing(Hearing.builder()
+                                                           .unavailableDates(wrapElements(
+                                                               UnavailableDate.builder().date(
+                                                                   LocalDate.now().plusYears(5)).build()))
+                                                           .build())
+                                  .build())
+                .build();
+
+            CallbackParams params = callbackParamsOf(caseDataBuilder.build(), MID, "validate-unavailable-dates");
+
+            AboutToStartOrSubmitCallbackResponse response = (AboutToStartOrSubmitCallbackResponse) handler
+                .handle(params);
+
+            assertThat(response.getErrors())
+                .containsExactly("The date cannot be in the past and must not be more than a year in the future");
+        }
+
+        @Test
+        void shouldReturnError_whenUnavailableDateIsInPast() {
+            CaseData.CaseDataBuilder caseDataBuilder = CaseData.builder();
+            caseDataBuilder
+                .applicant1DQ(Applicant1DQ.builder()
+                                  .applicant1DQHearing(Hearing.builder()
+                                                           .unavailableDates(wrapElements(
+                                                               UnavailableDate.builder().date(
+                                                                   LocalDate.now().minusYears(5)).build()))
+                                                           .build())
+                                  .build())
+                .build();
+
+            CallbackParams params = callbackParamsOf(caseDataBuilder.build(), MID, "validate-unavailable-dates");
+
+            AboutToStartOrSubmitCallbackResponse response = (AboutToStartOrSubmitCallbackResponse) handler
+                .handle(params);
+
+            assertThat(response.getErrors())
+                .containsExactly("The date cannot be in the past and must not be more than a year in the future");
+        }
+
+        @Test
+        void shouldReturnNoError_whenUnavailableDateIsValid() {
+            CaseData.CaseDataBuilder caseDataBuilder = CaseData.builder();
+            caseDataBuilder
+                .applicant1DQ(Applicant1DQ.builder()
+                                  .applicant1DQHearing(Hearing.builder()
+                                                           .unavailableDates(wrapElements(
+                                                               UnavailableDate.builder().date(
+                                                                   LocalDate.now().plusDays(5)).build()))
+                                                           .build())
+                                  .build())
+                .build();
+
+            CallbackParams params = callbackParamsOf(caseDataBuilder.build(), MID, "validate-unavailable-dates");
+
+            AboutToStartOrSubmitCallbackResponse response = (AboutToStartOrSubmitCallbackResponse) handler
+                .handle(params);
+
+            assertThat(response.getErrors()).isEmpty();
+        }
+
+        @Test
+        void shouldReturnNoError_whenNoUnavailableDate() {
+            CaseData.CaseDataBuilder caseDataBuilder = CaseData.builder();
+            caseDataBuilder
+                .applicant1DQ(Applicant1DQ.builder().applicant1DQHearing(Hearing.builder().build()).build()).build();
+
+            CallbackParams params = callbackParamsOf(caseDataBuilder.build(), MID, "validate-unavailable-dates");
+
+            AboutToStartOrSubmitCallbackResponse response = (AboutToStartOrSubmitCallbackResponse) handler
+                .handle(params);
+
+            assertThat(response.getErrors()).isEmpty();
+        }
+    }
+
+    @Nested
     class AboutToSubmitCallback {
 
         @BeforeEach
         void setup() {
-            when(businessProcessService.updateBusinessProcess(any(), any())).thenReturn(List.of());
+            when(businessProcessService.updateBusinessProcess(any(), any())).thenReturn(CaseData.builder().build());
             clearInvocations(businessProcessService);
         }
 
@@ -83,7 +175,7 @@ class RespondToDefenceCallbackHandlerTest extends BaseCallbackHandlerTest {
 
             handler.handle(callbackParamsOf(caseData, ABOUT_TO_SUBMIT));
 
-            verify(businessProcessService).updateBusinessProcess(Map.of(), CLAIMANT_RESPONSE);
+            verify(businessProcessService).updateBusinessProcess(caseData, CLAIMANT_RESPONSE);
         }
 
         @Test
@@ -98,7 +190,6 @@ class RespondToDefenceCallbackHandlerTest extends BaseCallbackHandlerTest {
 
     @Nested
     class SubmittedCallback {
-        public static final String APPLICANT_1_PROCEEDING = "applicant1ProceedWithClaim";
 
         @Test
         void shouldReturnExpectedResponse_whenApplicantIsProceedingWithClaim() {
