@@ -168,6 +168,7 @@ const assertValidData = async (eventName, pageId, eventData, expectedDataSetByCa
 
   if (response.status != 200) {
     console.log(responseBody);
+    console.log(responseBody.details.field_errors);
   }
 
   assert.equal(response.status, 200);

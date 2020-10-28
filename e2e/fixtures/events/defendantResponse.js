@@ -53,7 +53,7 @@ module.exports = {
     Experts: {
       respondent1DQExperts: {
         expertRequired: 'Yes',
-        exportReportsSent: 'NOT_OBTAINED',
+        expertReportsSent: 'NOT_OBTAINED',
         jointExpertSuitable: 'Yes',
         details: [
           element({

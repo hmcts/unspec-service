@@ -58,7 +58,7 @@ const requestedCourtPage = require('./fragments/dq/requestedCourt.page');
 const hearingSupportRequirementsPage = require('./fragments/dq/hearingSupportRequirements.page');
 const furtherInformationPage = require('./fragments/dq/furtherInformation.page');
 
-const addressFixture = require('./fixtures/address.js');
+const address = require('./fixtures/address.js');
 
 const baseUrl = process.env.URL || 'http://localhost:3333';
 const signedInSelector = 'exui-header';
@@ -96,9 +96,9 @@ module.exports = function () {
       await this.clickContinue();
       await solicitorReferencesPage.enterReferences();
       await chooseCourtPage.enterCourt();
-      await party.enterParty('applicant1', addressFixture);
-      await claimantLitigationDetails.enterLitigantFriendWithDifferentAddressToClaimant(addressFixture, TEST_FILE_PATH);
-      await party.enterParty('respondent1', addressFixture);
+      await party.enterParty('applicant1', address);
+      await claimantLitigationDetails.enterLitigantFriendWithDifferentAddressToClaimant(address, TEST_FILE_PATH);
+      await party.enterParty('respondent1', address);
       await claimTypePage.selectClaimType();
       await personalInjuryTypePage.selectPersonalInjuryType();
       await uploadParticularsOfClaim.upload(TEST_FILE_PATH);
