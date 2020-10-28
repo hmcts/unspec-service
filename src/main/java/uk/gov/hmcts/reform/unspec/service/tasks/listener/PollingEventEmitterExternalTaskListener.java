@@ -9,13 +9,14 @@ import uk.gov.hmcts.reform.unspec.service.tasks.handler.PollingEventEmitterHandl
 
 @Component
 @ConditionalOnExpression("${polling.event.emitter.enabled:true}")
-public abstract class PollingEventEmitterExternalTaskListener implements ExternalTaskClient {
+public class PollingEventEmitterExternalTaskListener {
 
     private static final String TOPIC = "POLLING_EVENT_EMITTER";
 
     @Autowired
-    private PollingEventEmitterExternalTaskListener(PollingEventEmitterHandler pollingEventEmitterHandler) {
-        TopicSubscriptionBuilder subscriptionBuilder = subscribe(TOPIC);
+    private PollingEventEmitterExternalTaskListener(PollingEventEmitterHandler pollingEventEmitterHandler,
+                                                    ExternalTaskClient client) {
+        TopicSubscriptionBuilder subscriptionBuilder = client.subscribe(TOPIC);
         subscriptionBuilder.handler(pollingEventEmitterHandler).open();
     }
 }
