@@ -2,11 +2,9 @@
 
 set -eu
 
-dir=$(dirname "${BASH_SOURCE[0]}")
-echo $dir
 filepath="$(realpath ".")/src/main/resources/camunda"
 echo $filepath
-serviceToken=$($(realpath ".")/civil-unspecified-docker/bin/utils/idam-lease-service-token.sh ccd_gw $(docker run --rm toolbelt/oathtool --totp -b ${CCD_API_GATEWAY_S2S_SECRET:-AAAAAAAAAAAAAAAC}))
+serviceToken=$($(realpath ".")/civil-unspecified-docker/bin/utils/idam-lease-service-token.sh unspec_service $(docker run --rm toolbelt/oathtool --totp -b ${S2S_SECRET:-AABBCCDDEEFFGGHH}))
 
 for file in $(find ${filepath} -name '*.bpmn')
 do
