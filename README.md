@@ -177,6 +177,5 @@ Run `./bin/import-bpmn-diagram.sh .` to upload it to Camunda. The diagram must e
 Camunda in other environments.
 
 ## License
-
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details
 
