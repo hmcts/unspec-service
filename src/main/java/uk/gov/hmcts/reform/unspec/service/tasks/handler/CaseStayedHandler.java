@@ -27,9 +27,4 @@ public class CaseStayedHandler implements BaseExternalTaskHandler {
         cases.forEach(caseDetails -> applicationEventPublisher.publishEvent(
             new MoveCaseToStayedEvent(caseDetails.getId())));
     }
-
-    @Override
-    public int getMaxRetries() {
-        return 3;
-    }
 }

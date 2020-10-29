@@ -81,11 +81,12 @@ class CaseStayedHandlerTest {
 
         caseStayedFinder.execute(mockExternalTask, externalTaskService);
 
+        verify(externalTaskService, never()).complete(mockExternalTask);
         verify(externalTaskService).handleFailure(mockExternalTask, "worker", errorMessage, 2, 500L);
     }
 
     @Test
-    void shouldNotCallExternalTaskService_whenExceptionOnCompleteCall() {
+    void shouldNotCallHandleFailureMethod_whenExceptionOnCompleteCall() {
         String errorMessage = "there was an error";
 
         doThrow(new NotFoundException(errorMessage)).when(externalTaskService).complete(mockExternalTask);
