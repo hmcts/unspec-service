@@ -659,6 +659,7 @@
     "ID": "pbaNumber",
     "Label": "Select a Payment by Account number from the list",
     "FieldType": "FixedList",
-    "FieldTypeParameter": "PbaNumber"
+    "FieldTypeParameter": "PbaNumber",
+    "SecurityClassification": "Public"
   }
 ]
