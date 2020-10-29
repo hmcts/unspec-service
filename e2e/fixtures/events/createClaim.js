@@ -79,6 +79,9 @@ module.exports = {
         statementOfValueInPennies: '3000000'
       }
     },
+    PbaNumber: {
+      pbaNumber: 'PBA0077597'
+    },
     StatementOfTruth: {
       applicantSolicitor1ClaimStatementOfTruth: {
         name: 'John Doe',

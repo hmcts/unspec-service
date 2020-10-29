@@ -18,6 +18,7 @@ const claimTypePage = require('./pages/createClaim/claimType.page');
 const personalInjuryTypePage = require('./pages/createClaim/personalInjuryType.page');
 const uploadParticularsOfClaim = require('./pages/createClaim/uploadParticularsOfClaim.page');
 const claimValuePage = require('./pages/createClaim/claimValue.page');
+const pbaNumberPage = require('./pages/createClaim/pbaNumber.page');
 
 const servedDocumentsPage = require('./pages/confirmService/servedDocuments.page');
 const uploadDocumentsPage = require('./pages/confirmService/uploadDocuments.page');
@@ -103,6 +104,7 @@ module.exports = function () {
       await personalInjuryTypePage.selectPersonalInjuryType();
       await uploadParticularsOfClaim.upload(TEST_FILE_PATH);
       await claimValuePage.enterClaimValue();
+      await pbaNumberPage.selectPbaNumber();
       await statementOfTruth.enterNameAndRole('claim');
       await event.submit('Issue claim', 'Your claim has been issued');
       await event.returnToCaseDetails();

@@ -20,7 +20,7 @@ module.exports = {
   createClaim: async (user) => {
     eventName = 'CREATE_CLAIM';
     const eventPages = ['References', 'Court', 'Claimant', 'ClaimantLitigationFriend', 'Defendant', 'ClaimType',
-      'PersonalInjuryType', 'Upload', 'ClaimValue', 'StatementOfTruth'];
+      'PbaNumber', 'PersonalInjuryType', 'Upload', 'ClaimValue', 'StatementOfTruth'];
 
     await request.setupTokens(user);
     await request.startEvent(eventName);
