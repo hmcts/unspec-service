@@ -1,15 +1,18 @@
 #!/usr/bin/env bash
 
 set -eu
-
-dir=$(dirname ${0})
-filepath="$(realpath ".")/src/main/resources/camunda"
+workspace=${1}
+echo $workspace
+filepath="$(realpath $workspace)/src/main/resources/camunda"
+echo $filepath
+serviceToken=$($(realpath $workspace)/civil-unspecified-docker/bin/utils/idam-lease-service-token.sh unspec_service $(docker run --rm toolbelt/oathtool --totp -b ${S2S_SECRET:-AABBCCDDEEFFGGHH}))
 
 for file in $(find ${filepath} -name '*.bpmn')
 do
-  uploadResponse=$(curl --insecure --silent -w "\n%{http_code}" --show-error -X POST \
+  uploadResponse=$(curl --insecure -v --silent -w "\n%{http_code}" --show-error -X POST \
     ${CAMUNDA_BASE_URL:-http://localhost:9404}/engine-rest/deployment/create \
     -H "Accept: application/json" \
+    -H "ServiceAuthorization: Bearer ${serviceToken}" \
     -F "deployment-name=$(date +"%Y%m%d-%H%M%S")-$(basename ${file})" \
     -F "file=@${filepath}/$(basename ${file})")
 
