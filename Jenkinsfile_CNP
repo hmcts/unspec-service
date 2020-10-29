@@ -57,7 +57,7 @@ def uploadBpmnDiagrams(String env) {
   dir("${WORKSPACE}/bin") {
     sh """
     eval \$(./variables/load-${env}-environment-variables.sh)
-    ./import-bpmn-diagram.sh
+    ./import-bpmn-diagram.sh ${WORKSPACE}
   """
   }
 }
@@ -145,6 +145,7 @@ withPipeline(type, product, component) {
     env.URL = "https://manage-case.aat.platform.hmcts.net"
     archiveCoreCaseDataDefinitions('aat')
     uploadCoreCaseDataDefinitions('aat')
+    uploadBpmnDiagrams('aat')
   }
 
   before('buildinfra:demo') {
