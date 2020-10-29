@@ -7,7 +7,7 @@ module.exports = {
     },
     Counter: {
       respondentSolicitor1claimResponseExtensionCounter: 'Yes',
-      respondentSolicitor1claimResponseExtensionCounterDate: date(31)
+      respondentSolicitor1claimResponseExtensionCounterDate: date(40)
     },
     Reason: {
       respondentSolicitor1claimResponseExtensionRejectionReason: 'Test rejection reason'

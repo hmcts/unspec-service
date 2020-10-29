@@ -3,7 +3,7 @@ const {date} = require('../../api/dataHelper');
 module.exports = {
   valid: {
     ProposeDeadline: {
-      respondentSolicitor1claimResponseExtensionProposedDeadline: date(31)
+      respondentSolicitor1claimResponseExtensionProposedDeadline: date(40)
     },
     ExtensionAlreadyAgreed: {
       respondentSolicitor1claimResponseExtensionAlreadyAgreed: 'No',
