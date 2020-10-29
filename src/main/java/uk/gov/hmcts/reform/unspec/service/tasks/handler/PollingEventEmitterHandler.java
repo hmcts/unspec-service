@@ -32,7 +32,7 @@ public class PollingEventEmitterHandler implements BaseExternalTaskHandler {
     }
 
     @Override
-    public int getMaxRetries() {
+    public int getMaxAttempts() {
         return 1;
     }
 }

@@ -26,6 +26,9 @@ import uk.gov.hmcts.reform.unspec.service.CoreCaseDataService;
 import java.util.Map;
 
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.never;
@@ -44,7 +47,7 @@ class CaseEventTaskHandlerTest {
     private static final String CASE_ID = "1";
 
     @Mock
-    private ExternalTask mockExternalTask;
+    private ExternalTask mockTask;
 
     @Mock
     private ExternalTaskService externalTaskService;
@@ -57,16 +60,16 @@ class CaseEventTaskHandlerTest {
 
     @BeforeEach
     void init() {
-        when(mockExternalTask.getTopicName()).thenReturn("test");
-        when(mockExternalTask.getWorkerId()).thenReturn("worker");
-        when(mockExternalTask.getActivityId()).thenReturn("activityId");
+        when(mockTask.getTopicName()).thenReturn("test");
+        when(mockTask.getWorkerId()).thenReturn("worker");
+        when(mockTask.getActivityId()).thenReturn("activityId");
 
         Map<String, Object> variables = Map.of(
             "caseId", CASE_ID,
             "caseEvent", NOTIFY_RESPONDENT_SOLICITOR1_FOR_CLAIM_ISSUE.name()
         );
 
-        when(mockExternalTask.getAllVariables()).thenReturn(variables);
+        when(mockTask.getAllVariables()).thenReturn(variables);
     }
 
     @Test
@@ -82,37 +85,43 @@ class CaseEventTaskHandlerTest {
 
         when(coreCaseDataService.submitUpdate(eq(CASE_ID), any(CaseDataContent.class))).thenReturn(caseData);
 
-        caseEventTaskHandler.execute(mockExternalTask, externalTaskService);
+        caseEventTaskHandler.execute(mockTask, externalTaskService);
 
         verify(coreCaseDataService).startUpdate(eq(CASE_ID), eq(NOTIFY_RESPONDENT_SOLICITOR1_FOR_CLAIM_ISSUE));
         verify(coreCaseDataService).submitUpdate(eq(CASE_ID), any(CaseDataContent.class));
-        verify(externalTaskService).complete(mockExternalTask);
+        verify(externalTaskService).complete(mockTask);
     }
 
     @Test
     void shouldCallHandleFailureMethod_whenExceptionFromBusinessLogic() {
         String errorMessage = "there was an error";
 
-        when(mockExternalTask.getRetries()).thenReturn(null);
+        when(mockTask.getRetries()).thenReturn(null);
         when(coreCaseDataService.startUpdate(CASE_ID, NOTIFY_RESPONDENT_SOLICITOR1_FOR_CLAIM_ISSUE))
             .thenAnswer(invocation -> {
                 throw new Exception(errorMessage);
             });
 
-        caseEventTaskHandler.execute(mockExternalTask, externalTaskService);
+        caseEventTaskHandler.execute(mockTask, externalTaskService);
 
-        verify(externalTaskService, never()).complete(mockExternalTask);
-        verify(externalTaskService).handleFailure(mockExternalTask, "worker", errorMessage, 2, 500L);
+        verify(externalTaskService, never()).complete(mockTask);
+        verify(externalTaskService).handleFailure(mockTask, "worker", errorMessage, 2, 500L);
     }
 
     @Test
     void shouldNotCallHandleFailureMethod_whenExceptionOnCompleteCall() {
         String errorMessage = "there was an error";
 
-        doThrow(new NotFoundException(errorMessage)).when(externalTaskService).complete(mockExternalTask);
+        doThrow(new NotFoundException(errorMessage)).when(externalTaskService).complete(mockTask);
 
-        caseEventTaskHandler.execute(mockExternalTask, externalTaskService);
+        caseEventTaskHandler.execute(mockTask, externalTaskService);
 
-        verify(externalTaskService, never()).handleFailure(mockExternalTask, "worker", errorMessage, 3, 500L);
+        verify(externalTaskService, never()).handleFailure(
+            any(ExternalTask.class),
+            anyString(),
+            anyString(),
+            anyInt(),
+            anyLong()
+        );
     }
 }
