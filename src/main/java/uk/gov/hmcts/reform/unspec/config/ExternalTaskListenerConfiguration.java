@@ -1,6 +1,7 @@
 package uk.gov.hmcts.reform.unspec.config;
 
 import org.camunda.bpm.client.ExternalTaskClient;
+import org.camunda.bpm.client.backoff.ExponentialBackoffStrategy;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -17,6 +18,8 @@ public class ExternalTaskListenerConfiguration {
     @Bean
     public ExternalTaskClient client() {
         return ExternalTaskClient.create()
+            .asyncResponseTimeout(120000)
+            .backoffStrategy(new ExponentialBackoffStrategy(0, 0 ,0))
             .baseUrl(baseUrl)
             .build();
     }
