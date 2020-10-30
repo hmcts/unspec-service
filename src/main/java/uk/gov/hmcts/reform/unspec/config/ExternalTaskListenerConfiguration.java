@@ -1,10 +1,10 @@
 package uk.gov.hmcts.reform.unspec.config;
 
 import org.camunda.bpm.client.ExternalTaskClient;
+import org.camunda.bpm.client.backoff.ExponentialBackoffStrategy;
 import org.camunda.bpm.client.interceptor.ClientRequestContext;
 import org.camunda.bpm.client.interceptor.ClientRequestInterceptor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.camunda.bpm.client.backoff.ExponentialBackoffStrategy;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -29,7 +29,7 @@ public class ExternalTaskListenerConfiguration {
         return ExternalTaskClient.create()
             .addInterceptor(new ServiceAuthProvider())
             .asyncResponseTimeout(120000)
-            .backoffStrategy(new ExponentialBackoffStrategy(0, 0 ,0))
+            .backoffStrategy(new ExponentialBackoffStrategy(0, 0, 0))
             .baseUrl(baseUrl)
             .build();
     }
