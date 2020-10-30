@@ -10,7 +10,7 @@ import static uk.gov.hmcts.reform.unspec.callback.CaseEvent.MAKE_PBA_PAYMENT;
 class CreateClaimTest extends BpmnBaseTest {
 
     public static final String NOTIFY_RESPONDENT_SOLICITOR_1 = "NOTIFY_RESPONDENT_SOLICITOR1_FOR_CLAIM_ISSUE";
-    private static final String NOTIFY_RESPONDENT_SOLICITOR_1_ACTIVITY_ID = "CreateClaimNotifyRespondentSolicitor1";
+    private static final String NOTIFY_RESPONDENT_SOLICITOR_1_ACTIVITY_ID = "CreateClaimPaymentSuccessfulNotifyRespondentSolicitor1";
     private static final String MAKE_PAYMENT_ACTIVITY_ID = "CreateClaimMakePayment";
     public static final String PROCESS_PAYMENT = "processPayment";
 

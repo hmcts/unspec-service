@@ -31,8 +31,8 @@ public class EndBusinessProcessTaskHandler implements ExternalTaskHandler {
 
     @Override
     public void execute(ExternalTask externalTask, ExternalTaskService externalTaskService) {
-        Map<String, Object> allVariables = externalTask.getAllVariables();
-        ExternalTaskInput externalTaskInput = mapper.convertValue(allVariables, ExternalTaskInput.class);
+        ExternalTaskInput externalTaskInput = mapper.convertValue(externalTask.getAllVariables(),
+                                                                  ExternalTaskInput.class);
         String caseId = externalTaskInput.getCaseId();
 
         StartEventResponse startEventResponse = coreCaseDataService.startUpdate(caseId, END_BUSINESS_PROCESS);

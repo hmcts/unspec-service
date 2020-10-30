@@ -55,6 +55,8 @@ public class CaseData {
     private LocalDateTime confirmationOfServiceDeadline;
     private final String legacyCaseReference;
     private final AllocatedTrack allocatedTrack;
+    private final String paymentReference;
+    private final String paymentFailureReason;
 
     private final StatementOfTruth applicant1ServiceStatementOfTruthToRespondentSolicitor1;
     private final List<Element<CaseDocument>> systemGeneratedCaseDocuments;

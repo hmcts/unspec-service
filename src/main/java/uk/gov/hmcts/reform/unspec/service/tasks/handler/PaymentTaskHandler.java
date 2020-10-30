@@ -6,6 +6,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.camunda.bpm.client.task.ExternalTask;
 import org.camunda.bpm.client.task.ExternalTaskHandler;
 import org.camunda.bpm.client.task.ExternalTaskService;
+import org.camunda.bpm.engine.variable.VariableMap;
+import org.camunda.bpm.engine.variable.Variables;
 import org.springframework.stereotype.Component;
 import uk.gov.hmcts.reform.ccd.client.model.CaseDataContent;
 import uk.gov.hmcts.reform.ccd.client.model.Event;
@@ -16,6 +18,7 @@ import uk.gov.hmcts.reform.unspec.model.BusinessProcess;
 import uk.gov.hmcts.reform.unspec.model.CaseData;
 import uk.gov.hmcts.reform.unspec.service.CoreCaseDataService;
 import uk.gov.hmcts.reform.unspec.service.data.ExternalTaskInput;
+import uk.gov.hmcts.reform.unspec.service.flowstate.StateFlowEngine;
 
 import java.util.Map;
 
@@ -24,9 +27,11 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class PaymentTaskHandler implements ExternalTaskHandler {
 
+    public static final String FLOW_STATE = "flowState";
     private final CoreCaseDataService coreCaseDataService;
     private final CaseDetailsConverter caseDetailsConverter;
     private final ObjectMapper objectMapper;
+    private final StateFlowEngine stateFlowEngine;
 
     @Override
     public void execute(ExternalTask externalTask, ExternalTaskService externalTaskService) {
@@ -37,7 +42,9 @@ public class PaymentTaskHandler implements ExternalTaskHandler {
         StartEventResponse startEventResponse = coreCaseDataService.startUpdate(caseId, caseEvent);
         CaseData data = caseDetailsConverter.toCaseData(startEventResponse.getCaseDetails());
         BusinessProcess businessProcess = data.getBusinessProcess().updateActivityId(externalTask.getActivityId());
-        coreCaseDataService.submitUpdate(caseId, caseDataContent(startEventResponse, businessProcess));
+        CaseData caseData = coreCaseDataService.submitUpdate(caseId, caseDataContent(startEventResponse, businessProcess));
+        VariableMap variables = Variables.createVariables();
+        variables.putValue(FLOW_STATE, stateFlowEngine.evaluate(caseData).getState().getName());
         externalTaskService.complete(externalTask);
     }
 

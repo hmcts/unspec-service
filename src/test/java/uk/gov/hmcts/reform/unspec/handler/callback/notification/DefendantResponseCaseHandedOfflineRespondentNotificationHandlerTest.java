@@ -54,10 +54,10 @@ class DefendantResponseCaseHandedOfflineRespondentNotificationHandlerTest extend
             handler.handle(params);
 
             verify(notificationService).sendMail(
-                "claimantsolicitor@example.com",
+                "defendantsolicitor@example.com",
                 "template-id",
-                Map.of(CLAIM_REFERENCE_NUMBER, LEGACY_CASE_REFERENCE, SOLICITOR_REFERENCE, "claimant solicitor"),
-                "defendant-response-case-handed-offline-applicant-notification-000LR001"
+                Map.of(CLAIM_REFERENCE_NUMBER, LEGACY_CASE_REFERENCE, SOLICITOR_REFERENCE, "defendant solicitor"),
+                "defendant-response-case-handed-offline-respondent-notification-000LR001"
             );
         }
     }

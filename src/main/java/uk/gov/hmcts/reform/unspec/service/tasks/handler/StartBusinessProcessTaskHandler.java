@@ -44,14 +44,13 @@ public class StartBusinessProcessTaskHandler implements ExternalTaskHandler {
     }
 
     private CaseData startBusinessProcess(ExternalTask externalTask) {
-        Map<String, Object> allVariables = externalTask.getAllVariables();
-        ExternalTaskInput externalTaskInput = objectMapper.convertValue(allVariables, ExternalTaskInput.class);
+        ExternalTaskInput externalTaskInput = objectMapper.convertValue(externalTask.getAllVariables(),
+                                                                        ExternalTaskInput.class);
         String caseId = externalTaskInput.getCaseId();
         CaseEvent caseEvent = externalTaskInput.getCaseEvent();
         StartEventResponse startEventResponse = coreCaseDataService.startUpdate(caseId, caseEvent);
         CaseData data = caseDetailsConverter.toCaseData(startEventResponse.getCaseDetails());
         BusinessProcess businessProcess = data.getBusinessProcess();
-
         switch (businessProcess.getStatusOrDefault()) {
             case READY:
             case DISPATCHED:

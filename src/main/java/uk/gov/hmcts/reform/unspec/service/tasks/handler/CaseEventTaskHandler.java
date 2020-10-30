@@ -33,8 +33,8 @@ public class CaseEventTaskHandler implements ExternalTaskHandler {
     }
 
     private void updateBusinessProcessActivityId(ExternalTask externalTask) {
-        Map<String, Object> allVariables = externalTask.getAllVariables();
-        ExternalTaskInput externalTaskInput = objectMapper.convertValue(allVariables, ExternalTaskInput.class);
+        ExternalTaskInput externalTaskInput = objectMapper.convertValue(externalTask.getAllVariables(),
+                                                                        ExternalTaskInput.class);
         String caseId = externalTaskInput.getCaseId();
         CaseEvent caseEvent = externalTaskInput.getCaseEvent();
         StartEventResponse startEventResponse = coreCaseDataService.startUpdate(caseId, caseEvent);

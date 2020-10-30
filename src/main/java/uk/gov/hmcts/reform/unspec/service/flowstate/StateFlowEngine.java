@@ -9,6 +9,7 @@ import uk.gov.hmcts.reform.unspec.stateflow.StateFlow;
 import uk.gov.hmcts.reform.unspec.stateflow.StateFlowBuilder;
 import uk.gov.hmcts.reform.unspec.stateflow.model.State;
 
+import static uk.gov.hmcts.reform.unspec.service.flowstate.FlowPredicate.ccdStateCreated;
 import static uk.gov.hmcts.reform.unspec.service.flowstate.FlowPredicate.claimantConfirmService;
 import static uk.gov.hmcts.reform.unspec.service.flowstate.FlowPredicate.claimantIssueClaim;
 import static uk.gov.hmcts.reform.unspec.service.flowstate.FlowPredicate.claimantRespondToDefence;
@@ -16,6 +17,8 @@ import static uk.gov.hmcts.reform.unspec.service.flowstate.FlowPredicate.claiman
 import static uk.gov.hmcts.reform.unspec.service.flowstate.FlowPredicate.defendantAcknowledgeService;
 import static uk.gov.hmcts.reform.unspec.service.flowstate.FlowPredicate.defendantAskForAnExtension;
 import static uk.gov.hmcts.reform.unspec.service.flowstate.FlowPredicate.defendantRespondToClaim;
+import static uk.gov.hmcts.reform.unspec.service.flowstate.FlowPredicate.paymentFailed;
+import static uk.gov.hmcts.reform.unspec.service.flowstate.FlowPredicate.paymentSuccessful;
 import static uk.gov.hmcts.reform.unspec.service.flowstate.FlowPredicate.schedulerStayClaim;
 import static uk.gov.hmcts.reform.unspec.service.flowstate.FlowState.Main.CLAIM_ISSUED;
 import static uk.gov.hmcts.reform.unspec.service.flowstate.FlowState.Main.CLAIM_STAYED;
@@ -24,6 +27,9 @@ import static uk.gov.hmcts.reform.unspec.service.flowstate.FlowState.Main.EXTENS
 import static uk.gov.hmcts.reform.unspec.service.flowstate.FlowState.Main.EXTENSION_RESPONDED;
 import static uk.gov.hmcts.reform.unspec.service.flowstate.FlowState.Main.FLOW_NAME;
 import static uk.gov.hmcts.reform.unspec.service.flowstate.FlowState.Main.FULL_DEFENCE;
+import static uk.gov.hmcts.reform.unspec.service.flowstate.FlowState.Main.PAYMENT_FAILED;
+import static uk.gov.hmcts.reform.unspec.service.flowstate.FlowState.Main.PAYMENT_SUCCESSFUL;
+import static uk.gov.hmcts.reform.unspec.service.flowstate.FlowState.Main.PENDING_CREATED;
 import static uk.gov.hmcts.reform.unspec.service.flowstate.FlowState.Main.RESPONDED_TO_CLAIM;
 import static uk.gov.hmcts.reform.unspec.service.flowstate.FlowState.Main.SERVICE_ACKNOWLEDGED;
 import static uk.gov.hmcts.reform.unspec.service.flowstate.FlowState.Main.SERVICE_CONFIRMED;
@@ -37,7 +43,14 @@ public class StateFlowEngine {
     public StateFlow build() {
         return StateFlowBuilder.<FlowState.Main>flow(FLOW_NAME)
             .initial(DRAFT)
-                .transitionTo(CLAIM_ISSUED).onlyIf(claimantIssueClaim)
+                .transitionTo(PENDING_CREATED).onlyIf(claimantIssueClaim)
+            .state(PENDING_CREATED)
+                .transitionTo(PAYMENT_FAILED).onlyIf(paymentFailed)
+                .transitionTo(PAYMENT_SUCCESSFUL).onlyIf(paymentSuccessful)
+            .state(PAYMENT_FAILED)
+                .transitionTo(PAYMENT_SUCCESSFUL).onlyIf(paymentSuccessful)
+            .state(PAYMENT_SUCCESSFUL)
+                .transitionTo(CLAIM_ISSUED).onlyIf(ccdStateCreated)
             .state(CLAIM_ISSUED)
                 .transitionTo(SERVICE_CONFIRMED).onlyIf(claimantConfirmService)
                 .transitionTo(CLAIM_STAYED).onlyIf(schedulerStayClaim)
