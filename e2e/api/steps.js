@@ -154,7 +154,9 @@ module.exports = {
 
   claimantResponse: async () => {
     eventName = 'CLAIMANT_RESPONSE';
-    const eventPages = ['RespondentResponse', 'DefenceResponseDocument'];
+    const eventPages = ['RespondentResponse', 'DefenceResponseDocument', 'FileDirectionsQuestionnaire',
+      'DisclosureOfElectronicDocuments', 'DisclosureOfNonElectronicDocuments', 'Experts', 'Witnesses', 'Hearing',
+      'DraftDirections', 'HearingSupport', 'FurtherInformation'];
 
     await testingSupport.resetBusinessProcess(caseId);
     await request.startEvent(eventName, caseId);
@@ -162,6 +164,11 @@ module.exports = {
     for (let pageId of eventPages) {
       await assertValidData(pageId);
     }
+
+    await assertCallbackError('Hearing', data[eventName].invalid.Hearing.past,
+      'The date cannot be in the past and must not be more than a year in the future');
+    await assertCallbackError('Hearing', data[eventName].invalid.Hearing.moreThanYear,
+      'The date cannot be in the past and must not be more than a year in the future');
 
     await assertSubmittedEvent('AWAITING_CLAIMANT_INTENTION', {
       header: 'You\'ve decided to proceed with the claim',
