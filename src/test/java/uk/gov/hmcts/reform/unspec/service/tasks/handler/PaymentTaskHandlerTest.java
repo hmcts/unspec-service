@@ -22,6 +22,7 @@ import uk.gov.hmcts.reform.unspec.model.CaseData;
 import uk.gov.hmcts.reform.unspec.sampledata.CaseDataBuilder;
 import uk.gov.hmcts.reform.unspec.sampledata.CaseDetailsBuilder;
 import uk.gov.hmcts.reform.unspec.service.CoreCaseDataService;
+import uk.gov.hmcts.reform.unspec.service.flowstate.StateFlowEngine;
 
 import java.util.Map;
 
@@ -34,7 +35,8 @@ import static uk.gov.hmcts.reform.unspec.callback.CaseEvent.MAKE_PBA_PAYMENT;
 @SpringBootTest(classes = {
     PaymentTaskHandler.class,
     JacksonAutoConfiguration.class,
-    CaseDetailsConverter.class
+    CaseDetailsConverter.class,
+    StateFlowEngine.class
 })
 @ExtendWith(SpringExtension.class)
 class PaymentTaskHandlerTest {

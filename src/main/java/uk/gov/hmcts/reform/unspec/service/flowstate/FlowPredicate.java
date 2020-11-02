@@ -5,8 +5,8 @@ import uk.gov.hmcts.reform.unspec.model.CaseData;
 import java.util.Objects;
 import java.util.function.Predicate;
 
-import static uk.gov.hmcts.reform.unspec.enums.CaseState.CREATED;
 import static uk.gov.hmcts.reform.unspec.enums.CaseState.CLOSED;
+import static uk.gov.hmcts.reform.unspec.enums.CaseState.PENDING_CREATED;
 import static uk.gov.hmcts.reform.unspec.enums.CaseState.STAYED;
 
 public class FlowPredicate {
@@ -23,7 +23,7 @@ public class FlowPredicate {
             && caseData.getPaymentFailureReason() == null;
 
     public static final Predicate<CaseData> ccdStateCreated = caseData ->
-        caseData.getCcdState() == CREATED;
+        caseData.getCcdState() != null && caseData.getCcdState() != PENDING_CREATED;
 
     public static final Predicate<CaseData> claimantConfirmService = caseData ->
         caseData.getDeemedServiceDateToRespondentSolicitor1() != null

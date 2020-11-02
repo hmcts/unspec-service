@@ -42,7 +42,8 @@ public class PaymentTaskHandler implements ExternalTaskHandler {
         StartEventResponse startEventResponse = coreCaseDataService.startUpdate(caseId, caseEvent);
         CaseData data = caseDetailsConverter.toCaseData(startEventResponse.getCaseDetails());
         BusinessProcess businessProcess = data.getBusinessProcess().updateActivityId(externalTask.getActivityId());
-        CaseData caseData = coreCaseDataService.submitUpdate(caseId, caseDataContent(startEventResponse, businessProcess));
+        CaseData caseData = coreCaseDataService.submitUpdate(caseId,
+            caseDataContent(startEventResponse, businessProcess));
         VariableMap variables = Variables.createVariables();
         variables.putValue(FLOW_STATE, stateFlowEngine.evaluate(caseData).getState().getName());
         externalTaskService.complete(externalTask);

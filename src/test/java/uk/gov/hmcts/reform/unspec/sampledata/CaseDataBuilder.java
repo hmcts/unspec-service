@@ -212,6 +212,12 @@ public class CaseDataBuilder {
         switch (flowState) {
             case DRAFT:
                 return atStateClaimDraft();
+            case PENDING_CREATED:
+                return atStatePendingCreated();
+            case PAYMENT_SUCCESSFUL:
+                return atStatePaymentSuccessful();
+            case PAYMENT_FAILED:
+                return atStatePaymentFailed();
             case CLAIM_ISSUED:
                 return atStateClaimCreated();
             case CLAIM_STAYED:
@@ -322,12 +328,6 @@ public class CaseDataBuilder {
         return this;
     }
 
-    public CaseDataBuilder atStateClaimStayed() {
-        atStatePendingCreated();
-        ccdState = STAYED;
-        return this;
-    }
-
     public CaseDataBuilder atStatePaymentFailed() {
         atStatePendingCreated();
         paymentFailureReason = "Your account is deleted";
@@ -343,6 +343,12 @@ public class CaseDataBuilder {
     public CaseDataBuilder atStateClaimCreated() {
         atStatePaymentSuccessful();
         ccdState = CREATED;
+        return this;
+    }
+
+    public CaseDataBuilder atStateClaimStayed() {
+        atStateClaimCreated();
+        ccdState = STAYED;
         return this;
     }
 
