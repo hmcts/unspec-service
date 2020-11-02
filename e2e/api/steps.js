@@ -42,7 +42,7 @@ module.exports = {
     await assertValidData('CONFIRM_SERVICE', 'Method', confirmServiceData.valid.method);
     await assertValidData('CONFIRM_SERVICE', 'Location', confirmServiceData.valid.location);
     await assertCallbackError('CONFIRM_SERVICE', 'Date', confirmServiceData.invalid.date.yesterday,
-      'The date must not be before issue date of claim');
+      'TBC: The date must not be before claim document is issued');
     await assertCallbackError('CONFIRM_SERVICE', 'Date', confirmServiceData.invalid.date.tomorrow,
       'The date must not be in the future');
     await assertValidData('CONFIRM_SERVICE', 'Date', confirmServiceData.valid.date);
