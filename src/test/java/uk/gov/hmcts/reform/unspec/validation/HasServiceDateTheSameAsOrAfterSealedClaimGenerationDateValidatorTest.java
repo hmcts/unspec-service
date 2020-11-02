@@ -8,15 +8,20 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import uk.gov.hmcts.reform.unspec.enums.ServiceMethodType;
 import uk.gov.hmcts.reform.unspec.model.CaseData;
 import uk.gov.hmcts.reform.unspec.model.ServiceMethod;
+import uk.gov.hmcts.reform.unspec.model.common.Element;
+import uk.gov.hmcts.reform.unspec.model.documents.CaseDocument;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.List;
 import javax.validation.ConstraintValidatorContext;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static uk.gov.hmcts.reform.unspec.model.documents.DocumentType.SEALED_CLAIM;
 
 @ExtendWith(MockitoExtension.class)
-class HasServiceDateTheSameAsOrAfterIssueDateValidatorTest {
+class HasServiceDateTheSameAsOrAfterSealedClaimGenerationDateValidatorTest {
 
     public static final LocalDate NOW = LocalDate.now();
 
@@ -24,7 +29,7 @@ class HasServiceDateTheSameAsOrAfterIssueDateValidatorTest {
     ConstraintValidatorContext constraintValidatorContext;
 
     @InjectMocks
-    private HasServiceDateTheSameAsOrAfterIssueDateValidator validator;
+    private HasServiceDateTheSameAsOrAfterSealedClaimGenerationDateValidator validator;
 
     @Test
     void shouldReturnFalse_whenServiceDateIsBeforeIssueDate() {
@@ -42,8 +47,11 @@ class HasServiceDateTheSameAsOrAfterIssueDateValidatorTest {
     }
 
     private CaseData buildCaseDataWithServiceDateOf(LocalDate serviceDate) {
+        Element<CaseDocument> documents = Element.<CaseDocument>builder()
+            .value(CaseDocument.builder().documentType(SEALED_CLAIM).createdDatetime(LocalDateTime.now()).build())
+            .build();
         return CaseData.builder()
-            .claimIssuedDate(NOW)
+            .systemGeneratedCaseDocuments(List.of(documents))
             .serviceMethodToRespondentSolicitor1(ServiceMethod.builder().type(ServiceMethodType.POST).build())
             .serviceDateToRespondentSolicitor1(serviceDate)
             .build();

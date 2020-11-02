@@ -16,13 +16,17 @@ import uk.gov.hmcts.reform.unspec.callback.CallbackType;
 import uk.gov.hmcts.reform.unspec.helpers.CaseDetailsConverter;
 import uk.gov.hmcts.reform.unspec.model.CaseData;
 import uk.gov.hmcts.reform.unspec.model.ServiceMethod;
+import uk.gov.hmcts.reform.unspec.model.common.Element;
+import uk.gov.hmcts.reform.unspec.model.documents.CaseDocument;
 import uk.gov.hmcts.reform.unspec.sampledata.CaseDataBuilder;
+import uk.gov.hmcts.reform.unspec.sampledata.CaseDocumentBuilder;
 import uk.gov.hmcts.reform.unspec.service.DeadlinesCalculator;
 import uk.gov.hmcts.reform.unspec.service.WorkingDayIndicator;
 import uk.gov.hmcts.reform.unspec.service.docmosis.cos.CertificateOfServiceGenerator;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.List;
 import java.util.Map;
 
@@ -40,6 +44,7 @@ import static uk.gov.hmcts.reform.unspec.helpers.DateFormatHelper.DATE;
 import static uk.gov.hmcts.reform.unspec.helpers.DateFormatHelper.DATE_TIME_AT;
 import static uk.gov.hmcts.reform.unspec.helpers.DateFormatHelper.formatLocalDate;
 import static uk.gov.hmcts.reform.unspec.helpers.DateFormatHelper.formatLocalDateTime;
+import static uk.gov.hmcts.reform.unspec.model.documents.DocumentType.SEALED_CLAIM;
 import static uk.gov.hmcts.reform.unspec.sampledata.CaseDataBuilder.DEEMED_SERVICE_DATE;
 import static uk.gov.hmcts.reform.unspec.sampledata.CaseDataBuilder.RESPONSE_DEADLINE;
 
@@ -108,7 +113,15 @@ class ConfirmServiceCallbackHandlerTest extends BaseCallbackHandlerTest {
     @Nested
     class MidEventServiceDateCallback {
 
-        private final LocalDate claimIssueDate = LocalDate.of(2000, 6, 22);
+        private static final String ERROR_MESSAGE = "TBC: The date must not be before claim document is issued";
+        private final LocalDate issueDate = LocalDate.of(2000, 6, 22);
+        private final List<Element<CaseDocument>> documents = List.of(Element.<CaseDocument>builder()
+                                                                          .value(CaseDocumentBuilder.builder().of(
+                                                                              SEALED_CLAIM,
+                                                                              issueDate.atTime(LocalTime.now())
+                                                                                 ).build()
+                                                                          )
+                                                                          .build());
 
         @Nested
         class ServiceDate {
@@ -119,8 +132,8 @@ class ConfirmServiceCallbackHandlerTest extends BaseCallbackHandlerTest {
             @Test
             void shouldReturnNoErrors_whenServiceDateInPastAndAfterIssueDate() {
                 CaseData caseData = CaseDataBuilder.builder().atStateServiceConfirmed()
-                    .claimIssuedDate(claimIssueDate)
-                    .serviceDateToRespondentSolicitor1(claimIssueDate.plusDays(1))
+                    .systemGeneratedCaseDocuments(documents)
+                    .serviceDateToRespondentSolicitor1(issueDate.plusDays(1))
                     .serviceMethodToRespondentSolicitor1(ServiceMethod.builder().type(POST).build())
                     .build();
                 CallbackParams params = callbackParamsOf(caseData, MID, "service-date");
@@ -133,7 +146,7 @@ class ConfirmServiceCallbackHandlerTest extends BaseCallbackHandlerTest {
             @Test
             void shouldReturnNoErrors_whenServiceDateIsTodayAndAfterIssueDate() {
                 CaseData caseData = CaseDataBuilder.builder().atStateServiceConfirmed()
-                    .claimIssuedDate(claimIssueDate)
+                    .systemGeneratedCaseDocuments(documents)
                     .serviceDateToRespondentSolicitor1(today)
                     .serviceMethodToRespondentSolicitor1(ServiceMethod.builder().type(POST).build())
                     .build();
@@ -147,7 +160,7 @@ class ConfirmServiceCallbackHandlerTest extends BaseCallbackHandlerTest {
             @Test
             void shouldReturnError_whenServiceDateInFuture() {
                 CaseData caseData = CaseDataBuilder.builder().atStateServiceConfirmed()
-                    .claimIssuedDate(claimIssueDate)
+                    .systemGeneratedCaseDocuments(documents)
                     .serviceDateToRespondentSolicitor1(futureDate)
                     .serviceMethodToRespondentSolicitor1(ServiceMethod.builder().type(POST).build())
                     .build();
@@ -161,15 +174,15 @@ class ConfirmServiceCallbackHandlerTest extends BaseCallbackHandlerTest {
             @Test
             void shouldReturnError_whenServiceDateIsBeforeClaimIssueDate() {
                 CaseData caseData = CaseDataBuilder.builder().atStateServiceConfirmed()
-                    .claimIssuedDate(claimIssueDate)
-                    .serviceDateToRespondentSolicitor1(claimIssueDate.minusDays(1))
+                    .systemGeneratedCaseDocuments(documents)
+                    .serviceDateToRespondentSolicitor1(issueDate.minusDays(1))
                     .serviceMethodToRespondentSolicitor1(ServiceMethod.builder().type(POST).build())
                     .build();
                 CallbackParams params = callbackParamsOf(caseData, MID, "service-date");
 
                 var response = (AboutToStartOrSubmitCallbackResponse) handler.handle(params);
 
-                assertThat(response.getErrors()).containsOnly("The date must not be before issue date of claim");
+                assertThat(response.getErrors()).containsOnly(ERROR_MESSAGE);
             }
         }
 
@@ -182,8 +195,9 @@ class ConfirmServiceCallbackHandlerTest extends BaseCallbackHandlerTest {
             @Test
             void shouldReturnNoErrors_whenServiceDateInPastAndAfterIssueDate() {
                 CaseData caseData = CaseDataBuilder.builder().atStateServiceConfirmed()
-                    .claimIssuedDate(claimIssueDate)
-                    .serviceDateTimeToRespondentSolicitor1(claimIssueDate.plusDays(1).atTime(12, 0))
+                    .claimIssuedDate(issueDate)
+                    .systemGeneratedCaseDocuments(documents)
+                    .serviceDateTimeToRespondentSolicitor1(issueDate.plusDays(1).atTime(12, 0))
                     .serviceMethodToRespondentSolicitor1(ServiceMethod.builder().type(FAX).build())
                     .build();
                 CallbackParams params = callbackParamsOf(caseData, MID, "service-date");
@@ -196,7 +210,8 @@ class ConfirmServiceCallbackHandlerTest extends BaseCallbackHandlerTest {
             @Test
             void shouldReturnNoErrors_whenServiceDateIsTodayAndAfterIssueDate() {
                 CaseData caseData = CaseDataBuilder.builder().atStateServiceConfirmed()
-                    .claimIssuedDate(claimIssueDate)
+                    .claimIssuedDate(issueDate)
+                    .systemGeneratedCaseDocuments(documents)
                     .serviceDateTimeToRespondentSolicitor1(today)
                     .serviceMethodToRespondentSolicitor1(ServiceMethod.builder().type(FAX).build())
                     .build();
@@ -210,7 +225,8 @@ class ConfirmServiceCallbackHandlerTest extends BaseCallbackHandlerTest {
             @Test
             void shouldReturnError_whenServiceDateInFuture() {
                 CaseData caseData = CaseDataBuilder.builder().atStateServiceConfirmed()
-                    .claimIssuedDate(claimIssueDate)
+                    .claimIssuedDate(issueDate)
+                    .systemGeneratedCaseDocuments(documents)
                     .serviceDateTimeToRespondentSolicitor1(futureDate)
                     .serviceMethodToRespondentSolicitor1(ServiceMethod.builder().type(FAX).build())
                     .build();
@@ -224,15 +240,16 @@ class ConfirmServiceCallbackHandlerTest extends BaseCallbackHandlerTest {
             @Test
             void shouldReturnError_whenServiceDateIsBeforeClaimIssueDate() {
                 CaseData caseData = CaseDataBuilder.builder().atStateServiceConfirmed()
-                    .claimIssuedDate(claimIssueDate)
-                    .serviceDateTimeToRespondentSolicitor1(claimIssueDate.atTime(12, 0).minusDays(1))
+                    .claimIssuedDate(issueDate)
+                    .systemGeneratedCaseDocuments(documents)
+                    .serviceDateTimeToRespondentSolicitor1(issueDate.atTime(12, 0).minusDays(1))
                     .serviceMethodToRespondentSolicitor1(ServiceMethod.builder().type(FAX).build())
                     .build();
                 CallbackParams params = callbackParamsOf(caseData, MID, "service-date");
 
                 var response = (AboutToStartOrSubmitCallbackResponse) handler.handle(params);
 
-                assertThat(response.getErrors()).containsOnly("The date must not be before issue date of claim");
+                assertThat(response.getErrors()).containsOnly(ERROR_MESSAGE);
             }
         }
     }
