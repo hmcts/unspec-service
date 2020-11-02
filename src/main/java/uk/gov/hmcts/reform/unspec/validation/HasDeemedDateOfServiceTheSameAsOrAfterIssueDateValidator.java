@@ -5,7 +5,7 @@ import org.springframework.stereotype.Component;
 import uk.gov.hmcts.reform.unspec.model.CaseData;
 import uk.gov.hmcts.reform.unspec.model.ServiceMethod;
 import uk.gov.hmcts.reform.unspec.service.DeadlinesCalculator;
-import uk.gov.hmcts.reform.unspec.validation.interfaces.HasServiceDateTheSameAsOrAfterIssueDate;
+import uk.gov.hmcts.reform.unspec.validation.interfaces.HasDeemedDateOfServiceTheSameAsOrAfterIssueDate;
 
 import java.time.LocalDate;
 import javax.validation.ConstraintValidator;
@@ -13,8 +13,8 @@ import javax.validation.ConstraintValidatorContext;
 
 @Component
 @RequiredArgsConstructor
-public class HasServiceDateTheSameAsOrAfterIssueDateValidator implements
-    ConstraintValidator<HasServiceDateTheSameAsOrAfterIssueDate, CaseData> {
+public class HasDeemedDateOfServiceTheSameAsOrAfterIssueDateValidator implements
+    ConstraintValidator<HasDeemedDateOfServiceTheSameAsOrAfterIssueDate, CaseData> {
 
     private final DeadlinesCalculator deadlinesCalculator;
 
