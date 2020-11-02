@@ -40,6 +40,9 @@ module.exports = {
       }
     },
     Date: {
+      dayBeforeYesterday: {
+        serviceDateToRespondentSolicitor1: date(-2)
+      },
       yesterday: {
         serviceDateToRespondentSolicitor1: date(-1)
       },
