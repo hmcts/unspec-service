@@ -5,7 +5,7 @@ module.exports = {
     RespondentResponse: {
       applicant1ProceedWithClaim: 'Yes'
     },
-    DefenceResponseDocument: {
+    ApplicantDefenceResponseDocument: {
       applicant1DefenceResponseDocument: {
         file: document('defenceResponse.pdf')
       }
