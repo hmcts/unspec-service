@@ -67,7 +67,7 @@ public class PaymentsCallbackHandler extends CallbackHandler {
                     case 403:
                     case 404:
                     case 422:
-                        caseData = CaseData.builder().paymentFailureReason(handleBusinessException(e)).build();
+                        caseData = caseData.toBuilder().paymentFailureReason(handleBusinessException(e)).build();
                         break;
                     default:
                         errors.add(ERROR_MESSAGE);
