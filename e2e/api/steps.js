@@ -19,15 +19,10 @@ let caseData = {};
 module.exports = {
   createClaim: async (user) => {
     eventName = 'CREATE_CLAIM';
-    const eventPages = ['References', 'Court', 'Claimant', 'ClaimantLitigationFriend', 'Defendant', 'ClaimType',
-      'PbaNumber', 'PersonalInjuryType', 'Upload', 'ClaimValue', 'StatementOfTruth'];
-
     await request.setupTokens(user);
     await request.startEvent(eventName);
 
-    for (let pageId of eventPages) {
-      await assertValidData(pageId);
-    }
+    await validateEventPages();
 
     await assertSubmittedEvent('CREATED', {
       header: 'Your claim has been issued',
@@ -37,15 +32,11 @@ module.exports = {
 
   confirmService: async () => {
     eventName = 'CONFIRM_SERVICE';
-    const eventPages = ['ServedDocuments', 'Upload', 'Method', 'Location', 'Date', 'StatementOfTruth'];
-
     await testingSupport.resetBusinessProcess(caseId);
     await request.startEvent(eventName, caseId);
     deleteCaseFields('servedDocumentFiles');
 
-    for (let pageId of eventPages) {
-      await assertValidData(pageId);
-    }
+    await validateEventPages();
 
     await assertCallbackError('ServedDocuments', data[eventName].invalid.ServedDocuments.blankOtherDocuments,
       'CONTENT TBC: please enter a valid value for other documents');
@@ -62,14 +53,10 @@ module.exports = {
 
   acknowledgeService: async () => {
     eventName = 'ACKNOWLEDGE_SERVICE';
-    const eventPages = ['ConfirmNameAddress', 'ConfirmDetails', 'ResponseIntention'];
-
     await testingSupport.resetBusinessProcess(caseId);
     await request.startEvent(eventName, caseId);
 
-    for (let pageId of eventPages) {
-      await assertValidData(pageId);
-    }
+    await validateEventPages();
 
     await assertCallbackError('ConfirmDetails', data[eventName].invalid.ConfirmDetails.futureDateOfBirth,
       'The date entered cannot be in the future');
@@ -82,14 +69,10 @@ module.exports = {
 
   requestExtension: async () => {
     eventName = 'REQUEST_EXTENSION';
-    const eventPages = ['ProposeDeadline', 'ExtensionAlreadyAgreed'];
-
     await testingSupport.resetBusinessProcess(caseId);
     await request.startEvent(eventName, caseId);
 
-    for (let pageId of eventPages) {
-      await assertValidData(pageId);
-    }
+    await validateEventPages();
 
     await assertCallbackError('ProposeDeadline', data[eventName].invalid.ProposeDeadline.past,
       'The proposed deadline must be a date in the future');
@@ -104,14 +87,10 @@ module.exports = {
 
   respondExtension: async () => {
     eventName = 'RESPOND_EXTENSION';
-    const eventPages = ['Respond', 'Counter', 'Reason'];
-
     await testingSupport.resetBusinessProcess(caseId);
     await request.startEvent(eventName, caseId);
 
-    for (let pageId of eventPages) {
-      await assertValidData(pageId);
-    }
+    await validateEventPages();
 
     await assertCallbackError('Counter', data[eventName].invalid.Counter.past,
       'The proposed deadline must be a date in the future');
@@ -126,18 +105,11 @@ module.exports = {
 
   defendantResponse: async () => {
     eventName = 'DEFENDANT_RESPONSE';
-    const eventPages = ['RespondentResponseType', 'Upload', 'ConfirmNameAddress', 'ConfirmDetails',
-      'FileDirectionsQuestionnaire', 'DisclosureOfElectronicDocuments', 'DisclosureOfNonElectronicDocuments',
-      'Experts', 'Witnesses', 'Hearing', 'DraftDirections', 'RequestedCourt', 'HearingSupport', 'FurtherInformation',
-      'StatementOfTruth'];
-
     await testingSupport.resetBusinessProcess(caseId);
     await request.startEvent(eventName, caseId);
     deleteCaseFields('respondent1', 'solicitorReferences');
 
-    for (let pageId of eventPages) {
-      await assertValidData(pageId);
-    }
+    await validateEventPages();
 
     await assertCallbackError('ConfirmDetails', data[eventName].invalid.ConfirmDetails.futureDateOfBirth,
       'The date entered cannot be in the future');
@@ -154,16 +126,10 @@ module.exports = {
 
   claimantResponse: async () => {
     eventName = 'CLAIMANT_RESPONSE';
-    const eventPages = ['RespondentResponse', 'DefenceResponseDocument', 'FileDirectionsQuestionnaire',
-      'DisclosureOfElectronicDocuments', 'DisclosureOfNonElectronicDocuments', 'Experts', 'Witnesses', 'Hearing',
-      'DraftDirections', 'HearingSupport', 'FurtherInformation'];
-
     await testingSupport.resetBusinessProcess(caseId);
     await request.startEvent(eventName, caseId);
 
-    for (let pageId of eventPages) {
-      await assertValidData(pageId);
-    }
+    await validateEventPages();
 
     await assertCallbackError('Hearing', data[eventName].invalid.Hearing.past,
       'The date cannot be in the past and must not be more than a year in the future');
@@ -174,6 +140,12 @@ module.exports = {
       header: 'You\'ve decided to proceed with the claim',
       body: 'We\'ll review the case. We\'ll contact you to tell you what to do next.'
     });
+  }
+};
+
+const validateEventPages = async () => {
+  for (let pageId of Object.keys(data[eventName].valid)) {
+    await assertValidData(pageId);
   }
 };
 
