@@ -11,6 +11,7 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static uk.gov.hmcts.reform.unspec.service.flowstate.FlowPredicate.claimDiscontinued;
 import static uk.gov.hmcts.reform.unspec.service.flowstate.FlowPredicate.claimWithdrawn;
+import static uk.gov.hmcts.reform.unspec.service.flowstate.FlowPredicate.ccdStateCreated;
 import static uk.gov.hmcts.reform.unspec.service.flowstate.FlowPredicate.claimantConfirmService;
 import static uk.gov.hmcts.reform.unspec.service.flowstate.FlowPredicate.claimantIssueClaim;
 import static uk.gov.hmcts.reform.unspec.service.flowstate.FlowPredicate.claimantRespondToDefence;
@@ -18,6 +19,8 @@ import static uk.gov.hmcts.reform.unspec.service.flowstate.FlowPredicate.claiman
 import static uk.gov.hmcts.reform.unspec.service.flowstate.FlowPredicate.defendantAcknowledgeService;
 import static uk.gov.hmcts.reform.unspec.service.flowstate.FlowPredicate.defendantAskForAnExtension;
 import static uk.gov.hmcts.reform.unspec.service.flowstate.FlowPredicate.defendantRespondToClaim;
+import static uk.gov.hmcts.reform.unspec.service.flowstate.FlowPredicate.paymentFailed;
+import static uk.gov.hmcts.reform.unspec.service.flowstate.FlowPredicate.paymentSuccessful;
 import static uk.gov.hmcts.reform.unspec.service.flowstate.FlowPredicate.schedulerStayClaim;
 
 class FlowPredicateTest {
@@ -27,7 +30,7 @@ class FlowPredicateTest {
 
         @Test
         void shouldReturnTrue_whenCaseDataAtIssuedSate() {
-            CaseData caseData = CaseDataBuilder.builder().atStateClaimCreated().build();
+            CaseData caseData = CaseDataBuilder.builder().atStatePendingCreated().build();
             assertTrue(claimantIssueClaim.test(caseData));
         }
 
@@ -35,6 +38,54 @@ class FlowPredicateTest {
         void shouldReturnFalse_whenCaseDataIsAtDraftSate() {
             CaseData caseData = CaseDataBuilder.builder().atStateClaimDraft().build();
             assertFalse(claimantIssueClaim.test(caseData));
+        }
+    }
+
+    @Nested
+    class PaymentFailedPredicate {
+
+        @Test
+        void shouldReturnTrue_whenCaseDataAtIssuedSate() {
+            CaseData caseData = CaseDataBuilder.builder().atStatePaymentFailed().build();
+            assertTrue(paymentFailed.test(caseData));
+        }
+
+        @Test
+        void shouldReturnFalse_whenCaseDataIsAtDraftSate() {
+            CaseData caseData = CaseDataBuilder.builder().atStatePendingCreated().build();
+            assertFalse(paymentFailed.test(caseData));
+        }
+    }
+
+    @Nested
+    class PaymentSuccessfulPredicate {
+
+        @Test
+        void shouldReturnTrue_whenCaseDataAtIssuedSate() {
+            CaseData caseData = CaseDataBuilder.builder().atStatePaymentSuccessful().build();
+            assertTrue(paymentSuccessful.test(caseData));
+        }
+
+        @Test
+        void shouldReturnFalse_whenCaseDataIsAtDraftSate() {
+            CaseData caseData = CaseDataBuilder.builder().atStatePendingCreated().build();
+            assertFalse(paymentSuccessful.test(caseData));
+        }
+    }
+
+    @Nested
+    class CcdStateCreatedPredicate {
+
+        @Test
+        void shouldReturnTrue_whenCaseDataAtIssuedSate() {
+            CaseData caseData = CaseDataBuilder.builder().atStateClaimCreated().build();
+            assertTrue(ccdStateCreated.test(caseData));
+        }
+
+        @Test
+        void shouldReturnFalse_whenCaseDataIsAtDraftSate() {
+            CaseData caseData = CaseDataBuilder.builder().atStatePaymentSuccessful().build();
+            assertFalse(ccdStateCreated.test(caseData));
         }
     }
 

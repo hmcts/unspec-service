@@ -198,6 +198,8 @@ class StateFlowEngineTest {
             "true,SERVICE_ACKNOWLEDGED",
             "true,SERVICE_CONFIRMED",
             "true,CLAIM_ISSUED",
+            "true,PAYMENT_SUCCESSFUL",
+            "true,PENDING_CREATED",
             "true,DRAFT",
             "false,EXTENSION_RESPONDED",
             "false,RESPONDED_TO_CLAIM",
