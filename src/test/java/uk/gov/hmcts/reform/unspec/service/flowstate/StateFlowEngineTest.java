@@ -45,6 +45,40 @@ class StateFlowEngineTest {
     class EvaluateStateFlowEngine {
 
         @Test
+        void shouldReturnPendingCreated_whenCaseDataAtStatePendingCreated() {
+            CaseData caseData = CaseDataBuilder.builder().atStatePendingCreated().build();
+
+            StateFlow stateFlow = stateFlowEngine.evaluate(caseData);
+
+            assertThat(stateFlow.getState())
+                .extracting(State::getName)
+                .isNotNull()
+                .isEqualTo(PENDING_CREATED.fullName());
+            assertThat(stateFlow.getStateHistory())
+                .hasSize(2)
+                .extracting(State::getName)
+                .containsExactly(
+                    DRAFT.fullName(), PENDING_CREATED.fullName());
+        }
+
+        @Test
+        void shouldReturnPaymentSuccessful_whenCaseDataAtStatePaymentSuccessful() {
+            CaseData caseData = CaseDataBuilder.builder().atStatePaymentSuccessful().build();
+
+            StateFlow stateFlow = stateFlowEngine.evaluate(caseData);
+
+            assertThat(stateFlow.getState())
+                .extracting(State::getName)
+                .isNotNull()
+                .isEqualTo(PAYMENT_SUCCESSFUL.fullName());
+            assertThat(stateFlow.getStateHistory())
+                .hasSize(3)
+                .extracting(State::getName)
+                .containsExactly(
+                    DRAFT.fullName(), PENDING_CREATED.fullName(), PAYMENT_SUCCESSFUL.fullName());
+        }
+
+        @Test
         void shouldReturnClaimIssued_whenCaseDataAtStateClaimIssued() {
             CaseData caseData = CaseDataBuilder.builder().atStateClaimCreated().build();
 

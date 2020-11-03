@@ -31,7 +31,7 @@ import static uk.gov.hmcts.reform.unspec.callback.CaseEvent.MAKE_PBA_PAYMENT;
 public class PaymentsCallbackHandler extends CallbackHandler {
 
     private static final List<CaseEvent> EVENTS = Collections.singletonList(MAKE_PBA_PAYMENT);
-    private static final String ERROR_MESSAGE = "An error occurred";
+    private static final String ERROR_MESSAGE = "Technical error occurred";
 
     private final CaseDetailsConverter caseDetailsConverter;
     private final PaymentsConfiguration paymentsConfiguration;

@@ -47,7 +47,7 @@ class DefendantResponseCaseHandedOfflineRespondentNotificationHandlerTest extend
         }
 
         @Test
-        void shouldNotifyParties_whenInvoked() {
+        void shouldNotifyDefendantSolicitor_whenInvoked() {
             CaseData caseData = CaseDataBuilder.builder().atStateClaimCreated().build();
             CallbackParams params = CallbackParamsBuilder.builder().of(ABOUT_TO_SUBMIT, caseData).build();
 

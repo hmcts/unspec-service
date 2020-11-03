@@ -95,7 +95,7 @@ public class PaymentsCallbackHandlerTest extends BaseCallbackHandlerTest {
         verify(paymentsService).createCreditAccountPayment(caseData);
         assertThat(response.getData()).extracting("paymentReference").isNull();
         assertThat(response.getData()).extracting("paymentFailureReason").isNull();
-        assertThat(response.getErrors()).containsOnly("An error occurred");
+        assertThat(response.getErrors()).containsOnly("Technical error occurred");
     }
 
     private FeignException buildFeignException(int status) {
