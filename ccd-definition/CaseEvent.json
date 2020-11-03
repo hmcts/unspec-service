@@ -364,7 +364,7 @@
     "PreConditionState(s)": "CREATED;AWAITING_CLAIMANT_INTENTION",
     "PostConditionState": "*",
     "SecurityClassification": "Public",
-    "ShowSummary": "Y",
+    "ShowSummary": "N",
     "ShowEventNotes": "N"
   }
 ]
