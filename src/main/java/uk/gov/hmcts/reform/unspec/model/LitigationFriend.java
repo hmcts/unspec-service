@@ -11,6 +11,7 @@ import java.util.List;
 @Data
 @Builder
 public class LitigationFriend {
+
     private final String fullName;
     private final YesOrNo hasSameAddressAsLitigant;
     private final Address primaryAddress;
