@@ -5,12 +5,17 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import uk.gov.hmcts.reform.ccd.client.model.AboutToStartOrSubmitCallbackResponse;
 import uk.gov.hmcts.reform.ccd.client.model.CallbackResponse;
+import uk.gov.hmcts.reform.payments.client.models.FeeDto;
 import uk.gov.hmcts.reform.payments.client.models.PaymentDto;
 import uk.gov.hmcts.reform.unspec.callback.Callback;
 import uk.gov.hmcts.reform.unspec.callback.CallbackHandler;
 import uk.gov.hmcts.reform.unspec.callback.CallbackParams;
 import uk.gov.hmcts.reform.unspec.callback.CaseEvent;
 import uk.gov.hmcts.reform.unspec.config.PaymentsConfiguration;
+import uk.gov.hmcts.reform.unspec.helpers.CaseDetailsConverter;
+import uk.gov.hmcts.reform.unspec.model.CaseData;
+import uk.gov.hmcts.reform.unspec.model.ClaimFee;
+import uk.gov.hmcts.reform.unspec.service.FeesService;
 import uk.gov.hmcts.reform.unspec.service.PaymentsService;
 
 import java.util.Collections;
@@ -29,6 +34,8 @@ public class PaymentsCallbackHandler extends CallbackHandler {
 
     private final PaymentsConfiguration paymentsConfiguration;
     private final PaymentsService paymentsService;
+    private final FeesService feesService;
+    private final CaseDetailsConverter caseDetailsConverter;
 
     @Override
     protected Map<String, Callback> callbacks() {
@@ -41,20 +48,28 @@ public class PaymentsCallbackHandler extends CallbackHandler {
     }
 
     private CallbackResponse makePbaPayment(CallbackParams callbackParams) {
-        var caseData = callbackParams.getCaseData();
-        var data = callbackParams.getRequest().getCaseDetails().getData();
+        CaseData caseData = callbackParams.getCaseData();
+        var builder = caseData.toBuilder();
         if (paymentsConfiguration.isEnabled()) {
             try {
-                PaymentDto paymentDto = paymentsService.createCreditAccountPayment(caseData);
-                data.put("paymentReference", paymentDto.getReference());
+                FeeDto feeDto = feesService.getFeeDataByClaimValue(caseData.getClaimValue());
+                builder.claimFee(ClaimFee.builder()
+                                     .feeAmount(feeDto.getCalculatedAmount())
+                                     .code(feeDto.getCode())
+                                     .description(feeDto.getDescription())
+                                     .version(feeDto.getVersion())
+                                     .build());
+                PaymentDto paymentDto = paymentsService.createCreditAccountPayment(caseData, feeDto);
+                builder.paymentReference(paymentDto.getPaymentReference());
             } catch (Exception e) {
                 log.error(String.format("Error when making payment for case: %s, message: %s",
-                                       caseData.getCcdCaseReference(), e.getMessage()));
+                                        caseData.getCcdCaseReference(), e.getMessage()
+                ));
             }
         }
 
         return AboutToStartOrSubmitCallbackResponse.builder()
-            .data(data)
+            .data(caseDetailsConverter.toMap(builder.build()))
             .build();
     }
 }

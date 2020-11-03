@@ -8,25 +8,17 @@ import uk.gov.hmcts.reform.payments.client.models.PaymentDto;
 import uk.gov.hmcts.reform.payments.client.request.CreditAccountPaymentRequest;
 import uk.gov.hmcts.reform.unspec.config.PaymentsConfiguration;
 import uk.gov.hmcts.reform.unspec.model.CaseData;
-import uk.gov.hmcts.reform.unspec.model.ClaimValue;
 import uk.gov.hmcts.reform.unspec.request.RequestData;
-
-import java.math.BigDecimal;
 
 @Service
 @RequiredArgsConstructor
 public class PaymentsService {
 
-    private final FeesService feesService;
     private final PaymentsClient paymentsClient;
     private final RequestData requestData;
     private final PaymentsConfiguration paymentsConfiguration;
 
-    public PaymentDto createCreditAccountPayment(CaseData caseData) {
-        //temporarily hardcoded
-        ClaimValue claimValue = ClaimValue.builder().statementOfValueInPennies(BigDecimal.valueOf(10000)).build();
-        FeeDto feeDto = feesService.getFeeDataByClaimValue(claimValue);
-
+    public PaymentDto createCreditAccountPayment(CaseData caseData, FeeDto feeDto) {
         return paymentsClient.createCreditAccountPayment(
             requestData.authorisation(),
             buildRequest(caseData, feeDto)

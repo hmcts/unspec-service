@@ -105,6 +105,9 @@ public class CaseData {
     @JsonUnwrapped
     private final Applicant1DQ applicant1DQ;
 
+    private final String paymentReference;
+    private final ClaimFee claimFee;
+
     public boolean hasNoOngoingBusinessProcess() {
         return businessProcess == null
             || businessProcess.getStatus() == null

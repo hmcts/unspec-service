@@ -1,0 +1,9 @@
+[
+  {
+    "ID": "ClaimValue",
+    "ListElementCode": "statementOfValueInPennies",
+    "FieldType": "MoneyGBP",
+    "ElementLabel": "Statement of value",
+    "SecurityClassification": "Public"
+  }
+]
