@@ -223,7 +223,7 @@ class RespondToDefenceCallbackHandlerTest extends BaseCallbackHandlerTest {
             assertThat(response).isEqualToComparingFieldByField(
                 SubmittedCallbackResponse.builder()
                     .confirmationHeader(format("# You have chosen not to proceed with the claim%n## Claim number: TBC"))
-                    .confirmationBody(format("<br />If you do want to proceed you need to do it within: %%n"
+                    .confirmationBody(format("<br />If you do want to proceed you need to do it within: %n%n"
                                                  + "- 14 days if the claim is allocated to a small claims track%n"
                                                  + "- 28 days if the claim is allocated to a fast or multi track%n%n"
                                                  + "The case will be stayed if you do not proceed within the allowed"
