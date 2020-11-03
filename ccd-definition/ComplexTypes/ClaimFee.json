@@ -1,9 +1,30 @@
 [
   {
-    "ID": "ClaimValue",
-    "ListElementCode": "statementOfValueInPennies",
+    "ID": "ClaimFee",
+    "ListElementCode": "feeAmount",
     "FieldType": "MoneyGBP",
-    "ElementLabel": "Statement of value",
+    "ElementLabel": "Calculated fee",
+    "SecurityClassification": "Public"
+  },
+  {
+    "ID": "ClaimFee",
+    "ListElementCode": "code",
+    "FieldType": "Text",
+    "ElementLabel": "Fee code",
+    "SecurityClassification": "Public"
+  },
+  {
+    "ID": "ClaimFee",
+    "ListElementCode": "description",
+    "FieldType": "Text",
+    "ElementLabel": "Fee description",
+    "SecurityClassification": "Public"
+  },
+  {
+    "ID": "ClaimFee",
+    "ListElementCode": "version",
+    "FieldType": "Text",
+    "ElementLabel": "Fee version",
     "SecurityClassification": "Public"
   }
 ]

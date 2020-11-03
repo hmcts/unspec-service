@@ -40,9 +40,6 @@ class PaymentsServiceTest {
     private static final PaymentDto PAYMENT_DTO = PaymentDto.builder().reference("RC-1234-1234-1234-1234").build();
 
     @Mock
-    private FeesService feesService;
-
-    @Mock
     private PaymentsClient paymentsClient;
 
     @Mock
@@ -56,14 +53,12 @@ class PaymentsServiceTest {
 
     @BeforeEach
     void setUp() {
-        given(feesService.getFeeDataByClaimValue(any())).willReturn(FEE_DATA);
         given(paymentsClient.createCreditAccountPayment(any(), any())).willReturn(PAYMENT_DTO);
         given(requestData.authorisation()).willReturn(AUTH_TOKEN);
         given(paymentsConfiguration.getService()).willReturn(SERVICE);
         given(paymentsConfiguration.getSiteId()).willReturn(SITE_ID);
 
         paymentsService = new PaymentsService(
-            feesService,
             paymentsClient,
             requestData,
             paymentsConfiguration
@@ -93,9 +88,8 @@ class PaymentsServiceTest {
             .statementOfValueInPennies(BigDecimal.valueOf(10000))
             .build();
 
-        PaymentDto paymentResponse = paymentsService.createCreditAccountPayment(caseData);
+        PaymentDto paymentResponse = paymentsService.createCreditAccountPayment(caseData, FEE_DATA);
 
-        verify(feesService).getFeeDataByClaimValue(expectedClaimValue);
         verify(paymentsClient).createCreditAccountPayment(AUTH_TOKEN, expectedCreditAccountPaymentRequest);
         assertThat(paymentResponse).isEqualTo(PAYMENT_DTO);
     }

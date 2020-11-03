@@ -60,7 +60,7 @@ public class PaymentsCallbackHandler extends CallbackHandler {
                                      .version(feeDto.getVersion())
                                      .build());
                 PaymentDto paymentDto = paymentsService.createCreditAccountPayment(caseData, feeDto);
-                builder.paymentReference(paymentDto.getPaymentReference());
+                builder.paymentReference(paymentDto.getReference());
             } catch (Exception e) {
                 log.error(String.format("Error when making payment for case: %s, message: %s",
                                         caseData.getCcdCaseReference(), e.getMessage()
