@@ -66,7 +66,7 @@ public class PaymentsCallbackHandler extends CallbackHandler {
                     case 403:
                     case 404:
                     case 422:
-                        caseData = caseData.toBuilder().paymentFailureReason(handleBusinessException(e)).build();
+                        caseData = caseData.toBuilder().paymentFailureReason(getFailureReason(e)).build();
                         break;
                     default:
                         errors.add(ERROR_MESSAGE);
@@ -81,7 +81,7 @@ public class PaymentsCallbackHandler extends CallbackHandler {
             .build();
     }
 
-    private String handleBusinessException(FeignException e) {
+    private String getFailureReason(FeignException e) {
         try {
             var paymentDto = objectMapper.readValue(e.contentUTF8(), PaymentDto.class);
             return paymentDto.getStatusHistories()[0].getErrorMessage();
