@@ -19,7 +19,6 @@ import uk.gov.hmcts.reform.unspec.model.ServiceMethod;
 import uk.gov.hmcts.reform.unspec.sampledata.CaseDataBuilder;
 import uk.gov.hmcts.reform.unspec.service.DeadlinesCalculator;
 import uk.gov.hmcts.reform.unspec.service.WorkingDayIndicator;
-import uk.gov.hmcts.reform.unspec.service.docmosis.cos.CertificateOfServiceGenerator;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -53,8 +52,6 @@ import static uk.gov.hmcts.reform.unspec.sampledata.CaseDataBuilder.RESPONSE_DEA
 })
 class ConfirmServiceCallbackHandlerTest extends BaseCallbackHandlerTest {
 
-    @MockBean
-    private CertificateOfServiceGenerator certificateOfServiceGenerator;
     @MockBean
     WorkingDayIndicator workingDayIndicator;
 

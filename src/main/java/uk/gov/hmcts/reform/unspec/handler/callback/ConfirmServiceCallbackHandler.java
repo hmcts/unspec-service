@@ -2,7 +2,6 @@ package uk.gov.hmcts.reform.unspec.handler.callback;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import org.springframework.util.ObjectUtils;
 import uk.gov.hmcts.reform.ccd.client.model.AboutToStartOrSubmitCallbackResponse;
 import uk.gov.hmcts.reform.ccd.client.model.CallbackResponse;
 import uk.gov.hmcts.reform.ccd.client.model.SubmittedCallbackResponse;
@@ -14,11 +13,9 @@ import uk.gov.hmcts.reform.unspec.enums.ServedDocuments;
 import uk.gov.hmcts.reform.unspec.helpers.CaseDetailsConverter;
 import uk.gov.hmcts.reform.unspec.model.CaseData;
 import uk.gov.hmcts.reform.unspec.model.ServiceMethod;
-import uk.gov.hmcts.reform.unspec.model.common.Element;
 import uk.gov.hmcts.reform.unspec.model.documents.CaseDocument;
 import uk.gov.hmcts.reform.unspec.model.documents.DocumentType;
 import uk.gov.hmcts.reform.unspec.service.DeadlinesCalculator;
-import uk.gov.hmcts.reform.unspec.service.docmosis.cos.CertificateOfServiceGenerator;
 import uk.gov.hmcts.reform.unspec.validation.groups.ConfirmServiceDateGroup;
 
 import java.time.LocalDate;
@@ -32,7 +29,6 @@ import javax.validation.ConstraintViolation;
 import javax.validation.Validator;
 
 import static java.lang.String.format;
-import static uk.gov.hmcts.reform.unspec.callback.CallbackParams.Params.BEARER_TOKEN;
 import static uk.gov.hmcts.reform.unspec.callback.CallbackType.ABOUT_TO_START;
 import static uk.gov.hmcts.reform.unspec.callback.CallbackType.ABOUT_TO_SUBMIT;
 import static uk.gov.hmcts.reform.unspec.callback.CallbackType.MID;
@@ -42,9 +38,7 @@ import static uk.gov.hmcts.reform.unspec.helpers.DateFormatHelper.DATE;
 import static uk.gov.hmcts.reform.unspec.helpers.DateFormatHelper.DATE_TIME_AT;
 import static uk.gov.hmcts.reform.unspec.helpers.DateFormatHelper.formatLocalDate;
 import static uk.gov.hmcts.reform.unspec.helpers.DateFormatHelper.formatLocalDateTime;
-import static uk.gov.hmcts.reform.unspec.utils.ElementUtils.element;
 import static uk.gov.hmcts.reform.unspec.utils.ElementUtils.unwrapElements;
-import static uk.gov.hmcts.reform.unspec.utils.ElementUtils.wrapElements;
 
 @Service
 @RequiredArgsConstructor
@@ -57,7 +51,6 @@ public class ConfirmServiceCallbackHandler extends CallbackHandler {
         + "\n\n[Download certificate of service](%s) (PDF, %s KB)";
 
     private final Validator validator;
-    private final CertificateOfServiceGenerator certificateOfServiceGenerator;
     private final DeadlinesCalculator deadlinesCalculator;
     private final CaseDetailsConverter caseDetailsConverter;
 
@@ -67,7 +60,7 @@ public class ConfirmServiceCallbackHandler extends CallbackHandler {
             callbackKey(ABOUT_TO_START), this::prepopulateServedDocuments,
             callbackKey(MID, "served-documents"), this::checkServedDocumentsOtherHasWhiteSpace,
             callbackKey(MID, "service-date"), this::validateServiceDate,
-            callbackKey(ABOUT_TO_SUBMIT), this::prepareCertificateOfService,
+            callbackKey(ABOUT_TO_SUBMIT), this::calculateServiceDates,
             callbackKey(SUBMITTED), this::buildConfirmation
         );
     }
@@ -111,7 +104,7 @@ public class ConfirmServiceCallbackHandler extends CallbackHandler {
             .build();
     }
 
-    private CallbackResponse prepareCertificateOfService(CallbackParams callbackParams) {
+    private CallbackResponse calculateServiceDates(CallbackParams callbackParams) {
         CaseData caseData = callbackParams.getCaseData();
         ServiceMethod serviceMethod = caseData.getServiceMethodToRespondentSolicitor1();
         LocalDateTime serviceDate;
@@ -127,19 +120,6 @@ public class ConfirmServiceCallbackHandler extends CallbackHandler {
         CaseData.CaseDataBuilder caseDataBuilder = caseData.toBuilder()
             .deemedServiceDateToRespondentSolicitor1(deemedDateOfService)
             .respondentSolicitor1ResponseDeadline(responseDeadline);
-
-        CaseDocument certificateOfService = certificateOfServiceGenerator.generate(
-            caseDataBuilder.build(),
-            callbackParams.getParams().get(BEARER_TOKEN).toString()
-        );
-
-        List<Element<CaseDocument>> systemGeneratedCaseDocuments = caseData.getSystemGeneratedCaseDocuments();
-        if (ObjectUtils.isEmpty(systemGeneratedCaseDocuments)) {
-            caseDataBuilder.systemGeneratedCaseDocuments(wrapElements(certificateOfService));
-        } else {
-            systemGeneratedCaseDocuments.add(element(certificateOfService));
-            caseDataBuilder.systemGeneratedCaseDocuments(systemGeneratedCaseDocuments);
-        }
 
         return AboutToStartOrSubmitCallbackResponse.builder()
             .data(caseDetailsConverter.toMap(caseDataBuilder.build()))
