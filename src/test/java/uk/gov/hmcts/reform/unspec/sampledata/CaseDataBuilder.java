@@ -11,6 +11,7 @@ import uk.gov.hmcts.reform.unspec.enums.YesOrNo;
 import uk.gov.hmcts.reform.unspec.model.ApplicantNotProceedingReason;
 import uk.gov.hmcts.reform.unspec.model.BusinessProcess;
 import uk.gov.hmcts.reform.unspec.model.CaseData;
+import uk.gov.hmcts.reform.unspec.model.ClaimFee;
 import uk.gov.hmcts.reform.unspec.model.ClaimValue;
 import uk.gov.hmcts.reform.unspec.model.CloseClaim;
 import uk.gov.hmcts.reform.unspec.model.CourtLocation;
@@ -109,6 +110,7 @@ public class CaseDataBuilder {
     private CloseClaim discontinueClaim;
 
     private Respondent1DQ respondent1DQ;
+    private ClaimFee claimFee;
 
     public CaseDataBuilder respondentSolicitor1claimResponseExtensionProposedDeadline(LocalDate responsedeadline) {
         this.respondentSolicitor1claimResponseExtensionProposedDeadline = responsedeadline;
@@ -386,6 +388,11 @@ public class CaseDataBuilder {
         return this;
     }
 
+    public CaseDataBuilder claimFee(ClaimFee claimFee) {
+        this.claimFee = claimFee;
+        return this;
+    }
+
     public static CaseDataBuilder builder() {
         return new CaseDataBuilder();
     }
@@ -458,6 +465,7 @@ public class CaseDataBuilder {
             .withdrawClaim(withdrawClaim)
             .discontinueClaim(discontinueClaim)
             .respondent1DQ(respondent1DQ)
+            .claimFee(claimFee)
             .build();
     }
 }

@@ -14,6 +14,10 @@ public class MonetaryConversions {
         // Utilities class, no instances
     }
 
+    public static BigDecimal penniesToPounds(BigInteger amountInPennies) {
+        return penniesToPounds(new BigDecimal(amountInPennies));
+    }
+
     public static BigDecimal penniesToPounds(BigDecimal amountInPennies) {
         requireNonNull(amountInPennies);
         return amountInPennies.divide(HUNDRED, 2, RoundingMode.UNNECESSARY);

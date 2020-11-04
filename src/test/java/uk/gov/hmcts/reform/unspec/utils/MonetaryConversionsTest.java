@@ -12,8 +12,9 @@ class MonetaryConversionsTest {
 
     @Test
     void shouldThrowNullPointer_whenGivenNullAmount() {
+        BigDecimal amountInPennies = null;
         assertThrows(NullPointerException.class, () ->
-            MonetaryConversions.penniesToPounds(null));
+            MonetaryConversions.penniesToPounds(amountInPennies));
     }
 
     @Test

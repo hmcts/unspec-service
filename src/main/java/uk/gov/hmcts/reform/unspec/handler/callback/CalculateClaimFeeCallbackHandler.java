@@ -5,32 +5,32 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import uk.gov.hmcts.reform.ccd.client.model.AboutToStartOrSubmitCallbackResponse;
 import uk.gov.hmcts.reform.ccd.client.model.CallbackResponse;
-import uk.gov.hmcts.reform.payments.client.models.PaymentDto;
+import uk.gov.hmcts.reform.payments.client.models.FeeDto;
 import uk.gov.hmcts.reform.unspec.callback.Callback;
 import uk.gov.hmcts.reform.unspec.callback.CallbackHandler;
 import uk.gov.hmcts.reform.unspec.callback.CallbackParams;
 import uk.gov.hmcts.reform.unspec.callback.CaseEvent;
-import uk.gov.hmcts.reform.unspec.config.PaymentsConfiguration;
 import uk.gov.hmcts.reform.unspec.helpers.CaseDetailsConverter;
 import uk.gov.hmcts.reform.unspec.model.CaseData;
-import uk.gov.hmcts.reform.unspec.service.PaymentsService;
+import uk.gov.hmcts.reform.unspec.model.ClaimFee;
+import uk.gov.hmcts.reform.unspec.service.FeesService;
 
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
 import static uk.gov.hmcts.reform.unspec.callback.CallbackType.ABOUT_TO_SUBMIT;
-import static uk.gov.hmcts.reform.unspec.callback.CaseEvent.MAKE_PBA_PAYMENT;
+import static uk.gov.hmcts.reform.unspec.callback.CaseEvent.CALCULATE_CLAIM_FEE;
+import static uk.gov.hmcts.reform.unspec.utils.MonetaryConversions.poundsToPennies;
 
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class PaymentsCallbackHandler extends CallbackHandler {
+public class CalculateClaimFeeCallbackHandler extends CallbackHandler {
 
-    private static final List<CaseEvent> EVENTS = Collections.singletonList(MAKE_PBA_PAYMENT);
+    private static final List<CaseEvent> EVENTS = Collections.singletonList(CALCULATE_CLAIM_FEE);
 
-    private final PaymentsConfiguration paymentsConfiguration;
-    private final PaymentsService paymentsService;
+    private final FeesService feesService;
     private final CaseDetailsConverter caseDetailsConverter;
 
     @Override
@@ -46,17 +46,18 @@ public class PaymentsCallbackHandler extends CallbackHandler {
     private CallbackResponse makePbaPayment(CallbackParams callbackParams) {
         CaseData caseData = callbackParams.getCaseData();
         var builder = caseData.toBuilder();
-        if (paymentsConfiguration.isEnabled()) {
-            try {
-                PaymentDto paymentDto = paymentsService.createCreditAccountPayment(caseData);
-                builder.paymentReference(paymentDto.getReference());
-            } catch (Exception e) {
-                log.error(String.format("Error when making payment for case: %s, message: %s",
-                                        caseData.getCcdCaseReference(), e.getMessage()
-                ));
-            }
-        } else {
-            log.info("Payment configuration is disabled.");
+        try {
+            FeeDto feeDto = feesService.getFeeDataByClaimValue(caseData.getClaimValue());
+            builder.claimFee(ClaimFee.builder()
+                                 .feeAmount(poundsToPennies(feeDto.getCalculatedAmount()))
+                                 .code(feeDto.getCode())
+                                 .description(feeDto.getDescription())
+                                 .version(feeDto.getVersion())
+                                 .build());
+        } catch (Exception e) {
+            log.error(String.format("Error when calculating fee for case: %s, message: %s",
+                                    caseData.getCcdCaseReference(), e.getMessage()
+            ));
         }
 
         return AboutToStartOrSubmitCallbackResponse.builder()
