@@ -73,7 +73,7 @@ public class RespondToDefenceCallbackHandler extends CallbackHandler {
 
     private CallbackResponse handleNotifications(CallbackParams callbackParams) {
         CaseData caseData = callbackParams.getCaseData();
-        if (fromFullName(stateFlowEngine.evaluate(caseData).getState().getName()) == FlowState.Main.FULL_DEFENCE) {
+        if (fromFullName(stateFlowEngine.evaluate(caseData).getState().getName()) == FlowState.Main.CLAIM_STAYED) {
             caseData = businessProcessService.updateBusinessProcess(caseData, CLAIMANT_RESPONSE);
         }
 
