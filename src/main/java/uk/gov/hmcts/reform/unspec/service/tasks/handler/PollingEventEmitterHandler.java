@@ -24,7 +24,6 @@ public class PollingEventEmitterHandler implements BaseExternalTaskHandler {
     private final EventEmitterService eventEmitterService;
 
     @Override
-    @EventEmitter
     public void handleTask(ExternalTask externalTask) {
         List<CaseDetails> cases = caseSearchService.getCases();
         log.info("Job '{}' found {} case(s)", externalTask.getTopicName(), cases.size());
