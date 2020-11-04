@@ -40,7 +40,7 @@ module.exports = {
 
     await assertCallbackError('ServedDocuments', data[eventName].invalid.ServedDocuments.blankOtherDocuments,
       'CONTENT TBC: please enter a valid value for other documents');
-    await assertCallbackError('Date', data[eventName].invalid.Date.yesterday,
+    await assertCallbackError('Date', data[eventName].invalid.Date.threeDaysBeforeToday,
       'The date must not be before issue date of claim');
     await assertCallbackError('Date', data[eventName].invalid.Date.tomorrow,
       'The date must not be in the future');
@@ -165,7 +165,7 @@ const assertValidData = async (pageId) => {
 };
 
 const assertCallbackError = async (pageId, eventData, expectedErrorMessage) => {
-  const response = await request.validatePage(eventName, pageId, {...caseData, ...eventData});
+  const response = await request.validatePage(eventName, pageId, {...caseData, ...eventData}, 422);
   const responseBody = await response.json();
 
   assert.equal(response.status, 422);
