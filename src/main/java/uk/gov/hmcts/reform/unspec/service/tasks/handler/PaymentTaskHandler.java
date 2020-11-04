@@ -51,6 +51,11 @@ public class PaymentTaskHandler implements BaseExternalTaskHandler {
         return variables;
     }
 
+    @Override
+    public int getMaxAttempts() {
+        return 3;
+    }
+
     private CaseDataContent caseDataContent(StartEventResponse startEventResponse, BusinessProcess businessProcess) {
         Map<String, Object> data = startEventResponse.getCaseDetails().getData();
         data.put("businessProcess", businessProcess);
