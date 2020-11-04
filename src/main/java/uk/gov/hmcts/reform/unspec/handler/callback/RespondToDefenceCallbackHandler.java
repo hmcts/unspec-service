@@ -83,9 +83,10 @@ public class RespondToDefenceCallbackHandler extends CallbackHandler {
     }
 
     private SubmittedCallbackResponse buildConfirmation(CallbackParams callbackParams) {
-        YesOrNo proceeding = callbackParams.getCaseData().getApplicant1ProceedWithClaim();
+        CaseData caseData = callbackParams.getCaseData();
+        YesOrNo proceeding = caseData.getApplicant1ProceedWithClaim();
 
-        String claimNumber = "TBC";
+        String claimNumber = caseData.getLegacyCaseReference();
         String dqLink = "http://www.google.com";
 
         String body = getBody(proceeding);
