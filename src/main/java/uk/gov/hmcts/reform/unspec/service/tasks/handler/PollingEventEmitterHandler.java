@@ -6,7 +6,6 @@ import org.camunda.bpm.client.task.ExternalTask;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression;
 import org.springframework.stereotype.Component;
 import uk.gov.hmcts.reform.ccd.client.model.CaseDetails;
-import uk.gov.hmcts.reform.unspec.aspect.EventEmitter;
 import uk.gov.hmcts.reform.unspec.helpers.CaseDetailsConverter;
 import uk.gov.hmcts.reform.unspec.service.EventEmitterService;
 import uk.gov.hmcts.reform.unspec.service.search.CaseReadyBusinessProcessSearchService;
