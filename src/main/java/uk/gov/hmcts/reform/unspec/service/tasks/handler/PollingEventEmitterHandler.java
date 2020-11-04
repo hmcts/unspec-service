@@ -6,6 +6,7 @@ import org.camunda.bpm.client.task.ExternalTask;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression;
 import org.springframework.stereotype.Component;
 import uk.gov.hmcts.reform.ccd.client.model.CaseDetails;
+import uk.gov.hmcts.reform.unspec.aspect.EventEmitter;
 import uk.gov.hmcts.reform.unspec.helpers.CaseDetailsConverter;
 import uk.gov.hmcts.reform.unspec.service.EventEmitterService;
 import uk.gov.hmcts.reform.unspec.service.search.CaseReadyBusinessProcessSearchService;
@@ -23,12 +24,13 @@ public class PollingEventEmitterHandler implements BaseExternalTaskHandler {
     private final EventEmitterService eventEmitterService;
 
     @Override
+    @EventEmitter
     public void handleTask(ExternalTask externalTask) {
         List<CaseDetails> cases = caseSearchService.getCases();
         log.info("Job '{}' found {} case(s)", externalTask.getTopicName(), cases.size());
         cases.stream()
             .map(caseDetailsConverter::toCaseData)
-            .forEach(eventEmitterService::emitBusinessProcessCamundaEvent);
+            .forEach(mappedCase -> eventEmitterService.emitBusinessProcessCamundaEvent(mappedCase, true));
     }
 
     @Override
