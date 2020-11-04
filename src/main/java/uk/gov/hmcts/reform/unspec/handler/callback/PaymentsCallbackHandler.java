@@ -24,6 +24,7 @@ import java.util.Map;
 
 import static uk.gov.hmcts.reform.unspec.callback.CallbackType.ABOUT_TO_SUBMIT;
 import static uk.gov.hmcts.reform.unspec.callback.CaseEvent.MAKE_PBA_PAYMENT;
+import static uk.gov.hmcts.reform.unspec.utils.MonetaryConversions.poundsToPennies;
 
 @Slf4j
 @Service
@@ -54,7 +55,7 @@ public class PaymentsCallbackHandler extends CallbackHandler {
             try {
                 FeeDto feeDto = feesService.getFeeDataByClaimValue(caseData.getClaimValue());
                 builder.claimFee(ClaimFee.builder()
-                                     .feeAmount(feeDto.getCalculatedAmount())
+                                     .feeAmount(poundsToPennies(feeDto.getCalculatedAmount()))
                                      .code(feeDto.getCode())
                                      .description(feeDto.getDescription())
                                      .version(feeDto.getVersion())

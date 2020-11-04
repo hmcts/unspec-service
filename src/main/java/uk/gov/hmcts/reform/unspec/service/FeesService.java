@@ -8,14 +8,13 @@ import uk.gov.hmcts.reform.payments.client.models.FeeDto;
 import uk.gov.hmcts.reform.unspec.config.FeesConfiguration;
 import uk.gov.hmcts.reform.unspec.model.ClaimValue;
 
-import java.math.BigDecimal;
 import java.math.BigInteger;
+
+import static uk.gov.hmcts.reform.unspec.utils.MonetaryConversions.poundsToPennies;
 
 @Service
 @RequiredArgsConstructor
 public class FeesService {
-
-    private static final BigDecimal PENCE_PER_POUND = BigDecimal.valueOf(100);
 
     private final FeesClient feesClient;
     private final FeesConfiguration feesConfiguration;
@@ -43,7 +42,7 @@ public class FeesService {
     private BigInteger getFeeAmountInPence(FeeLookupResponseDto feeLookupResponseDto) {
         var feeAmountPounds = feeLookupResponseDto.getFeeAmount();
 
-        return feeAmountPounds.multiply(PENCE_PER_POUND).toBigInteger();
+        return poundsToPennies(feeAmountPounds);
     }
 
     private FeeDto buildFeeDto(FeeLookupResponseDto feeLookupResponseDto) {
@@ -51,6 +50,7 @@ public class FeesService {
             .calculatedAmount(feeLookupResponseDto.getFeeAmount())
             .code(feeLookupResponseDto.getCode())
             .version(feeLookupResponseDto.getVersion().toString())
+            .description(feeLookupResponseDto.getDescription())
             .build();
     }
 }

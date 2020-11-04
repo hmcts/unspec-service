@@ -69,7 +69,7 @@ public class PaymentsCallbackHandlerTest extends BaseCallbackHandlerTest {
         assertThat(response.getData())
             .extracting("claimFee")
             .extracting("code", "description", "feeAmount", "version")
-            .containsExactlyInAnyOrder("my code", "my description", "10", "1");
+            .containsExactlyInAnyOrder("my code", "my description", "1000", "1");
 
     }
 }
