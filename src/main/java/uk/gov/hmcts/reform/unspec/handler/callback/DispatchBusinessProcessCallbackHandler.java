@@ -22,7 +22,6 @@ import static uk.gov.hmcts.reform.unspec.callback.CallbackType.ABOUT_TO_SUBMIT;
 import static uk.gov.hmcts.reform.unspec.callback.CaseEvent.DISPATCH_BUSINESS_PROCESS;
 import static uk.gov.hmcts.reform.unspec.enums.BusinessProcessStatus.DISPATCHED;
 import static uk.gov.hmcts.reform.unspec.enums.BusinessProcessStatus.READY;
-import static uk.gov.hmcts.reform.unspec.enums.BusinessProcessStatus.STARTED;
 
 @Service
 @RequiredArgsConstructor
@@ -49,7 +48,7 @@ public class DispatchBusinessProcessCallbackHandler extends CallbackHandler {
         CaseData caseData = callbackParams.getCaseData();
         List<String> errors = new ArrayList<>();
 
-        if (caseData.getBusinessProcess().getStatusOrDefault() == STARTED) {
+        if (caseData.getBusinessProcess().getStatusOrDefault() != READY) {
             errors.add("Business process already started");
         }
 

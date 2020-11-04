@@ -21,7 +21,6 @@ import static uk.gov.hmcts.reform.unspec.callback.CallbackType.ABOUT_TO_START;
 import static uk.gov.hmcts.reform.unspec.callback.CallbackType.ABOUT_TO_SUBMIT;
 import static uk.gov.hmcts.reform.unspec.enums.BusinessProcessStatus.DISPATCHED;
 import static uk.gov.hmcts.reform.unspec.enums.BusinessProcessStatus.READY;
-import static uk.gov.hmcts.reform.unspec.enums.BusinessProcessStatus.STARTED;
 
 @SpringBootTest(classes = {
     DispatchBusinessProcessCallbackHandler.class,
@@ -36,10 +35,11 @@ class DispatchBusinessProcessCallbackHandlerTest extends BaseCallbackHandlerTest
     @Nested
     class AboutToStartCallback {
 
-        @Test
-        void shouldReturnError_whenBusinessProcessIsStarted() {
+        @ParameterizedTest
+        @EnumSource(value = BusinessProcessStatus.class, mode = EnumSource.Mode.EXCLUDE, names = {"READY"})
+        void shouldReturnError_whenBusinessProcessIsStarted(BusinessProcessStatus status) {
             CaseData caseData = CaseDataBuilder.builder()
-                .businessProcess(businessProcessWithStatus(STARTED))
+                .businessProcess(businessProcessWithStatus(status))
                 .build();
             CallbackParams params = callbackParamsOf(caseData, ABOUT_TO_START);
 
@@ -49,7 +49,7 @@ class DispatchBusinessProcessCallbackHandlerTest extends BaseCallbackHandlerTest
         }
 
         @Test
-        void shouldNotReturnError_whenBusinessProcessIsNotStarted() {
+        void shouldNotReturnError_whenBusinessProcessIsNotReady() {
             CaseData caseData = CaseDataBuilder.builder()
                 .businessProcess(businessProcessWithStatus(READY))
                 .build();
