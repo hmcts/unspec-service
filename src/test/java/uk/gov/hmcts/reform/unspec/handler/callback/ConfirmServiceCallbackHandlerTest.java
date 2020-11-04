@@ -286,7 +286,6 @@ class ConfirmServiceCallbackHandlerTest extends BaseCallbackHandlerTest {
 
         @Test
         void shouldReturnExpectedResponse_whenValidData() {
-            int documentSize = 0;
             CaseData caseData = CaseDataBuilder.builder().atStateServiceConfirmed().build();
             CallbackParams params = callbackParamsOf(caseData, CallbackType.SUBMITTED);
 
@@ -298,8 +297,7 @@ class ConfirmServiceCallbackHandlerTest extends BaseCallbackHandlerTest {
                 CONFIRMATION_SUMMARY,
                 formattedDeemedDateOfService,
                 responseDeadlineDate,
-                format("/cases/case-details/%s#CaseDocuments", CASE_ID),
-                documentSize / 1024
+                format("/cases/case-details/%s#CaseDocuments", CASE_ID)
             );
 
             assertThat(response).isEqualToComparingFieldByField(

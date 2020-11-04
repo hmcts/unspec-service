@@ -13,8 +13,6 @@ import uk.gov.hmcts.reform.unspec.enums.ServedDocuments;
 import uk.gov.hmcts.reform.unspec.helpers.CaseDetailsConverter;
 import uk.gov.hmcts.reform.unspec.model.CaseData;
 import uk.gov.hmcts.reform.unspec.model.ServiceMethod;
-import uk.gov.hmcts.reform.unspec.model.documents.CaseDocument;
-import uk.gov.hmcts.reform.unspec.model.documents.DocumentType;
 import uk.gov.hmcts.reform.unspec.service.DeadlinesCalculator;
 import uk.gov.hmcts.reform.unspec.validation.groups.ConfirmServiceDateGroup;
 
@@ -38,7 +36,6 @@ import static uk.gov.hmcts.reform.unspec.helpers.DateFormatHelper.DATE;
 import static uk.gov.hmcts.reform.unspec.helpers.DateFormatHelper.DATE_TIME_AT;
 import static uk.gov.hmcts.reform.unspec.helpers.DateFormatHelper.formatLocalDate;
 import static uk.gov.hmcts.reform.unspec.helpers.DateFormatHelper.formatLocalDateTime;
-import static uk.gov.hmcts.reform.unspec.utils.ElementUtils.unwrapElements;
 
 @Service
 @RequiredArgsConstructor
@@ -48,7 +45,7 @@ public class ConfirmServiceCallbackHandler extends CallbackHandler {
 
     public static final String CONFIRMATION_SUMMARY = "<br /> Deemed date of service: %s."
         + "<br />The defendant must respond before %s."
-        + "\n\n[Download certificate of service](%s) (PDF, %s KB)";
+        + "\n\n[Download certificate of service](%s)";
 
     private final Validator validator;
     private final DeadlinesCalculator deadlinesCalculator;
@@ -135,18 +132,12 @@ public class ConfirmServiceCallbackHandler extends CallbackHandler {
             caseData.getRespondentSolicitor1ResponseDeadline(),
             DATE_TIME_AT
         );
-        Long documentSize = unwrapElements(caseData.getSystemGeneratedCaseDocuments()).stream()
-            .filter(c -> c.getDocumentType() == DocumentType.CERTIFICATE_OF_SERVICE)
-            .findFirst()
-            .map(CaseDocument::getDocumentSize)
-            .orElse(0L);
 
         String body = format(
             CONFIRMATION_SUMMARY,
             formattedDeemedDateOfService,
             responseDeadlineDate,
-            format("/cases/case-details/%s#CaseDocuments", caseData.getCcdCaseReference()),
-            documentSize / 1024
+            format("/cases/case-details/%s#CaseDocuments", caseData.getCcdCaseReference())
         );
 
         return SubmittedCallbackResponse.builder()
