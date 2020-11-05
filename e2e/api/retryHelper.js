@@ -1,12 +1,12 @@
-const retry = (fn, remainingRetries = 3, err = null) => {
+const retry = (fn, retryTimeout = 3000, remainingRetries = 5, err = null) => {
   if (!remainingRetries) {
     return Promise.reject(err);
   }
 
   return fn().catch(async err => {
-    await sleep(3000);
-    console.log('Retrying due to an error: ' + err);
-    return retry(fn, remainingRetries - 1, err);
+    console.log(`Failed due to an error: ${err}, will try again in ${retryTimeout / 1000} seconds (${remainingRetries} retries left)`);
+    await sleep(retryTimeout);
+    return retry(fn, 2 * retryTimeout, remainingRetries - 1, err);
   });
 };
 
