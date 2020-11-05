@@ -222,7 +222,7 @@ class StateFlowEngineTest {
                 .containsExactly(
                     DRAFT.fullName(), PENDING_CREATED.fullName(), PAYMENT_SUCCESSFUL.fullName(),
                     CLAIM_ISSUED.fullName(), SERVICE_CONFIRMED.fullName(), RESPONDED_TO_CLAIM.fullName(),
-                    FULL_DEFENCE.fullName() , CLAIM_STAYED.fullName());
+                    FULL_DEFENCE.fullName(), CLAIM_STAYED.fullName());
         }
     }
 
