@@ -48,7 +48,7 @@ public class FlowPredicate {
             && caseData.getApplicant1DefenceResponseDocument() != null;
 
     public static final Predicate<CaseData> schedulerStayClaim = caseData ->
-        caseData.getCcdState() == STAYED;
+        caseData.getCcdState() == STAYED && caseData.getDeemedServiceDateToRespondentSolicitor1() == null;
 
     public static final Predicate<CaseData> claimWithdrawn = caseData ->
         caseData.getWithdrawClaim() != null
