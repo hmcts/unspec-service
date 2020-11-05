@@ -9,11 +9,10 @@ import uk.gov.hmcts.reform.unspec.stateflow.StateFlow;
 import uk.gov.hmcts.reform.unspec.stateflow.StateFlowBuilder;
 import uk.gov.hmcts.reform.unspec.stateflow.model.State;
 
-import static uk.gov.hmcts.reform.unspec.service.flowstate.FlowPredicate.ccdStateCreated;
 import static uk.gov.hmcts.reform.unspec.service.flowstate.FlowPredicate.claimDiscontinued;
+import static uk.gov.hmcts.reform.unspec.service.flowstate.FlowPredicate.claimIssued;
 import static uk.gov.hmcts.reform.unspec.service.flowstate.FlowPredicate.claimWithdrawn;
 import static uk.gov.hmcts.reform.unspec.service.flowstate.FlowPredicate.claimantConfirmService;
-import static uk.gov.hmcts.reform.unspec.service.flowstate.FlowPredicate.claimantIssueClaim;
 import static uk.gov.hmcts.reform.unspec.service.flowstate.FlowPredicate.claimantRespondToDefence;
 import static uk.gov.hmcts.reform.unspec.service.flowstate.FlowPredicate.claimantRespondToRequestForExtension;
 import static uk.gov.hmcts.reform.unspec.service.flowstate.FlowPredicate.defendantAcknowledgeService;
@@ -21,6 +20,7 @@ import static uk.gov.hmcts.reform.unspec.service.flowstate.FlowPredicate.defenda
 import static uk.gov.hmcts.reform.unspec.service.flowstate.FlowPredicate.defendantRespondToClaim;
 import static uk.gov.hmcts.reform.unspec.service.flowstate.FlowPredicate.paymentFailed;
 import static uk.gov.hmcts.reform.unspec.service.flowstate.FlowPredicate.paymentSuccessful;
+import static uk.gov.hmcts.reform.unspec.service.flowstate.FlowPredicate.pendingCreated;
 import static uk.gov.hmcts.reform.unspec.service.flowstate.FlowPredicate.schedulerStayClaim;
 import static uk.gov.hmcts.reform.unspec.service.flowstate.FlowState.Main.CLAIM_DISCONTINUED;
 import static uk.gov.hmcts.reform.unspec.service.flowstate.FlowState.Main.CLAIM_ISSUED;
@@ -47,14 +47,14 @@ public class StateFlowEngine {
     public StateFlow build() {
         return StateFlowBuilder.<FlowState.Main>flow(FLOW_NAME)
             .initial(DRAFT)
-                .transitionTo(PENDING_CREATED).onlyIf(claimantIssueClaim)
+                .transitionTo(PENDING_CREATED).onlyIf(pendingCreated)
             .state(PENDING_CREATED)
                 .transitionTo(PAYMENT_SUCCESSFUL).onlyIf(paymentSuccessful)
                 .transitionTo(PAYMENT_FAILED).onlyIf(paymentFailed)
             .state(PAYMENT_FAILED)
                 .transitionTo(PAYMENT_SUCCESSFUL).onlyIf(paymentSuccessful)
             .state(PAYMENT_SUCCESSFUL)
-                .transitionTo(CLAIM_ISSUED).onlyIf(ccdStateCreated)
+                .transitionTo(CLAIM_ISSUED).onlyIf(claimIssued)
             .state(CLAIM_ISSUED)
                 .transitionTo(SERVICE_CONFIRMED).onlyIf(claimantConfirmService)
                 .transitionTo(CLAIM_WITHDRAWN).onlyIf(claimWithdrawn)

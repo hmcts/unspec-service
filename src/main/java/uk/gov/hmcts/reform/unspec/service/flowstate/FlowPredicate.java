@@ -11,7 +11,7 @@ import static uk.gov.hmcts.reform.unspec.enums.CaseState.STAYED;
 
 public class FlowPredicate {
 
-    public static final Predicate<CaseData> claimantIssueClaim = caseData ->
+    public static final Predicate<CaseData> pendingCreated = caseData ->
         caseData.getClaimIssuedDate() != null
             && caseData.getLegacyCaseReference() != null;
 
@@ -22,7 +22,7 @@ public class FlowPredicate {
         caseData.getPaymentReference() != null
             && caseData.getPaymentErrorMessage() == null;
 
-    public static final Predicate<CaseData> ccdStateCreated = caseData ->
+    public static final Predicate<CaseData> claimIssued = caseData ->
         caseData.getCcdState() != null && caseData.getCcdState() != PENDING_CREATED;
 
     public static final Predicate<CaseData> claimantConfirmService = caseData ->
