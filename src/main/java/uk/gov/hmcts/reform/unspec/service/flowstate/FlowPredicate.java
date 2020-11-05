@@ -16,11 +16,11 @@ public class FlowPredicate {
             && caseData.getLegacyCaseReference() != null;
 
     public static final Predicate<CaseData> paymentFailed = caseData ->
-        caseData.getPaymentFailureReason() != null;
+        caseData.getPaymentErrorMessage() != null;
 
     public static final Predicate<CaseData> paymentSuccessful = caseData ->
         caseData.getPaymentReference() != null
-            && caseData.getPaymentFailureReason() == null;
+            && caseData.getPaymentErrorMessage() == null;
 
     public static final Predicate<CaseData> ccdStateCreated = caseData ->
         caseData.getCcdState() != null && caseData.getCcdState() != PENDING_CREATED;

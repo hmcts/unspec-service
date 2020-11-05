@@ -1,7 +1,9 @@
 package uk.gov.hmcts.reform.unspec.handler.callback;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import feign.FeignException;
 import feign.Request;
+import lombok.SneakyThrows;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -12,6 +14,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import uk.gov.hmcts.reform.ccd.client.model.AboutToStartOrSubmitCallbackResponse;
 import uk.gov.hmcts.reform.payments.client.models.PaymentDto;
+import uk.gov.hmcts.reform.payments.client.models.StatusHistoryDto;
 import uk.gov.hmcts.reform.unspec.callback.CallbackParams;
 import uk.gov.hmcts.reform.unspec.config.PaymentsConfiguration;
 import uk.gov.hmcts.reform.unspec.helpers.CaseDetailsConverter;
@@ -25,6 +28,7 @@ import java.util.Map;
 import static feign.Request.HttpMethod.GET;
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.verify;
@@ -39,7 +43,8 @@ import static uk.gov.hmcts.reform.unspec.callback.CallbackType.ABOUT_TO_SUBMIT;
 public class PaymentsCallbackHandlerTest extends BaseCallbackHandlerTest {
 
     private static final String SUCCESSFUL_PAYMENT_REFERENCE = "RC-1234-1234-1234-1234";
-    private static final String PAYMENT_ERROR_RESPONSE = "Payment API error";
+    private static final String PAYMENT_ERROR_MESSAGE = "Your account is deleted";
+    private static final String PAYMENT_ERROR_CODE = "CA-E0004";
 
     @MockBean
     private PaymentsConfiguration paymentsConfiguration;
@@ -49,6 +54,9 @@ public class PaymentsCallbackHandlerTest extends BaseCallbackHandlerTest {
 
     @Autowired
     private PaymentsCallbackHandler handler;
+
+    @Autowired
+    private ObjectMapper objectMapper;
 
     private CaseData caseData;
     private CallbackParams params;
@@ -73,37 +81,66 @@ public class PaymentsCallbackHandlerTest extends BaseCallbackHandlerTest {
     }
 
     @ParameterizedTest
-    @ValueSource(ints = {403, 404, 422})
-    void shouldUpdateFailureReason_whenSpecificExceptionThrown(int status) {
+    @ValueSource(ints = {403})
+    void shouldUpdateFailureReason_whenForbiddenExceptionThrown(int status) {
         doThrow(buildFeignException(status)).when(paymentsService).createCreditAccountPayment(any());
 
         var response = (AboutToStartOrSubmitCallbackResponse) handler.handle(params);
 
         verify(paymentsService).createCreditAccountPayment(caseData);
         assertThat(response.getData()).extracting("paymentReference").isNull();
-        assertThat(response.getData()).extracting("paymentFailureReason").isEqualTo(PAYMENT_ERROR_RESPONSE);
+        assertThat(response.getData()).extracting("paymentErrorMessage").isEqualTo(PAYMENT_ERROR_MESSAGE);
+        assertThat(response.getData()).extracting("paymentErrorCode").isEqualTo(PAYMENT_ERROR_CODE);
         assertThat(response.getErrors()).isEmpty();
     }
 
     @ParameterizedTest
-    @ValueSource(ints = {400, 504})
-    void shouldAddError_whenSpecificExceptionThrown(int status) {
+    @ValueSource(ints = {400, 404, 422, 504})
+    void shouldAddError_whenOtherExceptionThrown(int status) {
         doThrow(buildFeignException(status)).when(paymentsService).createCreditAccountPayment(any());
 
         var response = (AboutToStartOrSubmitCallbackResponse) handler.handle(params);
 
         verify(paymentsService).createCreditAccountPayment(caseData);
         assertThat(response.getData()).extracting("paymentReference").isNull();
-        assertThat(response.getData()).extracting("paymentFailureReason").isNull();
+        assertThat(response.getData()).extracting("paymentErrorMessage").isNull();
+        assertThat(response.getData()).extracting("paymentErrorCode").isNull();
         assertThat(response.getErrors()).containsOnly("Technical error occurred");
     }
 
+    @Test
+    void shouldThrowException_whenForbiddenExceptionThrownContainsInvalidResponse() {
+        doThrow(buildForbiddenFeignExceptionWithInvalidResponse())
+            .when(paymentsService).createCreditAccountPayment(any());
+
+        assertThrows(FeignException.class, () -> handler.handle(params));
+        verify(paymentsService).createCreditAccountPayment(caseData);
+    }
+
+    @SneakyThrows
     private FeignException buildFeignException(int status) {
+        return buildFeignClientException(status, objectMapper.writeValueAsBytes(
+            PaymentDto.builder()
+                .statusHistories(new StatusHistoryDto[]{
+                    StatusHistoryDto.builder()
+                        .errorCode(PAYMENT_ERROR_CODE)
+                        .errorMessage(PAYMENT_ERROR_MESSAGE)
+                        .build()
+                })
+                .build()
+        ));
+    }
+
+    private FeignException buildForbiddenFeignExceptionWithInvalidResponse() {
+        return buildFeignClientException(403, "unexpected response body".getBytes(UTF_8));
+    }
+
+    private FeignException.FeignClientException buildFeignClientException(int status, byte[] body) {
         return new FeignException.FeignClientException(
             status,
             "exception message",
             Request.create(GET, "", Map.of(), new byte[]{}, UTF_8, null),
-            PAYMENT_ERROR_RESPONSE.getBytes(UTF_8)
+            body
         );
     }
 }

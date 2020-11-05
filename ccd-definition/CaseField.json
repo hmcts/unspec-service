@@ -656,8 +656,16 @@
   {
     "LiveFrom": "01/01/2017",
     "CaseTypeID": "UNSPECIFIED_CLAIMS",
-    "ID": "paymentFailureReason",
-    "Label": "PBA payment failure reason",
+    "ID": "paymentErrorMessage",
+    "Label": "PBA payment error message",
+    "FieldType": "Text",
+    "SecurityClassification": "Public"
+  },
+  {
+    "LiveFrom": "01/01/2017",
+    "CaseTypeID": "UNSPECIFIED_CLAIMS",
+    "ID": "paymentErrorCode",
+    "Label": "PBA payment error code",
     "FieldType": "Text",
     "SecurityClassification": "Public"
   },

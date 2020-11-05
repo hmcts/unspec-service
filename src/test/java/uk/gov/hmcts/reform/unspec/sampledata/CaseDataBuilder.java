@@ -75,7 +75,8 @@ public class CaseDataBuilder {
     private CaseState ccdState;
     private List<Element<CaseDocument>> systemGeneratedCaseDocuments;
     private String paymentReference;
-    private String paymentFailureReason;
+    private String paymentErrorMessage;
+    private String paymentErrorCode;
     // Confirm Service
     private LocalDate deemedServiceDateToRespondentSolicitor1;
     private LocalDateTime respondentSolicitor1ResponseDeadline;
@@ -330,7 +331,8 @@ public class CaseDataBuilder {
 
     public CaseDataBuilder atStatePaymentFailed() {
         atStatePendingCreated();
-        paymentFailureReason = "Your account is deleted";
+        paymentErrorMessage = "Your account is deleted";
+        paymentErrorCode = "CA-E0004";
         return this;
     }
 
@@ -435,7 +437,8 @@ public class CaseDataBuilder {
             .applicant1(applicant1)
             .respondent1(respondent1)
             .applicantSolicitor1ClaimStatementOfTruth(applicantSolicitor1ClaimStatementOfTruth)
-            .paymentFailureReason(paymentFailureReason)
+            .paymentErrorMessage(paymentErrorMessage)
+            .paymentErrorCode(paymentErrorCode)
             .paymentReference(paymentReference)
             // Confirm Service
             .deemedServiceDateToRespondentSolicitor1(deemedServiceDateToRespondentSolicitor1)

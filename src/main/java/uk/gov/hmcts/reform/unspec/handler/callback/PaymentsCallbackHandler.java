@@ -15,6 +15,7 @@ import uk.gov.hmcts.reform.unspec.callback.CallbackParams;
 import uk.gov.hmcts.reform.unspec.callback.CaseEvent;
 import uk.gov.hmcts.reform.unspec.config.PaymentsConfiguration;
 import uk.gov.hmcts.reform.unspec.helpers.CaseDetailsConverter;
+import uk.gov.hmcts.reform.unspec.model.CaseData;
 import uk.gov.hmcts.reform.unspec.service.PaymentsService;
 
 import java.util.ArrayList;
@@ -53,24 +54,16 @@ public class PaymentsCallbackHandler extends CallbackHandler {
         List<String> errors = new ArrayList<>();
         if (paymentsConfiguration.isEnabled()) {
             try {
-                PaymentDto paymentDto = paymentsService.createCreditAccountPayment(caseData);
                 caseData = caseData.toBuilder()
-                    .paymentReference(paymentDto.getReference())
-                    .paymentFailureReason(null)
+                    .paymentReference(paymentsService.createCreditAccountPayment(caseData).getReference())
+                    .paymentErrorMessage(null)
+                    .paymentErrorCode(null)
                     .build();
-
             } catch (FeignException e) {
-                log.error(String.format("Error when making payment for case: %s, message: %s",
-                                        caseData.getCcdCaseReference(), e.getMessage()));
-                switch (e.status()) {
-                    case 403:
-                    case 404:
-                    case 422:
-                        caseData = caseData.toBuilder().paymentFailureReason(getFailureReason(e)).build();
-                        break;
-                    default:
-                        errors.add(ERROR_MESSAGE);
-                        break;
+                if (e.status() == 403) {
+                    caseData = updateWithBusinessError(caseData, e);
+                } else {
+                    errors.add(ERROR_MESSAGE);
                 }
             }
         }
@@ -81,12 +74,18 @@ public class PaymentsCallbackHandler extends CallbackHandler {
             .build();
     }
 
-    private String getFailureReason(FeignException e) {
+    private CaseData updateWithBusinessError(CaseData caseData, FeignException e) {
         try {
             var paymentDto = objectMapper.readValue(e.contentUTF8(), PaymentDto.class);
-            return paymentDto.getStatusHistories()[0].getErrorMessage();
+            var statusHistory = paymentDto.getStatusHistories()[0];
+            return caseData.toBuilder()
+                .paymentErrorMessage(statusHistory.getErrorMessage())
+                .paymentErrorCode(statusHistory.getErrorCode())
+                .build();
         } catch (JsonProcessingException jsonException) {
-            return e.contentUTF8();
+            log.error(String.format("Unknown payment error for case: %s, response body: %s",
+                                    caseData.getCcdCaseReference(), e.contentUTF8()));
+            throw e;
         }
     }
 }
