@@ -96,10 +96,10 @@ public class SendGridClient {
             builder.withType(attachment.getContentType());
             builder.withDisposition("attachment");
             return builder.build();
-        } catch (IOException e) {
+        } catch (IOException ioException) {
             throw new EmailSendFailedException(
                 "Could not open input stream for attachment " + attachment.getFilename(),
-                e
+                ioException
             );
         }
     }

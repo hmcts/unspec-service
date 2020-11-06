@@ -32,10 +32,4 @@ public class EmailData {
     public boolean hasAttachments() {
         return this.attachments != null && !this.attachments.isEmpty();
     }
-
-    @Override
-    public String toString() {
-        return String.format("EmailData{to='%s', subject='%s', message='%s', attachments=%s}",
-            to, subject, message, attachments);
-    }
 }

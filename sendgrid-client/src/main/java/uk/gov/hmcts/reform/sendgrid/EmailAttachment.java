@@ -39,9 +39,4 @@ public class EmailAttachment {
             filename
         );
     }
-
-    @Override
-    public String toString() {
-        return String.format("EmailAttachment{contentType='%s', filename='%s'}", filename, contentType);
-    }
 }
