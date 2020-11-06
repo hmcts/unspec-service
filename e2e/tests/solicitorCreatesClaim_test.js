@@ -45,5 +45,5 @@ Scenario('Solicitor responds to claim', async (I) => {
 
 Scenario('Solicitor responds to defence', async (I) => {
   await I.respondToDefence();
-  await I.see(caseEventMessage('View and respond to defence'));
+  await I.see('Case List');
 });
