@@ -15,6 +15,6 @@ module.exports = {
       I.refreshPage();
       I.selectOption(this.fields.eventDropdown, event);
       I.click(this.goButton);
-    }, 'ccd-case-event-trigger');
+    }, 'ccd-case-event-trigger', 10);
   }
 };
