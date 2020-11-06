@@ -17,6 +17,7 @@ import uk.gov.hmcts.reform.unspec.helpers.CaseDetailsConverter;
 import uk.gov.hmcts.reform.unspec.model.CaseData;
 import uk.gov.hmcts.reform.unspec.model.ServiceMethod;
 import uk.gov.hmcts.reform.unspec.sampledata.CaseDataBuilder;
+import uk.gov.hmcts.reform.unspec.service.BusinessProcessService;
 import uk.gov.hmcts.reform.unspec.service.DeadlinesCalculator;
 import uk.gov.hmcts.reform.unspec.service.WorkingDayIndicator;
 
@@ -48,7 +49,8 @@ import static uk.gov.hmcts.reform.unspec.sampledata.CaseDataBuilder.RESPONSE_DEA
     JacksonAutoConfiguration.class,
     ValidationAutoConfiguration.class,
     DeadlinesCalculator.class,
-    CaseDetailsConverter.class
+    CaseDetailsConverter.class,
+    BusinessProcessService.class
 })
 class ConfirmServiceCallbackHandlerTest extends BaseCallbackHandlerTest {
 
@@ -239,7 +241,7 @@ class ConfirmServiceCallbackHandlerTest extends BaseCallbackHandlerTest {
     class AboutToSubmitCallback {
 
         @Test
-        void shouldReturnExpectedResponse_whenDateEntry() {
+        void shouldReturnExpectedResponseAndMarkBusinessProcessReady_whenDateEntry() {
             when(workingDayIndicator.isWorkingDay(any(LocalDate.class))).thenReturn(true);
 
             CaseData caseData = CaseDataBuilder.builder().atStateServiceConfirmed()
@@ -252,15 +254,14 @@ class ConfirmServiceCallbackHandlerTest extends BaseCallbackHandlerTest {
 
             assertThat(response.getData()).containsAllEntriesOf(
                 Map.of(
-                    "deemedServiceDateToRespondentSolicitor1",
-                    LocalDate.of(2099, 6, 25).toString(),
-                    "respondentSolicitor1ResponseDeadline",
-                    LocalDateTime.of(2099, 7, 9, 23, 59, 59).toString()
+                    "deemedServiceDateToRespondentSolicitor1", LocalDate.of(2099, 6, 25).toString(),
+                    "respondentSolicitor1ResponseDeadline", LocalDateTime.of(2099, 7, 9, 23, 59, 59).toString(),
+                    "businessProcess", Map.of("status", "READY", "camundaEvent", "CONFIRM_SERVICE")
                 ));
         }
 
         @Test
-        void shouldReturnExpectedResponse_whenDateAndTimeEntry() {
+        void shouldReturnExpectedResponseAndMarkBusinessProcessReady_whenDateAndTimeEntry() {
             when(workingDayIndicator.isWorkingDay(any(LocalDate.class))).thenReturn(true);
 
             CaseData caseData = CaseDataBuilder.builder().atStateServiceConfirmed()
@@ -273,10 +274,9 @@ class ConfirmServiceCallbackHandlerTest extends BaseCallbackHandlerTest {
 
             assertThat(response.getData()).containsAllEntriesOf(
                 Map.of(
-                    "deemedServiceDateToRespondentSolicitor1",
-                    LocalDate.of(2099, 6, 23).toString(),
-                    "respondentSolicitor1ResponseDeadline",
-                    LocalDateTime.of(2099, 7, 7, 23, 59, 59).toString()
+                    "deemedServiceDateToRespondentSolicitor1", LocalDate.of(2099, 6, 23).toString(),
+                    "respondentSolicitor1ResponseDeadline", LocalDateTime.of(2099, 7, 7, 23, 59, 59).toString(),
+                    "businessProcess", Map.of("status", "READY", "camundaEvent", "CONFIRM_SERVICE")
                 ));
         }
     }

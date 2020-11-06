@@ -13,6 +13,7 @@ import uk.gov.hmcts.reform.unspec.enums.ServedDocuments;
 import uk.gov.hmcts.reform.unspec.helpers.CaseDetailsConverter;
 import uk.gov.hmcts.reform.unspec.model.CaseData;
 import uk.gov.hmcts.reform.unspec.model.ServiceMethod;
+import uk.gov.hmcts.reform.unspec.service.BusinessProcessService;
 import uk.gov.hmcts.reform.unspec.service.DeadlinesCalculator;
 import uk.gov.hmcts.reform.unspec.validation.groups.ConfirmServiceDateGroup;
 
@@ -50,6 +51,7 @@ public class ConfirmServiceCallbackHandler extends CallbackHandler {
     private final Validator validator;
     private final DeadlinesCalculator deadlinesCalculator;
     private final CaseDetailsConverter caseDetailsConverter;
+    private final BusinessProcessService businessProcessService;
 
     @Override
     protected Map<String, Callback> callbacks() {
@@ -118,8 +120,10 @@ public class ConfirmServiceCallbackHandler extends CallbackHandler {
             .deemedServiceDateToRespondentSolicitor1(deemedDateOfService)
             .respondentSolicitor1ResponseDeadline(responseDeadline);
 
+        CaseData updatedData = businessProcessService.updateBusinessProcess(caseDataBuilder.build(), CONFIRM_SERVICE);
+
         return AboutToStartOrSubmitCallbackResponse.builder()
-            .data(caseDetailsConverter.toMap(caseDataBuilder.build()))
+            .data(caseDetailsConverter.toMap(updatedData))
             .build();
     }
 
