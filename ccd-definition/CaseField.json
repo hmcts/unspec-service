@@ -44,6 +44,14 @@
   {
     "LiveFrom": "01/01/2017",
     "CaseTypeID": "UNSPECIFIED_CLAIMS",
+    "ID": "applicant1LitigationFriendRequired",
+    "Label": "Is the claimant a child?",
+    "FieldType": "YesOrNo",
+    "SecurityClassification": "Public"
+  },
+  {
+    "LiveFrom": "01/01/2017",
+    "CaseTypeID": "UNSPECIFIED_CLAIMS",
     "ID": "applicant1LitigationFriend",
     "Label": "Claimant litigation details",
     "FieldType": "LitigationFriend",
@@ -179,6 +187,16 @@
     "FieldType": "ServiceMethod",
     "SecurityClassification": "Public",
     "_Definition":  "The delivery method type of service from the applicant solicitor to the first respondent solicitor",
+    "_Category":  "CIVIL"
+  },
+  {
+    "LiveFrom": "01/01/2017",
+    "CaseTypeID": "UNSPECIFIED_CLAIMS",
+    "ID": "serviceNamedPersonToRespondentSolicitor1",
+    "Label": "On whom did you serve?",
+    "FieldType": "Text",
+    "SecurityClassification": "Public",
+    "_Definition":  "The name of the person served by the applicant solicitor to the first respondent solicitor",
     "_Category":  "CIVIL"
   },
   {
@@ -660,6 +678,14 @@
     "Label": "Select a Payment by Account number from the list",
     "FieldType": "FixedList",
     "FieldTypeParameter": "PbaNumber",
+    "SecurityClassification": "Public"
+  },
+  {
+    "LiveFrom": "01/01/2017",
+    "CaseTypeID": "UNSPECIFIED_CLAIMS",
+    "ID": "respondent1LitigationFriend",
+    "Label": "Defendant litigation details",
+    "FieldType": "LitigationFriend",
     "SecurityClassification": "Public"
   }
 ]
