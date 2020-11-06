@@ -43,7 +43,6 @@ class EmailAttachmentTest {
                 () -> new EmailAttachment(CONTENT, PDF_CONTENT_TYPE, null)
             );
         }
-
     }
 
     @Nested

@@ -91,6 +91,5 @@ class SendGridAutoConfigurationTests {
         SendGrid sendGrid() {
             return new SendGrid(MY_CUSTOM_API_KEY, true);
         }
-
     }
 }
