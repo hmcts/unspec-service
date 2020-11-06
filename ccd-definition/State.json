@@ -2,9 +2,9 @@
   {
     "LiveFrom": "01/01/2017",
     "CaseTypeID": "UNSPECIFIED_CLAIMS",
-    "ID": "PENDING_CREATED",
-    "Name": "Pending claim created",
-    "Description": "Pending claim created",
+    "ID": "PENDING_CASE_ISSUED",
+    "Name": "Pending claim issued",
+    "Description": "Pending claim issued",
     "DisplayOrder": 1
   },
   {

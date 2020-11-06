@@ -20,7 +20,7 @@ import static uk.gov.hmcts.reform.unspec.service.flowstate.FlowPredicate.defenda
 import static uk.gov.hmcts.reform.unspec.service.flowstate.FlowPredicate.defendantRespondToClaim;
 import static uk.gov.hmcts.reform.unspec.service.flowstate.FlowPredicate.paymentFailed;
 import static uk.gov.hmcts.reform.unspec.service.flowstate.FlowPredicate.paymentSuccessful;
-import static uk.gov.hmcts.reform.unspec.service.flowstate.FlowPredicate.pendingCreated;
+import static uk.gov.hmcts.reform.unspec.service.flowstate.FlowPredicate.pendingCaseIssued;
 import static uk.gov.hmcts.reform.unspec.service.flowstate.FlowPredicate.schedulerStayClaim;
 import static uk.gov.hmcts.reform.unspec.service.flowstate.FlowState.Main.CLAIM_DISCONTINUED;
 import static uk.gov.hmcts.reform.unspec.service.flowstate.FlowState.Main.CLAIM_ISSUED;
@@ -33,7 +33,7 @@ import static uk.gov.hmcts.reform.unspec.service.flowstate.FlowState.Main.FLOW_N
 import static uk.gov.hmcts.reform.unspec.service.flowstate.FlowState.Main.FULL_DEFENCE;
 import static uk.gov.hmcts.reform.unspec.service.flowstate.FlowState.Main.PAYMENT_FAILED;
 import static uk.gov.hmcts.reform.unspec.service.flowstate.FlowState.Main.PAYMENT_SUCCESSFUL;
-import static uk.gov.hmcts.reform.unspec.service.flowstate.FlowState.Main.PENDING_CREATED;
+import static uk.gov.hmcts.reform.unspec.service.flowstate.FlowState.Main.PENDING_CASE_ISSUED;
 import static uk.gov.hmcts.reform.unspec.service.flowstate.FlowState.Main.RESPONDED_TO_CLAIM;
 import static uk.gov.hmcts.reform.unspec.service.flowstate.FlowState.Main.SERVICE_ACKNOWLEDGED;
 import static uk.gov.hmcts.reform.unspec.service.flowstate.FlowState.Main.SERVICE_CONFIRMED;
@@ -47,8 +47,8 @@ public class StateFlowEngine {
     public StateFlow build() {
         return StateFlowBuilder.<FlowState.Main>flow(FLOW_NAME)
             .initial(DRAFT)
-                .transitionTo(PENDING_CREATED).onlyIf(pendingCreated)
-            .state(PENDING_CREATED)
+                .transitionTo(PENDING_CASE_ISSUED).onlyIf(pendingCaseIssued)
+            .state(PENDING_CASE_ISSUED)
                 .transitionTo(PAYMENT_SUCCESSFUL).onlyIf(paymentSuccessful)
                 .transitionTo(PAYMENT_FAILED).onlyIf(paymentFailed)
             .state(PAYMENT_FAILED)

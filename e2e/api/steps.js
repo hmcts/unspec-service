@@ -23,7 +23,7 @@ module.exports = {
 
     await validateEventPages();
 
-    await assertSubmittedEvent('PENDING_CREATED', {
+    await assertSubmittedEvent('PENDING_CASE_ISSUED', {
       header: 'Your claim has been issued',
       body: 'Follow these steps to serve a claim'
     });

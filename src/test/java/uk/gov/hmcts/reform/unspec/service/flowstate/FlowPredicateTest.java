@@ -20,7 +20,7 @@ import static uk.gov.hmcts.reform.unspec.service.flowstate.FlowPredicate.defenda
 import static uk.gov.hmcts.reform.unspec.service.flowstate.FlowPredicate.defendantRespondToClaim;
 import static uk.gov.hmcts.reform.unspec.service.flowstate.FlowPredicate.paymentFailed;
 import static uk.gov.hmcts.reform.unspec.service.flowstate.FlowPredicate.paymentSuccessful;
-import static uk.gov.hmcts.reform.unspec.service.flowstate.FlowPredicate.pendingCreated;
+import static uk.gov.hmcts.reform.unspec.service.flowstate.FlowPredicate.pendingCaseIssued;
 import static uk.gov.hmcts.reform.unspec.service.flowstate.FlowPredicate.schedulerStayClaim;
 
 class FlowPredicateTest {
@@ -30,14 +30,14 @@ class FlowPredicateTest {
 
         @Test
         void shouldReturnTrue_whenCaseDataAtIssuedSate() {
-            CaseData caseData = CaseDataBuilder.builder().atStatePendingCreated().build();
-            assertTrue(pendingCreated.test(caseData));
+            CaseData caseData = CaseDataBuilder.builder().atStatePendingCaseIssued().build();
+            assertTrue(pendingCaseIssued.test(caseData));
         }
 
         @Test
         void shouldReturnFalse_whenCaseDataIsAtDraftSate() {
             CaseData caseData = CaseDataBuilder.builder().atStateClaimDraft().build();
-            assertFalse(pendingCreated.test(caseData));
+            assertFalse(pendingCaseIssued.test(caseData));
         }
     }
 
@@ -52,7 +52,7 @@ class FlowPredicateTest {
 
         @Test
         void shouldReturnFalse_whenCaseDataIsAtDraftSate() {
-            CaseData caseData = CaseDataBuilder.builder().atStatePendingCreated().build();
+            CaseData caseData = CaseDataBuilder.builder().atStatePendingCaseIssued().build();
             assertFalse(paymentFailed.test(caseData));
         }
     }
@@ -68,7 +68,7 @@ class FlowPredicateTest {
 
         @Test
         void shouldReturnFalse_whenCaseDataIsAtDraftSate() {
-            CaseData caseData = CaseDataBuilder.builder().atStatePendingCreated().build();
+            CaseData caseData = CaseDataBuilder.builder().atStatePendingCaseIssued().build();
             assertFalse(paymentSuccessful.test(caseData));
         }
     }

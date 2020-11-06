@@ -22,7 +22,7 @@ public interface FlowState {
 
     enum Main implements FlowState {
         DRAFT,
-        PENDING_CREATED,
+        PENDING_CASE_ISSUED,
         PAYMENT_SUCCESSFUL,
         PAYMENT_FAILED,
         CLAIM_ISSUED,
