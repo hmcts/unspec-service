@@ -1,4 +1,4 @@
-package uk.gov.hmcts.reform.unspec.config.sendgrid;
+package uk.gov.hmcts.reform.sendgrid.config;
 
 import com.sendgrid.SendGrid;
 import org.junit.jupiter.api.AfterEach;
@@ -13,7 +13,7 @@ import org.springframework.context.annotation.Configuration;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 
-public class SendGridAutoConfigurationTests {
+class SendGridAutoConfigurationTests {
 
     private static final String API_KEY = "SEND.GRID.SECRET-API-KEY";
     private static final String MY_CUSTOM_API_KEY = "SEND.GRID.MY.CUSTOM_API_KEY";

@@ -1,4 +1,4 @@
-package uk.gov.hmcts.reform.unspec.sendgrid;
+package uk.gov.hmcts.reform.sendgrid;
 
 import lombok.EqualsAndHashCode;
 import lombok.Getter;

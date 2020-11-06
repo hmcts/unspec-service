@@ -1,4 +1,4 @@
-package uk.gov.hmcts.reform.unspec.sendgrid;
+package uk.gov.hmcts.reform.sendgrid;
 
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -50,13 +50,13 @@ class EmailAttachmentTest {
     class ValidEmailAttachment {
 
         @Test
-        public void shouldCreateEmailAttachment_whenPdfAttachmentIsProvided() {
+        void shouldCreateEmailAttachment_whenPdfAttachmentIsProvided() {
             assertThat(EmailAttachment.pdf(PDF_CONTENT, PDF_FILE_NAME).getContentType())
                 .isEqualTo(PDF_CONTENT_TYPE);
         }
 
         @Test
-        public void shouldCreateEmailAttachment_whenJsonAttachmentIsProvided() {
+        void shouldCreateEmailAttachment_whenJsonAttachmentIsProvided() {
             assertThat(EmailAttachment.json(JSON_CONTENT.getBytes(), JSON_FILE_NAME).getContentType())
                 .isEqualTo(JSON_CONTENT_TYPE);
         }
