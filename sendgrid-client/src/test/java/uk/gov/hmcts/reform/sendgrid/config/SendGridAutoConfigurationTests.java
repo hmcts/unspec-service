@@ -31,7 +31,7 @@ class SendGridAutoConfigurationTests {
     void shouldAutoCreateSendGridBean_whenApiKeyIsConfigured() {
         loadContext("sendgrid.api-key:" + API_KEY);
         SendGrid sendGrid = this.context.getBean(SendGrid.class);
-        assertThat(sendGrid.getRequestHeaders().get("Authorization")).isEqualTo("Bearer " + API_KEY);
+        assertThat(sendGrid.getRequestHeaders()).containsEntry("Authorization", "Bearer " + API_KEY);
     }
 
     @Test
@@ -45,7 +45,7 @@ class SendGridAutoConfigurationTests {
     void shouldNotFiredAutoConfigure_whenBeanAlreadyCreatedManually() {
         loadContext(ManualSendGridConfiguration.class, "sendgrid.api-key:" + API_KEY);
         SendGrid sendGrid = this.context.getBean(SendGrid.class);
-        assertThat(sendGrid.getRequestHeaders().get("Authorization")).isEqualTo("Bearer " + MY_CUSTOM_API_KEY);
+        assertThat(sendGrid.getRequestHeaders()).containsEntry("Authorization", "Bearer " + MY_CUSTOM_API_KEY);
     }
 
     @Test

@@ -72,30 +72,30 @@ class SendGridClientTest {
         @ParameterizedTest
         @NullAndEmptySource
         void shouldThrowIllegalArgumentException_whenToIsNullOrBlank(String to) {
+            EmailData emailData = EmailData.builder()
+                .to(to)
+                .subject("my email")
+                .message("My email message")
+                .attachments(List.of())
+                .build();
             assertThrows(
                 IllegalArgumentException.class,
-                () -> sendGridClient.sendEmail(EMAIL_FROM, EmailData.builder()
-                    .to(to)
-                    .subject("my email")
-                    .message("My email message")
-                    .attachments(List.of())
-                    .build()
-                )
+                () -> sendGridClient.sendEmail(EMAIL_FROM, emailData)
             );
         }
 
         @ParameterizedTest
         @NullAndEmptySource
         void shouldThrowIllegalArgumentException_whenSubjectIsNullOrBlank(String subject) {
+            EmailData emailData = EmailData.builder()
+                .to("to@server.net")
+                .subject(subject)
+                .message("My email message")
+                .attachments(List.of())
+                .build();
             assertThrows(
                 IllegalArgumentException.class,
-                () -> sendGridClient.sendEmail(EMAIL_FROM, EmailData.builder()
-                    .to("to@server.net")
-                    .subject(subject)
-                    .message("My email message")
-                    .attachments(List.of())
-                    .build()
-                )
+                () -> sendGridClient.sendEmail(EMAIL_FROM, emailData)
             );
         }
 
