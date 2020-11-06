@@ -138,7 +138,6 @@ module.exports = {
 
   addDefendantLitigationFriend: async () => {
     eventName = 'ADD_DEFENDANT_LITIGATION_FRIEND';
-    await testingSupport.resetBusinessProcess(caseId);
     await request.startEvent(eventName, caseId);
 
     await validateEventPages();
