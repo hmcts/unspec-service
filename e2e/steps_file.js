@@ -186,7 +186,6 @@ module.exports = function () {
     },
 
     async addDefendantLitigationFriend() {
-      await testingSupport.resetBusinessProcess(caseId);
       await caseViewPage.startEvent('Add litigation friend');
       await defendantLitigationFriendPage.enterLitigantFriendWithDifferentAddressToDefendant(address, TEST_FILE_PATH);
       await this.click('Submit');
