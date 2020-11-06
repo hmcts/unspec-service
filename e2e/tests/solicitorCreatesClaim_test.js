@@ -40,6 +40,5 @@ Scenario('Solicitor responds to claim', async (I) => {
 
 Scenario('Solicitor responds to defence', async (I) => {
   await I.respondToDefence();
-  // solicitor user cannot see stayed state so assertion fails.
-  // await I.see(caseEventMessage('View and respond to defence'));
+  await I.see('Case List');
 });
