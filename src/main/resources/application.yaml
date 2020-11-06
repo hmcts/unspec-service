@@ -85,7 +85,7 @@ reference:
     migration: false
 
 notifications:
-  govNotifyApiKey: ${GOV_NOTIFY_API_KEY:}
+  govNotifyApiKey: pretends-a8b1617c-8e15-49aa-a8d3-a27a243f3c45-d408dc2f-6f61-44ae-b2dc-b0480ed5f17a
   defendantSolicitorClaimIssueEmailTemplate: "1e55aae6-879e-4e63-93ce-cf4cf93636f2"
   solicitorResponseToCase: "a2b3d626-bf20-406e-ac8c-8d8a5ea43c66"
   claimantSolicitorEmail: claimantsolicitor@gmail.com
@@ -143,6 +143,7 @@ document_management:
 docmosis:
   tornado:
     url: http://localhost:5433
+    key: XXX
 
 testing:
   support:
