@@ -4,8 +4,9 @@ import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 
-import java.util.Collections;
 import java.util.List;
+
+import static java.util.Collections.unmodifiableList;
 
 @EqualsAndHashCode
 @Getter
@@ -26,7 +27,7 @@ public class EmailData {
         this.to = to;
         this.subject = subject;
         this.message = message;
-        this.attachments = Collections.unmodifiableList(attachments);
+        this.attachments = attachments != null ? unmodifiableList(attachments) : List.of();
     }
 
     public boolean hasAttachments() {
