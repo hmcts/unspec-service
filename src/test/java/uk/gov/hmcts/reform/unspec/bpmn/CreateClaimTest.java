@@ -13,6 +13,9 @@ class CreateClaimTest extends BpmnBaseTest {
     private static final String NOTIFY_RESPONDENT_SOLICITOR_1_ACTIVITY_ID = "CreateClaimNotifyRespondentSolicitor1";
     private static final String MAKE_PAYMENT_ACTIVITY_ID = "CreateClaimMakePayment";
     public static final String PROCESS_PAYMENT = "processPayment";
+    public static final String GENERATE_CLAIM_CERTIFICATE = "GENERATE_CLAIM_CERTIFICATE";
+    public static final String CLAIM_CERTIFICATE_ACTIVITY_ID = "GenerateClaimCertificate";
+
 
     public CreateClaimTest() {
         super("create_claim.bpmn", "CREATE_CLAIM_PROCESS_ID");
@@ -38,7 +41,17 @@ class CreateClaimTest extends BpmnBaseTest {
         //complete the notification
         ExternalTask notificationTask = assertNextExternalTask(PROCESS_CASE_EVENT);
         assertCompleteExternalTask(notificationTask, PROCESS_CASE_EVENT, NOTIFY_RESPONDENT_SOLICITOR_1,
-                                   NOTIFY_RESPONDENT_SOLICITOR_1_ACTIVITY_ID);
+                                   NOTIFY_RESPONDENT_SOLICITOR_1_ACTIVITY_ID
+        );
+
+        //complete the document generation
+        ExternalTask notification = assertNextExternalTask(PROCESS_CASE_EVENT);
+        assertCompleteExternalTask(
+            notification,
+            PROCESS_CASE_EVENT,
+            GENERATE_CLAIM_CERTIFICATE,
+            CLAIM_CERTIFICATE_ACTIVITY_ID
+        );
 
         //end business process
         ExternalTask endBusinessProcess = assertNextExternalTask(END_BUSINESS_PROCESS);
