@@ -8,6 +8,7 @@ import org.springframework.stereotype.Component;
 import uk.gov.hmcts.reform.ccd.client.model.CaseDataContent;
 import uk.gov.hmcts.reform.ccd.client.model.Event;
 import uk.gov.hmcts.reform.ccd.client.model.StartEventResponse;
+import uk.gov.hmcts.reform.unspec.callback.CaseEvent;
 import uk.gov.hmcts.reform.unspec.helpers.CaseDetailsConverter;
 import uk.gov.hmcts.reform.unspec.model.BusinessProcess;
 import uk.gov.hmcts.reform.unspec.model.CaseData;
@@ -16,6 +17,7 @@ import uk.gov.hmcts.reform.unspec.service.data.ExternalTaskInput;
 
 import java.util.Map;
 
+import static java.util.Optional.ofNullable;
 import static uk.gov.hmcts.reform.unspec.callback.CaseEvent.END_BUSINESS_PROCESS;
 
 @Slf4j
@@ -29,11 +31,11 @@ public class EndBusinessProcessTaskHandler implements BaseExternalTaskHandler {
 
     @Override
     public void handleTask(ExternalTask externalTask) {
-        ExternalTaskInput externalTaskInput = mapper.convertValue(externalTask.getAllVariables(),
-                                                                  ExternalTaskInput.class);
-        String caseId = externalTaskInput.getCaseId();
+        ExternalTaskInput taskVariables = mapper.convertValue(externalTask.getAllVariables(), ExternalTaskInput.class);
+        String caseId = taskVariables.getCaseId();
+        CaseEvent caseEvent = ofNullable(taskVariables.getCaseEvent()).orElse(END_BUSINESS_PROCESS);
 
-        StartEventResponse startEventResponse = coreCaseDataService.startUpdate(caseId, END_BUSINESS_PROCESS);
+        StartEventResponse startEventResponse = coreCaseDataService.startUpdate(caseId, caseEvent);
         CaseData data = caseDetailsConverter.toCaseData(startEventResponse.getCaseDetails());
         BusinessProcess businessProcess = data.getBusinessProcess();
 

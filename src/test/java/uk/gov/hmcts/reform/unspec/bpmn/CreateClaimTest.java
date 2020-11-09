@@ -1,9 +1,13 @@
 package uk.gov.hmcts.reform.unspec.bpmn;
 
 import org.camunda.bpm.engine.externaltask.ExternalTask;
+import org.camunda.bpm.engine.externaltask.LockedExternalTask;
 import org.camunda.bpm.engine.variable.VariableMap;
 import org.camunda.bpm.engine.variable.Variables;
 import org.junit.jupiter.api.Test;
+
+import java.util.List;
+import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -63,7 +67,12 @@ class CreateClaimTest extends BpmnBaseTest {
 
         //end business process
         ExternalTask endBusinessProcess = assertNextExternalTask(END_BUSINESS_PROCESS);
-        completeBusinessProcess(endBusinessProcess);
+        assertCompleteExternalTask(
+            endBusinessProcess,
+            END_BUSINESS_PROCESS,
+            "PROGRESS_TO_CREATED",
+            "EndBusinessProcessTaskId"
+        );
 
         assertNoExternalTasksLeft();
     }
@@ -101,8 +110,15 @@ class CreateClaimTest extends BpmnBaseTest {
         );
 
         //end business process
-        ExternalTask endBusinessProcess = assertNextExternalTask(END_BUSINESS_PROCESS);
-        completeBusinessProcess(endBusinessProcess);
+        assertNextExternalTask(END_BUSINESS_PROCESS);
+        List<LockedExternalTask> lockedProcessTask = fetchAndLockTask(END_BUSINESS_PROCESS);
+
+        assertThat(lockedProcessTask).hasSize(1);
+        assertThat(lockedProcessTask.get(0).getVariables())
+            .containsExactlyEntriesOf(Map.of(FLOW_STATE, PAYMENT_FAILED.fullName()));
+        assertThat(lockedProcessTask.get(0).getActivityId()).isEqualTo("EndBusinessProcessTaskId");
+
+        completeTask(lockedProcessTask.get(0).getId(), variables);
 
         assertNoExternalTasksLeft();
     }
