@@ -63,7 +63,11 @@ const address = require('./fixtures/address.js');
 
 const baseUrl = process.env.URL || 'http://localhost:3333';
 const signedInSelector = 'exui-header';
+
+const STATE_LOCATOR = '#wb-case-type > option';
+const CASE_NUMBER_INPUT_LOCATOR = 'input[type$="number"]';
 const CASE_HEADER = 'ccd-case-header > h1';
+
 const TEST_FILE_PATH = './e2e/fixtures/examplePDF.pdf';
 
 let caseId;
@@ -86,15 +90,17 @@ module.exports = function () {
 
     async goToCase(caseId) {
         this.click('Case list');
-        this.waitForElement('#wb-case-type > option');
+
+        this.waitForElement(STATE_LOCATOR);
         this.selectOption('state', 'Any');
-        let caseNumberInputLocator = 'input[type$="number"]';
-        this.waitForElement(caseNumberInputLocator);
-        this.fillField(caseNumberInputLocator, caseId);
+
+        this.waitForElement(CASE_NUMBER_INPUT_LOCATOR);
+        this.fillField(CASE_NUMBER_INPUT_LOCATOR, caseId);
         this.click('Apply');
 
-        this.waitForElement(`a[href$="/cases/case-details/${caseId}"]`);
-        this.click(caseId.match(/.{1,4}/g).join('-'));
+        const caseLinkLocator = `a[href$="/cases/case-details/${caseId}"]`;
+        this.waitForElement(caseLinkLocator);
+        this.click(caseLinkLocator);
     },
 
     grabCaseNumber: async function () {
