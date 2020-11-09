@@ -77,7 +77,8 @@ public class PaymentsCallbackHandlerTest extends BaseCallbackHandlerTest {
         var response = (AboutToStartOrSubmitCallbackResponse) handler.handle(params);
 
         verify(paymentsService).createCreditAccountPayment(caseData);
-        assertThat(response.getData()).extracting("paymentReference").isEqualTo(SUCCESSFUL_PAYMENT_REFERENCE);
+        assertThat(response.getData()).extracting("paymentDetails").extracting("reference")
+            .isEqualTo(SUCCESSFUL_PAYMENT_REFERENCE);
     }
 
     @ParameterizedTest
@@ -88,9 +89,11 @@ public class PaymentsCallbackHandlerTest extends BaseCallbackHandlerTest {
         var response = (AboutToStartOrSubmitCallbackResponse) handler.handle(params);
 
         verify(paymentsService).createCreditAccountPayment(caseData);
-        assertThat(response.getData()).extracting("paymentReference").isNull();
-        assertThat(response.getData()).extracting("paymentErrorMessage").isEqualTo(PAYMENT_ERROR_MESSAGE);
-        assertThat(response.getData()).extracting("paymentErrorCode").isEqualTo(PAYMENT_ERROR_CODE);
+        assertThat(response.getData()).extracting("paymentDetails").extracting("reference").isNull();
+        assertThat(response.getData()).extracting("paymentDetails").extracting("errorMessage")
+            .isEqualTo(PAYMENT_ERROR_MESSAGE);
+        assertThat(response.getData()).extracting("paymentDetails").extracting("errorCode")
+            .isEqualTo(PAYMENT_ERROR_CODE);
         assertThat(response.getErrors()).isEmpty();
     }
 

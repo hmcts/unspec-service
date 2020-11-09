@@ -8,6 +8,8 @@ import java.util.function.Predicate;
 import static uk.gov.hmcts.reform.unspec.enums.CaseState.CLOSED;
 import static uk.gov.hmcts.reform.unspec.enums.CaseState.PENDING_CASE_ISSUED;
 import static uk.gov.hmcts.reform.unspec.enums.CaseState.STAYED;
+import static uk.gov.hmcts.reform.unspec.enums.PaymentStatus.FAILED;
+import static uk.gov.hmcts.reform.unspec.enums.PaymentStatus.SUCCESS;
 
 public class FlowPredicate {
 
@@ -16,14 +18,13 @@ public class FlowPredicate {
             && caseData.getLegacyCaseReference() != null;
 
     public static final Predicate<CaseData> paymentFailed = caseData ->
-        caseData.getPaymentErrorMessage() != null;
+        caseData.getPaymentDetails() != null && caseData.getPaymentDetails().getStatus() == FAILED;
 
     public static final Predicate<CaseData> paymentSuccessful = caseData ->
-        caseData.getPaymentReference() != null
-            && caseData.getPaymentErrorMessage() == null;
+        caseData.getPaymentDetails() != null && caseData.getPaymentDetails().getStatus() == SUCCESS;
 
     public static final Predicate<CaseData> claimIssued = caseData ->
-        caseData.getCcdState() != null && caseData.getCcdState() != PENDING_CASE_ISSUED;
+        caseData.getCcdState() != PENDING_CASE_ISSUED;
 
     public static final Predicate<CaseData> claimantConfirmService = caseData ->
         caseData.getDeemedServiceDateToRespondentSolicitor1() != null
