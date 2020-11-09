@@ -16,12 +16,14 @@ module.exports = {
 
   async startEvent(event, caseId) {
     await I.retryUntilExists(async () => {
-      console.log((new Date()).toISOString());
       await sleep(5000);
       await I.goToCase(caseId);
     }, locate('option').withText(event), 20);
 
-    I.selectOption(this.fields.eventDropdown, event);
-    I.click(this.goButton);
+    await I.retryUntilExists(async () => {
+      await I.goToCase(caseId);
+      I.selectOption(this.fields.eventDropdown, event);
+      I.click(this.goButton);
+    }, 'ccd-case-event-trigger', 20);
   }
 };
