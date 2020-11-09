@@ -30,6 +30,7 @@ import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static uk.gov.hmcts.reform.unspec.callback.CaseEvent.END_BUSINESS_PROCESS;
+import static uk.gov.hmcts.reform.unspec.callback.CaseEvent.PROGRESS_TO_CREATED;
 
 @SpringBootTest(classes = {
     EndBusinessProcessTaskHandler.class,
@@ -60,16 +61,12 @@ class EndBusinessProcessTaskHandlerTest {
         when(mockExternalTask.getWorkerId()).thenReturn("worker");
         when(mockExternalTask.getActivityId()).thenReturn("activityId");
         when(mockExternalTask.getProcessInstanceId()).thenReturn(PROCESS_INSTANCE_ID);
-
-        when(mockExternalTask.getAllVariables())
-            .thenReturn(Map.of(
-                "caseId", CASE_ID,
-                "caseEvent", END_BUSINESS_PROCESS
-            ));
     }
 
     @Test
-    void shouldTriggerEndBusinessProcessCCDEventAndUpdateBusinessProcessStatusToFinished_whenCalled() {
+    void shouldTriggerEndBusinessProcessCCDEventAndUpdateBusinessProcessStatusToFinished_whenCalledWithNoCaseEvent() {
+        when(mockExternalTask.getAllVariables()).thenReturn(Map.of("caseId", CASE_ID));
+
         CaseData caseData = new CaseDataBuilder().atStateClaimDraft()
             .businessProcess(BusinessProcess.builder().status(BusinessProcessStatus.READY).build())
             .build();
@@ -85,6 +82,33 @@ class EndBusinessProcessTaskHandlerTest {
         handler.execute(mockExternalTask, externalTaskService);
 
         verify(coreCaseDataService).startUpdate(eq(CASE_ID), eq(END_BUSINESS_PROCESS));
+        verify(coreCaseDataService).submitUpdate(eq(CASE_ID), eq(caseDataContentWithFinishedStatus));
+        verify(externalTaskService).complete(eq(mockExternalTask));
+    }
+
+    @Test
+    void shouldTriggerCCDEventAndUpdateBusinessProcessStatusToFinished_whenCalledWithCaseEvent() {
+        when(mockExternalTask.getAllVariables())
+            .thenReturn(Map.of(
+                "caseId", CASE_ID,
+                "caseEvent", PROGRESS_TO_CREATED
+            ));
+
+        CaseData caseData = new CaseDataBuilder().atStateClaimDraft()
+            .businessProcess(BusinessProcess.builder().status(BusinessProcessStatus.READY).build())
+            .build();
+
+        CaseDetails caseDetails = CaseDetailsBuilder.builder().data(caseData).build();
+        StartEventResponse startEventResponse = startEventResponse(caseDetails);
+
+        when(coreCaseDataService.startUpdate(eq(CASE_ID), eq(PROGRESS_TO_CREATED))).thenReturn(startEventResponse);
+        when(coreCaseDataService.submitUpdate(eq(CASE_ID), any(CaseDataContent.class))).thenReturn(caseData);
+
+        CaseDataContent caseDataContentWithFinishedStatus = getCaseDataContent(caseDetails, startEventResponse);
+
+        handler.execute(mockExternalTask, externalTaskService);
+
+        verify(coreCaseDataService).startUpdate(eq(CASE_ID), eq(PROGRESS_TO_CREATED));
         verify(coreCaseDataService).submitUpdate(eq(CASE_ID), eq(caseDataContentWithFinishedStatus));
         verify(externalTaskService).complete(eq(mockExternalTask));
     }
