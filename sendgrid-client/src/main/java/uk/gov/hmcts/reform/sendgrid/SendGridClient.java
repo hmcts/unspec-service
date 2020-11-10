@@ -62,7 +62,7 @@ public class SendGridClient {
         return response.getStatusCode() / 100 == 2;
     }
 
-    @SuppressWarnings("unused")
+    @SuppressWarnings("unused") // it's a recovery handler and will not have explicit call
     @Recover
     public void logSendMessageWithAttachmentFailure(
         EmailSendFailedException exception,
