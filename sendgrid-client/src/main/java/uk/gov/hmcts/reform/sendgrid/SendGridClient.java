@@ -87,13 +87,10 @@ public class SendGridClient {
 
     private static Attachments toSendGridAttachments(EmailAttachment attachment) {
         try {
-            Attachments.Builder builder = new Attachments.Builder(
-                attachment.getFilename(),
-                attachment.getData().getInputStream()
-            );
-            builder.withType(attachment.getContentType());
-            builder.withDisposition("attachment");
-            return builder.build();
+            return new Attachments.Builder(attachment.getFilename(), attachment.getData().getInputStream())
+                .withType(attachment.getContentType())
+                .withDisposition("attachment")
+                .build();
         } catch (IOException ioException) {
             throw new EmailSendFailedException(
                 "Could not open input stream for attachment " + attachment.getFilename(),
