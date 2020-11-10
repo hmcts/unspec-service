@@ -1,0 +1,54 @@
+package uk.gov.hmcts.reform.unspec.service.robotics;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Service;
+import uk.gov.hmcts.reform.sendgrid.EmailData;
+import uk.gov.hmcts.reform.sendgrid.SendGridClient;
+import uk.gov.hmcts.reform.unspec.config.properties.robotics.RoboticsEmailConfiguration;
+import uk.gov.hmcts.reform.unspec.model.CaseData;
+import uk.gov.hmcts.reform.unspec.model.robotics.RoboticsCaseData;
+
+import javax.validation.constraints.NotNull;
+
+import static java.util.List.of;
+import static uk.gov.hmcts.reform.sendgrid.EmailAttachment.json;
+
+@Slf4j
+@Service
+@AllArgsConstructor
+public class RoboticsNotificationService {
+
+    private final SendGridClient sendGridClient;
+    private final RoboticsEmailConfiguration roboticsEmailConfiguration;
+    private final RoboticsDataService roboticsDataService;
+    private final ObjectMapper objectMapper;
+
+    public void notifyRobotics(@NotNull CaseData caseData) {
+        EmailData emailData = prepareEmailData(caseData);
+        sendGridClient.sendEmail(roboticsEmailConfiguration.getSender(), emailData);
+    }
+
+    private EmailData prepareEmailData(CaseData caseData) {
+        RoboticsCaseData roboticsCaseData = roboticsDataService.toRoboticsCaseData(caseData);
+        byte[] roboticsJsonData = toJson(roboticsCaseData);
+        String fileName = String.format("CaseData_%s.json", caseData.getLegacyCaseReference());
+
+        return EmailData.builder()
+            .message(String.format("Case data for %s", caseData.getLegacyCaseReference()))
+            .subject(fileName)
+            .to(roboticsEmailConfiguration.getRecipient())
+            .attachments(of(json(roboticsJsonData, fileName)))
+            .build();
+    }
+
+    public byte[] toJson(RoboticsCaseData roboticsCaseData) {
+        try {
+            return objectMapper.writeValueAsBytes(roboticsCaseData);
+        } catch (JsonProcessingException e) {
+            throw new RoboticsDataException(e.getMessage(), e);
+        }
+    }
+}
