@@ -8,6 +8,7 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 @ConfigurationProperties(prefix = "robotics.notification")
 public class RoboticsEmailConfiguration {
+
     private String sender;
     private String recipient;
 }

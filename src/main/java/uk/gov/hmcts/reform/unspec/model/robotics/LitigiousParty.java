@@ -1,8 +1,9 @@
 package uk.gov.hmcts.reform.unspec.model.robotics;
 
-import com.fasterxml.jackson.annotation.JsonUnwrapped;
 import lombok.Builder;
 import lombok.Data;
+
+import java.time.LocalDate;
 
 @Data
 @Builder
@@ -10,8 +11,7 @@ public class LitigiousParty {
 
     private String litigiousPartyType;
     private String litigiousPartyName;
-    @JsonUnwrapped(prefix = "litigiousParty")
-    private RoboticsAddress litigiousPartyAddresses;
+    private RoboticsAddresses litigiousPartyAddresses;
     private String litigiousPartyContactDX;
     private String litigiousPartyContactTelephoneNumber;
     private String litigiousPartyContactFaxNumber;
@@ -21,6 +21,6 @@ public class LitigiousParty {
     private String litigiousPartyReference;
     private String litigiousPartyDateOfService;
     private String litigiousPartyLastDateForService;
-    private String litigiousPartyDateOfBirth;
+    private LocalDate litigiousPartyDateOfBirth;
     private String litigiousPartySolicitorPartyOrganisationID;
 }
