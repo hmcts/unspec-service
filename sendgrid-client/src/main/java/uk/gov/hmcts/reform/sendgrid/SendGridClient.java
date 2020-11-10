@@ -36,11 +36,9 @@ public class SendGridClient {
             Email recipient = new Email(emailData.getTo());
             Content content = new Content(TEXT_PLAIN_VALUE, getMessage(emailData));
             Mail mail = new Mail(sender, subject, recipient, content);
-            if (emailData.hasAttachments()) {
-                emailData.getAttachments().stream()
-                    .map(SendGridClient::toSendGridAttachments)
-                    .forEach(mail::addAttachments);
-            }
+            emailData.getAttachments().stream()
+                .map(SendGridClient::toSendGridAttachments)
+                .forEach(mail::addAttachments);
 
             Request request = new Request();
             request.setMethod(Method.POST);
@@ -64,7 +62,7 @@ public class SendGridClient {
         return response.getStatusCode() / 100 == 2;
     }
 
-    @SuppressWarnings("unused")
+    @SuppressWarnings("unused") // it's a recovery handler and will not have explicit call
     @Recover
     public void logSendMessageWithAttachmentFailure(
         EmailSendFailedException exception,
@@ -89,13 +87,10 @@ public class SendGridClient {
 
     private static Attachments toSendGridAttachments(EmailAttachment attachment) {
         try {
-            Attachments.Builder builder = new Attachments.Builder(
-                attachment.getFilename(),
-                attachment.getData().getInputStream()
-            );
-            builder.withType(attachment.getContentType());
-            builder.withDisposition("attachment");
-            return builder.build();
+            return new Attachments.Builder(attachment.getFilename(), attachment.getData().getInputStream())
+                .withType(attachment.getContentType())
+                .withDisposition("attachment")
+                .build();
         } catch (IOException ioException) {
             throw new EmailSendFailedException(
                 "Could not open input stream for attachment " + attachment.getFilename(),
