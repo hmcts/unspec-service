@@ -36,11 +36,9 @@ public class SendGridClient {
             Email recipient = new Email(emailData.getTo());
             Content content = new Content(TEXT_PLAIN_VALUE, getMessage(emailData));
             Mail mail = new Mail(sender, subject, recipient, content);
-            if (emailData.hasAttachments()) {
-                emailData.getAttachments().stream()
-                    .map(SendGridClient::toSendGridAttachments)
-                    .forEach(mail::addAttachments);
-            }
+            emailData.getAttachments().stream()
+                .map(SendGridClient::toSendGridAttachments)
+                .forEach(mail::addAttachments);
 
             Request request = new Request();
             request.setMethod(Method.POST);
