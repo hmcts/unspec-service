@@ -7,7 +7,7 @@ import lombok.Data;
 import uk.gov.hmcts.reform.unspec.enums.AllocatedTrack;
 import uk.gov.hmcts.reform.unspec.enums.CaseState;
 import uk.gov.hmcts.reform.unspec.enums.ClaimType;
-import uk.gov.hmcts.reform.unspec.enums.DefendantResponseType;
+import uk.gov.hmcts.reform.unspec.enums.ResponseType;
 import uk.gov.hmcts.reform.unspec.enums.PbaNumber;
 import uk.gov.hmcts.reform.unspec.enums.PersonalInjuryType;
 import uk.gov.hmcts.reform.unspec.enums.ResponseIntention;
@@ -83,7 +83,7 @@ public class CaseData {
     private final LocalDate respondentSolicitor1claimResponseExtensionCounterDate;
     private final String respondentSolicitor1claimResponseExtensionRejectionReason;
 
-    private final DefendantResponseType respondent1ClaimResponseType;
+    private final ResponseType respondent1ClaimResponseType;
     private final ResponseDocument respondent1ClaimResponseDocument;
     private final LocalDateTime applicantSolicitorResponseDeadlineToRespondentSolicitor1;
 

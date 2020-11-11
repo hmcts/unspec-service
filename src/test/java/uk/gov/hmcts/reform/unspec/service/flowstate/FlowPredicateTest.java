@@ -15,9 +15,9 @@ import static uk.gov.hmcts.reform.unspec.service.flowstate.FlowPredicate.applica
 import static uk.gov.hmcts.reform.unspec.service.flowstate.FlowPredicate.applicantIssueClaim;
 import static uk.gov.hmcts.reform.unspec.service.flowstate.FlowPredicate.applicantRespondToDefence;
 import static uk.gov.hmcts.reform.unspec.service.flowstate.FlowPredicate.applicantRespondToRequestForExtension;
-import static uk.gov.hmcts.reform.unspec.service.flowstate.FlowPredicate.defendantAcknowledgeService;
-import static uk.gov.hmcts.reform.unspec.service.flowstate.FlowPredicate.defendantAskForAnExtension;
-import static uk.gov.hmcts.reform.unspec.service.flowstate.FlowPredicate.defendantRespondToClaim;
+import static uk.gov.hmcts.reform.unspec.service.flowstate.FlowPredicate.respondentAcknowledgeService;
+import static uk.gov.hmcts.reform.unspec.service.flowstate.FlowPredicate.respondentAskForAnExtension;
+import static uk.gov.hmcts.reform.unspec.service.flowstate.FlowPredicate.respondentRespondToClaim;
 import static uk.gov.hmcts.reform.unspec.service.flowstate.FlowPredicate.schedulerStayClaim;
 
 class FlowPredicateTest {
@@ -55,50 +55,50 @@ class FlowPredicateTest {
     }
 
     @Nested
-    class DefendantAcknowledgedServicePredicate {
+    class RespondentAcknowledgedServicePredicate {
 
         @Test
         void shouldReturnTrue_whenCaseDataAtStateServiceAcknowledged() {
             CaseData caseData = CaseDataBuilder.builder().atStateServiceAcknowledge().build();
-            assertTrue(defendantAcknowledgeService.test(caseData));
+            assertTrue(respondentAcknowledgeService.test(caseData));
         }
 
         @Test
         void shouldReturnFalse_whenCaseDataAtStateClaimCreated() {
             CaseData caseData = CaseDataBuilder.builder().atStateClaimCreated().build();
-            assertFalse(defendantAcknowledgeService.test(caseData));
+            assertFalse(respondentAcknowledgeService.test(caseData));
         }
     }
 
     @Nested
-    class DefendantRespondToClaimPredicate {
+    class RespondentRespondToClaimPredicate {
 
         @Test
         void shouldReturnTrue_whenCaseDataAtStateRespondedToClaim() {
             CaseData caseData = CaseDataBuilder.builder().atStateRespondedToClaim().build();
-            assertTrue(defendantRespondToClaim.test(caseData));
+            assertTrue(respondentRespondToClaim.test(caseData));
         }
 
         @Test
         void shouldReturnFalse_whenCaseDataAtStateServiceConfirmed() {
             CaseData caseData = CaseDataBuilder.builder().atStateServiceConfirmed().build();
-            assertFalse(defendantRespondToClaim.test(caseData));
+            assertFalse(respondentRespondToClaim.test(caseData));
         }
     }
 
     @Nested
-    class DefendantAskForAnExtensionPredicate {
+    class RespondentAskForAnExtensionPredicate {
 
         @Test
         void shouldReturnTrue_whenCaseDataAtStateExtensionRequested() {
             CaseData caseData = CaseDataBuilder.builder().atStateExtensionRequested().build();
-            assertTrue(defendantAskForAnExtension.test(caseData));
+            assertTrue(respondentAskForAnExtension.test(caseData));
         }
 
         @Test
         void shouldReturnFalse_whenCaseDataAtStateServiceAcknowledged() {
             CaseData caseData = CaseDataBuilder.builder().atStateServiceAcknowledge().build();
-            assertFalse(defendantAskForAnExtension.test(caseData));
+            assertFalse(respondentAskForAnExtension.test(caseData));
         }
     }
 

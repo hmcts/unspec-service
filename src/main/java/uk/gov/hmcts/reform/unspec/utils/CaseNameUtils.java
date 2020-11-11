@@ -10,13 +10,13 @@ public class CaseNameUtils {
 
     //TODO Need to confirm the case name logic
     public static final Function<CaseData, String> toCaseName = caseData ->
-        fetchApplicantName(caseData) + " v " + fetchDefendantName(caseData);
+        fetchApplicantName(caseData) + " v " + fetchRespondentName(caseData);
 
     private CaseNameUtils() {
         //NO-OP
     }
 
-    public static String fetchDefendantName(CaseData caseData) {
+    public static String fetchRespondentName(CaseData caseData) {
         StringBuilder defendantNameBuilder = new StringBuilder();
         if (caseData.getRespondent2() != null) {
             defendantNameBuilder.append("1 ");

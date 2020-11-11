@@ -15,9 +15,9 @@ import static uk.gov.hmcts.reform.unspec.service.flowstate.FlowPredicate.applica
 import static uk.gov.hmcts.reform.unspec.service.flowstate.FlowPredicate.applicantIssueClaim;
 import static uk.gov.hmcts.reform.unspec.service.flowstate.FlowPredicate.applicantRespondToDefence;
 import static uk.gov.hmcts.reform.unspec.service.flowstate.FlowPredicate.applicantRespondToRequestForExtension;
-import static uk.gov.hmcts.reform.unspec.service.flowstate.FlowPredicate.defendantAcknowledgeService;
-import static uk.gov.hmcts.reform.unspec.service.flowstate.FlowPredicate.defendantAskForAnExtension;
-import static uk.gov.hmcts.reform.unspec.service.flowstate.FlowPredicate.defendantRespondToClaim;
+import static uk.gov.hmcts.reform.unspec.service.flowstate.FlowPredicate.respondentAcknowledgeService;
+import static uk.gov.hmcts.reform.unspec.service.flowstate.FlowPredicate.respondentAskForAnExtension;
+import static uk.gov.hmcts.reform.unspec.service.flowstate.FlowPredicate.respondentRespondToClaim;
 import static uk.gov.hmcts.reform.unspec.service.flowstate.FlowPredicate.schedulerStayClaim;
 import static uk.gov.hmcts.reform.unspec.service.flowstate.FlowState.Main.CLAIM_DISCONTINUED;
 import static uk.gov.hmcts.reform.unspec.service.flowstate.FlowState.Main.CLAIM_ISSUED;
@@ -48,21 +48,21 @@ public class StateFlowEngine {
                 .transitionTo(CLAIM_DISCONTINUED).onlyIf(claimDiscontinued)
                 .transitionTo(CLAIM_STAYED).onlyIf(schedulerStayClaim)
             .state(SERVICE_CONFIRMED)
-                .transitionTo(SERVICE_ACKNOWLEDGED).onlyIf(defendantAcknowledgeService)
-                .transitionTo(RESPONDED_TO_CLAIM).onlyIf(defendantRespondToClaim)
+                .transitionTo(SERVICE_ACKNOWLEDGED).onlyIf(respondentAcknowledgeService)
+                .transitionTo(RESPONDED_TO_CLAIM).onlyIf(respondentRespondToClaim)
                 .transitionTo(CLAIM_DISCONTINUED).onlyIf(claimDiscontinued)
                 .transitionTo(CLAIM_WITHDRAWN).onlyIf(claimWithdrawn)
             .state(SERVICE_ACKNOWLEDGED)
-                .transitionTo(EXTENSION_REQUESTED).onlyIf(defendantAskForAnExtension)
+                .transitionTo(EXTENSION_REQUESTED).onlyIf(respondentAskForAnExtension)
                 .transitionTo(CLAIM_DISCONTINUED).onlyIf(claimDiscontinued)
                 .transitionTo(CLAIM_WITHDRAWN).onlyIf(claimWithdrawn)
             .state(EXTENSION_REQUESTED)
                 .transitionTo(EXTENSION_RESPONDED).onlyIf(applicantRespondToRequestForExtension)
-                .transitionTo(RESPONDED_TO_CLAIM).onlyIf(defendantRespondToClaim)
+                .transitionTo(RESPONDED_TO_CLAIM).onlyIf(respondentRespondToClaim)
                 .transitionTo(CLAIM_DISCONTINUED).onlyIf(claimDiscontinued)
                 .transitionTo(CLAIM_WITHDRAWN).onlyIf(claimWithdrawn)
             .state(EXTENSION_RESPONDED)
-                .transitionTo(RESPONDED_TO_CLAIM).onlyIf(defendantRespondToClaim)
+                .transitionTo(RESPONDED_TO_CLAIM).onlyIf(respondentRespondToClaim)
                 .transitionTo(CLAIM_DISCONTINUED).onlyIf(claimDiscontinued)
                 .transitionTo(CLAIM_WITHDRAWN).onlyIf(claimWithdrawn)
             .state(RESPONDED_TO_CLAIM)

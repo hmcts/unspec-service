@@ -86,11 +86,11 @@ reference:
 
 notifications:
   govNotifyApiKey: ${GOV_NOTIFY_API_KEY:}
-  defendantSolicitorClaimIssueEmailTemplate: "1e55aae6-879e-4e63-93ce-cf4cf93636f2"
+  respondentSolicitorClaimIssueEmailTemplate: "1e55aae6-879e-4e63-93ce-cf4cf93636f2"
   solicitorResponseToCase: "a2b3d626-bf20-406e-ac8c-8d8a5ea43c66"
-  defendantSolicitorAcknowledgeService: "6ba538b6-f3f6-4943-862d-b436c0c3d741"
+  respondentSolicitorAcknowledgeService: "6ba538b6-f3f6-4943-862d-b436c0c3d741"
   applicantSolicitorEmail: claimantsolicitor@gmail.com
-  defendantSolicitorEmail: defendantsolicitor@gmail.com
+  respondentSolicitorEmail: defendantsolicitor@gmail.com
 
 testing:
   support:
@@ -205,7 +205,7 @@ feign:
 notifications:
   govNotifyApiKey: some-gov-uk-notify-api-key
   applicantSolicitorEmail: claimantsolicitor@example.com
-  defendantSolicitorEmail: defendantsolicitor@example.com
+  respondentSolicitorEmail: defendantsolicitor@example.com
 
 testing:
   support:

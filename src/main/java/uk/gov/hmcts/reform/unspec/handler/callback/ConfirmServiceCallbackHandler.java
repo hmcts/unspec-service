@@ -114,7 +114,7 @@ public class ConfirmServiceCallbackHandler extends CallbackHandler {
         }
         LocalDate deemedDateOfService = deadlinesCalculator.calculateDeemedDateOfService(
             serviceDate, serviceMethod.getType());
-        LocalDateTime responseDeadline = deadlinesCalculator.calculateDefendantResponseDeadline(deemedDateOfService);
+        LocalDateTime responseDeadline = deadlinesCalculator.calculateRespondentResponseDeadline(deemedDateOfService);
 
         CaseData.CaseDataBuilder caseDataBuilder = caseData.toBuilder()
             .deemedServiceDateToRespondentSolicitor1(deemedDateOfService)

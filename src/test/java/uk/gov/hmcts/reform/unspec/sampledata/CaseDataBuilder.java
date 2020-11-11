@@ -3,7 +3,7 @@ package uk.gov.hmcts.reform.unspec.sampledata;
 import uk.gov.hmcts.reform.unspec.enums.AllocatedTrack;
 import uk.gov.hmcts.reform.unspec.enums.CaseState;
 import uk.gov.hmcts.reform.unspec.enums.ClaimType;
-import uk.gov.hmcts.reform.unspec.enums.DefendantResponseType;
+import uk.gov.hmcts.reform.unspec.enums.ResponseType;
 import uk.gov.hmcts.reform.unspec.enums.PersonalInjuryType;
 import uk.gov.hmcts.reform.unspec.enums.ResponseIntention;
 import uk.gov.hmcts.reform.unspec.enums.ServedDocuments;
@@ -52,7 +52,7 @@ public class CaseDataBuilder {
     public static final Long CASE_ID = 1594901956117591L;
     public static final LocalDate DEEMED_SERVICE_DATE = LocalDate.now();
     public static final LocalDateTime RESPONSE_DEADLINE = now().plusDays(14).atTime(23, 59, 59);
-    public static final LocalDateTime CLAIMANT_RESPONSE_DEADLINE = LocalDateTime.now().plusDays(120);
+    public static final LocalDateTime APPLICANT_RESPONSE_DEADLINE = LocalDateTime.now().plusDays(120);
 
     // Create Claim
     private Long ccdCaseReference;
@@ -96,7 +96,7 @@ public class CaseDataBuilder {
     private LocalDate respondentSolicitor1claimResponseExtensionCounterDate;
     private String respondentSolicitor1claimResponseExtensionRejectionReason;
     // Defendant Response
-    private DefendantResponseType respondent1ClaimResponseType;
+    private ResponseType respondent1ClaimResponseType;
     private ResponseDocument respondent1ClaimResponseDocument;
     private LocalDateTime applicantSolicitorResponseDeadlineToRespondentSolicitor1;
     // Claimant Response
@@ -340,8 +340,8 @@ public class CaseDataBuilder {
 
     public CaseDataBuilder atStateRespondedToClaim() {
         atStateServiceConfirmed();
-        respondent1ClaimResponseType = DefendantResponseType.FULL_DEFENCE;
-        applicantSolicitorResponseDeadlineToRespondentSolicitor1 = CLAIMANT_RESPONSE_DEADLINE;
+        respondent1ClaimResponseType = ResponseType.FULL_DEFENCE;
+        applicantSolicitorResponseDeadlineToRespondentSolicitor1 = APPLICANT_RESPONSE_DEADLINE;
         respondent1ClaimResponseDocument = ResponseDocument.builder()
             .file(DocumentBuilder.builder().documentName("defendant-response.pdf").build())
             .build();

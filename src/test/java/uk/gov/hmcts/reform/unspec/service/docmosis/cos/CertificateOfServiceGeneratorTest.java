@@ -111,14 +111,14 @@ class CertificateOfServiceGeneratorTest {
             SolicitorReferences solicitorReferences = SolicitorReferences
                 .builder()
                 .applicantSolicitor1Reference("Applicant ref")
-                .respondentSolicitor1Reference("Defendant ref")
+                .respondentSolicitor1Reference("Respondent ref")
                 .build();
 
             SolicitorReferences result = generator.prepareSolicitorReferences(solicitorReferences);
             assertAll(
                 "SolicitorReferences provided",
                 () -> assertEquals("Applicant ref", result.getApplicantSolicitor1Reference()),
-                () -> assertEquals("Defendant ref", result.getRespondentSolicitor1Reference())
+                () -> assertEquals("Respondent ref", result.getRespondentSolicitor1Reference())
             );
         }
 

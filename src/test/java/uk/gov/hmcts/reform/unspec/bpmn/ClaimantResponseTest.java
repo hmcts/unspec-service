@@ -11,9 +11,9 @@ class ClaimantResponseTest extends BpmnBaseTest {
     private static final String RESPONDENT_SOLICITOR_1
         = "NOTIFY_RESPONDENT_SOLICITOR1_FOR_CASE_TRANSFERRED_TO_LOCAL_COURT";
     private static final String RESPONDENT_ACTIVITY = "ClaimantResponseNotifyRespondentSolicitor1";
-    private static final String CLAIMANT_SOLICITOR_1
+    private static final String APPLICANT_SOLICITOR_1
         = "NOTIFY_APPLICANT_SOLICITOR1_FOR_CASE_TRANSFERRED_TO_LOCAL_COURT";
-    private static final String CLAIMANT_ACTIVITY = "ClaimantResponseNotifyApplicantSolicitor1";
+    private static final String APPLICANT_ACTIVITY = "ClaimantResponseNotifyApplicantSolicitor1";
 
     public ClaimantResponseTest() {
         super("claimant_response.bpmn", "CLAIMANT_RESPONSE_PROCESS_ID");
@@ -38,7 +38,7 @@ class ClaimantResponseTest extends BpmnBaseTest {
 
         //complete the notification
         ExternalTask forApplicant = assertNextExternalTask(PROCESS_CASE_EVENT);
-        assertCompleteExternalTask(forApplicant, PROCESS_CASE_EVENT, CLAIMANT_SOLICITOR_1, CLAIMANT_ACTIVITY);
+        assertCompleteExternalTask(forApplicant, PROCESS_CASE_EVENT, APPLICANT_SOLICITOR_1, APPLICANT_ACTIVITY);
 
         //end business process
         ExternalTask endBusinessProcess = assertNextExternalTask(END_BUSINESS_PROCESS);
