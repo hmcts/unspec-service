@@ -17,20 +17,20 @@ public class CaseNameUtils {
     }
 
     public static String fetchRespondentName(CaseData caseData) {
-        StringBuilder defendantNameBuilder = new StringBuilder();
+        StringBuilder respondentNameBuilder = new StringBuilder();
         if (caseData.getRespondent2() != null) {
-            defendantNameBuilder.append("1 ");
-            defendantNameBuilder.append(caseData.getRespondent1().getPartyName());
-            soleTraderCompany(caseData.getRespondent1(), defendantNameBuilder);
-            defendantNameBuilder.append(" & 2 ");
-            defendantNameBuilder.append(caseData.getRespondent2().getPartyName());
-            soleTraderCompany(caseData.getRespondent2(), defendantNameBuilder);
+            respondentNameBuilder.append("1 ");
+            respondentNameBuilder.append(caseData.getRespondent1().getPartyName());
+            soleTraderCompany(caseData.getRespondent1(), respondentNameBuilder);
+            respondentNameBuilder.append(" & 2 ");
+            respondentNameBuilder.append(caseData.getRespondent2().getPartyName());
+            soleTraderCompany(caseData.getRespondent2(), respondentNameBuilder);
         } else {
-            defendantNameBuilder.append(caseData.getRespondent1().getPartyName());
-            soleTraderCompany(caseData.getRespondent1(), defendantNameBuilder);
+            respondentNameBuilder.append(caseData.getRespondent1().getPartyName());
+            soleTraderCompany(caseData.getRespondent1(), respondentNameBuilder);
         }
 
-        return defendantNameBuilder.toString();
+        return respondentNameBuilder.toString();
     }
 
     public static String fetchApplicantName(CaseData caseData) {
