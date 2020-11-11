@@ -8,13 +8,13 @@ import uk.gov.hmcts.reform.unspec.model.Party;
 import uk.gov.hmcts.reform.unspec.model.robotics.CaseHeader;
 import uk.gov.hmcts.reform.unspec.model.robotics.ClaimDetails;
 import uk.gov.hmcts.reform.unspec.model.robotics.LitigiousParty;
-import uk.gov.hmcts.reform.unspec.model.robotics.Mediation;
 import uk.gov.hmcts.reform.unspec.model.robotics.RoboticsCaseData;
 import uk.gov.hmcts.reform.unspec.model.robotics.Solicitor;
 import uk.gov.hmcts.reform.unspec.utils.PartyUtils;
 
-import java.math.BigDecimal;
 import java.util.List;
+
+import static java.util.Objects.requireNonNull;
 
 /**
  * This class is skeleton to be refined after we have final version of RPA Json structure
@@ -26,23 +26,19 @@ public class RoboticsDataMapper {
 
     private final RoboticsAddressMapper addressMapper;
 
-    private static final String TBC = "To be confirmed";
-    private static final BigDecimal COURT_FEE = BigDecimal.TEN; // Not available in Case Data yet
-
     public RoboticsCaseData toRoboticsCaseData(CaseData caseData) {
+        requireNonNull(caseData);
         return RoboticsCaseData.builder()
             .header(buildCaseHeader(caseData))
             .litigiousParties(buildLitigiousParties(caseData))
             .solicitors(buildSolicitors(caseData))
             .claimDetails(buildClaimDetails(caseData.getClaimValue()))
-            .mediation(Mediation.builder().build())
             .build();
     }
 
     private ClaimDetails buildClaimDetails(ClaimValue claimValue) {
         return ClaimDetails.builder()
             .amountClaimed(claimValue.getStatementOfValueInPennies())
-            .courtFee(COURT_FEE)
             .build();
     }
 
@@ -50,10 +46,6 @@ public class RoboticsDataMapper {
         return CaseHeader.builder()
             .caseNumber(caseData.getLegacyCaseReference())
             .preferredCourtName(caseData.getCourtLocation().getApplicantPreferredCourt())
-            .caseAllocatedTo(TBC)
-            .caseType(TBC)
-            .owningCourtCode(TBC)
-            .preferredCourtCode(TBC)
             .build();
     }
 

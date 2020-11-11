@@ -9,7 +9,7 @@ import static java.lang.String.join;
 
 public class RoboticsAddressAssert extends CustomAssert<RoboticsAddressAssert, RoboticsAddress> {
 
-    RoboticsAddressAssert(RoboticsAddress actual) {
+    public RoboticsAddressAssert(RoboticsAddress actual) {
         super("RoboticsAddress", actual, RoboticsAddressAssert.class);
     }
 

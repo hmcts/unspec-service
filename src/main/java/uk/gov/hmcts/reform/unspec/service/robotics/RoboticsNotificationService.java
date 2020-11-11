@@ -15,6 +15,7 @@ import uk.gov.hmcts.reform.unspec.service.robotics.mapper.RoboticsDataMapper;
 import javax.validation.constraints.NotNull;
 
 import static java.util.List.of;
+import static java.util.Objects.requireNonNull;
 import static uk.gov.hmcts.reform.sendgrid.EmailAttachment.json;
 
 @Slf4j
@@ -28,6 +29,7 @@ public class RoboticsNotificationService {
     private final ObjectMapper objectMapper;
 
     public void notifyRobotics(@NotNull CaseData caseData) {
+        requireNonNull(caseData);
         EmailData emailData = prepareEmailData(caseData);
         sendGridClient.sendEmail(roboticsEmailConfiguration.getSender(), emailData);
     }
