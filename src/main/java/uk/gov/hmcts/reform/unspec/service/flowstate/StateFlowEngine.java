@@ -11,10 +11,10 @@ import uk.gov.hmcts.reform.unspec.stateflow.model.State;
 
 import static uk.gov.hmcts.reform.unspec.service.flowstate.FlowPredicate.claimDiscontinued;
 import static uk.gov.hmcts.reform.unspec.service.flowstate.FlowPredicate.claimWithdrawn;
-import static uk.gov.hmcts.reform.unspec.service.flowstate.FlowPredicate.claimantConfirmService;
-import static uk.gov.hmcts.reform.unspec.service.flowstate.FlowPredicate.claimantIssueClaim;
-import static uk.gov.hmcts.reform.unspec.service.flowstate.FlowPredicate.claimantRespondToDefence;
-import static uk.gov.hmcts.reform.unspec.service.flowstate.FlowPredicate.claimantRespondToRequestForExtension;
+import static uk.gov.hmcts.reform.unspec.service.flowstate.FlowPredicate.applicantConfirmService;
+import static uk.gov.hmcts.reform.unspec.service.flowstate.FlowPredicate.applicantIssueClaim;
+import static uk.gov.hmcts.reform.unspec.service.flowstate.FlowPredicate.applicantRespondToDefence;
+import static uk.gov.hmcts.reform.unspec.service.flowstate.FlowPredicate.applicantRespondToRequestForExtension;
 import static uk.gov.hmcts.reform.unspec.service.flowstate.FlowPredicate.defendantAcknowledgeService;
 import static uk.gov.hmcts.reform.unspec.service.flowstate.FlowPredicate.defendantAskForAnExtension;
 import static uk.gov.hmcts.reform.unspec.service.flowstate.FlowPredicate.defendantRespondToClaim;
@@ -41,9 +41,9 @@ public class StateFlowEngine {
     public StateFlow build() {
         return StateFlowBuilder.<FlowState.Main>flow(FLOW_NAME)
             .initial(DRAFT)
-                .transitionTo(CLAIM_ISSUED).onlyIf(claimantIssueClaim)
+                .transitionTo(CLAIM_ISSUED).onlyIf(applicantIssueClaim)
             .state(CLAIM_ISSUED)
-                .transitionTo(SERVICE_CONFIRMED).onlyIf(claimantConfirmService)
+                .transitionTo(SERVICE_CONFIRMED).onlyIf(applicantConfirmService)
                 .transitionTo(CLAIM_WITHDRAWN).onlyIf(claimWithdrawn)
                 .transitionTo(CLAIM_DISCONTINUED).onlyIf(claimDiscontinued)
                 .transitionTo(CLAIM_STAYED).onlyIf(schedulerStayClaim)
@@ -57,7 +57,7 @@ public class StateFlowEngine {
                 .transitionTo(CLAIM_DISCONTINUED).onlyIf(claimDiscontinued)
                 .transitionTo(CLAIM_WITHDRAWN).onlyIf(claimWithdrawn)
             .state(EXTENSION_REQUESTED)
-                .transitionTo(EXTENSION_RESPONDED).onlyIf(claimantRespondToRequestForExtension)
+                .transitionTo(EXTENSION_RESPONDED).onlyIf(applicantRespondToRequestForExtension)
                 .transitionTo(RESPONDED_TO_CLAIM).onlyIf(defendantRespondToClaim)
                 .transitionTo(CLAIM_DISCONTINUED).onlyIf(claimDiscontinued)
                 .transitionTo(CLAIM_WITHDRAWN).onlyIf(claimWithdrawn)
@@ -66,7 +66,7 @@ public class StateFlowEngine {
                 .transitionTo(CLAIM_DISCONTINUED).onlyIf(claimDiscontinued)
                 .transitionTo(CLAIM_WITHDRAWN).onlyIf(claimWithdrawn)
             .state(RESPONDED_TO_CLAIM)
-                .transitionTo(FULL_DEFENCE).onlyIf(claimantRespondToDefence)
+                .transitionTo(FULL_DEFENCE).onlyIf(applicantRespondToDefence)
                 .transitionTo(CLAIM_DISCONTINUED).onlyIf(claimDiscontinued)
                 .transitionTo(CLAIM_WITHDRAWN).onlyIf(claimWithdrawn)
             .state(FULL_DEFENCE)

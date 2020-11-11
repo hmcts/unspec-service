@@ -22,7 +22,7 @@ public class NotificationsProperties {
     private String defendantSolicitorAcknowledgeService;
 
     @NotEmpty
-    private String claimantSolicitorEmail;
+    private String applicantSolicitorEmail;
 
     @NotEmpty
     private String defendantSolicitorEmail;

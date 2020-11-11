@@ -11,10 +11,10 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static uk.gov.hmcts.reform.unspec.service.flowstate.FlowPredicate.claimDiscontinued;
 import static uk.gov.hmcts.reform.unspec.service.flowstate.FlowPredicate.claimWithdrawn;
-import static uk.gov.hmcts.reform.unspec.service.flowstate.FlowPredicate.claimantConfirmService;
-import static uk.gov.hmcts.reform.unspec.service.flowstate.FlowPredicate.claimantIssueClaim;
-import static uk.gov.hmcts.reform.unspec.service.flowstate.FlowPredicate.claimantRespondToDefence;
-import static uk.gov.hmcts.reform.unspec.service.flowstate.FlowPredicate.claimantRespondToRequestForExtension;
+import static uk.gov.hmcts.reform.unspec.service.flowstate.FlowPredicate.applicantConfirmService;
+import static uk.gov.hmcts.reform.unspec.service.flowstate.FlowPredicate.applicantIssueClaim;
+import static uk.gov.hmcts.reform.unspec.service.flowstate.FlowPredicate.applicantRespondToDefence;
+import static uk.gov.hmcts.reform.unspec.service.flowstate.FlowPredicate.applicantRespondToRequestForExtension;
 import static uk.gov.hmcts.reform.unspec.service.flowstate.FlowPredicate.defendantAcknowledgeService;
 import static uk.gov.hmcts.reform.unspec.service.flowstate.FlowPredicate.defendantAskForAnExtension;
 import static uk.gov.hmcts.reform.unspec.service.flowstate.FlowPredicate.defendantRespondToClaim;
@@ -28,13 +28,13 @@ class FlowPredicateTest {
         @Test
         void shouldReturnTrue_whenCaseDataAtIssuedSate() {
             CaseData caseData = CaseDataBuilder.builder().atStateClaimCreated().build();
-            assertTrue(claimantIssueClaim.test(caseData));
+            assertTrue(applicantIssueClaim.test(caseData));
         }
 
         @Test
         void shouldReturnFalse_whenCaseDataIsAtDraftSate() {
             CaseData caseData = CaseDataBuilder.builder().atStateClaimDraft().build();
-            assertFalse(claimantIssueClaim.test(caseData));
+            assertFalse(applicantIssueClaim.test(caseData));
         }
     }
 
@@ -44,13 +44,13 @@ class FlowPredicateTest {
         @Test
         void shouldReturnTrue_whenCaseDataAtConfirmedService() {
             CaseData caseData = CaseDataBuilder.builder().atStateServiceConfirmed().build();
-            assertTrue(claimantConfirmService.test(caseData));
+            assertTrue(applicantConfirmService.test(caseData));
         }
 
         @Test
         void shouldReturnFalse_whenCaseDataIsAtClaimIssued() {
             CaseData caseData = CaseDataBuilder.builder().atStateClaimCreated().build();
-            assertFalse(claimantConfirmService.test(caseData));
+            assertFalse(applicantConfirmService.test(caseData));
         }
     }
 
@@ -103,34 +103,34 @@ class FlowPredicateTest {
     }
 
     @Nested
-    class ClaimantRespondToRequestForExtensionPredicate {
+    class ApplicantRespondToRequestForExtensionPredicate {
 
         @Test
         void shouldReturnTrue_whenCaseDataAtStateExtensionResponded() {
             CaseData caseData = CaseDataBuilder.builder().atStateExtensionResponded().build();
-            assertTrue(claimantRespondToRequestForExtension.test(caseData));
+            assertTrue(applicantRespondToRequestForExtension.test(caseData));
         }
 
         @Test
         void shouldReturnFalse_whenCaseDataAtStateServiceAcknowledged() {
             CaseData caseData = CaseDataBuilder.builder().atStateExtensionRequested().build();
-            assertFalse(claimantRespondToRequestForExtension.test(caseData));
+            assertFalse(applicantRespondToRequestForExtension.test(caseData));
         }
     }
 
     @Nested
-    class ClaimantRespondToDefencePredicate {
+    class ApplicantRespondToDefencePredicate {
 
         @Test
         void shouldReturnTrue_whenCaseDataAtStateFullDefence() {
             CaseData caseData = CaseDataBuilder.builder().atStateFullDefence().build();
-            assertTrue(claimantRespondToDefence.test(caseData));
+            assertTrue(applicantRespondToDefence.test(caseData));
         }
 
         @Test
         void shouldReturnFalse_whenCaseDataAtStateServiceAcknowledged() {
             CaseData caseData = CaseDataBuilder.builder().atStateRespondedToClaim().build();
-            assertFalse(claimantRespondToDefence.test(caseData));
+            assertFalse(applicantRespondToDefence.test(caseData));
         }
     }
 

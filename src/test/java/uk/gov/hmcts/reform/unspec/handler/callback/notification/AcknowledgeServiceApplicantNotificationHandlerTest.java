@@ -46,12 +46,12 @@ class AcknowledgeServiceApplicantNotificationHandlerTest extends BaseCallbackHan
         @BeforeEach
         void setup() {
             when(notificationsProperties.getDefendantSolicitorAcknowledgeService()).thenReturn("template-id");
-            when(notificationsProperties.getClaimantSolicitorEmail()).thenReturn("claimantsolicitor@example.com");
+            when(notificationsProperties.getApplicantSolicitorEmail()).thenReturn("claimantsolicitor@example.com");
             when(notificationsProperties.getDefendantSolicitorEmail()).thenReturn("defendantsolicitor@example.com");
         }
 
         @Test
-        void shouldNotifyClaimantSolicitor_whenInvoked() {
+        void shouldNotifyApplicantSolicitor_whenInvoked() {
             CaseData caseData = CaseDataBuilder.builder().atStateExtensionRequested().build();
             CallbackParams params = CallbackParamsBuilder.builder().of(ABOUT_TO_SUBMIT, caseData).build();
 

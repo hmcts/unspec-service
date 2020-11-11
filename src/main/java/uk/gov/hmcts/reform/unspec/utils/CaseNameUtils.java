@@ -10,7 +10,7 @@ public class CaseNameUtils {
 
     //TODO Need to confirm the case name logic
     public static final Function<CaseData, String> toCaseName = caseData ->
-        fetchClaimantName(caseData) + " v " + fetchDefendantName(caseData);
+        fetchApplicantName(caseData) + " v " + fetchDefendantName(caseData);
 
     private CaseNameUtils() {
         //NO-OP
@@ -33,22 +33,22 @@ public class CaseNameUtils {
         return defendantNameBuilder.toString();
     }
 
-    public static String fetchClaimantName(CaseData caseData) {
-        StringBuilder claimantNameBuilder = new StringBuilder();
+    public static String fetchApplicantName(CaseData caseData) {
+        StringBuilder applicantNameBuilder = new StringBuilder();
 
         if (caseData.getApplicant2() != null) {
-            claimantNameBuilder.append("1 ");
-            claimantNameBuilder.append(caseData.getApplicant1().getPartyName());
-            soleTraderCompany(caseData.getApplicant1(), claimantNameBuilder);
-            claimantNameBuilder.append(" & 2 ");
-            claimantNameBuilder.append(caseData.getApplicant2().getPartyName());
-            soleTraderCompany(caseData.getApplicant2(), claimantNameBuilder);
+            applicantNameBuilder.append("1 ");
+            applicantNameBuilder.append(caseData.getApplicant1().getPartyName());
+            soleTraderCompany(caseData.getApplicant1(), applicantNameBuilder);
+            applicantNameBuilder.append(" & 2 ");
+            applicantNameBuilder.append(caseData.getApplicant2().getPartyName());
+            soleTraderCompany(caseData.getApplicant2(), applicantNameBuilder);
         } else {
-            claimantNameBuilder.append(caseData.getApplicant1().getPartyName());
-            soleTraderCompany(caseData.getApplicant1(), claimantNameBuilder);
+            applicantNameBuilder.append(caseData.getApplicant1().getPartyName());
+            soleTraderCompany(caseData.getApplicant1(), applicantNameBuilder);
         }
 
-        return claimantNameBuilder.toString();
+        return applicantNameBuilder.toString();
     }
 
     private static void soleTraderCompany(Party party, StringBuilder stringBuilder) {

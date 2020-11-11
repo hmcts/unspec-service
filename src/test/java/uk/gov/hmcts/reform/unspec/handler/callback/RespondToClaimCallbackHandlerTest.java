@@ -213,8 +213,8 @@ class RespondToClaimCallbackHandlerTest extends BaseCallbackHandlerTest {
     class AboutToSubmitCallback {
 
         @Test
-        void shouldSetClaimantResponseDeadline_whenInvoked() {
-            LocalDateTime claimantResponseDeadline = now().atTime(16, 0);
+        void shouldSetApplicantResponseDeadline_whenInvoked() {
+            LocalDateTime applicantResponseDeadline = now().atTime(16, 0);
             CaseData caseData = CaseDataBuilder.builder().atStateRespondedToClaim().build();
             CallbackParams params = callbackParamsOf(caseData, ABOUT_TO_SUBMIT);
 
@@ -223,7 +223,7 @@ class RespondToClaimCallbackHandlerTest extends BaseCallbackHandlerTest {
             assertThat(response.getData())
                 .containsEntry(
                     "applicantSolicitorResponseDeadlineToRespondentSolicitor1",
-                    claimantResponseDeadline.format(ofPattern("yyyy-MM-dd'T'HH:mm:ss"))
+                    applicantResponseDeadline.format(ofPattern("yyyy-MM-dd'T'HH:mm:ss"))
                 );
         }
 

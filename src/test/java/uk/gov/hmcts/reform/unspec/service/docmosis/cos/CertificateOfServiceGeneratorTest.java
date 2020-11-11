@@ -110,14 +110,14 @@ class CertificateOfServiceGeneratorTest {
         void shouldPopulateProvidedValues_whenSolicitorReferencesAvailable() {
             SolicitorReferences solicitorReferences = SolicitorReferences
                 .builder()
-                .applicantSolicitor1Reference("Claimant ref")
+                .applicantSolicitor1Reference("Applicant ref")
                 .respondentSolicitor1Reference("Defendant ref")
                 .build();
 
             SolicitorReferences result = generator.prepareSolicitorReferences(solicitorReferences);
             assertAll(
                 "SolicitorReferences provided",
-                () -> assertEquals("Claimant ref", result.getApplicantSolicitor1Reference()),
+                () -> assertEquals("Applicant ref", result.getApplicantSolicitor1Reference()),
                 () -> assertEquals("Defendant ref", result.getRespondentSolicitor1Reference())
             );
         }
@@ -126,14 +126,14 @@ class CertificateOfServiceGeneratorTest {
         void shouldPopulateNotProvided_whenOneReferencesNotAvailable() {
             SolicitorReferences solicitorReferences = SolicitorReferences
                 .builder()
-                .applicantSolicitor1Reference("Claimant ref")
+                .applicantSolicitor1Reference("Applicant ref")
                 .build();
 
             SolicitorReferences result = generator.prepareSolicitorReferences(solicitorReferences);
 
             assertAll(
                 "SolicitorReferences one is provided",
-                () -> assertEquals("Claimant ref", result.getApplicantSolicitor1Reference()),
+                () -> assertEquals("Applicant ref", result.getApplicantSolicitor1Reference()),
                 () -> assertEquals("Not Provided", result.getRespondentSolicitor1Reference())
             );
         }

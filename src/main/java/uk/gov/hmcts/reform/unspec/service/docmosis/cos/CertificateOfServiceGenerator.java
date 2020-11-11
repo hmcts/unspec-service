@@ -69,7 +69,7 @@ public class CertificateOfServiceGenerator implements TemplateDataGenerator<Cert
             .solicitorReferences(prepareSolicitorReferences(caseData.getSolicitorReferences()))
             .dateServed(caseData.getServiceDateToRespondentSolicitor1())
             .deemedDateOfService(caseData.getDeemedServiceDateToRespondentSolicitor1())
-            .applicantName(CaseNameUtils.fetchClaimantName(caseData))
+            .applicantName(CaseNameUtils.fetchApplicantName(caseData))
             .respondentName(CaseNameUtils.fetchDefendantName(caseData))
             .respondentRepresentative(TEMP_REPRESENTATIVE)
             .serviceMethod(caseData.getServiceMethodToRespondentSolicitor1().getType().getLabel())

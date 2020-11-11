@@ -19,7 +19,7 @@ module.exports = {
         type: 'COMPANY',
         companyName: 'Test Inc',
         primaryAddress: {
-          AddressLine1: `${address.buildingAndStreet.lineOne + ' - claimant'}`,
+          AddressLine1: `${address.buildingAndStreet.lineOne + ' - applicant'}`,
           AddressLine2: address.buildingAndStreet.lineTwo,
           AddressLine3: address.buildingAndStreet.lineThree,
           PostTown: address.town,

@@ -26,7 +26,7 @@ class CaseNameUtilsTest {
     }
 
     @Test
-    void shouldReturnCaseName_whenMultiClaimant() {
+    void shouldReturnCaseName_whenMultiApplicant() {
         CaseData caseData = CaseData.builder()
             .applicant1(Party.builder()
                             .type(Party.Type.INDIVIDUAL)
@@ -68,7 +68,7 @@ class CaseNameUtilsTest {
     }
 
     @Test
-    void shouldReturnCaseName_whenClaimantIsSoleTrader() {
+    void shouldReturnCaseName_whenApplicantIsSoleTrader() {
         CaseData caseData = CaseData.builder()
             .applicant1(Party.builder()
                             .type(Party.Type.SOLE_TRADER)
