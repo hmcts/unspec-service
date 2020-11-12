@@ -5,6 +5,7 @@ import uk.gov.hmcts.reform.unspec.model.CaseData;
 import uk.gov.hmcts.reform.unspec.model.Party;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static uk.gov.hmcts.reform.unspec.utils.CaseNameUtils.toCaseName;
 
 class CaseNameUtilsTest {
@@ -121,4 +122,15 @@ class CaseNameUtilsTest {
         String caseName = toCaseName.apply(caseData);
         assertThat(caseName).isEqualTo("Mrs. Georgina Hammersmith T/A EuroStar v Mr. Boris Johnson T/A UberFlip");
     }
+
+    @Test
+    void shouldReturnCaseName_noCaseData() {
+        CaseData caseData = null;
+
+        //String caseName = toCaseName.apply(caseData);
+        assertThrows(
+            NullPointerException.class, () -> toCaseName.apply(caseData)
+        );
+    }
+
 }
