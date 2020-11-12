@@ -10,7 +10,7 @@ import uk.gov.hmcts.reform.unspec.enums.ClaimType;
 import uk.gov.hmcts.reform.unspec.enums.PbaNumber;
 import uk.gov.hmcts.reform.unspec.enums.PersonalInjuryType;
 import uk.gov.hmcts.reform.unspec.enums.ResponseIntention;
-import uk.gov.hmcts.reform.unspec.enums.ResponseType;
+import uk.gov.hmcts.reform.unspec.enums.RespondentResponseType;
 import uk.gov.hmcts.reform.unspec.enums.ServedDocuments;
 import uk.gov.hmcts.reform.unspec.enums.YesOrNo;
 import uk.gov.hmcts.reform.unspec.model.common.Element;
@@ -84,7 +84,7 @@ public class CaseData {
     private final LocalDate respondentSolicitor1claimResponseExtensionCounterDate;
     private final String respondentSolicitor1claimResponseExtensionRejectionReason;
 
-    private final ResponseType respondent1ClaimResponseType;
+    private final RespondentResponseType respondent1ClaimResponseType;
     private final ResponseDocument respondent1ClaimResponseDocument;
     private final LocalDateTime applicantSolicitorResponseDeadlineToRespondentSolicitor1;
 

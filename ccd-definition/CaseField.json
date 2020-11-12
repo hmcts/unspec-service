@@ -361,7 +361,7 @@
     "ID": "respondent1ClaimResponseType",
     "Label": "The defendant:",
     "FieldType": "FixedRadioList",
-    "FieldTypeParameter": "ResponseType",
+    "FieldTypeParameter": "RespondentResponseType",
     "SecurityClassification": "Public"
   },
   {

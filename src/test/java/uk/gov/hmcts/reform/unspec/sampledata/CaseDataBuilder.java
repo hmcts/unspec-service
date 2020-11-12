@@ -5,7 +5,7 @@ import uk.gov.hmcts.reform.unspec.enums.CaseState;
 import uk.gov.hmcts.reform.unspec.enums.ClaimType;
 import uk.gov.hmcts.reform.unspec.enums.PersonalInjuryType;
 import uk.gov.hmcts.reform.unspec.enums.ResponseIntention;
-import uk.gov.hmcts.reform.unspec.enums.ResponseType;
+import uk.gov.hmcts.reform.unspec.enums.RespondentResponseType;
 import uk.gov.hmcts.reform.unspec.enums.ServedDocuments;
 import uk.gov.hmcts.reform.unspec.enums.YesOrNo;
 import uk.gov.hmcts.reform.unspec.model.ApplicantNotProceedingReason;
@@ -101,7 +101,7 @@ public class CaseDataBuilder {
     private LocalDate respondentSolicitor1claimResponseExtensionCounterDate;
     private String respondentSolicitor1claimResponseExtensionRejectionReason;
     // Defendant Response
-    private ResponseType respondent1ClaimResponseType;
+    private RespondentResponseType respondent1ClaimResponseType;
     private ResponseDocument respondent1ClaimResponseDocument;
     private LocalDateTime applicantSolicitorResponseDeadlineToRespondentSolicitor1;
     // Claimant Response
@@ -377,7 +377,7 @@ public class CaseDataBuilder {
 
     public CaseDataBuilder atStateRespondedToClaim() {
         atStateServiceConfirmed();
-        respondent1ClaimResponseType = ResponseType.FULL_DEFENCE;
+        respondent1ClaimResponseType = RespondentResponseType.FULL_DEFENCE;
         applicantSolicitorResponseDeadlineToRespondentSolicitor1 = APPLICANT_RESPONSE_DEADLINE;
         respondent1ClaimResponseDocument = ResponseDocument.builder()
             .file(DocumentBuilder.builder().documentName("defendant-response.pdf").build())
