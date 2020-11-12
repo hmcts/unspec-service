@@ -127,10 +127,35 @@ class CaseNameUtilsTest {
     void shouldReturnCaseName_noCaseData() {
         CaseData caseData = null;
 
-        //String caseName = toCaseName.apply(caseData);
         assertThrows(
             NullPointerException.class, () -> toCaseName.apply(caseData)
         );
+    }
+
+    @Test
+    void shouldReturnCaseName_emptyCaseData() {
+        CaseData caseData = CaseData.builder().build();
+        String caseName = toCaseName.apply(caseData);
+            assertThat(caseName).isEqualTo("v");
+    }
+
+
+    @Test
+    void shouldReturnCaseName_whenMultiDefendantAndRespondent2IsNull() {
+        CaseData caseData = CaseData.builder()
+            .applicant1(Party.builder()
+                            .type(Party.Type.INDIVIDUAL)
+                            .partyName("Mr. Sam Clark")
+                            .build())
+            .respondent2(null)
+            .respondent1(Party.builder()
+                             .type(Party.Type.INDIVIDUAL)
+                             .partyName("Mr. Alex Richards")
+                             .build())
+            .build();
+
+        String caseName = toCaseName.apply(caseData);
+        assertThat(caseName).isEqualTo("Mr. Sam Clark v Mr. Alex Richards");
     }
 
 }
