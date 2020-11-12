@@ -244,7 +244,7 @@ jacocoTestReport.dependsOn {
 
 
 pitest {
-  targetClasses = ['uk.gov.hmcts.reform.unspec.*']
+  targetClasses = ['uk.gov.hmcts.reform.unspec.controllers.CallbackController']
   excludedClasses = ['uk.gov.hmcts.reform.unspec.advice.*',
                      'uk.gov.hmcts.reform.unspec.callback.*',
                      'uk.gov.hmcts.reform.unspec.config.*',
