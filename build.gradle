@@ -244,7 +244,7 @@ jacocoTestReport.dependsOn {
 
 
 pitest {
-  targetClasses = ['uk.gov.hmcts.reform.unspec.callback.*']
+  targetClasses = ['uk.gov.hmcts.reform.unspec.callback.CallbackType']
   excludedClasses = ['uk.gov.hmcts.reform.unspec.advice.*',
                      'uk.gov.hmcts.reform.unspec.config.*',
                      'uk.gov.hmcts.reform.unspec.enums.*',
@@ -253,6 +253,13 @@ pitest {
                      'uk.gov.hmcts.reform.unspec.helpers.*',
                      'uk.gov.hmcts.reform.unspec.model.*',
                      'uk.gov.hmcts.reform.unspec.aspect.*',
+                     'uk.gov.hmcts.reform.unspec.callback.CallbackHandler',
+                     'uk.gov.hmcts.reform.unspec.callback.CallbackException',
+                     'uk.gov.hmcts.reform.unspec.callback.CallbackHandlerFactory',
+                     'uk.gov.hmcts.reform.unspec.callback.CallbackParams',
+                     'uk.gov.hmcts.reform.unspec.callback.CallbackVersion',
+                     'uk.gov.hmcts.reform.unspec.callback.CaseEvent',
+                     'uk.gov.hmcts.reform.unspec.callback.UserType',
                      'uk.gov.hmcts.reform.unspec.validation.*',
                      'uk.gov.hmcts.reform.unspec.controllers.*',
                      'uk.gov.hmcts.reform.unspec.repositories.*',
