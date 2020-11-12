@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Service;
 import uk.gov.hmcts.reform.sendgrid.EmailData;
 import uk.gov.hmcts.reform.sendgrid.SendGridClient;
@@ -21,6 +22,7 @@ import static uk.gov.hmcts.reform.sendgrid.EmailAttachment.json;
 @Slf4j
 @Service
 @AllArgsConstructor
+@ConditionalOnProperty(prefix = "sendgrid", value = "api-key")
 public class RoboticsNotificationService {
 
     private final SendGridClient sendGridClient;

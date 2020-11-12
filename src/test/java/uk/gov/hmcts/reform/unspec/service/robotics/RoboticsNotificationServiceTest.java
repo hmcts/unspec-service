@@ -35,6 +35,7 @@ import static org.mockito.Mockito.verify;
         RoboticsAddressMapper.class
     },
     properties = {
+        "sendgrid.api-key:some-key",
         "robotics.notification.sender:no-reply@exaple.com",
         "robotics.notification.recipient:recipient@example.com"
     }
