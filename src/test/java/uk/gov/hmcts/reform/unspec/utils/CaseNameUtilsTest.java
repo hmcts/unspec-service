@@ -5,8 +5,6 @@ import uk.gov.hmcts.reform.unspec.model.CaseData;
 import uk.gov.hmcts.reform.unspec.model.Party;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static uk.gov.hmcts.reform.unspec.utils.CaseNameUtils.toCaseName;
 
 class CaseNameUtilsTest {
@@ -123,40 +121,4 @@ class CaseNameUtilsTest {
         String caseName = toCaseName.apply(caseData);
         assertThat(caseName).isEqualTo("Mrs. Georgina Hammersmith T/A EuroStar v Mr. Boris Johnson T/A UberFlip");
     }
-
-    @Test
-    void shouldReturnCaseName_noCaseData() {
-        CaseData caseData = null;
-
-        assertThrows(
-            NullPointerException.class, () -> toCaseName.apply(caseData)
-        );
-    }
-
-    @Test
-    void shouldReturnCaseName_emptyCaseData() {
-        CaseData caseData = CaseData.builder().build();
-        String caseName = toCaseName.apply(caseData);
-            assertThat(caseName).isEqualTo("v");
-    }
-
-
-    @Test
-    void shouldReturnCaseName_whenMultiDefendantAndRespondent2IsNull() {
-        CaseData caseData = CaseData.builder()
-            .applicant1(Party.builder()
-                            .type(Party.Type.INDIVIDUAL)
-                            .partyName("Mr. Sam Clark")
-                            .build())
-            .respondent2(null)
-            .respondent1(Party.builder()
-                             .type(Party.Type.INDIVIDUAL)
-                             .partyName("Mr. Alex Richards")
-                             .build())
-            .build();
-
-        String caseName = toCaseName.apply(caseData);
-        assertNotNull(caseName);
-    }
-
 }
