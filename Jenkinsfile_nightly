@@ -58,12 +58,12 @@ withNightlyPipeline(type, product, component) {
 
 //  enableFullFunctionalTest()
 
-  before('fullFunctionalTest') {
-    env.PROXY = params.PROXY_SERVER
-    env.PARALLEL_CHUNKS = params.FUNCTIONAL_TESTS_WORKERS
-    env.MOCKED_PAYMENTS = false
-    env.TEST_RETRIES = 2
-  }
+//  before('fullFunctionalTest') {
+//    env.PROXY = params.PROXY_SERVER
+//    env.PARALLEL_CHUNKS = params.FUNCTIONAL_TESTS_WORKERS
+//    env.MOCKED_PAYMENTS = false
+//    env.TEST_RETRIES = 2
+//  }
 
 
 //  after('fullFunctionalTest') {
