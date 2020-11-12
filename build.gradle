@@ -244,7 +244,7 @@ jacocoTestReport.dependsOn {
 
 
 pitest {
-  targetClasses = ['uk.gov.hmcts.reform.unspec.sevice.bankHolidays.*']
+  targetClasses = ['uk.gov.hmcts.reform.unspec.utils.*']
   excludedClasses = ['uk.gov.hmcts.reform.unspec.advice.*',
                      'uk.gov.hmcts.reform.unspec.config.*',
                      'uk.gov.hmcts.reform.unspec.enums.*',
@@ -264,7 +264,6 @@ pitest {
                      'uk.gov.hmcts.reform.unspec.service.*',
                      'uk.gov.hmcts.reform.unspec.stateflow.*',
                      'uk.gov.hmcts.reform.unspec.stereotypes.*',
-                     'uk.gov.hmcts.reform.unspec.utils.*',
                      'uk.gov.hmcts.reform.unspec.Application',
                      'uk.gov.hmcts.reform.unspec.CaseDefinitionConstants']
   threads = 10
