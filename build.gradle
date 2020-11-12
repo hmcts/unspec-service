@@ -11,6 +11,7 @@ plugins {
   id "io.freefair.lombok" version "5.3.0"
   id "org.flywaydb.flyway" version "7.2.0"
   id 'net.ltgt.apt' version '0.21'
+  id 'info.solidsoft.pitest' version '1.5.2'
 }
 
 group = 'uk.gov.hmcts.reform'
@@ -195,6 +196,9 @@ task runFunctionalTests(type: Exec, description: 'Runs functional tests.') {
   commandLine '/usr/bin/yarn', '--silent', 'test:functional'
 }
 
+
+
+
 def inStrictOrder(Task... tasks) {
   for (int i = 0; i < tasks.size() - 1; i++) {
     tasks[i + 1].mustRunAfter(tasks[i])
@@ -238,6 +242,35 @@ jacocoTestReport.dependsOn {
   subprojects*.test
 }
 
+
+pitest {
+  targetClasses = ['uk.gov.hmcts.reform.unspec.*']
+  excludedClasses = ['uk.gov.hmcts.reform.unspec.advice.*',
+                     'uk.gov.hmcts.reform.unspec.callback.*',
+                     'uk.gov.hmcts.reform.unspec.config.*',
+                     'uk.gov.hmcts.reform.unspec.controllers.*',
+                     'uk.gov.hmcts.reform.unspec.enums.*',
+                     'uk.gov.hmcts.reform.unspec.event.*',
+                     'uk.gov.hmcts.reform.unspec.handler.*',
+                     'uk.gov.hmcts.reform.unspec.helpers.*',
+                     'uk.gov.hmcts.reform.unspec.model.search.*',
+                     'uk.gov.hmcts.reform.unspec.repositories.*',
+                     'uk.gov.hmcts.reform.unspec.request.*',
+                     'uk.gov.hmcts.reform.unspec.security.*',
+                     'uk.gov.hmcts.reform.unspec.service.*',
+                     'uk.gov.hmcts.reform.unspec.stateflow.*',
+                     'uk.gov.hmcts.reform.unspec.stereotypes.*',
+                     'uk.gov.hmcts.reform.unspec.utils.*',
+                     'uk.gov.hmcts.reform.unspec.Application',
+                     'uk.gov.hmcts.reform.unspec.CaseDefinitionConstants']
+  threads = 10
+  outputFormats = ['XML', 'HTML']
+  timestampedReports = false
+  mutationThreshold = 80
+}
+
+
+
 def versions = [
   junit              : '5.7.0',
   junitPlatform      : '1.7.0',
@@ -247,6 +280,9 @@ def versions = [
   springfoxSwagger   : '2.9.2',
   lombok             : '1.18.12',
   pact               : '3.5.24',
+  gradlePitest       : '1.5.2',
+  pitest             : '1.5.2',
+  sonarPitest        : '0.5',
 ]
 
 ext.libraries = [
@@ -325,6 +361,10 @@ dependencies {
   // JAX-B dependencies for JDK 9+
   implementation group: 'jakarta.xml.bind', name: 'jakarta.xml.bind-api', version: '2.3.3'
   implementation group: 'org.glassfish.jaxb', name: 'jaxb-runtime', version: '2.3.3'
+
+  implementation group: 'org.pitest', name: 'pitest', version: versions.pitest
+  implementation group: 'info.solidsoft.gradle.pitest', name: 'gradle-pitest-plugin', version: versions.gradlePitest
+  implementation group: 'org.codehaus.sonar-plugins', name:'sonar-pitest-plugin', version: versions.sonarPitest
 
   testImplementation group: 'org.mockito', name: 'mockito-core', version: '3.6.0'
   testImplementation group: 'org.mockito', name: 'mockito-junit-jupiter', version: '3.6.0'
