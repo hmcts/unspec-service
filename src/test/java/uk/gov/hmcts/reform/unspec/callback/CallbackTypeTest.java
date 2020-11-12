@@ -19,4 +19,9 @@ class CallbackTypeTest {
     void shouldThrowCallbackException_whenUnknownCallback() {
         assertThrows(CallbackException.class, () -> CallbackType.fromValue("nope"));
     }
+
+    @Test
+    void shouldThrowCallbackException_whenEmptyCallback() {
+        assertThrows(CallbackException.class, () -> CallbackType.fromValue(""));
+    }
 }
