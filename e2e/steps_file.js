@@ -144,7 +144,7 @@ module.exports = function () {
     },
 
     async acknowledgeService() {
-      await caseViewPage.startEvent('Acknowledge service');
+      await caseViewPage.startEvent('Acknowledge service', caseId);
       await respondentDetails.verifyDetails();
       await confirmDetailsPage.confirmReference();
       await responseIntentionPage.selectResponseIntention();
