@@ -52,6 +52,7 @@ module.exports = {
 
   acknowledgeService: async () => {
     eventName = 'ACKNOWLEDGE_SERVICE';
+    deleteCaseFields('systemGeneratedCaseDocuments');
     await request.startEvent(eventName, caseId);
 
     await validateEventPages();
