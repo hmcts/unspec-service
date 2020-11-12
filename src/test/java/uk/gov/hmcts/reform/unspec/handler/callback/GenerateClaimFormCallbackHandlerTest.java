@@ -29,7 +29,6 @@ import static org.mockito.Mockito.when;
 import static uk.gov.hmcts.reform.unspec.callback.CallbackType.ABOUT_TO_SUBMIT;
 import static uk.gov.hmcts.reform.unspec.model.documents.DocumentType.SEALED_CLAIM;
 
-
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(classes = {
     GenerateClaimFormCallbackHandler.class,

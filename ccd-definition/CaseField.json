@@ -44,6 +44,14 @@
   {
     "LiveFrom": "01/01/2017",
     "CaseTypeID": "UNSPECIFIED_CLAIMS",
+    "ID": "applicant1LitigationFriendRequired",
+    "Label": "Is the claimant a child?",
+    "FieldType": "YesOrNo",
+    "SecurityClassification": "Public"
+  },
+  {
+    "LiveFrom": "01/01/2017",
+    "CaseTypeID": "UNSPECIFIED_CLAIMS",
     "ID": "applicant1LitigationFriend",
     "Label": "Claimant litigation details",
     "FieldType": "LitigationFriend",
@@ -666,10 +674,42 @@
   {
     "LiveFrom": "01/01/2017",
     "CaseTypeID": "UNSPECIFIED_CLAIMS",
+    "ID": "paymentErrorMessage",
+    "Label": "PBA payment error message",
+    "FieldType": "Text",
+    "SecurityClassification": "Public"
+  },
+  {
+    "LiveFrom": "01/01/2017",
+    "CaseTypeID": "UNSPECIFIED_CLAIMS",
+    "ID": "paymentErrorCode",
+    "Label": "PBA payment error code",
+    "FieldType": "Text",
+    "SecurityClassification": "Public"
+  },
+  {
+    "LiveFrom": "01/01/2017",
+    "CaseTypeID": "UNSPECIFIED_CLAIMS",
     "ID": "pbaNumber",
     "Label": "Select a Payment by Account number from the list",
     "FieldType": "FixedList",
     "FieldTypeParameter": "PbaNumber",
+    "SecurityClassification": "Public"
+  },
+  {
+    "LiveFrom": "01/01/2017",
+    "CaseTypeID": "UNSPECIFIED_CLAIMS",
+    "ID": "respondent1LitigationFriend",
+    "Label": "Defendant litigation details",
+    "FieldType": "LitigationFriend",
+    "SecurityClassification": "Public"
+  },
+  {
+    "LiveFrom": "01/01/2017",
+    "CaseTypeID": "UNSPECIFIED_CLAIMS",
+    "ID": "paymentDetails",
+    "Label": "Details of PBA payment",
+    "FieldType": "PaymentDetails",
     "SecurityClassification": "Public"
   }
 ]

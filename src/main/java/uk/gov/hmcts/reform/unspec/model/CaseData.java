@@ -55,6 +55,7 @@ public class CaseData {
     private LocalDateTime confirmationOfServiceDeadline;
     private final String legacyCaseReference;
     private final AllocatedTrack allocatedTrack;
+    private final PaymentDetails paymentDetails;
 
     private final StatementOfTruth applicant1ServiceStatementOfTruthToRespondentSolicitor1;
     private final List<Element<CaseDocument>> systemGeneratedCaseDocuments;
@@ -110,4 +111,6 @@ public class CaseData {
             || businessProcess.getStatus() == null
             || businessProcess.getStatus() == FINISHED;
     }
+
+    private final LitigationFriend respondent1LitigationFriend;
 }

@@ -19,14 +19,14 @@ import java.util.Map;
 
 import static uk.gov.hmcts.reform.unspec.callback.CallbackParams.Params.BEARER_TOKEN;
 import static uk.gov.hmcts.reform.unspec.callback.CallbackType.ABOUT_TO_SUBMIT;
-import static uk.gov.hmcts.reform.unspec.callback.CaseEvent.GENERATE_CLAIM_CERTIFICATE;
+import static uk.gov.hmcts.reform.unspec.callback.CaseEvent.GENERATE_CLAIM_FORM;
 import static uk.gov.hmcts.reform.unspec.utils.ElementUtils.wrapElements;
 
 @Service
 @RequiredArgsConstructor
 public class GenerateClaimFormCallbackHandler extends CallbackHandler {
 
-    private static final List<CaseEvent> EVENTS = Collections.singletonList(GENERATE_CLAIM_CERTIFICATE);
+    private static final List<CaseEvent> EVENTS = Collections.singletonList(GENERATE_CLAIM_FORM);
 
     private final SealedClaimFormGenerator sealedClaimFormGenerator;
     private final CaseDetailsConverter caseDetailsConverter;
