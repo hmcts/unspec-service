@@ -22,6 +22,9 @@ public class NotificationsProperties {
     private String respondentSolicitorAcknowledgeService;
 
     @NotEmpty
+    private String failedPayment;
+
+    @NotEmpty
     private String applicantSolicitorEmail;
 
     @NotEmpty

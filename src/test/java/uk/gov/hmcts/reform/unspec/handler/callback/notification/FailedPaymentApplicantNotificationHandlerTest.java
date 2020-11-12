@@ -25,23 +25,23 @@ import static uk.gov.hmcts.reform.unspec.handler.callback.notification.Notificat
 import static uk.gov.hmcts.reform.unspec.sampledata.CaseDataBuilder.LEGACY_CASE_REFERENCE;
 
 @SpringBootTest(classes = {
-    ClaimantResponseApplicantNotificationHandler.class,
+    FailedPaymentApplicantNotificationHandler.class,
     JacksonAutoConfiguration.class
 })
-class ClaimantResponseApplicantNotificationHandlerTest extends BaseCallbackHandlerTest {
+class FailedPaymentApplicantNotificationHandlerTest extends BaseCallbackHandlerTest {
 
     @MockBean
     private NotificationService notificationService;
     @MockBean
     private NotificationsProperties notificationsProperties;
     @Autowired
-    private ClaimantResponseApplicantNotificationHandler handler;
+    private FailedPaymentApplicantNotificationHandler handler;
 
     @Nested
     class AboutToSubmitCallback {
         @BeforeEach
         void setup() {
-            when(notificationsProperties.getSolicitorResponseToCase()).thenReturn("template-id");
+            when(notificationsProperties.getFailedPayment()).thenReturn("template-id");
             when(notificationsProperties.getApplicantSolicitorEmail()).thenReturn("claimantsolicitor@example.com");
             when(notificationsProperties.getRespondentSolicitorEmail()).thenReturn("defendantsolicitor@example.com");
         }
@@ -57,7 +57,7 @@ class ClaimantResponseApplicantNotificationHandlerTest extends BaseCallbackHandl
                 "claimantsolicitor@example.com",
                 "template-id",
                 Map.of(CLAIM_REFERENCE_NUMBER, LEGACY_CASE_REFERENCE, SOLICITOR_REFERENCE, "claimant solicitor"),
-                "claimant-response-applicant-notification-000LR001"
+                "failed-payment-applicant-notification-000LR001"
             );
         }
     }

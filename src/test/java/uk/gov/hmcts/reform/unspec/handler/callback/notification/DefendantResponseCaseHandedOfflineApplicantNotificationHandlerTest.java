@@ -47,17 +47,17 @@ class DefendantResponseCaseHandedOfflineApplicantNotificationHandlerTest extends
         }
 
         @Test
-        void shouldNotifyParties_whenInvoked() {
+        void shouldNotifyClaimantSolicitor_whenInvoked() {
             CaseData caseData = CaseDataBuilder.builder().atStateClaimCreated().build();
             CallbackParams params = CallbackParamsBuilder.builder().of(ABOUT_TO_SUBMIT, caseData).build();
 
             handler.handle(params);
 
             verify(notificationService).sendMail(
-                "defendantsolicitor@example.com",
+                "claimantsolicitor@example.com",
                 "template-id",
-                Map.of(CLAIM_REFERENCE_NUMBER, LEGACY_CASE_REFERENCE, SOLICITOR_REFERENCE, "defendant solicitor"),
-                "defendant-response-case-handed-offline-respondent-notification-000LR001"
+                Map.of(CLAIM_REFERENCE_NUMBER, LEGACY_CASE_REFERENCE, SOLICITOR_REFERENCE, "claimant solicitor"),
+                "defendant-response-case-handed-offline-applicant-notification-000LR001"
             );
         }
     }
