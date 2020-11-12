@@ -11,8 +11,12 @@ import uk.gov.hmcts.reform.unspec.callback.CaseEvent;
 import uk.gov.hmcts.reform.unspec.helpers.CaseDetailsConverter;
 import uk.gov.hmcts.reform.unspec.model.CaseData;
 import uk.gov.hmcts.reform.unspec.model.documents.CaseDocument;
+import uk.gov.hmcts.reform.unspec.service.DeadlinesCalculator;
+import uk.gov.hmcts.reform.unspec.service.IssueDateCalculator;
 import uk.gov.hmcts.reform.unspec.service.docmosis.sealedclaim.SealedClaimFormGenerator;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -30,6 +34,8 @@ public class GenerateClaimFormCallbackHandler extends CallbackHandler {
 
     private final SealedClaimFormGenerator sealedClaimFormGenerator;
     private final CaseDetailsConverter caseDetailsConverter;
+    private final IssueDateCalculator issueDateCalculator;
+    private final DeadlinesCalculator deadlinesCalculator;
 
     @Override
     protected Map<String, Callback> callbacks() {
@@ -42,8 +48,12 @@ public class GenerateClaimFormCallbackHandler extends CallbackHandler {
     }
 
     private CallbackResponse generateClaimForm(CallbackParams callbackParams) {
+        LocalDate claimIssuedDate = calculateIssueDate();
+
         CaseData caseData = callbackParams.getCaseData();
-        CaseData.CaseDataBuilder caseDataBuilder = caseData.toBuilder();
+        CaseData.CaseDataBuilder caseDataBuilder = caseData.toBuilder()
+            .claimIssuedDate(claimIssuedDate)
+            .confirmationOfServiceDeadline(calculateConfirmationOfServiceDeadline(claimIssuedDate));
 
         CaseDocument sealedClaim = sealedClaimFormGenerator.generate(
             caseData,
@@ -55,5 +65,13 @@ public class GenerateClaimFormCallbackHandler extends CallbackHandler {
         return AboutToStartOrSubmitCallbackResponse.builder()
             .data(caseDetailsConverter.toMap(caseDataBuilder.build()))
             .build();
+    }
+
+    private LocalDate calculateIssueDate() {
+        return issueDateCalculator.calculateIssueDay(LocalDateTime.now());
+    }
+
+    private LocalDateTime calculateConfirmationOfServiceDeadline(LocalDate issueDate) {
+        return deadlinesCalculator.calculateConfirmationOfServiceDeadline(issueDate);
     }
 }

@@ -17,10 +17,14 @@ import uk.gov.hmcts.reform.unspec.model.CaseData;
 import uk.gov.hmcts.reform.unspec.model.documents.CaseDocument;
 import uk.gov.hmcts.reform.unspec.model.documents.Document;
 import uk.gov.hmcts.reform.unspec.sampledata.CaseDataBuilder;
+import uk.gov.hmcts.reform.unspec.service.DeadlinesCalculator;
+import uk.gov.hmcts.reform.unspec.service.IssueDateCalculator;
 import uk.gov.hmcts.reform.unspec.service.docmosis.sealedclaim.SealedClaimFormGenerator;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
+import static java.time.LocalDate.now;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
@@ -37,6 +41,21 @@ import static uk.gov.hmcts.reform.unspec.model.documents.DocumentType.SEALED_CLA
 })
 class GenerateClaimFormCallbackHandlerTest extends BaseCallbackHandlerTest {
 
+    @MockBean
+    private IssueDateCalculator issueDateCalculator;
+
+    @MockBean
+    private DeadlinesCalculator deadlinesCalculator;
+
+    @MockBean
+    private SealedClaimFormGenerator sealedClaimFormGenerator;
+
+    @Autowired
+    private GenerateClaimFormCallbackHandler handler;
+
+    @Autowired
+    private final ObjectMapper mapper = new ObjectMapper();
+
     public static final CaseDocument DOCUMENT = CaseDocument.builder()
         .createdBy("John")
         .documentName("document name")
@@ -50,18 +69,14 @@ class GenerateClaimFormCallbackHandlerTest extends BaseCallbackHandlerTest {
                           .build())
         .build();
 
-    @MockBean
-    private SealedClaimFormGenerator sealedClaimFormGenerator;
-
-    @Autowired
-    private GenerateClaimFormCallbackHandler handler;
-
-    @Autowired
-    private final ObjectMapper mapper = new ObjectMapper();
+    private final LocalDate claimIssuedDate = now();
+    private final LocalDateTime deadline = now().atTime(23, 59, 59);
 
     @BeforeEach
     void setup() {
         when(sealedClaimFormGenerator.generate(any(CaseData.class), anyString())).thenReturn(DOCUMENT);
+        when(issueDateCalculator.calculateIssueDay(any(LocalDateTime.class))).thenReturn(claimIssuedDate);
+        when(deadlinesCalculator.calculateConfirmationOfServiceDeadline(any(LocalDate.class))).thenReturn(deadline);
     }
 
     @Nested
@@ -79,6 +94,8 @@ class GenerateClaimFormCallbackHandlerTest extends BaseCallbackHandlerTest {
             CaseData updatedData = mapper.convertValue(response.getData(), CaseData.class);
 
             assertThat(updatedData.getSystemGeneratedCaseDocuments().get(0).getValue()).isEqualTo(DOCUMENT);
+            assertThat(updatedData.getClaimIssuedDate()).isEqualTo(claimIssuedDate);
+            assertThat(updatedData.getConfirmationOfServiceDeadline()).isEqualTo(deadline);
         }
     }
 }
