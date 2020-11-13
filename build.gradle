@@ -96,6 +96,12 @@ allprojects {
 }
 
 sourceSets {
+
+  test {
+    java.srcDir 'src/test/java'
+    resources.srcDir 'src/test/resources'
+  }
+
   functionalTest {
     java {
       compileClasspath += main.output
@@ -373,7 +379,6 @@ dependencies {
   testImplementation group: 'org.mockito', name: 'mockito-core', version: '3.6.0'
   testImplementation group: 'org.mockito', name: 'mockito-junit-jupiter', version: '3.6.0'
   testImplementation group: 'org.mockito', name: 'mockito-inline', version: '3.6.0'
-  testImplementation("org.assertj:assertj-core:3.18.1")
 
   testAnnotationProcessor group: 'org.projectlombok', name: 'lombok', version: versions.lombok
   testCompileOnly group: 'org.projectlombok', name: 'lombok', version: versions.lombok
