@@ -104,6 +104,7 @@ sourceSets {
       srcDir file('src/test/java')
     }
     resources.srcDir file('src/test/resources')
+    failFast = true
   }
 
   functionalTest {
@@ -155,9 +156,9 @@ tasks.withType(Test) {
   }
 }
 
-test {
-  failFast = true
-}
+//test {
+//  failFast = true
+//}
 
 task integration(type: Test) {
   description = "Runs integration tests"
