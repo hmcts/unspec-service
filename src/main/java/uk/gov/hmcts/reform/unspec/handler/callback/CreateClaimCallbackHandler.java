@@ -15,6 +15,8 @@ import uk.gov.hmcts.reform.unspec.model.CaseData;
 import uk.gov.hmcts.reform.unspec.model.Party;
 import uk.gov.hmcts.reform.unspec.repositories.ReferenceNumberRepository;
 import uk.gov.hmcts.reform.unspec.service.BusinessProcessService;
+import uk.gov.hmcts.reform.unspec.service.DeadlinesCalculator;
+import uk.gov.hmcts.reform.unspec.service.IssueDateCalculator;
 import uk.gov.hmcts.reform.unspec.validation.DateOfBirthValidator;
 
 import java.time.LocalDate;
@@ -47,6 +49,8 @@ public class CreateClaimCallbackHandler extends CallbackHandler {
 
     private final ClaimIssueConfiguration claimIssueConfiguration;
     private final CaseDetailsConverter caseDetailsConverter;
+    private final IssueDateCalculator issueDateCalculator;
+    private final DeadlinesCalculator deadlinesCalculator;
     private final ReferenceNumberRepository referenceNumberRepository;
     private final DateOfBirthValidator dateOfBirthValidator;
     private final BusinessProcessService businessProcessService;
@@ -56,7 +60,7 @@ public class CreateClaimCallbackHandler extends CallbackHandler {
         return Map.of(
             callbackKey(ABOUT_TO_START), this::emptyCallbackResponse,
             callbackKey(MID, "claimant"), this::validateDateOfBirth,
-            callbackKey(ABOUT_TO_SUBMIT), this::submitClaim,
+            callbackKey(ABOUT_TO_SUBMIT), this::issueClaim,
             callbackKey(SUBMITTED), this::buildConfirmation
         );
     }
@@ -75,12 +79,19 @@ public class CreateClaimCallbackHandler extends CallbackHandler {
             .build();
     }
 
-    private CallbackResponse submitClaim(CallbackParams callbackParams) {
+    private CallbackResponse issueClaim(CallbackParams callbackParams) {
+        LocalDateTime submittedAt = LocalDateTime.now();
+        LocalDate issueDate = issueDateCalculator.calculateIssueDay(submittedAt);
         CaseData caseData = callbackParams.getCaseData();
+        String referenceNumber = referenceNumberRepository.getReferenceNumber();
+        LocalDateTime confirmationOfServiceDeadline = deadlinesCalculator.calculateConfirmationOfServiceDeadline(
+            issueDate);
 
         CaseData.CaseDataBuilder caseDataBuilder = caseData.toBuilder()
-            .legacyCaseReference(referenceNumberRepository.getReferenceNumber())
-            .claimSubmittedDateTime(LocalDateTime.now())
+            .claimIssuedDate(issueDate)
+            .legacyCaseReference(referenceNumber)
+            .claimSubmittedDateTime(submittedAt)
+            .confirmationOfServiceDeadline(confirmationOfServiceDeadline)
             .allocatedTrack(getAllocatedTrack(caseData.getClaimValue().toPounds(), caseData.getClaimType()));
 
         CaseData updatedCaseData = businessProcessService.updateBusinessProcess(caseDataBuilder.build(), CREATE_CLAIM);
