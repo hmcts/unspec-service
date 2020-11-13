@@ -246,8 +246,8 @@ jacocoTestReport.dependsOn {
 
 
 pitest {
-  targetClasses = ['uk.gov.hmcts.reform.unspec.utils.*']
-  excludedClasses = ['uk.gov.hmcts.reform.unspec.advice.*',
+  targetClasses.set(['uk.gov.hmcts.reform.unspec.utils.*'])
+  excludedClasses.set(['uk.gov.hmcts.reform.unspec.advice.*',
                      'uk.gov.hmcts.reform.unspec.config.*',
                      'uk.gov.hmcts.reform.unspec.enums.*',
                      'uk.gov.hmcts.reform.unspec.event.*',
@@ -267,12 +267,11 @@ pitest {
                      'uk.gov.hmcts.reform.unspec.stateflow.*',
                      'uk.gov.hmcts.reform.unspec.stereotypes.*',
                      'uk.gov.hmcts.reform.unspec.Application',
-                     'uk.gov.hmcts.reform.unspec.CaseDefinitionConstants']
-//  excludedMethods = ['fetchDefendantName']
-  threads = 10
-  outputFormats = ['XML', 'HTML']
-  timestampedReports = false
-  mutationThreshold = 80
+                     'uk.gov.hmcts.reform.unspec.CaseDefinitionConstants'])
+    threads.set(4)
+    outputFormats.set(['XML', 'HTML'])
+    timestampedReports.set(false)
+    mutationThreshold.set(80)
 }
 
 
