@@ -266,6 +266,7 @@ pitest {
                      'uk.gov.hmcts.reform.unspec.stereotypes.*',
                      'uk.gov.hmcts.reform.unspec.Application',
                      'uk.gov.hmcts.reform.unspec.CaseDefinitionConstants']
+  excludedMethods = ['fetchDefendantName']
   threads = 10
   outputFormats = ['XML', 'HTML']
   timestampedReports = false
