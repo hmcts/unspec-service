@@ -98,8 +98,12 @@ allprojects {
 sourceSets {
 
   test {
-    java.srcDir 'src/test/java'
-    resources.srcDir 'src/test/resources'
+    java {
+      compileClasspath += main.output
+      runtimeClasspath += main.output
+      srcDir file('src/test/java')
+    }
+    resources.srcDir file('src/test/resources')
   }
 
   functionalTest {
