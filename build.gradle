@@ -31,21 +31,6 @@ allprojects {
   apply plugin: 'com.github.ben-manes.versions'
   apply plugin: 'net.ltgt.apt'
 
-
-
-  def versions = [
-    junit              : '5.7.0',
-    junitPlatform      : '1.7.0',
-    reformLogging      : '5.1.5',
-    springBoot         : springBoot.class.package.implementationVersion,
-    springStatemachine : '3.0.0.M2',
-    springfoxSwagger   : '2.9.2',
-    lombok             : '1.18.12',
-    pact               : '3.5.24',
-    sonarPitest        : '0.5',
-  ]
-
-
   checkstyle {
     maxWarnings = 0
     toolVersion = '8.29'
@@ -290,6 +275,19 @@ pitest {
   mutationThreshold = 80
 }
 
+
+
+def versions = [
+  junit              : '5.7.0',
+  junitPlatform      : '1.7.0',
+  reformLogging      : '5.1.5',
+  springBoot         : springBoot.class.package.implementationVersion,
+  springStatemachine : '3.0.0.M2',
+  springfoxSwagger   : '2.9.2',
+  lombok             : '1.18.12',
+  pact               : '3.5.24',
+  sonarPitest        : '0.5',
+]
 
 ext.libraries = [
   junit5: [
