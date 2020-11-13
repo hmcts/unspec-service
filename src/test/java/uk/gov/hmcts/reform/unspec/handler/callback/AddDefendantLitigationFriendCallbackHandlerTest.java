@@ -15,7 +15,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static uk.gov.hmcts.reform.unspec.callback.CallbackType.ABOUT_TO_START;
 
 @SpringBootTest(classes = {
-    WithdrawClaimCallbackHandler.class,
+    AddDefendantLitigationFriendCallbackHandler.class,
     ValidationAutoConfiguration.class
 })
 class AddDefendantLitigationFriendCallbackHandlerTest extends BaseCallbackHandlerTest {
