@@ -96,17 +96,6 @@ allprojects {
 }
 
 sourceSets {
-
-  Test {
-    java {
-      compileClasspath += main.output
-      runtimeClasspath += main.output
-      srcDir file('src/test/java')
-    }
-    resources.srcDir file('src/test/resources')
-    failFast = true
-  }
-
   functionalTest {
     java {
       compileClasspath += main.output
@@ -156,9 +145,9 @@ tasks.withType(Test) {
   }
 }
 
-//test {
-//  failFast = true
-//}
+test {
+  failFast = true
+}
 
 task integration(type: Test) {
   description = "Runs integration tests"
