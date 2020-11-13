@@ -97,7 +97,7 @@ allprojects {
 
 sourceSets {
 
-  test {
+  Test {
     java {
       compileClasspath += main.output
       runtimeClasspath += main.output
