@@ -1,6 +1,7 @@
 const assert = require('assert').strict;
 
 const request = require('./request.js');
+const {date} = require('./dataHelper');
 
 const data = {
   CREATE_CLAIM: require('../fixtures/events/createClaim.js'),
@@ -21,7 +22,6 @@ module.exports = {
     eventName = 'CREATE_CLAIM';
     await request.setupTokens(user);
     await request.startEvent(eventName);
-
     await validateEventPages();
 
     await assertSubmittedEvent('PENDING_CASE_ISSUED', {
@@ -31,6 +31,9 @@ module.exports = {
   },
 
   confirmService: async () => {
+    // Issue date is no longer set in create claim journey so we need to add manually.
+    caseData.claimIssuedDate = date();
+
     eventName = 'CONFIRM_SERVICE';
     await request.startEvent(eventName, caseId);
     deleteCaseFields('servedDocumentFiles');
@@ -74,7 +77,7 @@ module.exports = {
 
     await assertCallbackError('ProposeDeadline', data[eventName].invalid.ProposeDeadline.past,
       'The proposed deadline must be a date in the future');
-    await assertCallbackError('ProposeDeadline',data[eventName].invalid.ProposeDeadline.beforeCurrentDeadline,
+    await assertCallbackError('ProposeDeadline', data[eventName].invalid.ProposeDeadline.beforeCurrentDeadline,
       'The proposed deadline must be after the current deadline');
 
     await assertSubmittedEvent('CREATED', {
@@ -91,7 +94,7 @@ module.exports = {
 
     await assertCallbackError('Counter', data[eventName].invalid.Counter.past,
       'The proposed deadline must be a date in the future');
-    await assertCallbackError('Counter',data[eventName].invalid.Counter.beforeCurrentDeadline,
+    await assertCallbackError('Counter', data[eventName].invalid.Counter.beforeCurrentDeadline,
       'The proposed deadline must be after the current deadline');
 
     await assertSubmittedEvent('CREATED', {
