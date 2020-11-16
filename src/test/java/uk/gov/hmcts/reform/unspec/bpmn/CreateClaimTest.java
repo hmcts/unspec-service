@@ -4,12 +4,14 @@ import org.camunda.bpm.engine.externaltask.ExternalTask;
 import org.camunda.bpm.engine.variable.VariableMap;
 import org.camunda.bpm.engine.variable.Variables;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.EnumSource;
+import uk.gov.hmcts.reform.unspec.service.flowstate.FlowState;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static uk.gov.hmcts.reform.unspec.callback.CaseEvent.MAKE_PBA_PAYMENT;
 import static uk.gov.hmcts.reform.unspec.service.flowstate.FlowState.Main.PAYMENT_FAILED;
-import static uk.gov.hmcts.reform.unspec.service.flowstate.FlowState.Main.PAYMENT_SUCCESSFUL;
 import static uk.gov.hmcts.reform.unspec.service.tasks.handler.StartBusinessProcessTaskHandler.FLOW_STATE;
 
 class CreateClaimTest extends BpmnBaseTest {
@@ -31,8 +33,13 @@ class CreateClaimTest extends BpmnBaseTest {
         super("create_claim.bpmn", "CREATE_CLAIM_PROCESS_ID");
     }
 
-    @Test
-    void shouldSuccessfullyCompleteCreateClaim_whenPaymentWasSuccessful() {
+    @ParameterizedTest
+    @EnumSource(
+        value = FlowState.Main.class,
+        names = {"PAYMENT_SUCCESSFUL", "CLAIM_ISSUED"},
+        mode = EnumSource.Mode.INCLUDE
+    )
+    void shouldSuccessfullyCompleteCreateClaim_whenPaymentWasSuccessful(FlowState.Main state) {
         //assert process has started
         assertFalse(processInstance.isEnded());
 
@@ -41,7 +48,7 @@ class CreateClaimTest extends BpmnBaseTest {
             .isEqualTo("CREATE_CLAIM_PROCESS_ID");
 
         VariableMap variables = Variables.createVariables();
-        variables.putValue(FLOW_STATE, PAYMENT_SUCCESSFUL.fullName());
+        variables.putValue(FLOW_STATE, state.fullName());
 
         //complete the start business process
         ExternalTask startBusiness = assertNextExternalTask(START_BUSINESS_TOPIC);
