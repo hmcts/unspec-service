@@ -212,8 +212,10 @@ task functional(description: 'Runs the functional tests.') {
 }
 
 pitest {
-  targetClasses = ['uk.gov.hmcts.reform.unspec.*']
-  excludedClasses = []
+  junit5PluginVersion = '0.12'
+  targetClasses = ['uk.gov.hmcts.reform.unspec.utils.CaseNameUtils']
+ // excludedClasses = []
+  targetTests = ['uk.gov.hmcts.reform.unspec.utils.CaseNameUtilsTest']
   threads = 10
   outputFormats = ['XML', 'HTML']
   timestampedReports = false
