@@ -11,10 +11,10 @@ import uk.gov.hmcts.reform.unspec.callback.CallbackParams;
 import uk.gov.hmcts.reform.unspec.callback.CaseEvent;
 import uk.gov.hmcts.reform.unspec.config.ClaimIssueConfiguration;
 import uk.gov.hmcts.reform.unspec.helpers.CaseDetailsConverter;
+import uk.gov.hmcts.reform.unspec.model.BusinessProcess;
 import uk.gov.hmcts.reform.unspec.model.CaseData;
 import uk.gov.hmcts.reform.unspec.model.Party;
 import uk.gov.hmcts.reform.unspec.repositories.ReferenceNumberRepository;
-import uk.gov.hmcts.reform.unspec.service.BusinessProcessService;
 import uk.gov.hmcts.reform.unspec.service.DeadlinesCalculator;
 import uk.gov.hmcts.reform.unspec.service.IssueDateCalculator;
 import uk.gov.hmcts.reform.unspec.validation.DateOfBirthValidator;
@@ -53,7 +53,6 @@ public class CreateClaimCallbackHandler extends CallbackHandler {
     private final DeadlinesCalculator deadlinesCalculator;
     private final ReferenceNumberRepository referenceNumberRepository;
     private final DateOfBirthValidator dateOfBirthValidator;
-    private final BusinessProcessService businessProcessService;
 
     @Override
     protected Map<String, Callback> callbacks() {
@@ -83,21 +82,17 @@ public class CreateClaimCallbackHandler extends CallbackHandler {
         LocalDateTime submittedAt = LocalDateTime.now();
         LocalDate issueDate = issueDateCalculator.calculateIssueDay(submittedAt);
         CaseData caseData = callbackParams.getCaseData();
-        String referenceNumber = referenceNumberRepository.getReferenceNumber();
-        LocalDateTime confirmationOfServiceDeadline = deadlinesCalculator.calculateConfirmationOfServiceDeadline(
-            issueDate);
 
         CaseData.CaseDataBuilder caseDataBuilder = caseData.toBuilder()
             .claimIssuedDate(issueDate)
-            .legacyCaseReference(referenceNumber)
             .claimSubmittedDateTime(submittedAt)
-            .confirmationOfServiceDeadline(confirmationOfServiceDeadline)
-            .allocatedTrack(getAllocatedTrack(caseData.getClaimValue().toPounds(), caseData.getClaimType()));
-
-        CaseData updatedCaseData = businessProcessService.updateBusinessProcess(caseDataBuilder.build(), CREATE_CLAIM);
+            .legacyCaseReference(referenceNumberRepository.getReferenceNumber())
+            .confirmationOfServiceDeadline(deadlinesCalculator.calculateConfirmationOfServiceDeadline(issueDate))
+            .allocatedTrack(getAllocatedTrack(caseData.getClaimValue().toPounds(), caseData.getClaimType()))
+            .businessProcess(BusinessProcess.ready(CREATE_CLAIM));
 
         return AboutToStartOrSubmitCallbackResponse.builder()
-            .data(caseDetailsConverter.toMap(updatedCaseData))
+            .data(caseDetailsConverter.toMap(caseDataBuilder.build()))
             .build();
     }
 
