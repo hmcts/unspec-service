@@ -213,7 +213,7 @@ task functional(description: 'Runs the functional tests.') {
 
 pitest {
   targetClasses = ['uk.gov.hmcts.reform.unspec.utils.CaseNameUtils']
-  excludedClasses = ['uk.gov.hmcts.reform.unspec.*']
+  excludedClasses = []
   threads = 10
   outputFormats = ['XML', 'HTML']
   timestampedReports = false
