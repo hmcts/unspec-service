@@ -84,7 +84,7 @@
       <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${flowState == "MAIN.PAYMENT_FAILED"}</bpmn:conditionExpression>
     </bpmn:sequenceFlow>
     <bpmn:sequenceFlow id="Flow_13gsvoo" sourceRef="Gateway_1tjkoh7" targetRef="GenerateClaimForm">
-      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${flowState == "MAIN.PAYMENT_SUCCESSFUL"}</bpmn:conditionExpression>
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${flowState == "MAIN.PAYMENT_SUCCESSFUL" || flowState == "MAIN.CLAIM_ISSUED"}</bpmn:conditionExpression>
     </bpmn:sequenceFlow>
     <bpmn:sequenceFlow id="Flow_0378r6q" sourceRef="CreateClaimMakePayment" targetRef="Gateway_1tjkoh7" />
     <bpmn:serviceTask id="GenerateClaimForm" name="Generate claim form" camunda:type="external" camunda:topic="processCaseEvent">
@@ -102,6 +102,10 @@
   <bpmn:error id="Error_0t2ju7k" name="StartBusinessAbort" errorCode="ABORT" />
   <bpmndi:BPMNDiagram id="BPMNDiagram_1">
     <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="CREATE_CLAIM_PROCESS_ID">
+      <bpmndi:BPMNEdge id="Flow_05erewm_di" bpmnElement="Flow_05erewm">
+        <di:waypoint x="750" y="120" />
+        <di:waypoint x="800" y="120" />
+      </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_0378r6q_di" bpmnElement="Flow_0378r6q">
         <di:waypoint x="510" y="120" />
         <di:waypoint x="555" y="120" />
@@ -143,10 +147,9 @@
         <di:waypoint x="310" y="178" />
         <di:waypoint x="310" y="272" />
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_05erewm_di" bpmnElement="Flow_05erewm">
-        <di:waypoint x="750" y="120" />
-        <di:waypoint x="800" y="120" />
-      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="Activity_0bn79uc_di" bpmnElement="CreateClaimPaymentSuccessfulNotifyRespondentSolicitor1">
+        <dc:Bounds x="800" y="80" width="100" height="80" />
+      </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Event_1m02c2o_di" bpmnElement="Event_0t2zome">
         <dc:Bounds x="152" y="102" width="36" height="36" />
         <bpmndi:BPMNLabel>
@@ -162,23 +165,14 @@
           <dc:Bounds x="291" y="315" width="39" height="14" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Activity_0nw0wrg_di" bpmnElement="CreateClaimMakePayment">
-        <dc:Bounds x="410" y="80" width="100" height="80" />
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Gateway_1tjkoh7_di" bpmnElement="Gateway_1tjkoh7" isMarkerVisible="true">
-        <dc:Bounds x="555" y="95" width="50" height="50" />
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Activity_0r61zq5_di" bpmnElement="GenerateClaimForm">
-        <dc:Bounds x="650" y="80" width="100" height="80" />
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Activity_0bn79uc_di" bpmnElement="CreateClaimPaymentSuccessfulNotifyRespondentSolicitor1">
-        <dc:Bounds x="800" y="80" width="100" height="80" />
-      </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Event_0r8yo0r_di" bpmnElement="Event_0r8yo0r">
         <dc:Bounds x="1122" y="102" width="36" height="36" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Activity_1x5rl4x_di" bpmnElement="Activity_0wretog">
         <dc:Bounds x="970" y="80" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0nw0wrg_di" bpmnElement="CreateClaimMakePayment">
+        <dc:Bounds x="410" y="80" width="100" height="80" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Activity_03lhz3m_di" bpmnElement="CreateClaimPaymentFailedNotifyApplicantSolicitor1">
         <dc:Bounds x="800" y="190" width="100" height="80" />
@@ -188,6 +182,12 @@
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Event_1ub69h5_di" bpmnElement="Event_1ub69h5">
         <dc:Bounds x="1122" y="212" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Gateway_1tjkoh7_di" bpmnElement="Gateway_1tjkoh7" isMarkerVisible="true">
+        <dc:Bounds x="555" y="95" width="50" height="50" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0r61zq5_di" bpmnElement="GenerateClaimForm">
+        <dc:Bounds x="650" y="80" width="100" height="80" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Event_02d0u09_di" bpmnElement="Event_0xn9cx1">
         <dc:Bounds x="292" y="142" width="36" height="36" />
