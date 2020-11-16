@@ -24,6 +24,8 @@ class CreateClaimTest extends BpmnBaseTest {
         = "CreateClaimPaymentFailedNotifyApplicantSolicitor1";
     private static final String MAKE_PAYMENT_ACTIVITY_ID = "CreateClaimMakePayment";
     public static final String PROCESS_PAYMENT = "processPayment";
+    public static final String GENERATE_CLAIM_FORM = "GENERATE_CLAIM_FORM";
+    public static final String CLAIM_FORM_ACTIVITY_ID = "GenerateClaimForm";
 
     public CreateClaimTest() {
         super("create_claim.bpmn", "CREATE_CLAIM_PROCESS_ID");
@@ -53,6 +55,15 @@ class CreateClaimTest extends BpmnBaseTest {
             MAKE_PBA_PAYMENT.name(),
             MAKE_PAYMENT_ACTIVITY_ID,
             variables
+        );
+
+        //complete the document generation
+        ExternalTask notification = assertNextExternalTask(PROCESS_CASE_EVENT);
+        assertCompleteExternalTask(
+            notification,
+            PROCESS_CASE_EVENT,
+            GENERATE_CLAIM_FORM,
+            CLAIM_FORM_ACTIVITY_ID
         );
 
         //complete the notification
