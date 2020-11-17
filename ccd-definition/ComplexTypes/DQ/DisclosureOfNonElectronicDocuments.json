@@ -1,0 +1,17 @@
+[
+  {
+    "ID": "DisclosureOfNonElectronicDocuments",
+    "ListElementCode": "bespokeDirectionsRequired",
+    "FieldType": "YesOrNo",
+    "ElementLabel": "Are bespoke directions required?",
+    "SecurityClassification": "Public"
+  },
+  {
+    "ID": "DisclosureOfNonElectronicDocuments",
+    "ListElementCode": "bespokeDirections",
+    "FieldType": "Text",
+    "ElementLabel": "What directions are proposed for disclosure?",
+    "FieldShowCondition": "bespokeDirectionsRequired = \"Yes\"",
+    "SecurityClassification": "Public"
+  }
+]

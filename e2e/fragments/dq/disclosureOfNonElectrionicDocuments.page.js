@@ -4,13 +4,23 @@ module.exports = {
 
   fields: function (party) {
     return {
-      directionsProposedForDisclosure: `#${party}DQDisclosureOfNonElectronicDocuments`,
+      bespokeDirectionsRequired: {
+        id: `#${party}DQDisclosureOfNonElectronicDocuments_bespokeDirectionsRequired`,
+        options: {
+          yes: 'Yes',
+          no: 'No'
+        }
+      },
+      bespokeDirections: `#${party}DQDisclosureOfNonElectronicDocuments_bespokeDirections`
     };
   },
 
   async enterDirectionsProposedForDisclosure(party) {
-    I.waitForElement(this.fields(party).directionsProposedForDisclosure);
-    I.fillField(this.fields(party).directionsProposedForDisclosure, 'Reason for no agreement');
+    I.waitForElement(this.fields(party).bespokeDirectionsRequired);
+    await within(this.fields(party).bespokeDirectionsRequired.id, () => {
+      I.click(this.fields(party).bespokeDirectionsRequired.options.yes);
+    });
+    I.fillField(this.fields(party).bespokeDirections, 'Bespoke directions');
 
     await I.clickContinue();
   }
