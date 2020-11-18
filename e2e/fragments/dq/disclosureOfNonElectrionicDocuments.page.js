@@ -11,8 +11,8 @@ module.exports = {
           no: 'No'
         }
       },
-      bespokeDirectionsRequired: {
-        id: `#${party}DQDisclosureOfNonElectronicDocuments_bespokeDirectionsRequired`,
+      standardDirectionsRequired: {
+        id: `#${party}DQDisclosureOfNonElectronicDocuments_standardDirectionsRequired`,
         options: {
           yes: 'Yes',
           no: 'No'
@@ -27,8 +27,8 @@ module.exports = {
     await within(this.fields(party).directionsForDisclosureProposed.id, () => {
       I.click(this.fields(party).directionsForDisclosureProposed.options.yes);
     });
-    await within(this.fields(party).bespokeDirectionsRequired.id, () => {
-      I.click(this.fields(party).bespokeDirectionsRequired.options.yes);
+    await within(this.fields(party).standardDirectionsRequired.id, () => {
+      I.click(this.fields(party).standardDirectionsRequired.options.no);
     });
     I.fillField(this.fields(party).bespokeDirections, 'Bespoke directions');
 

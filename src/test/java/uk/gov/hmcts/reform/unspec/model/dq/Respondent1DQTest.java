@@ -56,7 +56,7 @@ class Respondent1DQTest {
     private DisclosureOfNonElectronicDocuments disclosureOfNonElectronicDocuments() {
         return DisclosureOfNonElectronicDocuments.builder()
             .directionsForDisclosureProposed(YesOrNo.YES)
-            .bespokeDirectionsRequired(YesOrNo.YES)
+            .standardDirectionsRequired(YesOrNo.YES)
             .bespokeDirections("non electronic documents")
             .build();
     }

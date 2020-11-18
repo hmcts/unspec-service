@@ -9,6 +9,6 @@ import uk.gov.hmcts.reform.unspec.enums.YesOrNo;
 public class DisclosureOfNonElectronicDocuments {
 
     private final YesOrNo directionsForDisclosureProposed;
-    private final YesOrNo bespokeDirectionsRequired;
+    private final YesOrNo standardDirectionsRequired;
     private final String bespokeDirections;
 }

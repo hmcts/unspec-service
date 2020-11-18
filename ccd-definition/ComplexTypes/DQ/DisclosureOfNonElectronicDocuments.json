@@ -8,9 +8,9 @@
   },
   {
     "ID": "DisclosureOfNonElectronicDocuments",
-    "ListElementCode": "bespokeDirectionsRequired",
+    "ListElementCode": "standardDirectionsRequired",
     "FieldType": "YesOrNo",
-    "ElementLabel": "Are bespoke directions required?",
+    "ElementLabel": "Do you want standard directions?",
     "FieldShowCondition": "directionsForDisclosureProposed = \"Yes\"",
     "SecurityClassification": "Public"
   },
@@ -19,7 +19,7 @@
     "ListElementCode": "bespokeDirections",
     "FieldType": "Text",
     "ElementLabel": "What directions are proposed for disclosure?",
-    "FieldShowCondition": "bespokeDirectionsRequired = \"Yes\"",
+    "FieldShowCondition": "directionsForDisclosureProposed = \"Yes\" AND standardDirectionsRequired = \"No\"",
     "SecurityClassification": "Public"
   }
 ]
