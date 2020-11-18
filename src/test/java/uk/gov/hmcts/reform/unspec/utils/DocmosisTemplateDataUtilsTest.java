@@ -1,13 +1,18 @@
 package uk.gov.hmcts.reform.unspec.utils;
 
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import uk.gov.hmcts.reform.unspec.model.CaseData;
 import uk.gov.hmcts.reform.unspec.model.Party;
+import uk.gov.hmcts.reform.unspec.model.SolicitorReferences;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static uk.gov.hmcts.reform.unspec.utils.CaseNameUtils.toCaseName;
+import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static uk.gov.hmcts.reform.unspec.utils.DocmosisTemplateDataUtils.fetchSolicitorReferences;
+import static uk.gov.hmcts.reform.unspec.utils.DocmosisTemplateDataUtils.toCaseName;
 
-class CaseNameUtilsTest {
+class DocmosisTemplateDataUtilsTest {
 
     @Test
     void shouldReturnCaseName_whenBothPartiesAreIndividuals() {
@@ -120,5 +125,63 @@ class CaseNameUtilsTest {
 
         String caseName = toCaseName.apply(caseData);
         assertThat(caseName).isEqualTo("Mrs. Georgina Hammersmith T/A EuroStar v Mr. Boris Johnson T/A UberFlip");
+    }
+
+    @Nested
+    class FetchSolicitorReferences {
+
+        @Test
+        void shouldPopulateNotProvided_whenSolicitorReferencesIsNull() {
+            SolicitorReferences solicitorReferences = null;
+            SolicitorReferences result = fetchSolicitorReferences(solicitorReferences);
+            assertAll(
+                "SolicitorReferences not provided",
+                () -> assertEquals("Not Provided", result.getApplicantSolicitor1Reference()),
+                () -> assertEquals("Not Provided", result.getRespondentSolicitor1Reference())
+            );
+        }
+
+        @Test
+        void shouldPopulateNotProvided_whenSolicitorReferencesMissing() {
+            SolicitorReferences solicitorReferences = SolicitorReferences.builder().build();
+            SolicitorReferences result = fetchSolicitorReferences(solicitorReferences);
+            assertAll(
+                "SolicitorReferences not provided",
+                () -> assertEquals("Not Provided", result.getApplicantSolicitor1Reference()),
+                () -> assertEquals("Not Provided", result.getRespondentSolicitor1Reference())
+            );
+        }
+
+        @Test
+        void shouldPopulateProvidedValues_whenSolicitorReferencesAvailable() {
+            SolicitorReferences solicitorReferences = SolicitorReferences
+                .builder()
+                .applicantSolicitor1Reference("Applicant ref")
+                .respondentSolicitor1Reference("Respondent ref")
+                .build();
+
+            SolicitorReferences result = fetchSolicitorReferences(solicitorReferences);
+            assertAll(
+                "SolicitorReferences provided",
+                () -> assertEquals("Applicant ref", result.getApplicantSolicitor1Reference()),
+                () -> assertEquals("Respondent ref", result.getRespondentSolicitor1Reference())
+            );
+        }
+
+        @Test
+        void shouldPopulateNotProvided_whenOneReferencesNotAvailable() {
+            SolicitorReferences solicitorReferences = SolicitorReferences
+                .builder()
+                .applicantSolicitor1Reference("Applicant ref")
+                .build();
+
+            SolicitorReferences result = fetchSolicitorReferences(solicitorReferences);
+
+            assertAll(
+                "SolicitorReferences one is provided",
+                () -> assertEquals("Applicant ref", result.getApplicantSolicitor1Reference()),
+                () -> assertEquals("Not Provided", result.getRespondentSolicitor1Reference())
+            );
+        }
     }
 }

@@ -3,16 +3,19 @@ package uk.gov.hmcts.reform.unspec.utils;
 import org.apache.commons.lang.StringUtils;
 import uk.gov.hmcts.reform.unspec.model.CaseData;
 import uk.gov.hmcts.reform.unspec.model.Party;
+import uk.gov.hmcts.reform.unspec.model.SolicitorReferences;
 
 import java.util.function.Function;
 
-public class CaseNameUtils {
+import static java.util.Optional.ofNullable;
+
+public class DocmosisTemplateDataUtils {
 
     //TODO Need to confirm the case name logic
     public static final Function<CaseData, String> toCaseName = caseData ->
         fetchApplicantName(caseData) + " v " + fetchRespondentName(caseData);
 
-    private CaseNameUtils() {
+    private DocmosisTemplateDataUtils() {
         //NO-OP
     }
 
@@ -49,6 +52,20 @@ public class CaseNameUtils {
         }
 
         return applicantNameBuilder.toString();
+    }
+
+    public static SolicitorReferences fetchSolicitorReferences(SolicitorReferences solicitorReferences) {
+        return SolicitorReferences
+            .builder()
+            .applicantSolicitor1Reference(
+                ofNullable(solicitorReferences)
+                    .map(SolicitorReferences::getApplicantSolicitor1Reference)
+                    .orElse("Not Provided"))
+            .respondentSolicitor1Reference(
+                ofNullable(solicitorReferences)
+                    .map(SolicitorReferences::getRespondentSolicitor1Reference)
+                    .orElse("Not Provided"))
+            .build();
     }
 
     private static void soleTraderCompany(Party party, StringBuilder stringBuilder) {

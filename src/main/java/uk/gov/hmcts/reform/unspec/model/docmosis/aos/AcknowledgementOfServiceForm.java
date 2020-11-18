@@ -5,9 +5,9 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateSerializer;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
-import lombok.experimental.SuperBuilder;
 import uk.gov.hmcts.reform.unspec.model.SolicitorReferences;
 import uk.gov.hmcts.reform.unspec.model.docmosis.DocmosisData;
 import uk.gov.hmcts.reform.unspec.model.docmosis.sealedclaim.Respondent;
@@ -15,7 +15,7 @@ import uk.gov.hmcts.reform.unspec.model.docmosis.sealedclaim.Respondent;
 import java.time.LocalDate;
 
 @Getter
-@SuperBuilder
+@Builder
 @AllArgsConstructor
 @EqualsAndHashCode
 public class AcknowledgementOfServiceForm implements DocmosisData {

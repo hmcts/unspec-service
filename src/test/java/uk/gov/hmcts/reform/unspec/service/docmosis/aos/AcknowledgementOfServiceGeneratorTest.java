@@ -1,6 +1,5 @@
 package uk.gov.hmcts.reform.unspec.service.docmosis.aos;
 
-import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,7 +8,6 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import uk.gov.hmcts.reform.unspec.model.CaseData;
-import uk.gov.hmcts.reform.unspec.model.SolicitorReferences;
 import uk.gov.hmcts.reform.unspec.model.docmosis.DocmosisData;
 import uk.gov.hmcts.reform.unspec.model.docmosis.DocmosisDocument;
 import uk.gov.hmcts.reform.unspec.model.docmosis.aos.AcknowledgementOfServiceForm;
@@ -23,8 +21,6 @@ import uk.gov.hmcts.reform.unspec.service.documentmanagement.DocumentManagementS
 
 import static java.lang.String.format;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertAll;
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.verify;
@@ -88,63 +84,5 @@ class AcknowledgementOfServiceGeneratorTest {
             .uploadDocument(BEARER_TOKEN, new PDF(fileName, bytes, ACKNOWLEDGEMENT_OF_SERVICE));
         verify(documentGeneratorService)
             .generateDocmosisDocument(expectedDocmosisData, N9);
-    }
-
-    @Nested
-    class PrepareSolicitorReferences {
-
-        @Test
-        void shouldPopulateNotProvided_whenSolicitorReferencesIsNull() {
-            SolicitorReferences solicitorReferences = null;
-            SolicitorReferences result = generator.prepareSolicitorReferences(solicitorReferences);
-            assertAll(
-                "SolicitorReferences not provided",
-                () -> assertEquals("Not Provided", result.getApplicantSolicitor1Reference()),
-                () -> assertEquals("Not Provided", result.getRespondentSolicitor1Reference())
-            );
-        }
-
-        @Test
-        void shouldPopulateNotProvided_whenSolicitorReferencesMissing() {
-            SolicitorReferences solicitorReferences = SolicitorReferences.builder().build();
-            SolicitorReferences result = generator.prepareSolicitorReferences(solicitorReferences);
-            assertAll(
-                "SolicitorReferences not provided",
-                () -> assertEquals("Not Provided", result.getApplicantSolicitor1Reference()),
-                () -> assertEquals("Not Provided", result.getRespondentSolicitor1Reference())
-            );
-        }
-
-        @Test
-        void shouldPopulateProvidedValues_whenSolicitorReferencesAvailable() {
-            SolicitorReferences solicitorReferences = SolicitorReferences
-                .builder()
-                .applicantSolicitor1Reference("Applicant ref")
-                .respondentSolicitor1Reference("Respondent ref")
-                .build();
-
-            SolicitorReferences result = generator.prepareSolicitorReferences(solicitorReferences);
-            assertAll(
-                "SolicitorReferences provided",
-                () -> assertEquals("Applicant ref", result.getApplicantSolicitor1Reference()),
-                () -> assertEquals("Respondent ref", result.getRespondentSolicitor1Reference())
-            );
-        }
-
-        @Test
-        void shouldPopulateNotProvided_whenOneReferencesNotAvailable() {
-            SolicitorReferences solicitorReferences = SolicitorReferences
-                .builder()
-                .applicantSolicitor1Reference("Applicant ref")
-                .build();
-
-            SolicitorReferences result = generator.prepareSolicitorReferences(solicitorReferences);
-
-            assertAll(
-                "SolicitorReferences one is provided",
-                () -> assertEquals("Applicant ref", result.getApplicantSolicitor1Reference()),
-                () -> assertEquals("Not Provided", result.getRespondentSolicitor1Reference())
-            );
-        }
     }
 }
