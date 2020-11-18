@@ -96,6 +96,9 @@ public class CertificateOfServiceGenerator implements TemplateDataGenerator<Cert
     }
 
     public String prepareServedLocation(ServiceLocation serviceLocation) {
+        if (serviceLocation == null) {
+            return null;
+        }
         if (serviceLocation.getLocation() == ServiceLocationType.OTHER) {
             return ServiceLocationType.OTHER.getLabel() + " - " + serviceLocation.getOther();
         }
