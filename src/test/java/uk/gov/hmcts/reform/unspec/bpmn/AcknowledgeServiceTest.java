@@ -37,7 +37,8 @@ class AcknowledgeServiceTest extends BpmnBaseTest {
 
         //complete the notification to applicant
         ExternalTask notification = assertNextExternalTask(PROCESS_CASE_EVENT);
-        assertCompleteExternalTask(notification, PROCESS_CASE_EVENT, NOTIFY_APPLICANT_SOLICITOR_1, NOTIFICATION_ACTIVITY_ID);
+        assertCompleteExternalTask(notification, PROCESS_CASE_EVENT, NOTIFY_APPLICANT_SOLICITOR_1,
+                                   NOTIFICATION_ACTIVITY_ID);
 
         //end business process
         ExternalTask endBusinessProcess = assertNextExternalTask(END_BUSINESS_PROCESS);
