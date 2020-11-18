@@ -8,6 +8,7 @@ import uk.gov.hmcts.reform.unspec.enums.YesOrNo;
 @Builder
 public class DisclosureOfNonElectronicDocuments {
 
+    private final YesOrNo directionsForDisclosureProposed;
     private final YesOrNo bespokeDirectionsRequired;
     private final String bespokeDirections;
 }
