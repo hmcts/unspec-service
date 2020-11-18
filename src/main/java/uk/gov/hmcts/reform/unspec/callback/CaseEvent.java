@@ -42,7 +42,8 @@ public enum CaseEvent {
     MAKE_PBA_PAYMENT("Make PBA payment", CAMUNDA),
     GENERATE_CERTIFICATE_OF_SERVICE("Generate certificate of service", CAMUNDA),
     NOTIFY_APPLICANT_SOLICITOR1_FOR_FAILED_PAYMENT("Notify failed payment", CAMUNDA),
-    GENERATE_CLAIM_FORM("Generate claim certificate", CAMUNDA);
+    GENERATE_CLAIM_FORM("Generate claim certificate", CAMUNDA),
+    GENERATE_ACKNOWLEDGEMENT_OF_SERVICE("Generate acknowledgement of service", CAMUNDA);
 
     private final String displayName;
     private final UserType userType;

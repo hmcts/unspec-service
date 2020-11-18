@@ -1,31 +1,25 @@
-package uk.gov.hmcts.reform.unspec.service.docmosis.cos;
+package uk.gov.hmcts.reform.unspec.service.docmosis.aos;
 
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.EnumSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.jackson.JacksonAutoConfiguration;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
-import uk.gov.hmcts.reform.unspec.enums.ServedDocuments;
-import uk.gov.hmcts.reform.unspec.enums.ServiceLocationType;
 import uk.gov.hmcts.reform.unspec.model.CaseData;
-import uk.gov.hmcts.reform.unspec.model.ServiceLocation;
 import uk.gov.hmcts.reform.unspec.model.SolicitorReferences;
 import uk.gov.hmcts.reform.unspec.model.docmosis.DocmosisData;
 import uk.gov.hmcts.reform.unspec.model.docmosis.DocmosisDocument;
-import uk.gov.hmcts.reform.unspec.model.docmosis.cos.CertificateOfServiceForm;
+import uk.gov.hmcts.reform.unspec.model.docmosis.aos.AcknowledgementOfServiceForm;
+import uk.gov.hmcts.reform.unspec.model.docmosis.sealedclaim.Respondent;
 import uk.gov.hmcts.reform.unspec.model.documents.CaseDocument;
 import uk.gov.hmcts.reform.unspec.model.documents.PDF;
 import uk.gov.hmcts.reform.unspec.sampledata.CaseDataBuilder;
 import uk.gov.hmcts.reform.unspec.sampledata.CaseDocumentBuilder;
 import uk.gov.hmcts.reform.unspec.service.docmosis.DocumentGeneratorService;
 import uk.gov.hmcts.reform.unspec.service.documentmanagement.DocumentManagementService;
-
-import java.util.List;
 
 import static java.lang.String.format;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -35,23 +29,24 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static uk.gov.hmcts.reform.unspec.model.documents.DocumentType.CERTIFICATE_OF_SERVICE;
-import static uk.gov.hmcts.reform.unspec.service.docmosis.DocmosisTemplates.N215;
+import static uk.gov.hmcts.reform.unspec.model.documents.DocumentType.ACKNOWLEDGEMENT_OF_SERVICE;
+import static uk.gov.hmcts.reform.unspec.sampledata.CaseDataBuilder.LEGACY_CASE_REFERENCE;
+import static uk.gov.hmcts.reform.unspec.service.docmosis.DocmosisTemplates.N9;
 
 @ExtendWith(SpringExtension.class)
 @ContextConfiguration(classes = {
-    CertificateOfServiceGenerator.class,
+    AcknowledgementOfServiceGenerator.class,
     JacksonAutoConfiguration.class
 })
-class CertificateOfServiceGeneratorTest {
+class AcknowledgementOfServiceGeneratorTest {
 
     private static final String BEARER_TOKEN = "Bearer Token";
     private static final String REFERENCE_NUMBER = "000LR001";
     private static final byte[] bytes = {1, 2, 3, 4, 5, 6};
-    private static final String fileName = format(N215.getDocumentTitle(), REFERENCE_NUMBER);
+    private static final String fileName = format(N9.getDocumentTitle(), REFERENCE_NUMBER);
     private static final CaseDocument CASE_DOCUMENT = CaseDocumentBuilder.builder()
         .documentName(fileName)
-        .documentType(CERTIFICATE_OF_SERVICE)
+        .documentType(ACKNOWLEDGEMENT_OF_SERVICE)
         .build();
 
     @MockBean
@@ -61,25 +56,38 @@ class CertificateOfServiceGeneratorTest {
     private DocumentGeneratorService documentGeneratorService;
 
     @Autowired
-    private CertificateOfServiceGenerator generator;
+    private AcknowledgementOfServiceGenerator generator;
 
     @Test
     void shouldGenerateCertificateOfService_whenValidDataIsProvided() {
-        when(documentGeneratorService.generateDocmosisDocument(any(DocmosisData.class), eq(N215)))
-            .thenReturn(new DocmosisDocument(N215.getDocumentTitle(), bytes));
+        when(documentGeneratorService.generateDocmosisDocument(any(DocmosisData.class), eq(N9)))
+            .thenReturn(new DocmosisDocument(N9.getDocumentTitle(), bytes));
 
         when(documentManagementService
-                 .uploadDocument(BEARER_TOKEN, new PDF(fileName, bytes, CERTIFICATE_OF_SERVICE)))
+                 .uploadDocument(BEARER_TOKEN, new PDF(fileName, bytes, ACKNOWLEDGEMENT_OF_SERVICE)))
             .thenReturn(CASE_DOCUMENT);
 
-        CaseData caseData = CaseDataBuilder.builder().atStateServiceConfirmed().build();
+        CaseData caseData = CaseDataBuilder.builder().atStateServiceAcknowledge().build();
+
+        AcknowledgementOfServiceForm expectedDocmosisData = AcknowledgementOfServiceForm.builder()
+            .caseName("Mr. John Rambo v Mr. Sole Trader T/A Sole Trader co")
+            .referenceNumber(LEGACY_CASE_REFERENCE)
+            .solicitorReferences(caseData.getSolicitorReferences())
+            .claimIssuedDate(caseData.getClaimIssuedDate())
+            .responseDeadline(caseData.getRespondentSolicitor1ResponseDeadline().toLocalDate())
+            .respondent(Respondent.builder()
+                            .name(caseData.getRespondent1().getPartyName())
+                            .primaryAddress(caseData.getRespondent1().getPrimaryAddress())
+                            .build())
+            .build();
+
         CaseDocument caseDocument = generator.generate(caseData, BEARER_TOKEN);
         assertThat(caseDocument).isNotNull().isEqualTo(CASE_DOCUMENT);
 
         verify(documentManagementService)
-            .uploadDocument(BEARER_TOKEN, new PDF(fileName, bytes, CERTIFICATE_OF_SERVICE));
+            .uploadDocument(BEARER_TOKEN, new PDF(fileName, bytes, ACKNOWLEDGEMENT_OF_SERVICE));
         verify(documentGeneratorService)
-            .generateDocmosisDocument(any(CertificateOfServiceForm.class), eq(N215));
+            .generateDocmosisDocument(expectedDocmosisData, N9);
     }
 
     @Nested
@@ -137,63 +145,6 @@ class CertificateOfServiceGeneratorTest {
                 () -> assertEquals("Applicant ref", result.getApplicantSolicitor1Reference()),
                 () -> assertEquals("Not Provided", result.getRespondentSolicitor1Reference())
             );
-        }
-    }
-
-    @Nested
-    class PrepareServedLocation {
-
-        @ParameterizedTest
-        @EnumSource(value = ServiceLocationType.class, names = {"BUSINESS", "RESIDENCE"})
-        void shouldPrepareLocation_whenLocationTypeIsNotOther(ServiceLocationType type) {
-            ServiceLocation serviceLocation = ServiceLocation
-                .builder()
-                .location(type)
-                .build();
-
-            String location = generator.prepareServedLocation(serviceLocation);
-
-            assertEquals(type.getLabel(), location);
-        }
-
-        @Test
-        void shouldPrepareLocation_whenLocationTypeIsOther() {
-            ServiceLocation serviceLocation = ServiceLocation
-                .builder()
-                .location(ServiceLocationType.OTHER)
-                .build();
-
-            String location = generator.prepareServedLocation(serviceLocation);
-
-            assertEquals(ServiceLocationType.OTHER.getLabel() + " - " + serviceLocation.getOther(), location);
-        }
-    }
-
-    @Nested
-    class PrepareDocumentList {
-
-        @ParameterizedTest
-        @EnumSource(
-            value = ServedDocuments.class,
-            names = {"OTHER"},
-            mode = EnumSource.Mode.EXCLUDE
-
-        )
-        void shouldPrepareDocument_whenServedDocumentIsNotOthers(ServedDocuments servedDocument) {
-            List<ServedDocuments> servedDocuments = List.of(servedDocument);
-
-            String documentList = generator.prepareDocumentList(servedDocuments, "");
-
-            assertEquals(servedDocument.getLabel(), documentList);
-        }
-
-        @Test
-        void shouldPrepareDocument_whenServedDocumentsIncludeOthers() {
-            List<ServedDocuments> servedDocuments = List.of(ServedDocuments.CLAIM_FORM, ServedDocuments.OTHER);
-
-            String documentList = generator.prepareDocumentList(servedDocuments, "Some other");
-
-            assertEquals(ServedDocuments.CLAIM_FORM.getLabel() + "\n" + "Other - Some other", documentList);
         }
     }
 }
