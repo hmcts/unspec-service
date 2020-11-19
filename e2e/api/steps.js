@@ -71,6 +71,7 @@ module.exports = {
 
   requestExtension: async () => {
     eventName = 'REQUEST_EXTENSION';
+    deleteCaseFields('systemGeneratedCaseDocuments');
     await request.startEvent(eventName, caseId);
 
     await validateEventPages();
@@ -162,10 +163,6 @@ const assertValidData = async (pageId) => {
   const response = await request.validatePage(eventName, pageId, caseData);
   const responseBody = await response.json();
 
-  if (response.status !== 200) {
-    console.log(responseBody);
-  }
-
   assert.equal(response.status, 200);
   assert.deepEqual(responseBody.data, caseData);
 };
@@ -183,10 +180,6 @@ const assertSubmittedEvent = async (expectedState, submittedCallbackResponseCont
   await request.startEvent(eventName, caseId);
   const response = await request.submitEvent(eventName, caseData, caseId);
   const responseBody = await response.json();
-
-  if (response.status !== 201) {
-    console.log(responseBody);
-  }
 
   assert.equal(response.status, 201);
   assert.equal(responseBody.state, expectedState);
