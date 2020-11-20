@@ -6,7 +6,6 @@ import java.util.Objects;
 import java.util.function.Predicate;
 
 import static uk.gov.hmcts.reform.unspec.enums.CaseState.CLOSED;
-import static uk.gov.hmcts.reform.unspec.enums.CaseState.PENDING_CASE_ISSUED;
 import static uk.gov.hmcts.reform.unspec.enums.CaseState.STAYED;
 import static uk.gov.hmcts.reform.unspec.enums.PaymentStatus.FAILED;
 import static uk.gov.hmcts.reform.unspec.enums.PaymentStatus.SUCCESS;
@@ -14,8 +13,7 @@ import static uk.gov.hmcts.reform.unspec.enums.PaymentStatus.SUCCESS;
 public class FlowPredicate {
 
     public static final Predicate<CaseData> pendingCaseIssued = caseData ->
-        caseData.getClaimIssuedDate() != null
-            && caseData.getLegacyCaseReference() != null;
+        caseData.getClaimSubmittedDateTime() != null;
 
     public static final Predicate<CaseData> paymentFailed = caseData ->
         caseData.getPaymentDetails() != null && caseData.getPaymentDetails().getStatus() == FAILED;
@@ -24,27 +22,27 @@ public class FlowPredicate {
         caseData.getPaymentDetails() != null && caseData.getPaymentDetails().getStatus() == SUCCESS;
 
     public static final Predicate<CaseData> claimIssued = caseData ->
-        caseData.getCcdState() != PENDING_CASE_ISSUED;
+        caseData.getClaimIssuedDate() != null;
 
-    public static final Predicate<CaseData> claimantConfirmService = caseData ->
+    public static final Predicate<CaseData> applicantConfirmService = caseData ->
         caseData.getDeemedServiceDateToRespondentSolicitor1() != null
             && Objects.isNull(caseData.getWithdrawClaim())
             && Objects.isNull(caseData.getDiscontinueClaim());
 
-    public static final Predicate<CaseData> defendantAcknowledgeService = caseData ->
+    public static final Predicate<CaseData> respondentAcknowledgeService = caseData ->
         caseData.getRespondent1ClaimResponseIntentionType() != null
             && caseData.getRespondent1ClaimResponseDocument() == null;
 
-    public static final Predicate<CaseData> defendantRespondToClaim = caseData ->
+    public static final Predicate<CaseData> respondentRespondToClaim = caseData ->
         caseData.getRespondent1ClaimResponseDocument() != null;
 
-    public static final Predicate<CaseData> defendantAskForAnExtension = caseData ->
+    public static final Predicate<CaseData> respondentAskForAnExtension = caseData ->
         caseData.getRespondentSolicitor1claimResponseExtensionProposedDeadline() != null;
 
-    public static final Predicate<CaseData> claimantRespondToRequestForExtension = caseData ->
+    public static final Predicate<CaseData> applicantRespondToRequestForExtension = caseData ->
         caseData.getRespondentSolicitor1claimResponseExtensionAccepted() != null;
 
-    public static final Predicate<CaseData> claimantRespondToDefence = caseData ->
+    public static final Predicate<CaseData> applicantRespondToDefence = caseData ->
         caseData.getApplicant1ProceedWithClaim() != null
             && caseData.getApplicant1DefenceResponseDocument() != null;
 
