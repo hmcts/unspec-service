@@ -23,6 +23,6 @@ public class RootController {
      */
     @GetMapping("/")
     public ResponseEntity<String> welcome() {
-        return ok("<link rel=\"icon\" href=\"data:;base64,iVBORw0KGgo=\">"+"Welcome to unspec-service");
+        return ok("Welcome to unspec-service");
     }
 }
