@@ -9,7 +9,7 @@ plugins {
   id 'org.sonarqube' version '3.0'
   id 'au.com.dius.pact' version '4.1.11'
   id "io.freefair.lombok" version "5.3.0"
-  id "org.flywaydb.flyway" version "7.2.0"
+  id "org.flywaydb.flyway" version "7.2.1"
   id 'net.ltgt.apt' version '0.21'
 }
 
@@ -312,8 +312,8 @@ dependencies {
   implementation group: 'org.apache.logging.log4j', name: 'log4j-api', version: '2.14.0'
   implementation group: 'org.apache.logging.log4j', name: 'log4j-to-slf4j', version: '2.14.0'
 
-  implementation group: 'org.apache.tomcat.embed', name: 'tomcat-embed-core', version: '9.0.39'
-  implementation group: 'org.apache.tomcat.embed', name: 'tomcat-embed-websocket', version: '9.0.39'
+  implementation group: 'org.apache.tomcat.embed', name: 'tomcat-embed-core', version: '9.0.40'
+  implementation group: 'org.apache.tomcat.embed', name: 'tomcat-embed-websocket', version: '9.0.40'
 
   implementation group: 'org.elasticsearch', name: 'elasticsearch', version: '7.10.0'
 
