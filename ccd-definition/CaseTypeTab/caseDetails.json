@@ -1,0 +1,232 @@
+[
+  {
+    "LiveFrom": "01/01/2017",
+    "CaseTypeID": "UNSPECIFIED_CLAIMS",
+    "Channel": "CaseWorker",
+    "TabID": "CaseDetails",
+    "TabLabel": "Case details",
+    "TabDisplayOrder": 7,
+    "CaseFieldID": "courtLocation",
+    "TabFieldDisplayOrder": 1
+  },
+  {
+    "LiveFrom": "01/01/2017",
+    "CaseTypeID": "UNSPECIFIED_CLAIMS",
+    "Channel": "CaseWorker",
+    "TabID": "CaseDetails",
+    "TabLabel": "Case details",
+    "TabDisplayOrder": 7,
+    "CaseFieldID": "confirmationOfServiceDeadline",
+    "TabFieldDisplayOrder": 2
+  },
+  {
+    "LiveFrom": "01/01/2017",
+    "CaseTypeID": "UNSPECIFIED_CLAIMS",
+    "Channel": "CaseWorker",
+    "TabID": "CaseDetails",
+    "TabLabel": "Case details",
+    "TabDisplayOrder": 7,
+    "CaseFieldID": "servedDocuments",
+    "TabFieldDisplayOrder": 3
+  },
+  {
+    "LiveFrom": "01/01/2017",
+    "CaseTypeID": "UNSPECIFIED_CLAIMS",
+    "Channel": "CaseWorker",
+    "TabID": "CaseDetails",
+    "TabLabel": "Case details",
+    "TabDisplayOrder": 7,
+    "CaseFieldID": "servedDocumentsOther",
+    "TabFieldDisplayOrder": 4
+  },
+  {
+    "LiveFrom": "01/01/2017",
+    "CaseTypeID": "UNSPECIFIED_CLAIMS",
+    "Channel": "CaseWorker",
+    "TabID": "CaseDetails",
+    "TabLabel": "Case details",
+    "TabDisplayOrder": 7,
+    "CaseFieldID": "serviceMethodToRespondentSolicitor1",
+    "TabFieldDisplayOrder": 5
+  },
+  {
+    "LiveFrom": "01/01/2017",
+    "CaseTypeID": "UNSPECIFIED_CLAIMS",
+    "Channel": "CaseWorker",
+    "TabID": "CaseDetails",
+    "TabLabel": "Case details",
+    "TabDisplayOrder": 7,
+    "CaseFieldID": "serviceNamedPersonToRespondentSolicitor1",
+    "TabFieldDisplayOrder": 6
+  },
+  {
+    "LiveFrom": "01/01/2017",
+    "CaseTypeID": "UNSPECIFIED_CLAIMS",
+    "Channel": "CaseWorker",
+    "TabID": "CaseDetails",
+    "TabLabel": "Case details",
+    "TabDisplayOrder": 7,
+    "CaseFieldID": "serviceLocationToRespondentSolicitor1",
+    "TabFieldDisplayOrder": 7
+  },
+  {
+    "LiveFrom": "01/01/2017",
+    "CaseTypeID": "UNSPECIFIED_CLAIMS",
+    "Channel": "CaseWorker",
+    "TabID": "CaseDetails",
+    "TabLabel": "Case details",
+    "TabDisplayOrder": 7,
+    "CaseFieldID": "serviceDateToRespondentSolicitor1",
+    "TabFieldDisplayOrder": 8
+  },
+  {
+    "LiveFrom": "01/01/2017",
+    "CaseTypeID": "UNSPECIFIED_CLAIMS",
+    "Channel": "CaseWorker",
+    "TabID": "CaseDetails",
+    "TabLabel": "Case details",
+    "TabDisplayOrder": 7,
+    "CaseFieldID": "serviceDateTimeToRespondentSolicitor1",
+    "TabFieldDisplayOrder": 9
+  },
+  {
+    "LiveFrom": "01/01/2017",
+    "CaseTypeID": "UNSPECIFIED_CLAIMS",
+    "Channel": "CaseWorker",
+    "TabID": "CaseDetails",
+    "TabLabel": "Case details",
+    "TabDisplayOrder": 7,
+    "CaseFieldID": "deemedServiceDateToRespondentSolicitor1",
+    "TabFieldDisplayOrder": 10
+  },
+  {
+    "LiveFrom": "01/01/2017",
+    "CaseTypeID": "UNSPECIFIED_CLAIMS",
+    "Channel": "CaseWorker",
+    "TabID": "CaseDetails",
+    "TabLabel": "Case details",
+    "TabDisplayOrder": 7,
+    "CaseFieldID": "respondentSolicitor1ResponseDeadline",
+    "TabFieldDisplayOrder": 11
+  },
+  {
+    "LiveFrom": "01/01/2017",
+    "CaseTypeID": "UNSPECIFIED_CLAIMS",
+    "Channel": "CaseWorker",
+    "TabID": "CaseDetails",
+    "TabLabel": "Case details",
+    "TabDisplayOrder": 7,
+    "CaseFieldID": "respondentSolicitor1claimResponseExtensionProposedDeadline",
+    "TabFieldDisplayOrder": 12
+  },
+  {
+    "LiveFrom": "01/01/2017",
+    "CaseTypeID": "UNSPECIFIED_CLAIMS",
+    "Channel": "CaseWorker",
+    "TabID": "CaseDetails",
+    "TabLabel": "Case details",
+    "TabDisplayOrder": 7,
+    "CaseFieldID": "respondentSolicitor1claimResponseExtensionAlreadyAgreed",
+    "TabFieldDisplayOrder": 13
+  },
+  {
+    "LiveFrom": "01/01/2017",
+    "CaseTypeID": "UNSPECIFIED_CLAIMS",
+    "Channel": "CaseWorker",
+    "TabID": "CaseDetails",
+    "TabLabel": "Case details",
+    "TabDisplayOrder": 7,
+    "CaseFieldID": "respondentSolicitor1claimResponseExtensionReason",
+    "TabFieldDisplayOrder": 14
+  },
+  {
+    "LiveFrom": "01/01/2017",
+    "CaseTypeID": "UNSPECIFIED_CLAIMS",
+    "Channel": "CaseWorker",
+    "TabID": "CaseDetails",
+    "TabLabel": "Case details",
+    "TabDisplayOrder": 7,
+    "CaseFieldID": "respondentSolicitor1claimResponseExtensionAccepted",
+    "TabFieldDisplayOrder": 15
+  },
+  {
+    "LiveFrom": "01/01/2017",
+    "CaseTypeID": "UNSPECIFIED_CLAIMS",
+    "Channel": "CaseWorker",
+    "TabID": "CaseDetails",
+    "TabLabel": "Case details",
+    "TabDisplayOrder": 7,
+    "CaseFieldID": "respondentSolicitor1claimResponseExtensionCounter",
+    "TabFieldDisplayOrder": 16
+  },
+  {
+    "LiveFrom": "01/01/2017",
+    "CaseTypeID": "UNSPECIFIED_CLAIMS",
+    "Channel": "CaseWorker",
+    "TabID": "CaseDetails",
+    "TabLabel": "Case details",
+    "TabDisplayOrder": 7,
+    "CaseFieldID": "respondentSolicitor1claimResponseExtensionCounterDate",
+    "TabFieldDisplayOrder": 17
+  },
+  {
+    "LiveFrom": "01/01/2017",
+    "CaseTypeID": "UNSPECIFIED_CLAIMS",
+    "Channel": "CaseWorker",
+    "TabID": "CaseDetails",
+    "TabLabel": "Case details",
+    "TabDisplayOrder": 7,
+    "CaseFieldID": "respondentSolicitor1claimResponseExtensionRejectionReason",
+    "TabFieldDisplayOrder": 18
+  },
+  {
+    "LiveFrom": "01/01/2017",
+    "CaseTypeID": "UNSPECIFIED_CLAIMS",
+    "Channel": "CaseWorker",
+    "TabID": "CaseDetails",
+    "TabLabel": "Case details",
+    "TabDisplayOrder": 7,
+    "CaseFieldID": "respondent1ClaimResponseIntentionType",
+    "TabFieldDisplayOrder": 19
+  },
+  {
+    "LiveFrom": "01/01/2017",
+    "CaseTypeID": "UNSPECIFIED_CLAIMS",
+    "Channel": "CaseWorker",
+    "TabID": "CaseDetails",
+    "TabLabel": "Case details",
+    "TabDisplayOrder": 7,
+    "CaseFieldID": "respondent1ClaimResponseType",
+    "TabFieldDisplayOrder": 20
+  },
+  {
+    "LiveFrom": "01/01/2017",
+    "CaseTypeID": "UNSPECIFIED_CLAIMS",
+    "Channel": "CaseWorker",
+    "TabID": "CaseDetails",
+    "TabLabel": "Case details",
+    "TabDisplayOrder": 7,
+    "CaseFieldID": "applicantSolicitorResponseDeadlineToRespondentSolicitor1",
+    "TabFieldDisplayOrder": 21
+  },
+  {
+    "LiveFrom": "01/01/2017",
+    "CaseTypeID": "UNSPECIFIED_CLAIMS",
+    "Channel": "CaseWorker",
+    "TabID": "CaseDetails",
+    "TabLabel": "Case details",
+    "TabDisplayOrder": 7,
+    "CaseFieldID": "applicant1ProceedWithClaim",
+    "TabFieldDisplayOrder": 22
+  },
+  {
+    "LiveFrom": "01/01/2017",
+    "CaseTypeID": "UNSPECIFIED_CLAIMS",
+    "Channel": "CaseWorker",
+    "TabID": "CaseDetails",
+    "TabLabel": "Case details",
+    "TabDisplayOrder": 7,
+    "CaseFieldID": "applicant1NotProceedingReason",
+    "TabFieldDisplayOrder": 23
+  }
+]

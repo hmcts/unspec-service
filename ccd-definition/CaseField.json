@@ -711,5 +711,13 @@
     "Label": "Details of PBA payment",
     "FieldType": "PaymentDetails",
     "SecurityClassification": "Public"
+  },
+  {
+    "LiveFrom": "01/01/2017",
+    "CaseTypeID": "UNSPECIFIED_CLAIMS",
+    "ID": "paymentHistory",
+    "Label": "A history of payments associated with a the case",
+    "FieldType": "CasePaymentHistoryViewer",
+    "SecurityClassification": "Public"
   }
 ]

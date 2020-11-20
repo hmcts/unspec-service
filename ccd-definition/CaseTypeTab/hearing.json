@@ -1,0 +1,38 @@
+[
+  {
+    "CaseTypeID": "UNSPECIFIED_CLAIMS",
+    "Channel": "CaseWorker",
+    "TabID": "Hearing",
+    "TabLabel": "Hearing",
+    "TabDisplayOrder": 6,
+    "CaseFieldID": "respondent1DQHearingSupport",
+    "TabFieldDisplayOrder": 1
+  },
+  {
+    "CaseTypeID": "UNSPECIFIED_CLAIMS",
+    "Channel": "CaseWorker",
+    "TabID": "Hearing",
+    "TabLabel": "Hearing",
+    "TabDisplayOrder": 6,
+    "CaseFieldID": "respondent1DQFurtherInformation",
+    "TabFieldDisplayOrder": 2
+  },
+  {
+    "CaseTypeID": "UNSPECIFIED_CLAIMS",
+    "Channel": "CaseWorker",
+    "TabID": "Hearing",
+    "TabLabel": "Hearing",
+    "TabDisplayOrder": 6,
+    "CaseFieldID": "applicant1DQHearingSupport",
+    "TabFieldDisplayOrder": 3
+  },
+  {
+    "CaseTypeID": "UNSPECIFIED_CLAIMS",
+    "Channel": "CaseWorker",
+    "TabID": "Hearing",
+    "TabLabel": "Hearing",
+    "TabDisplayOrder": 6,
+    "CaseFieldID": "applicant1DQFurtherInformation",
+    "TabFieldDisplayOrder": 4
+  }
+]

@@ -1,0 +1,48 @@
+[
+  {
+    "CaseTypeID": "UNSPECIFIED_CLAIMS",
+    "TabID": "CaseDocuments",
+    "Channel": "CaseWorker",
+    "TabLabel": "Documents",
+    "TabDisplayOrder": 5,
+    "CaseFieldID": "systemGeneratedCaseDocuments",
+    "TabFieldDisplayOrder": 1,
+    "DisplayContextParameter": "#TABLE(documentType, documentLink)"
+  },
+  {
+    "CaseTypeID": "UNSPECIFIED_CLAIMS",
+    "TabID": "CaseDocuments",
+    "Channel": "CaseWorker",
+    "TabLabel": "Documents",
+    "TabDisplayOrder": 5,
+    "CaseFieldID": "respondent1ClaimResponseDocument",
+    "TabFieldDisplayOrder": 2
+  },
+  {
+    "CaseTypeID": "UNSPECIFIED_CLAIMS",
+    "TabID": "CaseDocuments",
+    "Channel": "CaseWorker",
+    "TabLabel": "Documents",
+    "TabDisplayOrder": 5,
+    "CaseFieldID": "applicant1DefenceResponseDocument",
+    "TabFieldDisplayOrder": 3
+  },
+  {
+    "CaseTypeID": "UNSPECIFIED_CLAIMS",
+    "TabID": "CaseDocuments",
+    "Channel": "CaseWorker",
+    "TabLabel": "Documents",
+    "TabDisplayOrder": 5,
+    "CaseFieldID": "respondent1DQDraftDirections",
+    "TabFieldDisplayOrder": 4
+  },
+  {
+    "CaseTypeID": "UNSPECIFIED_CLAIMS",
+    "TabID": "CaseDocuments",
+    "Channel": "CaseWorker",
+    "TabLabel": "Documents",
+    "TabDisplayOrder": 5,
+    "CaseFieldID": "applicant1DQDraftDirections",
+    "TabFieldDisplayOrder": 5
+  }
+]

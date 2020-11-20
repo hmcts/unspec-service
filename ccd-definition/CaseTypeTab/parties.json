@@ -1,0 +1,82 @@
+[
+  {
+    "LiveFrom": "01/01/2017",
+    "CaseTypeID": "UNSPECIFIED_CLAIMS",
+    "Channel": "CaseWorker",
+    "TabID": "Parties",
+    "TabLabel": "Parties",
+    "TabDisplayOrder": 3,
+    "CaseFieldID": "applicant1",
+    "TabFieldDisplayOrder": 1
+  },
+  {
+    "LiveFrom": "01/01/2017",
+    "CaseTypeID": "UNSPECIFIED_CLAIMS",
+    "Channel": "CaseWorker",
+    "TabID": "Parties",
+    "TabLabel": "Parties",
+    "TabDisplayOrder": 3,
+    "CaseFieldID": "applicant1LitigationFriend",
+    "TabFieldDisplayOrder": 2
+  },
+  {
+    "LiveFrom": "01/01/2017",
+    "CaseTypeID": "UNSPECIFIED_CLAIMS",
+    "Channel": "CaseWorker",
+    "TabID": "Parties",
+    "TabLabel": "Parties",
+    "TabDisplayOrder": 3,
+    "CaseFieldID": "applicant1DQExperts",
+    "TabFieldDisplayOrder": 3
+  },
+  {
+    "LiveFrom": "01/01/2017",
+    "CaseTypeID": "UNSPECIFIED_CLAIMS",
+    "Channel": "CaseWorker",
+    "TabID": "Parties",
+    "TabLabel": "Parties",
+    "TabDisplayOrder": 3,
+    "CaseFieldID": "applicant1DQWitnesses",
+    "TabFieldDisplayOrder": 4
+  },
+  {
+    "LiveFrom": "01/01/2017",
+    "CaseTypeID": "UNSPECIFIED_CLAIMS",
+    "Channel": "CaseWorker",
+    "TabID": "Parties",
+    "TabLabel": "Parties",
+    "TabDisplayOrder": 3,
+    "CaseFieldID": "respondent1",
+    "TabFieldDisplayOrder": 5
+  },
+  {
+    "LiveFrom": "01/01/2017",
+    "CaseTypeID": "UNSPECIFIED_CLAIMS",
+    "Channel": "CaseWorker",
+    "TabID": "Parties",
+    "TabLabel": "Parties",
+    "TabDisplayOrder": 3,
+    "CaseFieldID": "respondent1LitigationFriend",
+    "TabFieldDisplayOrder": 6
+  },
+  {
+    "LiveFrom": "01/01/2017",
+    "CaseTypeID": "UNSPECIFIED_CLAIMS",
+    "Channel": "CaseWorker",
+    "TabID": "Parties",
+    "TabLabel": "Parties",
+    "TabDisplayOrder": 3,
+    "CaseFieldID": "respondent1DQExperts",
+    "TabFieldDisplayOrder": 7
+  },
+  {
+    "LiveFrom": "01/01/2017",
+    "CaseTypeID": "UNSPECIFIED_CLAIMS",
+    "Channel": "CaseWorker",
+    "TabID": "Parties",
+    "TabLabel": "Parties",
+    "TabDisplayOrder": 3,
+    "CaseFieldID": "respondent1DQWitnesses",
+    "TabFieldDisplayOrder": 8
+  }
+]

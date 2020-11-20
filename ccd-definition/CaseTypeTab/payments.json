@@ -1,0 +1,11 @@
+[
+  {
+    "CaseTypeID": "UNSPECIFIED_CLAIMS",
+    "Channel": "CaseWorker",
+    "TabID": "PaymentHistory",
+    "TabLabel": "Payments",
+    "TabDisplayOrder": 4,
+    "CaseFieldID": "paymentHistory",
+    "TabFieldDisplayOrder": 1
+  }
+]
