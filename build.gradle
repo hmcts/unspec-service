@@ -11,7 +11,6 @@ plugins {
   id "io.freefair.lombok" version "5.3.0"
   id "org.flywaydb.flyway" version "7.2.1"
   id 'net.ltgt.apt' version '0.21'
-  id "info.solidsoft.pitest" version "1.5.1"
 }
 
 group = 'uk.gov.hmcts.reform'
@@ -211,17 +210,6 @@ task functional(description: 'Runs the functional tests.') {
   dependsOn(inStrictOrder(awaitApplicationReadiness, installDependencies, checkDependenciesIntegrity, lintUserInterfaceTests, runFunctionalTests))
 }
 
-pitest {
-  junit5PluginVersion = '0.12'
-  targetClasses = ['uk.gov.hmcts.reform.unspec.utils.CaseNameUtils']
- // excludedClasses = []
-  targetTests = ['uk.gov.hmcts.reform.unspec.utils.CaseNameUtilsTest']
-  threads = 10
-  outputFormats = ['XML', 'HTML']
-  timestampedReports = false
-  mutationThreshold = 80
-}
-
 project.tasks['sonarqube'].dependsOn test, integration, jacocoTestReport
 
 sonarqube {
@@ -231,8 +219,6 @@ sonarqube {
     property "sonar.coverage.jacoco.xmlReportPaths", "${jacocoTestReport.reports.xml.destination.path}"
     property "sonar.coverage.exclusions", "**/model/**, **/config/**/*Configuration.java, **/TestingSupportController.java, **/*ExternalTaskListener.java, **/stereotypes/**, **/*Exception.java"
     property "sonar.host.url", "https://sonar.reform.hmcts.net/"
-    property "sonar.pitest.mode", "reuseReport"
-    property "sonar.pitest.reportsDirectory", "build/reports/pitest"
   }
 }
 
@@ -261,10 +247,7 @@ def versions = [
   springStatemachine : '3.0.0.M2',
   springfoxSwagger   : '2.9.2',
   lombok             : '1.18.12',
-  pact               : '3.5.24',
-  pitest             : '1.5.2',
-  gradlePitest       : '1.5.1',
-  sonarPitest        : '0.5'
+  pact               : '3.5.24'
 ]
 
 ext.libraries = [
@@ -343,10 +326,6 @@ dependencies {
   // JAX-B dependencies for JDK 9+
   implementation group: 'jakarta.xml.bind', name: 'jakarta.xml.bind-api', version: '2.3.3'
   implementation group: 'org.glassfish.jaxb', name: 'jaxb-runtime', version: '2.3.3'
-
-  implementation group: 'info.solidsoft.gradle.pitest', name: 'gradle-pitest-plugin', version: versions.gradlePitest
-  implementation group: 'org.codehaus.sonar-plugins', name: 'sonar-pitest-plugin', version: versions.sonarPitest
-  implementation group: 'org.pitest', name: 'pitest', version: versions.pitest
 
   testImplementation group: 'org.mockito', name: 'mockito-core', version: '3.6.0'
   testImplementation group: 'org.mockito', name: 'mockito-junit-jupiter', version: '3.6.0'
