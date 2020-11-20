@@ -470,7 +470,7 @@
   {
     "LiveFrom": "01/01/2017",
     "CaseTypeID": "UNSPECIFIED_CLAIMS",
-    "ID": "NOTIFY_APPLICANT_SOLICITOR1_OF_CASE_STRIKE_OUT",
+    "ID": "NOTIFY_APPLICANT_SOLICITOR1_CASE_STRIKE_OUT",
     "Name": "Notify of struck out claim",
     "Description": "Notify applicant solicitor 1 of struck out claim",
     "DisplayOrder": 30,
@@ -485,7 +485,7 @@
   {
     "LiveFrom": "01/01/2017",
     "CaseTypeID": "UNSPECIFIED_CLAIMS",
-    "ID": "NOTIFY_RESPONDENT_SOLICITOR1_OF_CASE_STRIKE_OUT",
+    "ID": "NOTIFY_RESPONDENT_SOLICITOR1_CASE_STRIKE_OUT",
     "Name": "Notify of struck out claim",
     "Description": "Notify respondent solicitor 1 of struck out claim",
     "DisplayOrder": 31,

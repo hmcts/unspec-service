@@ -9,7 +9,7 @@ import uk.gov.hmcts.reform.unspec.service.tasks.handler.ClaimStrikeoutHandler;
 @Component
 public class CaseStrikeOutExternalTaskListener {
 
-    private static final String TOPIC = "CASE_STIKEOUT";
+    private static final String TOPIC = "CASE_STRIKEOUT";
 
     @Autowired
     private CaseStrikeOutExternalTaskListener(ClaimStrikeoutHandler caseStrikeoutHandler, ExternalTaskClient client) {
