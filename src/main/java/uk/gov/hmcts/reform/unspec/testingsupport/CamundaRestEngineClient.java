@@ -18,8 +18,10 @@ public class CamundaRestEngineClient {
 
     public Optional<String> findIncidentByProcessInstanceId(String processInstanceId) {
         return Optional.ofNullable(
-            camundaRestEngineApi.getActivityInstanceByProcessInstanceId(processInstanceId, authTokenGenerator.generate()))
+            camundaRestEngineApi.getActivityInstanceByProcessInstanceId(
+                processInstanceId, authTokenGenerator.generate()))
             .map(ActivityInstanceDto::getChildActivityInstances)
+            .filter(ArrayUtils::isNotEmpty)
             .map(activityInstances -> activityInstances[0])
             .map(ActivityInstanceDto::getIncidentIds)
             .filter(ArrayUtils::isNotEmpty)
@@ -29,6 +31,7 @@ public class CamundaRestEngineClient {
     public String getIncidentMessage(String incidentId) {
         IncidentDto incidentDto = camundaRestEngineApi.getIncidentById(incidentId, authTokenGenerator.generate());
         String externalTaskId = incidentDto.getConfiguration();
+
         return camundaRestEngineApi.getErrorDetailsByExternalTaskId(externalTaskId, authTokenGenerator.generate());
     }
 }
