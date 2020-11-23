@@ -113,4 +113,6 @@ public class CaseData {
     }
 
     private final LitigationFriend respondent1LitigationFriend;
+
+    private final LitigationFriend applicant1LitigationFriend;
 }

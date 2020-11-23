@@ -3,6 +3,7 @@ package uk.gov.hmcts.reform.unspec.utils;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import uk.gov.hmcts.reform.unspec.model.CaseData;
+import uk.gov.hmcts.reform.unspec.model.LitigationFriend;
 import uk.gov.hmcts.reform.unspec.model.Party;
 import uk.gov.hmcts.reform.unspec.model.SolicitorReferences;
 
@@ -27,7 +28,7 @@ class DocmosisTemplateDataUtilsTest {
                              .build())
             .build();
         String caseName = toCaseName.apply(caseData);
-        assertThat(caseName).isNotNull().isEqualTo("Mr. Sam Clark v Mr. Alex Richards");
+        assertThat(caseName).isEqualTo("Mr. Sam Clark v Mr. Alex Richards");
     }
 
     @Test
@@ -125,6 +126,59 @@ class DocmosisTemplateDataUtilsTest {
 
         String caseName = toCaseName.apply(caseData);
         assertThat(caseName).isEqualTo("Mrs. Georgina Hammersmith T/A EuroStar v Mr. Boris Johnson T/A UberFlip");
+    }
+
+    @Test
+    void shouldReturnCaseName_whenRespondentHasLitigationFriend() {
+        CaseData caseData = CaseData.builder()
+            .applicant1(Party.builder()
+                            .type(Party.Type.INDIVIDUAL)
+                            .partyName("Mr. Sam Clark")
+                            .build())
+            .respondent1(Party.builder()
+                             .type(Party.Type.INDIVIDUAL)
+                             .partyName("Mr. Alex Richards")
+                             .build())
+            .respondent1LitigationFriend(LitigationFriend.builder().fullName("Mr. Litigation Friend").build())
+            .build();
+        String caseName = toCaseName.apply(caseData);
+        assertThat(caseName).isEqualTo("Mr. Sam Clark v Mr. Alex Richards (proceeding by L/F Mr. Litigation Friend)");
+    }
+
+    @Test
+    void shouldReturnCaseName_whenApplicantHasLitigationFriend() {
+        CaseData caseData = CaseData.builder()
+            .applicant1(Party.builder()
+                            .type(Party.Type.INDIVIDUAL)
+                            .partyName("Mr. Sam Clark")
+                            .build())
+            .applicant1LitigationFriend(LitigationFriend.builder().fullName("Mr. Litigation Friend").build())
+            .respondent1(Party.builder()
+                             .type(Party.Type.INDIVIDUAL)
+                             .partyName("Mr. Alex Richards")
+                             .build())
+            .build();
+        String caseName = toCaseName.apply(caseData);
+        assertThat(caseName).isEqualTo("Mr. Sam Clark (proceeding by L/F Mr. Litigation Friend) v Mr. Alex Richards");
+    }
+
+    @Test
+    void shouldReturnCaseName_whenBothHasLitigationFriend() {
+        CaseData caseData = CaseData.builder()
+            .applicant1(Party.builder()
+                            .type(Party.Type.INDIVIDUAL)
+                            .partyName("Mr. Sam Clark")
+                            .build())
+            .applicant1LitigationFriend(LitigationFriend.builder().fullName("Mr. Applicant Friend").build())
+            .respondent1(Party.builder()
+                             .type(Party.Type.INDIVIDUAL)
+                             .partyName("Mr. Alex Richards")
+                             .build())
+            .respondent1LitigationFriend(LitigationFriend.builder().fullName("Mr. Respondent Friend").build())
+            .build();
+        String caseName = toCaseName.apply(caseData);
+        assertThat(caseName).isEqualTo("Mr. Sam Clark (proceeding by L/F Mr. Applicant Friend) v Mr. Alex Richards "
+                                           + "(proceeding by L/F Mr. Respondent Friend)");
     }
 
     @Nested

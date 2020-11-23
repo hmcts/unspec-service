@@ -2,11 +2,14 @@ package uk.gov.hmcts.reform.unspec.utils;
 
 import org.apache.commons.lang.StringUtils;
 import uk.gov.hmcts.reform.unspec.model.CaseData;
+import uk.gov.hmcts.reform.unspec.model.LitigationFriend;
 import uk.gov.hmcts.reform.unspec.model.Party;
 import uk.gov.hmcts.reform.unspec.model.SolicitorReferences;
 
+import java.util.Optional;
 import java.util.function.Function;
 
+import static java.lang.String.format;
 import static java.util.Optional.ofNullable;
 
 public class DocmosisTemplateDataUtils {
@@ -31,6 +34,7 @@ public class DocmosisTemplateDataUtils {
         } else {
             respondentNameBuilder.append(caseData.getRespondent1().getPartyName());
             soleTraderCompany(caseData.getRespondent1(), respondentNameBuilder);
+            litigationFriend(caseData.getRespondent1LitigationFriend(), respondentNameBuilder);
         }
 
         return respondentNameBuilder.toString();
@@ -49,6 +53,7 @@ public class DocmosisTemplateDataUtils {
         } else {
             applicantNameBuilder.append(caseData.getApplicant1().getPartyName());
             soleTraderCompany(caseData.getApplicant1(), applicantNameBuilder);
+            litigationFriend(caseData.getApplicant1LitigationFriend(), applicantNameBuilder);
         }
 
         return applicantNameBuilder.toString();
@@ -72,5 +77,11 @@ public class DocmosisTemplateDataUtils {
         if (party.getType() == Party.Type.SOLE_TRADER && StringUtils.isNotBlank(party.getSoleTraderTradingAs())) {
             stringBuilder.append(" T/A ").append(party.getSoleTraderTradingAs());
         }
+    }
+
+    private static void litigationFriend(LitigationFriend litigationFriend, StringBuilder stringBuilder) {
+        Optional.ofNullable(litigationFriend)
+            .map(LitigationFriend::getFullName)
+            .map(fullName -> stringBuilder.append(format(" (proceeding by L/F %s)", fullName)));
     }
 }
