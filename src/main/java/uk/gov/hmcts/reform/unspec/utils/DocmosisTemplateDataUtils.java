@@ -82,6 +82,6 @@ public class DocmosisTemplateDataUtils {
     private static void litigationFriend(LitigationFriend litigationFriend, StringBuilder stringBuilder) {
         Optional.ofNullable(litigationFriend)
             .map(LitigationFriend::getFullName)
-            .map(fullName -> stringBuilder.append(format(" (proceeding by L/F %s)", fullName)));
+            .ifPresent(fullName -> stringBuilder.append(format(" (proceeding by L/F %s)", fullName)));
     }
 }
