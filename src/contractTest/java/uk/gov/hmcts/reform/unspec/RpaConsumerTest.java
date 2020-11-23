@@ -44,25 +44,6 @@ public class RpaConsumerTest {
                           .build())
         .build();
 
-//    private PactDslJsonBody pactFromLibrary() {
-//        ConsumerBuilder<Robot> robotDefinition = RoboticsCaseData roboticsCaseData =RoboticsCaseData.builder()
-////            .header(CaseHeader.builder().caseNumber("000LR001").build())
-////            .solicitors(List.of())
-////            .claimDetails(ClaimDetails.builder().build())
-////            .litigiousParties(List.of())
-////            .mediation(Mediation.builder().build())
-////            .build();
-////        PactDslJsonBody jsonBody = ConsumerExpects.type(RoboticsCaseData.class)
-////            .build(new PactDslJsonBody(), roboticsCaseData);
-//            ConsumerExpects.type(Robot.class);
-//
-//        Robot robot = Robot.builder().name("Wallie").type("Automatic").build();
-//        PactDslJsonBody jsonBody = ConsumerExpects.type(Robot.class)
-//            .build(new PactDslJsonBody(), robot);
-//
-//        return jsonBody;
-//    }
-
     @Pact(provider = "rpa_api", consumer = "unspec_service")
     public RequestResponsePact executePostAndGet200(PactDslWithProvider builder) {
         // @formatter:off
@@ -132,9 +113,4 @@ public class RpaConsumerTest {
         ObjectMapper objectMapper = new ObjectMapper();
         return objectMapper.writeValueAsString(ROBOTICS_CASE_DATA);
     }
-//    private PactDslJsonBody createRobot() {
-//        return new PactDslJsonBody()
-//            .stringType("name", "Dandy")
-//            .stringType("type", "Auto Robot");
-//    }
 }
