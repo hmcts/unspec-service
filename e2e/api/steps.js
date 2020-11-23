@@ -1,6 +1,6 @@
 const assert = require('assert').strict;
 
-const request = require('./request.js');
+const apiRequest = require('./apiRequest.js');
 const {date} = require('./dataHelper');
 
 const data = {
@@ -20,8 +20,8 @@ let caseData = {};
 module.exports = {
   createClaim: async (user) => {
     eventName = 'CREATE_CLAIM';
-    await request.setupTokens(user);
-    await request.startEvent(eventName);
+    await apiRequest.setupTokens(user);
+    await apiRequest.startEvent(eventName);
     await validateEventPages();
 
     await assertSubmittedEvent('PENDING_CASE_ISSUED', {
@@ -35,7 +35,7 @@ module.exports = {
     caseData.claimIssuedDate = date();
 
     eventName = 'CONFIRM_SERVICE';
-    await request.startEvent(eventName, caseId);
+    await apiRequest.startEvent(eventName, caseId);
     deleteCaseFields('servedDocumentFiles');
 
     await validateEventPages();
@@ -56,7 +56,7 @@ module.exports = {
   acknowledgeService: async () => {
     eventName = 'ACKNOWLEDGE_SERVICE';
     deleteCaseFields('systemGeneratedCaseDocuments');
-    await request.startEvent(eventName, caseId);
+    await apiRequest.startEvent(eventName, caseId);
 
     await validateEventPages();
 
@@ -72,7 +72,7 @@ module.exports = {
   requestExtension: async () => {
     eventName = 'REQUEST_EXTENSION';
     deleteCaseFields('systemGeneratedCaseDocuments');
-    await request.startEvent(eventName, caseId);
+    await apiRequest.startEvent(eventName, caseId);
 
     await validateEventPages();
 
@@ -89,7 +89,7 @@ module.exports = {
 
   respondExtension: async () => {
     eventName = 'RESPOND_EXTENSION';
-    await request.startEvent(eventName, caseId);
+    await apiRequest.startEvent(eventName, caseId);
 
     await validateEventPages();
 
@@ -106,7 +106,7 @@ module.exports = {
 
   defendantResponse: async () => {
     eventName = 'DEFENDANT_RESPONSE';
-    await request.startEvent(eventName, caseId);
+    await apiRequest.startEvent(eventName, caseId);
     deleteCaseFields('respondent1', 'solicitorReferences');
 
     await validateEventPages();
@@ -126,7 +126,7 @@ module.exports = {
 
   claimantResponse: async () => {
     eventName = 'CLAIMANT_RESPONSE';
-    await request.startEvent(eventName, caseId);
+    await apiRequest.startEvent(eventName, caseId);
 
     await validateEventPages();
 
@@ -143,7 +143,7 @@ module.exports = {
 
   addDefendantLitigationFriend: async () => {
     eventName = 'ADD_DEFENDANT_LITIGATION_FRIEND';
-    await request.startEvent(eventName, caseId);
+    await apiRequest.startEvent(eventName, caseId);
 
     await validateEventPages();
   }
@@ -160,7 +160,7 @@ const assertValidData = async (pageId) => {
   const validDataForPage = data[eventName].valid[pageId];
   caseData = {...caseData, ...validDataForPage};
 
-  const response = await request.validatePage(eventName, pageId, caseData);
+  const response = await apiRequest.validatePage(eventName, pageId, caseData);
   const responseBody = await response.json();
 
   assert.equal(response.status, 200);
@@ -168,7 +168,7 @@ const assertValidData = async (pageId) => {
 };
 
 const assertCallbackError = async (pageId, eventData, expectedErrorMessage) => {
-  const response = await request.validatePage(eventName, pageId, {...caseData, ...eventData}, 422);
+  const response = await apiRequest.validatePage(eventName, pageId, {...caseData, ...eventData}, 422);
   const responseBody = await response.json();
 
   assert.equal(response.status, 422);
@@ -177,8 +177,8 @@ const assertCallbackError = async (pageId, eventData, expectedErrorMessage) => {
 };
 
 const assertSubmittedEvent = async (expectedState, submittedCallbackResponseContains) => {
-  await request.startEvent(eventName, caseId);
-  const response = await request.submitEvent(eventName, caseData, caseId);
+  await apiRequest.startEvent(eventName, caseId);
+  const response = await apiRequest.submitEvent(eventName, caseData, caseId);
   const responseBody = await response.json();
 
   assert.equal(response.status, 201);
