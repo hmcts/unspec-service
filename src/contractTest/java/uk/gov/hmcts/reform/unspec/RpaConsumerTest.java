@@ -43,14 +43,15 @@ public class RpaConsumerTest {
                           .amountClaimed(BigDecimal.TEN)
                           .build())
         .build();
+    private static final String FAKE_ENDPOINT_1 = "/fake-endpoint";
 
-    @Pact(provider = "rpa_api", consumer = "unspec_service")
+    @Pact(provider = "rpa_api_1", consumer = "unspec_service")
     public RequestResponsePact executePostAndGet200(PactDslWithProvider builder) {
         // @formatter:off
         return builder
             .given("there is RPA Json object")
             .uponReceiving("a POST /fake-endpoint request ")
-                .path("/fake-endpoint")
+                .path(FAKE_ENDPOINT_1)
                 .body(this::createRequestBody, MediaType.APPLICATION_JSON_VALUE)
                 .method(HttpMethod.POST.toString())
                 .headers(Map.of())
@@ -74,7 +75,7 @@ public class RpaConsumerTest {
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
             .when()
                 .body(createRequestBody())
-                .post(mockServer.getUrl() + "/fake-endpoint")
+                .post(mockServer.getUrl() + FAKE_ENDPOINT_1)
             .then()
                 .statusCode(200)
                 .and()
