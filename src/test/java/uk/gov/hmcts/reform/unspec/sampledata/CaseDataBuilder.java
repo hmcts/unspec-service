@@ -90,6 +90,7 @@ public class CaseDataBuilder {
     private LocalDate serviceDateToRespondentSolicitor1;
     private LocalDateTime serviceDateTimeToRespondentSolicitor1;
     private StatementOfTruth applicant1ServiceStatementOfTruthToRespondentSolicitor1;
+    private String serviceNamedPersonToRespondentSolicitor1;
     //Acknowledge Service
     private ResponseIntention respondent1ClaimResponseIntentionType;
     // Request Extension
@@ -468,6 +469,7 @@ public class CaseDataBuilder {
             .applicant1ServiceStatementOfTruthToRespondentSolicitor1(
                 applicant1ServiceStatementOfTruthToRespondentSolicitor1
             )
+            .serviceNamedPersonToRespondentSolicitor1(serviceNamedPersonToRespondentSolicitor1)
             // Acknowledge Service
             .respondent1ClaimResponseIntentionType(respondent1ClaimResponseIntentionType)
             // Request Extension
