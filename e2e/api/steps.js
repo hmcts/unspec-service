@@ -31,11 +31,10 @@ module.exports = {
   },
 
   confirmService: async () => {
-    // Issue date is no longer set in create claim journey so we need to add manually.
-    caseData.claimIssuedDate = date();
-
     eventName = 'CONFIRM_SERVICE';
-    await apiRequest.startEvent(eventName, caseId);
+    let returnedCaseData = await apiRequest.startEvent(eventName, caseId);
+    assertContainsPopulatedFields(returnedCaseData);
+    caseData = returnedCaseData;
     deleteCaseFields('servedDocumentFiles');
 
     await validateEventPages();
@@ -56,7 +55,9 @@ module.exports = {
   acknowledgeService: async () => {
     eventName = 'ACKNOWLEDGE_SERVICE';
     deleteCaseFields('systemGeneratedCaseDocuments');
-    await apiRequest.startEvent(eventName, caseId);
+    let returnedCaseData = await apiRequest.startEvent(eventName, caseId);
+    assertContainsPopulatedFields(returnedCaseData);
+    caseData = returnedCaseData;
 
     await validateEventPages();
 
@@ -71,7 +72,9 @@ module.exports = {
 
   requestExtension: async () => {
     eventName = 'REQUEST_EXTENSION';
-    await apiRequest.startEvent(eventName, caseId);
+    let returnedCaseData = await apiRequest.startEvent(eventName, caseId);
+    assertContainsPopulatedFields(returnedCaseData);
+    caseData = returnedCaseData;
 
     await validateEventPages();
 
@@ -88,7 +91,9 @@ module.exports = {
 
   respondExtension: async () => {
     eventName = 'RESPOND_EXTENSION';
-    await apiRequest.startEvent(eventName, caseId);
+    let returnedCaseData = await apiRequest.startEvent(eventName, caseId);
+    assertContainsPopulatedFields(returnedCaseData);
+    caseData = returnedCaseData;
 
     await validateEventPages();
 
@@ -105,7 +110,9 @@ module.exports = {
 
   defendantResponse: async () => {
     eventName = 'DEFENDANT_RESPONSE';
-    await apiRequest.startEvent(eventName, caseId);
+    let returnedCaseData = await apiRequest.startEvent(eventName, caseId);
+    assertContainsPopulatedFields(returnedCaseData);
+    caseData = returnedCaseData;
     deleteCaseFields('respondent1', 'solicitorReferences');
 
     await validateEventPages();
@@ -125,7 +132,9 @@ module.exports = {
 
   claimantResponse: async () => {
     eventName = 'CLAIMANT_RESPONSE';
-    await apiRequest.startEvent(eventName, caseId);
+    let returnedCaseData = await apiRequest.startEvent(eventName, caseId);
+    assertContainsPopulatedFields(returnedCaseData);
+    caseData = returnedCaseData;
 
     await validateEventPages();
 
@@ -142,12 +151,13 @@ module.exports = {
 
   addDefendantLitigationFriend: async () => {
     eventName = 'ADD_DEFENDANT_LITIGATION_FRIEND';
-    await apiRequest.startEvent(eventName, caseId);
+    let returnedCaseData = await apiRequest.startEvent(eventName, caseId);
+    assertContainsPopulatedFields(returnedCaseData);
+    caseData = returnedCaseData;
 
     await validateEventPages();
   }
 };
-
 
 const validateEventPages = async () => {
   for (let pageId of Object.keys(data[eventName].valid)) {
@@ -161,10 +171,6 @@ const assertValidData = async (pageId) => {
 
   const response = await apiRequest.validatePage(eventName, pageId, caseData);
   const responseBody = await response.json();
-
-  if (response.status !== 200) {
-    console.log(responseBody);
-  }
 
   assert.equal(response.status, 200);
   assert.deepEqual(responseBody.data, caseData);
@@ -184,20 +190,22 @@ const assertSubmittedEvent = async (expectedState, submittedCallbackResponseCont
   const response = await apiRequest.submitEvent(eventName, caseData, caseId);
   const responseBody = await response.json();
 
-  if (response.status !== 201) {
-    console.log(responseBody);
-  }
-
   assert.equal(response.status, 201);
   assert.equal(responseBody.state, expectedState);
   assert.equal(responseBody.callback_response_status_code, 200);
   assert.equal(responseBody.after_submit_callback_response.confirmation_header.includes(submittedCallbackResponseContains.header), true);
   assert.equal(responseBody.after_submit_callback_response.confirmation_body.includes(submittedCallbackResponseContains.body), true);
 
-  caseData = {...caseData, ...responseBody.case_data};
   if (eventName === 'CREATE_CLAIM') {
     caseId = responseBody.id;
     console.log('Case created: ' + caseId);
+  }
+};
+
+const assertContainsPopulatedFields = returnedCaseData => {
+  for (let populatedCaseField of Object.keys(caseData)) {
+    assert.equal(populatedCaseField in returnedCaseData, true,
+      'Expected case data to contain field: ' + populatedCaseField);
   }
 };
 
