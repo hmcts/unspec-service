@@ -16,6 +16,7 @@ import uk.gov.hmcts.reform.unspec.model.CaseData;
 import java.util.List;
 import java.util.Map;
 
+import static uk.gov.hmcts.reform.unspec.callback.CallbackType.ABOUT_TO_START;
 import static uk.gov.hmcts.reform.unspec.callback.CaseEvent.MOVE_CLAIM_TO_STRUCK_OUT;
 
 @Service
@@ -26,7 +27,10 @@ public class MoveClaimToStruckOutCallbackHandler extends CallbackHandler {
 
     @Override
     protected Map<String, Callback> callbacks() {
-        return Map.of(callbackKey(CallbackType.ABOUT_TO_SUBMIT), this::updateBusinessStatusToReady);
+        return Map.of(
+            callbackKey(ABOUT_TO_START), this::emptyCallbackResponse,
+            callbackKey(CallbackType.ABOUT_TO_SUBMIT), this::updateBusinessStatusToReady
+        );
     }
 
     @Override

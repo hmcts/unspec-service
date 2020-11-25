@@ -16,7 +16,6 @@ import uk.gov.hmcts.reform.unspec.service.NotificationService;
 
 import java.util.Map;
 
-import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static uk.gov.hmcts.reform.unspec.callback.CallbackType.ABOUT_TO_SUBMIT;
@@ -57,10 +56,10 @@ class RespondentClaimStruckOutNotificationHandlerTest {
             handler.handle(params);
 
             verify(notificationService).sendMail(
-                eq(EMAIL),
-                eq(TEMPLATE_ID),
-                eq(getExpectedMap()),
-                eq("respondent-claim-strike-out-notification-000LR001")
+                EMAIL,
+                TEMPLATE_ID,
+                getExpectedMap(),
+                "respondent-claim-strike-out-notification-000LR001"
             );
         }
     }
