@@ -93,6 +93,7 @@ public class Respondent1DQ implements DQ {
     }
 
     @Override
+    @JsonProperty("respondent1DQLanguage")
     public WelshLanguageRequirements getWelshLanguageRequirements() {
         return respondent1DQLanguage;
     }
