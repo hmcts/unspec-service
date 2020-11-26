@@ -55,10 +55,6 @@ public class DeadlinesCalculator {
         return calculateFirstWorkingDay(confirmationOfService).atTime(MID_NIGHT);
     }
 
-    public LocalDate calculateCaseStayedDeadline(@NonNull LocalDate issueDate) {
-        return issueDate.plusMonths(6);
-    }
-
     public LocalDate calculateFirstWorkingDay(LocalDate date) {
         while (!workingDayIndicator.isWorkingDay(date)) {
             date = date.plusDays(1);
