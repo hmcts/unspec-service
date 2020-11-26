@@ -22,7 +22,7 @@ public class CaseStayedSearchService extends ElasticSearchService {
         return new Query(
             boolQuery()
                 .must(rangeQuery("last_modified_date").lt("now-6M"))
-                .should(beValidState()),
+                .must(beValidState()),
             List.of("reference"),
             startIndex
         );
