@@ -3,13 +3,10 @@ package uk.gov.hmcts.reform.unspec.controllers;
 import lombok.SneakyThrows;
 import org.junit.jupiter.api.Test;
 import uk.gov.hmcts.reform.ccd.client.model.CallbackRequest;
-import uk.gov.hmcts.reform.ccd.client.model.CaseDetails;
-import uk.gov.hmcts.reform.unspec.callback.CaseEvent;
-import uk.gov.hmcts.reform.unspec.sampledata.CaseDataBuilder;
+import uk.gov.hmcts.reform.unspec.sampledata.CaseDetailsBuilder;
 
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static uk.gov.hmcts.reform.unspec.callback.CallbackType.ABOUT_TO_START;
-import static uk.gov.hmcts.reform.unspec.handler.callback.BaseCallbackHandlerTest.CASE_ID;
+import static uk.gov.hmcts.reform.unspec.callback.CaseEvent.REQUEST_EXTENSION;
 
 public class CallbackControllerTest extends BaseIntegrationTest {
 
@@ -19,14 +16,11 @@ public class CallbackControllerTest extends BaseIntegrationTest {
     @SneakyThrows
     public void shouldReturnNotFoundWhenCallbackHandlerIsNotImplemented() {
         CallbackRequest callbackRequest = CallbackRequest.builder()
-            .eventId(CaseEvent.CREATE_CASE.getValue())
-            .caseDetails(CaseDetails.builder()
-                             .id(CASE_ID)
-                             .data(convertToMap(CaseDataBuilder.builder().atStateClaimCreated().build()))
-                             .build())
+            .eventId(REQUEST_EXTENSION.name())
+            .caseDetails(CaseDetailsBuilder.builder().atStateExtensionRequested().build())
             .build();
 
-        doPost(BEARER_TOKEN, callbackRequest, CALLBACK_URL, ABOUT_TO_START.getValue())
+        doPost(BEARER_TOKEN, callbackRequest, CALLBACK_URL, "invalid-callback-type")
             .andExpect(status().isNotFound());
     }
 }

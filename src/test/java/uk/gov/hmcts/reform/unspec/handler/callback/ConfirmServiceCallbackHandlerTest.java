@@ -13,41 +13,45 @@ import uk.gov.hmcts.reform.ccd.client.model.AboutToStartOrSubmitCallbackResponse
 import uk.gov.hmcts.reform.ccd.client.model.SubmittedCallbackResponse;
 import uk.gov.hmcts.reform.unspec.callback.CallbackParams;
 import uk.gov.hmcts.reform.unspec.callback.CallbackType;
-import uk.gov.hmcts.reform.unspec.enums.ServedDocuments;
 import uk.gov.hmcts.reform.unspec.helpers.CaseDetailsConverter;
+import uk.gov.hmcts.reform.unspec.model.CaseData;
+import uk.gov.hmcts.reform.unspec.model.ServiceMethod;
+import uk.gov.hmcts.reform.unspec.sampledata.CaseDataBuilder;
 import uk.gov.hmcts.reform.unspec.service.DeadlinesCalculator;
 import uk.gov.hmcts.reform.unspec.service.WorkingDayIndicator;
-import uk.gov.hmcts.reform.unspec.service.docmosis.cos.CertificateOfServiceGenerator;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import static java.lang.String.format;
-import static java.util.Collections.emptyList;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
+import static uk.gov.hmcts.reform.unspec.callback.CallbackType.ABOUT_TO_SUBMIT;
+import static uk.gov.hmcts.reform.unspec.callback.CallbackType.MID;
+import static uk.gov.hmcts.reform.unspec.enums.ServedDocuments.CLAIM_FORM;
+import static uk.gov.hmcts.reform.unspec.enums.ServiceMethodType.FAX;
+import static uk.gov.hmcts.reform.unspec.enums.ServiceMethodType.POST;
 import static uk.gov.hmcts.reform.unspec.handler.callback.ConfirmServiceCallbackHandler.CONFIRMATION_SUMMARY;
 import static uk.gov.hmcts.reform.unspec.helpers.DateFormatHelper.DATE;
 import static uk.gov.hmcts.reform.unspec.helpers.DateFormatHelper.DATE_TIME_AT;
 import static uk.gov.hmcts.reform.unspec.helpers.DateFormatHelper.formatLocalDate;
 import static uk.gov.hmcts.reform.unspec.helpers.DateFormatHelper.formatLocalDateTime;
+import static uk.gov.hmcts.reform.unspec.sampledata.CaseDataBuilder.DEEMED_SERVICE_DATE;
+import static uk.gov.hmcts.reform.unspec.sampledata.CaseDataBuilder.RESPONSE_DEADLINE;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(classes = {
     ConfirmServiceCallbackHandler.class,
     JacksonAutoConfiguration.class,
     ValidationAutoConfiguration.class,
+    DeadlinesCalculator.class,
     CaseDetailsConverter.class,
-    DeadlinesCalculator.class
 })
 class ConfirmServiceCallbackHandlerTest extends BaseCallbackHandlerTest {
 
-    @MockBean
-    private CertificateOfServiceGenerator certificateOfServiceGenerator;
     @MockBean
     WorkingDayIndicator workingDayIndicator;
 
@@ -59,27 +63,29 @@ class ConfirmServiceCallbackHandlerTest extends BaseCallbackHandlerTest {
 
         @Test
         void shouldPrepopulateServedDocumentsList_whenInvoked() {
-            CallbackParams params = callbackParamsOf(new HashMap<>(), CallbackType.ABOUT_TO_START);
-            AboutToStartOrSubmitCallbackResponse response = (AboutToStartOrSubmitCallbackResponse) handler
-                .handle(params);
+            CaseData caseData = CaseDataBuilder.builder().atStateClaimCreated().build();
+            CallbackParams params = callbackParamsOf(caseData, CallbackType.ABOUT_TO_START);
+
+            var response = (AboutToStartOrSubmitCallbackResponse) handler.handle(params);
 
             assertThat(response.getData())
-                .containsOnly(Map.entry("servedDocuments", List.of(ServedDocuments.CLAIM_FORM)));
+                .extracting("servedDocuments").isEqualTo(List.of(CLAIM_FORM.name()));
         }
     }
 
     @Nested
-    class MidEventCallback {
+    class MidEventServedDocumentCallback {
+
+        private static final String PAGE_ID = "served-documents";
 
         @Test
         void shouldReturnError_whenWhitespaceInServedDocumentsOther() {
-            Map<String, Object> data = new HashMap<>();
-            data.put("servedDocumentsOther", " ");
+            CaseData caseData = CaseDataBuilder.builder().atStateClaimCreated()
+                .servedDocumentsOther(" ")
+                .build();
+            CallbackParams params = callbackParamsOf(caseData, MID, PAGE_ID);
 
-            CallbackParams params = callbackParamsOf(data, CallbackType.MID);
-
-            AboutToStartOrSubmitCallbackResponse response = (AboutToStartOrSubmitCallbackResponse) handler
-                .handle(params);
+            var response = (AboutToStartOrSubmitCallbackResponse) handler.handle(params);
 
             assertThat(response.getErrors()).containsExactly(
                 "CONTENT TBC: please enter a valid value for other documents");
@@ -87,86 +93,79 @@ class ConfirmServiceCallbackHandlerTest extends BaseCallbackHandlerTest {
 
         @Test
         void shouldReturnNoError_whenValidServedDocumentsOther() {
-            Map<String, Object> data = new HashMap<>();
-            data.put("servedDocumentsOther", "A valid document");
+            CaseData caseData = CaseDataBuilder.builder().atStateServiceConfirmed().build();
+            CallbackParams params = callbackParamsOf(caseData, MID, PAGE_ID);
 
-            CallbackParams params = callbackParamsOf(data, CallbackType.MID);
+            var response = (AboutToStartOrSubmitCallbackResponse) handler.handle(params);
 
-            AboutToStartOrSubmitCallbackResponse response = (AboutToStartOrSubmitCallbackResponse) handler
-                .handle(params);
-
-            assertThat(response.getData()).isEqualTo(data);
             assertThat(response.getErrors()).isEmpty();
         }
     }
 
     @Nested
-    class SecondMidEventCallback {
+    class MidEventServiceDateCallback {
 
         private final LocalDate claimIssueDate = LocalDate.of(2000, 6, 22);
 
         @Nested
         class ServiceDate {
 
+            private static final String PAGE_ID = "service-date";
             private final LocalDate today = LocalDate.now();
             private final LocalDate futureDate = today.plusYears(1);
 
             @Test
             void shouldReturnNoErrors_whenServiceDateInPastAndAfterIssueDate() {
-                Map<String, Object> data = new HashMap<>();
-                data.put("serviceMethodToRespondentSolicitor1", Map.of("type", "POST"));
-                data.put("serviceDateToRespondentSolicitor1", claimIssueDate.plusDays(1));
-                data.put("claimIssuedDate", claimIssueDate);
+                CaseData caseData = CaseDataBuilder.builder().atStateServiceConfirmed()
+                    .claimIssuedDate(claimIssueDate)
+                    .serviceDateToRespondentSolicitor1(claimIssueDate.plusDays(1))
+                    .serviceMethodToRespondentSolicitor1(ServiceMethod.builder().type(POST).build())
+                    .build();
+                CallbackParams params = callbackParamsOf(caseData, MID, PAGE_ID);
 
-                CallbackParams params = callbackParamsOf(data, CallbackType.MID_SECONDARY);
-
-                AboutToStartOrSubmitCallbackResponse response = (AboutToStartOrSubmitCallbackResponse) handler
-                    .handle(params);
+                var response = (AboutToStartOrSubmitCallbackResponse) handler.handle(params);
 
                 assertThat(response.getErrors()).isEmpty();
             }
 
             @Test
             void shouldReturnNoErrors_whenServiceDateIsTodayAndAfterIssueDate() {
-                Map<String, Object> data = new HashMap<>();
-                data.put("serviceMethodToRespondentSolicitor1", Map.of("type", "POST"));
-                data.put("serviceDateToRespondentSolicitor1", today);
-                data.put("claimIssuedDate", claimIssueDate);
+                CaseData caseData = CaseDataBuilder.builder().atStateServiceConfirmed()
+                    .claimIssuedDate(claimIssueDate)
+                    .serviceDateToRespondentSolicitor1(today)
+                    .serviceMethodToRespondentSolicitor1(ServiceMethod.builder().type(POST).build())
+                    .build();
+                CallbackParams params = callbackParamsOf(caseData, MID, PAGE_ID);
 
-                CallbackParams params = callbackParamsOf(data, CallbackType.MID_SECONDARY);
-
-                AboutToStartOrSubmitCallbackResponse response = (AboutToStartOrSubmitCallbackResponse) handler
-                    .handle(params);
+                var response = (AboutToStartOrSubmitCallbackResponse) handler.handle(params);
 
                 assertThat(response.getErrors()).isEmpty();
             }
 
             @Test
             void shouldReturnError_whenServiceDateInFuture() {
-                Map<String, Object> data = new HashMap<>();
-                data.put("serviceMethodToRespondentSolicitor1", Map.of("type", "POST"));
-                data.put("serviceDateToRespondentSolicitor1", futureDate);
-                data.put("claimIssuedDate", claimIssueDate);
+                CaseData caseData = CaseDataBuilder.builder().atStateServiceConfirmed()
+                    .claimIssuedDate(claimIssueDate)
+                    .serviceDateToRespondentSolicitor1(futureDate)
+                    .serviceMethodToRespondentSolicitor1(ServiceMethod.builder().type(POST).build())
+                    .build();
+                CallbackParams params = callbackParamsOf(caseData, MID, PAGE_ID);
 
-                CallbackParams params = callbackParamsOf(data, CallbackType.MID_SECONDARY);
-
-                AboutToStartOrSubmitCallbackResponse response = (AboutToStartOrSubmitCallbackResponse) handler
-                    .handle(params);
+                var response = (AboutToStartOrSubmitCallbackResponse) handler.handle(params);
 
                 assertThat(response.getErrors()).containsOnly("The date must not be in the future");
             }
 
             @Test
             void shouldReturnError_whenServiceDateIsBeforeClaimIssueDate() {
-                Map<String, Object> data = new HashMap<>();
-                data.put("serviceMethodToRespondentSolicitor1", Map.of("type", "POST"));
-                data.put("serviceDateToRespondentSolicitor1", claimIssueDate.minusDays(1));
-                data.put("claimIssuedDate", claimIssueDate);
+                CaseData caseData = CaseDataBuilder.builder().atStateServiceConfirmed()
+                    .claimIssuedDate(claimIssueDate)
+                    .serviceDateToRespondentSolicitor1(claimIssueDate.minusDays(3))
+                    .serviceMethodToRespondentSolicitor1(ServiceMethod.builder().type(POST).build())
+                    .build();
+                CallbackParams params = callbackParamsOf(caseData, MID, PAGE_ID);
 
-                CallbackParams params = callbackParamsOf(data, CallbackType.MID_SECONDARY);
-
-                AboutToStartOrSubmitCallbackResponse response = (AboutToStartOrSubmitCallbackResponse) handler
-                    .handle(params);
+                var response = (AboutToStartOrSubmitCallbackResponse) handler.handle(params);
 
                 assertThat(response.getErrors()).containsOnly("The date must not be before issue date of claim");
             }
@@ -180,60 +179,56 @@ class ConfirmServiceCallbackHandlerTest extends BaseCallbackHandlerTest {
 
             @Test
             void shouldReturnNoErrors_whenServiceDateInPastAndAfterIssueDate() {
-                Map<String, Object> data = new HashMap<>();
-                data.put("serviceMethodToRespondentSolicitor1", Map.of("type", "FAX"));
-                data.put("serviceDateTimeToRespondentSolicitor1", claimIssueDate.plusDays(1).atTime(12, 0));
-                data.put("claimIssuedDate", claimIssueDate);
+                CaseData caseData = CaseDataBuilder.builder().atStateServiceConfirmed()
+                    .claimIssuedDate(claimIssueDate)
+                    .serviceDateTimeToRespondentSolicitor1(claimIssueDate.plusDays(1).atTime(12, 0))
+                    .serviceMethodToRespondentSolicitor1(ServiceMethod.builder().type(FAX).build())
+                    .build();
+                CallbackParams params = callbackParamsOf(caseData, MID, "service-date");
 
-                CallbackParams params = callbackParamsOf(data, CallbackType.MID_SECONDARY);
-
-                AboutToStartOrSubmitCallbackResponse response = (AboutToStartOrSubmitCallbackResponse) handler
-                    .handle(params);
+                var response = (AboutToStartOrSubmitCallbackResponse) handler.handle(params);
 
                 assertThat(response.getErrors()).isEmpty();
             }
 
             @Test
             void shouldReturnNoErrors_whenServiceDateIsTodayAndAfterIssueDate() {
-                Map<String, Object> data = new HashMap<>();
-                data.put("serviceMethodToRespondentSolicitor1", Map.of("type", "FAX"));
-                data.put("serviceDateTimeToRespondentSolicitor1", today);
-                data.put("claimIssuedDate", claimIssueDate);
+                CaseData caseData = CaseDataBuilder.builder().atStateServiceConfirmed()
+                    .claimIssuedDate(claimIssueDate)
+                    .serviceDateTimeToRespondentSolicitor1(today)
+                    .serviceMethodToRespondentSolicitor1(ServiceMethod.builder().type(FAX).build())
+                    .build();
+                CallbackParams params = callbackParamsOf(caseData, MID, "service-date");
 
-                CallbackParams params = callbackParamsOf(data, CallbackType.MID_SECONDARY);
-
-                AboutToStartOrSubmitCallbackResponse response = (AboutToStartOrSubmitCallbackResponse) handler
-                    .handle(params);
+                var response = (AboutToStartOrSubmitCallbackResponse) handler.handle(params);
 
                 assertThat(response.getErrors()).isEmpty();
             }
 
             @Test
             void shouldReturnError_whenServiceDateInFuture() {
-                Map<String, Object> data = new HashMap<>();
-                data.put("serviceMethodToRespondentSolicitor1", Map.of("type", "FAX"));
-                data.put("serviceDateTimeToRespondentSolicitor1", futureDate);
-                data.put("claimIssuedDate", claimIssueDate);
+                CaseData caseData = CaseDataBuilder.builder().atStateServiceConfirmed()
+                    .claimIssuedDate(claimIssueDate)
+                    .serviceDateTimeToRespondentSolicitor1(futureDate)
+                    .serviceMethodToRespondentSolicitor1(ServiceMethod.builder().type(FAX).build())
+                    .build();
+                CallbackParams params = callbackParamsOf(caseData, MID, "service-date");
 
-                CallbackParams params = callbackParamsOf(data, CallbackType.MID_SECONDARY);
-
-                AboutToStartOrSubmitCallbackResponse response = (AboutToStartOrSubmitCallbackResponse) handler
-                    .handle(params);
+                var response = (AboutToStartOrSubmitCallbackResponse) handler.handle(params);
 
                 assertThat(response.getErrors()).containsOnly("The date must not be in the future");
             }
 
             @Test
             void shouldReturnError_whenServiceDateIsBeforeClaimIssueDate() {
-                Map<String, Object> data = new HashMap<>();
-                data.put("serviceMethodToRespondentSolicitor1", Map.of("type", "FAX"));
-                data.put("serviceDateTimeToRespondentSolicitor1", claimIssueDate.atTime(12, 0).minusDays(1));
-                data.put("claimIssuedDate", claimIssueDate);
+                CaseData caseData = CaseDataBuilder.builder().atStateServiceConfirmed()
+                    .claimIssuedDate(claimIssueDate)
+                    .serviceDateTimeToRespondentSolicitor1(claimIssueDate.atTime(12, 0).minusDays(1))
+                    .serviceMethodToRespondentSolicitor1(ServiceMethod.builder().type(FAX).build())
+                    .build();
+                CallbackParams params = callbackParamsOf(caseData, MID, "service-date");
 
-                CallbackParams params = callbackParamsOf(data, CallbackType.MID_SECONDARY);
-
-                AboutToStartOrSubmitCallbackResponse response = (AboutToStartOrSubmitCallbackResponse) handler
-                    .handle(params);
+                var response = (AboutToStartOrSubmitCallbackResponse) handler.handle(params);
 
                 assertThat(response.getErrors()).containsOnly("The date must not be before issue date of claim");
             }
@@ -244,48 +239,42 @@ class ConfirmServiceCallbackHandlerTest extends BaseCallbackHandlerTest {
     class AboutToSubmitCallback {
 
         @Test
-        void shouldReturnExpectedResponse_whenDateEntry() {
+        void shouldReturnExpectedResponseAndMarkBusinessProcessReady_whenDateEntry() {
             when(workingDayIndicator.isWorkingDay(any(LocalDate.class))).thenReturn(true);
 
-            Map<String, Object> data = new HashMap<>();
-            data.put("serviceMethodToRespondentSolicitor1", Map.of("type", "POST"));
-            data.put("serviceDateToRespondentSolicitor1", "2099-06-23");
+            CaseData caseData = CaseDataBuilder.builder().atStateServiceConfirmed()
+                .serviceDateToRespondentSolicitor1(LocalDate.of(2099, 6, 23))
+                .serviceMethodToRespondentSolicitor1(ServiceMethod.builder().type(POST).build())
+                .build();
+            CallbackParams params = callbackParamsOf(caseData, CallbackType.ABOUT_TO_SUBMIT);
 
-            CallbackParams params = callbackParamsOf(data, CallbackType.ABOUT_TO_SUBMIT);
+            var response = (AboutToStartOrSubmitCallbackResponse) handler.handle(params);
 
-            AboutToStartOrSubmitCallbackResponse response = (AboutToStartOrSubmitCallbackResponse) handler
-                .handle(params);
-
-            assertThat(response.getData()).containsExactlyInAnyOrderEntriesOf(
+            assertThat(response.getData()).containsAllEntriesOf(
                 Map.of(
-                    "deemedServiceDateToRespondentSolicitor1", LocalDate.of(2099, 6, 25),
-                    "respondentSolicitor1ResponseDeadline", LocalDateTime.of(2099, 7, 9, 23, 59, 59),
-                    "serviceMethodToRespondentSolicitor1", Map.of("type", "POST"),
-                    "serviceDateToRespondentSolicitor1", "2099-06-23",
-                    "systemGeneratedCaseDocuments", emptyList()
+                    "deemedServiceDateToRespondentSolicitor1", LocalDate.of(2099, 6, 25).toString(),
+                    "respondentSolicitor1ResponseDeadline", LocalDateTime.of(2099, 7, 9, 23, 59, 59).toString(),
+                    "businessProcess", Map.of("status", "READY", "camundaEvent", "CONFIRM_SERVICE")
                 ));
         }
 
         @Test
-        void shouldReturnExpectedResponse_whenDateAndTimeEntry() {
+        void shouldReturnExpectedResponseAndMarkBusinessProcessReady_whenDateAndTimeEntry() {
             when(workingDayIndicator.isWorkingDay(any(LocalDate.class))).thenReturn(true);
 
-            Map<String, Object> data = new HashMap<>();
-            data.put("serviceMethodToRespondentSolicitor1", Map.of("type", "FAX"));
-            data.put("serviceDateTimeToRespondentSolicitor1", "2099-06-23T15:00:00");
+            CaseData caseData = CaseDataBuilder.builder().atStateServiceConfirmed()
+                .serviceDateTimeToRespondentSolicitor1(LocalDateTime.of(2099, 6, 23, 15, 0, 0))
+                .serviceMethodToRespondentSolicitor1(ServiceMethod.builder().type(FAX).build())
+                .build();
+            CallbackParams params = callbackParamsOf(caseData, ABOUT_TO_SUBMIT);
 
-            CallbackParams params = callbackParamsOf(data, CallbackType.ABOUT_TO_SUBMIT);
+            var response = (AboutToStartOrSubmitCallbackResponse) handler.handle(params);
 
-            AboutToStartOrSubmitCallbackResponse response = (AboutToStartOrSubmitCallbackResponse) handler
-                .handle(params);
-
-            assertThat(response.getData()).containsExactlyInAnyOrderEntriesOf(
+            assertThat(response.getData()).containsAllEntriesOf(
                 Map.of(
-                    "deemedServiceDateToRespondentSolicitor1", LocalDate.of(2099, 6, 23),
-                    "respondentSolicitor1ResponseDeadline", LocalDateTime.of(2099, 7, 7, 23, 59, 59),
-                    "serviceMethodToRespondentSolicitor1", Map.of("type", "FAX"),
-                    "serviceDateTimeToRespondentSolicitor1", "2099-06-23T15:00:00",
-                    "systemGeneratedCaseDocuments", emptyList()
+                    "deemedServiceDateToRespondentSolicitor1", LocalDate.of(2099, 6, 23).toString(),
+                    "respondentSolicitor1ResponseDeadline", LocalDateTime.of(2099, 7, 7, 23, 59, 59).toString(),
+                    "businessProcess", Map.of("status", "READY", "camundaEvent", "CONFIRM_SERVICE")
                 ));
         }
     }
@@ -295,25 +284,18 @@ class ConfirmServiceCallbackHandlerTest extends BaseCallbackHandlerTest {
 
         @Test
         void shouldReturnExpectedResponse_whenValidData() {
-            Map<String, Object> data = new HashMap<>();
-            int documentSize = 0;
-            LocalDate deemedDateOfService = LocalDate.now();
-            LocalDateTime responseDeadline = deemedDateOfService.plusDays(14).atTime(16, 0);
-            data.put("deemedServiceDateToRespondentSolicitor1", deemedDateOfService);
-            data.put("respondentSolicitor1ResponseDeadline", responseDeadline);
-
-            CallbackParams params = callbackParamsOf(data, CallbackType.SUBMITTED);
+            CaseData caseData = CaseDataBuilder.builder().atStateServiceConfirmed().build();
+            CallbackParams params = callbackParamsOf(caseData, CallbackType.SUBMITTED);
 
             SubmittedCallbackResponse response = (SubmittedCallbackResponse) handler.handle(params);
-            String formattedDeemedDateOfService = formatLocalDate(deemedDateOfService, DATE);
-            String responseDeadlineDate = formatLocalDateTime(responseDeadline, DATE_TIME_AT);
+            String formattedDeemedDateOfService = formatLocalDate(DEEMED_SERVICE_DATE, DATE);
+            String responseDeadlineDate = formatLocalDateTime(RESPONSE_DEADLINE, DATE_TIME_AT);
 
             String body = format(
                 CONFIRMATION_SUMMARY,
                 formattedDeemedDateOfService,
                 responseDeadlineDate,
-                format("/cases/case-details/%s#CaseDocuments", CASE_ID),
-                documentSize / 1024
+                format("/cases/case-details/%s#CaseDocuments", CASE_ID)
             );
 
             assertThat(response).isEqualToComparingFieldByField(

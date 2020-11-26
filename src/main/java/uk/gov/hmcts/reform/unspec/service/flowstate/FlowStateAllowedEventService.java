@@ -13,9 +13,10 @@ import java.util.stream.Collectors;
 
 import static java.util.Collections.emptyList;
 import static uk.gov.hmcts.reform.unspec.callback.CaseEvent.ACKNOWLEDGE_SERVICE;
+import static uk.gov.hmcts.reform.unspec.callback.CaseEvent.ADD_DEFENDANT_LITIGATION_FRIEND;
 import static uk.gov.hmcts.reform.unspec.callback.CaseEvent.CLAIMANT_RESPONSE;
 import static uk.gov.hmcts.reform.unspec.callback.CaseEvent.CONFIRM_SERVICE;
-import static uk.gov.hmcts.reform.unspec.callback.CaseEvent.CREATE_CASE;
+import static uk.gov.hmcts.reform.unspec.callback.CaseEvent.CREATE_CLAIM;
 import static uk.gov.hmcts.reform.unspec.callback.CaseEvent.DEFENDANT_RESPONSE;
 import static uk.gov.hmcts.reform.unspec.callback.CaseEvent.DISCONTINUE_CLAIM;
 import static uk.gov.hmcts.reform.unspec.callback.CaseEvent.MOVE_TO_STAYED;
@@ -40,31 +41,34 @@ public class FlowStateAllowedEventService {
 
     private static final Map<String, List<CaseEvent>> ALLOWED_EVENTS_ON_FLOW_STATE = Map.of(
         DRAFT.fullName(),
-        List.of(CREATE_CASE, WITHDRAW_CLAIM, DISCONTINUE_CLAIM),
+        List.of(CREATE_CLAIM, WITHDRAW_CLAIM, DISCONTINUE_CLAIM),
 
         CLAIM_ISSUED.fullName(),
-        List.of(MOVE_TO_STAYED, CONFIRM_SERVICE, WITHDRAW_CLAIM, DISCONTINUE_CLAIM),
+        List.of(MOVE_TO_STAYED, CONFIRM_SERVICE, ADD_DEFENDANT_LITIGATION_FRIEND, WITHDRAW_CLAIM, DISCONTINUE_CLAIM),
 
         CLAIM_STAYED.fullName(),
         List.of(WITHDRAW_CLAIM, DISCONTINUE_CLAIM),
 
         SERVICE_CONFIRMED.fullName(),
-        List.of(ACKNOWLEDGE_SERVICE, DEFENDANT_RESPONSE, WITHDRAW_CLAIM, DISCONTINUE_CLAIM),
+        List.of(ACKNOWLEDGE_SERVICE, DEFENDANT_RESPONSE, ADD_DEFENDANT_LITIGATION_FRIEND, WITHDRAW_CLAIM,
+                DISCONTINUE_CLAIM),
 
         SERVICE_ACKNOWLEDGED.fullName(),
-        List.of(REQUEST_EXTENSION, DEFENDANT_RESPONSE, WITHDRAW_CLAIM, DISCONTINUE_CLAIM),
+        List.of(REQUEST_EXTENSION, DEFENDANT_RESPONSE, ADD_DEFENDANT_LITIGATION_FRIEND, WITHDRAW_CLAIM,
+                DISCONTINUE_CLAIM),
 
         EXTENSION_REQUESTED.fullName(),
-        List.of(DEFENDANT_RESPONSE, RESPOND_EXTENSION, WITHDRAW_CLAIM, DISCONTINUE_CLAIM),
+        List.of(DEFENDANT_RESPONSE, RESPOND_EXTENSION, ADD_DEFENDANT_LITIGATION_FRIEND, WITHDRAW_CLAIM,
+                DISCONTINUE_CLAIM),
 
         EXTENSION_RESPONDED.fullName(),
-        List.of(DEFENDANT_RESPONSE, WITHDRAW_CLAIM, DISCONTINUE_CLAIM),
+        List.of(DEFENDANT_RESPONSE, WITHDRAW_CLAIM, ADD_DEFENDANT_LITIGATION_FRIEND, DISCONTINUE_CLAIM),
 
         RESPONDED_TO_CLAIM.fullName(),
-        List.of(CLAIMANT_RESPONSE, WITHDRAW_CLAIM, DISCONTINUE_CLAIM),
+        List.of(CLAIMANT_RESPONSE, WITHDRAW_CLAIM, ADD_DEFENDANT_LITIGATION_FRIEND, DISCONTINUE_CLAIM),
 
         FULL_DEFENCE.fullName(),
-        List.of(WITHDRAW_CLAIM, DISCONTINUE_CLAIM)
+        List.of(ADD_DEFENDANT_LITIGATION_FRIEND, WITHDRAW_CLAIM, DISCONTINUE_CLAIM)
     );
 
     public FlowState getFlowState(CaseData caseData) {

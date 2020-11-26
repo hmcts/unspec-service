@@ -11,7 +11,7 @@
     "LiveFrom": "01/01/2017",
     "CaseTypeID": "UNSPECIFIED_CLAIMS",
     "ID": "eligibilityQuestions",
-    "Label": "## Issue civil court proceedings\nTo use this service you must be:\n* issuing a claim for an unspecified (unfixed) amount of money\n* serving the claim yourself, with a UK postal address and an email address\n* able to pay the full issue fee using payment by account\n* issuing and conducting the claim in English\n* representing a claimant who has no civil proceedings order, civil restraint order or all proceedings order against them\n* representing a claimant who isn’t seeking Help With Fees\n\nBoth claimant and defendant must:\n* have an address in England or Wales\n* be 18 or older and not a protected party\n\nThe claim you’re issuing must not:\n* ordinarily follow the Part 8 procedure\n* be brought under the Consumer Credit Act 1974\n* be against the crown\n\nIf this claim doesn't meet these conditions, select 'Cancel'",
+    "Label": "## Issue civil court proceedings\n### Who can use this service\nUse this service if you’re representing a claimant and:\n* issuing a claim for an unspecified (unfixed) amount of money\n* able to pay the full issue fee using fee account\n* serving the claim form yourself to a defendant who lives in the UK\n* serving a claim form in English\n* have an email and UK postal address\n\n### About the claimant\n The claimant must: \n* have a litigation friend if they are a child under 18\n* have an address in England or Wales\n* not have a civil restraint, all or civil proceedings order against them\n\n### About the claim\nThe claim must not be against the crown or ordinarily follow the Part 8 procedure.",
     "FieldType": "Label",
     "SecurityClassification": "Public"
   },
@@ -40,6 +40,22 @@
     "SecurityClassification": "Public",
     "_Definition":  "The details of the first applicant on the case",
     "_Category":  "COMMON"
+  },
+  {
+    "LiveFrom": "01/01/2017",
+    "CaseTypeID": "UNSPECIFIED_CLAIMS",
+    "ID": "applicant1LitigationFriendRequired",
+    "Label": "Is the claimant a child?",
+    "FieldType": "YesOrNo",
+    "SecurityClassification": "Public"
+  },
+  {
+    "LiveFrom": "01/01/2017",
+    "CaseTypeID": "UNSPECIFIED_CLAIMS",
+    "ID": "applicant1LitigationFriend",
+    "Label": "Claimant litigation details",
+    "FieldType": "LitigationFriend",
+    "SecurityClassification": "Public"
   },
   {
     "LiveFrom": "01/01/2017",
@@ -171,6 +187,16 @@
     "FieldType": "ServiceMethod",
     "SecurityClassification": "Public",
     "_Definition":  "The delivery method type of service from the applicant solicitor to the first respondent solicitor",
+    "_Category":  "CIVIL"
+  },
+  {
+    "LiveFrom": "01/01/2017",
+    "CaseTypeID": "UNSPECIFIED_CLAIMS",
+    "ID": "serviceNamedPersonToRespondentSolicitor1",
+    "Label": "On whom did you serve?",
+    "FieldType": "Text",
+    "SecurityClassification": "Public",
+    "_Definition":  "The name of the person served by the applicant solicitor to the first respondent solicitor",
     "_Category":  "CIVIL"
   },
   {
@@ -313,7 +339,7 @@
   {
     "LiveFrom": "01/01/2017",
     "CaseTypeID": "UNSPECIFIED_CLAIMS",
-    "ID": "defendantDetails",
+    "ID": "respondentDetails",
     "Label": "The claimant has provided the following name and address for the defendant.\n\nIf this is not correct, you should contact the claimant's legal representative.\n\n**Party type:** ${respondent1.partyTypeDisplayValue}\n\n**Name:** ${respondent1.partyName} ${respondent1.soleTraderTradingAs}\n\n\n\n**Address:**<br />\r\n${respondent1.primaryAddress.AddressLine1}<br />${respondent1.primaryAddress.AddressLine2}<br />${respondent1.primaryAddress.AddressLine3}<br />${respondent1.primaryAddress.PostTown}<br />${respondent1.primaryAddress.County}<br />${respondent1.primaryAddress.PostCode}",
     "FieldType": "Label",
     "SecurityClassification": "Public"
@@ -335,7 +361,7 @@
     "ID": "respondent1ClaimResponseType",
     "Label": "The defendant:",
     "FieldType": "FixedRadioList",
-    "FieldTypeParameter": "ResponseType",
+    "FieldTypeParameter": "RespondentResponseType",
     "SecurityClassification": "Public"
   },
   {
@@ -350,7 +376,7 @@
     "LiveFrom": "01/01/2017",
     "CaseTypeID": "UNSPECIFIED_CLAIMS",
     "ID": "respondent1ClaimResponseDocument",
-    "Label": "Upload your response",
+    "Label": "Upload defence",
     "FieldType": "ResponseDocument",
     "SecurityClassification": "Public"
   },
@@ -417,6 +443,265 @@
     "ID": "businessProcess",
     "Label": "Business process for camunda",
     "FieldType": "BusinessProcess",
+    "SecurityClassification": "Public"
+  },
+  {
+    "LiveFrom": "01/01/2017",
+    "CaseTypeID": "UNSPECIFIED_CLAIMS",
+    "ID": "respondent1DQFileDirectionsQuestionnaire",
+    "Label": "File directions questionnaire",
+    "FieldType": "FileDirectionsQuestionnaire",
+    "SecurityClassification": "Public"
+  },
+  {
+    "LiveFrom": "01/01/2017",
+    "CaseTypeID": "UNSPECIFIED_CLAIMS",
+    "ID": "respondent1DQDisclosureOfElectronicDocuments",
+    "Label": "Disclosure of electronic documents",
+    "FieldType": "DisclosureOfElectronicDocuments",
+    "SecurityClassification": "Public"
+  },
+  {
+    "LiveFrom": "01/01/2017",
+    "CaseTypeID": "UNSPECIFIED_CLAIMS",
+    "ID": "respondent1DQDisclosureOfNonElectronicDocuments",
+    "Label": "Disclosure of non-electronic documents",
+    "FieldType": "DisclosureOfNonElectronicDocuments",
+    "SecurityClassification": "Public"
+  },
+  {
+    "LiveFrom": "01/01/2017",
+    "CaseTypeID": "UNSPECIFIED_CLAIMS",
+    "ID": "respondent1DQDisclosureReport",
+    "Label": "Disclosure report",
+    "FieldType": "DisclosureReport",
+    "SecurityClassification": "Public"
+  },
+  {
+    "LiveFrom": "01/01/2017",
+    "CaseTypeID": "UNSPECIFIED_CLAIMS",
+    "ID": "respondent1DQExperts",
+    "Label": "Experts",
+    "FieldType": "Experts",
+    "SecurityClassification": "Public"
+  },
+  {
+    "LiveFrom": "01/01/2017",
+    "CaseTypeID": "UNSPECIFIED_CLAIMS",
+    "ID": "respondent1DQWitnesses",
+    "Label": "Witnesses",
+    "FieldType": "Witnesses",
+    "SecurityClassification": "Public"
+  },
+  {
+    "LiveFrom": "01/01/2017",
+    "CaseTypeID": "UNSPECIFIED_CLAIMS",
+    "ID": "respondent1DQHearing",
+    "Label": "Hearing",
+    "FieldType": "Hearing",
+    "SecurityClassification": "Public"
+  },
+  {
+    "LiveFrom": "01/01/2017",
+    "CaseTypeID": "UNSPECIFIED_CLAIMS",
+    "ID": "respondent1DQDraftDirectionsLabel",
+    "Label": "## Upload draft directions",
+    "FieldType": "Label",
+    "SecurityClassification": "Public"
+  },
+  {
+    "LiveFrom": "01/01/2017",
+    "CaseTypeID": "UNSPECIFIED_CLAIMS",
+    "ID": "respondent1DQDraftDirections",
+    "Label": "Upload file",
+    "HintText": "We accept documents sized 10MB or smaller, in these formats: pdf, doc, docx, jpg, jpeg, xls, xlsx, png.",
+    "FieldType": "Document",
+    "SecurityClassification": "Public"
+  },
+  {
+    "LiveFrom": "01/01/2017",
+    "CaseTypeID": "UNSPECIFIED_CLAIMS",
+    "ID": "respondent1DQRequestedCourt",
+    "Label": "The claimant requested court is",
+    "FieldType": "RequestedCourt",
+    "SecurityClassification": "Public"
+  },
+  {
+    "LiveFrom": "01/01/2017",
+    "CaseTypeID": "UNSPECIFIED_CLAIMS",
+    "ID": "respondent1DQHearingSupport",
+    "Label": "Hearing support requirements",
+    "FieldType": "HearingSupportRequirements",
+    "SecurityClassification": "Public"
+  },
+  {
+    "LiveFrom": "01/01/2017",
+    "CaseTypeID": "UNSPECIFIED_CLAIMS",
+    "ID": "respondent1DQFurtherInformation",
+    "Label": "Further information",
+    "FieldType": "FurtherInformation",
+    "SecurityClassification": "Public"
+  },
+  {
+    "LiveFrom": "01/01/2017",
+    "CaseTypeID": "UNSPECIFIED_CLAIMS",
+    "ID": "respondent1DQStatementOfTruth",
+    "Label": "Statement of truth",
+    "FieldType": "StatementOfTruth",
+    "SecurityClassification": "Public"
+  },
+  {
+    "LiveFrom": "01/01/2017",
+    "CaseTypeID": "UNSPECIFIED_CLAIMS",
+    "ID": "applicant1DQFileDirectionsQuestionnaire",
+    "Label": "File directions questionnaire",
+    "FieldType": "FileDirectionsQuestionnaire",
+    "SecurityClassification": "Public"
+  },
+  {
+    "LiveFrom": "01/01/2017",
+    "CaseTypeID": "UNSPECIFIED_CLAIMS",
+    "ID": "applicant1DQDisclosureOfElectronicDocuments",
+    "Label": "Disclosure of electronic documents",
+    "FieldType": "DisclosureOfElectronicDocuments",
+    "SecurityClassification": "Public"
+  },
+  {
+    "LiveFrom": "01/01/2017",
+    "CaseTypeID": "UNSPECIFIED_CLAIMS",
+    "ID": "applicant1DQDisclosureOfNonElectronicDocumentsLabel",
+    "Label": "## Disclosure of non-electronic documents",
+    "FieldType": "Label",
+    "SecurityClassification": "Public"
+  },
+  {
+    "LiveFrom": "01/01/2017",
+    "CaseTypeID": "UNSPECIFIED_CLAIMS",
+    "ID": "applicant1DQDisclosureOfNonElectronicDocuments",
+    "Label": "Disclosure of non-electronic documents",
+    "FieldType": "DisclosureOfNonElectronicDocuments",
+    "SecurityClassification": "Public"
+  },
+  {
+    "LiveFrom": "01/01/2017",
+    "CaseTypeID": "UNSPECIFIED_CLAIMS",
+    "ID": "applicant1DQDisclosureReport",
+    "Label": "Disclosure report",
+    "FieldType": "DisclosureReport",
+    "SecurityClassification": "Public"
+  },
+  {
+    "LiveFrom": "01/01/2017",
+    "CaseTypeID": "UNSPECIFIED_CLAIMS",
+    "ID": "applicant1DQExperts",
+    "Label": "Experts",
+    "FieldType": "Experts",
+    "SecurityClassification": "Public"
+  },
+  {
+    "LiveFrom": "01/01/2017",
+    "CaseTypeID": "UNSPECIFIED_CLAIMS",
+    "ID": "applicant1DQWitnesses",
+    "Label": "Witnesses",
+    "FieldType": "Witnesses",
+    "SecurityClassification": "Public"
+  },
+  {
+    "LiveFrom": "01/01/2017",
+    "CaseTypeID": "UNSPECIFIED_CLAIMS",
+    "ID": "applicant1DQHearing",
+    "Label": "Hearing",
+    "FieldType": "Hearing",
+    "SecurityClassification": "Public"
+  },
+  {
+    "LiveFrom": "01/01/2017",
+    "CaseTypeID": "UNSPECIFIED_CLAIMS",
+    "ID": "applicant1DQDraftDirectionsLabel",
+    "Label": "## Upload draft directions",
+    "FieldType": "Label",
+    "SecurityClassification": "Public"
+  },
+  {
+    "LiveFrom": "01/01/2017",
+    "CaseTypeID": "UNSPECIFIED_CLAIMS",
+    "ID": "applicant1DQDraftDirections",
+    "Label": "Upload file",
+    "HintText": "We accept documents sized 10MB or smaller, in these formats: pdf, doc, docx, jpg, jpeg, xls, xlsx, png.",
+    "FieldType": "Document",
+    "SecurityClassification": "Public"
+  },
+  {
+    "LiveFrom": "01/01/2017",
+    "CaseTypeID": "UNSPECIFIED_CLAIMS",
+    "ID": "applicant1DQHearingSupport",
+    "Label": "Hearing support requirements",
+    "FieldType": "HearingSupportRequirements",
+    "SecurityClassification": "Public"
+  },
+  {
+    "LiveFrom": "01/01/2017",
+    "CaseTypeID": "UNSPECIFIED_CLAIMS",
+    "ID": "applicant1DQFurtherInformation",
+    "Label": "Further information",
+    "FieldType": "FurtherInformation",
+    "SecurityClassification": "Public"
+  },
+  {
+    "LiveFrom": "01/01/2017",
+    "CaseTypeID": "UNSPECIFIED_CLAIMS",
+    "ID": "applicant1DQStatementOfTruth",
+    "Label": "Statement of truth",
+    "FieldType": "StatementOfTruth",
+    "SecurityClassification": "Public"
+  },
+  {
+    "LiveFrom": "01/01/2017",
+    "CaseTypeID": "UNSPECIFIED_CLAIMS",
+    "ID": "paymentReference",
+    "Label": "Successful PBA payment reference",
+    "FieldType": "Text",
+    "SecurityClassification": "Public"
+  },
+  {
+    "LiveFrom": "01/01/2017",
+    "CaseTypeID": "UNSPECIFIED_CLAIMS",
+    "ID": "paymentErrorMessage",
+    "Label": "PBA payment error message",
+    "FieldType": "Text",
+    "SecurityClassification": "Public"
+  },
+  {
+    "LiveFrom": "01/01/2017",
+    "CaseTypeID": "UNSPECIFIED_CLAIMS",
+    "ID": "paymentErrorCode",
+    "Label": "PBA payment error code",
+    "FieldType": "Text",
+    "SecurityClassification": "Public"
+  },
+  {
+    "LiveFrom": "01/01/2017",
+    "CaseTypeID": "UNSPECIFIED_CLAIMS",
+    "ID": "pbaNumber",
+    "Label": "Select a Payment by Account number from the list",
+    "FieldType": "FixedList",
+    "FieldTypeParameter": "PbaNumber",
+    "SecurityClassification": "Public"
+  },
+  {
+    "LiveFrom": "01/01/2017",
+    "CaseTypeID": "UNSPECIFIED_CLAIMS",
+    "ID": "respondent1LitigationFriend",
+    "Label": "Defendant litigation details",
+    "FieldType": "LitigationFriend",
+    "SecurityClassification": "Public"
+  },
+  {
+    "LiveFrom": "01/01/2017",
+    "CaseTypeID": "UNSPECIFIED_CLAIMS",
+    "ID": "paymentDetails",
+    "Label": "Details of PBA payment",
+    "FieldType": "PaymentDetails",
     "SecurityClassification": "Public"
   },
   {

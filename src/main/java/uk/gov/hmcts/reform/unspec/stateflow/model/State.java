@@ -1,5 +1,8 @@
 package uk.gov.hmcts.reform.unspec.stateflow.model;
 
+import lombok.EqualsAndHashCode;
+
+@EqualsAndHashCode
 public class State {
 
     public static final String ERROR_STATE = "ERROR";

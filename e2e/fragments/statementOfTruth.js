@@ -11,6 +11,14 @@ module.exports = {
       name: 'input[id$="applicant1ServiceStatementOfTruthToRespondentSolicitor1_name"',
       role: 'input[id$="applicant1ServiceStatementOfTruthToRespondentSolicitor1_role"',
     },
+    respondent1DQ: {
+      name: 'input[id$="respondent1DQStatementOfTruth_name"',
+      role: 'input[id$="respondent1DQStatementOfTruth_role"',
+    },
+    applicant1DQ: {
+      name: 'input[id$="applicant1DQStatementOfTruth_name"',
+      role: 'input[id$="applicant1DQStatementOfTruth_role"',
+    }
   },
 
   async enterNameAndRole(type = '', name = 'John Smith', role = 'Solicitor') {

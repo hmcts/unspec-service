@@ -51,10 +51,10 @@ fees:
     event: issue
 
 payments:
+  enabled: false
   api:
-    # TODO: update once f&p onboarding is completed
-    site_id:
-    service:
+    site_id: AAA7
+    service: UNSPEC
 
 idam:
   s2s-auth:
@@ -86,7 +86,19 @@ reference:
 
 notifications:
   govNotifyApiKey: ${GOV_NOTIFY_API_KEY:}
-  defendantSolicitorClaimIssueEmailTemplate: "1e55aae6-879e-4e63-93ce-cf4cf93636f2"
+  respondentSolicitorClaimIssueEmailTemplate: "1e55aae6-879e-4e63-93ce-cf4cf93636f2"
+  solicitorResponseToCase: "a2b3d626-bf20-406e-ac8c-8d8a5ea43c66"
+  respondentSolicitorAcknowledgeService: "6ba538b6-f3f6-4943-862d-b436c0c3d741"
+  failedPayment: "d32446d7-9f97-4d3b-8708-5639ebc27da3"
+  applicantSolicitorEmail: claimantsolicitor@gmail.com
+  respondentSolicitorEmail: defendantsolicitor@gmail.com
+
+sendgrid:
+  api-key: ${SENDGRID_API_KEY:false}
+
+testing:
+  support:
+    enabled: ${TESTING_SUPPORT_ENABLED:false}
 ---
 
 spring:
@@ -113,6 +125,7 @@ fees:
     url: http://localhost:8765
 
 payments:
+  enabled: true
   api:
     url: http://localhost:8765
 
@@ -135,6 +148,13 @@ document_management:
 docmosis:
   tornado:
     url: http://localhost:5433
+
+sendgrid:
+  api-key: fake-key
+
+testing:
+  support:
+    enabled: true
 ---
 
 spring:
@@ -188,5 +208,12 @@ feign:
         url: http://fake/engine-rest/
       remoteExternalTaskService:
         url: http://fake/engine-rest/
+
 notifications:
   govNotifyApiKey: some-gov-uk-notify-api-key
+  applicantSolicitorEmail: claimantsolicitor@example.com
+  respondentSolicitorEmail: defendantsolicitor@example.com
+
+testing:
+  support:
+    enabled: true

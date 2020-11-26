@@ -9,7 +9,6 @@ import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.ArgumentsProvider;
 import org.junit.jupiter.params.provider.ArgumentsSource;
 import org.junit.jupiter.params.provider.CsvSource;
-import org.junit.jupiter.params.provider.EnumSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.jackson.JacksonAutoConfiguration;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -26,9 +25,10 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static uk.gov.hmcts.reform.unspec.callback.CaseEvent.ACKNOWLEDGE_SERVICE;
+import static uk.gov.hmcts.reform.unspec.callback.CaseEvent.ADD_DEFENDANT_LITIGATION_FRIEND;
 import static uk.gov.hmcts.reform.unspec.callback.CaseEvent.CLAIMANT_RESPONSE;
 import static uk.gov.hmcts.reform.unspec.callback.CaseEvent.CONFIRM_SERVICE;
-import static uk.gov.hmcts.reform.unspec.callback.CaseEvent.CREATE_CASE;
+import static uk.gov.hmcts.reform.unspec.callback.CaseEvent.CREATE_CLAIM;
 import static uk.gov.hmcts.reform.unspec.callback.CaseEvent.DEFENDANT_RESPONSE;
 import static uk.gov.hmcts.reform.unspec.callback.CaseEvent.DISCONTINUE_CLAIM;
 import static uk.gov.hmcts.reform.unspec.callback.CaseEvent.MOVE_TO_STAYED;
@@ -70,7 +70,7 @@ class FlowStateAllowedEventServiceTest {
                 Arguments.of(CaseDataBuilder.builder().atStateExtensionRequested().build(), EXTENSION_REQUESTED),
                 Arguments.of(CaseDataBuilder.builder().atStateExtensionResponded().build(), EXTENSION_RESPONDED),
                 Arguments.of(CaseDataBuilder.builder().atStateRespondedToClaim().build(), RESPONDED_TO_CLAIM),
-                Arguments.of(CaseDataBuilder.builder().atStateFullDefence().build(), FULL_DEFENCE)
+                Arguments.of(CaseDataBuilder.builder().atStateFullDefence().build(), CLAIM_STAYED)
             );
         }
     }
@@ -92,49 +92,60 @@ class FlowStateAllowedEventServiceTest {
         @Test
         void shouldReturnValidEvents_whenFlowStateIsDraft() {
             assertThat(flowStateAllowedEventService.getAllowedEvents(DRAFT.fullName()))
-                .containsExactlyInAnyOrder(CREATE_CASE, WITHDRAW_CLAIM, DISCONTINUE_CLAIM);
+                .containsExactlyInAnyOrder(CREATE_CLAIM, WITHDRAW_CLAIM, DISCONTINUE_CLAIM);
         }
 
         @Test
         void shouldReturnValidEvents_whenFlowStateIsClaimIssued() {
             assertThat(flowStateAllowedEventService.getAllowedEvents(CLAIM_ISSUED.fullName()))
-                .containsExactlyInAnyOrder(MOVE_TO_STAYED, CONFIRM_SERVICE, WITHDRAW_CLAIM, DISCONTINUE_CLAIM);
+                .containsExactlyInAnyOrder(MOVE_TO_STAYED, CONFIRM_SERVICE, ADD_DEFENDANT_LITIGATION_FRIEND,
+                                           WITHDRAW_CLAIM, DISCONTINUE_CLAIM);
         }
 
         @Test
         void shouldReturnValidEvents_whenFlowStateIsServiceConfirmed() {
             assertThat(flowStateAllowedEventService.getAllowedEvents(SERVICE_CONFIRMED.fullName()))
-                .containsExactlyInAnyOrder(ACKNOWLEDGE_SERVICE, DEFENDANT_RESPONSE, WITHDRAW_CLAIM, DISCONTINUE_CLAIM);
+                .containsExactlyInAnyOrder(ACKNOWLEDGE_SERVICE, DEFENDANT_RESPONSE, ADD_DEFENDANT_LITIGATION_FRIEND,
+                                           WITHDRAW_CLAIM, DISCONTINUE_CLAIM);
         }
 
         @Test
         void shouldReturnValidEvents_whenFlowStateIsServiceAcknowledge() {
             assertThat(flowStateAllowedEventService.getAllowedEvents(SERVICE_ACKNOWLEDGED.fullName()))
-                .containsExactlyInAnyOrder(REQUEST_EXTENSION, DEFENDANT_RESPONSE, WITHDRAW_CLAIM, DISCONTINUE_CLAIM);
+                .containsExactlyInAnyOrder(REQUEST_EXTENSION, DEFENDANT_RESPONSE, ADD_DEFENDANT_LITIGATION_FRIEND,
+                                           WITHDRAW_CLAIM, DISCONTINUE_CLAIM);
         }
 
         @Test
         void shouldReturnValidEvents_whenFlowStateIsExtensionRequested() {
             assertThat(flowStateAllowedEventService.getAllowedEvents(EXTENSION_REQUESTED.fullName()))
-                .containsExactlyInAnyOrder(DEFENDANT_RESPONSE, RESPOND_EXTENSION, WITHDRAW_CLAIM, DISCONTINUE_CLAIM);
+                .containsExactlyInAnyOrder(DEFENDANT_RESPONSE, RESPOND_EXTENSION, ADD_DEFENDANT_LITIGATION_FRIEND,
+                                           WITHDRAW_CLAIM, DISCONTINUE_CLAIM);
         }
 
         @Test
         void shouldReturnValidEvents_whenFlowStateIsExtensionResponded() {
             assertThat(flowStateAllowedEventService.getAllowedEvents(EXTENSION_RESPONDED.fullName()))
-                .containsExactlyInAnyOrder(DEFENDANT_RESPONSE, WITHDRAW_CLAIM, DISCONTINUE_CLAIM);
+                .containsExactlyInAnyOrder(DEFENDANT_RESPONSE, ADD_DEFENDANT_LITIGATION_FRIEND, WITHDRAW_CLAIM,
+                                           DISCONTINUE_CLAIM);
         }
 
         @Test
         void shouldReturnValidEvents_whenFlowStateIsRespondToClaim() {
             assertThat(flowStateAllowedEventService.getAllowedEvents(RESPONDED_TO_CLAIM.fullName()))
-                .containsExactlyInAnyOrder(CLAIMANT_RESPONSE, WITHDRAW_CLAIM, DISCONTINUE_CLAIM);
+                .containsExactlyInAnyOrder(CLAIMANT_RESPONSE, ADD_DEFENDANT_LITIGATION_FRIEND, WITHDRAW_CLAIM,
+                                           DISCONTINUE_CLAIM);
         }
 
-        @ParameterizedTest
-        @EnumSource(value = FlowState.Main.class, names = {"CLAIM_STAYED", "FULL_DEFENCE"})
-        void shouldReturnValidEvents_whenFlowStateIsClaimStayedOrFullDefence(FlowState.Main state) {
-            assertThat(flowStateAllowedEventService.getAllowedEvents(state.fullName()))
+        @Test
+        void shouldReturnValidEvents_whenFlowStateIsFullDefence() {
+            assertThat(flowStateAllowedEventService.getAllowedEvents(FULL_DEFENCE.fullName()))
+                .containsExactlyInAnyOrder(ADD_DEFENDANT_LITIGATION_FRIEND, WITHDRAW_CLAIM, DISCONTINUE_CLAIM);
+        }
+
+        @Test
+        void shouldReturnValidEvents_whenFlowStateIsClaimStayed() {
+            assertThat(flowStateAllowedEventService.getAllowedEvents(CLAIM_STAYED.fullName()))
                 .containsExactlyInAnyOrder(WITHDRAW_CLAIM, DISCONTINUE_CLAIM);
         }
     }
@@ -144,7 +155,7 @@ class FlowStateAllowedEventServiceTest {
 
         @ParameterizedTest
         @CsvSource({
-            "DRAFT,CREATE_CASE",
+            "DRAFT,CREATE_CLAIM",
             "CLAIM_ISSUED,MOVE_TO_STAYED",
             "CLAIM_ISSUED,CONFIRM_SERVICE",
             "SERVICE_CONFIRMED,ACKNOWLEDGE_SERVICE",
@@ -184,7 +195,7 @@ class FlowStateAllowedEventServiceTest {
         @SneakyThrows
         public Stream<? extends Arguments> provideArguments(ExtensionContext context) {
             return Stream.of(
-                Arguments.of(CREATE_CASE, new String[]{DRAFT.fullName()}),
+                Arguments.of(CREATE_CLAIM, new String[]{DRAFT.fullName()}),
                 Arguments.of(CONFIRM_SERVICE, new String[]{CLAIM_ISSUED.fullName()}),
                 Arguments.of(REQUEST_EXTENSION, new String[]{SERVICE_ACKNOWLEDGED.fullName()}),
                 Arguments.of(RESPOND_EXTENSION, new String[]{EXTENSION_REQUESTED.fullName()}),
@@ -241,7 +252,7 @@ class FlowStateAllowedEventServiceTest {
                 Arguments.of(true, CaseDetailsBuilder.builder().atStateExtensionRequested().build(), RESPOND_EXTENSION),
                 Arguments.of(true, CaseDetailsBuilder.builder().atStateExtensionRequested().build(), WITHDRAW_CLAIM),
                 Arguments.of(true, CaseDetailsBuilder.builder().atStateExtensionRequested().build(), DISCONTINUE_CLAIM),
-                Arguments.of(false, CaseDetailsBuilder.builder().atStateExtensionRequested().build(), CREATE_CASE),
+                Arguments.of(false, CaseDetailsBuilder.builder().atStateExtensionRequested().build(), CREATE_CLAIM),
                 Arguments.of(
                     false,
                     CaseDetailsBuilder.builder().atStateExtensionRequested().build(),
@@ -256,7 +267,7 @@ class FlowStateAllowedEventServiceTest {
                     DEFENDANT_RESPONSE
                 ),
                 Arguments.of(true, CaseDetailsBuilder.builder().atStateServiceAcknowledge().build(), DISCONTINUE_CLAIM),
-                Arguments.of(false, CaseDetailsBuilder.builder().atStateServiceAcknowledge().build(), CREATE_CASE),
+                Arguments.of(false, CaseDetailsBuilder.builder().atStateServiceAcknowledge().build(), CREATE_CLAIM),
                 Arguments.of(false, CaseDetailsBuilder.builder().atStateServiceAcknowledge().build(), CONFIRM_SERVICE),
                 Arguments.of(false, CaseDetailsBuilder.builder().atStateServiceAcknowledge().build(), CLAIMANT_RESPONSE)
             );

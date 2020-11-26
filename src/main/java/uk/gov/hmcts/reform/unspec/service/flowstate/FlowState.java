@@ -22,6 +22,9 @@ public interface FlowState {
 
     enum Main implements FlowState {
         DRAFT,
+        PENDING_CASE_ISSUED,
+        PAYMENT_SUCCESSFUL,
+        PAYMENT_FAILED,
         CLAIM_ISSUED,
         CLAIM_STAYED,
         SERVICE_CONFIRMED,
@@ -29,7 +32,9 @@ public interface FlowState {
         EXTENSION_REQUESTED,
         EXTENSION_RESPONDED,
         RESPONDED_TO_CLAIM,
-        FULL_DEFENCE;
+        FULL_DEFENCE,
+        CLAIM_WITHDRAWN,
+        CLAIM_DISCONTINUED;
 
         public static final String FLOW_NAME = "MAIN";
 

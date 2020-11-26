@@ -1,6 +1,5 @@
 package uk.gov.hmcts.reform.unspec.service.docmosis.cos;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -56,17 +55,15 @@ class CertificateOfServiceGeneratorTest {
 
     @MockBean
     private DocumentManagementService documentManagementService;
+
     @MockBean
     private DocumentGeneratorService documentGeneratorService;
 
     @Autowired
     private CertificateOfServiceGenerator generator;
-    @Autowired
-    private ObjectMapper objectMapper;
 
     @Test
     void shouldGenerateCertificateOfService_whenValidDataIsProvided() {
-
         when(documentGeneratorService.generateDocmosisDocument(any(DocmosisData.class), eq(N215)))
             .thenReturn(new DocmosisDocument(N215.getDocumentTitle(), bytes));
 
@@ -88,6 +85,17 @@ class CertificateOfServiceGeneratorTest {
     class PrepareSolicitorReferences {
 
         @Test
+        void shouldPopulateNotProvided_whenSolicitorReferencesIsNull() {
+            SolicitorReferences solicitorReferences = null;
+            SolicitorReferences result = generator.prepareSolicitorReferences(solicitorReferences);
+            assertAll(
+                "SolicitorReferences not provided",
+                () -> assertEquals("Not Provided", result.getApplicantSolicitor1Reference()),
+                () -> assertEquals("Not Provided", result.getRespondentSolicitor1Reference())
+            );
+        }
+
+        @Test
         void shouldPopulateNotProvided_whenSolicitorReferencesMissing() {
             SolicitorReferences solicitorReferences = SolicitorReferences.builder().build();
             SolicitorReferences result = generator.prepareSolicitorReferences(solicitorReferences);
@@ -102,15 +110,15 @@ class CertificateOfServiceGeneratorTest {
         void shouldPopulateProvidedValues_whenSolicitorReferencesAvailable() {
             SolicitorReferences solicitorReferences = SolicitorReferences
                 .builder()
-                .applicantSolicitor1Reference("Claimant ref")
-                .respondentSolicitor1Reference("Defendant ref")
+                .applicantSolicitor1Reference("Applicant ref")
+                .respondentSolicitor1Reference("Respondent ref")
                 .build();
 
             SolicitorReferences result = generator.prepareSolicitorReferences(solicitorReferences);
             assertAll(
                 "SolicitorReferences provided",
-                () -> assertEquals("Claimant ref", result.getApplicantSolicitor1Reference()),
-                () -> assertEquals("Defendant ref", result.getRespondentSolicitor1Reference())
+                () -> assertEquals("Applicant ref", result.getApplicantSolicitor1Reference()),
+                () -> assertEquals("Respondent ref", result.getRespondentSolicitor1Reference())
             );
         }
 
@@ -118,14 +126,14 @@ class CertificateOfServiceGeneratorTest {
         void shouldPopulateNotProvided_whenOneReferencesNotAvailable() {
             SolicitorReferences solicitorReferences = SolicitorReferences
                 .builder()
-                .applicantSolicitor1Reference("Claimant ref")
+                .applicantSolicitor1Reference("Applicant ref")
                 .build();
 
             SolicitorReferences result = generator.prepareSolicitorReferences(solicitorReferences);
 
             assertAll(
                 "SolicitorReferences one is provided",
-                () -> assertEquals("Claimant ref", result.getApplicantSolicitor1Reference()),
+                () -> assertEquals("Applicant ref", result.getApplicantSolicitor1Reference()),
                 () -> assertEquals("Not Provided", result.getRespondentSolicitor1Reference())
             );
         }
@@ -157,6 +165,11 @@ class CertificateOfServiceGeneratorTest {
             String location = generator.prepareServedLocation(serviceLocation);
 
             assertEquals(ServiceLocationType.OTHER.getLabel() + " - " + serviceLocation.getOther(), location);
+        }
+
+        @Test
+        void shouldReturnNull_whenLocationIsNull() {
+            assertThat(generator.prepareServedLocation(null)).isNull();
         }
     }
 

@@ -12,6 +12,7 @@ import uk.gov.hmcts.reform.ccd.client.model.AboutToStartOrSubmitCallbackResponse
 import uk.gov.hmcts.reform.ccd.client.model.CallbackRequest;
 import uk.gov.hmcts.reform.ccd.client.model.CallbackResponse;
 import uk.gov.hmcts.reform.ccd.client.model.CaseDetails;
+import uk.gov.hmcts.reform.unspec.helpers.CaseDetailsConverter;
 import uk.gov.hmcts.reform.unspec.model.BusinessProcess;
 
 import java.util.Collections;
@@ -24,11 +25,12 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static uk.gov.hmcts.reform.unspec.callback.CallbackType.ABOUT_TO_SUBMIT;
 import static uk.gov.hmcts.reform.unspec.callback.CallbackVersion.V_1;
 import static uk.gov.hmcts.reform.unspec.callback.CallbackVersion.V_2;
-import static uk.gov.hmcts.reform.unspec.callback.CaseEvent.CREATE_CASE;
-import static uk.gov.hmcts.reform.unspec.callback.CaseEvent.NOTIFY_DEFENDANT_SOLICITOR_FOR_CLAIM_ISSUE;
+import static uk.gov.hmcts.reform.unspec.callback.CaseEvent.CREATE_CLAIM;
+import static uk.gov.hmcts.reform.unspec.callback.CaseEvent.NOTIFY_RESPONDENT_SOLICITOR1_FOR_CLAIM_ISSUE;
 
 @SpringBootTest(classes = {
     CallbackHandlerFactory.class,
+    CaseDetailsConverter.class,
     JacksonAutoConfiguration.class},
     properties = {"spring.main.allow-bean-definition-overriding=true"}
 )
@@ -41,7 +43,7 @@ class CallbackHandlerFactoryTest {
         .build();
 
     public static final CallbackResponse ALREADY_HANDLED_EVENT_RESPONSE = AboutToStartOrSubmitCallbackResponse.builder()
-        .errors(List.of(format("Event %s is already processed", NOTIFY_DEFENDANT_SOLICITOR_FOR_CLAIM_ISSUE.getValue())))
+        .errors(List.of(format("Event %s is already processed", NOTIFY_RESPONDENT_SOLICITOR1_FOR_CLAIM_ISSUE.name())))
         .build();
 
     @TestConfiguration
@@ -51,9 +53,9 @@ class CallbackHandlerFactoryTest {
 
             return new CallbackHandler() {
                 @Override
-                protected Map<CallbackType, Callback> callbacks() {
+                protected Map<String, Callback> callbacks() {
                     return ImmutableMap.of(
-                        ABOUT_TO_SUBMIT, this::createCitizenClaim
+                        ABOUT_TO_SUBMIT.getValue(), this::createCitizenClaim
                     );
                 }
 
@@ -63,7 +65,7 @@ class CallbackHandlerFactoryTest {
 
                 @Override
                 public List<CaseEvent> handledEvents() {
-                    return Collections.singletonList(CREATE_CASE);
+                    return Collections.singletonList(CREATE_CLAIM);
                 }
             };
         }
@@ -73,9 +75,9 @@ class CallbackHandlerFactoryTest {
 
             return new CallbackHandler() {
                 @Override
-                protected Map<CallbackType, Callback> callbacks() {
+                protected Map<String, Callback> callbacks() {
                     return ImmutableMap.of(
-                        ABOUT_TO_SUBMIT, this::sendSealedClaim
+                        ABOUT_TO_SUBMIT.getValue(), this::sendSealedClaim
                     );
                 }
 
@@ -85,12 +87,12 @@ class CallbackHandlerFactoryTest {
 
                 @Override
                 public String camundaActivityId() {
-                    return "SealedClaimEmailTaskId";
+                    return "CreateClaimPaymentSuccessfulNotifyRespondentSolicitor1";
                 }
 
                 @Override
                 public List<CaseEvent> handledEvents() {
-                    return Collections.singletonList(NOTIFY_DEFENDANT_SOLICITOR_FOR_CLAIM_ISSUE);
+                    return Collections.singletonList(NOTIFY_RESPONDENT_SOLICITOR1_FOR_CLAIM_ISSUE);
                 }
             };
         }
@@ -120,8 +122,8 @@ class CallbackHandlerFactoryTest {
     void shouldProcessEvent_whenValidCaseEvent() {
         CallbackRequest callbackRequest = CallbackRequest
             .builder()
-            .eventId(CREATE_CASE.getValue())
-            .caseDetails(CaseDetails.builder().data(Map.of("state", "created")).build())
+            .eventId(CREATE_CLAIM.name())
+            .caseDetailsBefore(CaseDetails.builder().data(Map.of("state", "created")).build())
             .build();
 
         CallbackParams params = CallbackParams.builder()
@@ -140,10 +142,10 @@ class CallbackHandlerFactoryTest {
     void shouldNotProcessEventAgain_whenEventIsAlreadyProcessed() {
         CallbackRequest callbackRequest = CallbackRequest
             .builder()
-            .eventId(NOTIFY_DEFENDANT_SOLICITOR_FOR_CLAIM_ISSUE.getValue())
-            .caseDetails(CaseDetails.builder().data(Map.of(
+            .eventId(NOTIFY_RESPONDENT_SOLICITOR1_FOR_CLAIM_ISSUE.name())
+            .caseDetailsBefore(CaseDetails.builder().data(Map.of(
                 "businessProcess",
-                BusinessProcess.builder().activityId("SealedClaimEmailTaskId").build()
+                BusinessProcess.builder().activityId("CreateClaimPaymentSuccessfulNotifyRespondentSolicitor1").build()
             )).build())
             .build();
 
@@ -163,8 +165,8 @@ class CallbackHandlerFactoryTest {
     void shouldProcessEvent_whenEventIsNotAlreadyProcessed() {
         CallbackRequest callbackRequest = CallbackRequest
             .builder()
-            .eventId(NOTIFY_DEFENDANT_SOLICITOR_FOR_CLAIM_ISSUE.getValue())
-            .caseDetails(CaseDetails.builder().data(Map.of(
+            .eventId(NOTIFY_RESPONDENT_SOLICITOR1_FOR_CLAIM_ISSUE.name())
+            .caseDetailsBefore(CaseDetails.builder().data(Map.of(
                 "businessProcess",
                 BusinessProcess.builder().activityId("unProcessedTask").build()
             )).build())
@@ -186,11 +188,30 @@ class CallbackHandlerFactoryTest {
     void shouldProcessEvent_whenEventHasNoCamundaTask() {
         CallbackRequest callbackRequest = CallbackRequest
             .builder()
-            .eventId(CREATE_CASE.getValue())
-            .caseDetails(CaseDetails.builder().data(Map.of(
+            .eventId(CREATE_CLAIM.name())
+            .caseDetailsBefore(CaseDetails.builder().data(Map.of(
                 "businessProcess",
                 BusinessProcess.builder().activityId("unProcessedTask").build()
             )).build())
+            .build();
+
+        CallbackParams params = CallbackParams.builder()
+            .request(callbackRequest)
+            .type(ABOUT_TO_SUBMIT)
+            .version(V_1)
+            .params(ImmutableMap.of(CallbackParams.Params.BEARER_TOKEN, BEARER_TOKEN))
+            .build();
+
+        CallbackResponse callbackResponse = callbackHandlerFactory.dispatch(params);
+
+        assertEquals(EVENT_HANDLED_RESPONSE, callbackResponse);
+    }
+
+    @Test
+    void shouldProcessEvent_whenEventHasNoCaseDetailsBefore() {
+        CallbackRequest callbackRequest = CallbackRequest
+            .builder()
+            .eventId(CREATE_CLAIM.name())
             .build();
 
         CallbackParams params = CallbackParams.builder()

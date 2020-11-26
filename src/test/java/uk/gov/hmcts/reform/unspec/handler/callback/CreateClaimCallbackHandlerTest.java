@@ -1,18 +1,15 @@
 package uk.gov.hmcts.reform.unspec.handler.callback;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.jackson.JacksonAutoConfiguration;
 import org.springframework.boot.autoconfigure.validation.ValidationAutoConfiguration;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import uk.gov.hmcts.reform.ccd.client.model.AboutToStartOrSubmitCallbackResponse;
+import uk.gov.hmcts.reform.ccd.client.model.CaseDetails;
 import uk.gov.hmcts.reform.ccd.client.model.SubmittedCallbackResponse;
 import uk.gov.hmcts.reform.unspec.callback.CallbackParams;
 import uk.gov.hmcts.reform.unspec.callback.CallbackType;
@@ -20,38 +17,27 @@ import uk.gov.hmcts.reform.unspec.config.ClaimIssueConfiguration;
 import uk.gov.hmcts.reform.unspec.config.MockDatabaseConfiguration;
 import uk.gov.hmcts.reform.unspec.helpers.CaseDetailsConverter;
 import uk.gov.hmcts.reform.unspec.model.CaseData;
-import uk.gov.hmcts.reform.unspec.model.ClaimValue;
-import uk.gov.hmcts.reform.unspec.model.common.Element;
-import uk.gov.hmcts.reform.unspec.model.documents.CaseDocument;
+import uk.gov.hmcts.reform.unspec.sampledata.CallbackParamsBuilder;
 import uk.gov.hmcts.reform.unspec.sampledata.CaseDataBuilder;
-import uk.gov.hmcts.reform.unspec.sampledata.CaseDocumentBuilder;
-import uk.gov.hmcts.reform.unspec.service.DeadlinesCalculator;
-import uk.gov.hmcts.reform.unspec.service.IssueDateCalculator;
-import uk.gov.hmcts.reform.unspec.service.docmosis.sealedclaim.SealedClaimFormGenerator;
+import uk.gov.hmcts.reform.unspec.sampledata.CaseDetailsBuilder;
+import uk.gov.hmcts.reform.unspec.sampledata.PartyBuilder;
 import uk.gov.hmcts.reform.unspec.validation.DateOfBirthValidator;
 
-import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 import static java.lang.String.format;
 import static java.time.LocalDate.now;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.when;
-import static uk.gov.hmcts.reform.unspec.callback.CallbackType.MID_SECONDARY;
-import static uk.gov.hmcts.reform.unspec.enums.AllocatedTrack.SMALL_CLAIM;
-import static uk.gov.hmcts.reform.unspec.enums.ClaimType.PERSONAL_INJURY;
+import static uk.gov.hmcts.reform.unspec.callback.CallbackType.ABOUT_TO_START;
+import static uk.gov.hmcts.reform.unspec.callback.CallbackType.MID;
+import static uk.gov.hmcts.reform.unspec.callback.CallbackType.SUBMITTED;
+import static uk.gov.hmcts.reform.unspec.callback.CaseEvent.CREATE_CLAIM;
+import static uk.gov.hmcts.reform.unspec.enums.AllocatedTrack.MULTI_CLAIM;
 import static uk.gov.hmcts.reform.unspec.handler.callback.CreateClaimCallbackHandler.CONFIRMATION_SUMMARY;
 import static uk.gov.hmcts.reform.unspec.helpers.DateFormatHelper.DATE_TIME_AT;
 import static uk.gov.hmcts.reform.unspec.helpers.DateFormatHelper.formatLocalDateTime;
-import static uk.gov.hmcts.reform.unspec.model.documents.DocumentType.SEALED_CLAIM;
-import static uk.gov.hmcts.reform.unspec.service.docmosis.DocmosisTemplates.N1;
-import static uk.gov.hmcts.reform.unspec.utils.PartyNameUtils.getPartyNameBasedOnType;
+import static uk.gov.hmcts.reform.unspec.utils.PartyUtils.getPartyNameBasedOnType;
 
 @SpringBootTest(classes = {
     CreateClaimCallbackHandler.class,
@@ -65,96 +51,85 @@ import static uk.gov.hmcts.reform.unspec.utils.PartyNameUtils.getPartyNameBasedO
 class CreateClaimCallbackHandlerTest extends BaseCallbackHandlerTest {
 
     public static final String REFERENCE_NUMBER = "000LR001";
-    private static final CaseDocument CASE_DOCUMENT = CaseDocumentBuilder.builder()
-        .documentName(format(N1.getDocumentTitle(), REFERENCE_NUMBER))
-        .documentType(SEALED_CLAIM)
-        .build();
-
-    @MockBean
-    private SealedClaimFormGenerator sealedClaimFormGenerator;
-    @MockBean
-    IssueDateCalculator issueDateCalculator;
-    @MockBean
-    DeadlinesCalculator deadlinesCalculator;
 
     @Autowired
     private CreateClaimCallbackHandler handler;
-    @Autowired
-    private ObjectMapper objectMapper;
+
     @Value("${unspecified.response-pack-url}")
     private String responsePackLink;
 
-    @BeforeEach
-    public void setup() {
-        when(sealedClaimFormGenerator.generate(any(CaseData.class), anyString())).thenReturn(CASE_DOCUMENT);
-    }
-
     @Nested
-    class MidEventCallback {
+    class AboutToStartCallback {
 
         @Test
-        void shouldReturnExpectedErrorInMidEvent_whenValuesAreInvalid() {
-            Map<String, Object> data = new HashMap<>();
-            data.put("claimValue", ClaimValue.builder()
-                .higherValue(BigDecimal.valueOf(1)).lowerValue(BigDecimal.valueOf(10)).build());
-
-            CallbackParams params = callbackParamsOf(data, CallbackType.MID);
-
-            var response = (AboutToStartOrSubmitCallbackResponse) handler.handle(params);
-
-            assertThat(response.getErrors())
-                .containsOnly("CONTENT TBC: Higher value must not be lower than the lower value.");
-        }
-
-        @Test
-        void shouldReturnNoErrorInMidEvent_whenValuesAreValid() {
-            Map<String, Object> data = new HashMap<>();
-            data.put("claimValue", ClaimValue.builder()
-                .higherValue(BigDecimal.valueOf(10)).lowerValue(BigDecimal.valueOf(1)).build());
-            data.put("claimType", PERSONAL_INJURY);
-            CallbackParams params = callbackParamsOf(data, CallbackType.MID);
-
-            var response = (AboutToStartOrSubmitCallbackResponse) handler.handle(params);
-
-            assertThat(response.getErrors()).isEmpty();
-            assertThat(response.getData())
-                .isEqualTo(
-                    Map.of(
-                        "claimValue", ClaimValue.builder()
-                            .higherValue(BigDecimal.valueOf(10)).lowerValue(BigDecimal.valueOf(1)).build(),
-                        "claimType", PERSONAL_INJURY,
-                        "allocatedTrack", SMALL_CLAIM
-                    ));
-        }
-    }
-
-    @Nested
-    class MidSecondaryEventCallback {
-
-        @ParameterizedTest
-        @ValueSource(strings = {"individualDateOfBirth", "soleTraderDateOfBirth"})
-        void shouldReturnError_whenDateOfBirthIsInTheFuture(String dateOfBirthField) {
-            Map<String, Object> data = new HashMap<>();
-            data.put("applicant1", Map.of(dateOfBirthField, now().plusDays(1)));
-
-            CallbackParams params = callbackParamsOf(data, MID_SECONDARY);
+        void shouldReturnNoError_WhenAboutToStartIsInvoked() {
+            CaseDetails caseDetails = CaseDetailsBuilder.builder().atStateClaimDraft().build();
+            CallbackParams params = CallbackParamsBuilder.builder().of(ABOUT_TO_START, caseDetails).build();
 
             AboutToStartOrSubmitCallbackResponse response = (AboutToStartOrSubmitCallbackResponse) handler
                 .handle(params);
+
+            assertThat(response.getErrors()).isNull();
+        }
+    }
+
+    @Nested
+    class MidEventApplicantCallback {
+
+        private static final String PAGE_ID = "applicant";
+
+        @Test
+        void shouldReturnError_whenIndividualDateOfBirthIsInTheFuture() {
+            CaseData caseData = CaseDataBuilder.builder().atStateClaimDraft()
+                .applicant1(PartyBuilder.builder().individual()
+                                .individualDateOfBirth(LocalDate.now().plusDays(1))
+                                .build())
+                .build();
+            CallbackParams params = callbackParamsOf(caseData, MID, PAGE_ID);
+
+            var response = (AboutToStartOrSubmitCallbackResponse) handler.handle(params);
 
             assertThat(response.getErrors()).containsExactly("The date entered cannot be in the future");
         }
 
-        @ParameterizedTest
-        @ValueSource(strings = {"individualDateOfBirth", "soleTraderDateOfBirth"})
-        void shouldReturnNoError_whenDateOfBirthIsInThePast(String dateOfBirthField) {
-            Map<String, Object> data = new HashMap<>();
-            data.put("applicant1", Map.of(dateOfBirthField, now().minusDays(1)));
+        @Test
+        void shouldReturnError_whenSoleTraderDateOfBirthIsInTheFuture() {
+            CaseData caseData = CaseDataBuilder.builder().atStateServiceConfirmed()
+                .applicant1(PartyBuilder.builder().individual()
+                                .soleTraderDateOfBirth(LocalDate.now().plusDays(1))
+                                .build())
+                .build();
+            CallbackParams params = callbackParamsOf(caseData, MID, PAGE_ID);
 
-            CallbackParams params = callbackParamsOf(data, MID_SECONDARY);
+            var response = (AboutToStartOrSubmitCallbackResponse) handler.handle(params);
 
-            AboutToStartOrSubmitCallbackResponse response = (AboutToStartOrSubmitCallbackResponse) handler
-                .handle(params);
+            assertThat(response.getErrors()).containsExactly("The date entered cannot be in the future");
+        }
+
+        @Test
+        void shouldReturnNoError_whenIndividualDateOfBirthIsInThePast() {
+            CaseData caseData = CaseDataBuilder.builder().atStateClaimDraft()
+                .applicant1(PartyBuilder.builder().individual()
+                                .individualDateOfBirth(LocalDate.now().minusDays(1))
+                                .build())
+                .build();
+            CallbackParams params = callbackParamsOf(caseData, MID, PAGE_ID);
+
+            var response = (AboutToStartOrSubmitCallbackResponse) handler.handle(params);
+
+            assertThat(response.getErrors()).isEmpty();
+        }
+
+        @Test
+        void shouldReturnNoError_whenSoleTraderDateOfBirthIsInThePast() {
+            CaseData caseData = CaseDataBuilder.builder().atStateClaimDraft()
+                .applicant1(PartyBuilder.builder().individual()
+                                .soleTraderDateOfBirth(LocalDate.now().minusDays(1))
+                                .build())
+                .build();
+            CallbackParams params = callbackParamsOf(caseData, MID, PAGE_ID);
+
+            var response = (AboutToStartOrSubmitCallbackResponse) handler.handle(params);
 
             assertThat(response.getErrors()).isEmpty();
         }
@@ -163,50 +138,32 @@ class CreateClaimCallbackHandlerTest extends BaseCallbackHandlerTest {
     @Nested
     class AboutToSubmitCallback {
 
+        private CallbackParams params;
+        private CaseData caseData;
+
+        @BeforeEach
+        void setup() {
+            caseData = CaseDataBuilder.builder().atStateClaimDraft().build();
+            params = CallbackParamsBuilder.builder().of(CallbackType.ABOUT_TO_SUBMIT, caseData).build();
+        }
+
         @Test
         void shouldAddClaimIssuedDateAndSubmittedAt_whenInvoked() {
-            when(issueDateCalculator.calculateIssueDay(any(LocalDateTime.class))).thenReturn(now());
-            when(deadlinesCalculator.calculateConfirmationOfServiceDeadline(any(LocalDate.class)))
-                .thenReturn(now().atTime(23, 59, 59));
-            CaseData caseData = CaseDataBuilder.builder().atStateClaimDraft().build();
-            CallbackParams params = callbackParamsOf(convertToMap(caseData), CallbackType.ABOUT_TO_SUBMIT);
-
             var response = (AboutToStartOrSubmitCallbackResponse) handler.handle(params);
 
-            assertThat(response.getData()).containsEntry("claimIssuedDate", now());
             assertThat(response.getData()).containsEntry("legacyCaseReference", REFERENCE_NUMBER);
-            assertThat(response.getData()).containsEntry(
-                "confirmationOfServiceDeadline",
-                now().atTime(23, 59, 59)
-            );
             assertThat(response.getData()).containsKey("claimSubmittedDateTime");
         }
 
         @Test
-        void shouldIssueClaimWithSystemGeneratedDocumentsAndDate_whenInvoked() {
-            when(issueDateCalculator.calculateIssueDay(any(LocalDateTime.class))).thenReturn(now());
-            when(deadlinesCalculator.calculateConfirmationOfServiceDeadline(any(LocalDate.class)))
-                .thenReturn(now().atTime(23, 59, 59));
-            CaseData caseDataDraft = CaseDataBuilder.builder().atStateClaimDraft().build();
-            CallbackParams params = callbackParamsOf(convertToMap(caseDataDraft), CallbackType.ABOUT_TO_SUBMIT);
-
+        void shouldAddAllocatedTrack_whenInvoked() {
             var response = (AboutToStartOrSubmitCallbackResponse) handler.handle(params);
 
-            CaseData caseData = objectMapper.convertValue(response.getData(), CaseData.class);
-            assertThat(caseData.getSystemGeneratedCaseDocuments()).isNotEmpty()
-                .contains(Element.<CaseDocument>builder().value(CASE_DOCUMENT).build());
-
-            assertThat(caseData.getClaimIssuedDate()).isEqualTo(now());
+            assertThat(response.getData()).containsEntry("allocatedTrack", MULTI_CLAIM.name());
         }
 
         @Test
         void shouldUpdateRespondentAndApplicantWithPartyNameAndPartyTypeDisplayValue_whenInvoked() {
-            when(issueDateCalculator.calculateIssueDay(any(LocalDateTime.class))).thenReturn(now());
-            when(deadlinesCalculator.calculateConfirmationOfServiceDeadline(any(LocalDate.class)))
-                .thenReturn(now().atTime(23, 59, 59));
-            CaseData caseData = CaseDataBuilder.builder().atStateClaimDraft().build();
-            CallbackParams params = callbackParamsOf(convertToMap(caseData), CallbackType.ABOUT_TO_SUBMIT);
-
             var response = (AboutToStartOrSubmitCallbackResponse) handler.handle(params);
 
             assertThat(response.getData()).extracting("respondent1").extracting("partyName").isEqualTo(
@@ -219,9 +176,19 @@ class CreateClaimCallbackHandlerTest extends BaseCallbackHandlerTest {
                 caseData.getApplicant1().getType().getDisplayValue());
         }
 
-        @SuppressWarnings("unchecked")
-        Map<String, Object> convertToMap(CaseData caseData) {
-            return (Map<String, Object>) objectMapper.convertValue(caseData, Map.class);
+        @Test
+        void shouldUpdateBusinessProcess_whenInvoked() {
+            var response = (AboutToStartOrSubmitCallbackResponse) handler.handle(params);
+
+            assertThat(response.getData())
+                .extracting("businessProcess")
+                .extracting("camundaEvent")
+                .isEqualTo(CREATE_CLAIM.name());
+
+            assertThat(response.getData())
+                .extracting("businessProcess")
+                .extracting("status")
+                .isEqualTo("READY");
         }
     }
 
@@ -230,14 +197,12 @@ class CreateClaimCallbackHandlerTest extends BaseCallbackHandlerTest {
 
         @Test
         void shouldReturnExpectedSubmittedCallbackResponseObject_whenDocumentIsGenerated() {
-            Map<String, Object> data = new HashMap<>();
-            int documentSize = 125952;
-            Element<CaseDocument> documents = Element.<CaseDocument>builder()
-                .value(CaseDocument.builder().documentSize(documentSize).documentType(SEALED_CLAIM).build())
+            CaseData caseData = CaseDataBuilder.builder()
+                .atStateClaimCreated()
                 .build();
-            data.put("systemGeneratedCaseDocuments", List.of(documents));
-            data.put("legacyCaseReference", REFERENCE_NUMBER);
-            CallbackParams params = callbackParamsOf(data, CallbackType.SUBMITTED);
+
+            CallbackParams params = callbackParamsOf(caseData, SUBMITTED);
+
             SubmittedCallbackResponse response = (SubmittedCallbackResponse) handler.handle(params);
 
             LocalDateTime serviceDeadline = now().plusDays(112).atTime(23, 59);
@@ -246,7 +211,6 @@ class CreateClaimCallbackHandlerTest extends BaseCallbackHandlerTest {
             String body = format(
                 CONFIRMATION_SUMMARY,
                 format("/cases/case-details/%s#CaseDocuments", CASE_ID),
-                documentSize / 1024,
                 responsePackLink,
                 formattedServiceDeadline
             );
@@ -260,10 +224,8 @@ class CreateClaimCallbackHandlerTest extends BaseCallbackHandlerTest {
 
         @Test
         void shouldReturnExpectedSubmittedCallbackResponseObject_whenDocumentIsNotGenerated() {
-            Map<String, Object> data = new HashMap<>();
-            data.put("legacyCaseReference", REFERENCE_NUMBER);
-            int documentSize = 0;
-            CallbackParams params = callbackParamsOf(data, CallbackType.SUBMITTED);
+            CaseData caseData = CaseDataBuilder.builder().atStateClaimCreated().build();
+            CallbackParams params = callbackParamsOf(caseData, SUBMITTED);
             SubmittedCallbackResponse response = (SubmittedCallbackResponse) handler.handle(params);
 
             LocalDateTime serviceDeadline = now().plusDays(112).atTime(23, 59);
@@ -272,7 +234,6 @@ class CreateClaimCallbackHandlerTest extends BaseCallbackHandlerTest {
             String body = format(
                 CONFIRMATION_SUMMARY,
                 format("/cases/case-details/%s#CaseDocuments", CASE_ID),
-                documentSize / 1024,
                 responsePackLink,
                 formattedServiceDeadline
             );

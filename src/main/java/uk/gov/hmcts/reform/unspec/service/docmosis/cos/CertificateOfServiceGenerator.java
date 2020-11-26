@@ -69,10 +69,11 @@ public class CertificateOfServiceGenerator implements TemplateDataGenerator<Cert
             .solicitorReferences(prepareSolicitorReferences(caseData.getSolicitorReferences()))
             .dateServed(caseData.getServiceDateToRespondentSolicitor1())
             .deemedDateOfService(caseData.getDeemedServiceDateToRespondentSolicitor1())
-            .applicantName(CaseNameUtils.fetchClaimantName(caseData))
-            .respondentName(CaseNameUtils.fetchDefendantName(caseData))
+            .applicantName(CaseNameUtils.fetchApplicantName(caseData))
+            .respondentName(CaseNameUtils.fetchRespondentName(caseData))
             .respondentRepresentative(TEMP_REPRESENTATIVE)
             .serviceMethod(caseData.getServiceMethodToRespondentSolicitor1().getType().getLabel())
+            .onWhomServed(caseData.getServiceNamedPersonToRespondentSolicitor1())
             .servedLocation(prepareServedLocation(caseData.getServiceLocationToRespondentSolicitor1()))
             .documentsServed(prepareDocumentList(caseData.getServedDocuments(), caseData.getServedDocumentsOther()))
             .statementOfTruth(caseData.getApplicantSolicitor1ClaimStatementOfTruth())
@@ -84,13 +85,20 @@ public class CertificateOfServiceGenerator implements TemplateDataGenerator<Cert
         return SolicitorReferences
             .builder()
             .applicantSolicitor1Reference(
-                ofNullable(solicitorReferences.getApplicantSolicitor1Reference()).orElse("Not Provided"))
+                ofNullable(solicitorReferences)
+                    .map(SolicitorReferences::getApplicantSolicitor1Reference)
+                    .orElse("Not Provided"))
             .respondentSolicitor1Reference(
-                ofNullable(solicitorReferences.getRespondentSolicitor1Reference()).orElse("Not Provided"))
+                ofNullable(solicitorReferences)
+                    .map(SolicitorReferences::getRespondentSolicitor1Reference)
+                    .orElse("Not Provided"))
             .build();
     }
 
     public String prepareServedLocation(ServiceLocation serviceLocation) {
+        if (serviceLocation == null) {
+            return null;
+        }
         if (serviceLocation.getLocation() == ServiceLocationType.OTHER) {
             return ServiceLocationType.OTHER.getLabel() + " - " + serviceLocation.getOther();
         }
