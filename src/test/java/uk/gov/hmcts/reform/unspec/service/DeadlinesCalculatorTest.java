@@ -235,4 +235,15 @@ public class DeadlinesCalculatorTest {
         String input = ResourceReader.readString("/bank-holidays.json");
         return new ObjectMapper().readValue(input, BankHolidays.class);
     }
+
+    @Nested
+    class CaseStayedDeadline {
+
+        @Test
+        void shouldAddSixMonthsToIssueDate_whenCalled() {
+            LocalDate now = LocalDate.now();
+
+            assertThat(calculator.calculateCaseStayedDeadline(now)).isEqualTo(now.plusMonths(6));
+        }
+    }
 }

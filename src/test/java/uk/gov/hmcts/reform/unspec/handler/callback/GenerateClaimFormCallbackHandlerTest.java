@@ -71,12 +71,14 @@ class GenerateClaimFormCallbackHandlerTest extends BaseCallbackHandlerTest {
 
     private final LocalDate claimIssuedDate = now();
     private final LocalDateTime deadline = now().atTime(23, 59, 59);
+    private final LocalDate caseStayedDeadline = now().plusMonths(6);
 
     @BeforeEach
     void setup() {
         when(sealedClaimFormGenerator.generate(any(CaseData.class), anyString())).thenReturn(DOCUMENT);
         when(issueDateCalculator.calculateIssueDay(any(LocalDateTime.class))).thenReturn(claimIssuedDate);
         when(deadlinesCalculator.calculateConfirmationOfServiceDeadline(any(LocalDate.class))).thenReturn(deadline);
+        when(deadlinesCalculator.calculateCaseStayedDeadline(any(LocalDate.class))).thenReturn(caseStayedDeadline);
     }
 
     @Nested
@@ -96,6 +98,7 @@ class GenerateClaimFormCallbackHandlerTest extends BaseCallbackHandlerTest {
             assertThat(updatedData.getSystemGeneratedCaseDocuments().get(0).getValue()).isEqualTo(DOCUMENT);
             assertThat(updatedData.getClaimIssuedDate()).isEqualTo(claimIssuedDate);
             assertThat(updatedData.getConfirmationOfServiceDeadline()).isEqualTo(deadline);
+            assertThat(updatedData.getCaseStayedDeadline()).isEqualTo(caseStayedDeadline);
         }
     }
 }

@@ -53,7 +53,8 @@ public class GenerateClaimFormCallbackHandler extends CallbackHandler {
         CaseData caseData = callbackParams.getCaseData();
         CaseData.CaseDataBuilder caseDataBuilder = caseData.toBuilder()
             .claimIssuedDate(claimIssuedDate)
-            .confirmationOfServiceDeadline(calculateConfirmationOfServiceDeadline(claimIssuedDate));
+            .confirmationOfServiceDeadline(calculateConfirmationOfServiceDeadline(claimIssuedDate))
+            .caseStayedDeadline(calculateCaseStayedDeadline(claimIssuedDate));
 
         CaseDocument sealedClaim = sealedClaimFormGenerator.generate(
             caseData,
@@ -73,5 +74,9 @@ public class GenerateClaimFormCallbackHandler extends CallbackHandler {
 
     private LocalDateTime calculateConfirmationOfServiceDeadline(LocalDate issueDate) {
         return deadlinesCalculator.calculateConfirmationOfServiceDeadline(issueDate);
+    }
+
+    private LocalDate calculateCaseStayedDeadline(LocalDate issueDate) {
+        return deadlinesCalculator.calculateCaseStayedDeadline(issueDate);
     }
 }

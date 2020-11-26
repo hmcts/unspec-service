@@ -699,9 +699,9 @@
   {
     "LiveFrom": "01/01/2017",
     "CaseTypeID": "UNSPECIFIED_CLAIMS",
-    "ID": "paymentDetails",
-    "Label": "Details of PBA payment",
-    "FieldType": "PaymentDetails",
+    "ID": "caseStayedDeadline",
+    "Label": "Date case will move to stayed if confirmation of service is not completed",
+    "FieldType": "Date",
     "SecurityClassification": "Public"
   }
 ]

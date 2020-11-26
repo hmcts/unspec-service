@@ -7,6 +7,7 @@ import uk.gov.hmcts.reform.unspec.model.search.Query;
 import java.util.List;
 
 import static org.elasticsearch.index.query.QueryBuilders.boolQuery;
+import static org.elasticsearch.index.query.QueryBuilders.existsQuery;
 import static org.elasticsearch.index.query.QueryBuilders.matchQuery;
 import static org.elasticsearch.index.query.QueryBuilders.rangeQuery;
 
@@ -20,7 +21,8 @@ class CaseStayedSearchServiceTest extends ElasticSearchServiceTest {
     @Override
     protected Query buildQuery(int fromValue) {
         BoolQueryBuilder query = boolQuery()
-            .must(rangeQuery("data.confirmationOfServiceDeadline").lt("now-112d"))
+            .must(rangeQuery("data.caseStayedDeadline").lt("now"))
+            .mustNot(existsQuery("data.deemedServiceDateToRespondentSolicitor1"))
             .must(matchQuery("state", "CREATED"));
 
         return new Query(query, List.of("reference"), fromValue);
