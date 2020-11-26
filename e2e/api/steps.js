@@ -1,7 +1,6 @@
 const assert = require('assert').strict;
 
 const apiRequest = require('./apiRequest.js');
-const {date} = require('./dataHelper');
 
 const data = {
   CREATE_CLAIM: require('../fixtures/events/createClaim.js'),
