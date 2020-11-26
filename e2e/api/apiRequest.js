@@ -50,7 +50,7 @@ module.exports = {
     let response = await restHelper.retriedRequest(url, getRequestHeaders(), null, 'GET')
       .then(response => response.json());
     tokens.ccdEvent = response.token;
-    return response.case_details.case_data ?? {};
+    return response.case_details.case_data || {};
   },
 
   validatePage: async (eventName, pageId, caseData, expectedStatus = 200) => {
