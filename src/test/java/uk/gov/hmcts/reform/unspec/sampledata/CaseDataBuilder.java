@@ -157,7 +157,7 @@ public class CaseDataBuilder {
         return this;
     }
 
-    public CaseDataBuilder discontinueClaim(CloseClaim closeClaim) {
+    public CaseDataBuilder disccontinueClaim(CloseClaim closeClaim) {
         this.discontinueClaim = closeClaim;
         return this;
     }
