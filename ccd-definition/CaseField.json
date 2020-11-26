@@ -339,7 +339,7 @@
   {
     "LiveFrom": "01/01/2017",
     "CaseTypeID": "UNSPECIFIED_CLAIMS",
-    "ID": "defendantDetails",
+    "ID": "respondentDetails",
     "Label": "The claimant has provided the following name and address for the defendant.\n\nIf this is not correct, you should contact the claimant's legal representative.\n\n**Party type:** ${respondent1.partyTypeDisplayValue}\n\n**Name:** ${respondent1.partyName} ${respondent1.soleTraderTradingAs}\n\n\n\n**Address:**<br />\r\n${respondent1.primaryAddress.AddressLine1}<br />${respondent1.primaryAddress.AddressLine2}<br />${respondent1.primaryAddress.AddressLine3}<br />${respondent1.primaryAddress.PostTown}<br />${respondent1.primaryAddress.County}<br />${respondent1.primaryAddress.PostCode}",
     "FieldType": "Label",
     "SecurityClassification": "Public"
@@ -361,7 +361,7 @@
     "ID": "respondent1ClaimResponseType",
     "Label": "The defendant:",
     "FieldType": "FixedRadioList",
-    "FieldTypeParameter": "ResponseType",
+    "FieldTypeParameter": "RespondentResponseType",
     "SecurityClassification": "Public"
   },
   {
@@ -464,17 +464,9 @@
   {
     "LiveFrom": "01/01/2017",
     "CaseTypeID": "UNSPECIFIED_CLAIMS",
-    "ID": "respondent1DQDisclosureOfNonElectronicDocumentsLabel",
-    "Label": "## Disclosure of non-electronic documents",
-    "FieldType": "Label",
-    "SecurityClassification": "Public"
-  },
-  {
-    "LiveFrom": "01/01/2017",
-    "CaseTypeID": "UNSPECIFIED_CLAIMS",
     "ID": "respondent1DQDisclosureOfNonElectronicDocuments",
-    "Label": "What directions are proposed for disclosure?",
-    "FieldType": "Text",
+    "Label": "Disclosure of non-electronic documents",
+    "FieldType": "DisclosureOfNonElectronicDocuments",
     "SecurityClassification": "Public"
   },
   {
@@ -586,8 +578,8 @@
     "LiveFrom": "01/01/2017",
     "CaseTypeID": "UNSPECIFIED_CLAIMS",
     "ID": "applicant1DQDisclosureOfNonElectronicDocuments",
-    "Label": "What directions are proposed for disclosure?",
-    "FieldType": "Text",
+    "Label": "Disclosure of non-electronic documents",
+    "FieldType": "DisclosureOfNonElectronicDocuments",
     "SecurityClassification": "Public"
   },
   {

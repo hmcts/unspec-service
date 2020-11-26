@@ -21,7 +21,6 @@ import uk.gov.hmcts.reform.unspec.sampledata.CallbackParamsBuilder;
 import uk.gov.hmcts.reform.unspec.sampledata.CaseDataBuilder;
 import uk.gov.hmcts.reform.unspec.sampledata.CaseDetailsBuilder;
 import uk.gov.hmcts.reform.unspec.sampledata.PartyBuilder;
-import uk.gov.hmcts.reform.unspec.service.BusinessProcessService;
 import uk.gov.hmcts.reform.unspec.validation.DateOfBirthValidator;
 import uk.gov.hmcts.reform.unspec.validation.UnavailableDateValidator;
 
@@ -39,7 +38,7 @@ import static uk.gov.hmcts.reform.unspec.callback.CallbackType.SUBMITTED;
 import static uk.gov.hmcts.reform.unspec.callback.CaseEvent.DEFENDANT_RESPONSE;
 import static uk.gov.hmcts.reform.unspec.helpers.DateFormatHelper.DATE;
 import static uk.gov.hmcts.reform.unspec.helpers.DateFormatHelper.formatLocalDateTime;
-import static uk.gov.hmcts.reform.unspec.sampledata.CaseDataBuilder.CLAIMANT_RESPONSE_DEADLINE;
+import static uk.gov.hmcts.reform.unspec.sampledata.CaseDataBuilder.APPLICANT_RESPONSE_DEADLINE;
 import static uk.gov.hmcts.reform.unspec.utils.ElementUtils.wrapElements;
 
 @ExtendWith(SpringExtension.class)
@@ -50,7 +49,6 @@ import static uk.gov.hmcts.reform.unspec.utils.ElementUtils.wrapElements;
     DateOfBirthValidator.class,
     UnavailableDateValidator.class,
     CaseDetailsConverter.class,
-    BusinessProcessService.class
 })
 class RespondToClaimCallbackHandlerTest extends BaseCallbackHandlerTest {
 
@@ -213,8 +211,8 @@ class RespondToClaimCallbackHandlerTest extends BaseCallbackHandlerTest {
     class AboutToSubmitCallback {
 
         @Test
-        void shouldSetClaimantResponseDeadline_whenInvoked() {
-            LocalDateTime claimantResponseDeadline = now().atTime(16, 0);
+        void shouldSetApplicantResponseDeadline_whenInvoked() {
+            LocalDateTime applicantResponseDeadline = now().atTime(16, 0);
             CaseData caseData = CaseDataBuilder.builder().atStateRespondedToClaim().build();
             CallbackParams params = callbackParamsOf(caseData, ABOUT_TO_SUBMIT);
 
@@ -223,7 +221,7 @@ class RespondToClaimCallbackHandlerTest extends BaseCallbackHandlerTest {
             assertThat(response.getData())
                 .containsEntry(
                     "applicantSolicitorResponseDeadlineToRespondentSolicitor1",
-                    claimantResponseDeadline.format(ofPattern("yyyy-MM-dd'T'HH:mm:ss"))
+                    applicantResponseDeadline.format(ofPattern("yyyy-MM-dd'T'HH:mm:ss"))
                 );
         }
 
@@ -264,7 +262,7 @@ class RespondToClaimCallbackHandlerTest extends BaseCallbackHandlerTest {
                     .confirmationBody(format(
                         "<br />The claimant has until %s to proceed. "
                             + "We will let you know when they respond.",
-                        formatLocalDateTime(CLAIMANT_RESPONSE_DEADLINE, DATE)
+                        formatLocalDateTime(APPLICANT_RESPONSE_DEADLINE, DATE)
                     ))
                     .build());
         }

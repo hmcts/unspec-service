@@ -1,6 +1,7 @@
 const assert = require('assert').strict;
 
-const request = require('./request.js');
+const apiRequest = require('./apiRequest.js');
+const {date} = require('./dataHelper');
 
 const data = {
   CREATE_CLAIM: require('../fixtures/events/createClaim.js'),
@@ -19,20 +20,22 @@ let caseData = {};
 module.exports = {
   createClaim: async (user) => {
     eventName = 'CREATE_CLAIM';
-    await request.setupTokens(user);
-    await request.startEvent(eventName);
-
+    await apiRequest.setupTokens(user);
+    await apiRequest.startEvent(eventName);
     await validateEventPages();
 
-    await assertSubmittedEvent('CREATED', {
+    await assertSubmittedEvent('PENDING_CASE_ISSUED', {
       header: 'Your claim has been issued',
       body: 'Follow these steps to serve a claim'
     });
   },
 
   confirmService: async () => {
+    // Issue date is no longer set in create claim journey so we need to add manually.
+    caseData.claimIssuedDate = date();
+
     eventName = 'CONFIRM_SERVICE';
-    await request.startEvent(eventName, caseId);
+    await apiRequest.startEvent(eventName, caseId);
     deleteCaseFields('servedDocumentFiles');
 
     await validateEventPages();
@@ -53,7 +56,7 @@ module.exports = {
   acknowledgeService: async () => {
     eventName = 'ACKNOWLEDGE_SERVICE';
     deleteCaseFields('systemGeneratedCaseDocuments');
-    await request.startEvent(eventName, caseId);
+    await apiRequest.startEvent(eventName, caseId);
 
     await validateEventPages();
 
@@ -68,13 +71,13 @@ module.exports = {
 
   requestExtension: async () => {
     eventName = 'REQUEST_EXTENSION';
-    await request.startEvent(eventName, caseId);
+    await apiRequest.startEvent(eventName, caseId);
 
     await validateEventPages();
 
     await assertCallbackError('ProposeDeadline', data[eventName].invalid.ProposeDeadline.past,
       'The proposed deadline must be a date in the future');
-    await assertCallbackError('ProposeDeadline',data[eventName].invalid.ProposeDeadline.beforeCurrentDeadline,
+    await assertCallbackError('ProposeDeadline', data[eventName].invalid.ProposeDeadline.beforeCurrentDeadline,
       'The proposed deadline must be after the current deadline');
 
     await assertSubmittedEvent('CREATED', {
@@ -85,13 +88,13 @@ module.exports = {
 
   respondExtension: async () => {
     eventName = 'RESPOND_EXTENSION';
-    await request.startEvent(eventName, caseId);
+    await apiRequest.startEvent(eventName, caseId);
 
     await validateEventPages();
 
     await assertCallbackError('Counter', data[eventName].invalid.Counter.past,
       'The proposed deadline must be a date in the future');
-    await assertCallbackError('Counter',data[eventName].invalid.Counter.beforeCurrentDeadline,
+    await assertCallbackError('Counter', data[eventName].invalid.Counter.beforeCurrentDeadline,
       'The proposed deadline must be after the current deadline');
 
     await assertSubmittedEvent('CREATED', {
@@ -102,7 +105,7 @@ module.exports = {
 
   defendantResponse: async () => {
     eventName = 'DEFENDANT_RESPONSE';
-    await request.startEvent(eventName, caseId);
+    await apiRequest.startEvent(eventName, caseId);
     deleteCaseFields('respondent1', 'solicitorReferences');
 
     await validateEventPages();
@@ -122,7 +125,7 @@ module.exports = {
 
   claimantResponse: async () => {
     eventName = 'CLAIMANT_RESPONSE';
-    await request.startEvent(eventName, caseId);
+    await apiRequest.startEvent(eventName, caseId);
 
     await validateEventPages();
 
@@ -139,7 +142,7 @@ module.exports = {
 
   addDefendantLitigationFriend: async () => {
     eventName = 'ADD_DEFENDANT_LITIGATION_FRIEND';
-    await request.startEvent(eventName, caseId);
+    await apiRequest.startEvent(eventName, caseId);
 
     await validateEventPages();
   }
@@ -156,7 +159,7 @@ const assertValidData = async (pageId) => {
   const validDataForPage = data[eventName].valid[pageId];
   caseData = {...caseData, ...validDataForPage};
 
-  const response = await request.validatePage(eventName, pageId, caseData);
+  const response = await apiRequest.validatePage(eventName, pageId, caseData);
   const responseBody = await response.json();
 
   if (response.status !== 200) {
@@ -168,7 +171,7 @@ const assertValidData = async (pageId) => {
 };
 
 const assertCallbackError = async (pageId, eventData, expectedErrorMessage) => {
-  const response = await request.validatePage(eventName, pageId, {...caseData, ...eventData}, 422);
+  const response = await apiRequest.validatePage(eventName, pageId, {...caseData, ...eventData}, 422);
   const responseBody = await response.json();
 
   assert.equal(response.status, 422);
@@ -177,8 +180,8 @@ const assertCallbackError = async (pageId, eventData, expectedErrorMessage) => {
 };
 
 const assertSubmittedEvent = async (expectedState, submittedCallbackResponseContains) => {
-  await request.startEvent(eventName, caseId);
-  const response = await request.submitEvent(eventName, caseData, caseId);
+  await apiRequest.startEvent(eventName, caseId);
+  const response = await apiRequest.submitEvent(eventName, caseData, caseId);
   const responseBody = await response.json();
 
   if (response.status !== 201) {

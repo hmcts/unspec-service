@@ -7,9 +7,9 @@ import lombok.Data;
 import uk.gov.hmcts.reform.unspec.enums.AllocatedTrack;
 import uk.gov.hmcts.reform.unspec.enums.CaseState;
 import uk.gov.hmcts.reform.unspec.enums.ClaimType;
-import uk.gov.hmcts.reform.unspec.enums.DefendantResponseType;
 import uk.gov.hmcts.reform.unspec.enums.PbaNumber;
 import uk.gov.hmcts.reform.unspec.enums.PersonalInjuryType;
+import uk.gov.hmcts.reform.unspec.enums.RespondentResponseType;
 import uk.gov.hmcts.reform.unspec.enums.ResponseIntention;
 import uk.gov.hmcts.reform.unspec.enums.ServedDocuments;
 import uk.gov.hmcts.reform.unspec.enums.YesOrNo;
@@ -60,6 +60,7 @@ public class CaseData {
     private final StatementOfTruth applicant1ServiceStatementOfTruthToRespondentSolicitor1;
     private final List<Element<CaseDocument>> systemGeneratedCaseDocuments;
     private final ServiceMethod serviceMethodToRespondentSolicitor1;
+    private final String serviceNamedPersonToRespondentSolicitor1;
 
     @PastOrPresent(message = "The date must not be in the future", groups = ConfirmServiceDateGroup.class)
     private final LocalDate serviceDateToRespondentSolicitor1;
@@ -84,7 +85,7 @@ public class CaseData {
     private final LocalDate respondentSolicitor1claimResponseExtensionCounterDate;
     private final String respondentSolicitor1claimResponseExtensionRejectionReason;
 
-    private final DefendantResponseType respondent1ClaimResponseType;
+    private final RespondentResponseType respondent1ClaimResponseType;
     private final ResponseDocument respondent1ClaimResponseDocument;
     private final LocalDateTime applicantSolicitorResponseDeadlineToRespondentSolicitor1;
 

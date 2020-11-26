@@ -44,7 +44,7 @@ const defendantLitigationFriendPage = require('./pages/addDefendantLitigationFri
 const statementOfTruth = require('./fragments/statementOfTruth');
 const party = require('./fragments/party');
 const event = require('./fragments/event');
-const defendantDetails = require('./fragments/defendantDetails.page');
+const respondentDetails = require('./fragments/respondentDetails.page');
 const confirmDetailsPage = require('./fragments/confirmDetails.page');
 
 // DQ fragments
@@ -62,9 +62,11 @@ const furtherInformationPage = require('./fragments/dq/furtherInformation.page')
 const address = require('./fixtures/address.js');
 
 const baseUrl = process.env.URL || 'http://localhost:3333';
-const signedInSelector = 'exui-header';
 
-const STATE_LOCATOR = '#wb-case-type > option';
+const SIGNED_IN_SELECTOR = 'exui-header';
+const CASE_LIST = 'exui-case-list';
+const TYPE_LOCATOR = '#wb-case-type > option';
+const STATE_LOCATOR = '#wb-case-state > option';
 const CASE_NUMBER_INPUT_LOCATOR = 'input[type$="number"]';
 const CASE_HEADER = 'ccd-case-header > h1';
 
@@ -80,16 +82,19 @@ module.exports = function () {
       await this.retryUntilExists(async () => {
         this.amOnPage(baseUrl);
 
-        if (await this.hasSelector(signedInSelector)) {
+        if (await this.hasSelector(SIGNED_IN_SELECTOR)) {
           this.click('Sign out');
         }
 
         loginPage.signIn(user);
-      }, signedInSelector);
+      }, SIGNED_IN_SELECTOR);
     },
 
     async goToCase(caseId) {
         this.click('Case list');
+
+        this.waitForElement(TYPE_LOCATOR);
+        this.selectOption('case-type', 'Unspecified Claims');
 
         this.waitForElement(STATE_LOCATOR);
         this.selectOption('state', 'Any');
@@ -101,6 +106,7 @@ module.exports = function () {
         const caseLinkLocator = `a[href$="/cases/case-details/${caseId}"]`;
         this.waitForElement(caseLinkLocator);
         this.click(caseLinkLocator);
+        this.waitForElement(CASE_HEADER);
     },
 
     grabCaseNumber: async function () {
@@ -117,7 +123,7 @@ module.exports = function () {
       await solicitorReferencesPage.enterReferences();
       await chooseCourtPage.enterCourt();
       await party.enterParty('applicant1', address);
-      await claimantLitigationDetails.enterLitigantFriendWithDifferentAddressToClaimant(address, TEST_FILE_PATH);
+      await claimantLitigationDetails.enterLitigantFriendWithDifferentAddressToApplicant(address, TEST_FILE_PATH);
       await party.enterParty('respondent1', address);
       await claimTypePage.selectClaimType();
       await personalInjuryTypePage.selectPersonalInjuryType();
@@ -145,11 +151,19 @@ module.exports = function () {
 
     async acknowledgeService() {
       await caseViewPage.startEvent('Acknowledge service', caseId);
-      await defendantDetails.verifyDetails();
+      await respondentDetails.verifyDetails();
       await confirmDetailsPage.confirmReference();
       await responseIntentionPage.selectResponseIntention();
       await event.submit('Acknowledge service', 'You\'ve acknowledged service');
       await event.returnToCaseDetails();
+    },
+
+    async addDefendantLitigationFriend() {
+      await caseViewPage.startEvent('Add litigation friend', caseId);
+      await defendantLitigationFriendPage.enterLitigantFriendWithDifferentAddressToDefendant(address, TEST_FILE_PATH);
+      this.waitForText('Submit');
+      this.click('Submit');
+      this.waitForElement(CASE_HEADER);
     },
 
     async requestExtension() {
@@ -173,7 +187,7 @@ module.exports = function () {
       await caseViewPage.startEvent('Respond to claim', caseId);
       await responseTypePage.selectFullDefence();
       await uploadResponsePage.uploadResponseDocuments(TEST_FILE_PATH);
-      await defendantDetails.verifyDetails();
+      await respondentDetails.verifyDetails();
       await confirmDetailsPage.confirmReference();
       await fileDirectionsQuestionnairePage.fileDirectionsQuestionnaire(parties.RESPONDENT_SOLICITOR_1);
       await disclosureOfElectronicDocumentsPage.enterDisclosureOfElectronicDocuments(parties.RESPONDENT_SOLICITOR_1);
@@ -206,12 +220,7 @@ module.exports = function () {
       await statementOfTruth.enterNameAndRole(parties.APPLICANT_SOLICITOR_1 + 'DQ');
       await event.submit('Submit your response', 'You\'ve decided to proceed with the claim');
       await this.click('Close and Return to case details');
-    },
-
-    async addDefendantLitigationFriend() {
-      await caseViewPage.startEvent('Add litigation friend', caseId);
-      await defendantLitigationFriendPage.enterLitigantFriendWithDifferentAddressToDefendant(address, TEST_FILE_PATH);
-      await this.click('Submit');
+      this.waitForElement(CASE_LIST);
     },
 
     async clickContinue() {
