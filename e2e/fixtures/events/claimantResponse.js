@@ -80,7 +80,7 @@ module.exports = {
         reasonForFutureApplications: 'Nothing'
       }
     },
-    WelshLanguage: {
+    Language: {
       applicant1DQLanguage: {
         isPartyWelsh: 'Yes',
         evidence: 'WELSH',

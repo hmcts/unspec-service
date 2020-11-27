@@ -111,7 +111,7 @@ module.exports = {
         reasonForFutureApplications: 'Nothing'
       }
     },
-    WelshLanguage: {
+    Language: {
       respondent1DQLanguage: {
         isPartyWelsh: 'Yes',
         evidence: 'WELSH',
