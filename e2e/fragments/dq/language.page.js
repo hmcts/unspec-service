@@ -44,14 +44,17 @@ module.exports = {
       I.click(this.fields(party).isPartyWelsh.options.yes);
     });
 
+    I.waitForElement(this.fields(party).evidence.id);
     await within(this.fields(party).evidence.id, () => {
       I.click(this.fields(party).evidence.options.welsh);
     });
 
+    I.waitForElement(this.fields(party).court.id);
     await within(this.fields(party).court.id, () => {
       I.click(this.fields(party).court.options.welsh);
     });
 
+    I.waitForElement(this.fields(party).documents.id);
     await within(this.fields(party).documents.id, () => {
       I.click(this.fields(party).documents.options.welsh);
     });
