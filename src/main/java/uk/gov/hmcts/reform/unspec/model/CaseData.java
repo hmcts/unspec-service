@@ -115,5 +115,7 @@ public class CaseData {
 
     private final LitigationFriend respondent1LitigationFriend;
 
+    private final YesOrNo applicant1LitigationFriendRequired;
+
     private final LitigationFriend applicant1LitigationFriend;
 }

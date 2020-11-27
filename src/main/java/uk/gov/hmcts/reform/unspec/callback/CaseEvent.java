@@ -43,6 +43,9 @@ public enum CaseEvent {
     GENERATE_CERTIFICATE_OF_SERVICE("Generate certificate of service", CAMUNDA),
     NOTIFY_APPLICANT_SOLICITOR1_FOR_FAILED_PAYMENT("Notify failed payment", CAMUNDA),
     GENERATE_CLAIM_FORM("Generate claim certificate", CAMUNDA),
+    NOTIFY_APPLICANT_SOLICITOR1_CASE_STRIKE_OUT("Notify case strike out", CAMUNDA),
+    NOTIFY_RESPONDENT_SOLICITOR1_CASE_STRIKE_OUT("Notify case strike out", CAMUNDA),
+    MOVE_CLAIM_TO_STRUCK_OUT("Strike out claim", USER),
     GENERATE_ACKNOWLEDGEMENT_OF_SERVICE("Generate acknowledgement of service", CAMUNDA);
 
     private final String displayName;
