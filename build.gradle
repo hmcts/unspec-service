@@ -341,7 +341,6 @@ dependencies {
   testImplementation libraries.junit5
   testImplementation group: 'org.springframework.boot', name: 'spring-boot-starter-test', {
     exclude group: 'junit', module: 'junit'
-    exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
   }
 
   testImplementation group: 'org.camunda.bpm.extension.springboot', name: 'camunda-bpm-spring-boot-starter-test', version: '2.2.0'
