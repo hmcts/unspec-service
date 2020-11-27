@@ -112,7 +112,7 @@ module.exports = {
       }
     },
     WelshLanguage: {
-      applicant1DQLanguage: {
+      respondent1DQLanguage: {
         isPartyWelsh: 'Yes',
         evidence: 'WELSH',
         court: 'WELSH',
