@@ -5,7 +5,6 @@
     "ID": "MAKE_PBA_PAYMENT",
     "Name": "Make PBA payment",
     "Description": "Make PBA payment for issued claim",
-    "DisplayOrder": 24,
     "PreConditionState(s)": "*",
     "PostConditionState": "*",
     "SecurityClassification": "Public",
