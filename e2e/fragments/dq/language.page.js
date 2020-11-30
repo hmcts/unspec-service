@@ -14,25 +14,19 @@ module.exports = {
       evidence: {
         id: `#${party}DQLanguage_evidence`,
         options: {
-          welsh: 'Welsh',
-          english: 'English',
-          both: 'Welsh and english'
+          welsh: `#${party}DQLanguage_evidence-WELSH`,
         }
       },
       court: {
         id: `#${party}DQLanguage_court`,
         options: {
-          welsh: 'Welsh',
-          english: 'English',
-          both: 'Welsh and english'
+          welsh: `#${party}DQLanguage_court-WELSH`,
         }
       },
       documents: {
         id: `#${party}DQLanguage_documents`,
         options: {
-          welsh: 'Welsh',
-          english: 'English',
-          both: 'Welsh and english'
+          welsh: `#${party}DQLanguage_documents-WELSH`,
         }
       },
     };
@@ -44,19 +38,10 @@ module.exports = {
       I.click(this.fields(party).isPartyWelsh.options.yes);
     });
 
-    I.waitForElement(this.fields(party).evidence.id);
-    await within(this.fields(party).evidence.id, () => {
-      I.click(this.fields(party).evidence.options.welsh);
-    });
+    I.click(this.fields(party).evidence.options.welsh);
+    I.click(this.fields(party).court.options.welsh);
+    I.click(this.fields(party).documents.options.welsh);
 
-    I.waitForElement(this.fields(party).court.id);
-    await within(this.fields(party).court.id, () => {
-      I.click(this.fields(party).court.options.welsh);
-    });
-
-    I.waitForElement(this.fields(party).documents.id);
-    await within(this.fields(party).documents.id, () => {
-      I.click(this.fields(party).documents.options.welsh);
-    });
+    await I.clickContinue();
   },
 };
