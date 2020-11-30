@@ -228,7 +228,7 @@
     "CaseTypeID": "UNSPECIFIED_CLAIMS",
     "CaseEventID": "CLAIMANT_RESPONSE",
     "CaseFieldID": "applicant1DQStatementOfTruth",
-    "PageDisplayOrder": 13,
+    "PageDisplayOrder": 14,
     "PageFieldDisplayOrder": 1,
     "DisplayContext": "COMPLEX",
     "PageID": "StatementOfTruth",
