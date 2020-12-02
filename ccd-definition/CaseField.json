@@ -121,6 +121,30 @@
   {
     "LiveFrom": "01/01/2017",
     "CaseTypeID": "UNSPECIFIED_CLAIMS",
+    "ID": "claimFee",
+    "Label": "Claim fee",
+    "FieldType": "Fee",
+    "SecurityClassification": "Public"
+  },
+  {
+    "LiveFrom": "01/01/2017",
+    "CaseTypeID": "UNSPECIFIED_CLAIMS",
+    "ID": "applicantSolicitor1PbaAccounts",
+    "Label": "Select a Payment by Account number from the list",
+    "FieldType": "DynamicList",
+    "SecurityClassification": "Public"
+  },
+  {
+    "LiveFrom": "01/01/2017",
+    "CaseTypeID": "UNSPECIFIED_CLAIMS",
+    "ID": "noPbaAccountsLabel",
+    "Label": "**You don't have a registered PBA.\nThis case will not be saved.**\n# Register an existing PBA with MyHMCTS\n\nYou will need to email MyHMCTSsupport@justice.gov.uk to ask for your PBA number to be registered with your MyHMCTS account. You should include your contact details, including your phone number.\n\nIt can then take up to 3 days for your account to be registered.\n\nOnce your PBA account has enough credit, you’ll need to start your claim again to pay the fee.\n# Apply to get a new PBA\n\nYou can [use this form to apply for a new PBA account.](https://www.gov.uk/government/publications/form-fee-account-application-form-fee-account-customer-application-form)\n\nYou’ll need to provide details for you and your organisation, including the required credit limit for your account.\n\nOnce you’ve posted the form, it usually takes 3 days for your PBA account to become available.",
+    "FieldType": "Label ",
+    "SecurityClassification": "Public"
+  },
+  {
+    "LiveFrom": "01/01/2017",
+    "CaseTypeID": "UNSPECIFIED_CLAIMS",
     "ID": "applicantSolicitor1ClaimStatementOfTruth",
     "Label": "Statement of truth",
     "FieldType": "StatementOfTruth",
@@ -693,15 +717,6 @@
     "ID": "paymentErrorCode",
     "Label": "PBA payment error code",
     "FieldType": "Text",
-    "SecurityClassification": "Public"
-  },
-  {
-    "LiveFrom": "01/01/2017",
-    "CaseTypeID": "UNSPECIFIED_CLAIMS",
-    "ID": "pbaNumber",
-    "Label": "Select a Payment by Account number from the list",
-    "FieldType": "FixedList",
-    "FieldTypeParameter": "PbaNumber",
     "SecurityClassification": "Public"
   },
   {

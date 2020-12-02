@@ -1,0 +1,24 @@
+[
+  {
+    "ID": "Fee",
+    "ListElementCode": "calculated_amount",
+    "FieldType": "Number",
+    "ElementLabel": "Issue fee",
+    "SecurityClassification": "Public",
+    "comment": "client returns value as xx.x which cannot be converted to MoneyGBP"
+  },
+  {
+    "ID": "Fee",
+    "ListElementCode": "code",
+    "FieldType": "Text",
+    "ElementLabel": "Code",
+    "SecurityClassification": "Public"
+  },
+  {
+    "ID": "Fee",
+    "ListElementCode": "version",
+    "FieldType": "Text",
+    "ElementLabel": "Version",
+    "SecurityClassification": "Public"
+  }
+]

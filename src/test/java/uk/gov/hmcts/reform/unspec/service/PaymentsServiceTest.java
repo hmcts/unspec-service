@@ -14,7 +14,8 @@ import uk.gov.hmcts.reform.payments.client.models.PaymentDto;
 import uk.gov.hmcts.reform.payments.client.request.CreditAccountPaymentRequest;
 import uk.gov.hmcts.reform.unspec.config.PaymentsConfiguration;
 import uk.gov.hmcts.reform.unspec.model.CaseData;
-import uk.gov.hmcts.reform.unspec.model.ClaimValue;
+import uk.gov.hmcts.reform.unspec.model.common.DynamicList;
+import uk.gov.hmcts.reform.unspec.model.common.DynamicListElement;
 
 import java.math.BigDecimal;
 
@@ -39,9 +40,6 @@ class PaymentsServiceTest {
     private static final PaymentDto PAYMENT_DTO = PaymentDto.builder().reference("RC-1234-1234-1234-1234").build();
 
     @Mock
-    private FeesService feesService;
-
-    @Mock
     private PaymentsClient paymentsClient;
 
     @Mock
@@ -52,7 +50,6 @@ class PaymentsServiceTest {
 
     @BeforeEach
     void setUp() {
-        given(feesService.getFeeDataByClaimValue(any())).willReturn(FEE_DATA);
         given(paymentsClient.createCreditAccountPayment(any(), any())).willReturn(PAYMENT_DTO);
         given(paymentsConfiguration.getService()).willReturn(SERVICE);
         given(paymentsConfiguration.getSiteId()).willReturn(SITE_ID);
@@ -60,10 +57,15 @@ class PaymentsServiceTest {
 
     @Test
     void shouldCreateCreditAccountPayment_whenValidCaseDetails() {
+        DynamicList pbaAccounts = DynamicList.builder()
+            .value(DynamicListElement.builder().label(PBA0077597.toString()).build())
+            .build();
+
         CaseData caseData = CaseData.builder()
             .legacyCaseReference("000LR001")
             .ccdCaseReference(12345L)
-            .pbaNumber(PBA0077597)
+            .applicantSolicitor1PbaAccounts(pbaAccounts)
+            .claimFee(FEE_DATA)
             .build();
         var expectedCreditAccountPaymentRequest = CreditAccountPaymentRequest.builder()
             .accountNumber("PBA0077597")
@@ -77,13 +79,9 @@ class PaymentsServiceTest {
             .siteId(SITE_ID)
             .fees(new FeeDto[]{FEE_DATA})
             .build();
-        var expectedClaimValue = ClaimValue.builder()
-            .statementOfValueInPennies(BigDecimal.valueOf(10000))
-            .build();
 
         PaymentDto paymentResponse = paymentsService.createCreditAccountPayment(caseData, AUTH_TOKEN);
 
-        verify(feesService).getFeeDataByClaimValue(expectedClaimValue);
         verify(paymentsClient).createCreditAccountPayment(AUTH_TOKEN, expectedCreditAccountPaymentRequest);
         assertThat(paymentResponse).isEqualTo(PAYMENT_DTO);
     }

@@ -155,6 +155,10 @@ sendgrid:
 testing:
   support:
     enabled: true
+
+rd_professional:
+  api:
+    url: http://localhost:8765
 ---
 
 spring:
@@ -217,3 +221,7 @@ notifications:
 testing:
   support:
     enabled: true
+
+rd_professional:
+  api:
+    url: http://fake-prd-api
