@@ -15,8 +15,8 @@ import uk.gov.hmcts.reform.unspec.enums.YesOrNo;
 import uk.gov.hmcts.reform.unspec.helpers.CaseDetailsConverter;
 import uk.gov.hmcts.reform.unspec.model.BusinessProcess;
 import uk.gov.hmcts.reform.unspec.model.CaseData;
-import uk.gov.hmcts.reform.unspec.model.Fee;
 import uk.gov.hmcts.reform.unspec.model.Party;
+import uk.gov.hmcts.reform.unspec.model.SolicitorReferences;
 import uk.gov.hmcts.reform.unspec.model.common.DynamicList;
 import uk.gov.hmcts.reform.unspec.repositories.ReferenceNumberRepository;
 import uk.gov.hmcts.reform.unspec.service.FeesService;
@@ -32,6 +32,7 @@ import java.util.Map;
 import java.util.Optional;
 
 import static java.lang.String.format;
+import static java.util.Optional.ofNullable;
 import static uk.gov.hmcts.reform.unspec.callback.CallbackParams.Params.BEARER_TOKEN;
 import static uk.gov.hmcts.reform.unspec.callback.CallbackType.ABOUT_TO_START;
 import static uk.gov.hmcts.reform.unspec.callback.CallbackType.ABOUT_TO_SUBMIT;
@@ -88,23 +89,30 @@ public class CreateClaimCallbackHandler extends CallbackHandler {
 
     private CallbackResponse calculateFee(CallbackParams callbackParams) {
         CaseData caseData = callbackParams.getCaseData();
+        Optional<SolicitorReferences> references = ofNullable(caseData.getSolicitorReferences());
+        String paymentReference = ofNullable(caseData.getPaymentReference())
+            .orElse(references.map(SolicitorReferences::getApplicantSolicitor1Reference).orElse(""));
 
         String authToken = callbackParams.getParams().get(BEARER_TOKEN).toString();
-        Optional<Organisation> organisation = organisationService.findOrganisation(authToken);
-
-        List<String> pbaNumbers = new ArrayList<>();
-        organisation.ifPresent(org -> pbaNumbers.addAll(org.getPaymentAccount()));
-
-        Fee fee = feesService.getFeeDataByClaimValue(caseData.getClaimValue());
+        List<String> pbaNumbers = getPbaAccounts(authToken);
 
         CaseData.CaseDataBuilder caseDataBuilder = caseData.toBuilder()
-            .claimFee(fee)
+            .claimFee(feesService.getFeeDataByClaimValue(caseData.getClaimValue()))
             .applicantSolicitor1PbaAccounts(DynamicList.fromList(pbaNumbers))
-            .applicantSolicitor1PbaAccountsIsEmpty(pbaNumbers.isEmpty() ? YesOrNo.YES : YesOrNo.NO);
+            .applicantSolicitor1PbaAccountsIsEmpty(pbaNumbers.isEmpty() ? YesOrNo.YES : YesOrNo.NO)
+            .paymentReference(paymentReference);
 
         return AboutToStartOrSubmitCallbackResponse.builder()
             .data(caseDetailsConverter.toMap(caseDataBuilder.build()))
             .build();
+    }
+
+    private List<String> getPbaAccounts(String authToken) {
+        Optional<Organisation> organisation = organisationService.findOrganisation(authToken);
+
+        List<String> pbaNumbers = new ArrayList<>();
+        organisation.ifPresent(org -> pbaNumbers.addAll(org.getPaymentAccount()));
+        return pbaNumbers;
     }
 
     private CallbackResponse submitClaim(CallbackParams callbackParams) {
