@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import uk.gov.hmcts.reform.unspec.model.CaseData;
 import uk.gov.hmcts.reform.unspec.model.ClaimValue;
 import uk.gov.hmcts.reform.unspec.model.Party;
+import uk.gov.hmcts.reform.unspec.model.SolicitorReferences;
 import uk.gov.hmcts.reform.unspec.model.robotics.CaseHeader;
 import uk.gov.hmcts.reform.unspec.model.robotics.ClaimDetails;
 import uk.gov.hmcts.reform.unspec.model.robotics.LitigiousParty;
@@ -13,8 +14,10 @@ import uk.gov.hmcts.reform.unspec.model.robotics.Solicitor;
 import uk.gov.hmcts.reform.unspec.utils.PartyUtils;
 
 import java.util.List;
+import java.util.Optional;
 
 import static java.util.Objects.requireNonNull;
+import static java.util.Optional.ofNullable;
 
 /**
  * This class is skeleton to be refined after we have final version of RPA Json structure
@@ -55,13 +58,19 @@ public class RoboticsDataMapper {
 
     private Solicitor buildRespondentSolicitor(CaseData caseData) {
         return Solicitor.builder()
-            .reference(caseData.getSolicitorReferences().getRespondentSolicitor1Reference())
+            .reference(ofNullable(caseData.getSolicitorReferences())
+                           .map(SolicitorReferences::getRespondentSolicitor1Reference)
+                           .orElse(null)
+            )
             .build();
     }
 
     private Solicitor buildApplicantSolicitor(CaseData caseData) {
         return Solicitor.builder()
-            .reference(caseData.getSolicitorReferences().getApplicantSolicitor1Reference())
+            .reference(ofNullable(caseData.getSolicitorReferences())
+                           .map(SolicitorReferences::getApplicantSolicitor1Reference)
+                           .orElse(null)
+            )
             .build();
     }
 
