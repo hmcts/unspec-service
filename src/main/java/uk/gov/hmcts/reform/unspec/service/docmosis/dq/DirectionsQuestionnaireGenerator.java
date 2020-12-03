@@ -72,6 +72,7 @@ public class DirectionsQuestionnaireGenerator implements TemplateDataGenerator<D
             .furtherInformation(respondent1DQ.getFurtherInformation())
             .welshLanguageRequirements(getWelshLanguageRequirements(respondent1DQ))
             .statementOfTruth(respondent1DQ.getStatementOfTruth())
+            .allocatedTrack(caseData.getAllocatedTrack())
             .build();
     }
 

@@ -8,6 +8,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import uk.gov.hmcts.reform.unspec.enums.AllocatedTrack;
 import uk.gov.hmcts.reform.unspec.model.SolicitorReferences;
 import uk.gov.hmcts.reform.unspec.model.StatementOfTruth;
 import uk.gov.hmcts.reform.unspec.model.docmosis.DocmosisData;
@@ -44,5 +45,6 @@ public class DirectionsQuestionnaireForm implements DocmosisData {
     private final FurtherInformation furtherInformation;
     private final WelshLanguageRequirements welshLanguageRequirements;
     private final StatementOfTruth statementOfTruth;
+    private final AllocatedTrack allocatedTrack;
 
 }
