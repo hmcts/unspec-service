@@ -11,7 +11,7 @@ public class RoboticsCaseData {
 
     private CaseHeader header;
     private List<LitigiousParty> litigiousParties;
-    private  List<Solicitor> solicitors;
+    private List<Solicitor> solicitors;
     private String particularsOfClaim;
     private ClaimDetails claimDetails;
     private Mediation mediation;

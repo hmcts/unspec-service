@@ -55,13 +55,13 @@ public class RoboticsDataMapper {
 
     private Solicitor buildRespondentSolicitor(CaseData caseData) {
         return Solicitor.builder()
-            .solicitorPartyReference(caseData.getSolicitorReferences().getRespondentSolicitor1Reference())
+            .reference(caseData.getSolicitorReferences().getRespondentSolicitor1Reference())
             .build();
     }
 
     private Solicitor buildApplicantSolicitor(CaseData caseData) {
         return Solicitor.builder()
-            .solicitorPartyReference(caseData.getSolicitorReferences().getApplicantSolicitor1Reference())
+            .reference(caseData.getSolicitorReferences().getApplicantSolicitor1Reference())
             .build();
     }
 
@@ -71,10 +71,10 @@ public class RoboticsDataMapper {
 
     private LitigiousParty buildLitigiousParty(Party party) {
         return LitigiousParty.builder()
-            .litigiousPartyName(party.getPartyName())
-            .litigiousPartyType(party.getType().getDisplayValue())
-            .litigiousPartyDateOfBirth(PartyUtils.getDateOfBirth(party).orElse(null))
-            .litigiousPartyAddresses(addressMapper.toRoboticsAddresses(party.getPrimaryAddress()))
+            .name(party.getPartyName())
+            .type(party.getType().getDisplayValue())
+            .dateOfBirth(PartyUtils.getDateOfBirth(party).orElse(null))
+            .addresses(addressMapper.toRoboticsAddresses(party.getPrimaryAddress()))
             .build();
     }
 }
