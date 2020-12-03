@@ -82,7 +82,21 @@ module.exports = {
       }
     },
     PbaNumber: {
-      pbaNumber: 'PBA0077597'
+      applicantSolicitor1PbaAccounts: {
+        list_items: [
+          {
+            code: 'RANDOM UUID',
+            label: 'PBA0077597'
+          },
+          {
+            code: 'RANDOM UUID',
+            label: 'PBA0078094'
+          }
+        ]
+      }
+    },
+    PaymentReference: {
+      paymentReference: 'abcdef'
     },
     StatementOfTruth: {
       applicantSolicitor1ClaimStatementOfTruth: {
