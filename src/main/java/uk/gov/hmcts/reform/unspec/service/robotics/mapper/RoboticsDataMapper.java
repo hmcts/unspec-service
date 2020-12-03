@@ -14,7 +14,6 @@ import uk.gov.hmcts.reform.unspec.model.robotics.Solicitor;
 import uk.gov.hmcts.reform.unspec.utils.PartyUtils;
 
 import java.util.List;
-import java.util.Optional;
 
 import static java.util.Objects.requireNonNull;
 import static java.util.Optional.ofNullable;
