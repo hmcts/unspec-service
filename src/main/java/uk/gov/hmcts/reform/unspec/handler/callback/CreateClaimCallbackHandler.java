@@ -5,16 +5,17 @@ import org.springframework.stereotype.Service;
 import uk.gov.hmcts.reform.ccd.client.model.AboutToStartOrSubmitCallbackResponse;
 import uk.gov.hmcts.reform.ccd.client.model.CallbackResponse;
 import uk.gov.hmcts.reform.ccd.client.model.SubmittedCallbackResponse;
-import uk.gov.hmcts.reform.payments.client.models.FeeDto;
 import uk.gov.hmcts.reform.prd.model.Organisation;
 import uk.gov.hmcts.reform.unspec.callback.Callback;
 import uk.gov.hmcts.reform.unspec.callback.CallbackHandler;
 import uk.gov.hmcts.reform.unspec.callback.CallbackParams;
 import uk.gov.hmcts.reform.unspec.callback.CaseEvent;
 import uk.gov.hmcts.reform.unspec.config.ClaimIssueConfiguration;
+import uk.gov.hmcts.reform.unspec.enums.YesOrNo;
 import uk.gov.hmcts.reform.unspec.helpers.CaseDetailsConverter;
 import uk.gov.hmcts.reform.unspec.model.BusinessProcess;
 import uk.gov.hmcts.reform.unspec.model.CaseData;
+import uk.gov.hmcts.reform.unspec.model.Fee;
 import uk.gov.hmcts.reform.unspec.model.Party;
 import uk.gov.hmcts.reform.unspec.model.common.DynamicList;
 import uk.gov.hmcts.reform.unspec.repositories.ReferenceNumberRepository;
@@ -94,11 +95,12 @@ public class CreateClaimCallbackHandler extends CallbackHandler {
         List<String> pbaNumbers = new ArrayList<>();
         organisation.ifPresent(org -> pbaNumbers.addAll(org.getPaymentAccount()));
 
-        FeeDto feeDto = feesService.getFeeDataByClaimValue(caseData.getClaimValue());
+        Fee fee = feesService.getFeeDataByClaimValue(caseData.getClaimValue());
 
         CaseData.CaseDataBuilder caseDataBuilder = caseData.toBuilder()
-            .claimFee(feeDto)
-            .applicantSolicitor1PbaAccounts(DynamicList.fromList(pbaNumbers));
+            .claimFee(fee)
+            .applicantSolicitor1PbaAccounts(DynamicList.fromList(pbaNumbers))
+            .applicantSolicitor1PbaAccountsIsEmpty(pbaNumbers.isEmpty() ? YesOrNo.YES : YesOrNo.NO);
 
         return AboutToStartOrSubmitCallbackResponse.builder()
             .data(caseDetailsConverter.toMap(caseDataBuilder.build()))

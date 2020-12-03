@@ -13,7 +13,6 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import uk.gov.hmcts.reform.ccd.client.model.AboutToStartOrSubmitCallbackResponse;
 import uk.gov.hmcts.reform.ccd.client.model.CaseDetails;
 import uk.gov.hmcts.reform.ccd.client.model.SubmittedCallbackResponse;
-import uk.gov.hmcts.reform.payments.client.models.FeeDto;
 import uk.gov.hmcts.reform.prd.model.Organisation;
 import uk.gov.hmcts.reform.unspec.callback.CallbackParams;
 import uk.gov.hmcts.reform.unspec.callback.CallbackType;
@@ -21,6 +20,7 @@ import uk.gov.hmcts.reform.unspec.config.ClaimIssueConfiguration;
 import uk.gov.hmcts.reform.unspec.config.MockDatabaseConfiguration;
 import uk.gov.hmcts.reform.unspec.helpers.CaseDetailsConverter;
 import uk.gov.hmcts.reform.unspec.model.CaseData;
+import uk.gov.hmcts.reform.unspec.model.Fee;
 import uk.gov.hmcts.reform.unspec.model.common.DynamicList;
 import uk.gov.hmcts.reform.unspec.model.common.DynamicListElement;
 import uk.gov.hmcts.reform.unspec.sampledata.CallbackParamsBuilder;
@@ -159,10 +159,10 @@ class CreateClaimCallbackHandlerTest extends BaseCallbackHandlerTest {
     class MidEventFeeCallback {
 
         private final String pageId = "fee";
-        private final FeeDto feeData = FeeDto.builder()
+        private final Fee feeData = Fee.builder()
             .version("1")
             .code("CODE")
-            .calculatedAmount(BigDecimal.ONE)
+            .calculatedAmountInPence(BigDecimal.valueOf(100))
             .build();
         private final Organisation organisation = Organisation.builder()
             .paymentAccount(List.of("12345", "98765"))
@@ -184,8 +184,12 @@ class CreateClaimCallbackHandlerTest extends BaseCallbackHandlerTest {
 
             assertThat(response.getData())
                 .extracting("claimFee")
-                .extracting("calculated_amount", "code", "version")
-                .containsExactly(feeData.getCalculatedAmount(), feeData.getCode(), feeData.getVersion());
+                .extracting("calculatedAmountInPence", "code", "version")
+                .containsExactly(
+                    String.valueOf(feeData.getCalculatedAmountInPence()),
+                    feeData.getCode(),
+                    feeData.getVersion()
+                );
 
             DynamicList dynamicList = getDynamicList(response);
 
@@ -208,12 +212,15 @@ class CreateClaimCallbackHandlerTest extends BaseCallbackHandlerTest {
 
             assertThat(response.getData())
                 .extracting("claimFee")
-                .extracting("calculated_amount", "code", "version")
-                .containsExactly(feeData.getCalculatedAmount(), feeData.getCode(), feeData.getVersion());
+                .extracting("calculatedAmountInPence", "code", "version")
+                .containsExactly(
+                    String.valueOf(feeData.getCalculatedAmountInPence()),
+                    feeData.getCode(),
+                    feeData.getVersion()
+                );
 
-            DynamicList dynamicList = getDynamicList(response);
-
-            assertThat(dynamicList).isEqualTo(DynamicList.builder().value(DynamicListElement.EMPTY).build());
+            assertThat(getDynamicList(response))
+                .isEqualTo(DynamicList.builder().value(DynamicListElement.EMPTY).build());
         }
 
         private DynamicList getDynamicList(AboutToStartOrSubmitCallbackResponse response) {

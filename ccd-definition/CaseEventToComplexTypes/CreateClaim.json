@@ -357,7 +357,7 @@
     "ID": "Fee",
     "CaseEventID": "CREATE_CLAIM",
     "CaseFieldID": "claimFee",
-    "ListElementCode": "calculated_amount",
+    "ListElementCode": "calculatedAmountInPence",
     "FieldDisplayOrder": 1,
     "DisplayContext": "READONLY"
   },

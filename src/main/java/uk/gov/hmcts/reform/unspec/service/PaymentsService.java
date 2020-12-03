@@ -21,7 +21,7 @@ public class PaymentsService {
     }
 
     private CreditAccountPaymentRequest buildRequest(CaseData caseData) {
-        FeeDto claimFee = caseData.getClaimFee();
+        FeeDto claimFee = caseData.getClaimFee().toFeeDto();
 
         return CreditAccountPaymentRequest.builder()
             .accountNumber(caseData.getApplicantSolicitor1PbaAccounts().getValue().getLabel())

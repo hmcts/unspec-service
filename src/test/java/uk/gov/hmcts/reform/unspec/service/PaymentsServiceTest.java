@@ -14,6 +14,7 @@ import uk.gov.hmcts.reform.payments.client.models.PaymentDto;
 import uk.gov.hmcts.reform.payments.client.request.CreditAccountPaymentRequest;
 import uk.gov.hmcts.reform.unspec.config.PaymentsConfiguration;
 import uk.gov.hmcts.reform.unspec.model.CaseData;
+import uk.gov.hmcts.reform.unspec.model.Fee;
 import uk.gov.hmcts.reform.unspec.model.common.DynamicList;
 import uk.gov.hmcts.reform.unspec.model.common.DynamicListElement;
 
@@ -32,10 +33,10 @@ class PaymentsServiceTest {
     private static final String SERVICE = "service";
     private static final String SITE_ID = "site_id";
     private static final String AUTH_TOKEN = "Bearer token";
-    private static final FeeDto FEE_DATA = FeeDto.builder()
+    private static final Fee FEE_DATA = Fee.builder()
         .version("1")
         .code("CODE")
-        .calculatedAmount(BigDecimal.ONE)
+        .calculatedAmountInPence(BigDecimal.valueOf(100))
         .build();
     private static final PaymentDto PAYMENT_DTO = PaymentDto.builder().reference("RC-1234-1234-1234-1234").build();
 
@@ -69,7 +70,7 @@ class PaymentsServiceTest {
             .build();
         var expectedCreditAccountPaymentRequest = CreditAccountPaymentRequest.builder()
             .accountNumber("PBA0077597")
-            .amount(FEE_DATA.getCalculatedAmount())
+            .amount(FEE_DATA.toFeeDto().getCalculatedAmount())
             .caseReference("000LR001")
             .ccdCaseNumber("12345")
             .customerReference("Test Customer Reference")
@@ -77,7 +78,7 @@ class PaymentsServiceTest {
             .organisationName("Test Organisation Name")
             .service(SERVICE)
             .siteId(SITE_ID)
-            .fees(new FeeDto[]{FEE_DATA})
+            .fees(new FeeDto[]{FEE_DATA.toFeeDto()})
             .build();
 
         PaymentDto paymentResponse = paymentsService.createCreditAccountPayment(caseData, AUTH_TOKEN);

@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonUnwrapped;
 import lombok.Builder;
 import lombok.Data;
-import uk.gov.hmcts.reform.payments.client.models.FeeDto;
 import uk.gov.hmcts.reform.unspec.enums.AllocatedTrack;
 import uk.gov.hmcts.reform.unspec.enums.CaseState;
 import uk.gov.hmcts.reform.unspec.enums.ClaimType;
@@ -45,7 +44,8 @@ public class CaseData {
     private final Party respondent1;
     private final Party respondent2;
     private final ClaimValue claimValue;
-    private final FeeDto claimFee;
+    private final Fee claimFee;
+    private final String paymentReference;
     private final DynamicList applicantSolicitor1PbaAccounts;
     private final ClaimType claimType;
     private final String claimTypeOther;
@@ -120,4 +120,7 @@ public class CaseData {
     private final YesOrNo applicant1LitigationFriendRequired;
 
     private final LitigationFriend applicant1LitigationFriend;
+
+    //CCD UI flag
+    private final YesOrNo applicantSolicitor1PbaAccountsIsEmpty;
 }
