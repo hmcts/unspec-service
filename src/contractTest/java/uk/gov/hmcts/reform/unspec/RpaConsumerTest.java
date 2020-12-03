@@ -1,6 +1,5 @@
 package uk.gov.hmcts.reform.unspec;
 
-
 import au.com.dius.pact.consumer.PactTestRun;
 import au.com.dius.pact.model.RequestResponsePact;
 import lombok.SneakyThrows;
@@ -18,17 +17,24 @@ class RpaConsumerTest extends BaseRpaTest {
 
     @Test
     @SneakyThrows
-    void pactTest_whenRoboticsObjectIsPopulated() {
-
-        int statusCode;
+    void shouldGeneratePact_whenRoboticsObjectIsPopulated() {
         String description = "a request to fake endpoint with Robotics data for RPA";
+        String rpaJson = writeToString(buildRoboticsCaseData());
+        int statusCode = validateJsonPayload(rpaJson, "/rpa-json-schema.json");
 
-        final String body = createRequestBody(buildRoboticsCaseData());
+        String payload = writeToString(buildRpaContract());
+        RequestResponsePact pact = preparePact(statusCode, description, payload);
+        PactTestRun pactTestRun = preparePactTestRun(payload);
 
-        statusCode = validateJsonPayload(body, "/rpa-json-schema.json");
-        RequestResponsePact pact = preparePact(statusCode, description, body);
-        PactTestRun pactTestRun = preparePactTestRun(body);
         runPactTest(pact, pactTestRun);
+    }
+
+    private RpaContract buildRpaContract() {
+        return RpaContract.builder()
+            .title("A sample RPA Json for drop 1")
+            .version("1.0.0")
+            .payload(buildRoboticsCaseData())
+            .build();
     }
 
     private RoboticsCaseData buildRoboticsCaseData() {

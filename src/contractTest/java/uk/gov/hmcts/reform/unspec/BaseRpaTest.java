@@ -35,17 +35,19 @@ public abstract class BaseRpaTest {
     protected static final String CONSUMER = "unspec_service";
     protected static final String PROVIDER = "rpa_api";
 
+    protected ObjectMapper objectMapper = new ObjectMapper();
+
     protected RequestResponsePact preparePact(int statusCode, String description, String body) {
         // @formatter:off
         return ConsumerPactBuilder
             .consumer(CONSUMER)
             .hasPactWith(PROVIDER)
             .uponReceiving(description)
-            .path(PATH)
-            .method("POST")
-            .body(body)
+                .path(PATH)
+                .method("POST")
+                .body(body)
             .willRespondWith()
-            .status(statusCode)
+                .status(statusCode)
             .toPact();
         // @formatter:on
     }
@@ -75,24 +77,23 @@ public abstract class BaseRpaTest {
     }
 
     protected int validateJsonPayload(String body, String jsonSchemaFileName) {
-        String JsonSchema = readJsonSchema(jsonSchemaFileName);
-        var jsonSchema = JsonSchemaFactory.getInstance(SpecVersion.VersionFlag.V7).getSchema(JsonSchema);
+        String jsonSchemaContents = readJsonSchema(jsonSchemaFileName);
+        var jsonSchema = JsonSchemaFactory.getInstance(SpecVersion.VersionFlag.V7).getSchema(jsonSchemaContents);
         Set<ValidationMessage> errors = jsonSchema.validate(getJsonNodeFromStringContent(body));
         if (!errors.isEmpty()) {
-            log.info("Schema validation errors: {}", errors);
+            log.error("Schema validation errors: {}", errors);
         }
         return errors.isEmpty() ? 200 : 422;
     }
 
     @SneakyThrows
-    protected String createRequestBody(Object object) {
-        ObjectMapper objectMapper = new ObjectMapper();
+    protected String writeToString(Object object) {
         return objectMapper.writeValueAsString(object);
     }
 
     @SneakyThrows
     protected JsonNode getJsonNodeFromStringContent(String content) {
-        return new ObjectMapper().readTree(content);
+        return objectMapper.readTree(content);
     }
 
     protected String readJsonSchema(String input) {
