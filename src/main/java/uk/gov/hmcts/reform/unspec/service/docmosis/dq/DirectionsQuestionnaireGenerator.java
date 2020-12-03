@@ -2,16 +2,13 @@ package uk.gov.hmcts.reform.unspec.service.docmosis.dq;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import uk.gov.hmcts.reform.unspec.enums.ExpertReportsSent;
+import uk.gov.hmcts.reform.unspec.enums.dq.Language;
 import uk.gov.hmcts.reform.unspec.model.CaseData;
 import uk.gov.hmcts.reform.unspec.model.Party;
 import uk.gov.hmcts.reform.unspec.model.docmosis.DocmosisDocument;
 import uk.gov.hmcts.reform.unspec.model.docmosis.common.Applicant;
-import uk.gov.hmcts.reform.unspec.model.docmosis.dq.DirectionsQuestionnaireForm;
-import uk.gov.hmcts.reform.unspec.model.docmosis.dq.Expert;
-import uk.gov.hmcts.reform.unspec.model.docmosis.dq.Experts;
-import uk.gov.hmcts.reform.unspec.model.docmosis.dq.Hearing;
-import uk.gov.hmcts.reform.unspec.model.docmosis.dq.WelshLanguageRequirements;
-import uk.gov.hmcts.reform.unspec.model.docmosis.dq.Witnesses;
+import uk.gov.hmcts.reform.unspec.model.docmosis.dq.*;
 import uk.gov.hmcts.reform.unspec.model.documents.CaseDocument;
 import uk.gov.hmcts.reform.unspec.model.documents.DocumentType;
 import uk.gov.hmcts.reform.unspec.model.documents.PDF;
@@ -25,8 +22,8 @@ import uk.gov.hmcts.reform.unspec.utils.MonetaryConversions;
 import java.text.NumberFormat;
 import java.util.List;
 import java.util.Locale;
-import java.util.Optional;
 
+import static java.util.Optional.ofNullable;
 import static java.util.stream.Collectors.toList;
 import static uk.gov.hmcts.reform.unspec.service.docmosis.DocmosisTemplates.N181;
 import static uk.gov.hmcts.reform.unspec.utils.ElementUtils.unwrapElements;
@@ -88,7 +85,10 @@ public class DirectionsQuestionnaireGenerator implements TemplateDataGenerator<D
         var experts = respondent1DQ.getExperts();
         return Experts.builder()
             .expertRequired(experts.getExpertRequired())
-            .expertReportsSent(experts.getExpertReportsSent().getDisplayedValue())
+            .expertReportsSent(
+                ofNullable(experts.getExpertReportsSent())
+                    .map(ExpertReportsSent::getDisplayedValue)
+                    .orElse(""))
             .jointExpertSuitable(experts.getJointExpertSuitable())
             .details(getExpertsDetails(respondent1DQ))
             .build();
@@ -139,24 +139,23 @@ public class DirectionsQuestionnaireGenerator implements TemplateDataGenerator<D
     private String getHearingSupport(Respondent1DQ respondent1DQ) {
         var hearingSupport = respondent1DQ.getHearingSupport();
         var stringBuilder = new StringBuilder();
-        Optional.ofNullable(hearingSupport.getRequirements()).orElse(List.of())
-            .forEach(requirement -> {
-                stringBuilder.append(requirement.getDisplayedValue());
-                switch (requirement) {
-                    case SIGN_INTERPRETER:
-                        stringBuilder.append(" - ").append(hearingSupport.getSignLanguageRequired());
-                        break;
-                    case LANGUAGE_INTERPRETER:
-                        stringBuilder.append(" - ").append(hearingSupport.getLanguageToBeInterpreted());
-                        break;
-                    case OTHER_SUPPORT:
-                        stringBuilder.append(" - ").append(hearingSupport.getOtherSupport());
-                        break;
-                    default:
-                        break;
-                }
-                stringBuilder.append("\n");
-            });
+        hearingSupport.getRequirements().forEach(requirement -> {
+            stringBuilder.append(requirement.getDisplayedValue());
+            switch (requirement) {
+                case SIGN_INTERPRETER:
+                    stringBuilder.append(" - ").append(hearingSupport.getSignLanguageRequired());
+                    break;
+                case LANGUAGE_INTERPRETER:
+                    stringBuilder.append(" - ").append(hearingSupport.getLanguageToBeInterpreted());
+                    break;
+                case OTHER_SUPPORT:
+                    stringBuilder.append(" - ").append(hearingSupport.getOtherSupport());
+                    break;
+                default:
+                    break;
+            }
+            stringBuilder.append("\n");
+        });
         return stringBuilder.toString().trim();
     }
 
@@ -164,9 +163,12 @@ public class DirectionsQuestionnaireGenerator implements TemplateDataGenerator<D
         var welshLanguageRequirements = respondent1DQ.getWelshLanguageRequirements();
         return WelshLanguageRequirements.builder()
             .isPartyWelsh(welshLanguageRequirements.getIsPartyWelsh())
-            .evidence(welshLanguageRequirements.getEvidence().getDisplayedValue())
-            .court(welshLanguageRequirements.getCourt().getDisplayedValue())
-            .documents(welshLanguageRequirements.getDocuments().getDisplayedValue())
+            .evidence(ofNullable(
+                welshLanguageRequirements.getEvidence()).map(Language::getDisplayedValue).orElse(""))
+            .court(ofNullable(
+                welshLanguageRequirements.getCourt()).map(Language::getDisplayedValue).orElse(""))
+            .documents(ofNullable(
+                welshLanguageRequirements.getDocuments()).map(Language::getDisplayedValue).orElse(""))
             .build();
     }
 }
