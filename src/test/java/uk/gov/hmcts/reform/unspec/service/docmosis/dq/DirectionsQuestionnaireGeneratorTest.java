@@ -61,7 +61,6 @@ class DirectionsQuestionnaireGeneratorTest {
                  .uploadDocument(BEARER_TOKEN, new PDF(fileName, bytes, DIRECTIONS_QUESTIONNAIRE)))
             .thenReturn(CASE_DOCUMENT);
 
-        //TODO: update case data builder with DQ data
         CaseData caseData = CaseDataBuilder.builder().atStateRespondedToClaim().build();
 
         CaseDocument caseDocument = generator.generate(caseData, BEARER_TOKEN);

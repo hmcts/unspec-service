@@ -82,9 +82,9 @@ public class DirectionsQuestionnaireGenerator implements TemplateDataGenerator<D
     private Applicant getApplicant(CaseData caseData) {
         Party applicant = caseData.getApplicant1();
         return Applicant.builder()
-                           .name(applicant.getPartyName())
-                           .primaryAddress(applicant.getPrimaryAddress())
-                           .build();
+            .name(applicant.getPartyName())
+            .primaryAddress(applicant.getPrimaryAddress())
+            .build();
     }
 
     private Experts getExperts(Respondent1DQ respondent1DQ) {

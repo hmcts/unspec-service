@@ -56,14 +56,20 @@ class DefendantResponseTest extends BpmnBaseTest {
 
         //complete the notification to respondent
         ExternalTask forRespondent = assertNextExternalTask(PROCESS_CASE_EVENT);
-        assertCompleteExternalTask(forRespondent, PROCESS_CASE_EVENT,
-                                   OFFLINE_NOTIFY_RESPONDENT_SOLICITOR_1, OFFLINE_NOTIFICATION_RESPONDENT_ACTIVITY_ID
+        assertCompleteExternalTask(
+            forRespondent,
+            PROCESS_CASE_EVENT,
+            OFFLINE_NOTIFY_RESPONDENT_SOLICITOR_1,
+            OFFLINE_NOTIFICATION_RESPONDENT_ACTIVITY_ID
         );
 
         //complete the notification to applicant
         ExternalTask forApplicant = assertNextExternalTask(PROCESS_CASE_EVENT);
-        assertCompleteExternalTask(forApplicant, PROCESS_CASE_EVENT,
-                                   OFFLINE_NOTIFY_APPLICANT_SOLICITOR_1, OFFLINE_NOTIFICATION_APPLICANT_ACTIVITY_ID
+        assertCompleteExternalTask(
+            forApplicant,
+            PROCESS_CASE_EVENT,
+            OFFLINE_NOTIFY_APPLICANT_SOLICITOR_1,
+            OFFLINE_NOTIFICATION_APPLICANT_ACTIVITY_ID
         );
 
         //end business process
@@ -98,8 +104,11 @@ class DefendantResponseTest extends BpmnBaseTest {
 
         //complete the notification to respondent
         ExternalTask forApplicant = assertNextExternalTask(PROCESS_CASE_EVENT);
-        assertCompleteExternalTask(forApplicant, PROCESS_CASE_EVENT, FULL_DEFENCE_NOTIFY_APPLICANT_SOLICITOR_1,
-                                   FULL_DEFENCE_NOTIFICATION_ACTIVITY_ID
+        assertCompleteExternalTask(
+            forApplicant,
+            PROCESS_CASE_EVENT,
+            FULL_DEFENCE_NOTIFY_APPLICANT_SOLICITOR_1,
+            FULL_DEFENCE_NOTIFICATION_ACTIVITY_ID
         );
 
         //complete the document generation
