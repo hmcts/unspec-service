@@ -23,11 +23,11 @@ module.exports =  {
           if (response.incidentMessage) {
             incidentMessage = response.incidentMessage;
           } else if (businessProcess.status !== 'FINISHED') {
-            throw new Error(`Ongoing business process: ${businessProcess.camundaEvent}, status: ${businessProcess.status},`
+            throw new Error(`Ongoing business process: ${businessProcess.camundaEvent}, case id: ${caseId}, status: ${businessProcess.status},`
               + ` process instance: ${businessProcess.processInstanceId}, last finished activity: ${businessProcess.activityId}`);
           }
       });
-    });
+    }, 300, 1000);
     if (incidentMessage)
       throw new Error(`Business process failed for case: ${caseId}, incident message: ${incidentMessage}`);
   }
