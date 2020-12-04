@@ -25,7 +25,6 @@ import java.nio.file.Paths;
 import java.util.Set;
 
 import static au.com.dius.pact.consumer.ConsumerPactRunnerKt.runConsumerTest;
-import static java.nio.charset.StandardCharsets.UTF_8;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @Slf4j
@@ -82,8 +81,9 @@ public abstract class BaseRpaTest {
         Set<ValidationMessage> errors = jsonSchema.validate(getJsonNodeFromStringContent(body));
         if (!errors.isEmpty()) {
             log.error("Schema validation errors: {}", errors);
+            return 422;
         }
-        return errors.isEmpty() ? 200 : 422;
+        return 200;
     }
 
     @SneakyThrows
@@ -100,7 +100,7 @@ public abstract class BaseRpaTest {
         try {
             URL resource = getClass().getResource(input);
             URI url = resource.toURI();
-            return new String(Files.readAllBytes(Paths.get(url)), UTF_8);
+            return Files.readString(Paths.get(url));
         } catch (NoSuchFileException e) {
             throw new RuntimeException("no file found with the link '" + input + "'", e);
         } catch (IOException | URISyntaxException e) {
