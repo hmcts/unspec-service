@@ -30,7 +30,12 @@ class ConfirmServiceTest extends BpmnBaseTest {
 
         //complete the document generation
         ExternalTask documentGeneration = assertNextExternalTask(PROCESS_CASE_EVENT);
-        assertCompleteExternalTask(documentGeneration, PROCESS_CASE_EVENT, GENERATE_CERTIFICATE_OF_SERVICE, ACTIVITY_ID);
+        assertCompleteExternalTask(
+            documentGeneration,
+            PROCESS_CASE_EVENT,
+            GENERATE_CERTIFICATE_OF_SERVICE,
+            ACTIVITY_ID
+        );
 
         //end business process
         ExternalTask endBusinessProcess = assertNextExternalTask(END_BUSINESS_PROCESS);

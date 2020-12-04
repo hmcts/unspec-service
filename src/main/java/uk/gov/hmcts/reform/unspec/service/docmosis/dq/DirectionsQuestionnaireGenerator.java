@@ -8,10 +8,16 @@ import uk.gov.hmcts.reform.unspec.model.CaseData;
 import uk.gov.hmcts.reform.unspec.model.Party;
 import uk.gov.hmcts.reform.unspec.model.docmosis.DocmosisDocument;
 import uk.gov.hmcts.reform.unspec.model.docmosis.common.Applicant;
-import uk.gov.hmcts.reform.unspec.model.docmosis.dq.*;
+import uk.gov.hmcts.reform.unspec.model.docmosis.dq.DirectionsQuestionnaireForm;
+import uk.gov.hmcts.reform.unspec.model.docmosis.dq.Expert;
+import uk.gov.hmcts.reform.unspec.model.docmosis.dq.Experts;
+import uk.gov.hmcts.reform.unspec.model.docmosis.dq.Hearing;
+import uk.gov.hmcts.reform.unspec.model.docmosis.dq.WelshLanguageRequirements;
+import uk.gov.hmcts.reform.unspec.model.docmosis.dq.Witnesses;
 import uk.gov.hmcts.reform.unspec.model.documents.CaseDocument;
 import uk.gov.hmcts.reform.unspec.model.documents.DocumentType;
 import uk.gov.hmcts.reform.unspec.model.documents.PDF;
+import uk.gov.hmcts.reform.unspec.model.dq.HearingSupport;
 import uk.gov.hmcts.reform.unspec.model.dq.Respondent1DQ;
 import uk.gov.hmcts.reform.unspec.service.docmosis.DocumentGeneratorService;
 import uk.gov.hmcts.reform.unspec.service.docmosis.TemplateDataGenerator;
@@ -137,25 +143,28 @@ public class DirectionsQuestionnaireGenerator implements TemplateDataGenerator<D
     }
 
     private String getHearingSupport(Respondent1DQ respondent1DQ) {
-        var hearingSupport = respondent1DQ.getHearingSupport();
         var stringBuilder = new StringBuilder();
-        hearingSupport.getRequirements().forEach(requirement -> {
-            stringBuilder.append(requirement.getDisplayedValue());
-            switch (requirement) {
-                case SIGN_INTERPRETER:
-                    stringBuilder.append(" - ").append(hearingSupport.getSignLanguageRequired());
-                    break;
-                case LANGUAGE_INTERPRETER:
-                    stringBuilder.append(" - ").append(hearingSupport.getLanguageToBeInterpreted());
-                    break;
-                case OTHER_SUPPORT:
-                    stringBuilder.append(" - ").append(hearingSupport.getOtherSupport());
-                    break;
-                default:
-                    break;
-            }
-            stringBuilder.append("\n");
-        });
+        ofNullable(respondent1DQ.getHearingSupport())
+            .map(HearingSupport::getRequirements)
+            .orElse(List.of())
+            .forEach(requirement -> {
+                var hearingSupport = respondent1DQ.getHearingSupport();
+                stringBuilder.append(requirement.getDisplayedValue());
+                switch (requirement) {
+                    case SIGN_INTERPRETER:
+                        stringBuilder.append(" - ").append(hearingSupport.getSignLanguageRequired());
+                        break;
+                    case LANGUAGE_INTERPRETER:
+                        stringBuilder.append(" - ").append(hearingSupport.getLanguageToBeInterpreted());
+                        break;
+                    case OTHER_SUPPORT:
+                        stringBuilder.append(" - ").append(hearingSupport.getOtherSupport());
+                        break;
+                    default:
+                        break;
+                }
+                stringBuilder.append("\n");
+            });
         return stringBuilder.toString().trim();
     }
 

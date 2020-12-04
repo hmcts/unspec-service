@@ -104,8 +104,11 @@ class DefendantResponseTest extends BpmnBaseTest {
 
         //complete the document generation
         ExternalTask documentGeneration = assertNextExternalTask(PROCESS_CASE_EVENT);
-        assertCompleteExternalTask(documentGeneration, PROCESS_CASE_EVENT, FULL_DEFENCE_GENERATE_DIRECTIONS_QUESTIONNAIRE,
-                                   FULL_DEFENCE_GENERATE_DIRECTIONS_QUESTIONNAIRE_ACTIVITY_ID
+        assertCompleteExternalTask(
+            documentGeneration,
+            PROCESS_CASE_EVENT,
+            FULL_DEFENCE_GENERATE_DIRECTIONS_QUESTIONNAIRE,
+            FULL_DEFENCE_GENERATE_DIRECTIONS_QUESTIONNAIRE_ACTIVITY_ID
         );
 
         //end business process
