@@ -5,9 +5,7 @@ import au.com.dius.pact.consumer.PactTestRun;
 import au.com.dius.pact.consumer.PactVerificationResult;
 import au.com.dius.pact.model.MockProviderConfig;
 import au.com.dius.pact.model.RequestResponsePact;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import io.restassured.RestAssured;
-import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
 import uk.gov.hmcts.reform.unspec.service.robotics.mapper.RoboticsAddressMapper;
@@ -20,14 +18,21 @@ import static au.com.dius.pact.consumer.ConsumerPactRunnerKt.runConsumerTest;
 @Slf4j
 public abstract class BaseRpaTest {
 
+    protected static final String VERSION = "1.0.0";
     protected static final String PATH = "/fake-endpoint";
     protected static final String CONSUMER = "unspec_service";
     protected static final String PROVIDER = "rpa_api";
 
     protected RoboticsDataMapper roboticsDataMapper = new RoboticsDataMapper(new RoboticsAddressMapper());
 
-    protected ObjectMapper objectMapper = new ObjectMapper();
+    protected PactVerificationResult getPactVerificationResult(String payload, String description) {
+        Map<String, String> headers = Map.of("title", description, "version", VERSION);
+        RequestResponsePact pact = preparePact(description, payload, headers);
+        PactTestRun pactTestRun = preparePactTestRun(payload, headers);
 
+        return runPactTest(pact, pactTestRun);
+    }
+    
     protected RequestResponsePact preparePact(String description, String body, Map<String, String> headers) {
         // @formatter:off
         return ConsumerPactBuilder
@@ -66,10 +71,5 @@ public abstract class BaseRpaTest {
             .then()
                 .statusCode(200);
         // @formatter:on
-    }
-
-    @SneakyThrows
-    protected String toJsonString(Object object) {
-        return objectMapper.writeValueAsString(object);
     }
 }

@@ -7,7 +7,7 @@ import java.util.List;
 
 @Data
 @Builder
-public class RoboticsCaseData {
+public class RoboticsCaseData implements ToJsonString {
 
     private CaseHeader header;
     private List<LitigiousParty> litigiousParties;
