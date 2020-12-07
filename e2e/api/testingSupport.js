@@ -4,6 +4,9 @@ const restHelper = require('./restHelper');
 const {retry} = require('./retryHelper');
 let incidentMessage;
 
+const MAX_RETRIES = 300;
+const RETRY_TIMEOUT_MS = 1000;
+
 module.exports =  {
   waitForFinishedBusinessProcess: async caseId => {
     const authToken = await restHelper.retriedRequest(
@@ -27,7 +30,7 @@ module.exports =  {
               + ` process instance: ${businessProcess.processInstanceId}, last finished activity: ${businessProcess.activityId}`);
           }
       });
-    }, 300, 1000);
+    }, MAX_RETRIES, RETRY_TIMEOUT_MS);
     if (incidentMessage)
       throw new Error(`Business process failed for case: ${caseId}, incident message: ${incidentMessage}`);
   }
