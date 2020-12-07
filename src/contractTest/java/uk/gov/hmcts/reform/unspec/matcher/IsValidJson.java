@@ -20,6 +20,8 @@ import java.nio.file.NoSuchFileException;
 import java.nio.file.Paths;
 import java.util.Set;
 
+import static java.lang.String.format;
+
 @Slf4j
 public class IsValidJson extends TypeSafeMatcher<String> {
 
@@ -73,9 +75,9 @@ public class IsValidJson extends TypeSafeMatcher<String> {
             URI url = resource.toURI();
             return Files.readString(Paths.get(url));
         } catch (NoSuchFileException e) {
-            throw new RuntimeException("no file found with the link '" + input + "'", e);
+            throw new RuntimeException(format("no file found with the link '%s'", input), e);
         } catch (IOException | URISyntaxException e) {
-            throw new RuntimeException("failed to read from file '" + input + "'", e);
+            throw new RuntimeException(format("failed to read from file '%s'", input), e);
         }
     }
 }
