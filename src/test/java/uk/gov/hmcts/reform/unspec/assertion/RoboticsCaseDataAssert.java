@@ -10,6 +10,7 @@ import uk.gov.hmcts.reform.unspec.utils.PartyUtils;
 
 import java.util.Optional;
 
+import static java.time.format.DateTimeFormatter.ISO_DATE;
 import static uk.gov.hmcts.reform.unspec.assertion.CustomAssertions.assertThat;
 
 public class RoboticsCaseDataAssert extends CustomAssert<RoboticsCaseDataAssert, RoboticsCaseData> {
@@ -88,7 +89,7 @@ public class RoboticsCaseDataAssert extends CustomAssert<RoboticsCaseDataAssert,
         compare(
             "dateOfBirth",
             litigiousParty.getDateOfBirth(),
-            PartyUtils.getDateOfBirth(party)
+            PartyUtils.getDateOfBirth(party).map(d -> d.format(ISO_DATE))
         );
 
         assertThat(litigiousParty.getAddresses().getContactAddress())

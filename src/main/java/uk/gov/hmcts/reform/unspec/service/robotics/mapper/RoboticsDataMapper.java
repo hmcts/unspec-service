@@ -15,6 +15,7 @@ import uk.gov.hmcts.reform.unspec.utils.PartyUtils;
 
 import java.util.List;
 
+import static java.time.format.DateTimeFormatter.ISO_DATE;
 import static java.util.Objects.requireNonNull;
 import static java.util.Optional.ofNullable;
 
@@ -81,7 +82,7 @@ public class RoboticsDataMapper {
         return LitigiousParty.builder()
             .name(party.getPartyName())
             .type(party.getType().getDisplayValue())
-            .dateOfBirth(PartyUtils.getDateOfBirth(party).orElse(null))
+            .dateOfBirth(PartyUtils.getDateOfBirth(party).map(d -> d.format(ISO_DATE)).orElse(null))
             .addresses(addressMapper.toRoboticsAddresses(party.getPrimaryAddress()))
             .build();
     }
