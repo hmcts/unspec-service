@@ -231,6 +231,9 @@ class CreateClaimCallbackHandlerTest extends BaseCallbackHandlerTest {
         @Nested
         class Respondent1DoesNotHaveLegalRepresentation {
 
+            public static final String LIP_CONFIRMATION_BODY = "<br />You do not need to do anything.\n\n"
+                + "Your claim will be considered by the court and you will be informed of the outcome by post.";
+
             @Test
             void shouldReturnExpectedSubmittedCallbackResponse_whenRespondent1DoesNotHaveRepresentation() {
                 CaseData caseData = CaseDataBuilder.builder().atStateClaimCreated().respondent1Represented(NO).build();
@@ -239,8 +242,8 @@ class CreateClaimCallbackHandlerTest extends BaseCallbackHandlerTest {
 
                 assertThat(response).usingRecursiveComparison().isEqualTo(
                     SubmittedCallbackResponse.builder()
-                        .confirmationHeader("Your claim will now progress offline")
-                        .confirmationBody("You do not need to do anything")
+                        .confirmationHeader("# Your claim will now progress offline")
+                        .confirmationBody(LIP_CONFIRMATION_BODY)
                         .build());
             }
         }

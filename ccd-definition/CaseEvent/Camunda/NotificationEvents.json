@@ -170,7 +170,7 @@
   {
     "LiveFrom": "01/01/2017",
     "CaseTypeID": "UNSPECIFIED_CLAIMS",
-    "ID": "NOTIFY_APPLICANT_SOLICITOR1_FOR_RESPONDENT_LITIGANT_IN_PERSON",
+    "ID": "NOTIFY_APPLICANT_SOLICITOR1_FOR_CASE_TAKEN_OFFLINE",
     "Name": "Notify handed offline",
     "Description": "Notify applicant solicitor 1 of claim moving offline due to respondent litigant in person",
     "PreConditionState(s)": "PROCEEDS_WITH_OFFLINE_JOURNEY",

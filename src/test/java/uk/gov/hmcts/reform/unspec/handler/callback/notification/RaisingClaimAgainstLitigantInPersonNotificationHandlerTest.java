@@ -16,6 +16,7 @@ import uk.gov.hmcts.reform.unspec.service.NotificationService;
 
 import java.util.Map;
 
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static uk.gov.hmcts.reform.unspec.callback.CallbackType.ABOUT_TO_SUBMIT;
 
@@ -43,7 +44,7 @@ class RaisingClaimAgainstLitigantInPersonNotificationHandlerTest {
 
         @BeforeEach
         void setup() {
-            when(notificationsProperties.getApplicantSolicitorCaseStrikeOut()).thenReturn(TEMPLATE_ID);
+            when(notificationsProperties.getClaimantSolicitorCaseWillProgressOffline()).thenReturn(TEMPLATE_ID);
             when(notificationsProperties.getApplicantSolicitorEmail()).thenReturn(EMAIL);
         }
 
@@ -54,21 +55,19 @@ class RaisingClaimAgainstLitigantInPersonNotificationHandlerTest {
 
             handler.handle(params);
 
-            //            verify(notificationService).sendMail(
-            //                EMAIL,
-            //                TEMPLATE_ID,
-            //                getExpectedMap(),
-            //                "applicant-create-case-handed-offline-notification-000LR001"
-            //            );
+            verify(notificationService).sendMail(
+                EMAIL,
+                TEMPLATE_ID,
+                getExpectedMap(),
+                "applicant-create-case-handed-offline-notification-000LR001"
+            );
         }
     }
 
     private Map<String, String> getExpectedMap() {
         return Map.of(
             "claimReferenceNumber", "000LR001",
-            "claimantName", "Mr. John Rambo",
-            "frontendBaseUrl", "https://www.MyHMCTS.gov.uk",
-            "defendantName", "Mr. Sole Trader"
+            "applicantSolicitorName", "Applicant solicitor name (need to add solicitor name to case data?)"
         );
     }
 }

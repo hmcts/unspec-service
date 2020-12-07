@@ -51,6 +51,9 @@ public class CreateClaimCallbackHandler extends CallbackHandler {
         + "\n* Confirm service online within 21 days of sending the form, particulars and response pack, before"
         + " 4pm if you're doing this on the due day";
 
+    public static final String LIP_CONFIRMATION_BODY = "<br />You do not need to do anything.\n\n"
+        + "Your claim will be considered by the court and you will be informed of the outcome by post.";
+
     private final ClaimIssueConfiguration claimIssueConfiguration;
     private final CaseDetailsConverter caseDetailsConverter;
     private final ReferenceNumberRepository referenceNumberRepository;
@@ -109,8 +112,8 @@ public class CreateClaimCallbackHandler extends CallbackHandler {
 
         if (caseData.getRespondent1Represented() == YesOrNo.NO) {
             return SubmittedCallbackResponse.builder()
-                .confirmationHeader("Your claim will now progress offline")
-                .confirmationBody("You do not need to do anything")
+                .confirmationHeader("# Your claim will now progress offline")
+                .confirmationBody(LIP_CONFIRMATION_BODY)
                 .build();
         }
 
