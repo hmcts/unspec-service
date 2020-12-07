@@ -24,7 +24,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
-import static uk.gov.hmcts.reform.unspec.enums.PbaNumber.PBA0077597;
 
 @ExtendWith(SpringExtension.class)
 @ContextConfiguration(classes = {JacksonAutoConfiguration.class})
@@ -39,6 +38,7 @@ class PaymentsServiceTest {
         .calculatedAmountInPence(BigDecimal.valueOf(100))
         .build();
     private static final PaymentDto PAYMENT_DTO = PaymentDto.builder().reference("RC-1234-1234-1234-1234").build();
+    private static final String SUCCESSFUL_PBA = "PBA0077597";
 
     @Mock
     private PaymentsClient paymentsClient;
@@ -59,7 +59,7 @@ class PaymentsServiceTest {
     @Test
     void shouldCreateCreditAccountPayment_whenValidCaseDetails() {
         DynamicList pbaAccounts = DynamicList.builder()
-            .value(DynamicListElement.builder().label(PBA0077597.toString()).build())
+            .value(DynamicListElement.builder().label(SUCCESSFUL_PBA).build())
             .build();
 
         CaseData caseData = CaseData.builder()

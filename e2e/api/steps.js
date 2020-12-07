@@ -173,6 +173,8 @@ const assertValidData = async (pageId) => {
   const responseBody = await response.json();
 
   assert.equal(response.status, 200);
+  addIssueClaimMidEventFields(pageId, responseBody);
+
   assert.deepEqual(responseBody.data, caseData);
 };
 
@@ -215,3 +217,13 @@ const assertContainsPopulatedFields = returnedCaseData => {
 const deleteCaseFields = (...caseFields) => {
   caseFields.forEach(caseField => delete caseData[caseField]);
 };
+
+function addIssueClaimMidEventFields(pageId, responseBody) {
+  if (pageId === 'ClaimValue') {
+    const midEventData = data[eventName].midEventData[pageId];
+    caseData = {...caseData, ...midEventData};
+
+    responseBody.data['applicantSolicitor1PbaAccounts'] = caseData.applicantSolicitor1PbaAccounts;
+  }
+}
+
