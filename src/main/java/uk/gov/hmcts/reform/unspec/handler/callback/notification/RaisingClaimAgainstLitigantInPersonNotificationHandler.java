@@ -34,7 +34,7 @@ public class RaisingClaimAgainstLitigantInPersonNotificationHandler extends Call
     @Override
     protected Map<String, Callback> callbacks() {
         return Map.of(
-            callbackKey(ABOUT_TO_SUBMIT), this::notifyApplicantSolicitorForCaseHandedOffline
+            callbackKey(ABOUT_TO_SUBMIT), this::notifyApplicantSolicitorCaseHandedOffline
         );
     }
 
@@ -48,7 +48,7 @@ public class RaisingClaimAgainstLitigantInPersonNotificationHandler extends Call
         return EVENTS;
     }
 
-    private CallbackResponse notifyApplicantSolicitorForCaseHandedOffline(CallbackParams callbackParams) {
+    private CallbackResponse notifyApplicantSolicitorCaseHandedOffline(CallbackParams callbackParams) {
         CaseData caseData = callbackParams.getCaseData();
 
         notificationService.sendMail(
