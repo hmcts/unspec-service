@@ -29,7 +29,7 @@ class CreateClaimTest extends BpmnBaseTest {
     public static final String GENERATE_CLAIM_FORM = "GENERATE_CLAIM_FORM";
     public static final String CLAIM_FORM_ACTIVITY_ID = "GenerateClaimForm";
     public static final String NOTIFY_APPLICANT_SOLICITOR_1_CLAIM_PROCEEDS_OFFLINE
-        = "NOTIFY_APPLICANT_SOLICITOR1_FOR_CASE_TAKEN_OFFLINE";
+        = "NOTIFY_APPLICANT_SOLICITOR1_FOR_RESPONDENT_LITIGANT_IN_PERSON";
     public static final String NOTIFY_APPLICANT_SOLICITOR_1_CLAIM_PROCEEDS_OFFLINE_ACTIVITY_ID
         = "CreateClaimProceedsOfflineNotifyApplicantSolicitor1";
 

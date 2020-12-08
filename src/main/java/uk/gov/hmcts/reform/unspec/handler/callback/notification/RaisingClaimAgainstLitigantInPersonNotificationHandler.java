@@ -16,7 +16,7 @@ import java.util.List;
 import java.util.Map;
 
 import static uk.gov.hmcts.reform.unspec.callback.CallbackType.ABOUT_TO_SUBMIT;
-import static uk.gov.hmcts.reform.unspec.callback.CaseEvent.NOTIFY_APPLICANT_SOLICITOR1_FOR_CASE_TAKEN_OFFLINE;
+import static uk.gov.hmcts.reform.unspec.callback.CaseEvent.NOTIFY_APPLICANT_SOLICITOR1_FOR_RESPONDENT_LITIGANT_IN_PERSON;
 
 @Service
 @RequiredArgsConstructor
@@ -24,7 +24,7 @@ public class RaisingClaimAgainstLitigantInPersonNotificationHandler extends Call
     implements NotificationData {
 
     private static final List<CaseEvent> EVENTS =
-        List.of(NOTIFY_APPLICANT_SOLICITOR1_FOR_CASE_TAKEN_OFFLINE);
+        List.of(NOTIFY_APPLICANT_SOLICITOR1_FOR_RESPONDENT_LITIGANT_IN_PERSON);
     public static final String TASK_ID = "CreateClaimProceedsOfflineNotifyApplicantSolicitor1";
     private static final String REFERENCE_TEMPLATE = "applicant-create-case-handed-offline-notification-%s";
 
