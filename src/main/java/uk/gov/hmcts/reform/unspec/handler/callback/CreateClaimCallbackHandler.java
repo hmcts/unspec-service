@@ -25,13 +25,13 @@ import uk.gov.hmcts.reform.unspec.validation.DateOfBirthValidator;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
 import static java.lang.String.format;
+import static java.util.Collections.emptyList;
 import static java.util.Optional.ofNullable;
 import static uk.gov.hmcts.reform.unspec.callback.CallbackParams.Params.BEARER_TOKEN;
 import static uk.gov.hmcts.reform.unspec.callback.CallbackType.ABOUT_TO_START;
@@ -108,11 +108,9 @@ public class CreateClaimCallbackHandler extends CallbackHandler {
     }
 
     private List<String> getPbaAccounts(String authToken) {
-        Optional<Organisation> organisation = organisationService.findOrganisation(authToken);
-
-        List<String> pbaNumbers = new ArrayList<>();
-        organisation.ifPresent(org -> pbaNumbers.addAll(org.getPaymentAccount()));
-        return pbaNumbers;
+        return organisationService.findOrganisation(authToken)
+            .map(Organisation::getPaymentAccount)
+            .orElse(emptyList());
     }
 
     private CallbackResponse submitClaim(CallbackParams callbackParams) {

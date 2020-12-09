@@ -37,7 +37,7 @@ public class FeesService {
     private Fee buildFeeDto(FeeLookupResponseDto feeLookupResponseDto) {
         BigDecimal calculatedAmount = feeLookupResponseDto.getFeeAmount()
             .multiply(PENCE_PER_POUND)
-            .setScale(0, RoundingMode.CEILING);
+            .setScale(0, RoundingMode.UNNECESSARY);
 
         return Fee.builder()
             .calculatedAmountInPence(calculatedAmount)
