@@ -84,11 +84,14 @@ module.exports = function () {
       await this.retryUntilExists(async () => {
         this.amOnPage(baseUrl);
 
-        if (await this.hasSelector(SIGNED_IN_SELECTOR)) {
-          this.click('Sign out');
+        if (!config.idamStub.enabled) {
+          if (await this.hasSelector(SIGNED_IN_SELECTOR)) {
+            this.click('Sign out');
+          }
+
+          loginPage.signIn(user);
         }
 
-        loginPage.signIn(user);
       }, SIGNED_IN_SELECTOR);
     },
 
