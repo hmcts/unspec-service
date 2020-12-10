@@ -132,9 +132,9 @@ payments:
 
 idam:
   web:
-    url: http://localhost:9002
+    url: ${TEST:}
   api:
-    url: http://localhost:5000
+    url: ${TEST:}
   s2s-auth:
     url: http://localhost:4502
     totp_secret: AABBCCDDEEFFGGHH
@@ -218,3 +218,12 @@ notifications:
 testing:
   support:
     enabled: true
+---
+
+spring:
+  profiles: idam-stub
+idam:
+  web:
+    url: http://ccd-test-stubs-service:5555
+  api:
+    url: http://ccd-test-stubs-service:5555
