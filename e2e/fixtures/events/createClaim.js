@@ -14,7 +14,7 @@ module.exports = {
       },
       applicantSolicitor1PbaAccountsIsEmpty: 'No',
       claimFee: {
-        calculatedAmountInPence: '100000',
+        calculatedAmountInPence: '150000',
         code: 'FEE0209',
         version: '1'
       },
