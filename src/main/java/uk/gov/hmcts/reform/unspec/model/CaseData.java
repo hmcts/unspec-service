@@ -43,6 +43,7 @@ public class CaseData {
     private final Party applicant2;
     private final Party respondent1;
     private final Party respondent2;
+    private final YesOrNo respondent1Represented;
     private final ClaimValue claimValue;
     private final Fee claimFee;
     private final String paymentReference;
@@ -90,10 +91,10 @@ public class CaseData {
     private final RespondentResponseType respondent1ClaimResponseType;
     private final ResponseDocument respondent1ClaimResponseDocument;
     private final LocalDateTime applicantSolicitorResponseDeadlineToRespondentSolicitor1;
+    private final LocalDate defendantResponseDate;
 
     private final YesOrNo applicant1ProceedWithClaim;
     private final ResponseDocument applicant1DefenceResponseDocument;
-    private final ApplicantNotProceedingReason applicant1NotProceedingReason;
 
     @Valid
     private final CloseClaim withdrawClaim;

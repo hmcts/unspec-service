@@ -70,6 +70,14 @@
   {
     "LiveFrom": "01/01/2017",
     "CaseTypeID": "UNSPECIFIED_CLAIMS",
+    "ID": "respondent1Represented",
+    "Label": "Does the defendant have a legal representative?",
+    "FieldType": "YesOrNo",
+    "SecurityClassification": "Public"
+  },
+  {
+    "LiveFrom": "01/01/2017",
+    "CaseTypeID": "UNSPECIFIED_CLAIMS",
     "ID": "claimValue",
     "Label": "Enter expected claim value",
     "FieldType": "ClaimValue",
@@ -458,15 +466,6 @@
   {
     "LiveFrom": "01/01/2017",
     "CaseTypeID": "UNSPECIFIED_CLAIMS",
-    "ID": "applicant1NotProceedingReason",
-    "Label": " ",
-    "FieldType": "NotProceedingWithClaim",
-    "SecurityClassification": "Public",
-    "Comment": "Label purposefully left blank so not to appear in the UI"
-  },
-  {
-    "LiveFrom": "01/01/2017",
-    "CaseTypeID": "UNSPECIFIED_CLAIMS",
     "ID": "legacyCaseReference",
     "FieldType": "Text",
     "Label": "CaseMan Reference number",
@@ -744,6 +743,14 @@
     "ID": "applicantSolicitorSecondResponseDeadlineToRespondentSolicitor1",
     "Label": "Case strikeout deadline",
     "FieldType": "DateTime",
+    "SecurityClassification": "Public"
+  },
+  {
+    "LiveFrom": "01/01/2017",
+    "CaseTypeID": "UNSPECIFIED_CLAIMS",
+    "ID": "defendantResponseDate",
+    "Label": "Defendant response date",
+    "FieldType": "Date",
     "SecurityClassification": "Public"
   }
 ]

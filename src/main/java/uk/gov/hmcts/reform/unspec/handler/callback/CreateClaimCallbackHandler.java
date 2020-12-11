@@ -11,6 +11,7 @@ import uk.gov.hmcts.reform.unspec.callback.CallbackHandler;
 import uk.gov.hmcts.reform.unspec.callback.CallbackParams;
 import uk.gov.hmcts.reform.unspec.callback.CaseEvent;
 import uk.gov.hmcts.reform.unspec.config.ClaimIssueConfiguration;
+import uk.gov.hmcts.reform.unspec.enums.CaseState;
 import uk.gov.hmcts.reform.unspec.enums.YesOrNo;
 import uk.gov.hmcts.reform.unspec.helpers.CaseDetailsConverter;
 import uk.gov.hmcts.reform.unspec.model.BusinessProcess;
@@ -21,6 +22,8 @@ import uk.gov.hmcts.reform.unspec.model.common.DynamicList;
 import uk.gov.hmcts.reform.unspec.repositories.ReferenceNumberRepository;
 import uk.gov.hmcts.reform.unspec.service.FeesService;
 import uk.gov.hmcts.reform.unspec.service.OrganisationService;
+import uk.gov.hmcts.reform.unspec.service.flowstate.FlowState;
+import uk.gov.hmcts.reform.unspec.service.flowstate.StateFlowEngine;
 import uk.gov.hmcts.reform.unspec.validation.DateOfBirthValidator;
 
 import java.time.LocalDate;
@@ -42,6 +45,8 @@ import static uk.gov.hmcts.reform.unspec.callback.CaseEvent.CREATE_CLAIM;
 import static uk.gov.hmcts.reform.unspec.enums.AllocatedTrack.getAllocatedTrack;
 import static uk.gov.hmcts.reform.unspec.helpers.DateFormatHelper.DATE_TIME_AT;
 import static uk.gov.hmcts.reform.unspec.helpers.DateFormatHelper.formatLocalDateTime;
+import static uk.gov.hmcts.reform.unspec.service.flowstate.FlowState.Main.PENDING_CASE_ISSUED;
+import static uk.gov.hmcts.reform.unspec.service.flowstate.FlowState.fromFullName;
 
 @Service
 @RequiredArgsConstructor
@@ -49,11 +54,14 @@ public class CreateClaimCallbackHandler extends CallbackHandler {
 
     private static final List<CaseEvent> EVENTS = Collections.singletonList(CREATE_CLAIM);
     public static final String CONFIRMATION_SUMMARY = "<br />Follow these steps to serve a claim:"
-        + "\n* <a href=\"%s\" target=\"_blank\">Download the sealed claim form</a>"
+        + "\n* [Download the sealed claim form](%s)"
         + "\n* Send the form, particulars of claim and "
         + "<a href=\"%s\" target=\"_blank\">a response pack</a> (PDF, 266 KB) to the defendant by %s"
         + "\n* Confirm service online within 21 days of sending the form, particulars and response pack, before"
         + " 4pm if you're doing this on the due day";
+
+    public static final String LIP_CONFIRMATION_BODY = "<br />You do not need to do anything.\n\n"
+        + "Your claim will be considered by the court and you will be informed of the outcome by post.";
 
     private final ClaimIssueConfiguration claimIssueConfiguration;
     private final CaseDetailsConverter caseDetailsConverter;
@@ -61,6 +69,7 @@ public class CreateClaimCallbackHandler extends CallbackHandler {
     private final DateOfBirthValidator dateOfBirthValidator;
     private final FeesService feesService;
     private final OrganisationService organisationService;
+    private final StateFlowEngine stateFlowEngine;
 
     @Override
     protected Map<String, Callback> callbacks() {
@@ -116,19 +125,35 @@ public class CreateClaimCallbackHandler extends CallbackHandler {
     private CallbackResponse submitClaim(CallbackParams callbackParams) {
         CaseData caseData = callbackParams.getCaseData();
 
-        CaseData.CaseDataBuilder caseDataBuilder = caseData.toBuilder()
+        CaseData updatedCaseData = caseData.toBuilder()
             .legacyCaseReference(referenceNumberRepository.getReferenceNumber())
             .claimSubmittedDateTime(LocalDateTime.now())
             .allocatedTrack(getAllocatedTrack(caseData.getClaimValue().toPounds(), caseData.getClaimType()))
-            .businessProcess(BusinessProcess.ready(CREATE_CLAIM));
+            .businessProcess(BusinessProcess.ready(CREATE_CLAIM))
+            .build();
 
         return AboutToStartOrSubmitCallbackResponse.builder()
-            .data(caseDetailsConverter.toMap(caseDataBuilder.build()))
+            .data(caseDetailsConverter.toMap(updatedCaseData))
+            .state(getState(updatedCaseData))
             .build();
+    }
+
+    private String getState(CaseData updatedCaseData) {
+        FlowState flowState = fromFullName(stateFlowEngine.evaluate(updatedCaseData).getState().getName());
+        return String.valueOf(
+            flowState == PENDING_CASE_ISSUED ? CaseState.PENDING_CASE_ISSUED : CaseState.PROCEEDS_WITH_OFFLINE_JOURNEY
+        );
     }
 
     private SubmittedCallbackResponse buildConfirmation(CallbackParams callbackParams) {
         CaseData caseData = callbackParams.getCaseData();
+
+        if (caseData.getRespondent1Represented() == YesOrNo.NO) {
+            return SubmittedCallbackResponse.builder()
+                .confirmationHeader("# Your claim will now progress offline")
+                .confirmationBody(LIP_CONFIRMATION_BODY)
+                .build();
+        }
 
         LocalDateTime serviceDeadline = LocalDate.now().plusDays(112).atTime(23, 59);
         String formattedServiceDeadline = formatLocalDateTime(serviceDeadline, DATE_TIME_AT);

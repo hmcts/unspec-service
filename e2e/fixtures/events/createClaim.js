@@ -116,6 +116,9 @@ module.exports = {
         }
       }
     },
+    LegalRepresentation: {
+      respondent1Represented: 'Yes'
+    },
     ClaimType: {
       claimType: 'PERSONAL_INJURY'
     },
