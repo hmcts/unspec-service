@@ -76,6 +76,7 @@ public class CaseDataBuilder {
     private CourtLocation courtLocation;
     private Party applicant1;
     private Party respondent1;
+    private YesOrNo respondent1Represented;
     private ClaimValue claimValue;
     private ClaimType claimType;
     private String claimTypeOther;
@@ -227,6 +228,11 @@ public class CaseDataBuilder {
         return this;
     }
 
+    public CaseDataBuilder respondent1Represented(YesOrNo isRepresented) {
+        this.respondent1Represented = isRepresented;
+        return this;
+    }
+
     public CaseDataBuilder atState(FlowState.Main flowState) {
         switch (flowState) {
             case DRAFT:
@@ -332,6 +338,7 @@ public class CaseDataBuilder {
         personalInjuryType = ROAD_ACCIDENT;
         applicant1 = PartyBuilder.builder().individual().build();
         respondent1 = PartyBuilder.builder().soleTrader().build();
+        respondent1Represented = YES;
         applicantSolicitor1ClaimStatementOfTruth = StatementOfTruthBuilder.builder().build();
 
         return this;
@@ -440,16 +447,16 @@ public class CaseDataBuilder {
             .build();
         applicant1DQ = Applicant1DQ.builder()
             .applicant1DQFileDirectionsQuestionnaire(FileDirectionsQuestionnaire.builder()
-                                                          .explainedToClient(List.of("OTHER"))
-                                                          .oneMonthStayRequested(NO)
-                                                          .reactionProtocolCompliedWith(YES)
-                                                          .build())
+                                                         .explainedToClient(List.of("OTHER"))
+                                                         .oneMonthStayRequested(NO)
+                                                         .reactionProtocolCompliedWith(YES)
+                                                         .build())
             .applicant1DQDisclosureOfElectronicDocuments(DisclosureOfElectronicDocuments.builder()
-                                                              .reachedAgreement(YES)
-                                                              .build())
+                                                             .reachedAgreement(YES)
+                                                             .build())
             .applicant1DQDisclosureOfNonElectronicDocuments(DisclosureOfNonElectronicDocuments.builder()
-                                                                 .directionsForDisclosureProposed(NO)
-                                                                 .build())
+                                                                .directionsForDisclosureProposed(NO)
+                                                                .build())
             .applicant1DQExperts(Experts.builder().expertRequired(NO).build())
             .applicant1DQWitnesses(Witnesses.builder().witnessesToAppear(NO).build())
             .applicant1DQHearing(Hearing.builder().hearingLength(ONE_DAY).unavailableDatesRequired(NO).build())
@@ -511,6 +518,7 @@ public class CaseDataBuilder {
             .personalInjuryTypeOther(personalInjuryTypeOther)
             .applicant1(applicant1)
             .respondent1(respondent1)
+            .respondent1Represented(respondent1Represented)
             .applicantSolicitor1ClaimStatementOfTruth(applicantSolicitor1ClaimStatementOfTruth)
             .paymentDetails(paymentDetails)
             // Confirm Service
