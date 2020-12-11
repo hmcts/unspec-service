@@ -9,7 +9,7 @@ module.exports =  {
     return restHelper.retriedRequest(
       `${idamUrl}/${loginEndpoint}?username=${user.email}&password=${user.password}`,
       {'Content-Type': 'application/x-www-form-urlencoded'})
-      .then(response => response.json()).then(data => data.access_token)
+      .then(response => response.json()).then(data => data.access_token);
   },
 
   userId: async (authToken) => {
