@@ -173,6 +173,7 @@ class CreateClaimCallbackHandlerTest extends BaseCallbackHandlerTest {
         private final Organisation organisation = Organisation.builder()
             .paymentAccount(List.of("12345", "98765"))
             .build();
+        private final ObjectMapper mapper = new ObjectMapper();
 
         @BeforeEach
         void setup() {
@@ -230,7 +231,6 @@ class CreateClaimCallbackHandlerTest extends BaseCallbackHandlerTest {
         }
 
         private DynamicList getDynamicList(AboutToStartOrSubmitCallbackResponse response) {
-            ObjectMapper mapper = new ObjectMapper();
             return mapper.convertValue(response.getData().get("applicantSolicitor1PbaAccounts"), DynamicList.class);
         }
     }
