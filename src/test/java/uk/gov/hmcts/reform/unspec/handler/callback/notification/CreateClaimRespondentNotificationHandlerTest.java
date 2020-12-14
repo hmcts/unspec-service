@@ -59,7 +59,7 @@ class CreateClaimRespondentNotificationHandlerTest extends BaseCallbackHandlerTe
         private Map<String, String> getExpectedMap() {
             return Map.of(
                 "claimReferenceNumber", "000LR001",
-                "defendantSolicitorName", "TBC: Respondent solicitor name (need to add in case data?)",
+                "defendantSolicitorName", "Placeholder name",
                 "claimantName", "Mr. John Rambo",
                 "defendantName", "Mr. Sole Trader",
                 "issuedOn", formatLocalDate(CLAIM_ISSUED_DATE, DATE)
