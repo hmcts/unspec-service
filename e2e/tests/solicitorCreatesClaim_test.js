@@ -5,6 +5,7 @@ const caseEventMessage = eventName => `Case ${caseNumber} has been updated with 
 const caseId = () => `${caseNumber.split('-').join('').replace(/#/, '')}`;
 
 const CASE_HEADER = 'ccd-case-header > h1';
+const CASE_LIST = 'exui-case-list';
 
 let caseNumber;
 
