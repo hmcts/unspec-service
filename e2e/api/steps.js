@@ -1,6 +1,7 @@
 const assert = require('assert').strict;
 
 const apiRequest = require('./apiRequest.js');
+const {waitForFinishedBusinessProcess} = require('../api/testingSupport');
 
 const data = {
   CREATE_CLAIM: require('../fixtures/events/createClaim.js'),
@@ -55,8 +56,6 @@ module.exports = {
 
     await assertCallbackError('ServedDocuments', data[eventName].invalid.ServedDocuments.blankOtherDocuments,
       'CONTENT TBC: please enter a valid value for other documents');
-    await assertCallbackError('Date', data[eventName].invalid.Date.threeDaysBeforeToday,
-      'The date must not be before issue date of claim');
     await assertCallbackError('Date', data[eventName].invalid.Date.tomorrow,
       'The date must not be in the future');
 
@@ -162,6 +161,7 @@ module.exports = {
       header: 'You\'ve decided to proceed with the claim',
       body: 'We\'ll review the case. We\'ll contact you to tell you what to do next.'
     });
+    await waitForFinishedBusinessProcess(caseId);
   },
 
   addDefendantLitigationFriend: async () => {
