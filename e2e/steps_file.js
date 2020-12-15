@@ -85,7 +85,7 @@ module.exports = function () {
       await this.retryUntilExists(async () => {
         this.amOnPage(baseUrl);
 
-        if (!config.idamStub.enabled) {
+        if (!config.idamStub.enabled || config.idamStub.enabled === 'false') {
           if (await this.hasSelector(SIGNED_IN_SELECTOR)) {
             this.click('Sign out');
           }
