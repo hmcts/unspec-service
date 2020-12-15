@@ -9,7 +9,7 @@ exports.config = {
       keepCookies: true,
       show: process.env.SHOW_BROWSER_WINDOW || false,
       windowSize: '1200x900',
-      waitForTimeout: 20000,
+      waitForTimeout: 40000,
       waitForNavigation: [ "domcontentloaded", "networkidle0" ],
       chrome: {
         ignoreHTTPSErrors: true,
@@ -34,6 +34,18 @@ exports.config = {
         'selectOption',
         'attachFile',
       ],
+    },
+    retryFailedStep: {
+      enabled: true,
+    },
+    selenoid: {
+      enabled: true,
+      deletePassed: true,
+      autoCreate: true,
+      autoStart: true,
+      sessionTimeout: '30m',
+      enableVideo: true,
+      enableLog: true,
     },
     screenshotOnFail: {
       enabled: true,
