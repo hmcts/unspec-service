@@ -38,15 +38,6 @@ exports.config = {
     retryFailedStep: {
       enabled: true,
     },
-    selenoid: {
-      enabled: true,
-      deletePassed: true,
-      autoCreate: true,
-      autoStart: true,
-      sessionTimeout: '30m',
-      enableVideo: true,
-      enableLog: true,
-    },
     screenshotOnFail: {
       enabled: true,
       fullPageScreenshots: true,
