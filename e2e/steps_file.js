@@ -105,10 +105,10 @@ module.exports = function () {
 
         this.waitForElement(CASE_NUMBER_INPUT_LOCATOR);
         this.fillField(CASE_NUMBER_INPUT_LOCATOR, caseId);
-        this.click('Apply');
 
         const caseLinkLocator = `a[href$="/cases/case-details/${caseId}"]`;
-        this.waitForElement(caseLinkLocator);
+        await this.retryUntilExists(() => this.click('Apply'), caseLinkLocator);
+
         this.click(caseLinkLocator);
         this.waitForElement(CASE_HEADER);
     },
