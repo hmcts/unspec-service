@@ -1,5 +1,3 @@
-/* global process */
-
 // in this file you can append custom step methods to 'I' object
 
 const output = require('codeceptjs').output;
@@ -64,8 +62,6 @@ const welshLanguageRequirementsPage = require('./fragments/dq/language.page');
 
 const address = require('./fixtures/address.js');
 
-const baseUrl = process.env.URL || 'http://localhost:3333';
-
 const SIGNED_IN_SELECTOR = 'exui-header';
 const JURISDICTION_LOCATOR = '#wb-jurisdiction > option';
 const TYPE_LOCATOR = '#wb-case-type > option';
@@ -83,7 +79,7 @@ module.exports = function () {
     // It is recommended to place a general 'login' function here.
     async login(user) {
       await this.retryUntilExists(async () => {
-        this.amOnPage(baseUrl);
+        this.amOnPage(config.url.manageCase);
 
         if (!config.idamStub.enabled || config.idamStub.enabled === 'false') {
           if (await this.hasSelector(SIGNED_IN_SELECTOR)) {
@@ -110,10 +106,10 @@ module.exports = function () {
 
         this.waitForElement(CASE_NUMBER_INPUT_LOCATOR);
         this.fillField(CASE_NUMBER_INPUT_LOCATOR, caseId);
-        this.click('Apply');
 
         const caseLinkLocator = `a[href$="/cases/case-details/${caseId}"]`;
-        this.waitForElement(caseLinkLocator);
+        await this.retryUntilExists(() => this.click('Apply'), caseLinkLocator);
+
         this.click(caseLinkLocator);
         this.waitForElement(CASE_HEADER);
     },
