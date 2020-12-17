@@ -35,9 +35,6 @@ exports.config = {
         'attachFile',
       ],
     },
-    retryFailedStep: {
-      enabled: true,
-    },
     screenshotOnFail: {
       enabled: true,
       fullPageScreenshots: true,

@@ -109,8 +109,7 @@ module.exports = function () {
         const caseLinkLocator = `a[href$="/cases/case-details/${caseId}"]`;
         await this.retryUntilExists(() => this.click('Apply'), caseLinkLocator);
 
-        this.click(caseLinkLocator);
-        this.waitForElement(CASE_HEADER);
+        await this.retryUntilExists(() => this.click(caseLinkLocator), CASE_HEADER);
     },
 
     grabCaseNumber: async function () {
