@@ -59,4 +59,4 @@ java:
         - cmc-db-password
         - gov-notify-api-key
         - sendgrid-api-key
-        - launchDarkly-sdk-key
+        - launch-darkly-sdk-key
