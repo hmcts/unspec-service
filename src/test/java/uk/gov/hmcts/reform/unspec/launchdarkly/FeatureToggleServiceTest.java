@@ -15,24 +15,24 @@ import static org.mockito.ArgumentMatchers.anyBoolean;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static uk.gov.hmcts.reform.unspec.launchdarkly.FeatureToggleService.UNSPEC_SERVICE_USER;
 
 @ExtendWith(MockitoExtension.class)
 class FeatureToggleServiceTest {
 
     private static final String FAKE_FEATURE = "fake-feature";
+    private static final String ENVIRONMENT = "fake-env";
+    private static final LDUser LD_USER = new LDUser.Builder("civil-unspec-service")
+        .custom("timestamp", String.valueOf(System.currentTimeMillis()))
+        .custom("environment", ENVIRONMENT).build();
 
     @Mock
     private LDClientInterface ldClient;
-
-    @Mock
-    private LDUser ldUser;
 
     private FeatureToggleService featureToggleService;
 
     @BeforeEach
     void setUp() {
-        featureToggleService = new FeatureToggleService(ldClient);
+        featureToggleService = new FeatureToggleService(ldClient, ENVIRONMENT);
     }
 
     @ParameterizedTest
@@ -40,12 +40,12 @@ class FeatureToggleServiceTest {
     void shouldReturnCorrectState_whenUserIsProvided(Boolean toggleState) {
         givenToggle(FAKE_FEATURE, toggleState);
 
-        assertThat(featureToggleService.isFeatureEnabled(FAKE_FEATURE, ldUser)).isEqualTo(toggleState);
+        assertThat(featureToggleService.isFeatureEnabled(FAKE_FEATURE, LD_USER)).isEqualTo(toggleState);
 
         verify(ldClient).boolVariation(
-            eq(FAKE_FEATURE),
-            eq(ldUser),
-            eq(false)
+            FAKE_FEATURE,
+            LD_USER,
+            false
         );
     }
 
@@ -58,7 +58,7 @@ class FeatureToggleServiceTest {
 
         verify(ldClient).boolVariation(
             eq(FAKE_FEATURE),
-            eq(UNSPEC_SERVICE_USER),
+            any(LDUser.class),
             eq(false)
         );
     }

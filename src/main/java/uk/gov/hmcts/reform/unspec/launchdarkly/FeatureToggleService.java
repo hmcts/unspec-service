@@ -4,6 +4,7 @@ import com.launchdarkly.sdk.LDUser;
 import com.launchdarkly.sdk.server.interfaces.LDClientInterface;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -12,31 +13,36 @@ import java.io.IOException;
 @Service
 public class FeatureToggleService {
 
-    public static final LDUser UNSPEC_SERVICE_USER = new LDUser.Builder("civil-unspec-service")
-        .anonymous(true)
-        .build();
-
     private final LDClientInterface internalClient;
+    private final String environment;
 
     @Autowired
-    public FeatureToggleService(LDClientInterface internalClient) {
+    public FeatureToggleService(LDClientInterface internalClient, @Value("${unspec.env}") String environment) {
         this.internalClient = internalClient;
+        this.environment = environment;
         Runtime.getRuntime().addShutdownHook(new Thread(this::close));
     }
 
     public boolean isFeatureEnabled(String feature) {
-        return internalClient.boolVariation(feature, UNSPEC_SERVICE_USER, false);
+        return internalClient.boolVariation(feature, createLDUser(), false);
     }
 
     public boolean isFeatureEnabled(String feature, LDUser user) {
         return internalClient.boolVariation(feature, user, false);
     }
 
+    public LDUser createLDUser() {
+        LDUser.Builder builder = new LDUser.Builder("civil-unspec-service")
+            .custom("timestamp", String.valueOf(System.currentTimeMillis()))
+            .custom("environment", environment);
+
+        return builder.build();
+    }
+
     private void close() {
         try {
             internalClient.close();
         } catch (IOException e) {
-            // can't do anything clever here because things are being destroyed
             log.error("Error in closing the Launchdarkly client::", e);
         }
     }

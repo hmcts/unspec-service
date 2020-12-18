@@ -18,7 +18,7 @@ import uk.gov.hmcts.reform.unspec.launchdarkly.FeatureToggleService;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyBoolean;
 import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -70,7 +70,7 @@ class FeatureToggleAspectTest {
 
         featureToggleAspect.checkFeatureEnabled(proceedingJoinPoint, featureToggle);
 
-        verify(proceedingJoinPoint, times(0)).proceed();
+        verify(proceedingJoinPoint, never()).proceed();
     }
 
     private void givenToggle(String feature, boolean state) {
