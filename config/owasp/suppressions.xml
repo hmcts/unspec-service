@@ -28,4 +28,11 @@
     <notes><![CDATA[Awaiting version bump for apache tomcat dependencies]]></notes>
     <cve>CVE-2020-13943</cve>
   </suppress>
+  <suppress>
+    <notes><![CDATA[Awaiting version bump for lang-tag]]></notes>
+    <cve>CVE-2020-29242</cve>
+    <cve>CVE-2020-29243</cve>
+    <cve>CVE-2020-29244</cve>
+    <cve>CVE-2020-29245</cve>
+  </suppress>
 </suppressions>
