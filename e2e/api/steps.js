@@ -1,4 +1,10 @@
 const assert = require('assert').strict;
+const deepEqualInAnyOrder = require('deep-equal-in-any-order');
+const chai = require('chai');
+
+chai.use(deepEqualInAnyOrder);
+
+const { expect } = chai;
 
 const apiRequest = require('./apiRequest.js');
 const {waitForFinishedBusinessProcess} = require('../api/testingSupport');
@@ -260,7 +266,7 @@ function assertDynamicListListItemsHaveExpectedLabels(responseBody, dynamicListF
   const actualDynamicElementLabels = removeUuidsFromDynamicList(responseBody.data, dynamicListFieldName);
   const expectedDynamicElementLabels = removeUuidsFromDynamicList(midEventData, dynamicListFieldName);
 
-  assert.deepEqual(actualDynamicElementLabels, expectedDynamicElementLabels);
+  expect(actualDynamicElementLabels).to.deep.equalInAnyOrder(expectedDynamicElementLabels);
 }
 
 function removeUuidsFromDynamicList(data, dynamicListField) {
