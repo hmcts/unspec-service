@@ -66,14 +66,6 @@ withNightlyPipeline(type, product, component) {
 
   enableFullFunctionalTest(200)
 
-  before('fullFunctionalTest') {
-    env.PROXY = params.PROXY_SERVER
-    env.PARALLEL_CHUNKS = params.FUNCTIONAL_TESTS_WORKERS
-    env.MOCKED_PAYMENTS = false
-    env.TEST_RETRIES = 2
-    env.ENV = 'aat'
-  }
-
   after('fullFunctionalTest') {
     archiveArtifacts allowEmptyArchive: true, artifacts: 'output/**/*'
   }
