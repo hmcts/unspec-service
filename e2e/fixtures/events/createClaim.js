@@ -1,42 +1,8 @@
 const {document, element, listElement, buildAddress} = require('../../api/dataHelper');
 
 const selectedPba = listElement('PBA0077597');
-
-module.exports = {
-  midEventData: {
-    ClaimValue: {
-      applicantSolicitor1PbaAccounts: {
-        list_items: [
-          selectedPba,
-          listElement('PBA0078094')
-        ]
-      },
-      applicantSolicitor1PbaAccountsIsEmpty: 'No',
-      claimFee: {
-        calculatedAmountInPence: '150000',
-        code: 'FEE0209',
-        version: '1'
-      },
-      paymentReference: 'Applicant test reference',
-      applicant1: {
-        type: 'COMPANY',
-        companyName: 'Test Inc',
-        partyName: 'Test Inc',
-        partyTypeDisplayValue: 'Company',
-        primaryAddress: buildAddress('applicant')
-      },
-      respondent1: {
-        type: 'INDIVIDUAL',
-        individualFirstName: 'John',
-        individualLastName: 'Doe',
-        individualTitle: 'Sir',
-        partyName: 'Sir John Doe',
-        partyTypeDisplayValue: 'Individual',
-        primaryAddress: buildAddress('respondent')
-      }
-    },
-  },
-  valid: {
+const createClaimData = legalRepresentation => {
+  return {
     References: {
       solicitorReferences: {
         applicantSolicitor1Reference: 'Applicant test reference',
@@ -76,7 +42,7 @@ module.exports = {
       }
     },
     LegalRepresentation: {
-      respondent1Represented: 'Yes'
+      respondent1Represented: `${legalRepresentation}`
     },
     ClaimType: {
       claimType: 'PERSONAL_INJURY'
@@ -113,5 +79,52 @@ module.exports = {
         role: 'Test Solicitor'
       }
     },
+  };
+};
+
+module.exports = {
+  midEventData: {
+    ClaimValue: {
+      applicantSolicitor1PbaAccounts: {
+        list_items: [
+          selectedPba,
+          listElement('PBA0078094')
+        ]
+      },
+      applicantSolicitor1PbaAccountsIsEmpty: 'No',
+      claimFee: {
+        calculatedAmountInPence: '150000',
+        code: 'FEE0209',
+        version: '1'
+      },
+      paymentReference: 'Applicant test reference',
+      applicant1: {
+        type: 'COMPANY',
+        companyName: 'Test Inc',
+        partyName: 'Test Inc',
+        partyTypeDisplayValue: 'Company',
+        primaryAddress: buildAddress('applicant')
+      },
+      respondent1: {
+        type: 'INDIVIDUAL',
+        individualFirstName: 'John',
+        individualLastName: 'Doe',
+        individualTitle: 'Sir',
+        partyName: 'Sir John Doe',
+        partyTypeDisplayValue: 'Individual',
+        primaryAddress: buildAddress('respondent')
+      }
+    },
+  },
+  createClaim: {
+    valid: {
+      ...createClaimData('Yes'),
+      PaymentReference: {
+        paymentReference: 'Applicant test reference'
+      }
+    }
+  },
+  createClaimLitigantInPerson: {
+    valid: createClaimData('No')
   },
 };

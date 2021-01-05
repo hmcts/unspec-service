@@ -1,11 +1,11 @@
 const assert = require('assert').strict;
-
-const apiRequest = require('./apiRequest.js');
 const {waitForFinishedBusinessProcess} = require('../api/testingSupport');
+const apiRequest = require('./apiRequest.js');
+const claimData = require('../fixtures/events/createClaim.js');
 
 const data = {
-  CREATE_CLAIM: require('../fixtures/events/createClaim.js'),
-  CREATE_CLAIM_RESPONDENT_LIP: require('../fixtures/events/createClaimLitigantInPerson.js'),
+  CREATE_CLAIM: claimData.createClaim,
+  CREATE_CLAIM_RESPONDENT_LIP: claimData.createClaimLitigantInPerson,
   CONFIRM_SERVICE: require('../fixtures/events/confirmService.js'),
   ACKNOWLEDGE_SERVICE: require('../fixtures/events/acknowledgeService.js'),
   REQUEST_EXTENSION: require('../fixtures/events/requestExtension.js'),
