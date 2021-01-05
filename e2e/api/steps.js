@@ -15,6 +15,11 @@ const data = {
   ADD_DEFENDANT_LITIGATION_FRIEND: require('../fixtures/events/addDefendantLitigationFriend.js'),
 };
 
+const pagesWithMidEvents = ['ClaimValue'];
+const dynamicListFieldForPage = {
+  ClaimValue: 'applicantSolicitor1PbaAccounts'
+};
+
 let caseId, eventName;
 let caseData = {};
 
@@ -188,7 +193,10 @@ const assertValidData = async (data, pageId) => {
   const responseBody = await response.json();
 
   assert.equal(response.status, 200);
-  addIssueClaimMidEventFields(pageId, responseBody);
+
+  if (pagesWithMidEvents.includes(pageId)) {
+    addMidEventFields(pageId, responseBody);
+  }
 
   assert.deepEqual(responseBody.data, caseData);
 };
@@ -233,12 +241,29 @@ const deleteCaseFields = (...caseFields) => {
   caseFields.forEach(caseField => delete caseData[caseField]);
 };
 
-function addIssueClaimMidEventFields(pageId, responseBody) {
-  if (pageId === 'ClaimValue') {
-    const midEventData = data[eventName].midEventData[pageId];
-    caseData = {...caseData, ...midEventData};
+function addMidEventFields(pageId, responseBody) {
+  const midEventData = data[eventName].midEventData[pageId];
+  const dynamicListFieldName = dynamicListFieldForPage[pageId];
 
-    responseBody.data['applicantSolicitor1PbaAccounts'] = caseData.applicantSolicitor1PbaAccounts;
+  if (typeof dynamicListFieldName != 'undefined') {
+    assertDynamicListListItemsHaveExpectedLabels(responseBody, dynamicListFieldName, midEventData);
   }
+
+  caseData = {...caseData, ...midEventData};
+
+  responseBody.data[dynamicListFieldName] = caseData[dynamicListFieldName];
+}
+
+function assertDynamicListListItemsHaveExpectedLabels(responseBody, dynamicListFieldName, midEventData) {
+  const actualDynamicElementLabels = removeUuidsFromDynamicList(responseBody.data, dynamicListFieldName);
+  const expectedDynamicElementLabels = removeUuidsFromDynamicList(midEventData, dynamicListFieldName);
+
+  assert.deepEqual(actualDynamicElementLabels, expectedDynamicElementLabels);
+}
+
+function removeUuidsFromDynamicList(data, dynamicListField) {
+  const dynamicElements = data[dynamicListField].list_items;
+  // eslint-disable-next-line no-unused-vars
+  return dynamicElements.map(({code, ...item}) => item);
 }
 
