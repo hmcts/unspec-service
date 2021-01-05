@@ -16,8 +16,11 @@ const data = {
 };
 
 const pagesWithMidEvents = ['ClaimValue'];
-const dynamicListFieldForPage = {
-  ClaimValue: 'applicantSolicitor1PbaAccounts'
+const midEventFieldForPage = {
+  ClaimValue: {
+    id: 'applicantSolicitor1PbaAccounts',
+    dynamicList: true
+  }
 };
 
 let caseId, eventName;
@@ -243,15 +246,14 @@ const deleteCaseFields = (...caseFields) => {
 
 function addMidEventFields(pageId, responseBody) {
   const midEventData = data[eventName].midEventData[pageId];
-  const dynamicListFieldName = dynamicListFieldForPage[pageId];
+  const midEventField = midEventFieldForPage[pageId];
 
-  if (typeof dynamicListFieldName != 'undefined') {
-    assertDynamicListListItemsHaveExpectedLabels(responseBody, dynamicListFieldName, midEventData);
+  if (midEventField.dynamicList === true) {
+    assertDynamicListListItemsHaveExpectedLabels(responseBody, midEventField.id, midEventData);
   }
 
   caseData = {...caseData, ...midEventData};
-
-  responseBody.data[dynamicListFieldName] = caseData[dynamicListFieldName];
+  responseBody.data[midEventField.id] = caseData[midEventField.id];
 }
 
 function assertDynamicListListItemsHaveExpectedLabels(responseBody, dynamicListFieldName, midEventData) {
