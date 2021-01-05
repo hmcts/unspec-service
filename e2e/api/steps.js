@@ -15,7 +15,6 @@ const data = {
   ADD_DEFENDANT_LITIGATION_FRIEND: require('../fixtures/events/addDefendantLitigationFriend.js'),
 };
 
-const pagesWithMidEvents = ['ClaimValue'];
 const midEventFieldForPage = {
   ClaimValue: {
     id: 'applicantSolicitor1PbaAccounts',
@@ -197,7 +196,8 @@ const assertValidData = async (data, pageId) => {
 
   assert.equal(response.status, 200);
 
-  if (pagesWithMidEvents.includes(pageId)) {
+  // eslint-disable-next-line no-prototype-builtins
+  if (midEventFieldForPage.hasOwnProperty(pageId)) {
     addMidEventFields(pageId, responseBody);
   }
 
