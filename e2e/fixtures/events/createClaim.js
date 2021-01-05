@@ -83,40 +83,40 @@ const createClaimData = legalRepresentation => {
 };
 
 module.exports = {
-  midEventData: {
-    ClaimValue: {
-      applicantSolicitor1PbaAccounts: {
-        list_items: [
-          selectedPba,
-          listElement('PBA0078094')
-        ]
-      },
-      applicantSolicitor1PbaAccountsIsEmpty: 'No',
-      claimFee: {
-        calculatedAmountInPence: '150000',
-        code: 'FEE0209',
-        version: '1'
-      },
-      paymentReference: 'Applicant test reference',
-      applicant1: {
-        type: 'COMPANY',
-        companyName: 'Test Inc',
-        partyName: 'Test Inc',
-        partyTypeDisplayValue: 'Company',
-        primaryAddress: buildAddress('applicant')
-      },
-      respondent1: {
-        type: 'INDIVIDUAL',
-        individualFirstName: 'John',
-        individualLastName: 'Doe',
-        individualTitle: 'Sir',
-        partyName: 'Sir John Doe',
-        partyTypeDisplayValue: 'Individual',
-        primaryAddress: buildAddress('respondent')
-      }
-    },
-  },
   createClaim: {
+    midEventData: {
+      ClaimValue: {
+        applicantSolicitor1PbaAccounts: {
+          list_items: [
+            selectedPba,
+            listElement('PBA0078094')
+          ]
+        },
+        applicantSolicitor1PbaAccountsIsEmpty: 'No',
+        claimFee: {
+          calculatedAmountInPence: '150000',
+          code: 'FEE0209',
+          version: '1'
+        },
+        paymentReference: 'Applicant test reference',
+        applicant1: {
+          type: 'COMPANY',
+          companyName: 'Test Inc',
+          partyName: 'Test Inc',
+          partyTypeDisplayValue: 'Company',
+          primaryAddress: buildAddress('applicant')
+        },
+        respondent1: {
+          type: 'INDIVIDUAL',
+          individualFirstName: 'John',
+          individualLastName: 'Doe',
+          individualTitle: 'Sir',
+          partyName: 'Sir John Doe',
+          partyTypeDisplayValue: 'Individual',
+          primaryAddress: buildAddress('respondent')
+        }
+      },
+    },
     valid: {
       ...createClaimData('Yes'),
       PaymentReference: {
