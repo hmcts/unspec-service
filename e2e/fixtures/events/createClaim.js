@@ -1,5 +1,4 @@
-const {document, element, listElement} = require('../../api/dataHelper');
-const address = require('../address');
+const {document, element, listElement, buildAddress} = require('../../api/dataHelper');
 
 const selectedPba = listElement('PBA0077597');
 
@@ -24,15 +23,7 @@ module.exports = {
         companyName: 'Test Inc',
         partyName: 'Test Inc',
         partyTypeDisplayValue: 'Company',
-        primaryAddress: {
-          AddressLine1: `${address.buildingAndStreet.lineOne + ' - applicant'}`,
-          AddressLine2: address.buildingAndStreet.lineTwo,
-          AddressLine3: address.buildingAndStreet.lineThree,
-          PostTown: address.town,
-          County: address.county,
-          Country: address.country,
-          PostCode: address.postcode
-        }
+        primaryAddress: buildAddress('applicant')
       },
       respondent1: {
         type: 'INDIVIDUAL',
@@ -41,15 +32,7 @@ module.exports = {
         individualTitle: 'Sir',
         partyName: 'Sir John Doe',
         partyTypeDisplayValue: 'Individual',
-        primaryAddress: {
-          AddressLine1: `${address.buildingAndStreet.lineOne + ' - respondent'}`,
-          AddressLine2: address.buildingAndStreet.lineTwo,
-          AddressLine3: address.buildingAndStreet.lineThree,
-          PostTown: address.town,
-          County: address.county,
-          Country: address.country,
-          PostCode: address.postcode
-        }
+        primaryAddress: buildAddress('respondent')
       }
     },
   },
@@ -69,15 +52,7 @@ module.exports = {
       applicant1: {
         type: 'COMPANY',
         companyName: 'Test Inc',
-        primaryAddress: {
-          AddressLine1: `${address.buildingAndStreet.lineOne + ' - applicant'}`,
-          AddressLine2: address.buildingAndStreet.lineTwo,
-          AddressLine3: address.buildingAndStreet.lineThree,
-          PostTown: address.town,
-          County: address.county,
-          Country: address.country,
-          PostCode: address.postcode
-        }
+        primaryAddress: buildAddress('applicant')
       }
     },
     ClaimantLitigationFriendRequired: {
@@ -87,15 +62,7 @@ module.exports = {
       applicant1LitigationFriend: {
         fullName: 'Bob the litigant friend',
         hasSameAddressAsLitigant: 'No',
-        primaryAddress: {
-          AddressLine1: `${address.buildingAndStreet.lineOne + ' - litigant friend'}`,
-          AddressLine2: address.buildingAndStreet.lineTwo,
-          AddressLine3: address.buildingAndStreet.lineThree,
-          PostTown: address.town,
-          County: address.county,
-          Country: address.country,
-          PostCode: address.postcode
-        }
+        primaryAddress: buildAddress('litigant friend')
       }
     },
     Defendant: {
@@ -105,15 +72,7 @@ module.exports = {
         individualLastName: 'Doe',
         individualTitle: 'Sir',
         individualDateOfBirth: null,
-        primaryAddress: {
-          AddressLine1: `${address.buildingAndStreet.lineOne + ' - respondent'}`,
-          AddressLine2: address.buildingAndStreet.lineTwo,
-          AddressLine3: address.buildingAndStreet.lineThree,
-          PostTown: address.town,
-          County: address.county,
-          Country: address.country,
-          PostCode: address.postcode
-        }
+        primaryAddress: buildAddress('respondent')
       }
     },
     LegalRepresentation: {
