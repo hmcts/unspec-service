@@ -31,6 +31,7 @@
     "uuid": "^3.4.0"
   },
   "dependencies": {
+    "axios": "^0.21.1",
     "chai": "^4.2.0",
     "deep-equal-in-any-order": "^1.0.28"
   }
