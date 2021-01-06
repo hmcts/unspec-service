@@ -20,6 +20,7 @@ import uk.gov.hmcts.reform.ccd.client.model.CaseDetails;
 import uk.gov.hmcts.reform.ccd.client.model.Event;
 import uk.gov.hmcts.reform.ccd.client.model.StartEventResponse;
 import uk.gov.hmcts.reform.unspec.enums.BusinessProcessStatus;
+import uk.gov.hmcts.reform.unspec.handler.tasks.StartBusinessProcessTaskHandler;
 import uk.gov.hmcts.reform.unspec.helpers.CaseDetailsConverter;
 import uk.gov.hmcts.reform.unspec.model.BusinessProcess;
 import uk.gov.hmcts.reform.unspec.model.CaseData;
@@ -41,8 +42,8 @@ import static org.mockito.Mockito.when;
 import static uk.gov.hmcts.reform.unspec.callback.CaseEvent.START_BUSINESS_PROCESS;
 import static uk.gov.hmcts.reform.unspec.enums.BusinessProcessStatus.FINISHED;
 import static uk.gov.hmcts.reform.unspec.enums.BusinessProcessStatus.STARTED;
-import static uk.gov.hmcts.reform.unspec.service.tasks.handler.StartBusinessProcessTaskHandler.BUSINESS_PROCESS;
-import static uk.gov.hmcts.reform.unspec.service.tasks.handler.StartBusinessProcessTaskHandler.FLOW_STATE;
+import static uk.gov.hmcts.reform.unspec.handler.tasks.StartBusinessProcessTaskHandler.BUSINESS_PROCESS;
+import static uk.gov.hmcts.reform.unspec.handler.tasks.StartBusinessProcessTaskHandler.FLOW_STATE;
 
 @SpringBootTest(classes = {
     StartBusinessProcessTaskHandler.class,

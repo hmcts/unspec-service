@@ -12,6 +12,7 @@ import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import uk.gov.hmcts.reform.ccd.client.model.CaseDetails;
 import uk.gov.hmcts.reform.unspec.event.MoveCaseToStayedEvent;
+import uk.gov.hmcts.reform.unspec.handler.tasks.CaseStayedHandler;
 import uk.gov.hmcts.reform.unspec.service.search.CaseStayedSearchService;
 
 import java.util.List;

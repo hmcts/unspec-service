@@ -12,6 +12,7 @@ import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import uk.gov.hmcts.reform.ccd.client.model.CaseDetails;
 import uk.gov.hmcts.reform.unspec.event.MoveCaseToStuckOutEvent;
+import uk.gov.hmcts.reform.unspec.handler.tasks.ClaimStrikeoutHandler;
 import uk.gov.hmcts.reform.unspec.service.search.CaseStrikeoutSearchService;
 
 import java.util.List;
