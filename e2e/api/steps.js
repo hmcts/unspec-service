@@ -7,8 +7,6 @@ chai.use(deepEqualInAnyOrder);
 
 const { expect } = chai;
 
-const apiRequest = require('./apiRequest.js');
-
 const {waitForFinishedBusinessProcess} = require('../api/testingSupport');
 const apiRequest = require('./apiRequest.js');
 const claimData = require('../fixtures/events/createClaim.js');
