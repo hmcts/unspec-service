@@ -108,7 +108,7 @@ class SealedClaimFormGeneratorTest {
                     templateData.getStatementOfTruth(),
                     caseData.getApplicantSolicitor1ClaimStatementOfTruth()
                 ),
-                () -> assertEquals(templateData.getClaimDetails(), TEMP_CLAIM_DETAILS),
+                () -> assertEquals(TEMP_CLAIM_DETAILS, templateData.getClaimDetails()),
                 () -> assertEquals(
                     templateData.getHearingCourtLocation(),
                     caseData.getCourtLocation().getApplicantPreferredCourt()
