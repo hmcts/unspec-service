@@ -1,4 +1,4 @@
-package uk.gov.hmcts.reform.unspec.handler.callback;
+package uk.gov.hmcts.reform.unspec.handler.callback.camunda.businessprocess;
 
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -10,7 +10,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import uk.gov.hmcts.reform.ccd.client.model.AboutToStartOrSubmitCallbackResponse;
 import uk.gov.hmcts.reform.unspec.callback.CallbackParams;
 import uk.gov.hmcts.reform.unspec.enums.BusinessProcessStatus;
-import uk.gov.hmcts.reform.unspec.handler.callback.camunda.businessprocess.DispatchBusinessProcessCallbackHandler;
+import uk.gov.hmcts.reform.unspec.handler.callback.BaseCallbackHandlerTest;
 import uk.gov.hmcts.reform.unspec.helpers.CaseDetailsConverter;
 import uk.gov.hmcts.reform.unspec.model.BusinessProcess;
 import uk.gov.hmcts.reform.unspec.model.CaseData;

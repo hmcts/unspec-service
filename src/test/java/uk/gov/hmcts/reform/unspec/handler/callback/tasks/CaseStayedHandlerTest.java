@@ -1,4 +1,4 @@
-package uk.gov.hmcts.reform.unspec.service.tasks.handler;
+package uk.gov.hmcts.reform.unspec.handler.callback.tasks;
 
 import org.camunda.bpm.client.exception.NotFoundException;
 import org.camunda.bpm.client.task.ExternalTask;
@@ -11,9 +11,9 @@ import org.mockito.Mock;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import uk.gov.hmcts.reform.ccd.client.model.CaseDetails;
-import uk.gov.hmcts.reform.unspec.event.MoveCaseToStuckOutEvent;
-import uk.gov.hmcts.reform.unspec.handler.tasks.ClaimStrikeoutHandler;
-import uk.gov.hmcts.reform.unspec.service.search.CaseStrikeoutSearchService;
+import uk.gov.hmcts.reform.unspec.event.MoveCaseToStayedEvent;
+import uk.gov.hmcts.reform.unspec.handler.tasks.CaseStayedHandler;
+import uk.gov.hmcts.reform.unspec.service.search.CaseStayedSearchService;
 
 import java.util.List;
 import java.util.Map;
@@ -30,7 +30,7 @@ import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(SpringExtension.class)
-class ClaimStrikeoutHandlerTest {
+class CaseStayedHandlerTest {
 
     @Mock
     private ExternalTask mockTask;
@@ -39,13 +39,13 @@ class ClaimStrikeoutHandlerTest {
     private ExternalTaskService externalTaskService;
 
     @Mock
-    private CaseStrikeoutSearchService searchService;
+    private CaseStayedSearchService searchService;
 
     @Mock
     private ApplicationEventPublisher applicationEventPublisher;
 
     @InjectMocks
-    private ClaimStrikeoutHandler caseStayedFinder;
+    private CaseStayedHandler caseStayedFinder;
 
     @BeforeEach
     void init() {
@@ -54,7 +54,7 @@ class ClaimStrikeoutHandlerTest {
     }
 
     @Test
-    void shouldEmitMoveCaseToStuckOutEvent_whenCasesFound() {
+    void shouldEmitMoveCaseToStayedEvent_whenCasesFound() {
         long caseId = 1L;
         Map<String, Object> data = Map.of("data", "some data");
         List<CaseDetails> caseDetails = List.of(CaseDetails.builder().id(caseId).data(data).build());
@@ -63,12 +63,12 @@ class ClaimStrikeoutHandlerTest {
 
         caseStayedFinder.execute(mockTask, externalTaskService);
 
-        verify(applicationEventPublisher).publishEvent(new MoveCaseToStuckOutEvent(caseId));
+        verify(applicationEventPublisher).publishEvent(new MoveCaseToStayedEvent(caseId));
         verify(externalTaskService).complete(mockTask);
     }
 
     @Test
-    void shouldNotEmitMoveCaseToStuckOutEvent_WhenNoCasesFound() {
+    void shouldNotEmitMoveCaseToStayedEvent_WhenNoCasesFound() {
         when(searchService.getCases()).thenReturn(List.of());
 
         caseStayedFinder.execute(mockTask, externalTaskService);
