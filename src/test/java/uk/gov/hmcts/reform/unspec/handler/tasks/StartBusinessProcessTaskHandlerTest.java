@@ -1,4 +1,4 @@
-package uk.gov.hmcts.reform.unspec.handler.callback.tasks;
+package uk.gov.hmcts.reform.unspec.handler.tasks;
 
 import org.camunda.bpm.client.task.ExternalTask;
 import org.camunda.bpm.client.task.ExternalTaskService;
@@ -20,7 +20,6 @@ import uk.gov.hmcts.reform.ccd.client.model.CaseDetails;
 import uk.gov.hmcts.reform.ccd.client.model.Event;
 import uk.gov.hmcts.reform.ccd.client.model.StartEventResponse;
 import uk.gov.hmcts.reform.unspec.enums.BusinessProcessStatus;
-import uk.gov.hmcts.reform.unspec.handler.tasks.StartBusinessProcessTaskHandler;
 import uk.gov.hmcts.reform.unspec.helpers.CaseDetailsConverter;
 import uk.gov.hmcts.reform.unspec.model.BusinessProcess;
 import uk.gov.hmcts.reform.unspec.model.CaseData;
