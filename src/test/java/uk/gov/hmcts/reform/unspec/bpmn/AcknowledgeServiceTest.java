@@ -15,7 +15,8 @@ class AcknowledgeServiceTest extends BpmnBaseTest {
     private static final String MESSAGE_NAME = "ACKNOWLEDGE_SERVICE";
     private static final String PROCESS_ID = "ACKNOWLEDGE_SERVICE_PROCESS_ID";
 
-    private static final String NOTIFY_APPLICANT_SOLICITOR_1 = "NOTIFY_APPLICANT_SOLICITOR1_FOR_SERVICE_ACKNOWLEDGEMENT";
+    private static final String NOTIFY_APPLICANT_SOLICITOR_1
+        = "NOTIFY_APPLICANT_SOLICITOR1_FOR_SERVICE_ACKNOWLEDGEMENT";
     private static final String GENERATE_ACKNOWLEDGEMENT_OF_SERVICE = "GENERATE_ACKNOWLEDGEMENT_OF_SERVICE";
     private static final String NOTIFICATION_ACTIVITY_ID = "AcknowledgeServiceNotifyApplicantSolicitor1";
     private static final String GENERATE_CERTIFICATE_ACTIVITY_ID = "AcknowledgeServiceGenerateAcknowledgementOfService";
