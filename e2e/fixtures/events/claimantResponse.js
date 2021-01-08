@@ -80,6 +80,20 @@ module.exports = {
         reasonForFutureApplications: 'Nothing'
       }
     },
+    Language: {
+      applicant1DQLanguage: {
+        isPartyWelsh: 'Yes',
+        evidence: 'WELSH',
+        court: 'WELSH',
+        documents: 'WELSH'
+      }
+    },
+    StatementOfTruth: {
+      applicant1DQStatementOfTruth: {
+        name: 'James Bond',
+        role: 'Spy'
+      }
+    }
   },
   invalid: {
     Hearing: {

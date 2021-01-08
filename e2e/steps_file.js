@@ -1,5 +1,3 @@
-/* global process */
-
 // in this file you can append custom step methods to 'I' object
 
 const output = require('codeceptjs').output;
@@ -13,10 +11,12 @@ const solicitorReferencesPage = require('./pages/createClaim/solicitorReferences
 const chooseCourtPage = require('./pages/createClaim/chooseCourt.page');
 const claimantLitigationDetails = require('./pages/createClaim/claimantLitigationDetails.page');
 const claimTypePage = require('./pages/createClaim/claimType.page');
+const respondentRepresentedPage = require('./pages/createClaim/isRespondentRepresented.page');
 const personalInjuryTypePage = require('./pages/createClaim/personalInjuryType.page');
 const uploadParticularsOfClaim = require('./pages/createClaim/uploadParticularsOfClaim.page');
 const claimValuePage = require('./pages/createClaim/claimValue.page');
 const pbaNumberPage = require('./pages/createClaim/pbaNumber.page');
+const paymentReferencePage = require('./pages/createClaim/paymentReference.page');
 
 const servedDocumentsPage = require('./pages/confirmService/servedDocuments.page');
 const uploadDocumentsPage = require('./pages/confirmService/uploadDocuments.page');
@@ -58,13 +58,12 @@ const draftDirectionsPage = require('./fragments/dq/draftDirections.page');
 const requestedCourtPage = require('./fragments/dq/requestedCourt.page');
 const hearingSupportRequirementsPage = require('./fragments/dq/hearingSupportRequirements.page');
 const furtherInformationPage = require('./fragments/dq/furtherInformation.page');
+const welshLanguageRequirementsPage = require('./fragments/dq/language.page');
 
 const address = require('./fixtures/address.js');
 
-const baseUrl = process.env.URL || 'http://localhost:3333';
-
 const SIGNED_IN_SELECTOR = 'exui-header';
-const CASE_LIST = 'exui-case-list';
+const JURISDICTION_LOCATOR = '#wb-jurisdiction > option';
 const TYPE_LOCATOR = '#wb-case-type > option';
 const STATE_LOCATOR = '#wb-case-state > option';
 const CASE_NUMBER_INPUT_LOCATOR = 'input[type$="number"]';
@@ -80,18 +79,24 @@ module.exports = function () {
     // It is recommended to place a general 'login' function here.
     async login(user) {
       await this.retryUntilExists(async () => {
-        this.amOnPage(baseUrl);
+        this.amOnPage(config.url.manageCase);
 
-        if (await this.hasSelector(SIGNED_IN_SELECTOR)) {
-          this.click('Sign out');
+        if (!config.idamStub.enabled || config.idamStub.enabled === 'false') {
+          if (await this.hasSelector(SIGNED_IN_SELECTOR)) {
+            this.click('Sign out');
+          }
+
+          loginPage.signIn(user);
         }
 
-        loginPage.signIn(user);
       }, SIGNED_IN_SELECTOR);
     },
 
     async goToCase(caseId) {
         this.click('Case list');
+
+        this.waitForElement(JURISDICTION_LOCATOR);
+        this.selectOption('jurisdiction', 'Civil');
 
         this.waitForElement(TYPE_LOCATOR);
         this.selectOption('case-type', 'Unspecified Claims');
@@ -101,10 +106,10 @@ module.exports = function () {
 
         this.waitForElement(CASE_NUMBER_INPUT_LOCATOR);
         this.fillField(CASE_NUMBER_INPUT_LOCATOR, caseId);
-        this.click('Apply');
 
         const caseLinkLocator = `a[href$="/cases/case-details/${caseId}"]`;
-        this.waitForElement(caseLinkLocator);
+        await this.retryUntilExists(() => this.click('Apply'), caseLinkLocator);
+
         this.click(caseLinkLocator);
         this.waitForElement(CASE_HEADER);
     },
@@ -125,11 +130,13 @@ module.exports = function () {
       await party.enterParty('applicant1', address);
       await claimantLitigationDetails.enterLitigantFriendWithDifferentAddressToApplicant(address, TEST_FILE_PATH);
       await party.enterParty('respondent1', address);
+      await respondentRepresentedPage.enterRespondentRepresented();
       await claimTypePage.selectClaimType();
       await personalInjuryTypePage.selectPersonalInjuryType();
       await uploadParticularsOfClaim.upload(TEST_FILE_PATH);
       await claimValuePage.enterClaimValue();
       await pbaNumberPage.selectPbaNumber();
+      await paymentReferencePage.updatePaymentReference();
       await statementOfTruth.enterNameAndRole('claim');
       await event.submit('Issue claim', 'Your claim has been issued');
       await event.returnToCaseDetails();
@@ -199,6 +206,7 @@ module.exports = function () {
       await requestedCourtPage.selectSpecificCourtForHearing(parties.RESPONDENT_SOLICITOR_1);
       await hearingSupportRequirementsPage.selectRequirements(parties.RESPONDENT_SOLICITOR_1);
       await furtherInformationPage.enterFurtherInformation(parties.RESPONDENT_SOLICITOR_1);
+      await welshLanguageRequirementsPage.enterWelshLanguageRequirements(parties.RESPONDENT_SOLICITOR_1);
       await statementOfTruth.enterNameAndRole(parties.RESPONDENT_SOLICITOR_1 + 'DQ');
       await event.submit('Submit response', 'You\'ve submitted your response');
       await event.returnToCaseDetails();
@@ -217,10 +225,10 @@ module.exports = function () {
       await draftDirectionsPage.enterDraftDirections(parties.APPLICANT_SOLICITOR_1);
       await hearingSupportRequirementsPage.selectRequirements(parties.APPLICANT_SOLICITOR_1);
       await furtherInformationPage.enterFurtherInformation(parties.APPLICANT_SOLICITOR_1);
+      await welshLanguageRequirementsPage.enterWelshLanguageRequirements(parties.APPLICANT_SOLICITOR_1);
       await statementOfTruth.enterNameAndRole(parties.APPLICANT_SOLICITOR_1 + 'DQ');
       await event.submit('Submit your response', 'You\'ve decided to proceed with the claim');
       await this.click('Close and Return to case details');
-      this.waitForElement(CASE_LIST);
     },
 
     async clickContinue() {

@@ -1,5 +1,6 @@
 const config = require('../config.js');
 
+const idamHelper = require('./idamHelper');
 const restHelper = require('./restHelper.js');
 const totp = require('totp-generator');
 const {waitForFinishedBusinessProcess} = require('./testingSupport');
@@ -16,19 +17,8 @@ const getRequestHeaders = () => {
 
 module.exports = {
   setupTokens: async (user) => {
-    tokens.userAuth = await restHelper.retriedRequest(
-      `${config.url.idamApi}/loginUser?username=${user.email}&password=${user.password}`,
-      {'Content-Type': 'application/x-www-form-urlencoded'})
-      .then(response => response.json()).then(data => data.access_token);
-
-    tokens.userId = await restHelper.retriedRequest(
-      `${config.url.idamApi}/o/userinfo`,
-      {
-        'Content-Type': 'application/x-www-form-urlencoded',
-        'Authorization': `Bearer ${tokens.userAuth}`
-      })
-      .then(response => response.json()).then(data => data.uid);
-
+    tokens.userAuth = await idamHelper.accessToken(user);
+    tokens.userId = await idamHelper.userId(tokens.userAuth);
     tokens.s2sAuth = await restHelper.retriedRequest(
       `${config.url.authProviderApi}/lease`,
       {'Content-Type': 'application/json'},
@@ -47,8 +37,10 @@ module.exports = {
     }
     url += `/event-triggers/${eventName}/token`;
 
-    tokens.ccdEvent = await restHelper.retriedRequest(url, getRequestHeaders(), null, 'GET')
-      .then(response => response.json()).then(data => data.token);
+    let response = await restHelper.retriedRequest(url, getRequestHeaders(), null, 'GET')
+      .then(response => response.json());
+    tokens.ccdEvent = response.token;
+    return response.case_details.case_data || {};
   },
 
   validatePage: async (eventName, pageId, caseData, expectedStatus = 200) => {

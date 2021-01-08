@@ -7,18 +7,17 @@ import lombok.Data;
 import uk.gov.hmcts.reform.unspec.enums.AllocatedTrack;
 import uk.gov.hmcts.reform.unspec.enums.CaseState;
 import uk.gov.hmcts.reform.unspec.enums.ClaimType;
-import uk.gov.hmcts.reform.unspec.enums.PbaNumber;
 import uk.gov.hmcts.reform.unspec.enums.PersonalInjuryType;
 import uk.gov.hmcts.reform.unspec.enums.RespondentResponseType;
 import uk.gov.hmcts.reform.unspec.enums.ResponseIntention;
 import uk.gov.hmcts.reform.unspec.enums.ServedDocuments;
 import uk.gov.hmcts.reform.unspec.enums.YesOrNo;
+import uk.gov.hmcts.reform.unspec.model.common.DynamicList;
 import uk.gov.hmcts.reform.unspec.model.common.Element;
 import uk.gov.hmcts.reform.unspec.model.documents.CaseDocument;
 import uk.gov.hmcts.reform.unspec.model.dq.Applicant1DQ;
 import uk.gov.hmcts.reform.unspec.model.dq.Respondent1DQ;
 import uk.gov.hmcts.reform.unspec.validation.groups.ConfirmServiceDateGroup;
-import uk.gov.hmcts.reform.unspec.validation.interfaces.HasDeemedDateOfServiceTheSameAsOrAfterIssueDate;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -30,7 +29,6 @@ import static uk.gov.hmcts.reform.unspec.enums.BusinessProcessStatus.FINISHED;
 
 @Data
 @Builder(toBuilder = true)
-@HasDeemedDateOfServiceTheSameAsOrAfterIssueDate(groups = ConfirmServiceDateGroup.class)
 public class CaseData {
 
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
@@ -43,8 +41,11 @@ public class CaseData {
     private final Party applicant2;
     private final Party respondent1;
     private final Party respondent2;
+    private final YesOrNo respondent1Represented;
     private final ClaimValue claimValue;
-    private final PbaNumber pbaNumber;
+    private final Fee claimFee;
+    private final String paymentReference;
+    private final DynamicList applicantSolicitor1PbaAccounts;
     private final ClaimType claimType;
     private final String claimTypeOther;
     private final PersonalInjuryType personalInjuryType;
@@ -88,10 +89,10 @@ public class CaseData {
     private final RespondentResponseType respondent1ClaimResponseType;
     private final ResponseDocument respondent1ClaimResponseDocument;
     private final LocalDateTime applicantSolicitorResponseDeadlineToRespondentSolicitor1;
+    private final LocalDate defendantResponseDate;
 
     private final YesOrNo applicant1ProceedWithClaim;
     private final ResponseDocument applicant1DefenceResponseDocument;
-    private final ApplicantNotProceedingReason applicant1NotProceedingReason;
 
     @Valid
     private final CloseClaim withdrawClaim;
@@ -114,6 +115,13 @@ public class CaseData {
     }
 
     private final LitigationFriend respondent1LitigationFriend;
+
+    private final YesOrNo applicant1LitigationFriendRequired;
+
+    private final LitigationFriend applicant1LitigationFriend;
+
+    //CCD UI flag
+    private final YesOrNo applicantSolicitor1PbaAccountsIsEmpty;
 
     private final OrganisationPolicy applicantSolicitor1OrganisationPolicy;
     private final OrganisationPolicy applicantSolicitor2OrganisationPolicy;

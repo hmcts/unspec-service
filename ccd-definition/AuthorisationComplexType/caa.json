@@ -1,0 +1,82 @@
+[
+  {
+    "LiveFrom": "01/01/2017",
+    "CaseTypeID": "UNSPECIFIED_CLAIMS",
+    "CaseFieldID": "applicantSolicitor1OrganisationPolicy",
+    "ListElementCode": "OrgPolicyCaseAssignedRole",
+    "UserRole": "caseworker-caa",
+    "CRUD": "CRU"
+  },
+  {
+    "LiveFrom": "01/01/2017",
+    "CaseTypeID": "UNSPECIFIED_CLAIMS",
+    "CaseFieldID": "applicantSolicitor1OrganisationPolicy",
+    "ListElementCode": "OrgPolicyReference",
+    "UserRole": "caseworker-caa",
+    "CRUD": "CRU"
+  },
+  {
+    "LiveFrom": "01/01/2017",
+    "CaseTypeID": "UNSPECIFIED_CLAIMS",
+    "CaseFieldID": "applicantSolicitor1OrganisationPolicy",
+    "ListElementCode": "Organisation",
+    "UserRole": "caseworker-caa",
+    "CRUD": "CRU"
+  },
+  {
+    "LiveFrom": "01/01/2017",
+    "CaseTypeID": "UNSPECIFIED_CLAIMS",
+    "CaseFieldID": "applicantSolicitor1OrganisationPolicy",
+    "ListElementCode": "Organisation.OrganisationID",
+    "UserRole": "caseworker-caa",
+    "CRUD": "CRU"
+  },
+  {
+    "LiveFrom": "01/01/2017",
+    "CaseTypeID": "UNSPECIFIED_CLAIMS",
+    "CaseFieldID": "applicantSolicitor1OrganisationPolicy",
+    "ListElementCode": "Organisation.OrganisationName",
+    "UserRole": "caseworker-caa",
+    "CRUD": "CRU"
+  },
+  {
+    "LiveFrom": "01/01/2017",
+    "CaseTypeID": "UNSPECIFIED_CLAIMS",
+    "CaseFieldID": "respondentSolicitor1OrganisationPolicy",
+    "ListElementCode": "OrgPolicyCaseAssignedRole",
+    "UserRole": "caseworker-caa",
+    "CRUD": "CRU"
+  },
+  {
+    "LiveFrom": "01/01/2017",
+    "CaseTypeID": "UNSPECIFIED_CLAIMS",
+    "CaseFieldID": "respondentSolicitor1OrganisationPolicy",
+    "ListElementCode": "OrgPolicyReference",
+    "UserRole": "caseworker-caa",
+    "CRUD": "CRU"
+  },
+  {
+    "LiveFrom": "01/01/2017",
+    "CaseTypeID": "UNSPECIFIED_CLAIMS",
+    "CaseFieldID": "respondentSolicitor1OrganisationPolicy",
+    "ListElementCode": "Organisation",
+    "UserRole": "caseworker-caa",
+    "CRUD": "CRU"
+  },
+  {
+    "LiveFrom": "01/01/2017",
+    "CaseTypeID": "UNSPECIFIED_CLAIMS",
+    "CaseFieldID": "respondentSolicitor1OrganisationPolicy",
+    "ListElementCode": "Organisation.OrganisationID",
+    "UserRole": "caseworker-caa",
+    "CRUD": "CRU"
+  },
+  {
+    "LiveFrom": "01/01/2017",
+    "CaseTypeID": "UNSPECIFIED_CLAIMS",
+    "CaseFieldID": "respondentSolicitor1OrganisationPolicy",
+    "ListElementCode": "Organisation.OrganisationName",
+    "UserRole": "caseworker-caa",
+    "CRUD": "CRU"
+  }
+]

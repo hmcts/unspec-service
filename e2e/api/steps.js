@@ -1,10 +1,11 @@
 const assert = require('assert').strict;
 
 const apiRequest = require('./apiRequest.js');
-const {date} = require('./dataHelper');
+const {waitForFinishedBusinessProcess} = require('../api/testingSupport');
 
 const data = {
   CREATE_CLAIM: require('../fixtures/events/createClaim.js'),
+  CREATE_CLAIM_RESPONDENT_LIP: require('../fixtures/events/createClaimLitigantInPerson.js'),
   CONFIRM_SERVICE: require('../fixtures/events/confirmService.js'),
   ACKNOWLEDGE_SERVICE: require('../fixtures/events/acknowledgeService.js'),
   REQUEST_EXTENSION: require('../fixtures/events/requestExtension.js'),
@@ -18,11 +19,11 @@ let caseId, eventName;
 let caseData = {};
 
 module.exports = {
-  createClaim: async (user) => {
+  createClaimWithRepresentedRespondent: async (user) => {
     eventName = 'CREATE_CLAIM';
     await apiRequest.setupTokens(user);
     await apiRequest.startEvent(eventName);
-    await validateEventPages();
+    await validateEventPages(data.CREATE_CLAIM);
 
     await assertSubmittedEvent('PENDING_CASE_ISSUED', {
       header: 'Your claim has been issued',
@@ -30,20 +31,31 @@ module.exports = {
     });
   },
 
-  confirmService: async () => {
-    // Issue date is no longer set in create claim journey so we need to add manually.
-    caseData.claimIssuedDate = date();
+  createClaimWithRespondentLitigantInPerson: async (user) => {
+    eventName = 'CREATE_CLAIM';
+    caseId = null;
+    caseData = {};
+    await apiRequest.setupTokens(user);
+    await apiRequest.startEvent(eventName);
+    await validateEventPages(data.CREATE_CLAIM_RESPONDENT_LIP);
 
+    await assertSubmittedEvent('PROCEEDS_WITH_OFFLINE_JOURNEY', {
+      header: 'Your claim will now progress offline',
+      body: 'You do not need to do anything'
+    });
+  },
+
+  confirmService: async () => {
     eventName = 'CONFIRM_SERVICE';
-    await apiRequest.startEvent(eventName, caseId);
+    let returnedCaseData = await apiRequest.startEvent(eventName, caseId);
+    assertContainsPopulatedFields(returnedCaseData);
+    caseData = returnedCaseData;
     deleteCaseFields('servedDocumentFiles');
 
-    await validateEventPages();
+    await validateEventPages(data.CONFIRM_SERVICE);
 
     await assertCallbackError('ServedDocuments', data[eventName].invalid.ServedDocuments.blankOtherDocuments,
       'CONTENT TBC: please enter a valid value for other documents');
-    await assertCallbackError('Date', data[eventName].invalid.Date.threeDaysBeforeToday,
-      'The date must not be before issue date of claim');
     await assertCallbackError('Date', data[eventName].invalid.Date.tomorrow,
       'The date must not be in the future');
 
@@ -55,10 +67,12 @@ module.exports = {
 
   acknowledgeService: async () => {
     eventName = 'ACKNOWLEDGE_SERVICE';
+    let returnedCaseData = await apiRequest.startEvent(eventName, caseId);
+    assertContainsPopulatedFields(returnedCaseData);
+    caseData = returnedCaseData;
     deleteCaseFields('systemGeneratedCaseDocuments');
-    await apiRequest.startEvent(eventName, caseId);
 
-    await validateEventPages();
+    await validateEventPages(data.ACKNOWLEDGE_SERVICE);
 
     await assertCallbackError('ConfirmDetails', data[eventName].invalid.ConfirmDetails.futureDateOfBirth,
       'The date entered cannot be in the future');
@@ -71,9 +85,12 @@ module.exports = {
 
   requestExtension: async () => {
     eventName = 'REQUEST_EXTENSION';
-    await apiRequest.startEvent(eventName, caseId);
+    let returnedCaseData = await apiRequest.startEvent(eventName, caseId);
+    assertContainsPopulatedFields(returnedCaseData);
+    caseData = returnedCaseData;
+    deleteCaseFields('systemGeneratedCaseDocuments');
 
-    await validateEventPages();
+    await validateEventPages(data.REQUEST_EXTENSION);
 
     await assertCallbackError('ProposeDeadline', data[eventName].invalid.ProposeDeadline.past,
       'The proposed deadline must be a date in the future');
@@ -88,9 +105,11 @@ module.exports = {
 
   respondExtension: async () => {
     eventName = 'RESPOND_EXTENSION';
-    await apiRequest.startEvent(eventName, caseId);
+    let returnedCaseData = await apiRequest.startEvent(eventName, caseId);
+    assertContainsPopulatedFields(returnedCaseData);
+    caseData = returnedCaseData;
 
-    await validateEventPages();
+    await validateEventPages(data.RESPOND_EXTENSION);
 
     await assertCallbackError('Counter', data[eventName].invalid.Counter.past,
       'The proposed deadline must be a date in the future');
@@ -105,10 +124,12 @@ module.exports = {
 
   defendantResponse: async () => {
     eventName = 'DEFENDANT_RESPONSE';
-    await apiRequest.startEvent(eventName, caseId);
+    let returnedCaseData = await apiRequest.startEvent(eventName, caseId);
+    assertContainsPopulatedFields(returnedCaseData);
+    caseData = returnedCaseData;
     deleteCaseFields('respondent1', 'solicitorReferences');
 
-    await validateEventPages();
+    await validateEventPages(data.DEFENDANT_RESPONSE);
 
     await assertCallbackError('ConfirmDetails', data[eventName].invalid.ConfirmDetails.futureDateOfBirth,
       'The date entered cannot be in the future');
@@ -125,9 +146,11 @@ module.exports = {
 
   claimantResponse: async () => {
     eventName = 'CLAIMANT_RESPONSE';
-    await apiRequest.startEvent(eventName, caseId);
+    let returnedCaseData = await apiRequest.startEvent(eventName, caseId);
+    assertContainsPopulatedFields(returnedCaseData);
+    caseData = returnedCaseData;
 
-    await validateEventPages();
+    await validateEventPages(data.CLAIMANT_RESPONSE);
 
     await assertCallbackError('Hearing', data[eventName].invalid.Hearing.past,
       'The date cannot be in the past and must not be more than a year in the future');
@@ -138,35 +161,35 @@ module.exports = {
       header: 'You\'ve decided to proceed with the claim',
       body: 'We\'ll review the case. We\'ll contact you to tell you what to do next.'
     });
+    await waitForFinishedBusinessProcess(caseId);
   },
 
   addDefendantLitigationFriend: async () => {
     eventName = 'ADD_DEFENDANT_LITIGATION_FRIEND';
-    await apiRequest.startEvent(eventName, caseId);
+    let returnedCaseData = await apiRequest.startEvent(eventName, caseId);
+    assertContainsPopulatedFields(returnedCaseData);
+    caseData = returnedCaseData;
 
-    await validateEventPages();
+    await validateEventPages(data.ADD_DEFENDANT_LITIGATION_FRIEND);
   }
 };
 
-
-const validateEventPages = async () => {
-  for (let pageId of Object.keys(data[eventName].valid)) {
-    await assertValidData(pageId);
+const validateEventPages = async (data) => {
+  for (let pageId of Object.keys(data.valid)) {
+    await assertValidData(data, pageId);
   }
 };
 
-const assertValidData = async (pageId) => {
-  const validDataForPage = data[eventName].valid[pageId];
+const assertValidData = async (data, pageId) => {
+  const validDataForPage = data.valid[pageId];
   caseData = {...caseData, ...validDataForPage};
 
   const response = await apiRequest.validatePage(eventName, pageId, caseData);
   const responseBody = await response.json();
 
-  if (response.status !== 200) {
-    console.log(responseBody);
-  }
-
   assert.equal(response.status, 200);
+  addIssueClaimMidEventFields(pageId, responseBody);
+
   assert.deepEqual(responseBody.data, caseData);
 };
 
@@ -184,20 +207,22 @@ const assertSubmittedEvent = async (expectedState, submittedCallbackResponseCont
   const response = await apiRequest.submitEvent(eventName, caseData, caseId);
   const responseBody = await response.json();
 
-  if (response.status !== 201) {
-    console.log(responseBody);
-  }
-
   assert.equal(response.status, 201);
   assert.equal(responseBody.state, expectedState);
   assert.equal(responseBody.callback_response_status_code, 200);
   assert.equal(responseBody.after_submit_callback_response.confirmation_header.includes(submittedCallbackResponseContains.header), true);
   assert.equal(responseBody.after_submit_callback_response.confirmation_body.includes(submittedCallbackResponseContains.body), true);
 
-  caseData = {...caseData, ...responseBody.case_data};
   if (eventName === 'CREATE_CLAIM') {
     caseId = responseBody.id;
     console.log('Case created: ' + caseId);
+  }
+};
+
+const assertContainsPopulatedFields = returnedCaseData => {
+  for (let populatedCaseField of Object.keys(caseData)) {
+    assert.equal(populatedCaseField in returnedCaseData, true,
+      'Expected case data to contain field: ' + populatedCaseField);
   }
 };
 
@@ -207,3 +232,13 @@ const assertSubmittedEvent = async (expectedState, submittedCallbackResponseCont
 const deleteCaseFields = (...caseFields) => {
   caseFields.forEach(caseField => delete caseData[caseField]);
 };
+
+function addIssueClaimMidEventFields(pageId, responseBody) {
+  if (pageId === 'ClaimValue') {
+    const midEventData = data[eventName].midEventData[pageId];
+    caseData = {...caseData, ...midEventData};
+
+    responseBody.data['applicantSolicitor1PbaAccounts'] = caseData.applicantSolicitor1PbaAccounts;
+  }
+}
+

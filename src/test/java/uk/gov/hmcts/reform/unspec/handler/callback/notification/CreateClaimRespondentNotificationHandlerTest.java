@@ -14,10 +14,13 @@ import uk.gov.hmcts.reform.unspec.sampledata.CallbackParamsBuilder;
 import uk.gov.hmcts.reform.unspec.sampledata.CaseDataBuilder;
 import uk.gov.hmcts.reform.unspec.service.NotificationService;
 
-import static org.mockito.ArgumentMatchers.anyMap;
-import static org.mockito.ArgumentMatchers.eq;
+import java.util.Map;
+
 import static org.mockito.Mockito.verify;
 import static uk.gov.hmcts.reform.unspec.callback.CallbackType.ABOUT_TO_SUBMIT;
+import static uk.gov.hmcts.reform.unspec.helpers.DateFormatHelper.DATE;
+import static uk.gov.hmcts.reform.unspec.helpers.DateFormatHelper.formatLocalDate;
+import static uk.gov.hmcts.reform.unspec.sampledata.CaseDataBuilder.CLAIM_ISSUED_DATE;
 import static uk.gov.hmcts.reform.unspec.sampledata.ServiceMethodBuilder.SERVICE_EMAIL;
 
 @SpringBootTest(classes = {
@@ -40,16 +43,26 @@ class CreateClaimRespondentNotificationHandlerTest extends BaseCallbackHandlerTe
 
         @Test
         void shouldNotifyRespondentSolicitor_whenInvoked() {
-            CaseData caseData = CaseDataBuilder.builder().atStateServiceConfirmed().build();
+            CaseData caseData = CaseDataBuilder.builder().atStateRespondedToClaim().build();
             CallbackParams params = CallbackParamsBuilder.builder().of(ABOUT_TO_SUBMIT, caseData).build();
 
             handler.handle(params);
 
             verify(notificationService).sendMail(
-                eq(SERVICE_EMAIL),
-                eq(notificationsProperties.getRespondentSolicitorClaimIssueEmailTemplate()),
-                anyMap(),
-                eq("create-claim-respondent-notification-000LR001")
+                SERVICE_EMAIL,
+                notificationsProperties.getRespondentSolicitorClaimIssueEmailTemplate(),
+                getExpectedMap(),
+                "create-claim-respondent-notification-000LR001"
+            );
+        }
+
+        private Map<String, String> getExpectedMap() {
+            return Map.of(
+                "claimReferenceNumber", "000LR001",
+                "defendantSolicitorName", "Placeholder name",
+                "claimantName", "Mr. John Rambo",
+                "defendantName", "Mr. Sole Trader",
+                "issuedOn", formatLocalDate(CLAIM_ISSUED_DATE, DATE)
             );
         }
     }
