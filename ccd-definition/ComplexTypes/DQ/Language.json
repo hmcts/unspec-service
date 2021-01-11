@@ -3,7 +3,7 @@
     "ID": "Language",
     "ListElementCode": "isPartyWelsh",
     "FieldType": "YesOrNo",
-    "ElementLabel": "Is your client Welsh?",
+    "ElementLabel": "Is your Client, a Witness or and Expert Welsh?",
     "SecurityClassification": "Public"
   },
   {
