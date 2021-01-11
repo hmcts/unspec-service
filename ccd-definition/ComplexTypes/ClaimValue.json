@@ -12,6 +12,6 @@
     "FieldType": "MoneyGBP",
     "ElementLabel": "Statement of value",
     "SecurityClassification": "Public",
-    "Min": 1
+    "Min": 100
   }
 ]
