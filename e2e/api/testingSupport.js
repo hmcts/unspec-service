@@ -41,19 +41,19 @@ module.exports =  {
         `${config.url.unspecService}/testing-support/assignCase`,
         { 'Content-Type': 'application/json' },
         {
-          "caseId":`${caseId}`,
-          "userId": `${userId}`,
-          "caseRoles": ["[\"[RESPONDENTSOLICITORONE]\"]"]
+          'caseId':`${caseId}`,
+          'userId': `${userId}`,
+          'caseRoles': ["[\"[RESPONDENTSOLICITORONE]\"]"]
         },
         'POST')
         .then( response =>  response._status)
         .then(status => {
           if (status === 200) {
-            console.log( "Role created successfully");
+            console.log( 'Role created successfully');
           } else if (status === 409) {
-            console.log("Role already exists!");
+            console.log('Role already exists!');
           } else  {
-            throw new Error(`Error occurred with status": ${status}`);
+            throw new Error(`Error occurred with status : ${status}`);
           }
         });
     }, MAX_RETRIES, RETRY_TIMEOUT_MS);
