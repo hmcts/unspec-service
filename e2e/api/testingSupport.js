@@ -41,8 +41,8 @@ module.exports =  {
         `${config.url.unspecService}/testing-support/assignCase`,
         { 'Content-Type': 'application/json' },
         {
-          "caseId":"`${caseId}`",
-          "userId": "`${userId}`",
+          "caseId":`${caseId}`,
+          "userId": `${userId}`,
           "caseRoles": ["[\"[RESPONDENTSOLICITORONE]\"]"]
         },
         'POST')
