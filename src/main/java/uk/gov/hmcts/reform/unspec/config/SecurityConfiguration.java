@@ -22,7 +22,7 @@ import uk.gov.hmcts.reform.unspec.security.JwtGrantedAuthoritiesConverter;
 import static org.springframework.security.config.http.SessionCreationPolicy.STATELESS;
 
 @Configuration
-@EnableWebSecurity
+@EnableWebSecurity(debug = true)
 public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     private static final String[] AUTHORITIES = {
@@ -44,6 +44,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         "/health/readiness",
         "/status/health",
         "/",
+        "/testing-support/assign-case",
         "/loggers/**"
     };
 

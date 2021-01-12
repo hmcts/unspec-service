@@ -24,6 +24,10 @@ module.exports = {
     password: defaultPassword,
     email: 'claimantsolicitor@gmail.com'
   },
+  defendantSolicitorUser: {
+    password: defaultPassword,
+    email: 'defendant-solicitor-manager@mailnesia.com'
+  },
   definition: {
     jurisdiction: 'CIVIL',
     caseType: 'UNSPECIFIED_CLAIMS',
