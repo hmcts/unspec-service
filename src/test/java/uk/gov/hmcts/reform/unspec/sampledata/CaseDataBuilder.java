@@ -123,7 +123,6 @@ public class CaseDataBuilder {
     private Applicant1DQ applicant1DQ;
     // Claimant Response
     private YesOrNo applicant1ProceedWithClaim;
-    private ResponseDocument applicant1DefenceResponseDocument;
     private BusinessProcess businessProcess;
 
     private CloseClaim withdrawClaim;
@@ -443,9 +442,6 @@ public class CaseDataBuilder {
     public CaseDataBuilder atStateFullDefence() {
         atStateRespondedToClaim();
         applicant1ProceedWithClaim = YES;
-        applicant1DefenceResponseDocument = ResponseDocument.builder()
-            .file(DocumentBuilder.builder().documentName("claimant-response.pdf").build())
-            .build();
         applicant1DQ = Applicant1DQ.builder()
             .applicant1DQFileDirectionsQuestionnaire(FileDirectionsQuestionnaire.builder()
                                                          .explainedToClient(List.of("OTHER"))
@@ -563,7 +559,6 @@ public class CaseDataBuilder {
             )
             // Claimant Response
             .applicant1ProceedWithClaim(applicant1ProceedWithClaim)
-            .applicant1DefenceResponseDocument(applicant1DefenceResponseDocument)
 
             .ccdState(ccdState)
             .businessProcess(businessProcess)

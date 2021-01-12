@@ -92,7 +92,6 @@ public class CaseData {
     private final LocalDate defendantResponseDate;
 
     private final YesOrNo applicant1ProceedWithClaim;
-    private final ResponseDocument applicant1DefenceResponseDocument;
 
     @Valid
     private final CloseClaim withdrawClaim;

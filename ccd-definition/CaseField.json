@@ -458,14 +458,6 @@
   {
     "LiveFrom": "01/01/2017",
     "CaseTypeID": "UNSPECIFIED_CLAIMS",
-    "ID": "applicant1DefenceResponseDocument",
-    "Label": "Respond to the defence",
-    "FieldType": "ResponseDocument",
-    "SecurityClassification": "Public"
-  },
-  {
-    "LiveFrom": "01/01/2017",
-    "CaseTypeID": "UNSPECIFIED_CLAIMS",
     "ID": "legacyCaseReference",
     "FieldType": "Text",
     "Label": "CaseMan Reference number",

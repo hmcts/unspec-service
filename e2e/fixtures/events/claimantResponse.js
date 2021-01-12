@@ -5,11 +5,6 @@ module.exports = {
     RespondentResponse: {
       applicant1ProceedWithClaim: 'Yes'
     },
-    ApplicantDefenceResponseDocument: {
-      applicant1DefenceResponseDocument: {
-        file: document('defenceResponse.pdf')
-      }
-    },
     FileDirectionsQuestionnaire: {
       applicant1DQFileDirectionsQuestionnaire: {
         explainedToClient: ['CONFIRM'],

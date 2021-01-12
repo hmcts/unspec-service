@@ -37,7 +37,6 @@ const responseTypePage = require('./pages/respondToClaim/responseType.page');
 const uploadResponsePage = require('./pages/respondToClaim/uploadResponseDocument.page');
 
 const proceedPage = require('./pages/respondToDefence/proceed.page');
-const uploadResponseDocumentPage = require('./pages/respondToDefence/uploadResponseDocument.page');
 
 const defendantLitigationFriendPage = require('./pages/addDefendantLitigationFriend/defendantLitigationDetails.page');
 
@@ -171,7 +170,6 @@ module.exports = function () {
       await confirmDetailsPage.confirmReference();
       await fileDirectionsQuestionnairePage.fileDirectionsQuestionnaire(parties.RESPONDENT_SOLICITOR_1);
       await disclosureOfElectronicDocumentsPage.enterDisclosureOfElectronicDocuments(parties.RESPONDENT_SOLICITOR_1);
-      await disclosureOfNonElectronicDocumentsPage.enterDirectionsProposedForDisclosure(parties.RESPONDENT_SOLICITOR_1);
       await expertsPage.enterExpertInformation(parties.RESPONDENT_SOLICITOR_1);
       await witnessPage.enterWitnessInformation(parties.RESPONDENT_SOLICITOR_1);
       await hearingPage.enterHearingInformation(parties.RESPONDENT_SOLICITOR_1);
@@ -180,6 +178,7 @@ module.exports = function () {
       await hearingSupportRequirementsPage.selectRequirements(parties.RESPONDENT_SOLICITOR_1);
       await furtherInformationPage.enterFurtherInformation(parties.RESPONDENT_SOLICITOR_1);
       await welshLanguageRequirementsPage.enterWelshLanguageRequirements(parties.RESPONDENT_SOLICITOR_1);
+      await disclosureOfNonElectronicDocumentsPage.enterDirectionsProposedForDisclosure(parties.RESPONDENT_SOLICITOR_1);
       await statementOfTruth.enterNameAndRole(parties.RESPONDENT_SOLICITOR_1 + 'DQ');
       await event.submit('Submit response', 'You\'ve submitted your response');
       await event.returnToCaseDetails();
@@ -188,10 +187,8 @@ module.exports = function () {
     async respondToDefence() {
       await caseViewPage.startEvent('View and respond to defence', caseId);
       await proceedPage.proceedWithClaim();
-      await uploadResponseDocumentPage.uploadResponseDocuments(TEST_FILE_PATH);
       await fileDirectionsQuestionnairePage.fileDirectionsQuestionnaire(parties.APPLICANT_SOLICITOR_1);
       await disclosureOfElectronicDocumentsPage.enterDisclosureOfElectronicDocuments(parties.APPLICANT_SOLICITOR_1);
-      await disclosureOfNonElectronicDocumentsPage.enterDirectionsProposedForDisclosure(parties.APPLICANT_SOLICITOR_1);
       await expertsPage.enterExpertInformation(parties.APPLICANT_SOLICITOR_1);
       await witnessPage.enterWitnessInformation(parties.APPLICANT_SOLICITOR_1);
       await hearingPage.enterHearingInformation(parties.APPLICANT_SOLICITOR_1);
@@ -199,6 +196,7 @@ module.exports = function () {
       await hearingSupportRequirementsPage.selectRequirements(parties.APPLICANT_SOLICITOR_1);
       await furtherInformationPage.enterFurtherInformation(parties.APPLICANT_SOLICITOR_1);
       await welshLanguageRequirementsPage.enterWelshLanguageRequirements(parties.APPLICANT_SOLICITOR_1);
+      await disclosureOfNonElectronicDocumentsPage.enterDirectionsProposedForDisclosure(parties.APPLICANT_SOLICITOR_1);
       await statementOfTruth.enterNameAndRole(parties.APPLICANT_SOLICITOR_1 + 'DQ');
       await event.submit('Submit your response', 'You\'ve decided to proceed with the claim');
       await this.click('Close and Return to case details');
