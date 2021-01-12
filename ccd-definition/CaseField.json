@@ -752,5 +752,13 @@
     "Label": "Defendant response date",
     "FieldType": "Date",
     "SecurityClassification": "Public"
+  },
+  {
+    "LiveFrom": "01/01/2017",
+    "CaseTypeID": "UNSPECIFIED_CLAIMS",
+    "ID": "localAuthorityPolicy",
+    "Label": "Organisation policy",
+    "FieldType": "OrganisationPolicy",
+    "SecurityClassification": "Public"
   }
 ]
