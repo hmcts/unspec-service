@@ -43,7 +43,7 @@ module.exports =  {
         {
           'caseId':`${caseId}`,
           'userId': `${userId}`,
-          'caseRoles': ["[\"[RESPONDENTSOLICITORONE]\"]"]
+          'caseRoles': ['[\'RESPONDENTSOLICITORONE\']']
         },
         'POST')
         .then( response =>  response._status)
