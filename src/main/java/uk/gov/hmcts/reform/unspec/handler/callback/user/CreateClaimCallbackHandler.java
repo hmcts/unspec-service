@@ -124,12 +124,14 @@ public class CreateClaimCallbackHandler extends CallbackHandler {
 
     private CallbackResponse submitClaim(CallbackParams callbackParams) {
         CaseData caseData = callbackParams.getCaseData();
+        String authToken = callbackParams.getParams().get(BEARER_TOKEN).toString();
 
         CaseData updatedCaseData = caseData.toBuilder()
             .legacyCaseReference(referenceNumberRepository.getReferenceNumber())
             .claimSubmittedDateTime(LocalDateTime.now())
             .allocatedTrack(getAllocatedTrack(caseData.getClaimValue().toPounds(), caseData.getClaimType()))
             .businessProcess(BusinessProcess.ready(CREATE_CLAIM))
+            .localAuthorityPolicy(organisationService.findOrganisationPolicy(authToken).orElse(null))
             .build();
 
         return AboutToStartOrSubmitCallbackResponse.builder()

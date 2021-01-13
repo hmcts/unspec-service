@@ -58,6 +58,7 @@ public class CaseData {
     private final AllocatedTrack allocatedTrack;
     private final PaymentDetails paymentDetails;
 
+    private final OrganisationPolicy localAuthorityPolicy;
     private final StatementOfTruth applicant1ServiceStatementOfTruthToRespondentSolicitor1;
     private final List<Element<CaseDocument>> systemGeneratedCaseDocuments;
     private final ServiceMethod serviceMethodToRespondentSolicitor1;
