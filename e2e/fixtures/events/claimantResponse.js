@@ -18,13 +18,6 @@ module.exports = {
         agreementLikely: 'Yes'
       }
     },
-    DisclosureOfNonElectronicDocuments: {
-      applicant1DQDisclosureOfNonElectronicDocuments: {
-        directionsForDisclosureProposed: 'Yes',
-        standardDirectionsRequired: 'Yes',
-        bespokeDirections: 'directions'
-      }
-    },
     Experts: {
       applicant1DQExperts: {
         expertRequired: 'Yes',
@@ -81,6 +74,13 @@ module.exports = {
         evidence: 'WELSH',
         court: 'WELSH',
         documents: 'WELSH'
+      }
+    },
+    DisclosureOfNonElectronicDocuments: {
+      applicant1DQDisclosureOfNonElectronicDocuments: {
+        directionsForDisclosureProposed: 'Yes',
+        standardDirectionsRequired: 'Yes',
+        bespokeDirections: 'directions'
       }
     },
     StatementOfTruth: {
