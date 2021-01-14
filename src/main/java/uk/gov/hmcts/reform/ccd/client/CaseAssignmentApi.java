@@ -23,6 +23,7 @@ import static org.springframework.http.HttpHeaders.AUTHORIZATION;
         configuration = CoreCaseDataConfiguration.class
 )
 public interface CaseAssignmentApi {
+
     String SERVICE_AUTHORIZATION = "ServiceAuthorization";
 
     @PostMapping(
