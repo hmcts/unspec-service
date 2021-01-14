@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonUnwrapped;
 import lombok.Builder;
 import lombok.Data;
+import uk.gov.hmcts.reform.ccd.model.OrganisationPolicy;
 import uk.gov.hmcts.reform.unspec.enums.AllocatedTrack;
 import uk.gov.hmcts.reform.unspec.enums.CaseState;
 import uk.gov.hmcts.reform.unspec.enums.ClaimType;
@@ -122,4 +123,9 @@ public class CaseData {
 
     //CCD UI flag
     private final YesOrNo applicantSolicitor1PbaAccountsIsEmpty;
+
+    private final OrganisationPolicy applicantSolicitor1OrganisationPolicy;
+    private final OrganisationPolicy applicantSolicitor2OrganisationPolicy;
+    private final OrganisationPolicy respondentSolicitor1OrganisationPolicy;
+    private final OrganisationPolicy respondentSolicitor2OrganisationPolicy;
 }

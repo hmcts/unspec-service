@@ -4,7 +4,7 @@
     "CaseTypeID": "UNSPECIFIED_CLAIMS",
     "CaseFieldID": "applicantSolicitor1OrganisationPolicy",
     "ListElementCode": "OrgPolicyCaseAssignedRole",
-    "UserRole": "caseworker-civil-solicitor",
+    "UserRole": "caseworker-caa",
     "CRUD": "CRU"
   },
   {
@@ -12,7 +12,7 @@
     "CaseTypeID": "UNSPECIFIED_CLAIMS",
     "CaseFieldID": "applicantSolicitor1OrganisationPolicy",
     "ListElementCode": "OrgPolicyReference",
-    "UserRole": "caseworker-civil-solicitor",
+    "UserRole": "caseworker-caa",
     "CRUD": "CRU"
   },
   {
@@ -20,7 +20,7 @@
     "CaseTypeID": "UNSPECIFIED_CLAIMS",
     "CaseFieldID": "applicantSolicitor1OrganisationPolicy",
     "ListElementCode": "Organisation",
-    "UserRole": "caseworker-civil-solicitor",
+    "UserRole": "caseworker-caa",
     "CRUD": "CRU"
   },
   {
@@ -28,7 +28,7 @@
     "CaseTypeID": "UNSPECIFIED_CLAIMS",
     "CaseFieldID": "applicantSolicitor1OrganisationPolicy",
     "ListElementCode": "Organisation.OrganisationID",
-    "UserRole": "caseworker-civil-solicitor",
+    "UserRole": "caseworker-caa",
     "CRUD": "CRU"
   },
   {
@@ -36,7 +36,7 @@
     "CaseTypeID": "UNSPECIFIED_CLAIMS",
     "CaseFieldID": "applicantSolicitor1OrganisationPolicy",
     "ListElementCode": "Organisation.OrganisationName",
-    "UserRole": "caseworker-civil-solicitor",
+    "UserRole": "caseworker-caa",
     "CRUD": "CRU"
   },
   {
@@ -44,7 +44,7 @@
     "CaseTypeID": "UNSPECIFIED_CLAIMS",
     "CaseFieldID": "respondentSolicitor1OrganisationPolicy",
     "ListElementCode": "OrgPolicyCaseAssignedRole",
-    "UserRole": "caseworker-civil-solicitor",
+    "UserRole": "caseworker-caa",
     "CRUD": "CRU"
   },
   {
@@ -52,7 +52,7 @@
     "CaseTypeID": "UNSPECIFIED_CLAIMS",
     "CaseFieldID": "respondentSolicitor1OrganisationPolicy",
     "ListElementCode": "OrgPolicyReference",
-    "UserRole": "caseworker-civil-solicitor",
+    "UserRole": "caseworker-caa",
     "CRUD": "CRU"
   },
   {
@@ -60,7 +60,7 @@
     "CaseTypeID": "UNSPECIFIED_CLAIMS",
     "CaseFieldID": "respondentSolicitor1OrganisationPolicy",
     "ListElementCode": "Organisation",
-    "UserRole": "caseworker-civil-solicitor",
+    "UserRole": "caseworker-caa",
     "CRUD": "CRU"
   },
   {
@@ -68,7 +68,7 @@
     "CaseTypeID": "UNSPECIFIED_CLAIMS",
     "CaseFieldID": "respondentSolicitor1OrganisationPolicy",
     "ListElementCode": "Organisation.OrganisationID",
-    "UserRole": "caseworker-civil-solicitor",
+    "UserRole": "caseworker-caa",
     "CRUD": "CRU"
   },
   {
@@ -76,7 +76,7 @@
     "CaseTypeID": "UNSPECIFIED_CLAIMS",
     "CaseFieldID": "respondentSolicitor1OrganisationPolicy",
     "ListElementCode": "Organisation.OrganisationName",
-    "UserRole": "caseworker-civil-solicitor",
+    "UserRole": "caseworker-caa",
     "CRUD": "CRU"
   }
 ]
