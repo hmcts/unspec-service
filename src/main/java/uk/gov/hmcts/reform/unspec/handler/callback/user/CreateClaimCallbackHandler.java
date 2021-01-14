@@ -124,7 +124,6 @@ public class CreateClaimCallbackHandler extends CallbackHandler {
 
     private CallbackResponse submitClaim(CallbackParams callbackParams) {
         CaseData caseData = callbackParams.getCaseData();
-        String authToken = callbackParams.getParams().get(BEARER_TOKEN).toString();
 
         CaseData updatedCaseData = caseData.toBuilder()
             .legacyCaseReference(referenceNumberRepository.getReferenceNumber())
