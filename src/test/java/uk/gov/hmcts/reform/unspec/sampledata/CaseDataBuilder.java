@@ -404,7 +404,12 @@ public class CaseDataBuilder {
 
     public CaseDataBuilder atStateRespondedToClaim() {
         atStateServiceConfirmed();
-        respondent1ClaimResponseType = RespondentResponseType.FULL_DEFENCE;
+        atStateRespondedToClaim(RespondentResponseType.FULL_DEFENCE);
+        return this;
+    }
+
+    public CaseDataBuilder atStateRespondedToClaim(RespondentResponseType respondentResponseType) {
+        respondent1ClaimResponseType = respondentResponseType;
         applicantSolicitorResponseDeadlineToRespondentSolicitor1 = APPLICANT_RESPONSE_DEADLINE;
         respondent1ClaimResponseDocument = ResponseDocument.builder()
             .file(DocumentBuilder.builder().documentName("defendant-response.pdf").build())
