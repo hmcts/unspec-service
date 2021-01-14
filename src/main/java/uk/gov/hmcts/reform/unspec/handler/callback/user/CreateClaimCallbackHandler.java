@@ -131,7 +131,6 @@ public class CreateClaimCallbackHandler extends CallbackHandler {
             .claimSubmittedDateTime(LocalDateTime.now())
             .allocatedTrack(getAllocatedTrack(caseData.getClaimValue().toPounds(), caseData.getClaimType()))
             .businessProcess(BusinessProcess.ready(CREATE_CLAIM))
-            .localAuthorityPolicy(organisationService.findOrganisationPolicy(authToken).orElse(null))
             .build();
 
         return AboutToStartOrSubmitCallbackResponse.builder()

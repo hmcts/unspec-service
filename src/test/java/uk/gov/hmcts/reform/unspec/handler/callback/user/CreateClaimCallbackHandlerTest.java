@@ -324,18 +324,6 @@ class CreateClaimCallbackHandlerTest extends BaseCallbackHandlerTest {
 
                 assertThat(response.getState()).isEqualTo(PENDING_CASE_ISSUED.toString());
             }
-
-            @Test
-            void shouldSetLocalAuthorityPolicy_whenRespondentIsRepresented() {
-                var response = (AboutToStartOrSubmitCallbackResponse) handler.handle(params);
-
-                assertThat(response.getData())
-                    .extracting("localAuthorityPolicy").extracting("Organisation").extracting("OrganisationID")
-                    .isEqualTo(organisationPolicy.getOrganisation().getOrganisationID());
-                assertThat(response.getData())
-                    .extracting("localAuthorityPolicy").extracting("OrgPolicyReference")
-                    .isEqualTo(organisationPolicy.getOrgPolicyReference());
-            }
         }
     }
 
