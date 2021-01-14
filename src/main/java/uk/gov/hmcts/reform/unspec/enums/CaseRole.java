@@ -4,7 +4,10 @@ import lombok.Getter;
 
 @Getter
 public enum CaseRole {
-    SOLICITOR;
+    CLAIMANTSOLICITOR1,
+    CLAIMANTSOLICITOR2,
+    DEFENDANTSOLICITOR1,
+    DEFENDANTSOLICITOR2;
 
     private String formattedName;
 

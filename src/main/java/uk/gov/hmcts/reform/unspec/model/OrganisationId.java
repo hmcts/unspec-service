@@ -8,7 +8,7 @@ import lombok.extern.jackson.Jacksonized;
 @Data
 @Builder
 @Jacksonized
-public class Organisation {
+public class OrganisationId {
 
     @JsonProperty("OrganisationID")
     private String organisationID;

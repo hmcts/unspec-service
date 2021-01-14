@@ -12,6 +12,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import uk.gov.hmcts.reform.authorisation.generators.AuthTokenGenerator;
 import uk.gov.hmcts.reform.prd.client.OrganisationApi;
 import uk.gov.hmcts.reform.prd.model.Organisation;
+import uk.gov.hmcts.reform.unspec.model.OrganisationId;
 import uk.gov.hmcts.reform.unspec.model.OrganisationPolicy;
 
 import java.util.Map;
@@ -80,10 +81,10 @@ class OrganisationServiceTest {
         @Test
         void shouldReturnOrganisationPolicy_whenInvoked() {
             var expectedOrganisationPolicy = OrganisationPolicy.builder()
-                .organisation(uk.gov.hmcts.reform.unspec.model.Organisation.builder()
+                .organisation(OrganisationId.builder()
                                   .organisationID("ORG ID")
                                   .build())
-                .orgPolicyCaseAssignedRole("[SOLICITOR]")
+                .orgPolicyCaseAssignedRole("[CLAIMANTSOLICITOR1]")
                 .build();
             var organisation = organisationService.findOrganisationPolicy(AUTH_TOKEN);
 

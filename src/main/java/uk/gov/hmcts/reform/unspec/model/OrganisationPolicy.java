@@ -11,7 +11,7 @@ import lombok.Data;
 public class OrganisationPolicy {
 
     @JsonProperty("Organisation")
-    private Organisation organisation;
+    private OrganisationId organisation;
 
     @JsonProperty("OrgPolicyReference")
     private String orgPolicyReference;

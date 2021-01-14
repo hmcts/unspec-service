@@ -22,6 +22,7 @@ import uk.gov.hmcts.reform.unspec.handler.callback.BaseCallbackHandlerTest;
 import uk.gov.hmcts.reform.unspec.helpers.CaseDetailsConverter;
 import uk.gov.hmcts.reform.unspec.model.CaseData;
 import uk.gov.hmcts.reform.unspec.model.Fee;
+import uk.gov.hmcts.reform.unspec.model.OrganisationId;
 import uk.gov.hmcts.reform.unspec.model.OrganisationPolicy;
 import uk.gov.hmcts.reform.unspec.model.Party;
 import uk.gov.hmcts.reform.unspec.model.common.DynamicList;
@@ -243,7 +244,7 @@ class CreateClaimCallbackHandlerTest extends BaseCallbackHandlerTest {
         private CallbackParams params;
         private CaseData caseData;
         private OrganisationPolicy organisationPolicy = OrganisationPolicy.builder()
-            .organisation(uk.gov.hmcts.reform.unspec.model.Organisation.builder().organisationID("ORG_ID").build())
+            .organisation(OrganisationId.builder().organisationID("ORG_ID").build())
             .orgPolicyReference("TEST_REFERENCE")
             .build();
 
