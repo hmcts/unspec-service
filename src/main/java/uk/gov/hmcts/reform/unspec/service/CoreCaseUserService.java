@@ -4,13 +4,11 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import uk.gov.hmcts.reform.authorisation.generators.AuthTokenGenerator;
 import uk.gov.hmcts.reform.ccd.client.CaseAccessDataStoreApi;
-import uk.gov.hmcts.reform.ccd.client.model.CaseUser;
 import uk.gov.hmcts.reform.ccd.model.AddCaseAssignedUserRolesRequest;
 import uk.gov.hmcts.reform.ccd.model.CaseAssignedUserRoleWithOrganisation;
 import uk.gov.hmcts.reform.idam.client.IdamClient;
 import uk.gov.hmcts.reform.prd.model.Organisation;
 import uk.gov.hmcts.reform.unspec.config.CrossAccessUserConfiguration;
-import uk.gov.hmcts.reform.unspec.config.SystemUpdateUserConfiguration;
 import uk.gov.hmcts.reform.unspec.enums.CaseRole;
 
 import java.util.List;
@@ -19,6 +17,7 @@ import java.util.Optional;
 @Service
 @RequiredArgsConstructor
 public class CoreCaseUserService {
+
     private final CaseAccessDataStoreApi caseAccessDataStoreApi;
     private final IdamClient idamClient;
     private final OrganisationService organisationService;

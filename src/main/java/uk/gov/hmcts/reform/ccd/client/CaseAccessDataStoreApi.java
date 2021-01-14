@@ -22,6 +22,7 @@ import static uk.gov.hmcts.reform.ccd.client.CoreCaseDataApi.SERVICE_AUTHORIZATI
 @FeignClient(name = "ccd-access-data-store-api", url = "${core_case_data.api.url}",
     configuration = CoreCaseDataConfiguration.class)
 public interface CaseAccessDataStoreApi {
+
     @PostMapping(
         value = "/case-users",
         consumes = MediaType.APPLICATION_JSON_VALUE
