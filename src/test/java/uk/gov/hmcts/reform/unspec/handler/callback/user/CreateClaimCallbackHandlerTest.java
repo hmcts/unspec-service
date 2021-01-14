@@ -22,6 +22,7 @@ import uk.gov.hmcts.reform.unspec.handler.callback.BaseCallbackHandlerTest;
 import uk.gov.hmcts.reform.unspec.helpers.CaseDetailsConverter;
 import uk.gov.hmcts.reform.unspec.model.CaseData;
 import uk.gov.hmcts.reform.unspec.model.Fee;
+import uk.gov.hmcts.reform.unspec.model.OrganisationPolicy;
 import uk.gov.hmcts.reform.unspec.model.Party;
 import uk.gov.hmcts.reform.unspec.model.common.DynamicList;
 import uk.gov.hmcts.reform.unspec.model.common.DynamicListElement;
@@ -241,6 +242,10 @@ class CreateClaimCallbackHandlerTest extends BaseCallbackHandlerTest {
 
         private CallbackParams params;
         private CaseData caseData;
+        private OrganisationPolicy organisationPolicy = OrganisationPolicy.builder()
+            .organisation(uk.gov.hmcts.reform.unspec.model.Organisation.builder().organisationID("ORG_ID").build())
+            .orgPolicyReference("TEST_REFERENCE")
+            .build();
 
         @Nested
         class Respondent1DoesNotHaveLegalRepresentation {
@@ -266,6 +271,7 @@ class CreateClaimCallbackHandlerTest extends BaseCallbackHandlerTest {
             void setup() {
                 caseData = CaseDataBuilder.builder().atStateClaimDraft().build();
                 params = CallbackParamsBuilder.builder().of(CallbackType.ABOUT_TO_SUBMIT, caseData).build();
+                given(organisationService.findOrganisationPolicy(any())).willReturn(Optional.of(organisationPolicy));
             }
 
             @Test
@@ -316,6 +322,18 @@ class CreateClaimCallbackHandlerTest extends BaseCallbackHandlerTest {
                 var response = (AboutToStartOrSubmitCallbackResponse) handler.handle(params);
 
                 assertThat(response.getState()).isEqualTo(PENDING_CASE_ISSUED.toString());
+            }
+
+            @Test
+            void shouldSetLocalAuthorityPolicy_whenRespondentIsRepresented() {
+                var response = (AboutToStartOrSubmitCallbackResponse) handler.handle(params);
+
+                assertThat(response.getData())
+                    .extracting("localAuthorityPolicy").extracting("Organisation").extracting("OrganisationID")
+                    .isEqualTo(organisationPolicy.getOrganisation().getOrganisationID());
+                assertThat(response.getData())
+                    .extracting("localAuthorityPolicy").extracting("OrgPolicyReference")
+                    .isEqualTo(organisationPolicy.getOrgPolicyReference());
             }
         }
     }
