@@ -18,7 +18,7 @@ import java.util.List;
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 
 @FeignClient(
-        name = "core-case-data-api",
+        name = "case-assignment-api",
         url = "${core_case_data.api.url}",
         configuration = CoreCaseDataConfiguration.class
 )
