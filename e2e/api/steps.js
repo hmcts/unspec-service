@@ -59,6 +59,7 @@ module.exports = {
       header: 'Your claim will now progress offline',
       body: 'You do not need to do anything'
     });
+
     await assignCaseToDefendant(caseId);
   },
 

@@ -37,13 +37,15 @@ module.exports =  {
 
     await retry(() => {
       return restHelper.request(
-        `${config.url.unspecService}/testing-support/assignCase/${caseId}`,
+        `${config.url.unspecService}/testing-support/assign-case/${caseId}`,
         {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${authToken}` },
         {},
         'POST')
-        .then( response =>  response._status)
+        .then( response => {
+          console.log(response)
+          return response._status})
         .then(status => {
           if (status === 200) {
             console.log( 'Role created successfully');
