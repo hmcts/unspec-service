@@ -7,13 +7,10 @@ import org.springframework.stereotype.Service;
 import uk.gov.hmcts.reform.authorisation.generators.AuthTokenGenerator;
 import uk.gov.hmcts.reform.prd.client.OrganisationApi;
 import uk.gov.hmcts.reform.prd.model.Organisation;
-import uk.gov.hmcts.reform.unspec.model.OrganisationId;
-import uk.gov.hmcts.reform.unspec.model.OrganisationPolicy;
 
 import java.util.Optional;
 
 import static java.util.Optional.ofNullable;
-import static uk.gov.hmcts.reform.unspec.enums.CaseRole.APPLICANTSOLICITOR1;
 
 @Service
 @RequiredArgsConstructor
