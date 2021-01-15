@@ -28,5 +28,4 @@ class RoboticsEventHandlerTest {
 
         verify(roboticsNotificationService).notifyRobotics(event.getCaseData());
     }
-
 }
