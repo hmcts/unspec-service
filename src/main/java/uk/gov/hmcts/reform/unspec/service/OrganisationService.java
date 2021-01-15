@@ -37,7 +37,7 @@ public class OrganisationService {
         return findOrganisation(authToken)
             .map(org -> OrganisationPolicy.builder()
                 .organisation(OrganisationId.builder()
-                                  .organisationID(org.getOrganisationIdentifier())
+                                  .id(org.getOrganisationIdentifier())
                                   .build())
                 .orgPolicyCaseAssignedRole(APPLICANTSOLICITOR1.getFormattedName())
                 .build());

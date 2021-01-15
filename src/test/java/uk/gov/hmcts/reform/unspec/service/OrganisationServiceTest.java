@@ -82,7 +82,7 @@ class OrganisationServiceTest {
         void shouldReturnOrganisationPolicy_whenInvoked() {
             var expectedOrganisationPolicy = OrganisationPolicy.builder()
                 .organisation(OrganisationId.builder()
-                                  .organisationID("ORG ID")
+                                  .id("ORG ID")
                                   .build())
                 .orgPolicyCaseAssignedRole("[APPLICANTSOLICITOR1]")
                 .build();

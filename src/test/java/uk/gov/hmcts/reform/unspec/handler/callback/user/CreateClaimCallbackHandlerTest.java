@@ -244,7 +244,7 @@ class CreateClaimCallbackHandlerTest extends BaseCallbackHandlerTest {
         private CallbackParams params;
         private CaseData caseData;
         private OrganisationPolicy organisationPolicy = OrganisationPolicy.builder()
-            .organisation(OrganisationId.builder().organisationID("ORG_ID").build())
+            .organisation(OrganisationId.builder().id("ORG_ID").build())
             .orgPolicyReference("TEST_REFERENCE")
             .build();
 

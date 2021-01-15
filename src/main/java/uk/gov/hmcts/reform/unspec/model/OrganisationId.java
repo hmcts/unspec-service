@@ -11,5 +11,5 @@ import lombok.extern.jackson.Jacksonized;
 public class OrganisationId {
 
     @JsonProperty("OrganisationID")
-    private String organisationID;
+    private String id;
 }
