@@ -43,9 +43,7 @@ module.exports =  {
           'Authorization': `Bearer ${authToken}` },
         {},
         'POST')
-        .then( response => {
-          console.log(response)
-          return response._status})
+        .then( response => response._status)
         .then(status => {
           if (status === 200) {
             console.log( 'Role created successfully');
