@@ -84,7 +84,7 @@ class OrganisationServiceTest {
                 .organisation(OrganisationId.builder()
                                   .organisationID("ORG ID")
                                   .build())
-                .orgPolicyCaseAssignedRole("[CLAIMANTSOLICITOR1]")
+                .orgPolicyCaseAssignedRole("[APPLICANTSOLICITOR1]")
                 .build();
             var organisation = organisationService.findOrganisationPolicy(AUTH_TOKEN);
 

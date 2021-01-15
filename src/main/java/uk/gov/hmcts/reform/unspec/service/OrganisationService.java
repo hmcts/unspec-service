@@ -13,7 +13,7 @@ import uk.gov.hmcts.reform.unspec.model.OrganisationPolicy;
 import java.util.Optional;
 
 import static java.util.Optional.ofNullable;
-import static uk.gov.hmcts.reform.unspec.enums.CaseRole.CLAIMANTSOLICITOR1;
+import static uk.gov.hmcts.reform.unspec.enums.CaseRole.APPLICANTSOLICITOR1;
 
 @Service
 @RequiredArgsConstructor
@@ -39,7 +39,7 @@ public class OrganisationService {
                 .organisation(OrganisationId.builder()
                                   .organisationID(org.getOrganisationIdentifier())
                                   .build())
-                .orgPolicyCaseAssignedRole(CLAIMANTSOLICITOR1.getFormattedName())
+                .orgPolicyCaseAssignedRole(APPLICANTSOLICITOR1.getFormattedName())
                 .build());
     }
 }
