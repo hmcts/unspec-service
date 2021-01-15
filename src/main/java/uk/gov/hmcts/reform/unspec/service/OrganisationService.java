@@ -32,14 +32,4 @@ public class OrganisationService {
             return Optional.empty();
         }
     }
-
-    public Optional<OrganisationPolicy> findOrganisationPolicy(String authToken) {
-        return findOrganisation(authToken)
-            .map(org -> OrganisationPolicy.builder()
-                .organisation(OrganisationId.builder()
-                                  .id(org.getOrganisationIdentifier())
-                                  .build())
-                .orgPolicyCaseAssignedRole(APPLICANTSOLICITOR1.getFormattedName())
-                .build());
-    }
 }

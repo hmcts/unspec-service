@@ -74,31 +74,4 @@ class OrganisationServiceTest {
             assertThat(organisation).isEmpty();
         }
     }
-
-    @Nested
-    class FindOrganisationPolicy {
-
-        @Test
-        void shouldReturnOrganisationPolicy_whenInvoked() {
-            var expectedOrganisationPolicy = OrganisationPolicy.builder()
-                .organisation(OrganisationId.builder()
-                                  .id("ORG ID")
-                                  .build())
-                .orgPolicyCaseAssignedRole("[APPLICANTSOLICITOR1]")
-                .build();
-            var organisation = organisationService.findOrganisationPolicy(AUTH_TOKEN);
-
-            verify(organisationApi).findUserOrganisation(AUTH_TOKEN, SERVICE_AUTH_TOKEN);
-            assertThat(organisation).isEqualTo(Optional.of(expectedOrganisationPolicy));
-        }
-
-        @Test
-        void shouldReturnEmptyOptional_whenOrganisationNotFound() {
-            given(organisationApi.findUserOrganisation(any(), any())).willThrow(notFoundFeignException);
-            var organisation = organisationService.findOrganisationPolicy(AUTH_TOKEN);
-
-            verify(organisationApi).findUserOrganisation(AUTH_TOKEN, SERVICE_AUTH_TOKEN);
-            assertThat(organisation).isEmpty();
-        }
-    }
 }

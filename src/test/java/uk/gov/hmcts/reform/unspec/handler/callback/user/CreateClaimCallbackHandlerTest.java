@@ -243,10 +243,6 @@ class CreateClaimCallbackHandlerTest extends BaseCallbackHandlerTest {
 
         private CallbackParams params;
         private CaseData caseData;
-        private OrganisationPolicy organisationPolicy = OrganisationPolicy.builder()
-            .organisation(OrganisationId.builder().id("ORG_ID").build())
-            .orgPolicyReference("TEST_REFERENCE")
-            .build();
 
         @Nested
         class Respondent1DoesNotHaveLegalRepresentation {
@@ -272,7 +268,6 @@ class CreateClaimCallbackHandlerTest extends BaseCallbackHandlerTest {
             void setup() {
                 caseData = CaseDataBuilder.builder().atStateClaimDraft().build();
                 params = CallbackParamsBuilder.builder().of(CallbackType.ABOUT_TO_SUBMIT, caseData).build();
-                given(organisationService.findOrganisationPolicy(any())).willReturn(Optional.of(organisationPolicy));
             }
 
             @Test
