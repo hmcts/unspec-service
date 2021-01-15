@@ -43,16 +43,15 @@ module.exports =  {
           'Authorization': `Bearer ${authToken}` },
         {},
         'POST')
-        .then( response => response._status)
-        .then(status => {
-          if (status === 200) {
+        .then(response => {
+          if (response.status === 200) {
             console.log( 'Role created successfully');
-          } else if (status === 409) {
+          } else if (response.status === 409) {
             console.log('Role already exists!');
           } else  {
-            throw new Error(`Error occurred with status : ${status}`);
+            throw new Error(`Error occurred with status : ${response.status}`);
           }
         });
-    }, MAX_RETRIES, RETRY_TIMEOUT_MS);
+    });
   }
 };
