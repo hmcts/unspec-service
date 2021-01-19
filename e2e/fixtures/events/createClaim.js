@@ -85,6 +85,20 @@ const createClaimData = legalRepresentation => {
 module.exports = {
   createClaim: {
     midEventData: {
+      applicant1OrganisationPolicy : {
+        OrgPolicyReference : 'sdfsdfsdf',
+        OrgPolicyCaseAssignedRole : '[APPLICANTSOLICITORONE]',
+        Organisation : {
+          OrganisationID : '62LYJRF'
+        }
+      },
+      respondent1OrganisationPolicy : {
+        OrgPolicyReference : 'sdfsdfsdf',
+        OrgPolicyCaseAssignedRole : '[RESPONDENTSOLICITORONE]',
+        Organisation : {
+          OrganisationID : '62LYJRF'
+        }
+      },
       ClaimValue: {
         applicantSolicitor1PbaAccounts: {
           list_items: [

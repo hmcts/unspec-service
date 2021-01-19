@@ -68,7 +68,7 @@
     "TabID": "ClaimDetails",
     "TabLabel": "Claim Details",
     "TabDisplayOrder": 4,
-    "CaseFieldID": "applicantSolicitor1OrganisationPolicy",
+    "CaseFieldID": "applicant1OrganisationPolicy",
     "TabFieldDisplayOrder": 2
   },
   {
@@ -78,7 +78,7 @@
     "TabID": "ClaimDetails",
     "TabLabel": "Claim Details",
     "TabDisplayOrder": 4,
-    "CaseFieldID": "respondentSolicitor1OrganisationPolicy",
+    "CaseFieldID": "respondent1OrganisationPolicy",
     "TabFieldDisplayOrder": 3
   }
 ]

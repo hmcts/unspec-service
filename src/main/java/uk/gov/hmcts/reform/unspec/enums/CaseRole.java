@@ -1,5 +1,8 @@
 package uk.gov.hmcts.reform.unspec.enums;
 
+import lombok.Getter;
+
+@Getter
 public enum CaseRole {
     APPLICANTSOLICITORONE,
     APPLICANTSOLICITORTWO,
@@ -10,9 +13,5 @@ public enum CaseRole {
 
     CaseRole() {
         this.formattedName = String.format("[%s]", name());
-    }
-
-    public String formattedName() {
-        return formattedName;
     }
 }

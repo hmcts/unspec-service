@@ -11,7 +11,7 @@
   {
     "LiveFrom": "01/01/2017",
     "CaseTypeID": "UNSPECIFIED_CLAIMS",
-    "CaseFieldID": "applicantSolicitor1OrganisationPolicy",
+    "CaseFieldID": "applicant1OrganisationPolicy",
     "ListElementCode": "OrgPolicyReference",
     "Label": "Solicitor Reference",
     "DisplayOrder": 2,

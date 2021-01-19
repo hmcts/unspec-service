@@ -59,6 +59,10 @@ public class CaseData {
     private final AllocatedTrack allocatedTrack;
     private final PaymentDetails paymentDetails;
 
+    private final OrganisationPolicy applicant1OrganisationPolicy;
+    private final OrganisationPolicy applicant2OrganisationPolicy;
+    private final OrganisationPolicy respondent1OrganisationPolicy;
+    private final OrganisationPolicy respondent2OrganisationPolicy;
     private final StatementOfTruth applicant1ServiceStatementOfTruthToRespondentSolicitor1;
     private final List<Element<CaseDocument>> systemGeneratedCaseDocuments;
     private final ServiceMethod serviceMethodToRespondentSolicitor1;
@@ -123,9 +127,4 @@ public class CaseData {
 
     //CCD UI flag
     private final YesOrNo applicantSolicitor1PbaAccountsIsEmpty;
-
-    private final OrganisationPolicy applicantSolicitor1OrganisationPolicy;
-    private final OrganisationPolicy applicantSolicitor2OrganisationPolicy;
-    private final OrganisationPolicy respondentSolicitor1OrganisationPolicy;
-    private final OrganisationPolicy respondentSolicitor2OrganisationPolicy;
 }

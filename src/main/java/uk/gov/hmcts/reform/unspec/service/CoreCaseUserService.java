@@ -37,7 +37,7 @@ public class CoreCaseUserService {
             = CaseAssignedUserRoleWithOrganisation.builder()
             .caseDataId(caseId)
             .userId(userId)
-            .caseRole(CaseRole.RESPONDENTSOLICITORONE.formattedName())
+            .caseRole(CaseRole.RESPONDENTSOLICITORONE.getFormattedName())
             .organisationId(organisation.map(Organisation::getOrganisationIdentifier).orElse(null))
             .build();
 
