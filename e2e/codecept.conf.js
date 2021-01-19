@@ -1,7 +1,7 @@
 /* global process */
 
 exports.config = {
-  tests: './e2e/tests/*_test.js',
+  tests: './tests/*_test.js',
   output: './output',
   helpers: {
     Puppeteer: {
@@ -17,12 +17,12 @@ exports.config = {
       },
     },
     PuppeteerHelpers: {
-      require: './e2e/helpers/puppeteer_helper.js',
+      require: './helpers/puppeteer_helper.js',
     },
   },
   include: {
-    I: './e2e/steps_file.js',
-    api: './e2e/api/steps.js'
+    I: './steps_file.js',
+    api: './api/steps.js'
   },
   plugins: {
     autoDelay: {
