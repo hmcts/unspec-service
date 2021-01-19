@@ -85,7 +85,7 @@ class CoreCaseUserServiceTest {
                 = CaseAssignedUserRoleWithOrganisation.builder()
                 .caseDataId(CASE_ID)
                 .userId(USER_ID)
-                .caseRole(CaseRole.RESPONDENTSOLICITORONE.formattedName())
+                .caseRole(CaseRole.RESPONDENTSOLICITORONE.getFormattedName())
                 .organisationId(ORG_ID)
                 .build();
 
