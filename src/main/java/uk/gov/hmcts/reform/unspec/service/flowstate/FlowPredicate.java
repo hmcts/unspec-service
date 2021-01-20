@@ -35,7 +35,8 @@ public class FlowPredicate {
 
     public static final Predicate<CaseData> respondentRespondToClaim = caseData ->
         caseData.getRespondent1ClaimResponseDocument() != null
-            && caseData.getCcdState() != CLOSED;
+            && caseData.getCcdState() != CLOSED
+            &&  caseData.getCcdState() != STAYED;
 
     public static final Predicate<CaseData> respondentAskForAnExtension = caseData ->
         caseData.getRespondentSolicitor1claimResponseExtensionProposedDeadline() != null;

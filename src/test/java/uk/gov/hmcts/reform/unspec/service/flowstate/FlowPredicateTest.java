@@ -136,8 +136,14 @@ class FlowPredicateTest {
         }
 
         @Test
-        void shouldReturnFalse_whenCaseDataNotAtStateRespondedToClaim() {
+        void shouldReturnFalse_whenCaseDataAtStateClosed() {
             CaseData caseData = CaseDataBuilder.builder().atStateClaimDiscontinued().build();
+            assertFalse(respondentRespondToClaim.test(caseData));
+        }
+
+        @Test
+        void shouldReturnFalse_whenCaseDataAtStateStayed() {
+            CaseData caseData = CaseDataBuilder.builder().atStateClaimStayed().build();
             assertFalse(respondentRespondToClaim.test(caseData));
         }
     }
