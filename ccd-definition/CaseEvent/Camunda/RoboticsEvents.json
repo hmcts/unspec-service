@@ -3,7 +3,7 @@
     "LiveFrom": "01/01/2017",
     "CaseTypeID": "UNSPECIFIED_CLAIMS",
     "ID": "NOTIFY_RPA_ON_CASE_HANDED_OFFLINE",
-    "Name": "Notify robotics on case handed offline",
+    "Name": "Notify RPA on case offline",
     "Description": "Notify by email with attached RPA JSON to robotics on case handed offline",
     "PreConditionState(s)": "*",
     "PostConditionState": "*",
