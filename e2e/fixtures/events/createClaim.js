@@ -31,6 +31,15 @@ const createClaimData = legalRepresentation => {
         primaryAddress: buildAddress('litigant friend')
       }
     },
+    ClaimantSolicitorOrganisation:{
+      applicant1OrganisationPolicy : {
+        OrgPolicyReference : 'sdfsdfsdf',
+        OrgPolicyCaseAssignedRole : '[APPLICANTSOLICITORONE]',
+        Organisation : {
+          OrganisationID : '62LYJRF'
+        }
+      }
+    },
     Defendant: {
       respondent1: {
         type: 'INDIVIDUAL',
@@ -43,6 +52,15 @@ const createClaimData = legalRepresentation => {
     },
     LegalRepresentation: {
       respondent1Represented: `${legalRepresentation}`
+    },
+    DefendantSolicitorOrganisation: {
+      respondent1OrganisationPolicy : {
+        OrgPolicyReference : 'sdfsdfsdf',
+        OrgPolicyCaseAssignedRole : '[RESPONDENTSOLICITORONE]',
+        Organisation : {
+          OrganisationID : '62LYJRF'
+        }
+      }
     },
     ClaimType: {
       claimType: 'PERSONAL_INJURY'
@@ -85,20 +103,6 @@ const createClaimData = legalRepresentation => {
 module.exports = {
   createClaim: {
     midEventData: {
-      applicant1OrganisationPolicy : {
-        OrgPolicyReference : 'sdfsdfsdf',
-        OrgPolicyCaseAssignedRole : '[APPLICANTSOLICITORONE]',
-        Organisation : {
-          OrganisationID : '62LYJRF'
-        }
-      },
-      respondent1OrganisationPolicy : {
-        OrgPolicyReference : 'sdfsdfsdf',
-        OrgPolicyCaseAssignedRole : '[RESPONDENTSOLICITORONE]',
-        Organisation : {
-          OrganisationID : '62LYJRF'
-        }
-      },
       ClaimValue: {
         applicantSolicitor1PbaAccounts: {
           list_items: [
