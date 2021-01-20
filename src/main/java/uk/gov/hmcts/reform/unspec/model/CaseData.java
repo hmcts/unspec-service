@@ -64,6 +64,7 @@ public class CaseData {
 
     private final LocalDateTime respondentSolicitor1ResponseDeadline;
     private final ResponseIntention respondent1ClaimResponseIntentionType;
+    private final ServedDocumentFiles servedDocumentFiles;
 
     private final LocalDate respondentSolicitor1claimResponseExtensionProposedDeadline;
     private final YesOrNo respondentSolicitor1claimResponseExtensionAlreadyAgreed;
