@@ -65,7 +65,7 @@ const address = require('./fixtures/address.js');
 const SIGNED_IN_SELECTOR = 'exui-header';
 const CASE_HEADER = 'ccd-case-header > h1';
 
-const TEST_FILE_PATH = './e2e/fixtures/examplePDF.pdf';
+const TEST_FILE_PATH = './fixtures/examplePDF.pdf';
 
 let caseId;
 

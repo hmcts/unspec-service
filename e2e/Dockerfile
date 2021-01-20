@@ -4,8 +4,11 @@ USER root
 
 COPY ./ /opt/app/
 
-RUN apk add --no-cache  chromium --repository=http://dl-cdn.alpinelinux.org/alpine/v3.10/main
+RUN apk add --no-cache udev ttf-freefont chromium git
 
-RUN yarn install
+ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD true
+ENV PUPPETEER_EXECUTABLE_PATH /usr/bin/chromium-browser
+
+RUN yarn install --frozen-lockfile
 
 ENTRYPOINT [ "yarn" ]

@@ -13,7 +13,7 @@ exports.config = {
       waitForNavigation: [ "domcontentloaded", "networkidle0" ],
       chrome: {
         ignoreHTTPSErrors: true,
-        args: process.env.PROXY_SERVER ? [`--proxy-server=${process.env.PROXY_SERVER}`,] : [],
+        args: process.env.PROXY_SERVER ? [`--proxy-server=${process.env.PROXY_SERVER} --no-sandbox`,] : ['--no-sandbox'],
       },
     },
     PuppeteerHelpers: {
