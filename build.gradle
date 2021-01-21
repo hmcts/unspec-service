@@ -195,7 +195,7 @@ task runFunctionalTests(type: Exec, description: 'Runs functional tests.') {
       return skipTestsEnvironmentVariable == null || skipTestsEnvironmentVariable == 'false'
     }
   })
-  commandLine 'docker run -it -v output:/opt/app/output $(env | cut -f1 -d= | sed \'s/^/-e /\') hmctssandbox.azurecr.io/unspec/e2e-unspec:latest test:functional'
+  commandLine "docker run -it -v ${System.getProperty('user.dir')}output:/opt/app/output \$(env | cut -f1 -d= | sed 's/^/-e /') hmctssandbox.azurecr.io/unspec/e2e-unspec:latest test:functional"
 }
 
 def inStrictOrder(Task... tasks) {
