@@ -1,0 +1,28 @@
+FROM hmctspublic.azurecr.io/base/node:12-alpine
+
+USER root
+
+RUN addgroup -S app && adduser -S -G app app
+
+RUN mkdir -p /opt/app/output
+RUN mkdir -p /opt/app/test-results
+
+RUN chown app /opt/app/output
+RUN chown app /opt/app/test-results
+
+COPY e2e /opt/app/e2e
+COPY codecept.conf.js /opt/app
+COPY package.json /opt/app
+COPY steps.d.ts /opt/app
+COPY yarn.lock /opt/app
+
+RUN apk add --no-cache udev ttf-freefont chromium git
+
+ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD true
+ENV PUPPETEER_EXECUTABLE_PATH /usr/bin/chromium-browser
+
+RUN yarn install --frozen-lockfile
+
+USER app
+
+ENTRYPOINT [ "yarn" ]
