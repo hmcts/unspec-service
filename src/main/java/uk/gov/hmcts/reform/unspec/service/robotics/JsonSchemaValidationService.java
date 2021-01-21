@@ -55,8 +55,7 @@ public class JsonSchemaValidationService {
     public Set<ValidationMessage> validate(String body, String jsonSchemaFileName) {
         String jsonSchemaContents = readJsonSchema(jsonSchemaFileName);
         var jsonSchema = JsonSchemaFactory.getInstance(SpecVersion.VersionFlag.V7).getSchema(jsonSchemaContents);
-        Set<ValidationMessage> errors = jsonSchema.validate(getJsonNodeFromStringContent(body));
-        return errors;
+        return jsonSchema.validate(getJsonNodeFromStringContent(body));
     }
 
     private JsonNode getJsonNodeFromStringContent(String content) {
