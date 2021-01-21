@@ -15,6 +15,7 @@ import static uk.gov.hmcts.reform.unspec.service.flowstate.FlowPredicate.applica
 import static uk.gov.hmcts.reform.unspec.service.flowstate.FlowPredicate.applicantRespondToRequestForExtension;
 import static uk.gov.hmcts.reform.unspec.service.flowstate.FlowPredicate.claimDiscontinued;
 import static uk.gov.hmcts.reform.unspec.service.flowstate.FlowPredicate.claimIssued;
+import static uk.gov.hmcts.reform.unspec.service.flowstate.FlowPredicate.claimStruckOut;
 import static uk.gov.hmcts.reform.unspec.service.flowstate.FlowPredicate.claimTakenOffline;
 import static uk.gov.hmcts.reform.unspec.service.flowstate.FlowPredicate.claimWithdrawn;
 import static uk.gov.hmcts.reform.unspec.service.flowstate.FlowPredicate.paymentFailed;
@@ -24,7 +25,6 @@ import static uk.gov.hmcts.reform.unspec.service.flowstate.FlowPredicate.respond
 import static uk.gov.hmcts.reform.unspec.service.flowstate.FlowPredicate.respondentAcknowledgeService;
 import static uk.gov.hmcts.reform.unspec.service.flowstate.FlowPredicate.respondentAskForAnExtension;
 import static uk.gov.hmcts.reform.unspec.service.flowstate.FlowPredicate.respondentRespondToClaim;
-import static uk.gov.hmcts.reform.unspec.service.flowstate.FlowPredicate.schedulerStayClaim;
 
 class FlowPredicateTest {
 
@@ -208,18 +208,18 @@ class FlowPredicateTest {
     }
 
     @Nested
-    class SchedulerStayClaimPredicate {
+    class StrikeoutClaimPredicate {
 
         @Test
         void shouldReturnTrue_whenCaseDataAtStateClaimStayed() {
-            CaseData caseData = CaseDataBuilder.builder().atStateClaimStayed().build();
-            assertTrue(schedulerStayClaim.test(caseData));
+            CaseData caseData = CaseDataBuilder.builder().atStateClaimStruckOut().build();
+            assertTrue(claimStruckOut.test(caseData));
         }
 
         @Test
         void shouldReturnFalse_whenCaseDataAtStateFullDefence() {
             CaseData caseData = CaseDataBuilder.builder().atStateFullDefence().build();
-            assertFalse(schedulerStayClaim.test(caseData));
+            assertFalse(claimStruckOut.test(caseData));
         }
     }
 

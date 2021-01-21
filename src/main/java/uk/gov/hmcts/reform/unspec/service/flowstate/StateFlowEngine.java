@@ -14,6 +14,7 @@ import static uk.gov.hmcts.reform.unspec.service.flowstate.FlowPredicate.applica
 import static uk.gov.hmcts.reform.unspec.service.flowstate.FlowPredicate.applicantRespondToRequestForExtension;
 import static uk.gov.hmcts.reform.unspec.service.flowstate.FlowPredicate.claimDiscontinued;
 import static uk.gov.hmcts.reform.unspec.service.flowstate.FlowPredicate.claimIssued;
+import static uk.gov.hmcts.reform.unspec.service.flowstate.FlowPredicate.claimStruckOut;
 import static uk.gov.hmcts.reform.unspec.service.flowstate.FlowPredicate.claimTakenOffline;
 import static uk.gov.hmcts.reform.unspec.service.flowstate.FlowPredicate.claimWithdrawn;
 import static uk.gov.hmcts.reform.unspec.service.flowstate.FlowPredicate.paymentFailed;
@@ -23,10 +24,9 @@ import static uk.gov.hmcts.reform.unspec.service.flowstate.FlowPredicate.respond
 import static uk.gov.hmcts.reform.unspec.service.flowstate.FlowPredicate.respondentAcknowledgeService;
 import static uk.gov.hmcts.reform.unspec.service.flowstate.FlowPredicate.respondentAskForAnExtension;
 import static uk.gov.hmcts.reform.unspec.service.flowstate.FlowPredicate.respondentRespondToClaim;
-import static uk.gov.hmcts.reform.unspec.service.flowstate.FlowPredicate.schedulerStayClaim;
 import static uk.gov.hmcts.reform.unspec.service.flowstate.FlowState.Main.CLAIM_DISCONTINUED;
 import static uk.gov.hmcts.reform.unspec.service.flowstate.FlowState.Main.CLAIM_ISSUED;
-import static uk.gov.hmcts.reform.unspec.service.flowstate.FlowState.Main.CLAIM_STAYED;
+import static uk.gov.hmcts.reform.unspec.service.flowstate.FlowState.Main.CLAIM_STRUCK_OUT;
 import static uk.gov.hmcts.reform.unspec.service.flowstate.FlowState.Main.CLAIM_WITHDRAWN;
 import static uk.gov.hmcts.reform.unspec.service.flowstate.FlowState.Main.DRAFT;
 import static uk.gov.hmcts.reform.unspec.service.flowstate.FlowState.Main.EXTENSION_REQUESTED;
@@ -63,7 +63,6 @@ public class StateFlowEngine {
                 .transitionTo(SERVICE_CONFIRMED).onlyIf(applicantConfirmService)
                 .transitionTo(CLAIM_WITHDRAWN).onlyIf(claimWithdrawn)
                 .transitionTo(CLAIM_DISCONTINUED).onlyIf(claimDiscontinued)
-                .transitionTo(CLAIM_STAYED).onlyIf(schedulerStayClaim)
             .state(SERVICE_CONFIRMED)
                 .transitionTo(SERVICE_ACKNOWLEDGED).onlyIf(respondentAcknowledgeService)
                 .transitionTo(RESPONDED_TO_CLAIM).onlyIf(respondentRespondToClaim)
@@ -87,12 +86,13 @@ public class StateFlowEngine {
                 .transitionTo(CLAIM_DISCONTINUED).onlyIf(claimDiscontinued)
                 .transitionTo(CLAIM_WITHDRAWN).onlyIf(claimWithdrawn)
                 .transitionTo(PROCEEDS_WITH_OFFLINE_JOURNEY).onlyIf(claimTakenOffline)
+                 .transitionTo(CLAIM_STRUCK_OUT).onlyIf(claimStruckOut)
             .state(FULL_DEFENCE)
-                .transitionTo(CLAIM_STAYED)
-            .state(CLAIM_STAYED)
+                .transitionTo(PROCEEDS_WITH_OFFLINE_JOURNEY)
             .state(PROCEEDS_WITH_OFFLINE_JOURNEY)
             .state(CLAIM_WITHDRAWN)
             .state(CLAIM_DISCONTINUED)
+            .state(CLAIM_STRUCK_OUT)
             .build();
     }
 

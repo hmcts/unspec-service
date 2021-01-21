@@ -45,11 +45,11 @@ import java.util.List;
 import static java.time.LocalDate.now;
 import static uk.gov.hmcts.reform.unspec.enums.AllocatedTrack.FAST_CLAIM;
 import static uk.gov.hmcts.reform.unspec.enums.CaseState.AWAITING_CLAIMANT_INTENTION;
+import static uk.gov.hmcts.reform.unspec.enums.CaseState.CLAIM_STRUCK_OUT;
 import static uk.gov.hmcts.reform.unspec.enums.CaseState.CLOSED;
 import static uk.gov.hmcts.reform.unspec.enums.CaseState.CREATED;
 import static uk.gov.hmcts.reform.unspec.enums.CaseState.PENDING_CASE_ISSUED;
 import static uk.gov.hmcts.reform.unspec.enums.CaseState.PROCEEDS_WITH_OFFLINE_JOURNEY;
-import static uk.gov.hmcts.reform.unspec.enums.CaseState.STAYED;
 import static uk.gov.hmcts.reform.unspec.enums.PaymentStatus.FAILED;
 import static uk.gov.hmcts.reform.unspec.enums.PaymentStatus.SUCCESS;
 import static uk.gov.hmcts.reform.unspec.enums.PersonalInjuryType.ROAD_ACCIDENT;
@@ -296,8 +296,8 @@ public class CaseDataBuilder {
                 return atStatePaymentFailed();
             case CLAIM_ISSUED:
                 return atStateClaimCreated();
-            case CLAIM_STAYED:
-                return atStateClaimStayed();
+            case CLAIM_STRUCK_OUT:
+                return atStateClaimStruckOut();
             case SERVICE_CONFIRMED:
                 return atStateServiceConfirmed();
             case SERVICE_ACKNOWLEDGED:
@@ -433,9 +433,9 @@ public class CaseDataBuilder {
         return this;
     }
 
-    public CaseDataBuilder atStateClaimStayed() {
-        atStateClaimCreated();
-        ccdState = STAYED;
+    public CaseDataBuilder atStateClaimStruckOut() {
+        atStateRespondedToClaim();
+        ccdState = CLAIM_STRUCK_OUT;
         return this;
     }
 

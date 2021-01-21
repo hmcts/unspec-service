@@ -6,9 +6,9 @@ import uk.gov.hmcts.reform.unspec.model.CaseData;
 import java.util.Objects;
 import java.util.function.Predicate;
 
+import static uk.gov.hmcts.reform.unspec.enums.CaseState.CLAIM_STRUCK_OUT;
 import static uk.gov.hmcts.reform.unspec.enums.CaseState.CLOSED;
 import static uk.gov.hmcts.reform.unspec.enums.CaseState.PROCEEDS_WITH_OFFLINE_JOURNEY;
-import static uk.gov.hmcts.reform.unspec.enums.CaseState.STAYED;
 import static uk.gov.hmcts.reform.unspec.enums.PaymentStatus.FAILED;
 import static uk.gov.hmcts.reform.unspec.enums.PaymentStatus.SUCCESS;
 
@@ -51,9 +51,6 @@ public class FlowPredicate {
         caseData.getApplicant1ProceedWithClaim() != null
             && caseData.getApplicant1DefenceResponseDocument() != null;
 
-    public static final Predicate<CaseData> schedulerStayClaim = caseData ->
-        caseData.getCcdState() == STAYED && caseData.getDeemedServiceDateToRespondentSolicitor1() == null;
-
     public static final Predicate<CaseData> claimWithdrawn = caseData ->
         caseData.getWithdrawClaim() != null
             && caseData.getCcdState() == CLOSED;
@@ -64,6 +61,9 @@ public class FlowPredicate {
 
     public static final Predicate<CaseData> claimTakenOffline = caseData ->
         caseData.getCcdState() == PROCEEDS_WITH_OFFLINE_JOURNEY;
+
+    public static final Predicate<CaseData> claimStruckOut = caseData ->
+        caseData.getCcdState() == CLAIM_STRUCK_OUT;
 
     private FlowPredicate() {
         //Utility class

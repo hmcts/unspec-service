@@ -26,7 +26,6 @@ public interface FlowState {
         PAYMENT_SUCCESSFUL,
         PAYMENT_FAILED,
         CLAIM_ISSUED,
-        CLAIM_STAYED,
         SERVICE_CONFIRMED,
         SERVICE_ACKNOWLEDGED,
         EXTENSION_REQUESTED,
@@ -35,7 +34,8 @@ public interface FlowState {
         FULL_DEFENCE,
         CLAIM_WITHDRAWN,
         CLAIM_DISCONTINUED,
-        PROCEEDS_WITH_OFFLINE_JOURNEY;
+        PROCEEDS_WITH_OFFLINE_JOURNEY,
+        CLAIM_STRUCK_OUT;
 
         public static final String FLOW_NAME = "MAIN";
 
