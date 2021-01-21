@@ -28,7 +28,7 @@ import static uk.gov.hmcts.reform.unspec.service.flowstate.FlowState.Main.EXTENS
 import static uk.gov.hmcts.reform.unspec.service.flowstate.FlowState.Main.FULL_DEFENCE;
 import static uk.gov.hmcts.reform.unspec.service.flowstate.FlowState.Main.PAYMENT_SUCCESSFUL;
 import static uk.gov.hmcts.reform.unspec.service.flowstate.FlowState.Main.PENDING_CASE_ISSUED;
-import static uk.gov.hmcts.reform.unspec.service.flowstate.FlowState.Main.PROCEEDS_WITH_OFFLINE_JOURNEY;
+import static uk.gov.hmcts.reform.unspec.service.flowstate.FlowState.Main.PROCEEDS_IN_HERITAGE_SYSTEM;
 import static uk.gov.hmcts.reform.unspec.service.flowstate.FlowState.Main.RESPONDED_TO_CLAIM;
 import static uk.gov.hmcts.reform.unspec.service.flowstate.FlowState.Main.SERVICE_ACKNOWLEDGED;
 import static uk.gov.hmcts.reform.unspec.service.flowstate.FlowState.Main.SERVICE_CONFIRMED;
@@ -74,12 +74,12 @@ class StateFlowEngineTest {
             assertThat(stateFlow.getState())
                 .extracting(State::getName)
                 .isNotNull()
-                .isEqualTo(PROCEEDS_WITH_OFFLINE_JOURNEY.fullName());
+                .isEqualTo(PROCEEDS_IN_HERITAGE_SYSTEM.fullName());
             assertThat(stateFlow.getStateHistory())
                 .hasSize(2)
                 .extracting(State::getName)
                 .containsExactly(
-                    DRAFT.fullName(), PROCEEDS_WITH_OFFLINE_JOURNEY.fullName());
+                    DRAFT.fullName(), PROCEEDS_IN_HERITAGE_SYSTEM.fullName());
         }
 
         @Test
@@ -263,14 +263,14 @@ class StateFlowEngineTest {
             assertThat(stateFlow.getState())
                 .extracting(State::getName)
                 .isNotNull()
-                .isEqualTo(PROCEEDS_WITH_OFFLINE_JOURNEY.fullName());
+                .isEqualTo(PROCEEDS_IN_HERITAGE_SYSTEM.fullName());
             assertThat(stateFlow.getStateHistory())
                 .hasSize(7)
                 .extracting(State::getName)
                 .containsExactly(
                     DRAFT.fullName(), PENDING_CASE_ISSUED.fullName(), PAYMENT_SUCCESSFUL.fullName(),
                     CLAIM_ISSUED.fullName(), SERVICE_CONFIRMED.fullName(), RESPONDED_TO_CLAIM.fullName(),
-                    PROCEEDS_WITH_OFFLINE_JOURNEY.fullName()
+                    PROCEEDS_IN_HERITAGE_SYSTEM.fullName()
                 );
         }
     }

@@ -52,7 +52,7 @@ import static uk.gov.hmcts.reform.unspec.callback.CallbackType.SUBMITTED;
 import static uk.gov.hmcts.reform.unspec.callback.CaseEvent.CREATE_CLAIM;
 import static uk.gov.hmcts.reform.unspec.enums.AllocatedTrack.MULTI_CLAIM;
 import static uk.gov.hmcts.reform.unspec.enums.CaseState.PENDING_CASE_ISSUED;
-import static uk.gov.hmcts.reform.unspec.enums.CaseState.PROCEEDS_WITH_OFFLINE_JOURNEY;
+import static uk.gov.hmcts.reform.unspec.enums.CaseState.PROCEEDS_IN_HERITAGE_SYSTEM;
 import static uk.gov.hmcts.reform.unspec.enums.YesOrNo.NO;
 import static uk.gov.hmcts.reform.unspec.handler.callback.user.CreateClaimCallbackHandler.CONFIRMATION_SUMMARY;
 import static uk.gov.hmcts.reform.unspec.helpers.DateFormatHelper.DATE_TIME_AT;
@@ -255,7 +255,7 @@ class CreateClaimCallbackHandlerTest extends BaseCallbackHandlerTest {
             void shouldSetStateAsProceedsWithOfflineJourney_whenRespondentIsNotRepresented() {
                 var response = (AboutToStartOrSubmitCallbackResponse) handler.handle(params);
 
-                assertThat(response.getState()).isEqualTo(PROCEEDS_WITH_OFFLINE_JOURNEY.toString());
+                assertThat(response.getState()).isEqualTo(PROCEEDS_IN_HERITAGE_SYSTEM.toString());
             }
         }
 

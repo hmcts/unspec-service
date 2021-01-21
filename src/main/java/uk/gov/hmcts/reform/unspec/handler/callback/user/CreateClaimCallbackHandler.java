@@ -141,7 +141,7 @@ public class CreateClaimCallbackHandler extends CallbackHandler {
     private String getState(CaseData updatedCaseData) {
         FlowState flowState = fromFullName(stateFlowEngine.evaluate(updatedCaseData).getState().getName());
         return String.valueOf(
-            flowState == PENDING_CASE_ISSUED ? CaseState.PENDING_CASE_ISSUED : CaseState.PROCEEDS_WITH_OFFLINE_JOURNEY
+            flowState == PENDING_CASE_ISSUED ? CaseState.PENDING_CASE_ISSUED : CaseState.PROCEEDS_IN_HERITAGE_SYSTEM
         );
     }
 

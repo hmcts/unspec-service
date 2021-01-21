@@ -44,11 +44,11 @@ import java.util.List;
 
 import static java.time.LocalDate.now;
 import static uk.gov.hmcts.reform.unspec.enums.AllocatedTrack.FAST_CLAIM;
-import static uk.gov.hmcts.reform.unspec.enums.CaseState.AWAITING_CLAIMANT_INTENTION;
+import static uk.gov.hmcts.reform.unspec.enums.CaseState.AWAITING_APPLICANT_INTENTION;
+import static uk.gov.hmcts.reform.unspec.enums.CaseState.CASE_ISSUED;
 import static uk.gov.hmcts.reform.unspec.enums.CaseState.CLOSED;
-import static uk.gov.hmcts.reform.unspec.enums.CaseState.CREATED;
 import static uk.gov.hmcts.reform.unspec.enums.CaseState.PENDING_CASE_ISSUED;
-import static uk.gov.hmcts.reform.unspec.enums.CaseState.PROCEEDS_WITH_OFFLINE_JOURNEY;
+import static uk.gov.hmcts.reform.unspec.enums.CaseState.PROCEEDS_IN_HERITAGE_SYSTEM;
 import static uk.gov.hmcts.reform.unspec.enums.CaseState.STAYED;
 import static uk.gov.hmcts.reform.unspec.enums.PaymentStatus.FAILED;
 import static uk.gov.hmcts.reform.unspec.enums.PaymentStatus.SUCCESS;
@@ -314,7 +314,7 @@ public class CaseDataBuilder {
                 return atStateClaimWithdrawn();
             case CLAIM_DISCONTINUED:
                 return atStateClaimDiscontinued();
-            case PROCEEDS_WITH_OFFLINE_JOURNEY:
+            case PROCEEDS_IN_HERITAGE_SYSTEM:
                 return atStateProceedsOffline();
             default:
                 throw new IllegalArgumentException("Invalid internal state: " + flowState);
@@ -429,7 +429,7 @@ public class CaseDataBuilder {
         atStatePaymentSuccessful();
         claimIssuedDate = CLAIM_ISSUED_DATE;
         confirmationOfServiceDeadline = claimIssuedDate.plusMonths(4).atTime(23, 59, 59);
-        ccdState = CREATED;
+        ccdState = CASE_ISSUED;
         return this;
     }
 
@@ -467,13 +467,13 @@ public class CaseDataBuilder {
             respondent1DQ();
         }
         applicantSolicitorResponseDeadlineToRespondentSolicitor1 = APPLICANT_RESPONSE_DEADLINE;
-        ccdState = AWAITING_CLAIMANT_INTENTION;
+        ccdState = AWAITING_APPLICANT_INTENTION;
         return this;
     }
 
     public CaseDataBuilder atStateProceedsOffline() {
         atStateRespondedToClaim();
-        ccdState = PROCEEDS_WITH_OFFLINE_JOURNEY;
+        ccdState = PROCEEDS_IN_HERITAGE_SYSTEM;
         return this;
     }
 

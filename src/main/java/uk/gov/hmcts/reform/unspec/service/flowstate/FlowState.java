@@ -35,7 +35,7 @@ public interface FlowState {
         FULL_DEFENCE,
         CLAIM_WITHDRAWN,
         CLAIM_DISCONTINUED,
-        PROCEEDS_WITH_OFFLINE_JOURNEY;
+        PROCEEDS_IN_HERITAGE_SYSTEM;
 
         public static final String FLOW_NAME = "MAIN";
 

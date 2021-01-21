@@ -2,10 +2,10 @@ package uk.gov.hmcts.reform.unspec.enums;
 
 public enum CaseState {
     PENDING_CASE_ISSUED,
-    CREATED,
+    CASE_ISSUED,
     STAYED,
-    AWAITING_CLAIMANT_INTENTION,
+    AWAITING_APPLICANT_INTENTION,
     CLOSED,
-    PROCEEDS_WITH_OFFLINE_JOURNEY
+    PROCEEDS_IN_HERITAGE_SYSTEM
 }
 

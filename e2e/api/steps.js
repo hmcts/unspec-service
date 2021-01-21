@@ -54,7 +54,7 @@ module.exports = {
     await apiRequest.startEvent(eventName);
     await validateEventPages(data.CREATE_CLAIM_RESPONDENT_LIP);
 
-    await assertSubmittedEvent('PROCEEDS_WITH_OFFLINE_JOURNEY', {
+    await assertSubmittedEvent('PROCEEDS_IN_HERITAGE_SYSTEM', {
       header: 'Your claim will now progress offline',
       body: 'You do not need to do anything'
     });
@@ -74,7 +74,7 @@ module.exports = {
     await assertCallbackError('Date', data[eventName].invalid.Date.tomorrow,
       'The date must not be in the future');
 
-    await assertSubmittedEvent('CREATED', {
+    await assertSubmittedEvent('CASE_ISSUED', {
       header: 'You\'ve confirmed service',
       body: 'Deemed date of service'
     });
@@ -92,7 +92,7 @@ module.exports = {
     await assertCallbackError('ConfirmDetails', data[eventName].invalid.ConfirmDetails.futureDateOfBirth,
       'The date entered cannot be in the future');
 
-    await assertSubmittedEvent('CREATED', {
+    await assertSubmittedEvent('CASE_ISSUED', {
       header: 'You\'ve acknowledged service',
       body: 'You need to respond before'
     });
@@ -112,7 +112,7 @@ module.exports = {
     await assertCallbackError('ProposeDeadline', data[eventName].invalid.ProposeDeadline.beforeCurrentDeadline,
       'The proposed deadline must be after the current deadline');
 
-    await assertSubmittedEvent('CREATED', {
+    await assertSubmittedEvent('CASE_ISSUED', {
       header: 'You asked for extra time to respond',
       body: 'You asked if you can respond before 4pm on'
     });
@@ -131,7 +131,7 @@ module.exports = {
     await assertCallbackError('Counter', data[eventName].invalid.Counter.beforeCurrentDeadline,
       'The proposed deadline must be after the current deadline');
 
-    await assertSubmittedEvent('CREATED', {
+    await assertSubmittedEvent('CASE_ISSUED', {
       header: 'You\'ve responded to the request for more time',
       body: 'The defendant must respond before 4pm on'
     });
@@ -153,7 +153,7 @@ module.exports = {
     await assertCallbackError('Hearing', data[eventName].invalid.Hearing.moreThanYear,
       'The date cannot be in the past and must not be more than a year in the future');
 
-    await assertSubmittedEvent('AWAITING_CLAIMANT_INTENTION', {
+    await assertSubmittedEvent('AWAITING_APPLICANT_INTENTION', {
       header: 'You\'ve submitted your response',
       body: 'We will let you know when they respond.'
     });

@@ -4,13 +4,13 @@
     "UserIDAMId": "solicitor@example.com",
     "WorkBasketDefaultJurisdiction": "CIVIL",
     "WorkBasketDefaultCaseType": "UNSPECIFIED_CLAIMS",
-    "WorkBasketDefaultState": "CREATED"
+    "WorkBasketDefaultState": "CASE_ISSUED"
   },
   {
     "LiveFrom": "01/01/2017",
     "UserIDAMId": "claimantsolicitor@gmail.com",
     "WorkBasketDefaultJurisdiction": "CIVIL",
     "WorkBasketDefaultCaseType": "UNSPECIFIED_CLAIMS",
-    "WorkBasketDefaultState": "CREATED"
+    "WorkBasketDefaultState": "CASE_ISSUED"
   }
 ]
