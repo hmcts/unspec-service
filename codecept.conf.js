@@ -10,7 +10,7 @@ exports.config = {
       show: process.env.SHOW_BROWSER_WINDOW || false,
       windowSize: '1200x900',
       waitForTimeout: 40000,
-      waitForNavigation: [ "domcontentloaded", "networkidle0" ],
+      waitForNavigation: [ 'domcontentloaded', 'networkidle0' ],
       chrome: {
         ignoreHTTPSErrors: true,
         args: process.env.PROXY_SERVER ? [`--proxy-server=${process.env.PROXY_SERVER}`,] : [],
