@@ -25,10 +25,18 @@ import static java.lang.String.format;
 @Service
 public class JsonSchemaValidationService {
 
-    private static final String JSON_SCHEMA_FILE = "/schema/rpa-json-schema.json";
+    private String jsonSchemaFile;
+
+    public JsonSchemaValidationService() {
+        this.jsonSchemaFile = "/schema/rpa-json-schema.json";
+    }
+
+    public JsonSchemaValidationService(String jsonSchemaFile) {
+        this.jsonSchemaFile = jsonSchemaFile;
+    }
 
     public boolean isValid(String body) {
-        return isValid(body, JSON_SCHEMA_FILE);
+        return isValid(body, jsonSchemaFile);
     }
 
     public boolean isValid(String body, String jsonSchemaFileName) {
@@ -41,7 +49,7 @@ public class JsonSchemaValidationService {
     }
 
     public Set<ValidationMessage> validate(String payload) {
-        return validate(payload, JSON_SCHEMA_FILE);
+        return validate(payload, jsonSchemaFile);
     }
 
     public Set<ValidationMessage> validate(String body, String jsonSchemaFileName) {
@@ -72,6 +80,6 @@ public class JsonSchemaValidationService {
     }
 
     public String getJsonSchemaFile() {
-        return JSON_SCHEMA_FILE;
+        return jsonSchemaFile;
     }
 }
