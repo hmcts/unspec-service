@@ -7,6 +7,7 @@ import uk.gov.hmcts.reform.unspec.model.search.Query;
 import java.util.List;
 
 import static org.elasticsearch.index.query.QueryBuilders.boolQuery;
+import static org.elasticsearch.index.query.QueryBuilders.matchQuery;
 import static org.elasticsearch.index.query.QueryBuilders.rangeQuery;
 
 class CaseStrikeoutSearchServiceTest extends ElasticSearchServiceTest {
@@ -19,7 +20,10 @@ class CaseStrikeoutSearchServiceTest extends ElasticSearchServiceTest {
     @Override
     protected Query buildQuery(int fromValue) {
         BoolQueryBuilder query = boolQuery()
-            .must(rangeQuery("data.applicantSolicitorSecondResponseDeadlineToRespondentSolicitor1").lt("now"));
+            .must(rangeQuery("data.applicantSolicitor1ClaimStrikeOutDeadlineToRespondentSolicitor1").lt("now"))
+            .must(boolQuery()
+                      .minimumShouldMatch(1)
+                      .should(matchQuery("state", "AWAITING_CLAIMANT_INTENTION")));
 
         return new Query(query, List.of("reference"), fromValue);
     }

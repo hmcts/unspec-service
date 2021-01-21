@@ -126,4 +126,7 @@ public class CaseData {
 
     //CCD UI flag
     private final YesOrNo applicantSolicitor1PbaAccountsIsEmpty;
+
+    //TODO: field is currently not set anywhere
+    private final LocalDate applicantSolicitor1ClaimStrikeOutDeadlineToRespondentSolicitor1;
 }
