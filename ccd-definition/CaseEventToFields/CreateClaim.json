@@ -155,7 +155,7 @@
     "CaseEventID": "CREATE_CLAIM",
     "CaseFieldID": "servedDocumentFiles",
     "PageFieldDisplayOrder": 1,
-    "DisplayContext": "COMPLEX",
+    "DisplayContext": "MANDATORY",
     "PageID": "Upload",
     "PageDisplayOrder": 10,
     "PageColumnNumber": 1,
