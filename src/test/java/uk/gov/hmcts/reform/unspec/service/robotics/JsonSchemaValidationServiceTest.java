@@ -7,6 +7,7 @@ import org.junit.jupiter.params.provider.CsvSource;
 import uk.gov.hmcts.reform.unspec.service.robotics.exception.JsonSchemaValidationException;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -75,6 +76,35 @@ class JsonSchemaValidationServiceTest {
             var errors = validationService.validate(payload);
 
             assertThat(errors).isEmpty();
+        }
+
+        @Test
+        void shouldThrowJsonSchemaValidationException_whenJsonSchemaFileDoesNotExist() {
+            Exception exception = assertThrows(
+                JsonSchemaValidationException.class,
+                () -> validationService
+                    .validate("{}", "not-a-file")
+            );
+            String expectedMessage = "no file found with the link 'not-a-file'";
+            String actualMessage = exception.getMessage();
+
+            assertEquals(expectedMessage, actualMessage);
+        }
+    }
+
+    @Nested
+    class GetJsonSchemaFile {
+
+        @Test
+        void shouldReturnDefaultSchemaFile_whenInvoked() {
+            assertThat(validationService.getJsonSchemaFile())
+                .isEqualTo("/sample-json-schema.json");
+        }
+
+        @Test
+        void shouldReturnSchemaFile_whenInvoked() {
+            assertThat(new JsonSchemaValidationService("/another-schema-file.json").getJsonSchemaFile())
+                .isEqualTo("/another-schema-file.json");
         }
     }
 }

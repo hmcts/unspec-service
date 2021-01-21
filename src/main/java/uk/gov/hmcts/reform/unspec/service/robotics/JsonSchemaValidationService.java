@@ -71,7 +71,7 @@ public class JsonSchemaValidationService {
             URL resource = getClass().getResource(input);
             URI url = resource.toURI();
             return Files.readString(Paths.get(url));
-        } catch (NoSuchFileException e) {
+        } catch (NoSuchFileException | NullPointerException e) {
             throw new JsonSchemaValidationException(format("no file found with the link '%s'", input), e);
         } catch (IOException | URISyntaxException e) {
             throw new JsonSchemaValidationException(format("failed to read from file '%s'", input), e);
