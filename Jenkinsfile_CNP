@@ -132,8 +132,9 @@ withPipeline(type, product, component) {
       sh """
     eval \$(./variables/load-preview-environment-variables.sh ${CHANGE_ID})
     ./import-bpmn-diagram.sh ${WORKSPACE}
-    az login
+    az login --identity
     az acr login --name hmctssandbox
+    env > myvars
   """
     }
   }
