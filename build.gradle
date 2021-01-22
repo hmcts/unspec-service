@@ -195,7 +195,7 @@ task runFunctionalTests(type: Exec, description: 'Runs functional tests.') {
       return skipTestsEnvironmentVariable == null || skipTestsEnvironmentVariable == 'false'
     }
   })
-  commandLine 'docker', 'run', '-v', "${System.getProperty('user.dir')}/output:/opt/app/output", '--env-file', 'myvars', 'hmctssandbox.azurecr.io/unspec/e2e-unspec:latest', 'test:functional'
+  commandLine 'docker', 'run', '-v', "${System.getProperty('user.dir')}/output:/opt/app/output", '-e', 'IDAM_API_URL', '-e', 'SERVICE_AUTH_PROVIDER_API_BASE_URL', '-e', 'CCD_DATA_STORE_URL', '-e', 'DM_STORE_URL', '-e', 'UNSPEC_SERVICE_URL', '-e', 'S2S_SECRET', 'hmctssandbox.azurecr.io/unspec/e2e-unspec:latest', 'test:functional'
 }
 
 def inStrictOrder(Task... tasks) {
