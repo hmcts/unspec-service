@@ -72,7 +72,7 @@ class JsonSchemaValidationServiceTest {
 
         @Test
         void shouldReturnNoErrors_whenPayloadIsValidJson() {
-            String payload = "{\"firstName\": \"Joe\",\"lastName\": \"Root\",\"age\": 10}";
+            String payload = "{\"name\": \"Joe\",\"age\": 10}";
             var errors = validationService.validate(payload);
 
             assertThat(errors).isEmpty();
