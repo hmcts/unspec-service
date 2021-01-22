@@ -7,9 +7,6 @@ RUN addgroup -S app && adduser -S -G app app
 RUN mkdir -p /opt/app/output
 RUN mkdir -p /opt/app/test-results
 
-RUN chown app /opt/app/output
-RUN chown app /opt/app/test-results
-
 COPY e2e /opt/app/e2e
 COPY codecept.conf.js /opt/app
 COPY package.json /opt/app
@@ -22,6 +19,9 @@ ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD true
 ENV PUPPETEER_EXECUTABLE_PATH /usr/bin/chromium-browser
 
 RUN yarn install --frozen-lockfile
+
+RUN chown -R app /opt/app/output
+RUN chown -R app /opt/app/test-results
 
 USER app
 

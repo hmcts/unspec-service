@@ -1,27 +1,12 @@
-.dependabot
-.github
-.gradle
-.idea
-bin
-ccd-definition
-charts
-civil-unspecified-docker
-config
-docker
-functional-output
-gradle
-infrastructure
-node_modules
-output
-sendgrid-client
-src
-target
+*
 
-### IntelliJ IDEA ###
-.idea
-/out
-*.iws
-*.iml
-*.ipr
+### Allow for unspec-service Dockerfile
+!build/libs/unspec-service.jar
+!lib/AI-Agent.xml
 
-.DS_Store
+### Allow for E2E Dockerfile
+!e2e
+!codecept.conf.js
+!package.json
+!steps.d.ts
+!yarn.lock
