@@ -236,7 +236,7 @@ class StateFlowEngineTest {
         }
 
         @Test
-        void shouldReturnClaimantRespond_whenCaseDataAtStateFullDefence() {
+        void shouldReturnProceedsWithOfflineJourney_whenCaseDataAtStateFullDefence() {
             CaseData caseData = CaseDataBuilder.builder().atStateFullDefence().build();
 
             StateFlow stateFlow = stateFlowEngine.evaluate(caseData);

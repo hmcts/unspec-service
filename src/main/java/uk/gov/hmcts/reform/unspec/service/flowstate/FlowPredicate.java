@@ -60,7 +60,8 @@ public class FlowPredicate {
             && caseData.getCcdState() == CLOSED;
 
     public static final Predicate<CaseData> claimTakenOffline = caseData ->
-        caseData.getCcdState() == PROCEEDS_WITH_OFFLINE_JOURNEY;
+        caseData.getCcdState() == PROCEEDS_WITH_OFFLINE_JOURNEY
+            && caseData.getApplicant1ProceedWithClaim() == null;
 
     public static final Predicate<CaseData> claimStruckOut = caseData ->
         caseData.getCcdState() == CLAIM_STRUCK_OUT;
