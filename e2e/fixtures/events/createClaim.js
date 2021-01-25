@@ -36,7 +36,7 @@ const createClaimData = legalRepresentation => {
         OrgPolicyReference : 'sdfsdfsdf',
         OrgPolicyCaseAssignedRole : '[APPLICANTSOLICITORONE]',
         Organisation : {
-          OrganisationID : '62LYJRF'
+          OrganisationID : 'M9VLW61'
         }
       }
     },
@@ -58,7 +58,7 @@ const createClaimData = legalRepresentation => {
         OrgPolicyReference : 'sdfsdfsdf',
         OrgPolicyCaseAssignedRole : '[RESPONDENTSOLICITORONE]',
         Organisation : {
-          OrganisationID : '62LYJRF'
+          OrganisationID : 'N5AFUXG'
         }
       }
     },

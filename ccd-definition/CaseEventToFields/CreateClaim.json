@@ -82,10 +82,10 @@
     "PageFieldDisplayOrder": 1,
     "DisplayContext": "COMPLEX",
     "PageID": "ClaimantSolicitorOrganisation",
-    "PageLabel": "Enter your organisation details",
+    "PageLabel": "Search for your organisation",
     "PageDisplayOrder": 6,
     "PageColumnNumber": 1,
-    "ShowSummaryChangeOption": "N"
+    "ShowSummaryChangeOption": "Y"
   },
   {
     "LiveFrom": "01/01/2017",
@@ -119,10 +119,10 @@
     "PageFieldDisplayOrder": 1,
     "DisplayContext": "COMPLEX",
     "PageID": "DefendantSolicitorOrganisation",
-    "PageLabel": "Enter Defendant Solicitor organisation details",
+    "PageLabel": "Search for the legal representative’s organisation",
     "PageDisplayOrder": 9,
     "PageColumnNumber": 1,
-    "ShowSummaryChangeOption": "N",
+    "ShowSummaryChangeOption": "Y",
     "PageShowCondition": "respondent1Represented = \"Yes\""
   },
   {

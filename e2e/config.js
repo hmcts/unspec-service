@@ -22,11 +22,11 @@ module.exports = {
   },
   solicitorUser: {
     password: defaultPassword,
-    email: 'claimantsolicitor@gmail.com'
+    email: 'civil.damages.claims+organisation.1.solicitor.1@gmail.com'
   },
   defendantSolicitorUser: {
     password: defaultPassword,
-    email: 'defendantsolicitor@gmail.com'
+    email: 'civil.damages.claims+organisation.2.solicitor.1@gmail.com'
   },
   definition: {
     jurisdiction: 'CIVIL',
