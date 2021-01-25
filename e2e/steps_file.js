@@ -99,10 +99,10 @@ module.exports = function () {
       await chooseCourtPage.enterCourt();
       await party.enterParty('applicant1', address);
       await claimantLitigationDetails.enterLitigantFriendWithDifferentAddressToApplicant(address, TEST_FILE_PATH);
-      await claimantSolicitorOrganisation.enterOrganisationDetails()
+      await claimantSolicitorOrganisation.enterOrganisationDetails();
       await party.enterParty('respondent1', address);
       await respondentRepresentedPage.enterRespondentRepresented();
-      await defendantSolicitorOrganisation.enterOrganisationDetails()
+      await defendantSolicitorOrganisation.enterOrganisationDetails();
       await claimTypePage.selectClaimType();
       await personalInjuryTypePage.selectPersonalInjuryType();
       await uploadParticularsOfClaim.upload(TEST_FILE_PATH);
