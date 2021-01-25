@@ -235,7 +235,7 @@
     "PageFieldDisplayOrder": 3,
     "DisplayContext": "MANDATORY",
     "PageID": "PbaNumber",
-    "PageDisplayOrder": 15,
+    "PageDisplayOrder": 14,
     "PageColumnNumber": 1,
     "ShowSummaryChangeOption": "Y"
   },
@@ -247,7 +247,7 @@
     "PageFieldDisplayOrder": 4,
     "DisplayContext": "READONLY",
     "PageID": "PbaNumber",
-    "PageDisplayOrder": 15,
+    "PageDisplayOrder": 14,
     "PageColumnNumber": 1,
     "ShowSummaryChangeOption": "Y",
     "FieldShowCondition": "applicantSolicitor1PbaAccountsIsEmpty = \"No\""
@@ -260,7 +260,7 @@
     "PageFieldDisplayOrder": 5,
     "DisplayContext": "READONLY",
     "PageID": "PbaNumber",
-    "PageDisplayOrder": 15,
+    "PageDisplayOrder": 14,
     "PageColumnNumber": 1,
     "ShowSummaryChangeOption": "Y",
     "FieldShowCondition": "applicantSolicitor1PbaAccountsIsEmpty = \"Yes\""
@@ -273,7 +273,7 @@
     "PageFieldDisplayOrder": 1,
     "DisplayContext": "MANDATORY",
     "PageID": "PaymentReference",
-    "PageDisplayOrder": 13,
+    "PageDisplayOrder": 15,
     "PageColumnNumber": 1,
     "ShowSummaryChangeOption": "Y"
   },
@@ -285,7 +285,7 @@
     "PageFieldDisplayOrder": 1,
     "DisplayContext": "COMPLEX",
     "PageID": "StatementOfTruth",
-    "PageDisplayOrder": 17,
+    "PageDisplayOrder": 16,
     "PageColumnNumber": 1,
     "ShowSummaryChangeOption": "Y"
   }

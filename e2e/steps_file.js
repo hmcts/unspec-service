@@ -8,6 +8,8 @@ const loginPage = require('./pages/login.page');
 const caseViewPage = require('./pages/caseView.page');
 const createCasePage = require('./pages/createClaim/createCase.page');
 const solicitorReferencesPage = require('./pages/createClaim/solicitorReferences.page');
+const claimantSolicitorOrganisation = require('./pages/createClaim/claimantSolicitorOrganisation.page');
+const defendantSolicitorOrganisation = require('./pages/createClaim/defendantSolicitorOrganisation.page');
 const chooseCourtPage = require('./pages/createClaim/chooseCourt.page');
 const claimantLitigationDetails = require('./pages/createClaim/claimantLitigationDetails.page');
 const claimTypePage = require('./pages/createClaim/claimType.page');
@@ -17,12 +19,6 @@ const uploadParticularsOfClaim = require('./pages/createClaim/uploadParticularsO
 const claimValuePage = require('./pages/createClaim/claimValue.page');
 const pbaNumberPage = require('./pages/createClaim/pbaNumber.page');
 const paymentReferencePage = require('./pages/createClaim/paymentReference.page');
-
-const servedDocumentsPage = require('./pages/confirmService/servedDocuments.page');
-const uploadDocumentsPage = require('./pages/confirmService/uploadDocuments.page');
-const serviceMethodPage = require('./pages/confirmService/serviceMethod.page');
-const serviceLocationPage = require('./pages/confirmService/serviceLocation.page');
-const serviceDatePage = require('./pages/confirmService/serviceDate.page');
 
 const responseIntentionPage = require('./pages/acknowledgeSerivce/responseIntention.page');
 
@@ -103,8 +99,10 @@ module.exports = function () {
       await chooseCourtPage.enterCourt();
       await party.enterParty('applicant1', address);
       await claimantLitigationDetails.enterLitigantFriendWithDifferentAddressToApplicant(address, TEST_FILE_PATH);
+      await claimantSolicitorOrganisation.enterOrganisationDetails()
       await party.enterParty('respondent1', address);
       await respondentRepresentedPage.enterRespondentRepresented();
+      await defendantSolicitorOrganisation.enterOrganisationDetails()
       await claimTypePage.selectClaimType();
       await personalInjuryTypePage.selectPersonalInjuryType();
       await uploadParticularsOfClaim.upload(TEST_FILE_PATH);
@@ -116,18 +114,6 @@ module.exports = function () {
       await event.returnToCaseDetails();
 
       caseId = (await this.grabCaseNumber()).split('-').join('').substring(1);
-    },
-
-    async confirmService() {
-      await caseViewPage.startEvent('Confirm service', caseId);
-      await servedDocumentsPage.enterServedDocuments();
-      await uploadDocumentsPage.uploadServedDocuments(TEST_FILE_PATH);
-      await serviceMethodPage.selectPostMethod();
-      await serviceLocationPage.selectUsualResidence();
-      await serviceDatePage.enterServiceDate();
-      await statementOfTruth.enterNameAndRole('service');
-      await event.submit('Confirm service', 'You\'ve confirmed service');
-      await event.returnToCaseDetails();
     },
 
     async acknowledgeService() {
