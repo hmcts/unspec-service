@@ -20,6 +20,7 @@ const data = {
   DEFENDANT_RESPONSE: require('../fixtures/events/defendantResponse.js'),
   CLAIMANT_RESPONSE: require('../fixtures/events/claimantResponse.js'),
   ADD_DEFENDANT_LITIGATION_FRIEND: require('../fixtures/events/addDefendantLitigationFriend.js'),
+  CASE_PROCEEDS_IN_CASEMAN: require('../fixtures/events/addDefendantLitigationFriend.js'),
 };
 
 const midEventFieldForPage = {
@@ -35,6 +36,8 @@ let caseData = {};
 module.exports = {
   createClaimWithRepresentedRespondent: async (user) => {
     eventName = 'CREATE_CLAIM';
+    caseId = null;
+    caseData = {};
     await apiRequest.setupTokens(user);
     await apiRequest.startEvent(eventName);
     await validateEventPages(data.CREATE_CLAIM);
@@ -165,6 +168,18 @@ module.exports = {
     caseData = returnedCaseData;
 
     await validateEventPages(data.ADD_DEFENDANT_LITIGATION_FRIEND);
+  },
+
+  caseProceedsInCaseman: async () => {
+    eventName = 'CASE_PROCEEDS_IN_CASEMAN';
+    let returnedCaseData = await apiRequest.startEvent(eventName, caseId);
+    assertContainsPopulatedFields(returnedCaseData);
+    caseData = returnedCaseData;
+
+    await validateEventPages(data.ADD_DEFENDANT_LITIGATION_FRIEND);
+
+    await assertCallbackError('CaseProceedsInCaseman', data[eventName].invalid.CaseProceedsInCaseman.claimProceedsInCaseman,
+      'The date entered cannot be in the future');
   }
 };
 
