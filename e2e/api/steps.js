@@ -10,6 +10,7 @@ const { expect } = chai;
 const {waitForFinishedBusinessProcess} = require('../api/testingSupport');
 const apiRequest = require('./apiRequest.js');
 const claimData = require('../fixtures/events/createClaim.js');
+const expectedEvents =  require('../fixtures/expectedEvents.js');
 
 const data = {
   CREATE_CLAIM: claimData.createClaim,
@@ -43,6 +44,10 @@ module.exports = {
       header: 'Your claim has been issued',
       body: 'Follow these steps to serve a claim'
     });
+
+    const caseForDisplay = await apiRequest.fetchCaseForDisplay(caseId);
+
+    expect(caseForDisplay.triggers).to.deep.equalInAnyOrder(expectedEvents.CREATED);
   },
 
   createClaimWithRespondentLitigantInPerson: async (user) => {

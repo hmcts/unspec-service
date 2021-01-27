@@ -7,6 +7,7 @@ const {waitForFinishedBusinessProcess} = require('./testingSupport');
 
 const tokens = {};
 const getCcdDataStoreBaseUrl = () => `${config.url.ccdDataStore}/caseworkers/${tokens.userId}/jurisdictions/${config.definition.jurisdiction}/case-types/${config.definition.caseType}`;
+const getCcdCaseUrl = () => `${config.url.ccdDataStore}/aggregated/caseworkers/${tokens.userId}/jurisdictions/${config.definition.jurisdiction}/case-types/${config.definition.caseType}/cases/`;
 const getRequestHeaders = () => {
   return {
     'Content-Type': 'application/json',
@@ -27,6 +28,13 @@ module.exports = {
         oneTimePassword: totp(config.s2s.secret)
       })
       .then(response => response.text());
+  },
+
+  fetchCaseForDisplay: async(caseId) => {
+    let url = getCcdCaseUrl() + `${caseId}`;
+
+    return await restHelper.retriedRequest(url, getRequestHeaders(), null, 'GET')
+      .then(response => response.json());
   },
 
   startEvent: async (eventName, caseId) => {
