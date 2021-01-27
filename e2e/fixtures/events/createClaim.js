@@ -36,7 +36,7 @@ const createClaimData = legalRepresentation => {
         OrgPolicyReference : 'Claimant policy reference',
         OrgPolicyCaseAssignedRole : '[APPLICANTSOLICITORONE]',
         Organisation : {
-          OrganisationID : 'M9VLW61'
+          OrganisationID : '0FA7S8S'
         }
       }
     },
