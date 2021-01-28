@@ -8,7 +8,7 @@ chai.use(deepEqualInAnyOrder);
 
 const { expect } = chai;
 
-const {waitForFinishedBusinessProcess} = require('../api/testingSupport');
+const {waitForFinishedBusinessProcess, assignCaseToDefendant} = require('../api/testingSupport');
 const apiRequest = require('./apiRequest.js');
 const claimData = require('../fixtures/events/createClaim.js');
 const expectedEvents =  require('../fixtures/ccd/expectedEvents.js');
@@ -45,8 +45,10 @@ module.exports = {
       header: 'Your claim has been issued',
       body: 'Follow these steps to serve a claim'
     });
+    await assignCaseToDefendant(caseId);
 
     await assertCorrectEventsAreAvailableToUser(config.solicitorUser, 'CREATED');
+    await assertCorrectEventsAreAvailableToUser(config.defendantSolicitorUser, 'CREATED');
   },
 
   createClaimWithRespondentLitigantInPerson: async (user) => {
@@ -62,8 +64,10 @@ module.exports = {
       body: 'You do not need to do anything'
     });
 
-    await assertCorrectEventsAreAvailableToUser(config.solicitorUser, 'PROCEEDS_WITH_OFFLINE_JOURNEY');
+    await assignCaseToDefendant(caseId);
 
+    await assertCorrectEventsAreAvailableToUser(config.solicitorUser, 'PROCEEDS_WITH_OFFLINE_JOURNEY');
+    await assertCorrectEventsAreAvailableToUser(config.defendantSolicitorUser, 'PROCEEDS_WITH_OFFLINE_JOURNEY');
   },
 
   acknowledgeService: async () => {
@@ -84,6 +88,7 @@ module.exports = {
     });
 
     await assertCorrectEventsAreAvailableToUser(config.solicitorUser, 'CREATED');
+    await assertCorrectEventsAreAvailableToUser(config.defendantSolicitorUser, 'CREATED');
   },
 
   requestExtension: async () => {
@@ -106,6 +111,7 @@ module.exports = {
     });
 
     await assertCorrectEventsAreAvailableToUser(config.solicitorUser, 'CREATED');
+    await assertCorrectEventsAreAvailableToUser(config.defendantSolicitorUser, 'CREATED');
   },
 
   respondExtension: async () => {
@@ -127,6 +133,7 @@ module.exports = {
     });
 
     await assertCorrectEventsAreAvailableToUser(config.solicitorUser, 'CREATED');
+    await assertCorrectEventsAreAvailableToUser(config.defendantSolicitorUser, 'CREATED');
   },
 
   defendantResponse: async () => {
@@ -151,6 +158,7 @@ module.exports = {
     });
 
     await assertCorrectEventsAreAvailableToUser(config.solicitorUser, 'AWAITING_CLAIMANT_INTENTION');
+    await assertCorrectEventsAreAvailableToUser(config.defendantSolicitorUser, 'AWAITING_CLAIMANT_INTENTION');
 
   },
 
@@ -174,8 +182,10 @@ module.exports = {
     await waitForFinishedBusinessProcess(caseId);
 
     await assertCorrectEventsAreAvailableToUser(config.solicitorUser, 'PROCEEDS_WITH_OFFLINE_JOURNEY');
+    await assertCorrectEventsAreAvailableToUser(config.defendantSolicitorUser, 'PROCEEDS_WITH_OFFLINE_JOURNEY');
   },
 
+  //TODO this method is not used in api tests
   addDefendantLitigationFriend: async () => {
     eventName = 'ADD_DEFENDANT_LITIGATION_FRIEND';
     let returnedCaseData = await apiRequest.startEvent(eventName, caseId);
