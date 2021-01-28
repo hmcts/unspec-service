@@ -7,11 +7,11 @@ const {waitForFinishedBusinessProcess} = require('./testingSupport');
 
 const tokens = {};
 const getCcdDataStoreBaseUrl = () => `${config.url.ccdDataStore}/caseworkers/${tokens.userId}/jurisdictions/${config.definition.jurisdiction}/case-types/${config.definition.caseType}`;
-const getCcdCaseUrl = () => `${config.url.ccdDataStore}/aggregated/caseworkers/${tokens.userId}/jurisdictions/${config.definition.jurisdiction}/case-types/${config.definition.caseType}/cases/`;
-const getRequestHeaders = () => {
+const getCcdCaseUrl = (userId, caseId) => `${config.url.ccdDataStore}/aggregated/caseworkers/${userId}/jurisdictions/${config.definition.jurisdiction}/case-types/${config.definition.caseType}/cases/${caseId}`;
+const getRequestHeaders = (userAuth) => {
   return {
     'Content-Type': 'application/json',
-    'Authorization': `Bearer ${tokens.userAuth}`,
+    'Authorization': `Bearer ${userAuth}`,
     'ServiceAuthorization': tokens.s2sAuth
   };
 };
@@ -30,10 +30,12 @@ module.exports = {
       .then(response => response.text());
   },
 
-  fetchCaseForDisplay: async(caseId) => {
-    let url = getCcdCaseUrl() + `${caseId}`;
+  fetchCaseForDisplay: async(user, caseId) => {
+    let eventUserAuth = await idamHelper.accessToken(user);
+    let eventUserId = await idamHelper.userId(eventUserAuth);
+    let url = getCcdCaseUrl(eventUserId, caseId);
 
-    return await restHelper.retriedRequest(url, getRequestHeaders(), null, 'GET')
+    return await restHelper.retriedRequest(url, getRequestHeaders(eventUserId), null, 'GET')
       .then(response => response.json());
   },
 
@@ -45,14 +47,14 @@ module.exports = {
     }
     url += `/event-triggers/${eventName}/token`;
 
-    let response = await restHelper.retriedRequest(url, getRequestHeaders(), null, 'GET')
+    let response = await restHelper.retriedRequest(url, getRequestHeaders(tokens.userAuth), null, 'GET')
       .then(response => response.json());
     tokens.ccdEvent = response.token;
     return response.case_details.case_data || {};
   },
 
   validatePage: async (eventName, pageId, caseData, expectedStatus = 200) => {
-    return restHelper.retriedRequest(`${getCcdDataStoreBaseUrl()}/validate?pageId=${eventName}${pageId}`, getRequestHeaders(),
+    return restHelper.retriedRequest(`${getCcdDataStoreBaseUrl()}/validate?pageId=${eventName}${pageId}`, getRequestHeaders(tokens.userAuth),
       {
         data: caseData,
         event: {id: eventName},
@@ -67,7 +69,7 @@ module.exports = {
       url += `/${caseId}/events`;
     }
 
-    return restHelper.retriedRequest(url, getRequestHeaders(),
+    return restHelper.retriedRequest(url, getRequestHeaders(tokens.userAuth),
       {
         data: caseData,
         event: {id: eventName},

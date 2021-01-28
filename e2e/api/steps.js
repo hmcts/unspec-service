@@ -1,4 +1,5 @@
 const assert = require('assert').strict;
+const config = require('../config.js');
 
 const deepEqualInAnyOrder = require('deep-equal-in-any-order');
 const chai = require('chai');
@@ -10,7 +11,7 @@ const { expect } = chai;
 const {waitForFinishedBusinessProcess} = require('../api/testingSupport');
 const apiRequest = require('./apiRequest.js');
 const claimData = require('../fixtures/events/createClaim.js');
-const expectedEvents =  require('../fixtures/expectedEvents.js');
+const expectedEvents =  require('../fixtures/ccd/expectedEvents.js');
 
 const data = {
   CREATE_CLAIM: claimData.createClaim,
@@ -45,9 +46,7 @@ module.exports = {
       body: 'Follow these steps to serve a claim'
     });
 
-    const caseForDisplay = await apiRequest.fetchCaseForDisplay(caseId);
-
-    expect(caseForDisplay.triggers).to.deep.equalInAnyOrder(expectedEvents.CREATED);
+    await assertCorrectEventsAreAvailableToUser(config.solicitorUser, 'CREATED');
   },
 
   createClaimWithRespondentLitigantInPerson: async (user) => {
@@ -62,6 +61,9 @@ module.exports = {
       header: 'Your claim will now progress offline',
       body: 'You do not need to do anything'
     });
+
+    await assertCorrectEventsAreAvailableToUser(config.solicitorUser, 'PROCEEDS_WITH_OFFLINE_JOURNEY');
+
   },
 
   acknowledgeService: async () => {
@@ -80,6 +82,8 @@ module.exports = {
       header: 'You\'ve acknowledged service',
       body: 'You need to respond before'
     });
+
+    await assertCorrectEventsAreAvailableToUser(config.solicitorUser, 'CREATED');
   },
 
   requestExtension: async () => {
@@ -100,6 +104,8 @@ module.exports = {
       header: 'You asked for extra time to respond',
       body: 'You asked if you can respond before 4pm on'
     });
+
+    await assertCorrectEventsAreAvailableToUser(config.solicitorUser, 'CREATED');
   },
 
   respondExtension: async () => {
@@ -119,6 +125,8 @@ module.exports = {
       header: 'You\'ve responded to the request for more time',
       body: 'The defendant must respond before 4pm on'
     });
+
+    await assertCorrectEventsAreAvailableToUser(config.solicitorUser, 'CREATED');
   },
 
   defendantResponse: async () => {
@@ -141,6 +149,9 @@ module.exports = {
       header: 'You\'ve submitted your response',
       body: 'We will let you know when they respond.'
     });
+
+    await assertCorrectEventsAreAvailableToUser(config.solicitorUser, 'AWAITING_CLAIMANT_INTENTION');
+
   },
 
   claimantResponse: async () => {
@@ -161,6 +172,8 @@ module.exports = {
       body: 'We\'ll review the case. We\'ll contact you to tell you what to do next.'
     });
     await waitForFinishedBusinessProcess(caseId);
+
+    await assertCorrectEventsAreAvailableToUser(config.solicitorUser, 'PROCEEDS_WITH_OFFLINE_JOURNEY');
   },
 
   addDefendantLitigationFriend: async () => {
@@ -236,6 +249,11 @@ const deleteCaseFields = (...caseFields) => {
   caseFields.forEach(caseField => delete caseData[caseField]);
 };
 
+const assertCorrectEventsAreAvailableToUser = async (user, state) => {
+  const caseForDisplay = await apiRequest.fetchCaseForDisplay(user, caseId);
+  expect(caseForDisplay.triggers).to.deep.equalInAnyOrder(expectedEvents[state]);
+};
+
 function addMidEventFields(pageId, responseBody) {
   const midEventData = data[eventName].midEventData[pageId];
   const midEventField = midEventFieldForPage[pageId];
@@ -260,4 +278,3 @@ function removeUuidsFromDynamicList(data, dynamicListField) {
   // eslint-disable-next-line no-unused-vars
   return dynamicElements.map(({code, ...item}) => item);
 }
-
