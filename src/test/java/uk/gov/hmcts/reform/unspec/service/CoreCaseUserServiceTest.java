@@ -22,7 +22,6 @@ import uk.gov.hmcts.reform.unspec.enums.CaseRole;
 import java.util.List;
 import java.util.Optional;
 
-import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.clearInvocations;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -94,9 +93,9 @@ class CoreCaseUserServiceTest {
                 .build();
 
             verify(caseAccessDataStoreApi).addCaseUserRoles(
-                eq(USER_AUTH_TOKEN),
-                eq(SERVICE_AUTH_TOKEN),
-                eq(addCaseAssignedUserRolesRequest)
+                USER_AUTH_TOKEN,
+                SERVICE_AUTH_TOKEN,
+                addCaseAssignedUserRolesRequest
             );
         }
 
