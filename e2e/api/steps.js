@@ -20,7 +20,7 @@ const data = {
   DEFENDANT_RESPONSE: require('../fixtures/events/defendantResponse.js'),
   CLAIMANT_RESPONSE: require('../fixtures/events/claimantResponse.js'),
   ADD_DEFENDANT_LITIGATION_FRIEND: require('../fixtures/events/addDefendantLitigationFriend.js'),
-  CASE_PROCEEDS_IN_CASEMAN: require('../fixtures/events/addDefendantLitigationFriend.js'),
+  CASE_PROCEEDS_IN_CASEMAN: require('../fixtures/events/caseProceedsInCaseman.js'),
 };
 
 const midEventFieldForPage = {
