@@ -26,9 +26,6 @@
       <bpmn:extensionElements>
         <camunda:in variables="all" />
         <camunda:out variables="all" />
-        <camunda:inputOutput>
-          <camunda:inputParameter name="origin">Camunda</camunda:inputParameter>
-        </camunda:inputOutput>
       </bpmn:extensionElements>
       <bpmn:incoming>Flow_1bnqopm</bpmn:incoming>
       <bpmn:outgoing>Flow_0a2vj44</bpmn:outgoing>
@@ -53,7 +50,7 @@
   <bpmndi:BPMNDiagram id="BPMNDiagram_1">
     <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="RETRY_RPA_NOTIFICATION_PROCESS_ID">
       <bpmndi:BPMNEdge id="Flow_1bnqopm_di" bpmnElement="Flow_1bnqopm">
-        <di:waypoint x="188" y="207" />
+        <di:waypoint x="208" y="207" />
         <di:waypoint x="310" y="207" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_0a2vj44_di" bpmnElement="Flow_0a2vj44">
@@ -72,26 +69,26 @@
         <di:waypoint x="580" y="207" />
         <di:waypoint x="660" y="207" />
       </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="Activity_0ipbyde_di" bpmnElement="RetryRoboticsNotification">
+        <dc:Bounds x="480" y="167" width="100" height="80" />
+      </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Event_0a4ru5o_di" bpmnElement="Event_0a4ru5o">
         <dc:Bounds x="802" y="189" width="36" height="36" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Activity_0oqt68l_di" bpmnElement="Activity_1xyawja">
         <dc:Bounds x="660" y="167" width="100" height="80" />
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Activity_0ipbyde_di" bpmnElement="RetryRoboticsNotification">
-        <dc:Bounds x="480" y="167" width="100" height="80" />
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="_BPMNShape_StartEvent_2" bpmnElement="StartEvent_1">
-        <dc:Bounds x="152" y="189" width="36" height="36" />
-        <bpmndi:BPMNLabel>
-          <dc:Bounds x="159" y="232" width="22" height="14" />
-        </bpmndi:BPMNLabel>
-      </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Activity_0kz6paj_di" bpmnElement="Activity_0kz6paj">
         <dc:Bounds x="310" y="167" width="100" height="80" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Event_0nyii4z_di" bpmnElement="Event_0nyii4z">
         <dc:Bounds x="342" y="62" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="_BPMNShape_StartEvent_2" bpmnElement="StartEvent_1">
+        <dc:Bounds x="172" y="189" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="179" y="232" width="22" height="14" />
+        </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Event_0qo02p4_di" bpmnElement="Event_0qo02p4">
         <dc:Bounds x="342" y="149" width="36" height="36" />
