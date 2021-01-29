@@ -179,7 +179,7 @@ module.exports = {
     assertContainsPopulatedFields(returnedCaseData);
     caseData = returnedCaseData;
 
-    await validateEventPages(data.ADD_DEFENDANT_LITIGATION_FRIEND);
+    await validateEventPages(data.CASE_PROCEEDS_IN_CASEMAN);
 
     await assertCallbackError('CaseProceedsInCaseman', data[eventName].invalid.CaseProceedsInCaseman.claimProceedsInCaseman,
       'The date entered cannot be in the future');
