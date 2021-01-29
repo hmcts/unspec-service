@@ -19,6 +19,7 @@ import javax.validation.Validator;
 
 import static uk.gov.hmcts.reform.unspec.callback.CallbackType.ABOUT_TO_START;
 import static uk.gov.hmcts.reform.unspec.callback.CallbackType.MID;
+import static uk.gov.hmcts.reform.unspec.callback.CaseEvent.CASE_PROCEEDS_IN_CASEMAN;
 import static uk.gov.hmcts.reform.unspec.callback.CaseEvent.DISCONTINUE_CLAIM;
 import static uk.gov.hmcts.reform.unspec.callback.CaseEvent.WITHDRAW_CLAIM;
 
@@ -26,7 +27,7 @@ import static uk.gov.hmcts.reform.unspec.callback.CaseEvent.WITHDRAW_CLAIM;
 @RequiredArgsConstructor
 public class CaseProceedsInCasemanCallbackHandler extends CallbackHandler {
 
-    private static final List<CaseEvent> EVENTS = List.of(WITHDRAW_CLAIM, DISCONTINUE_CLAIM);
+    private static final List<CaseEvent> EVENTS = List.of(CASE_PROCEEDS_IN_CASEMAN);
 
     private final Validator validator;
 
