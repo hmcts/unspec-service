@@ -170,10 +170,8 @@ module.exports = {
     await validateEventPages(data.ADD_DEFENDANT_LITIGATION_FRIEND);
   },
 
-  caseProceedsInCaseman: async (user) => {
+  caseProceedsInCaseman: async () => {
     eventName = 'CASE_PROCEEDS_IN_CASEMAN';
-    await apiRequest.setupTokens(user);
-    await apiRequest.startEvent(eventName);
     let returnedCaseData = await apiRequest.startEvent(eventName, caseId);
     assertContainsPopulatedFields(returnedCaseData);
     caseData = returnedCaseData;

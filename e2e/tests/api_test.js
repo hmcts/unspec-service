@@ -32,5 +32,5 @@ Scenario('Create claim where respondent is litigant in person', async (api) => {
 
 Scenario('Create claim and move it to caseman', async (api) => {
   await api.createClaimWithRepresentedRespondent(config.solicitorUser);
-  await api.caseProceedsInCaseman(config.solicitorUser);
+  await api.caseProceedsInCaseman();
 });
