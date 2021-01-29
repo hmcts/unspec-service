@@ -35,7 +35,7 @@ module.exports = {
     let eventUserId = await idamHelper.userId(eventUserAuth);
     let url = getCcdCaseUrl(eventUserId, caseId);
 
-    return await restHelper.retriedRequest(url, getRequestHeaders(eventUserId), null, 'GET')
+    return await restHelper.retriedRequest(url, getRequestHeaders(eventUserAuth), null, 'GET')
       .then(response => response.json());
   },
 
