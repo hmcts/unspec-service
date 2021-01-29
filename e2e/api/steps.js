@@ -7,7 +7,7 @@ chai.use(deepEqualInAnyOrder);
 
 const { expect } = chai;
 
-const {waitForFinishedBusinessProcess} = require('../api/testingSupport');
+const {waitForFinishedBusinessProcess, assignCaseToDefendant} = require('../api/testingSupport');
 const apiRequest = require('./apiRequest.js');
 const claimData = require('../fixtures/events/createClaim.js');
 
@@ -46,6 +46,7 @@ module.exports = {
       header: 'Your claim has been issued',
       body: 'Follow these steps to serve a claim'
     });
+    await assignCaseToDefendant(caseId);
   },
 
   createClaimWithRespondentLitigantInPerson: async (user) => {
@@ -60,6 +61,8 @@ module.exports = {
       header: 'Your claim will now progress offline',
       body: 'You do not need to do anything'
     });
+
+    await assignCaseToDefendant(caseId);
   },
 
   acknowledgeService: async () => {
