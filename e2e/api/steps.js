@@ -5,7 +5,7 @@ const chai = require('chai');
 
 chai.use(deepEqualInAnyOrder);
 
-const { expect } = chai;
+const {expect} = chai;
 
 const {waitForFinishedBusinessProcess, assignCaseToDefendant} = require('../api/testingSupport');
 const apiRequest = require('./apiRequest.js');
@@ -45,7 +45,7 @@ module.exports = {
     await assertSubmittedEvent('PENDING_CASE_ISSUED', {
       header: 'Your claim has been issued',
       body: 'Follow these steps to serve a claim'
-    });
+    }, true);
     await assignCaseToDefendant(caseId);
   },
 
@@ -58,9 +58,9 @@ module.exports = {
     await validateEventPages(data.CREATE_CLAIM_RESPONDENT_LIP);
 
     await assertSubmittedEvent('PROCEEDS_WITH_OFFLINE_JOURNEY', {
-      header: 'Your claim will now progress offline',
-      body: 'You do not need to do anything'
-    });
+        header: 'Your claim will now progress offline',
+        body: 'You do not need to do anything'
+      }, true);
 
     await assignCaseToDefendant(caseId);
   },
@@ -80,7 +80,7 @@ module.exports = {
     await assertSubmittedEvent('CREATED', {
       header: 'You\'ve acknowledged service',
       body: 'You need to respond before'
-    });
+    }, true);
   },
 
   requestExtension: async () => {
@@ -100,7 +100,7 @@ module.exports = {
     await assertSubmittedEvent('CREATED', {
       header: 'You asked for extra time to respond',
       body: 'You asked if you can respond before 4pm on'
-    });
+    }, true);
   },
 
   respondExtension: async () => {
@@ -119,7 +119,7 @@ module.exports = {
     await assertSubmittedEvent('CREATED', {
       header: 'You\'ve responded to the request for more time',
       body: 'The defendant must respond before 4pm on'
-    });
+    }, true);
   },
 
   defendantResponse: async () => {
@@ -141,7 +141,7 @@ module.exports = {
     await assertSubmittedEvent('AWAITING_CLAIMANT_INTENTION', {
       header: 'You\'ve submitted your response',
       body: 'We will let you know when they respond.'
-    });
+    }, true);
   },
 
   claimantResponse: async () => {
@@ -160,7 +160,7 @@ module.exports = {
     await assertSubmittedEvent('STAYED', {
       header: 'You\'ve decided to proceed with the claim',
       body: 'We\'ll review the case. We\'ll contact you to tell you what to do next.'
-    });
+    }, true);
     await waitForFinishedBusinessProcess(caseId);
   },
 
@@ -187,11 +187,10 @@ module.exports = {
     //   'The date entered cannot be in the future');
 
     //TODO CMC-1245 confirmation page for event
-
-    // await assertSubmittedEvent('PROCEEDS_WITH_OFFLINE_JOURNEY', {
-    //   header: '',
-    //   body: ''
-    // });
+    await assertSubmittedEvent('PROCEEDS_WITH_OFFLINE_JOURNEY', {
+      header: '',
+      body: ''
+    }, false);
   }
 };
 
@@ -227,16 +226,18 @@ const assertCallbackError = async (pageId, eventData, expectedErrorMessage) => {
   assert.equal(responseBody.callbackErrors[0], expectedErrorMessage);
 };
 
-const assertSubmittedEvent = async (expectedState, submittedCallbackResponseContains) => {
+const assertSubmittedEvent = async (expectedState, submittedCallbackResponseContains, hasSubmittedCallback) => {
   await apiRequest.startEvent(eventName, caseId);
   const response = await apiRequest.submitEvent(eventName, caseData, caseId);
   const responseBody = await response.json();
 
   assert.equal(response.status, 201);
   assert.equal(responseBody.state, expectedState);
-  assert.equal(responseBody.callback_response_status_code, 200);
-  assert.equal(responseBody.after_submit_callback_response.confirmation_header.includes(submittedCallbackResponseContains.header), true);
-  assert.equal(responseBody.after_submit_callback_response.confirmation_body.includes(submittedCallbackResponseContains.body), true);
+  if (hasSubmittedCallback) {
+    assert.equal(responseBody.callback_response_status_code, 200);
+    assert.equal(responseBody.after_submit_callback_response.confirmation_header.includes(submittedCallbackResponseContains.header), true);
+    assert.equal(responseBody.after_submit_callback_response.confirmation_body.includes(submittedCallbackResponseContains.body), true);
+  }
 
   if (eventName === 'CREATE_CLAIM') {
     caseId = responseBody.id;
