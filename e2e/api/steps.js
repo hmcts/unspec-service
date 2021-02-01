@@ -186,10 +186,12 @@ module.exports = {
     // await assertCallbackError('CaseProceedsInCaseman', data[eventName].invalid.CaseProceedsInCaseman.claimProceedsInCaseman,
     //   'The date entered cannot be in the future');
 
-    await assertSubmittedEvent('PROCEEDS_WITH_OFFLINE_JOURNEY', {
-      header: null,
-      body: null
-    });
+    //TODO CMC-1245 confirmation page for event
+
+    // await assertSubmittedEvent('PROCEEDS_WITH_OFFLINE_JOURNEY', {
+    //   header: '',
+    //   body: ''
+    // });
   }
 };
 
