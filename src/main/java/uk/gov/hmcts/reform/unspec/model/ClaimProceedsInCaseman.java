@@ -12,7 +12,7 @@ import javax.validation.constraints.PastOrPresent;
 @Builder
 public class ClaimProceedsInCaseman {
 
-    @PastOrPresent(message = "The date must not be in the future", groups = CasemanTransferDateGroup.class)
+    @PastOrPresent(message = "The date entered cannot be in the future", groups = CasemanTransferDateGroup.class)
     private LocalDate date;
     private ReasonForProceedingOnPaper reason;
     private String other;

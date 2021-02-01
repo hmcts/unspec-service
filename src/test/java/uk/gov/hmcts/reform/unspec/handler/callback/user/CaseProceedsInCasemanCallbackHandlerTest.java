@@ -60,7 +60,7 @@ class CaseProceedsInCasemanCallbackHandlerTest extends BaseCallbackHandlerTest {
             AboutToStartOrSubmitCallbackResponse response =
                 (AboutToStartOrSubmitCallbackResponse) handler.handle(params);
 
-            assertThat(response.getErrors()).containsOnly("The date must not be in the future");
+            assertThat(response.getErrors()).containsOnly("The date entered cannot be in the future");
         }
 
         @Test
