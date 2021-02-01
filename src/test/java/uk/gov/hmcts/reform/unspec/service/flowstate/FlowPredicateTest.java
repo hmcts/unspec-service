@@ -266,7 +266,7 @@ class FlowPredicateTest {
     }
 
     @Nested
-    class CaseProceedsInCaseman {
+    class ClaimProceedsInCaseman {
 
         @Test
         void shouldReturnTrue_whenCaseDataAtStateCaseProceedsInCaseman() {

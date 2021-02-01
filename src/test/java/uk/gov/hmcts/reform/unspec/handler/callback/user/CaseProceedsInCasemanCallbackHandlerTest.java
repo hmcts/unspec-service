@@ -10,7 +10,7 @@ import uk.gov.hmcts.reform.ccd.client.model.CaseDetails;
 import uk.gov.hmcts.reform.unspec.callback.CallbackParams;
 import uk.gov.hmcts.reform.unspec.handler.callback.BaseCallbackHandlerTest;
 import uk.gov.hmcts.reform.unspec.model.CaseData;
-import uk.gov.hmcts.reform.unspec.model.CaseProceedsInCaseman;
+import uk.gov.hmcts.reform.unspec.model.ClaimProceedsInCaseman;
 import uk.gov.hmcts.reform.unspec.sampledata.CallbackParamsBuilder;
 import uk.gov.hmcts.reform.unspec.sampledata.CaseDataBuilder;
 import uk.gov.hmcts.reform.unspec.sampledata.CaseDetailsBuilder;
@@ -53,7 +53,7 @@ class CaseProceedsInCasemanCallbackHandlerTest extends BaseCallbackHandlerTest {
         @Test
         void shouldReturnErrors_whenDateInFuture() {
             CaseData caseData = CaseDataBuilder.builder().atStateCaseProceedsInCaseman()
-                .caseProceedsInCaseman(CaseProceedsInCaseman.builder().date(LocalDate.now().plusDays(1)).build())
+                .claimProceedsInCaseman(ClaimProceedsInCaseman.builder().date(LocalDate.now().plusDays(1)).build())
                 .build();
             CallbackParams params = callbackParamsOf(caseData, MID, PAGE_ID);
 
@@ -66,7 +66,7 @@ class CaseProceedsInCasemanCallbackHandlerTest extends BaseCallbackHandlerTest {
         @Test
         void shouldReturnNoErrors_whenDateInPast() {
             CaseData caseData = CaseDataBuilder.builder().atStateClaimCreated()
-                .caseProceedsInCaseman(CaseProceedsInCaseman.builder().date(LocalDate.now().minusDays(1)).build())
+                .claimProceedsInCaseman(ClaimProceedsInCaseman.builder().date(LocalDate.now().minusDays(1)).build())
                 .build();
             CallbackParams params = callbackParamsOf(caseData, MID, PAGE_ID);
 

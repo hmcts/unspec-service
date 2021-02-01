@@ -10,7 +10,7 @@ import javax.validation.constraints.PastOrPresent;
 
 @Data
 @Builder
-public class CaseProceedsInCaseman {
+public class ClaimProceedsInCaseman {
 
     @PastOrPresent(message = "The date must not be in the future", groups = CasemanTransferDateGroup.class)
     private LocalDate date;

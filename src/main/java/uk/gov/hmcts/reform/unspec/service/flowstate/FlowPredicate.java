@@ -63,7 +63,7 @@ public class FlowPredicate {
         caseData.getCcdState() == PROCEEDS_WITH_OFFLINE_JOURNEY;
 
     public static final Predicate<CaseData> caseProceedsInCaseman = caseData ->
-        caseData.getCaseProceedsInCaseman() != null;
+        caseData.getClaimProceedsInCaseman() != null;
 
     private FlowPredicate() {
         //Utility class

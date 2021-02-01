@@ -10,7 +10,7 @@ import uk.gov.hmcts.reform.unspec.enums.ResponseIntention;
 import uk.gov.hmcts.reform.unspec.enums.YesOrNo;
 import uk.gov.hmcts.reform.unspec.model.BusinessProcess;
 import uk.gov.hmcts.reform.unspec.model.CaseData;
-import uk.gov.hmcts.reform.unspec.model.CaseProceedsInCaseman;
+import uk.gov.hmcts.reform.unspec.model.ClaimProceedsInCaseman;
 import uk.gov.hmcts.reform.unspec.model.ClaimValue;
 import uk.gov.hmcts.reform.unspec.model.CloseClaim;
 import uk.gov.hmcts.reform.unspec.model.CourtLocation;
@@ -109,7 +109,7 @@ public class CaseDataBuilder {
     private BusinessProcess businessProcess;
 
     //Case proceeds in caseman
-    private CaseProceedsInCaseman caseProceedsInCaseman;
+    private ClaimProceedsInCaseman claimProceedsInCaseman;
 
     private CloseClaim withdrawClaim;
     private CloseClaim discontinueClaim;
@@ -244,8 +244,8 @@ public class CaseDataBuilder {
         return this;
     }
 
-    public CaseDataBuilder caseProceedsInCaseman(CaseProceedsInCaseman caseProceedsInCaseman) {
-        this.caseProceedsInCaseman = caseProceedsInCaseman;
+    public CaseDataBuilder claimProceedsInCaseman(ClaimProceedsInCaseman claimProceedsInCaseman) {
+        this.claimProceedsInCaseman = claimProceedsInCaseman;
         return this;
     }
 
@@ -411,7 +411,7 @@ public class CaseDataBuilder {
 
     public CaseDataBuilder atStateCaseProceedsInCaseman() {
         atStateClaimCreated();
-        caseProceedsInCaseman = CaseProceedsInCaseman.builder()
+        claimProceedsInCaseman = ClaimProceedsInCaseman.builder()
             .date(LocalDate.now())
             .reason(ReasonForProceedingOnPaper.APPLICATION)
             .build();
@@ -536,7 +536,7 @@ public class CaseDataBuilder {
             .applicant1DefenceResponseDocument(applicant1DefenceResponseDocument)
 
             //Case procceds in Caseman
-            .caseProceedsInCaseman(caseProceedsInCaseman)
+            .claimProceedsInCaseman(claimProceedsInCaseman)
 
             .ccdState(ccdState)
             .businessProcess(businessProcess)
