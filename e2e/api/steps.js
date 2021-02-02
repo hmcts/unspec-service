@@ -49,6 +49,7 @@ module.exports = {
 
     await assertCorrectEventsAreAvailableToUser(config.solicitorUser, 'CREATED');
     await assertCorrectEventsAreAvailableToUser(config.defendantSolicitorUser, 'CREATED');
+    deleteCaseFields('respondentSolicitor1EmailAddress'); // email address is removed after create claim
   },
 
   createClaimWithRespondentLitigantInPerson: async (user) => {
@@ -68,6 +69,7 @@ module.exports = {
 
     await assertCorrectEventsAreAvailableToUser(config.solicitorUser, 'PROCEEDS_WITH_OFFLINE_JOURNEY');
     await assertCorrectEventsAreAvailableToUser(config.defendantSolicitorUser, 'PROCEEDS_WITH_OFFLINE_JOURNEY');
+    deleteCaseFields('respondentSolicitor1EmailAddress'); // email address is removed after create claim
   },
 
   acknowledgeService: async () => {
@@ -76,7 +78,6 @@ module.exports = {
     assertContainsPopulatedFields(returnedCaseData);
     caseData = returnedCaseData;
     deleteCaseFields('systemGeneratedCaseDocuments');
-    deleteCaseFields('respondentSolicitor1EmailAddress'); // email address is removed after create claim
 
     await validateEventPages(data.ACKNOWLEDGE_SERVICE);
 
