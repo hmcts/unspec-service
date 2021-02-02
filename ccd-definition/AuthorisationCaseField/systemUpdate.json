@@ -284,6 +284,6 @@
     "CaseTypeID": "UNSPECIFIED_CLAIMS",
     "CaseFieldID": "respondentSolicitor1EmailAddress",
     "UserRole": "caseworker-civil-systemupdate",
-    "CRUD": "R"
+    "CRUD": "CRUD"
   }
 ]
