@@ -76,6 +76,7 @@ module.exports = {
     assertContainsPopulatedFields(returnedCaseData);
     caseData = returnedCaseData;
     deleteCaseFields('systemGeneratedCaseDocuments');
+    deleteCaseFields('respondentSolicitor1EmailAddress'); // email address is removed after create claim
 
     await validateEventPages(data.ACKNOWLEDGE_SERVICE);
 
