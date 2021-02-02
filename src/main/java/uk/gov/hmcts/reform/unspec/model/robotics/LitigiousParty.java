@@ -18,7 +18,7 @@ public class LitigiousParty {
     private String contactFaxNumber;
     private String contactEmailAddress;
     private String preferredMethodOfCommunication;
-    private String welshTranslation;
+    private Boolean welshTranslation;
     private String reference;
     private String dateOfService;
     private String lastDateForService;

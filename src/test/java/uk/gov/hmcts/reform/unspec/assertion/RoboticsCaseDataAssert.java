@@ -1,16 +1,18 @@
 package uk.gov.hmcts.reform.unspec.assertion;
 
 import uk.gov.hmcts.reform.unspec.model.CaseData;
+import uk.gov.hmcts.reform.unspec.model.LitigationFriend;
 import uk.gov.hmcts.reform.unspec.model.Party;
 import uk.gov.hmcts.reform.unspec.model.robotics.CaseHeader;
+import uk.gov.hmcts.reform.unspec.model.robotics.ClaimDetails;
 import uk.gov.hmcts.reform.unspec.model.robotics.LitigiousParty;
 import uk.gov.hmcts.reform.unspec.model.robotics.RoboticsCaseData;
 import uk.gov.hmcts.reform.unspec.model.robotics.Solicitor;
 import uk.gov.hmcts.reform.unspec.utils.PartyUtils;
 
-import java.util.Optional;
-
 import static java.time.format.DateTimeFormatter.ISO_DATE;
+import static java.util.Optional.ofNullable;
+import static uk.gov.hmcts.reform.unspec.assertion.CustomAssertions.assertMoney;
 import static uk.gov.hmcts.reform.unspec.assertion.CustomAssertions.assertThat;
 
 public class RoboticsCaseDataAssert extends CustomAssert<RoboticsCaseDataAssert, RoboticsCaseData> {
@@ -26,22 +28,30 @@ public class RoboticsCaseDataAssert extends CustomAssert<RoboticsCaseDataAssert,
         compare(
             "caseNumber",
             expected.getLegacyCaseReference(),
-            Optional.ofNullable(header.getCaseNumber())
+            ofNullable(header.getCaseNumber())
         );
         compare(
             "preferredCourtName",
             expected.getCourtLocation().getApplicantPreferredCourt(),
-            Optional.ofNullable(header.getPreferredCourtName())
+            ofNullable(header.getPreferredCourtName())
         );
 
-        compare(
-            "amountClaimed",
-            expected.getClaimValue().getStatementOfValueInPennies(),
-            Optional.ofNullable(actual.getClaimDetails().getAmountClaimed())
-        );
+        assertClaimDetails(expected, actual.getClaimDetails());
 
-        assertParty("applicant1", actual.getLitigiousParties().get(0), expected.getApplicant1());
-        assertParty("respondent1", actual.getLitigiousParties().get(1), expected.getRespondent1());
+        assertParty(
+            "applicant1",
+            "Claimant",
+            actual.getLitigiousParties().get(0),
+            expected.getApplicant1(),
+            expected.getApplicant1LitigationFriend()
+        );
+        assertParty(
+            "respondent1",
+            "Defendant",
+            actual.getLitigiousParties().get(1),
+            expected.getRespondent1(),
+            expected.getRespondent1LitigationFriend()
+        );
 
         assertSolicitor(
             "applicant1" + "." + "reference",
@@ -57,15 +67,49 @@ public class RoboticsCaseDataAssert extends CustomAssert<RoboticsCaseDataAssert,
         return this;
     }
 
+    private void assertClaimDetails(CaseData expected, ClaimDetails actual) {
+        compare(
+            "caseIssuedDate",
+            expected.getClaimIssuedDate(),
+            ofNullable(actual.getCaseIssuedDate())
+        );
+
+        compare(
+            "caseRequestReceivedDate",
+            expected.getClaimSubmittedDateTime().toLocalDate(),
+            ofNullable(actual.getCaseRequestReceivedDate())
+        );
+
+        compare(
+            "amountClaimed",
+            expected.getClaimValue().toPounds(),
+            ofNullable(actual.getAmountClaimed())
+        );
+
+        compare(
+            "courtFee",
+            ofNullable(expected.getClaimFee())
+                .map(fee -> fee.getCalculatedAmountInPence())
+                .orElse(null),
+            ofNullable(actual.getCourtFee()),
+            (e, a) -> assertMoney(a).isEqualTo(e)
+        );
+    }
+
     private void assertSolicitor(String fieldName, Solicitor solicitor, String reference) {
         compare(
             fieldName,
             solicitor.getReference(),
-            Optional.ofNullable(reference)
+            ofNullable(reference)
         );
     }
 
-    private void assertParty(String fieldName, LitigiousParty litigiousParty, Party party) {
+    private void assertParty(String fieldName,
+                             String litigiousPartyType,
+                             LitigiousParty litigiousParty,
+                             Party party,
+                             LitigationFriend litigationFriend
+    ) {
         if (party == null && litigiousParty != null) {
             failExpectedPresent(fieldName, litigiousParty);
             return;
@@ -79,12 +123,12 @@ public class RoboticsCaseDataAssert extends CustomAssert<RoboticsCaseDataAssert,
         compare(
             "name",
             litigiousParty.getName(),
-            Optional.ofNullable(party.getPartyName())
+            ofNullable(PartyUtils.getLitigiousPartyName(party, litigationFriend))
         );
         compare(
             "type",
             litigiousParty.getType(),
-            Optional.ofNullable(party.getType().getDisplayValue())
+            ofNullable(litigiousPartyType)
         );
         compare(
             "dateOfBirth",

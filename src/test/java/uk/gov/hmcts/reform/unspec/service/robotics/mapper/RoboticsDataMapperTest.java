@@ -13,7 +13,7 @@ class RoboticsDataMapperTest {
     RoboticsDataMapper mapper = new RoboticsDataMapper(new RoboticsAddressMapper());
 
     @Test
-    void shouldMapToRoboticsCaseData_whenCaseDataIsProvided() {
+    void shouldMapToRoboticsCaseData_whenHandOffPointIsUnrepresentedDefendant() {
         CaseData caseData = CaseDataBuilder.builder().atStateClaimCreated().build();
 
         RoboticsCaseData roboticsCaseData = mapper.toRoboticsCaseData(caseData);
