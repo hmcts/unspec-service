@@ -9,7 +9,6 @@ import uk.gov.hmcts.reform.unspec.callback.CallbackHandler;
 import uk.gov.hmcts.reform.unspec.callback.CallbackParams;
 import uk.gov.hmcts.reform.unspec.callback.CaseEvent;
 import uk.gov.hmcts.reform.unspec.config.properties.notification.NotificationsProperties;
-import uk.gov.hmcts.reform.unspec.helpers.CaseDetailsConverter;
 import uk.gov.hmcts.reform.unspec.model.CaseData;
 import uk.gov.hmcts.reform.unspec.service.NotificationService;
 
@@ -32,7 +31,6 @@ public class CreateClaimRespondentNotificationHandler extends CallbackHandler im
 
     private final NotificationService notificationService;
     private final NotificationsProperties notificationsProperties;
-    private final CaseDetailsConverter caseDetailsConverter;
 
     @Override
     protected Map<String, Callback> callbacks() {
@@ -60,14 +58,7 @@ public class CreateClaimRespondentNotificationHandler extends CallbackHandler im
             addProperties(caseData),
             String.format(REFERENCE_TEMPLATE, caseData.getLegacyCaseReference())
         );
-
-        CaseData updatedCaseData = caseData.toBuilder()
-            .respondentSolicitor1EmailAddress(null)
-            .build();
-
-        return AboutToStartOrSubmitCallbackResponse.builder()
-            .data(caseDetailsConverter.toMap(updatedCaseData))
-            .build();
+        return AboutToStartOrSubmitCallbackResponse.builder().build();
     }
 
     @Override
