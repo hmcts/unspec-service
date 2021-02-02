@@ -52,7 +52,7 @@ class CreateClaimRespondentNotificationHandlerTest extends BaseCallbackHandlerTe
             var response = (AboutToStartOrSubmitCallbackResponse) handler.handle(params);
 
             verify(notificationService).sendMail(
-                "example@email.com",
+                "civilunspecified@gmail.com",
                 notificationsProperties.getRespondentSolicitorClaimIssueEmailTemplate(),
                 getExpectedMap(),
                 "create-claim-respondent-notification-000LR001"

@@ -61,7 +61,7 @@ const createClaimData = legalRepresentation => {
           OrganisationID: 'N5AFUXG'
         },
       },
-      respondentSolicitor1EmailAddress: 'example@email.com'
+      respondentSolicitor1EmailAddress: 'civilunspecified@gmail.com'
     },
     ClaimType: {
       claimType: 'PERSONAL_INJURY'
