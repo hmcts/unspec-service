@@ -1,0 +1,16 @@
+[
+  {
+    "ID": "IdamCorrectEmail",
+    "ListElementCode": "email",
+    "FieldType": "Label",
+    "ElementLabel": "",
+    "SecurityClassification": "Public"
+  },
+  {
+    "ID": "IdamCorrectEmail",
+    "ListElementCode": "isCorrect",
+    "FieldType": "YesOrNo",
+    "ElementLabel": "Would you like to use the same email address for notifications?",
+    "SecurityClassification": "Public"
+  }
+]
