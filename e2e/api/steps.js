@@ -50,7 +50,6 @@ module.exports = {
     }, true);
     await assignCaseToDefendant(caseId);
 
-    await waitForFinishedBusinessProcess(caseId);
     await assertCorrectEventsAreAvailableToUser(config.solicitorUser, 'CREATED');
     await assertCorrectEventsAreAvailableToUser(config.defendantSolicitorUser, 'CREATED');
   },
@@ -69,8 +68,6 @@ module.exports = {
       }, true);
 
     await assignCaseToDefendant(caseId);
-
-    await waitForFinishedBusinessProcess(caseId);
     await assertCorrectEventsAreAvailableToUser(config.solicitorUser, 'PROCEEDS_WITH_OFFLINE_JOURNEY');
     await assertCorrectEventsAreAvailableToUser(config.defendantSolicitorUser, 'PROCEEDS_WITH_OFFLINE_JOURNEY');
   },
@@ -286,6 +283,7 @@ const deleteCaseFields = (...caseFields) => {
 };
 
 const assertCorrectEventsAreAvailableToUser = async (user, state) => {
+  await waitForFinishedBusinessProcess(caseId);
   const caseForDisplay = await apiRequest.fetchCaseForDisplay(user, caseId);
   expect(caseForDisplay.triggers).to.deep.equalInAnyOrder(expectedEvents[state]);
 };
