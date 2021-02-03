@@ -2,14 +2,25 @@ provider "azurerm" {
   features {}
 }
 
+data "azurerm_key_vault" "unspec_key_vault" {
+  name                = "unspec-${var.env}"
+  resource_group_name = "unspec-service-${var.env}"
+}
+
 data "azurerm_key_vault" "s2s_vault" {
   name                = "s2s-${var.env}"
   resource_group_name = "rpe-service-auth-provider-${var.env}"
 }
 
-data "azurerm_key_vault_secret" "microservicekey-unspec-service" {
+data "azurerm_key_vault_secret" "s2s_secret" {
   key_vault_id = "${data.azurerm_key_vault.s2s_vault.id}"
   name = "microservicekey-unspec-service"
+}
+
+resource "azurerm_key_vault_secret" "microservicekey-unspec-service" {
+  name         = "microservicekey-unspec-service"
+  value        = data.azurerm_key_vault_secret.s2s_secret.value
+  key_vault_id = data.azurerm_key_vault.unspec_key_vault.id
 }
 
 resource "azurerm_resource_group" "rg" {
