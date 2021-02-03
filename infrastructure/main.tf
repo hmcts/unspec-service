@@ -2,6 +2,16 @@ provider "azurerm" {
   features {}
 }
 
+data "azurerm_key_vault" "s2s_vault" {
+  name                = "s2s-${var.env}"
+  resource_group_name = "rpe-service-auth-provider-${var.env}"
+}
+
+data "azurerm_key_vault_secret" "microservicekey-unspec-service" {
+  key_vault_id = "${data.azurerm_key_vault.s2s_vault.id}"
+  name = "microservicekey-unspec-service"
+}
+
 resource "azurerm_resource_group" "rg" {
   name     = "${var.product}-${var.component}-${var.env}"
   location = var.location
