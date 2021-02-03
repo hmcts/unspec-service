@@ -9,13 +9,22 @@ import java.util.List;
 @Builder
 public class EventHistory {
 
-    private List<Event> miscellaneous;
-    private List acknowledgementOfServiceReceived;
-    private List consentExtensionFilingDefence;
-    private List defenceFiled;
-    private List defenceAndCounterClaim;
-    private List receiptOfPartAdmission;
-    private List receiptofAdmission;
-    private List replyToDefence;
-    private List directionsQuestionnaireFiled;
+    @Builder.Default
+    private List<Event> miscellaneous = List.of(Event.builder().build());
+    @Builder.Default
+    private List<Event> acknowledgementOfServiceReceived = List.of(Event.builder().build());
+    @Builder.Default
+    private List<Event> consentExtensionFilingDefence = List.of(Event.builder().build());
+    @Builder.Default
+    private List<Event> defenceFiled = List.of(Event.builder().build());
+    @Builder.Default
+    private List<Event> defenceAndCounterClaim = List.of(Event.builder().build());
+    @Builder.Default
+    private List<Event> receiptOfPartAdmission = List.of(Event.builder().build());
+    @Builder.Default
+    private List<Event> receiptofAdmission = List.of(Event.builder().build());
+    @Builder.Default
+    private List<Event> replyToDefence = List.of(Event.builder().build());
+    @Builder.Default
+    private List<Event> directionsQuestionnaireFiled = List.of(Event.builder().build());
 }

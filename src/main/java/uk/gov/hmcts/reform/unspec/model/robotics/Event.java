@@ -11,7 +11,7 @@ public class Event {
 
     private Integer eventSequence;
     private String eventCode;
-    private LocalDate dateReceived;
-    private Object litigiousPartyID;
+    private String dateReceived;
+    private String litigiousPartyID;
     private EventDetails eventDetails;
 }
