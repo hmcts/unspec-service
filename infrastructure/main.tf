@@ -17,7 +17,7 @@ data "azurerm_key_vault_secret" "s2s_secret" {
   name = "microservicekey-unspec-service"
 }
 
-resource "azurerm_key_vault_secret" "microservicekey-unspec-service" {
+resource "azurerm_key_vault_secret" "unspec_s2s_secret" {
   name         = "microservicekey-unspec-service"
   value        = data.azurerm_key_vault_secret.s2s_secret.value
   key_vault_id = data.azurerm_key_vault.unspec_key_vault.id
