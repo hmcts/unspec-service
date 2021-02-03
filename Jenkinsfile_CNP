@@ -183,7 +183,7 @@ withPipeline(type, product, component) {
     steps.archiveArtifacts allowEmptyArchive: true, artifacts: 'output/**/*'
   }
 
-  before('buildinfra:ithc') {
+  after('buildinfra:ithc') {
     def subscription = 'nonprod'
     withSubscription(subscription) {
       withTeamSecrets(pipelineConf, 'ithc') {
