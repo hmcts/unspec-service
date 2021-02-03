@@ -9,6 +9,8 @@ import uk.gov.hmcts.reform.unspec.model.Party;
 import uk.gov.hmcts.reform.unspec.model.SolicitorReferences;
 import uk.gov.hmcts.reform.unspec.model.robotics.CaseHeader;
 import uk.gov.hmcts.reform.unspec.model.robotics.ClaimDetails;
+import uk.gov.hmcts.reform.unspec.model.robotics.Event;
+import uk.gov.hmcts.reform.unspec.model.robotics.EventHistory;
 import uk.gov.hmcts.reform.unspec.model.robotics.LitigiousParty;
 import uk.gov.hmcts.reform.unspec.model.robotics.RoboticsCaseData;
 import uk.gov.hmcts.reform.unspec.model.robotics.Solicitor;
@@ -38,6 +40,22 @@ public class RoboticsDataMapper {
             .litigiousParties(buildLitigiousParties(caseData))
             .solicitors(buildSolicitors(caseData))
             .claimDetails(buildClaimDetails(caseData))
+            .events(buildEvents(caseData))
+            .build();
+    }
+
+    private EventHistory buildEvents(CaseData caseData) {
+
+        return EventHistory.builder()
+            .acknowledgementOfServiceReceived(List.of(Event.builder().build()))
+            .consentExtensionFilingDefence(List.of(Event.builder().build()))
+            .defenceFiled(List.of(Event.builder().build()))
+            .defenceAndCounterClaim(List.of(Event.builder().build()))
+            .directionsQuestionnaireFiled(List.of(Event.builder().build()))
+            .miscellaneous(List.of(Event.builder().build()))
+            .receiptofAdmission(List.of(Event.builder().build()))
+            .replyToDefence(List.of(Event.builder().build()))
+            .receiptOfPartAdmission(List.of(Event.builder().build()))
             .build();
     }
 
@@ -47,8 +65,8 @@ public class RoboticsDataMapper {
             .courtFee(ofNullable(caseData.getClaimFee())
                           .map(fee -> penniesToPounds(fee.getCalculatedAmountInPence()))
                           .orElse(null))
-            .caseIssuedDate(caseData.getClaimIssuedDate())
-            .caseRequestReceivedDate(caseData.getClaimSubmittedDateTime().toLocalDate())
+            .caseIssuedDate(caseData.getClaimIssuedDate().format(ISO_DATE))
+            .caseRequestReceivedDate(caseData.getClaimSubmittedDateTime().toLocalDate().format(ISO_DATE))
             .build();
     }
 
