@@ -50,6 +50,7 @@ module.exports = {
     }, true);
     await assignCaseToDefendant(caseId);
 
+    await waitForFinishedBusinessProcess(caseId);
     await assertCorrectEventsAreAvailableToUser(config.solicitorUser, 'CREATED');
     await assertCorrectEventsAreAvailableToUser(config.defendantSolicitorUser, 'CREATED');
   },
@@ -69,6 +70,7 @@ module.exports = {
 
     await assignCaseToDefendant(caseId);
 
+    await waitForFinishedBusinessProcess(caseId);
     await assertCorrectEventsAreAvailableToUser(config.solicitorUser, 'PROCEEDS_WITH_OFFLINE_JOURNEY');
     await assertCorrectEventsAreAvailableToUser(config.defendantSolicitorUser, 'PROCEEDS_WITH_OFFLINE_JOURNEY');
   },
