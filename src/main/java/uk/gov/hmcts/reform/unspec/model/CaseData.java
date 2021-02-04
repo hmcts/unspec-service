@@ -111,6 +111,9 @@ public class CaseData {
 
     private final LitigationFriend applicant1LitigationFriend;
 
+    @Valid
+    private final ClaimProceedsInCaseman claimProceedsInCaseman;
+
     //CCD UI flag
     private final YesOrNo applicantSolicitor1PbaAccountsIsEmpty;
 }

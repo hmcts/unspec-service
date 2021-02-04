@@ -4,11 +4,13 @@ import uk.gov.hmcts.reform.unspec.enums.AllocatedTrack;
 import uk.gov.hmcts.reform.unspec.enums.CaseState;
 import uk.gov.hmcts.reform.unspec.enums.ClaimType;
 import uk.gov.hmcts.reform.unspec.enums.PersonalInjuryType;
+import uk.gov.hmcts.reform.unspec.enums.ReasonForProceedingOnPaper;
 import uk.gov.hmcts.reform.unspec.enums.RespondentResponseType;
 import uk.gov.hmcts.reform.unspec.enums.ResponseIntention;
 import uk.gov.hmcts.reform.unspec.enums.YesOrNo;
 import uk.gov.hmcts.reform.unspec.model.BusinessProcess;
 import uk.gov.hmcts.reform.unspec.model.CaseData;
+import uk.gov.hmcts.reform.unspec.model.ClaimProceedsInCaseman;
 import uk.gov.hmcts.reform.unspec.model.ClaimValue;
 import uk.gov.hmcts.reform.unspec.model.CloseClaim;
 import uk.gov.hmcts.reform.unspec.model.CourtLocation;
@@ -106,6 +108,9 @@ public class CaseDataBuilder {
     private YesOrNo applicant1ProceedWithClaim;
     private ResponseDocument applicant1DefenceResponseDocument;
     private BusinessProcess businessProcess;
+
+    //Case proceeds in caseman
+    private ClaimProceedsInCaseman claimProceedsInCaseman;
 
     private CloseClaim withdrawClaim;
     private CloseClaim discontinueClaim;
@@ -240,6 +245,11 @@ public class CaseDataBuilder {
         return this;
     }
 
+    public CaseDataBuilder claimProceedsInCaseman(ClaimProceedsInCaseman claimProceedsInCaseman) {
+        this.claimProceedsInCaseman = claimProceedsInCaseman;
+        return this;
+    }
+
     public CaseDataBuilder atState(FlowState.Main flowState) {
         switch (flowState) {
             case DRAFT:
@@ -270,6 +280,8 @@ public class CaseDataBuilder {
                 return atStateClaimDiscontinued();
             case PROCEEDS_WITH_OFFLINE_JOURNEY:
                 return atStateProceedsOffline();
+            case CASE_PROCEEDS_IN_CASEMAN:
+                return atStateCaseProceedsInCaseman();
             default:
                 throw new IllegalArgumentException("Invalid internal state: " + flowState);
         }
@@ -399,6 +411,15 @@ public class CaseDataBuilder {
         return this;
     }
 
+    public CaseDataBuilder atStateCaseProceedsInCaseman() {
+        atStateClaimCreated();
+        claimProceedsInCaseman = ClaimProceedsInCaseman.builder()
+            .date(LocalDate.now())
+            .reason(ReasonForProceedingOnPaper.APPLICATION)
+            .build();
+        return this;
+    }
+
     public CaseDataBuilder atStateRespondedToClaim() {
         atStateRespondedToClaim(RespondentResponseType.FULL_DEFENCE);
         return this;
@@ -516,6 +537,9 @@ public class CaseDataBuilder {
             // Claimant Response
             .applicant1ProceedWithClaim(applicant1ProceedWithClaim)
             .applicant1DefenceResponseDocument(applicant1DefenceResponseDocument)
+
+            //Case procceds in Caseman
+            .claimProceedsInCaseman(claimProceedsInCaseman)
 
             .ccdState(ccdState)
             .businessProcess(businessProcess)
