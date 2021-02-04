@@ -349,13 +349,12 @@ public class CaseDataBuilder {
         respondent1 = PartyBuilder.builder().soleTrader().build();
         respondent1Represented = YES;
         applicantSolicitor1ClaimStatementOfTruth = StatementOfTruthBuilder.builder().build();
-
+        claimSubmittedDateTime = LocalDateTime.now();
         return this;
     }
 
     public CaseDataBuilder atStatePendingCaseIssued() {
         atStateClaimDraft();
-        claimSubmittedDateTime = LocalDateTime.now();
         legacyCaseReference = LEGACY_CASE_REFERENCE;
         allocatedTrack = FAST_CLAIM;
         ccdState = PENDING_CASE_ISSUED;

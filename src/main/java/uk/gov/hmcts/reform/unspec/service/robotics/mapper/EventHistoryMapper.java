@@ -20,24 +20,29 @@ public class EventHistoryMapper {
 
     private final StateFlowEngine stateFlowEngine;
 
+    @SuppressWarnings("MissingSwitchDefault")
     public EventHistory buildEvents(CaseData caseData) {
         EventHistory.EventHistoryBuilder builder = EventHistory.builder();
         State state = stateFlowEngine.evaluate(caseData).getState();
         FlowState.Main mainFlowState = (FlowState.Main) FlowState.fromFullName(state.getName());
         switch (mainFlowState) {
             case PROCEEDS_WITH_OFFLINE_JOURNEY:
-                builder.miscellaneous(
-                    List.of(Event.builder()
-                                .eventSequence(1)
-                                .eventCode("999")
-                                .dateReceived(caseData.getClaimSubmittedDateTime().toLocalDate().format(ISO_DATE))
-                                .eventDetails(EventDetails.builder()
-                                                  .miscText("RPA Reason: Unrepresented defendant.")
-                                                  .build())
-                                .build()
-                    ));
+                buildUnrepresentedDefendant(caseData, builder);
                 break;
         }
         return builder.build();
+    }
+
+    private void buildUnrepresentedDefendant(CaseData caseData, EventHistory.EventHistoryBuilder builder) {
+        builder.miscellaneous(
+            List.of(Event.builder()
+                        .eventSequence(1)
+                        .eventCode("999")
+                        .dateReceived(caseData.getClaimSubmittedDateTime().toLocalDate().format(ISO_DATE))
+                        .eventDetails(EventDetails.builder()
+                                          .miscText("RPA Reason: Unrepresented defendant.")
+                                          .build())
+                        .build()
+            ));
     }
 }
