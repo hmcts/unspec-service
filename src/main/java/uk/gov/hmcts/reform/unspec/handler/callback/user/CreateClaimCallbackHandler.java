@@ -5,6 +5,8 @@ import org.springframework.stereotype.Service;
 import uk.gov.hmcts.reform.ccd.client.model.AboutToStartOrSubmitCallbackResponse;
 import uk.gov.hmcts.reform.ccd.client.model.CallbackResponse;
 import uk.gov.hmcts.reform.ccd.client.model.SubmittedCallbackResponse;
+import uk.gov.hmcts.reform.idam.client.IdamClient;
+import uk.gov.hmcts.reform.idam.client.models.UserDetails;
 import uk.gov.hmcts.reform.prd.model.Organisation;
 import uk.gov.hmcts.reform.unspec.callback.Callback;
 import uk.gov.hmcts.reform.unspec.callback.CallbackHandler;
@@ -16,6 +18,7 @@ import uk.gov.hmcts.reform.unspec.enums.YesOrNo;
 import uk.gov.hmcts.reform.unspec.helpers.CaseDetailsConverter;
 import uk.gov.hmcts.reform.unspec.model.BusinessProcess;
 import uk.gov.hmcts.reform.unspec.model.CaseData;
+import uk.gov.hmcts.reform.unspec.model.IdamCorrectEmail;
 import uk.gov.hmcts.reform.unspec.model.Party;
 import uk.gov.hmcts.reform.unspec.model.SolicitorReferences;
 import uk.gov.hmcts.reform.unspec.model.common.DynamicList;
@@ -70,6 +73,7 @@ public class CreateClaimCallbackHandler extends CallbackHandler {
     private final FeesService feesService;
     private final OrganisationService organisationService;
     private final StateFlowEngine stateFlowEngine;
+    private final IdamClient idamClient;
 
     @Override
     protected Map<String, Callback> callbacks() {
@@ -77,6 +81,8 @@ public class CreateClaimCallbackHandler extends CallbackHandler {
             callbackKey(ABOUT_TO_START), this::emptyCallbackResponse,
             callbackKey(MID, "applicant"), this::validateDateOfBirth,
             callbackKey(MID, "fee"), this::calculateFee,
+            callbackKey(MID, "idam-email"), this::getIdamEmail,
+            callbackKey(MID, "set-email"), this::setEmailForApplicantSolicitor1,
             callbackKey(ABOUT_TO_SUBMIT), this::submitClaim,
             callbackKey(SUBMITTED), this::buildConfirmation
         );
@@ -110,6 +116,36 @@ public class CreateClaimCallbackHandler extends CallbackHandler {
             .applicantSolicitor1PbaAccounts(DynamicList.fromList(pbaNumbers))
             .applicantSolicitor1PbaAccountsIsEmpty(pbaNumbers.isEmpty() ? YesOrNo.YES : YesOrNo.NO)
             .paymentReference(paymentReference);
+
+        return AboutToStartOrSubmitCallbackResponse.builder()
+            .data(caseDetailsConverter.toMap(caseDataBuilder.build()))
+            .build();
+    }
+
+    private CallbackResponse getIdamEmail(CallbackParams callbackParams) {
+        UserDetails userDetails = idamClient.getUserDetails(callbackParams.getParams().get(BEARER_TOKEN).toString());
+
+        IdamCorrectEmail correctEmail = IdamCorrectEmail.builder()
+            .label(userDetails.getEmail())
+            .build();
+
+        CaseData.CaseDataBuilder caseDataBuilder = callbackParams.getCaseData().toBuilder()
+            .applicantSolicitor1IdamEmail(correctEmail);
+
+        return AboutToStartOrSubmitCallbackResponse.builder()
+            .data(caseDetailsConverter.toMap(caseDataBuilder.build()))
+            .build();
+    }
+
+    private CallbackResponse setEmailForApplicantSolicitor1(CallbackParams callbackParams) {
+        CaseData caseData = callbackParams.getCaseData();
+        IdamCorrectEmail applicantSolicitor1IdamEmail = caseData.getApplicantSolicitor1IdamEmail();
+        CaseData.CaseDataBuilder caseDataBuilder = caseData.toBuilder();
+
+        if (applicantSolicitor1IdamEmail.isCorrect()) {
+            caseDataBuilder.applicantSolicitor1EmailAddress(applicantSolicitor1IdamEmail.getLabel());
+            caseDataBuilder.applicantSolicitor1IdamEmail(null);
+        }
 
         return AboutToStartOrSubmitCallbackResponse.builder()
             .data(caseDetailsConverter.toMap(caseDataBuilder.build()))

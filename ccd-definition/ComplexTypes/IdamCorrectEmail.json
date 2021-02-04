@@ -2,8 +2,8 @@
   {
     "ID": "IdamCorrectEmail",
     "ListElementCode": "email",
-    "FieldType": "Label",
-    "ElementLabel": "",
+    "FieldType": "TextArea",
+    "ElementLabel": "Your current logged in email:",
     "SecurityClassification": "Public"
   },
   {

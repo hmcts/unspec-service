@@ -81,7 +81,7 @@
     "CaseEventID": "CREATE_CLAIM",
     "CaseFieldID": "applicantSolicitor1IdamEmail",
     "PageFieldDisplayOrder": 1,
-    "DisplayContext": "MANDATORY",
+    "DisplayContext": "COMPLEX",
     "PageID": "ApplicantSolicitorEmail",
     "PageDisplayOrder": 6,
     "PageColumnNumber": 1,
