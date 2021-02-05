@@ -12,6 +12,7 @@ import uk.gov.hmcts.reform.unspec.utils.PartyUtils;
 
 import static java.time.format.DateTimeFormatter.ISO_DATE;
 import static java.util.Optional.ofNullable;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static uk.gov.hmcts.reform.unspec.assertion.CustomAssertions.assertMoney;
 import static uk.gov.hmcts.reform.unspec.assertion.CustomAssertions.assertThat;
 
@@ -63,6 +64,8 @@ public class RoboticsCaseDataAssert extends CustomAssert<RoboticsCaseDataAssert,
             actual.getSolicitors().get(1),
             expected.getSolicitorReferences().getRespondentSolicitor1Reference()
         );
+
+        assertNotNull(actual.getEvents());
 
         return this;
     }

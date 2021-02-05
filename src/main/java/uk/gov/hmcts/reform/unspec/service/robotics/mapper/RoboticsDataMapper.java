@@ -15,6 +15,7 @@ import uk.gov.hmcts.reform.unspec.model.robotics.Solicitor;
 import uk.gov.hmcts.reform.unspec.utils.PartyUtils;
 
 import java.util.List;
+import java.util.Optional;
 
 import static java.time.format.DateTimeFormatter.ISO_DATE;
 import static java.util.Objects.requireNonNull;
@@ -49,7 +50,9 @@ public class RoboticsDataMapper {
             .courtFee(ofNullable(caseData.getClaimFee())
                           .map(fee -> penniesToPounds(fee.getCalculatedAmountInPence()))
                           .orElse(null))
-            .caseIssuedDate(caseData.getClaimIssuedDate().format(ISO_DATE))
+            .caseIssuedDate(Optional.ofNullable(caseData.getClaimIssuedDate())
+                                .map(issueDate -> issueDate.format(ISO_DATE))
+                                .orElse(null))
             .caseRequestReceivedDate(caseData.getClaimSubmittedDateTime().toLocalDate().format(ISO_DATE))
             .build();
     }

@@ -165,17 +165,17 @@
           },
           "dateOfService": {
             "$id": "#/properties/litigiousParties/items/properties/dateOfService",
-            "$ref": "#/definitions/formatDateORNull",
+            "$ref": "#/definitions/formatDateOrNull",
             "description": ""
           },
           "lastDateForService": {
             "$id": "#/properties/litigiousParties/items/properties/lastDateForService",
-            "$ref": "#/definitions/formatDateORNull",
+            "$ref": "#/definitions/formatDateOrNull",
             "description": ""
           },
           "dateOfBirth": {
             "$id": "#/properties/litigiousParties/items/properties/dateOfBirth",
-            "$ref": "#/definitions/formatDateORNull",
+            "$ref": "#/definitions/formatDateOrNull",
             "description": ""
           },
           "solicitorOrganisationID": {
@@ -283,13 +283,13 @@
       ],
       "properties": {
         "caseRequestReceivedDate": {
-          "$id": "#/properties/claimDetails/properties/caseIssued",
+          "$id": "#/properties/claimDetails/properties/caseRequestReceivedDate",
           "$ref": "#/definitions/formatDate",
           "description": ""
         },
         "caseIssuedDate": {
-          "$id": "#/properties/claimDetails/properties/caseIssued",
-          "$ref": "#/definitions/formatDate",
+          "$id": "#/properties/claimDetails/properties/caseIssuedDate",
+          "$ref": "#/definitions/formatDateOrNull",
           "description": ""
         },
         "amountClaimed": {
@@ -318,7 +318,7 @@
         "defenceFiled",
         "defenceAndCounterClaim",
         "receiptOfPartAdmission",
-        "receiptofAdmission",
+        "receiptOfAdmission",
         "replyToDefence",
         "directionsQuestionnaireFiled"
       ],
@@ -394,11 +394,11 @@
           ],
           "description": ""
         },
-        "receiptofAdmission": {
-          "$id": "#/properties/events/properties/receiptofAdmission",
+        "receiptOfAdmission": {
+          "$id": "#/properties/events/properties/receiptOfAdmission",
           "anyOf": [
             {
-              "$ref": "#/definitions/receiptofAdmissionEventType"
+              "$ref": "#/definitions/receiptOfAdmissionEventType"
             },
             {
               "$ref": "#/definitions/nullEventType"
@@ -436,8 +436,8 @@
   },
   "additionalProperties": false,
   "definitions": {
-    "formatDateORNull": {
-      "$id": "#/definitions/formatDateORNull",
+    "formatDateOrNull": {
+      "$id": "#/definitions/formatDateOrNull",
       "type": [
         "string",
         "null"
@@ -954,12 +954,12 @@
         "additionalProperties": false
       }
     },
-    "receiptofAdmissionEventType": {
-      "$id": "#/definitions/receiptofAdmissionEventType",
+    "receiptOfAdmissionEventType": {
+      "$id": "#/definitions/receiptOfAdmissionEventType",
       "type": "array",
       "additionalItems": false,
       "items": {
-        "$id": "#/definitions/receiptofAdmissionEventType/items",
+        "$id": "#/definitions/receiptOfAdmissionEventType/items",
         "type": "object",
         "required": [
           "eventSequence",
@@ -970,27 +970,27 @@
         ],
         "properties": {
           "eventSequence": {
-            "$id": "#/definitions/receiptofAdmissionEventType/items/properties/eventSequence",
+            "$id": "#/definitions/receiptOfAdmissionEventType/items/properties/eventSequence",
             "$ref": "#/definitions/eventSequenceType"
           },
           "eventCode": {
-            "$id": "#/definitions/receiptofAdmissionEventType/items/properties/eventCode",
+            "$id": "#/definitions/receiptOfAdmissionEventType/items/properties/eventCode",
             "type": "string",
             "const": "40",
-            "description": "The CASEMAN code for the receiptofAdmission event."
+            "description": "The CASEMAN code for the receiptOfAdmission event."
           },
           "dateReceived": {
-            "$id": "#/definitions/receiptofAdmissionEventType/items/properties/dateReceived",
+            "$id": "#/definitions/receiptOfAdmissionEventType/items/properties/dateReceived",
             "$ref": "#/definitions/formatDate",
             "description": ""
           },
           "litigiousPartyID": {
-            "$id": "#/definitions/receiptofAdmissionEventType/items/properties/litigiousPartyID",
+            "$id": "#/definitions/receiptOfAdmissionEventType/items/properties/litigiousPartyID",
             "$ref": "#/definitions/litigiousPartyIDType",
             "description": ""
           },
           "eventDetails": {
-            "$id": "#/definitions/receiptofAdmissionEventType/items/properties/eventDetails",
+            "$id": "#/definitions/receiptOfAdmissionEventType/items/properties/eventDetails",
             "type": [
               "object",
               "null"

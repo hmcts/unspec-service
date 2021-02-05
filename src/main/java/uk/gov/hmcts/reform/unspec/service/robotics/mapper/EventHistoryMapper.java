@@ -29,8 +29,15 @@ public class EventHistoryMapper {
             case PROCEEDS_OFFLINE_UNREPRESENTED_DEFENDANT:
                 buildUnrepresentedDefendant(caseData, builder);
                 break;
+            case PROCEEDS_OFFLINE_ADMIT_OR_COUNTER_CLAIM:
+                buildAdmissionsOrCounterClaim(caseData, builder);
+                break;
         }
         return builder.build();
+    }
+
+    private void buildAdmissionsOrCounterClaim(CaseData caseData, EventHistory.EventHistoryBuilder builder) {
+        //will be implemented as part of relevant rpa story.
     }
 
     private void buildUnrepresentedDefendant(CaseData caseData, EventHistory.EventHistoryBuilder builder) {

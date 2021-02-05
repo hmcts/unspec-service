@@ -22,7 +22,7 @@ public class EventHistory {
     @Builder.Default
     private List<Event> receiptOfPartAdmission = List.of(Event.builder().build());
     @Builder.Default
-    private List<Event> receiptofAdmission = List.of(Event.builder().build());
+    private List<Event> receiptOfAdmission = List.of(Event.builder().build());
     @Builder.Default
     private List<Event> replyToDefence = List.of(Event.builder().build());
     @Builder.Default
