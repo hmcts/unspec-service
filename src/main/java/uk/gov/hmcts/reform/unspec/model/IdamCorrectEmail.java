@@ -8,7 +8,7 @@ import uk.gov.hmcts.reform.unspec.enums.YesOrNo;
 @Builder
 public class IdamCorrectEmail {
 
-    private final String label;
+    private final String email;
     private final YesOrNo isCorrect;
 
     public boolean isCorrect() {

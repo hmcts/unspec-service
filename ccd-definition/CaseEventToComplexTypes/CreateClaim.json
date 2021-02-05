@@ -194,7 +194,7 @@
     "ID": "IdamEmail",
     "CaseEventID": "CREATE_CLAIM",
     "CaseFieldID": "applicantSolicitor1IdamEmail",
-    "ListElementCode": "label",
+    "ListElementCode": "email",
     "FieldDisplayOrder": 1,
     "DisplayContext": "READONLY"
   },

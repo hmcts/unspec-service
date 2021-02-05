@@ -124,10 +124,14 @@ public class CreateClaimCallbackHandler extends CallbackHandler {
     }
 
     private CallbackResponse getIdamEmail(CallbackParams callbackParams) {
+
+        //TODO: below error
+        // Case data validation failed: The following list of fields are in an invalid state:
+        // [applicantSolicitor1IdamEmail.correct, applicantSolicitor1IdamEmail.label]
         UserDetails userDetails = idamClient.getUserDetails(callbackParams.getParams().get(BEARER_TOKEN).toString());
 
         IdamCorrectEmail correctEmail = IdamCorrectEmail.builder()
-            .label(userDetails.getEmail())
+            .email(userDetails.getEmail())
             .build();
 
         CaseData.CaseDataBuilder caseDataBuilder = callbackParams.getCaseData().toBuilder()
@@ -147,7 +151,7 @@ public class CreateClaimCallbackHandler extends CallbackHandler {
 
         if (applicantSolicitor1IdamEmail.isCorrect()) {
             caseDataBuilder.applicantSolicitor1IdamUserDetails(
-                applicantSolicitor1IdamDetails.toBuilder().email(applicantSolicitor1IdamEmail.getLabel()).build()
+                applicantSolicitor1IdamDetails.toBuilder().email(applicantSolicitor1IdamEmail.getEmail()).build()
             );
         }
 

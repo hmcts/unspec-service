@@ -264,7 +264,7 @@ class CreateClaimCallbackHandlerTest extends BaseCallbackHandlerTest {
 
             assertThat(response.getData())
                 .extracting("applicantSolicitor1IdamEmail")
-                .extracting("label")
+                .extracting("email")
                 .isEqualTo(email);
 
             assertThat(response.getData())
@@ -287,7 +287,7 @@ class CreateClaimCallbackHandlerTest extends BaseCallbackHandlerTest {
 
             CaseData caseData = CaseDataBuilder.builder().atStateClaimDraft().build().toBuilder()
                 .applicantSolicitor1IdamEmail(IdamCorrectEmail.builder()
-                                                  .label(EMAIL)
+                                                  .email(EMAIL)
                                                   .isCorrect(YES)
                                                   .build())
                 .applicantSolicitor1IdamUserDetails(IdamUserDetails.builder()
@@ -315,7 +315,7 @@ class CreateClaimCallbackHandlerTest extends BaseCallbackHandlerTest {
 
             CaseData caseData = CaseDataBuilder.builder().atStateClaimDraft().build().toBuilder()
                 .applicantSolicitor1IdamEmail(IdamCorrectEmail.builder()
-                                                  .label(EMAIL)
+                                                  .email(EMAIL)
                                                   .isCorrect(NO)
                                                   .build())
                 .applicantSolicitor1IdamUserDetails(IdamUserDetails.builder()
