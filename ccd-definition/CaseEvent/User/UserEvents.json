@@ -133,7 +133,7 @@
     "Name": "Respond to claim",
     "Description": "Defendant response to claim",
     "DisplayOrder": 8,
-    "PreConditionState(s)": "PENDING_CASE_ISSUED;CREATED",
+    "PreConditionState(s)": "CREATED",
     "PostConditionState": "AWAITING_CLAIMANT_INTENTION",
     "SecurityClassification": "Public",
     "CallBackURLAboutToStartEvent": "${CCD_DEF_CASE_SERVICE_BASE_URL}/cases/callbacks/about-to-start",
