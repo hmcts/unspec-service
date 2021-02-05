@@ -30,7 +30,8 @@ import static uk.gov.hmcts.reform.unspec.service.flowstate.FlowState.Main.EXTENS
 import static uk.gov.hmcts.reform.unspec.service.flowstate.FlowState.Main.FULL_DEFENCE;
 import static uk.gov.hmcts.reform.unspec.service.flowstate.FlowState.Main.PAYMENT_SUCCESSFUL;
 import static uk.gov.hmcts.reform.unspec.service.flowstate.FlowState.Main.PENDING_CASE_ISSUED;
-import static uk.gov.hmcts.reform.unspec.service.flowstate.FlowState.Main.PROCEEDS_WITH_OFFLINE_JOURNEY;
+import static uk.gov.hmcts.reform.unspec.service.flowstate.FlowState.Main.PROCEEDS_OFFLINE_ADMIT_OR_COUNTER_CLAIM;
+import static uk.gov.hmcts.reform.unspec.service.flowstate.FlowState.Main.PROCEEDS_OFFLINE_UNREPRESENTED_DEFENDANT;
 import static uk.gov.hmcts.reform.unspec.service.flowstate.FlowState.Main.RESPONDED_TO_CLAIM;
 import static uk.gov.hmcts.reform.unspec.service.flowstate.FlowState.Main.SERVICE_ACKNOWLEDGED;
 
@@ -75,12 +76,12 @@ class StateFlowEngineTest {
             assertThat(stateFlow.getState())
                 .extracting(State::getName)
                 .isNotNull()
-                .isEqualTo(PROCEEDS_WITH_OFFLINE_JOURNEY.fullName());
+                .isEqualTo(PROCEEDS_OFFLINE_UNREPRESENTED_DEFENDANT.fullName());
             assertThat(stateFlow.getStateHistory())
                 .hasSize(2)
                 .extracting(State::getName)
                 .containsExactly(
-                    DRAFT.fullName(), PROCEEDS_WITH_OFFLINE_JOURNEY.fullName());
+                    DRAFT.fullName(), PROCEEDS_OFFLINE_UNREPRESENTED_DEFENDANT.fullName());
         }
 
         @Test
@@ -257,21 +258,21 @@ class StateFlowEngineTest {
 
         @Test
         void shouldReturnProceedsWithOfflineJourney_whenCcdStateIsProceedsWithOfflineJourney() {
-            CaseData caseData = CaseDataBuilder.builder().atStateProceedsOffline().build();
+            CaseData caseData = CaseDataBuilder.builder().atStateProceedsOfflineAdmissionOrCounterClaim().build();
 
             StateFlow stateFlow = stateFlowEngine.evaluate(caseData);
 
             assertThat(stateFlow.getState())
                 .extracting(State::getName)
                 .isNotNull()
-                .isEqualTo(PROCEEDS_WITH_OFFLINE_JOURNEY.fullName());
+                .isEqualTo(PROCEEDS_OFFLINE_ADMIT_OR_COUNTER_CLAIM.fullName());
             assertThat(stateFlow.getStateHistory())
                 .hasSize(7)
                 .extracting(State::getName)
                 .containsExactly(
                     DRAFT.fullName(), PENDING_CASE_ISSUED.fullName(), PAYMENT_SUCCESSFUL.fullName(),
                     AWAITING_CASE_NOTIFICATION.fullName(), CLAIM_ISSUED.fullName(), RESPONDED_TO_CLAIM.fullName(),
-                    PROCEEDS_WITH_OFFLINE_JOURNEY.fullName()
+                    PROCEEDS_OFFLINE_ADMIT_OR_COUNTER_CLAIM.fullName()
                 );
         }
 
@@ -284,14 +285,13 @@ class StateFlowEngineTest {
             assertThat(stateFlow.getState())
                 .extracting(State::getName)
                 .isNotNull()
-                .isEqualTo(PROCEEDS_WITH_OFFLINE_JOURNEY.fullName());
+                .isEqualTo(CASE_PROCEEDS_IN_CASEMAN.fullName());
             assertThat(stateFlow.getStateHistory())
-                .hasSize(7)
+                .hasSize(6)
                 .extracting(State::getName)
                 .containsExactly(
                     DRAFT.fullName(), PENDING_CASE_ISSUED.fullName(), PAYMENT_SUCCESSFUL.fullName(),
-                    AWAITING_CASE_NOTIFICATION.fullName(), CLAIM_ISSUED.fullName(), CASE_PROCEEDS_IN_CASEMAN.fullName(),
-                    PROCEEDS_WITH_OFFLINE_JOURNEY.fullName()
+                    AWAITING_CASE_NOTIFICATION.fullName(), CLAIM_ISSUED.fullName(), CASE_PROCEEDS_IN_CASEMAN.fullName()
                 );
         }
     }
@@ -332,6 +332,8 @@ class StateFlowEngineTest {
                 "PAYMENT_FAILED",
                 "PAYMENT_SUCCESSFUL",
                 "CLAIM_DISCONTINUED",
+                "PROCEEDS_OFFLINE_UNREPRESENTED_DEFENDANT",
+                "PROCEEDS_OFFLINE_ADMIT_OR_COUNTER_CLAIM",
                 "AWAITING_CASE_NOTIFICATION",
                 "CASE_PROCEEDS_IN_CASEMAN"
             })
@@ -357,6 +359,8 @@ class StateFlowEngineTest {
                 "PAYMENT_FAILED",
                 "PAYMENT_SUCCESSFUL",
                 "CLAIM_WITHDRAWN",
+                "PROCEEDS_OFFLINE_UNREPRESENTED_DEFENDANT",
+                "PROCEEDS_OFFLINE_ADMIT_OR_COUNTER_CLAIM",
                 "AWAITING_CASE_NOTIFICATION",
                 "CASE_PROCEEDS_IN_CASEMAN"
             })
