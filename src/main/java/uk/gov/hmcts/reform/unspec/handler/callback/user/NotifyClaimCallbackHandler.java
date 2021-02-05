@@ -28,7 +28,7 @@ import static uk.gov.hmcts.reform.unspec.callback.CaseEvent.NOTIFY_DEFENDANT_OF_
 public class NotifyClaimCallbackHandler extends CallbackHandler {
 
     private static final List<CaseEvent> EVENTS = Collections.singletonList(NOTIFY_DEFENDANT_OF_CLAIM);
-    public static final String CONFIRMATION_SUMMARY = "<br />##What happens next\n\n"
+    public static final String CONFIRMATION_SUMMARY = "<br />What happens next\n\n"
         + "The defendant legal representative's organisation has been notified and granted access to this claim.\n\n"
         + "You must notify the defendant with the claim details by %s";
 
