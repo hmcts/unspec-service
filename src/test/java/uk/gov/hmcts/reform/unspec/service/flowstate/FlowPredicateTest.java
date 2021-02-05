@@ -14,6 +14,7 @@ import static uk.gov.hmcts.reform.unspec.service.flowstate.FlowPredicate.applica
 import static uk.gov.hmcts.reform.unspec.service.flowstate.FlowPredicate.applicantRespondToRequestForExtension;
 import static uk.gov.hmcts.reform.unspec.service.flowstate.FlowPredicate.claimDiscontinued;
 import static uk.gov.hmcts.reform.unspec.service.flowstate.FlowPredicate.claimIssued;
+import static uk.gov.hmcts.reform.unspec.service.flowstate.FlowPredicate.claimNotified;
 import static uk.gov.hmcts.reform.unspec.service.flowstate.FlowPredicate.claimTakenOffline;
 import static uk.gov.hmcts.reform.unspec.service.flowstate.FlowPredicate.claimWithdrawn;
 import static uk.gov.hmcts.reform.unspec.service.flowstate.FlowPredicate.paymentFailed;
@@ -32,7 +33,7 @@ class FlowPredicateTest {
 
         @Test
         void shouldReturnTrue_whenCaseDataAtIssuedSate() {
-            CaseData caseData = CaseDataBuilder.builder().atStatePendingCaseIssued().build();
+            CaseData caseData = CaseDataBuilder.builder().atStateAwaitingCaseNotification().build();
             assertTrue(pendingCaseIssued.test(caseData));
         }
 
@@ -40,6 +41,22 @@ class FlowPredicateTest {
         void shouldReturnFalse_whenCaseDataIsAtDraftSate() {
             CaseData caseData = CaseDataBuilder.builder().atStateClaimDraft().build();
             assertFalse(pendingCaseIssued.test(caseData));
+        }
+    }
+
+    @Nested
+    class ClaimNotifiedPredicate {
+
+        @Test
+        void shouldReturnTrue_whenCaseDataAtIssuedSate() {
+            CaseData caseData = CaseDataBuilder.builder().atStateClaimCreated().build();
+            assertTrue(claimNotified.test(caseData));
+        }
+
+        @Test
+        void shouldReturnFalse_whenCaseDataIsAtDraftSate() {
+            CaseData caseData = CaseDataBuilder.builder().atStateClaimDraft().build();
+            assertFalse(claimNotified.test(caseData));
         }
     }
 

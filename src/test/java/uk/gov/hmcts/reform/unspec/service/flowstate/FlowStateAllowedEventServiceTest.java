@@ -33,9 +33,11 @@ import static uk.gov.hmcts.reform.unspec.callback.CaseEvent.DEFENDANT_RESPONSE;
 import static uk.gov.hmcts.reform.unspec.callback.CaseEvent.DISCONTINUE_CLAIM;
 import static uk.gov.hmcts.reform.unspec.callback.CaseEvent.MOVE_CLAIM_TO_STRUCK_OUT;
 import static uk.gov.hmcts.reform.unspec.callback.CaseEvent.MOVE_TO_STAYED;
+import static uk.gov.hmcts.reform.unspec.callback.CaseEvent.NOTIFY_DEFENDANT_OF_CLAIM;
 import static uk.gov.hmcts.reform.unspec.callback.CaseEvent.REQUEST_EXTENSION;
 import static uk.gov.hmcts.reform.unspec.callback.CaseEvent.RESPOND_EXTENSION;
 import static uk.gov.hmcts.reform.unspec.callback.CaseEvent.WITHDRAW_CLAIM;
+import static uk.gov.hmcts.reform.unspec.service.flowstate.FlowState.Main.AWAITING_CASE_NOTIFICATION;
 import static uk.gov.hmcts.reform.unspec.service.flowstate.FlowState.Main.CLAIM_ISSUED;
 import static uk.gov.hmcts.reform.unspec.service.flowstate.FlowState.Main.CLAIM_STAYED;
 import static uk.gov.hmcts.reform.unspec.service.flowstate.FlowState.Main.DRAFT;
@@ -63,6 +65,7 @@ class FlowStateAllowedEventServiceTest {
         public Stream<? extends Arguments> provideArguments(ExtensionContext context) {
             return Stream.of(
                 of(CaseDataBuilder.builder().atStateClaimDraft().build(), DRAFT),
+                of(CaseDataBuilder.builder().atStateAwaitingCaseNotification().build(), AWAITING_CASE_NOTIFICATION),
                 of(CaseDataBuilder.builder().atStateClaimCreated().build(), CLAIM_ISSUED),
                 of(CaseDataBuilder.builder().atStateClaimStayed().build(), CLAIM_STAYED),
                 of(CaseDataBuilder.builder().atStateServiceAcknowledge().build(), SERVICE_ACKNOWLEDGED),
@@ -92,6 +95,12 @@ class FlowStateAllowedEventServiceTest {
         void shouldReturnValidEvents_whenFlowStateIsDraft() {
             assertThat(flowStateAllowedEventService.getAllowedEvents(DRAFT.fullName()))
                 .containsExactlyInAnyOrder(CREATE_CLAIM, WITHDRAW_CLAIM, DISCONTINUE_CLAIM);
+        }
+
+        @Test
+        void shouldReturnValidEvents_whenFlowStateIsAwaitingCaseNotification() {
+            assertThat(flowStateAllowedEventService.getAllowedEvents(AWAITING_CASE_NOTIFICATION.fullName()))
+                .containsExactlyInAnyOrder(NOTIFY_DEFENDANT_OF_CLAIM, ADD_DEFENDANT_LITIGATION_FRIEND);
         }
 
         @Test
@@ -156,6 +165,8 @@ class FlowStateAllowedEventServiceTest {
             "CLAIM_ISSUED,MOVE_TO_STAYED",
             "CLAIM_ISSUED,ACKNOWLEDGE_SERVICE",
             "CLAIM_ISSUED,WITHDRAW_CLAIM",
+            "AWAITING_CASE_NOTIFICATION,NOTIFY_DEFENDANT_OF_CLAIM",
+            "AWAITING_CASE_NOTIFICATION,ADD_DEFENDANT_LITIGATION_FRIEND",
             "SERVICE_ACKNOWLEDGED,REQUEST_EXTENSION",
             "SERVICE_ACKNOWLEDGED,DEFENDANT_RESPONSE",
             "EXTENSION_REQUESTED,RESPOND_EXTENSION",
@@ -171,6 +182,7 @@ class FlowStateAllowedEventServiceTest {
         @ParameterizedTest
         @CsvSource({
             "CLAIM_STAYED,DEFENDANT_RESPONSE",
+            "AWAITING_CASE_NOTIFICATION,ACKNOWLEDGE_SERVICE",
             "FULL_DEFENCE,ACKNOWLEDGE_SERVICE"
         })
         void shouldReturnFalse_whenEventIsNotAllowedAtGivenState(FlowState.Main flowState, CaseEvent caseEvent) {
@@ -189,6 +201,7 @@ class FlowStateAllowedEventServiceTest {
                 of(RESPOND_EXTENSION, new String[]{EXTENSION_REQUESTED.fullName()}),
                 of(MOVE_TO_STAYED, new String[]{CLAIM_ISSUED.fullName()}),
                 of(ACKNOWLEDGE_SERVICE, new String[]{CLAIM_ISSUED.fullName()}),
+                of(NOTIFY_DEFENDANT_OF_CLAIM, new String[]{AWAITING_CASE_NOTIFICATION.fullName()}),
                 of(CLAIMANT_RESPONSE, new String[]{RESPONDED_TO_CLAIM.fullName()}),
                 of(
                     DEFENDANT_RESPONSE,
@@ -206,6 +219,13 @@ class FlowStateAllowedEventServiceTest {
                 of(
                     DISCONTINUE_CLAIM,
                     new String[]{DRAFT.fullName(), CLAIM_ISSUED.fullName(), CLAIM_STAYED.fullName(),
+                        SERVICE_ACKNOWLEDGED.fullName(), EXTENSION_REQUESTED.fullName(),
+                        EXTENSION_RESPONDED.fullName(), RESPONDED_TO_CLAIM.fullName(), FULL_DEFENCE.fullName()
+                    }
+                ),
+                of(
+                    ADD_DEFENDANT_LITIGATION_FRIEND,
+                    new String[]{AWAITING_CASE_NOTIFICATION.fullName(), CLAIM_ISSUED.fullName(),
                         SERVICE_ACKNOWLEDGED.fullName(), EXTENSION_REQUESTED.fullName(),
                         EXTENSION_RESPONDED.fullName(), RESPONDED_TO_CLAIM.fullName(), FULL_DEFENCE.fullName()
                     }
@@ -231,31 +251,33 @@ class FlowStateAllowedEventServiceTest {
         @SneakyThrows
         public Stream<? extends Arguments> provideArguments(ExtensionContext context) {
             return Stream.of(
-                Arguments.of(
+                of(true, CaseDetailsBuilder.builder().atStateExtensionRequested().build(), DEFENDANT_RESPONSE),
+                of(true, CaseDetailsBuilder.builder().atStateExtensionRequested().build(), RESPOND_EXTENSION),
+                of(true, CaseDetailsBuilder.builder().atStateExtensionRequested().build(), WITHDRAW_CLAIM),
+                of(true, CaseDetailsBuilder.builder().atStateExtensionRequested().build(), DISCONTINUE_CLAIM),
+                of(false, CaseDetailsBuilder.builder().atStateExtensionRequested().build(), CREATE_CLAIM),
+                of(false, CaseDetailsBuilder.builder().atStateExtensionRequested().build(), CLAIMANT_RESPONSE),
+                of(true, CaseDetailsBuilder.builder().atStateServiceAcknowledge().build(), REQUEST_EXTENSION),
+                of(true, CaseDetailsBuilder.builder().atStateServiceAcknowledge().build(), WITHDRAW_CLAIM),
+                of(true, CaseDetailsBuilder.builder().atStateServiceAcknowledge().build(), DEFENDANT_RESPONSE),
+                of(true, CaseDetailsBuilder.builder().atStateServiceAcknowledge().build(), DISCONTINUE_CLAIM),
+                of(false, CaseDetailsBuilder.builder().atStateServiceAcknowledge().build(), CREATE_CLAIM),
+                of(false, CaseDetailsBuilder.builder().atStateServiceAcknowledge().build(), CLAIMANT_RESPONSE),
+                of(
                     true,
-                    CaseDetailsBuilder.builder().atStateExtensionRequested().build(),
-                    DEFENDANT_RESPONSE
+                    CaseDetailsBuilder.builder().atStateAwaitingCaseNotification().build(),
+                    NOTIFY_DEFENDANT_OF_CLAIM
                 ),
-                Arguments.of(true, CaseDetailsBuilder.builder().atStateExtensionRequested().build(), RESPOND_EXTENSION),
-                Arguments.of(true, CaseDetailsBuilder.builder().atStateExtensionRequested().build(), WITHDRAW_CLAIM),
-                Arguments.of(true, CaseDetailsBuilder.builder().atStateExtensionRequested().build(), DISCONTINUE_CLAIM),
-                Arguments.of(false, CaseDetailsBuilder.builder().atStateExtensionRequested().build(), CREATE_CLAIM),
-                Arguments.of(
+                of(
+                    true,
+                    CaseDetailsBuilder.builder().atStateAwaitingCaseNotification().build(),
+                    ADD_DEFENDANT_LITIGATION_FRIEND
+                ),
+                of(
                     false,
-                    CaseDetailsBuilder.builder().atStateExtensionRequested().build(),
-                    CLAIMANT_RESPONSE
-                ),
-
-                Arguments.of(true, CaseDetailsBuilder.builder().atStateServiceAcknowledge().build(), REQUEST_EXTENSION),
-                Arguments.of(true, CaseDetailsBuilder.builder().atStateServiceAcknowledge().build(), WITHDRAW_CLAIM),
-                Arguments.of(
-                    true,
-                    CaseDetailsBuilder.builder().atStateServiceAcknowledge().build(),
-                    DEFENDANT_RESPONSE
-                ),
-                Arguments.of(true, CaseDetailsBuilder.builder().atStateServiceAcknowledge().build(), DISCONTINUE_CLAIM),
-                Arguments.of(false, CaseDetailsBuilder.builder().atStateServiceAcknowledge().build(), CREATE_CLAIM),
-                Arguments.of(false, CaseDetailsBuilder.builder().atStateServiceAcknowledge().build(), CLAIMANT_RESPONSE)
+                    CaseDetailsBuilder.builder().atStateAwaitingCaseNotification().build(),
+                    ACKNOWLEDGE_SERVICE
+                )
             );
         }
     }
