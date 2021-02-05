@@ -710,7 +710,7 @@
     "LiveFrom": "01/01/2017",
     "CaseTypeID": "UNSPECIFIED_CLAIMS",
     "ID": "applicantSolicitor1IdamEmail",
-    "Label": "",
+    "Label": "Idam email address",
     "FieldType": "IdamCorrectEmail",
     "SecurityClassification": "Public"
   },
