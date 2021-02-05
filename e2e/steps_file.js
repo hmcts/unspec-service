@@ -20,7 +20,10 @@ const claimValuePage = require('./pages/createClaim/claimValue.page');
 const pbaNumberPage = require('./pages/createClaim/pbaNumber.page');
 const paymentReferencePage = require('./pages/createClaim/paymentReference.page');
 
-const responseIntentionPage = require('./pages/acknowledgeSerivce/responseIntention.page');
+const responseIntentionPage = require('./pages/acknowledgeService/responseIntention.page');
+
+const caseProceedsInCasemanPage = require('./pages/caseProceedsInCaseman/caseProceedsInCaseman.page');
+const takeCaseOffline = require('./pages/caseProceedsInCaseman/takeCaseOffline.page');
 
 const proposeDeadline = require('./pages/requestExtension/proposeDeadline.page');
 const extensionAlreadyAgreed = require('./pages/requestExtension/extensionAlreadyAgreed.page');
@@ -188,6 +191,12 @@ module.exports = function () {
       await statementOfTruth.enterNameAndRole(parties.APPLICANT_SOLICITOR_1 + 'DQ');
       await event.submit('Submit your response', 'You\'ve decided to proceed with the claim');
       await this.click('Close and Return to case details');
+    },
+
+    async caseProceedsInCaseman() {
+      await caseViewPage.startEvent('Case proceeds in Caseman', caseId);
+      await caseProceedsInCasemanPage.enterTransferDate();
+      await takeCaseOffline.takeCaseOffline();
     },
 
     async clickContinue() {
