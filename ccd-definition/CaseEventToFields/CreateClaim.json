@@ -82,7 +82,7 @@
     "CaseFieldID": "applicantSolicitor1IdamEmail",
     "PageFieldDisplayOrder": 1,
     "DisplayContext": "COMPLEX",
-    "PageID": "ApplicantSolicitorEmail",
+    "PageID": "ClaimantSolicitorEmail",
     "PageDisplayOrder": 6,
     "PageColumnNumber": 1,
     "ShowSummaryChangeOption": "N",

@@ -31,6 +31,11 @@ const createClaimData = legalRepresentation => {
         primaryAddress: buildAddress('litigant friend')
       }
     },
+    ClaimantSolicitorEmail: {
+      applicantSolicitor1IdamEmail: {
+        isCorrect: 'Yes'
+      }
+    },
     ClaimantSolicitorOrganisation:{
       applicant1OrganisationPolicy : {
         OrgPolicyReference : 'Claimant policy reference',
