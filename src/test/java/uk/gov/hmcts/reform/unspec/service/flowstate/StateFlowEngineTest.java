@@ -19,6 +19,7 @@ import uk.gov.hmcts.reform.unspec.stateflow.model.State;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static uk.gov.hmcts.reform.unspec.service.flowstate.FlowState.Main.AWAITING_CASE_NOTIFICATION;
+import static uk.gov.hmcts.reform.unspec.service.flowstate.FlowState.Main.CASE_PROCEEDS_IN_CASEMAN;
 import static uk.gov.hmcts.reform.unspec.service.flowstate.FlowState.Main.CLAIM_DISCONTINUED;
 import static uk.gov.hmcts.reform.unspec.service.flowstate.FlowState.Main.CLAIM_ISSUED;
 import static uk.gov.hmcts.reform.unspec.service.flowstate.FlowState.Main.CLAIM_STAYED;
@@ -273,6 +274,26 @@ class StateFlowEngineTest {
                     PROCEEDS_WITH_OFFLINE_JOURNEY.fullName()
                 );
         }
+
+        @Test
+        void shouldReturnProceedsWithOfflineJourney_whenCaseDataIsCaseProceedsInCaseman() {
+            CaseData caseData = CaseDataBuilder.builder().atStateCaseProceedsInCaseman().build();
+
+            StateFlow stateFlow = stateFlowEngine.evaluate(caseData);
+
+            assertThat(stateFlow.getState())
+                .extracting(State::getName)
+                .isNotNull()
+                .isEqualTo(PROCEEDS_WITH_OFFLINE_JOURNEY.fullName());
+            assertThat(stateFlow.getStateHistory())
+                .hasSize(7)
+                .extracting(State::getName)
+                .containsExactly(
+                    DRAFT.fullName(), PENDING_CASE_ISSUED.fullName(), PAYMENT_SUCCESSFUL.fullName(),
+                    AWAITING_CASE_NOTIFICATION.fullName(), CLAIM_ISSUED.fullName(), CASE_PROCEEDS_IN_CASEMAN.fullName(),
+                    PROCEEDS_WITH_OFFLINE_JOURNEY.fullName()
+                );
+        }
     }
 
     @Nested
@@ -311,7 +332,8 @@ class StateFlowEngineTest {
                 "PAYMENT_FAILED",
                 "PAYMENT_SUCCESSFUL",
                 "CLAIM_DISCONTINUED",
-                "AWAITING_CASE_NOTIFICATION"
+                "AWAITING_CASE_NOTIFICATION",
+                "CASE_PROCEEDS_IN_CASEMAN"
             })
         @ParameterizedTest(name = "{index} => should withdraw claim after claim state {0}")
         void shouldReturnValidState_whenCaseIsWithdrawnAfter(FlowState.Main flowState) {
@@ -335,7 +357,8 @@ class StateFlowEngineTest {
                 "PAYMENT_FAILED",
                 "PAYMENT_SUCCESSFUL",
                 "CLAIM_WITHDRAWN",
-                "AWAITING_CASE_NOTIFICATION"
+                "AWAITING_CASE_NOTIFICATION",
+                "CASE_PROCEEDS_IN_CASEMAN"
             })
         @ParameterizedTest(name = "{index} => should discontinue claim after claim state {0}")
         void shouldReturnValidState_whenCaseIsDiscontinuedAfter(FlowState.Main flowState) {
