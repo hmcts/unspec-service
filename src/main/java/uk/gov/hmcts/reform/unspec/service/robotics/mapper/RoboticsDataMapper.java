@@ -2,6 +2,7 @@ package uk.gov.hmcts.reform.unspec.service.robotics.mapper;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import uk.gov.hmcts.reform.ccd.model.OrganisationPolicy;
 import uk.gov.hmcts.reform.unspec.enums.AllocatedTrack;
 import uk.gov.hmcts.reform.unspec.model.CaseData;
 import uk.gov.hmcts.reform.unspec.model.LitigationFriend;
@@ -15,7 +16,6 @@ import uk.gov.hmcts.reform.unspec.model.robotics.Solicitor;
 import uk.gov.hmcts.reform.unspec.utils.PartyUtils;
 
 import java.util.List;
-import java.util.Optional;
 
 import static java.time.format.DateTimeFormatter.ISO_DATE;
 import static java.util.Objects.requireNonNull;
@@ -50,7 +50,7 @@ public class RoboticsDataMapper {
             .courtFee(ofNullable(caseData.getClaimFee())
                           .map(fee -> penniesToPounds(fee.getCalculatedAmountInPence()))
                           .orElse(null))
-            .caseIssuedDate(Optional.ofNullable(caseData.getClaimIssuedDate())
+            .caseIssuedDate(ofNullable(caseData.getClaimIssuedDate())
                                 .map(issueDate -> issueDate.format(ISO_DATE))
                                 .orElse(null))
             .caseRequestReceivedDate(caseData.getClaimSubmittedDateTime().toLocalDate().format(ISO_DATE))
@@ -85,6 +85,10 @@ public class RoboticsDataMapper {
 
     private Solicitor buildRespondentSolicitor(CaseData caseData) {
         return Solicitor.builder()
+            .organisationId(ofNullable(caseData.getRespondent1OrganisationPolicy())
+                                .map(organisationPolicy -> organisationPolicy.getOrganisation().getOrganisationID())
+                                .orElse(null)
+            )
             .reference(ofNullable(caseData.getSolicitorReferences())
                            .map(SolicitorReferences::getRespondentSolicitor1Reference)
                            .orElse(null)
@@ -94,6 +98,10 @@ public class RoboticsDataMapper {
 
     private Solicitor buildApplicantSolicitor(CaseData caseData) {
         return Solicitor.builder()
+            .organisationId(ofNullable(caseData.getApplicant1OrganisationPolicy())
+                                .map(organisationPolicy -> organisationPolicy.getOrganisation().getOrganisationID())
+                                .orElse(null)
+            )
             .reference(ofNullable(caseData.getSolicitorReferences())
                            .map(SolicitorReferences::getApplicantSolicitor1Reference)
                            .orElse(null)
@@ -106,25 +114,36 @@ public class RoboticsDataMapper {
             buildLitigiousParty(
                 caseData.getApplicant1(),
                 caseData.getApplicant1LitigationFriend(),
+                caseData.getApplicant1OrganisationPolicy(),
                 "Claimant",
                 "1"
             ),
             buildLitigiousParty(
                 caseData.getRespondent1(),
                 caseData.getRespondent1LitigationFriend(),
+                caseData.getRespondent1OrganisationPolicy(),
                 "Defendant",
                 "1"
             )
         );
     }
 
-    private LitigiousParty buildLitigiousParty(Party party, LitigationFriend litigationFriend, String type, String id) {
+    private LitigiousParty buildLitigiousParty(
+        Party party,
+        LitigationFriend litigationFriend,
+        OrganisationPolicy organisationPolicy,
+        String type,
+        String id
+    ) {
         return LitigiousParty.builder()
             .id(id)
             .type(type)
             .name(PartyUtils.getLitigiousPartyName(party, litigationFriend))
             .dateOfBirth(PartyUtils.getDateOfBirth(party).map(d -> d.format(ISO_DATE)).orElse(null))
             .addresses(addressMapper.toRoboticsAddresses(party.getPrimaryAddress()))
+            .solicitorOrganisationID(ofNullable(organisationPolicy)
+                                         .map(policy -> policy.getOrganisation().getOrganisationID())
+                                         .orElse(null))
             .build();
     }
 }

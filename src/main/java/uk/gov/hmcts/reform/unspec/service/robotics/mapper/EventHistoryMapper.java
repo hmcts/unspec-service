@@ -13,6 +13,7 @@ import uk.gov.hmcts.reform.unspec.stateflow.model.State;
 import java.util.List;
 
 import static java.time.format.DateTimeFormatter.ISO_DATE;
+import static uk.gov.hmcts.reform.unspec.service.flowstate.FlowState.Main.PROCEEDS_OFFLINE_UNREPRESENTED_DEFENDANT;
 
 @Component
 @RequiredArgsConstructor
@@ -20,24 +21,14 @@ public class EventHistoryMapper {
 
     private final StateFlowEngine stateFlowEngine;
 
-    @SuppressWarnings("MissingSwitchDefault")
     public EventHistory buildEvents(CaseData caseData) {
         EventHistory.EventHistoryBuilder builder = EventHistory.builder();
         State state = stateFlowEngine.evaluate(caseData).getState();
         FlowState.Main mainFlowState = (FlowState.Main) FlowState.fromFullName(state.getName());
-        switch (mainFlowState) {
-            case PROCEEDS_OFFLINE_UNREPRESENTED_DEFENDANT:
-                buildUnrepresentedDefendant(caseData, builder);
-                break;
-            case PROCEEDS_OFFLINE_ADMIT_OR_COUNTER_CLAIM:
-                buildAdmissionsOrCounterClaim(caseData, builder);
-                break;
+        if (mainFlowState == PROCEEDS_OFFLINE_UNREPRESENTED_DEFENDANT) {
+            buildUnrepresentedDefendant(caseData, builder);
         }
         return builder.build();
-    }
-
-    private void buildAdmissionsOrCounterClaim(CaseData caseData, EventHistory.EventHistoryBuilder builder) {
-        //will be implemented as part of relevant rpa story.
     }
 
     private void buildUnrepresentedDefendant(CaseData caseData, EventHistory.EventHistoryBuilder builder) {

@@ -28,7 +28,7 @@ class RoboticsDataMapperTest {
 
     @Test
     void shouldMapToRoboticsCaseData_whenHandOffPointIsUnrepresentedDefendant() {
-        CaseData caseData = CaseDataBuilder.builder().atStateClaimCreated().build();
+        CaseData caseData = CaseDataBuilder.builder().atStateProceedsOfflineUnrepresentedDefendant().build();
 
         RoboticsCaseData roboticsCaseData = mapper.toRoboticsCaseData(caseData);
 
