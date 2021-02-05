@@ -45,7 +45,7 @@
     <bpmn:sequenceFlow id="Flow_1qlh0ym" sourceRef="NotifyDefendantSolicitor1" targetRef="Activity_0wretog" />
     <bpmn:sequenceFlow id="Flow_1qffyiy" sourceRef="Activity_0y089q8" targetRef="NotifyDefendantSolicitor1" />
   </bpmn:process>
-  <bpmn:message id="Message_0slk3de" name="NOTIFY_CLAIM" />
+  <bpmn:message id="Message_0slk3de" name="NOTIFY_DEFENDANT_OF_CLAIM" />
   <bpmn:error id="Error_0t2ju7k" name="StartBusinessAbort" errorCode="ABORT" />
   <bpmn:error id="Error_1237qii" name="StartBusinessAbort" errorCode="ABORT" />
   <bpmndi:BPMNDiagram id="BPMNDiagram_1">

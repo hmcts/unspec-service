@@ -13,7 +13,7 @@ import static uk.gov.hmcts.reform.unspec.service.flowstate.FlowState.Main.PROCEE
 
 class NotifyClaimTest extends BpmnBaseTest {
 
-    public static final String MESSAGE_NAME = "NOTIFY_CLAIM";
+    public static final String MESSAGE_NAME = "NOTIFY_DEFENDANT_OF_CLAIM";
     public static final String PROCESS_ID = "NOTIFY_CLAIM";
 
     public static final String NOTIFY_RESPONDENT_SOLICITOR_1_CLAIM_ISSUE

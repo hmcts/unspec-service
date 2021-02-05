@@ -48,7 +48,7 @@ class NotifyClaimCallbackHandlerTest extends BaseCallbackHandlerTest {
     @Nested
     class SubmittedCallback {
 
-        public static final String CONFIRMATION_BODY = "<br />## What happens next\n\n"
+        public static final String CONFIRMATION_BODY = "<br />##What happens next\n\n"
             + "The defendant legal representative's organisation has been notified and granted access to this "
             + "claim.\n\n"
             + "You must notify the defendant with the claim details by %s";
