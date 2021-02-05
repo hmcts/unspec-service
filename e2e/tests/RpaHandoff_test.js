@@ -1,11 +1,11 @@
 const config = require('../config.js');
-const {waitForFinishedBusinessProcess} = require('../api/testingSupport');
+//const {waitForFinishedBusinessProcess} = require('../api/testingSupport');
 
 const caseEventMessage = eventName => `Case ${caseNumber} has been updated with event: ${eventName}`;
 const caseId = () => `${caseNumber.split('-').join('').replace(/#/, '')}`;
 
-const CASE_HEADER = 'ccd-case-header > h1';
-const CASE_LIST = 'exui-case-list';
+//const CASE_HEADER = 'ccd-case-header > h1';
+//const CASE_LIST = 'exui-case-list';
 
 let caseNumber;
 
