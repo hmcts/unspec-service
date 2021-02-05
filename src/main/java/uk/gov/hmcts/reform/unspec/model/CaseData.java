@@ -34,6 +34,7 @@ public class CaseData {
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private final CaseState ccdState;
     private final SolicitorReferences solicitorReferences;
+    private final String submitterId = "88f995a2-2314-4591-8d43-2876f25471b4";
     private final CourtLocation courtLocation;
     private final Party applicant1;
     private final Party applicant2;

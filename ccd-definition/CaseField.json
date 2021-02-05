@@ -26,6 +26,14 @@
   {
     "LiveFrom": "01/01/2017",
     "CaseTypeID": "UNSPECIFIED_CLAIMS",
+    "ID": "submitterId",
+    "Label": "Applicant solicitor identifier",
+    "FieldType": "Text",
+    "SecurityClassification": "Public"
+  },
+  {
+    "LiveFrom": "01/01/2017",
+    "CaseTypeID": "UNSPECIFIED_CLAIMS",
     "ID": "courtLocation",
     "Label": "Choose court location",
     "FieldType": "CourtLocation",
