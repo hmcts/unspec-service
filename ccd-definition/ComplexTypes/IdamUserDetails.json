@@ -1,0 +1,16 @@
+[
+  {
+    "ID": "IdamUserDetails",
+    "ListElementCode": "email",
+    "FieldType": "Email",
+    "ElementLabel": "Email",
+    "SecurityClassification": "Public"
+  },
+  {
+    "ID": "IdamUserDetails",
+    "ListElementCode": "id",
+    "FieldType": "Text",
+    "ElementLabel": "User ID",
+    "SecurityClassification": "Public"
+  }
+]

@@ -19,6 +19,7 @@ import uk.gov.hmcts.reform.unspec.helpers.CaseDetailsConverter;
 import uk.gov.hmcts.reform.unspec.model.BusinessProcess;
 import uk.gov.hmcts.reform.unspec.model.CaseData;
 import uk.gov.hmcts.reform.unspec.model.IdamCorrectEmail;
+import uk.gov.hmcts.reform.unspec.model.IdamUserDetails;
 import uk.gov.hmcts.reform.unspec.model.Party;
 import uk.gov.hmcts.reform.unspec.model.SolicitorReferences;
 import uk.gov.hmcts.reform.unspec.model.common.DynamicList;
@@ -130,7 +131,8 @@ public class CreateClaimCallbackHandler extends CallbackHandler {
             .build();
 
         CaseData.CaseDataBuilder caseDataBuilder = callbackParams.getCaseData().toBuilder()
-            .applicantSolicitor1IdamEmail(correctEmail);
+            .applicantSolicitor1IdamEmail(correctEmail)
+            .applicantSolicitor1IdamUserDetails(IdamUserDetails.builder().id(userDetails.getId()).build());
 
         return AboutToStartOrSubmitCallbackResponse.builder()
             .data(caseDetailsConverter.toMap(caseDataBuilder.build()))
@@ -139,13 +141,17 @@ public class CreateClaimCallbackHandler extends CallbackHandler {
 
     private CallbackResponse setEmailForApplicantSolicitor1(CallbackParams callbackParams) {
         CaseData caseData = callbackParams.getCaseData();
-        IdamCorrectEmail applicantSolicitor1IdamEmail = caseData.getApplicantSolicitor1IdamEmail();
         CaseData.CaseDataBuilder caseDataBuilder = caseData.toBuilder();
+        IdamCorrectEmail applicantSolicitor1IdamEmail = caseData.getApplicantSolicitor1IdamEmail();
+        IdamUserDetails applicantSolicitor1IdamDetails = caseData.getApplicantSolicitor1IdamUserDetails();
 
         if (applicantSolicitor1IdamEmail.isCorrect()) {
-            caseDataBuilder.applicantSolicitor1EmailAddress(applicantSolicitor1IdamEmail.getLabel());
-            caseDataBuilder.applicantSolicitor1IdamEmail(null);
+            caseDataBuilder.applicantSolicitor1IdamUserDetails(
+                applicantSolicitor1IdamDetails.toBuilder().email(applicantSolicitor1IdamEmail.getLabel()).build()
+            );
         }
+
+        caseDataBuilder.applicantSolicitor1IdamEmail(null);
 
         return AboutToStartOrSubmitCallbackResponse.builder()
             .data(caseDetailsConverter.toMap(caseDataBuilder.build()))

@@ -282,7 +282,7 @@
   {
     "LiveFrom": "01/01/2017",
     "CaseTypeID": "UNSPECIFIED_CLAIMS",
-    "CaseFieldID": "applicantSolicitor1EmailAddress",
+    "CaseFieldID": "applicantSolicitor1IdamUserDetails",
     "UserRole": "caseworker-civil-systemupdate",
     "CRUD": "R"
   }

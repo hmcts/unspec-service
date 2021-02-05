@@ -13,6 +13,8 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import uk.gov.hmcts.reform.ccd.client.model.AboutToStartOrSubmitCallbackResponse;
 import uk.gov.hmcts.reform.ccd.client.model.CaseDetails;
 import uk.gov.hmcts.reform.ccd.client.model.SubmittedCallbackResponse;
+import uk.gov.hmcts.reform.idam.client.IdamClient;
+import uk.gov.hmcts.reform.idam.client.models.UserDetails;
 import uk.gov.hmcts.reform.prd.model.Organisation;
 import uk.gov.hmcts.reform.unspec.callback.CallbackParams;
 import uk.gov.hmcts.reform.unspec.callback.CallbackType;
@@ -22,6 +24,8 @@ import uk.gov.hmcts.reform.unspec.handler.callback.BaseCallbackHandlerTest;
 import uk.gov.hmcts.reform.unspec.helpers.CaseDetailsConverter;
 import uk.gov.hmcts.reform.unspec.model.CaseData;
 import uk.gov.hmcts.reform.unspec.model.Fee;
+import uk.gov.hmcts.reform.unspec.model.IdamCorrectEmail;
+import uk.gov.hmcts.reform.unspec.model.IdamUserDetails;
 import uk.gov.hmcts.reform.unspec.model.Party;
 import uk.gov.hmcts.reform.unspec.model.common.DynamicList;
 import uk.gov.hmcts.reform.unspec.model.common.DynamicListElement;
@@ -39,6 +43,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 import static java.lang.String.format;
@@ -54,6 +59,7 @@ import static uk.gov.hmcts.reform.unspec.enums.AllocatedTrack.MULTI_CLAIM;
 import static uk.gov.hmcts.reform.unspec.enums.CaseState.PENDING_CASE_ISSUED;
 import static uk.gov.hmcts.reform.unspec.enums.CaseState.PROCEEDS_WITH_OFFLINE_JOURNEY;
 import static uk.gov.hmcts.reform.unspec.enums.YesOrNo.NO;
+import static uk.gov.hmcts.reform.unspec.enums.YesOrNo.YES;
 import static uk.gov.hmcts.reform.unspec.handler.callback.user.CreateClaimCallbackHandler.CONFIRMATION_SUMMARY;
 import static uk.gov.hmcts.reform.unspec.helpers.DateFormatHelper.DATE_TIME_AT;
 import static uk.gov.hmcts.reform.unspec.helpers.DateFormatHelper.formatLocalDateTime;
@@ -78,6 +84,9 @@ class CreateClaimCallbackHandlerTest extends BaseCallbackHandlerTest {
 
     @MockBean
     private OrganisationService organisationService;
+
+    @MockBean
+    private IdamClient idamClient;
 
     @Autowired
     private CreateClaimCallbackHandler handler;
@@ -233,6 +242,99 @@ class CreateClaimCallbackHandlerTest extends BaseCallbackHandlerTest {
 
         private DynamicList getDynamicList(AboutToStartOrSubmitCallbackResponse response) {
             return mapper.convertValue(response.getData().get("applicantSolicitor1PbaAccounts"), DynamicList.class);
+        }
+    }
+
+    @Nested
+    class MidEventGetIdamEmailCallback {
+
+        private static final String PAGE_ID = "idam-email";
+
+        @Test
+        void shouldAddEmailLabelAndIdamIdToData_whenInvoked() {
+            String userId = UUID.randomUUID().toString();
+            String email = "example@email.com";
+
+            given(idamClient.getUserDetails(any()))
+                .willReturn(UserDetails.builder().email(email).id(userId).build());
+
+            CaseData caseData = CaseDataBuilder.builder().atStateClaimDraft().build();
+            CallbackParams params = callbackParamsOf(caseData, MID, PAGE_ID);
+            var response = (AboutToStartOrSubmitCallbackResponse) handler.handle(params);
+
+            assertThat(response.getData())
+                .extracting("applicantSolicitor1IdamEmail")
+                .extracting("label")
+                .isEqualTo(email);
+
+            assertThat(response.getData())
+                .extracting("applicantSolicitor1IdamUserDetails")
+                .extracting("id")
+                .isEqualTo(userId);
+        }
+    }
+
+    @Nested
+    class MidEventSetEmailCallback {
+
+        private static final String PAGE_ID = "set-email";
+        private static final String EMAIL = "example@email.com";
+        private static final String DIFFERENT_EMAIL = "other_example@email.com";
+
+        @Test
+        void shouldAddIdamEmailToIdamDetails_whenIdamEmailIsCorrect() {
+            String userId = UUID.randomUUID().toString();
+
+            CaseData caseData = CaseDataBuilder.builder().atStateClaimDraft().build().toBuilder()
+                .applicantSolicitor1IdamEmail(IdamCorrectEmail.builder()
+                                                  .label(EMAIL)
+                                                  .isCorrect(YES)
+                                                  .build())
+                .applicantSolicitor1IdamUserDetails(IdamUserDetails.builder()
+                                                        .id(userId)
+                                                        .email(DIFFERENT_EMAIL)
+                                                        .build())
+                .build();
+
+            CallbackParams params = callbackParamsOf(caseData, MID, PAGE_ID);
+            var response = (AboutToStartOrSubmitCallbackResponse) handler.handle(params);
+
+            assertThat(response.getData())
+                .extracting("applicantSolicitor1IdamEmail")
+                .isNull();
+
+            assertThat(response.getData())
+                .extracting("applicantSolicitor1IdamUserDetails")
+                .extracting("id", "email")
+                .containsExactly(userId, EMAIL);
+        }
+
+        @Test
+        void shouldAddDifferentEmailToIdamDetails_whenIdamEmailIsNotCorrect() {
+            String userId = UUID.randomUUID().toString();
+
+            CaseData caseData = CaseDataBuilder.builder().atStateClaimDraft().build().toBuilder()
+                .applicantSolicitor1IdamEmail(IdamCorrectEmail.builder()
+                                                  .label(EMAIL)
+                                                  .isCorrect(NO)
+                                                  .build())
+                .applicantSolicitor1IdamUserDetails(IdamUserDetails.builder()
+                                                        .id(userId)
+                                                        .email(DIFFERENT_EMAIL)
+                                                        .build())
+                .build();
+
+            CallbackParams params = callbackParamsOf(caseData, MID, PAGE_ID);
+            var response = (AboutToStartOrSubmitCallbackResponse) handler.handle(params);
+
+            assertThat(response.getData())
+                .extracting("applicantSolicitor1IdamEmail")
+                .isNull();
+
+            assertThat(response.getData())
+                .extracting("applicantSolicitor1IdamUserDetails")
+                .extracting("id", "email")
+                .containsExactly(userId, DIFFERENT_EMAIL);
         }
     }
 

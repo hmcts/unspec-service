@@ -701,9 +701,9 @@
   {
     "LiveFrom": "01/01/2017",
     "CaseTypeID": "UNSPECIFIED_CLAIMS",
-    "ID": "applicantSolicitor1EmailAddress",
-    "Label": "Claimant solicitor email address",
-    "FieldType": "Email",
+    "ID": "applicantSolicitor1IdamUserDetails",
+    "Label": "Claimant solicitor idam details",
+    "FieldType": "IdamUserDetails",
     "SecurityClassification": "Public"
   }
 ]

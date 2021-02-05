@@ -38,7 +38,7 @@ public class CaseData {
     private final Party applicant1;
     private final Party applicant2;
     private final IdamCorrectEmail applicantSolicitor1IdamEmail;
-    private final String applicantSolicitor1EmailAddress;
+    private final IdamUserDetails applicantSolicitor1IdamUserDetails;
     private final Party respondent1;
     private final Party respondent2;
     private final YesOrNo respondent1Represented;
