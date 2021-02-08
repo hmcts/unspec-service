@@ -13,12 +13,21 @@ module.exports = {
     }
   },
 
-  async selectResponseIntention() {
+  async selectResponseIntentionFullDefence() {
     I.waitForElement(this.fields.responseIntention.id);
     await within(this.fields.responseIntention.id, () => {
       I.click(this.fields.responseIntention.options.fullDefence);
     });
     await I.clickContinue();
-  }
+  },
+
+  async selectResponseIntentionPartDefence() {
+    I.waitForElement(this.fields.responseIntention.id);
+    await within(this.fields.responseIntention.id, () => {
+      I.click(this.fields.responseIntention.options.partDefence);
+    });
+    await I.clickContinue();
+  },
+
 };
 

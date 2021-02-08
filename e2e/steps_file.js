@@ -93,7 +93,7 @@ module.exports = function () {
       return await this.grabTextFrom(CASE_HEADER);
     },
 
-    async createCase() {
+    async createCase(litigantInPerson = false) {
       this.click('Create case');
       this.waitForElement(`#cc-jurisdiction > option[value="${config.definition.jurisdiction}"]`);
       await this.retryUntilExists(() => createCasePage.selectCaseType(), 'ccd-markdown');
@@ -104,8 +104,14 @@ module.exports = function () {
       await claimantLitigationDetails.enterLitigantFriendWithDifferentAddressToApplicant(address, TEST_FILE_PATH);
       await claimantSolicitorOrganisation.enterOrganisationDetails();
       await party.enterParty('respondent1', address);
-      await respondentRepresentedPage.enterRespondentRepresented();
-      await defendantSolicitorOrganisation.enterOrganisationDetails();
+
+      if (litigantInPerson) {
+        await respondentRepresentedPage.enterRespondentNotRepresented();
+      } else {
+        await respondentRepresentedPage.enterRespondentRepresented();
+        await defendantSolicitorOrganisation.enterOrganisationDetails();
+      }
+
       await claimTypePage.selectClaimType();
       await personalInjuryTypePage.selectPersonalInjuryType();
       await uploadParticularsOfClaim.upload(TEST_FILE_PATH);
@@ -113,17 +119,17 @@ module.exports = function () {
       await pbaNumberPage.selectPbaNumber();
       await paymentReferencePage.updatePaymentReference();
       await statementOfTruth.enterNameAndRole('claim');
-      await event.submit('Issue claim', 'Your claim has been issued');
-      await event.returnToCaseDetails();
+      await (litigantInPerson ? event.submit('Issue claim', 'Your claim will now progress offline') : event.submit('Issue claim', 'Your claim has been issued'));
 
+      await event.returnToCaseDetails();
       caseId = (await this.grabCaseNumber()).split('-').join('').substring(1);
     },
 
-    async acknowledgeService() {
+    async acknowledgeService(responseIntention = 'FULL') {
       await caseViewPage.startEvent('Acknowledge service', caseId);
       await respondentDetails.verifyDetails();
       await confirmDetailsPage.confirmReference();
-      await responseIntentionPage.selectResponseIntention();
+      await (responseIntention == 'FULL' ? responseIntentionPage.selectResponseIntentionFullDefence() : responseIntentionPage.selectResponseIntentionPartDefence());
       await event.submit('Acknowledge service', 'You\'ve acknowledged service');
       await event.returnToCaseDetails();
     },
@@ -152,8 +158,14 @@ module.exports = function () {
       await event.returnToCaseDetails();
     },
 
-    async respondToClaim() {
+    async respondToClaim(responseType = 'FULL') {
       await caseViewPage.startEvent('Respond to claim', caseId);
+      await (responseType == 'FULL' ? respondToClaimFullDefence() : responseTypePage.selectPartDefence());
+      await event.submit('Submit response', 'You\'ve submitted your response');
+      await event.returnToCaseDetails();
+    },
+
+    async respondToClaimFullDefence() {
       await responseTypePage.selectFullDefence();
       await uploadResponsePage.uploadResponseDocuments(TEST_FILE_PATH);
       await respondentDetails.verifyDetails();
@@ -170,8 +182,6 @@ module.exports = function () {
       await furtherInformationPage.enterFurtherInformation(parties.RESPONDENT_SOLICITOR_1);
       await welshLanguageRequirementsPage.enterWelshLanguageRequirements(parties.RESPONDENT_SOLICITOR_1);
       await statementOfTruth.enterNameAndRole(parties.RESPONDENT_SOLICITOR_1 + 'DQ');
-      await event.submit('Submit response', 'You\'ve submitted your response');
-      await event.returnToCaseDetails();
     },
 
     async respondToDefence() {

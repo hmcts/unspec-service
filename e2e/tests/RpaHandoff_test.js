@@ -17,13 +17,30 @@ Scenario('Take claim offline @rpa-handoff', async (I) => {
 
   caseNumber = await I.grabCaseNumber();
   await I.see(`Case #${caseId()} has been created.`);
-});
 
-Scenario('Solicitor acknowledges service', async (I) => {
   await I.acknowledgeService();
   await I.see(caseEventMessage('Acknowledge service'));
+  await I.caseProceedsInCaseman();
 });
 
-Scenario('Case proceeds in Caseman', async (I) => {
-  await I.caseProceedsInCaseman();
+Scenario('Defendant - Litigant In Person @rpa-handoff', async (I) => {
+  await I.login(config.solicitorUser);
+  await I.createCase(true);
+
+  caseNumber = await I.grabCaseNumber();
+  await I.see(`Case #${caseId()} has been created.`);
+});
+
+
+Scenario('Defendant - Defend part of Claim @rpa-handoff', async (I) => {
+  await I.login(config.solicitorUser);
+  await I.createCase();
+
+  caseNumber = await I.grabCaseNumber();
+  await I.see(`Case #${caseId()} has been created.`);
+
+  await I.acknowledgeService('PART');
+  await I.see(caseEventMessage('Acknowledge service'));
+
+  await I.respondToClaim('PART');
 });

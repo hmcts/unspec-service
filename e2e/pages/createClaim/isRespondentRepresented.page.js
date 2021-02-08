@@ -19,6 +19,16 @@ module.exports = {
     });
 
     await I.clickContinue();
-  }
+  },
+
+  async enterRespondentNotRepresented() {
+    I.waitForElement(this.fields.respondent1Represented.id);
+    await within(this.fields.respondent1Represented.id, () => {
+      I.click(this.fields.respondent1Represented.options.no);
+    });
+
+    await I.clickContinue();
+  },
+
 };
 

@@ -21,6 +21,16 @@ module.exports = {
     });
 
     await I.clickContinue();
-  }
+  },
+
+  async selectPartDefence() {
+    I.waitForElement(this.fields.respondent1ClaimResponseType.id);
+    await within(this.fields.respondent1ClaimResponseType.id, () => {
+      I.click(this.fields.respondent1ClaimResponseType.options.partAdmission);
+    });
+
+    await I.clickContinue();
+  },
+
 };
 
