@@ -203,7 +203,7 @@
     "ID": "IdamEmail",
     "CaseEventID": "CREATE_CLAIM",
     "CaseFieldID": "applicantSolicitor1IdamEmail",
-    "ListElementCode": "isCorrect",
+    "ListElementCode": "correct",
     "FieldDisplayOrder": 2,
     "DisplayContext": "MANDATORY"
   },

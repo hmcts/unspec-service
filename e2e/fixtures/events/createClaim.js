@@ -33,7 +33,7 @@ const createClaimData = legalRepresentation => {
     },
     ClaimantSolicitorEmail: {
       applicantSolicitor1IdamEmail: {
-        isCorrect: 'Yes'
+        correct: 'Yes'
       }
     },
     ClaimantSolicitorOrganisation: {

@@ -9,9 +9,9 @@ import uk.gov.hmcts.reform.unspec.enums.YesOrNo;
 public class IdamCorrectEmail {
 
     private final String email;
-    private final YesOrNo isCorrect;
+    private final YesOrNo correct;
 
     public boolean isCorrect() {
-        return isCorrect == YesOrNo.YES;
+        return correct == YesOrNo.YES;
     }
 }

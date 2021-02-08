@@ -4,7 +4,7 @@ module.exports = {
 
   fields: {
     idamEmailIsCorrect: {
-      id: '#applicantSolicitor1IdamEmail_isCorrect',
+      id: '#applicantSolicitor1IdamEmail_correct',
       options: {
         yes: 'Yes',
         no: 'No'

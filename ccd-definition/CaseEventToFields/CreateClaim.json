@@ -99,7 +99,7 @@
     "PageDisplayOrder": 6,
     "PageColumnNumber": 1,
     "ShowSummaryChangeOption": "Y",
-    "FieldShowCondition": "applicantSolicitor1IdamEmail.isCorrect = \"No\""
+    "FieldShowCondition": "applicantSolicitor1IdamEmail.correct = \"No\""
   },
   {
     "LiveFrom": "01/01/2017",
