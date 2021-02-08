@@ -95,7 +95,7 @@
     "CaseFieldID": "applicantSolicitor1IdamUserDetails",
     "PageFieldDisplayOrder": 2,
     "DisplayContext": "COMPLEX",
-    "PageID": "ApplicantSolicitorEmail",
+    "PageID": "ClaimantSolicitorEmail",
     "PageDisplayOrder": 6,
     "PageColumnNumber": 1,
     "ShowSummaryChangeOption": "Y",
@@ -110,7 +110,7 @@
     "DisplayContext": "COMPLEX",
     "PageID": "ClaimantSolicitorOrganisation",
     "PageLabel": "Search for your organisation",
-    "PageDisplayOrder": 6,
+    "PageDisplayOrder": 7,
     "PageColumnNumber": 1,
     "ShowSummaryChangeOption": "Y"
   },
@@ -122,7 +122,7 @@
     "PageFieldDisplayOrder": 1,
     "DisplayContext": "COMPLEX",
     "PageID": "Defendant",
-    "PageDisplayOrder": 7,
+    "PageDisplayOrder": 8,
     "PageColumnNumber": 1,
     "ShowSummaryChangeOption": "Y"
   },
@@ -134,7 +134,7 @@
     "PageFieldDisplayOrder": 1,
     "DisplayContext": "MANDATORY",
     "PageID": "LegalRepresentation",
-    "PageDisplayOrder": 8,
+    "PageDisplayOrder": 9,
     "PageColumnNumber": 1,
     "ShowSummaryChangeOption": "Y"
   },
@@ -147,7 +147,7 @@
     "DisplayContext": "COMPLEX",
     "PageID": "DefendantSolicitorOrganisation",
     "PageLabel": "Search for the legal representative’s organisation",
-    "PageDisplayOrder": 9,
+    "PageDisplayOrder": 10,
     "PageColumnNumber": 1,
     "ShowSummaryChangeOption": "Y",
     "PageShowCondition": "respondent1Represented = \"Yes\""
@@ -160,7 +160,7 @@
     "PageFieldDisplayOrder": 2,
     "DisplayContext": "MANDATORY",
     "PageID": "DefendantSolicitorOrganisation",
-    "PageDisplayOrder": 9,
+    "PageDisplayOrder": 11,
     "PageColumnNumber": 1,
     "ShowSummaryChangeOption": "Y"
   },
@@ -172,7 +172,7 @@
     "PageFieldDisplayOrder": 1,
     "DisplayContext": "MANDATORY",
     "PageID": "ClaimType",
-    "PageDisplayOrder": 10,
+    "PageDisplayOrder": 11,
     "PageColumnNumber": 1,
     "ShowSummaryChangeOption": "Y"
   },
@@ -184,7 +184,7 @@
     "PageFieldDisplayOrder": 2,
     "DisplayContext": "MANDATORY",
     "PageID": "ClaimType",
-    "PageDisplayOrder": 10,
+    "PageDisplayOrder": 11,
     "PageColumnNumber": 1,
     "ShowSummaryChangeOption": "Y",
     "FieldShowCondition": "claimType = \"OTHER\""
@@ -197,7 +197,7 @@
     "PageFieldDisplayOrder": 1,
     "DisplayContext": "MANDATORY",
     "PageID": "PersonalInjuryType",
-    "PageDisplayOrder": 11,
+    "PageDisplayOrder": 12,
     "PageColumnNumber": 1,
     "ShowSummaryChangeOption": "Y",
     "PageShowCondition": "claimType = \"PERSONAL_INJURY\""
@@ -210,7 +210,7 @@
     "PageFieldDisplayOrder": 2,
     "DisplayContext": "MANDATORY",
     "PageID": "PersonalInjuryType",
-    "PageDisplayOrder": 11,
+    "PageDisplayOrder": 12,
     "PageColumnNumber": 1,
     "ShowSummaryChangeOption": "Y",
     "FieldShowCondition": "personalInjuryType = \"PERSONAL_INJURY_OTHER\""
@@ -223,7 +223,7 @@
     "PageFieldDisplayOrder": 1,
     "DisplayContext": "COMPLEX",
     "PageID": "Upload",
-    "PageDisplayOrder": 12,
+    "PageDisplayOrder": 13,
     "PageColumnNumber": 1,
     "ShowSummaryChangeOption": "Y"
   },
@@ -235,7 +235,7 @@
     "PageFieldDisplayOrder": 2,
     "DisplayContext": "OPTIONAL",
     "PageID": "Upload",
-    "PageDisplayOrder": 12,
+    "PageDisplayOrder": 13,
     "PageColumnNumber": 1,
     "ShowSummaryChangeOption": "Y",
     "FieldShowCondition": "claimFee = \"DO_NOT_SHOW_IN_UI\"",
@@ -249,7 +249,7 @@
     "PageFieldDisplayOrder": 1,
     "DisplayContext": "MANDATORY",
     "PageID": "ClaimValue",
-    "PageDisplayOrder": 13,
+    "PageDisplayOrder": 14,
     "PageColumnNumber": 1,
     "ShowSummaryChangeOption": "Y",
     "CallBackURLMidEvent": "${CCD_DEF_CASE_SERVICE_BASE_URL}/cases/callbacks/mid/fee"
@@ -262,7 +262,7 @@
     "PageFieldDisplayOrder": 2,
     "DisplayContext": "COMPLEX",
     "PageID": "PbaNumber",
-    "PageDisplayOrder": 14,
+    "PageDisplayOrder": 15,
     "PageColumnNumber": 1,
     "ShowSummaryChangeOption": "Y"
   },
@@ -274,7 +274,7 @@
     "PageFieldDisplayOrder": 3,
     "DisplayContext": "MANDATORY",
     "PageID": "PbaNumber",
-    "PageDisplayOrder": 14,
+    "PageDisplayOrder": 15,
     "PageColumnNumber": 1,
     "ShowSummaryChangeOption": "Y"
   },
@@ -286,7 +286,7 @@
     "PageFieldDisplayOrder": 4,
     "DisplayContext": "READONLY",
     "PageID": "PbaNumber",
-    "PageDisplayOrder": 14,
+    "PageDisplayOrder": 15,
     "PageColumnNumber": 1,
     "ShowSummaryChangeOption": "Y",
     "FieldShowCondition": "applicantSolicitor1PbaAccountsIsEmpty = \"No\""
@@ -299,7 +299,7 @@
     "PageFieldDisplayOrder": 5,
     "DisplayContext": "READONLY",
     "PageID": "PbaNumber",
-    "PageDisplayOrder": 14,
+    "PageDisplayOrder": 15,
     "PageColumnNumber": 1,
     "ShowSummaryChangeOption": "Y",
     "FieldShowCondition": "applicantSolicitor1PbaAccountsIsEmpty = \"Yes\""
@@ -312,7 +312,7 @@
     "PageFieldDisplayOrder": 1,
     "DisplayContext": "MANDATORY",
     "PageID": "PaymentReference",
-    "PageDisplayOrder": 15,
+    "PageDisplayOrder": 16,
     "PageColumnNumber": 1,
     "ShowSummaryChangeOption": "Y"
   },
@@ -324,7 +324,7 @@
     "PageFieldDisplayOrder": 1,
     "DisplayContext": "COMPLEX",
     "PageID": "StatementOfTruth",
-    "PageDisplayOrder": 16,
+    "PageDisplayOrder": 17,
     "PageColumnNumber": 1,
     "ShowSummaryChangeOption": "Y"
   }
