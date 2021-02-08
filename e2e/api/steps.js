@@ -73,7 +73,7 @@ module.exports = {
   },
 
   notifyClaim: async() => {
-    eventName = 'NOTIFY_CLAIM';
+    eventName = 'NOTIFY_DEFENDANT_OF_CLAIM';
     let returnedCaseData = await apiRequest.startEvent(eventName, caseId);
     assertContainsPopulatedFields(returnedCaseData);
 
