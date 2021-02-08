@@ -8,6 +8,8 @@ import lombok.Data;
 @Builder
 public class Solicitor {
 
+    @JsonProperty("ID")
+    private String id;
     @JsonProperty("organisationID")
     private String organisationId;
     private String name;

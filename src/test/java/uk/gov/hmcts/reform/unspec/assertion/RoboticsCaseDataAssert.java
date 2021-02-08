@@ -15,6 +15,8 @@ import static java.util.Optional.ofNullable;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static uk.gov.hmcts.reform.unspec.assertion.CustomAssertions.assertMoney;
 import static uk.gov.hmcts.reform.unspec.assertion.CustomAssertions.assertThat;
+import static uk.gov.hmcts.reform.unspec.service.robotics.mapper.RoboticsDataMapper.APPLICANT_SOLICITOR_ID;
+import static uk.gov.hmcts.reform.unspec.service.robotics.mapper.RoboticsDataMapper.RESPONDENT_SOLICITOR_ID;
 
 public class RoboticsCaseDataAssert extends CustomAssert<RoboticsCaseDataAssert, RoboticsCaseData> {
 
@@ -26,16 +28,7 @@ public class RoboticsCaseDataAssert extends CustomAssert<RoboticsCaseDataAssert,
         isNotNull();
 
         CaseHeader header = actual.getHeader();
-        compare(
-            "caseNumber",
-            expected.getLegacyCaseReference(),
-            ofNullable(header.getCaseNumber())
-        );
-        compare(
-            "preferredCourtName",
-            expected.getCourtLocation().getApplicantPreferredCourt(),
-            ofNullable(header.getPreferredCourtName())
-        );
+        assertHeader(expected, header);
 
         assertClaimDetails(expected, actual.getClaimDetails());
 
@@ -55,11 +48,13 @@ public class RoboticsCaseDataAssert extends CustomAssert<RoboticsCaseDataAssert,
         );
 
         assertSolicitor(
+            APPLICANT_SOLICITOR_ID,
             "applicant1" + "." + "reference",
             actual.getSolicitors().get(0),
             expected.getSolicitorReferences().getApplicantSolicitor1Reference()
         );
         assertSolicitor(
+            RESPONDENT_SOLICITOR_ID,
             "respondent1" + "." + "reference",
             actual.getSolicitors().get(1),
             expected.getSolicitorReferences().getRespondentSolicitor1Reference()
@@ -68,6 +63,29 @@ public class RoboticsCaseDataAssert extends CustomAssert<RoboticsCaseDataAssert,
         assertNotNull(actual.getEvents());
 
         return this;
+    }
+
+    private void assertHeader(CaseData expected, CaseHeader header) {
+        compare(
+            "caseNumber",
+            expected.getLegacyCaseReference(),
+            ofNullable(header.getCaseNumber())
+        );
+        compare(
+            "caseType",
+            "PERSONAL INJURY",
+            ofNullable(header.getCaseType())
+        );
+        compare(
+            "owningCourtCode",
+            "390",
+            ofNullable(header.getOwningCourtCode())
+        );
+        compare(
+            "owningCourtName",
+            "CCMCC",
+            ofNullable(header.getOwningCourtName())
+        );
     }
 
     private void assertClaimDetails(CaseData expected, ClaimDetails actual) {
@@ -101,7 +119,12 @@ public class RoboticsCaseDataAssert extends CustomAssert<RoboticsCaseDataAssert,
         );
     }
 
-    private void assertSolicitor(String fieldName, Solicitor solicitor, String reference) {
+    private void assertSolicitor(String id, String fieldName, Solicitor solicitor, String reference) {
+        compare(
+            "id",
+            solicitor.getId(),
+            ofNullable(id)
+        );
         compare(
             fieldName,
             solicitor.getReference(),

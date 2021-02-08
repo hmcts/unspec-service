@@ -61,7 +61,7 @@
         },
         "preferredCourtName": {
           "$id": "#/properties/header/properties/preferredCourtName",
-          "type": "string",
+          "type": ["string", "null"],
           "description": "The court description. When not using preferredCourtCode, this should be populated with the court name as found in CASEMAN. Mismatches will result in an exception record for manual resolution."
         },
         "caseAllocatedTo": {
@@ -101,7 +101,8 @@
           "dateOfService",
           "lastDateForService",
           "dateOfBirth",
-          "solicitorOrganisationID"
+          "solicitorOrganisationID",
+          "solicitorID"
         ],
         "properties": {
           "ID": {
@@ -182,6 +183,11 @@
             "$id": "#/properties/litigiousParties/items/properties/solicitorOrganisationID",
             "$ref": "#/definitions/solicitorOrganisationIDType",
             "description": ""
+          },
+          "solicitorID": {
+            "$id": "#/properties/litigiousParties/items/properties/solicitorID",
+            "$ref": "#/definitions/solicitorIDType",
+            "description": ""
           }
         },
         "additionalProperties": false
@@ -196,6 +202,7 @@
         "$id": "#/properties/solicitors/items",
         "type": "object",
         "required": [
+          "ID",
           "organisationID",
           "name",
           "addresses",
@@ -208,6 +215,11 @@
           "isPayee"
         ],
         "properties": {
+          "ID": {
+            "$id": "#/properties/solicitors/items/anyOf/0/properties/ID",
+            "$ref": "#/definitions/solicitorIDType",
+            "description": ""
+          },
           "organisationID": {
             "$id": "#/properties/solicitors/items/properties/organisationID",
             "$ref": "#/definitions/solicitorOrganisationIDType",
@@ -457,6 +469,12 @@
       "$id": "#/definitions/litigiousPartyIDType",
       "type": "string",
       "description": "Identifies the litigant object in the json document.",
+      "default": ""
+    },
+    "solicitorIDType": {
+      "$id": "#/definitions/solicitorIDType",
+      "type": "string",
+      "description": "Identifies the solicitor object in the json document.",
       "default": ""
     },
     "courtCodeType": {

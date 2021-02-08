@@ -24,4 +24,5 @@ public class LitigiousParty {
     private String lastDateForService;
     private String dateOfBirth;
     private String solicitorOrganisationID;
+    private String solicitorID;
 }

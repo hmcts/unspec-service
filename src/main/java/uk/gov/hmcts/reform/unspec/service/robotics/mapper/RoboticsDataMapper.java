@@ -30,6 +30,11 @@ import static uk.gov.hmcts.reform.unspec.utils.MonetaryConversions.penniesToPoun
 @RequiredArgsConstructor
 public class RoboticsDataMapper {
 
+    public static final String APPLICANT_SOLICITOR_ID = "001";
+    public static final String RESPONDENT_SOLICITOR_ID = "002";
+    public static final String APPLICANT_ID = "001";
+    public static final String RESPONDENT_ID = "002";
+
     private final RoboticsAddressMapper addressMapper;
     private final EventHistoryMapper eventHistoryMapper;
 
@@ -63,7 +68,6 @@ public class RoboticsDataMapper {
             .owningCourtCode("390")
             .owningCourtName("CCMCC")
             .caseType("PERSONAL INJURY")
-            .preferredCourtName(caseData.getCourtLocation().getApplicantPreferredCourt())
             .caseAllocatedTo(buildAllocatedTrack(caseData.getAllocatedTrack()))
             .build();
     }
@@ -82,11 +86,15 @@ public class RoboticsDataMapper {
     }
 
     private List<Solicitor> buildSolicitors(CaseData caseData) {
-        return List.of(buildApplicantSolicitor(caseData), buildRespondentSolicitor(caseData));
+        return List.of(
+            buildApplicantSolicitor(caseData, APPLICANT_SOLICITOR_ID),
+            buildRespondentSolicitor(caseData, RESPONDENT_SOLICITOR_ID)
+        );
     }
 
-    private Solicitor buildRespondentSolicitor(CaseData caseData) {
+    private Solicitor buildRespondentSolicitor(CaseData caseData, String id) {
         return Solicitor.builder()
+            .id(id)
             .organisationId(ofNullable(caseData.getRespondent1OrganisationPolicy())
                                 .map(organisationPolicy -> organisationPolicy.getOrganisation().getOrganisationID())
                                 .orElse(null)
@@ -98,8 +106,9 @@ public class RoboticsDataMapper {
             .build();
     }
 
-    private Solicitor buildApplicantSolicitor(CaseData caseData) {
+    private Solicitor buildApplicantSolicitor(CaseData caseData, String id) {
         return Solicitor.builder()
+            .id(id)
             .organisationId(ofNullable(caseData.getApplicant1OrganisationPolicy())
                                 .map(organisationPolicy -> organisationPolicy.getOrganisation().getOrganisationID())
                                 .orElse(null)
@@ -118,14 +127,16 @@ public class RoboticsDataMapper {
                 caseData.getApplicant1LitigationFriend(),
                 caseData.getApplicant1OrganisationPolicy(),
                 "Claimant",
-                "1"
+                APPLICANT_ID,
+                APPLICANT_SOLICITOR_ID
             ),
             buildLitigiousParty(
                 caseData.getRespondent1(),
                 caseData.getRespondent1LitigationFriend(),
                 caseData.getRespondent1OrganisationPolicy(),
                 "Defendant",
-                "1"
+                RESPONDENT_ID,
+                RESPONDENT_SOLICITOR_ID
             )
         );
     }
@@ -135,10 +146,12 @@ public class RoboticsDataMapper {
         LitigationFriend litigationFriend,
         OrganisationPolicy organisationPolicy,
         String type,
-        String id
+        String id,
+        String solicitorId
     ) {
         return LitigiousParty.builder()
             .id(id)
+            .solicitorID(solicitorId)
             .type(type)
             .name(PartyUtils.getLitigiousPartyName(party, litigationFriend))
             .dateOfBirth(PartyUtils.getDateOfBirth(party).map(d -> d.format(ISO_DATE)).orElse(null))
