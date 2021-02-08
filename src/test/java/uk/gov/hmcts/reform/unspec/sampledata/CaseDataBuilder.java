@@ -436,7 +436,7 @@ public class CaseDataBuilder {
     }
 
     public CaseDataBuilder atStateCaseProceedsInCaseman() {
-        atStateClaimCreated();
+        atStateAwaitingCaseNotification();
         claimProceedsInCaseman = ClaimProceedsInCaseman.builder()
             .date(LocalDate.now())
             .reason(ReasonForProceedingOnPaper.APPLICATION)

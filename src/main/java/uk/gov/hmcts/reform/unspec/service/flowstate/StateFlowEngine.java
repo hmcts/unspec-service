@@ -64,6 +64,7 @@ public class StateFlowEngine {
                 .transitionTo(AWAITING_CASE_NOTIFICATION).onlyIf(claimIssued)
             .state(AWAITING_CASE_NOTIFICATION)
                 .transitionTo(CLAIM_ISSUED).onlyIf(claimNotified)
+                .transitionTo(CASE_PROCEEDS_IN_CASEMAN).onlyIf(caseProceedsInCaseman)
             .state(CLAIM_ISSUED)
                 .transitionTo(SERVICE_ACKNOWLEDGED).onlyIf(respondentAcknowledgeService)
                 .transitionTo(RESPONDED_TO_CLAIM).onlyIf(respondentRespondToClaim)

@@ -287,11 +287,11 @@ class StateFlowEngineTest {
                 .isNotNull()
                 .isEqualTo(CASE_PROCEEDS_IN_CASEMAN.fullName());
             assertThat(stateFlow.getStateHistory())
-                .hasSize(6)
+                .hasSize(5)
                 .extracting(State::getName)
                 .containsExactly(
                     DRAFT.fullName(), PENDING_CASE_ISSUED.fullName(), PAYMENT_SUCCESSFUL.fullName(),
-                    AWAITING_CASE_NOTIFICATION.fullName(), CLAIM_ISSUED.fullName(), CASE_PROCEEDS_IN_CASEMAN.fullName()
+                    AWAITING_CASE_NOTIFICATION.fullName(), CASE_PROCEEDS_IN_CASEMAN.fullName()
                 );
         }
     }
