@@ -5,8 +5,8 @@ const createClaimData = legalRepresentation => {
   return {
     References: {
       solicitorReferences: {
-        applicantSolicitor1Reference: 'Applicant test reference',
-        respondentSolicitor1Reference: 'Respondent test reference'
+        applicantSolicitor1Reference: 'Applicant reference',
+        respondentSolicitor1Reference: 'Respondent reference'
       }
     },
     Court: {
