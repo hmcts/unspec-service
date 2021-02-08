@@ -24,5 +24,8 @@ mkdir -p ${build_dir}
 
 $(${root_dir}/bin/variables/load-${environment}-environment-variables.sh)
 
+echo "username ${CCD_CONFIGURER_IMPORTER_USERNAME}"
+echo "password ${CCD_CONFIGURER_IMPORTER_PASSWORD}"
+
 # build the ccd definition file
 ${root_dir}/civil-unspecified-docker/bin/utils/process-definition.sh ${config_dir} ${release_definition_output_file} "${excludedFilenamePatterns}"
