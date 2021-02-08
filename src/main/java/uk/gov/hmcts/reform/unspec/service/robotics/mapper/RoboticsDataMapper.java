@@ -60,7 +60,9 @@ public class RoboticsDataMapper {
     private CaseHeader buildCaseHeader(CaseData caseData) {
         return CaseHeader.builder()
             .caseNumber(caseData.getLegacyCaseReference())
-            .caseType(caseData.getClaimType().name().replace("_", " "))
+            .owningCourtCode("390")
+            .owningCourtName("CCMCC")
+            .caseType("PERSONAL INJURY")
             .preferredCourtName(caseData.getCourtLocation().getApplicantPreferredCourt())
             .caseAllocatedTo(buildAllocatedTrack(caseData.getAllocatedTrack()))
             .build();
