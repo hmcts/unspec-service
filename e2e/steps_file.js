@@ -160,12 +160,13 @@ module.exports = function () {
 
     async respondToClaim(responseType = 'FULL') {
       await caseViewPage.startEvent('Respond to claim', caseId);
-      await (responseType == 'FULL' ? respondToClaimFullDefence() : responseTypePage.selectPartDefence());
+      await (responseType == 'FULL' ? this.respondToClaimFullDefence() : responseTypePage.selectPartDefence());
       await event.submit('Submit response', 'You\'ve submitted your response');
       await event.returnToCaseDetails();
     },
 
     async respondToClaimFullDefence() {
+      console.log('full');
       await responseTypePage.selectFullDefence();
       await uploadResponsePage.uploadResponseDocuments(TEST_FILE_PATH);
       await respondentDetails.verifyDetails();
