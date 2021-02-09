@@ -33,13 +33,13 @@ class FlowPredicateTest {
     class ClaimIssuedPredicate {
 
         @Test
-        void shouldReturnTrue_whenCaseDataAtIssuedSate() {
+        void shouldReturnTrue_whenCaseDataAtIssuedState() {
             CaseData caseData = CaseDataBuilder.builder().atStateAwaitingCaseNotification().build();
             assertTrue(pendingCaseIssued.test(caseData));
         }
 
         @Test
-        void shouldReturnFalse_whenCaseDataIsAtDraftSate() {
+        void shouldReturnFalse_whenCaseDataIsAtDraftState() {
             CaseData caseData = CaseDataBuilder.builder().atStateClaimDraft().build();
             assertFalse(pendingCaseIssued.test(caseData));
         }
@@ -49,13 +49,13 @@ class FlowPredicateTest {
     class ClaimNotifiedPredicate {
 
         @Test
-        void shouldReturnTrue_whenCaseDataAtIssuedSate() {
+        void shouldReturnTrue_whenCaseDataAtIssuedState() {
             CaseData caseData = CaseDataBuilder.builder().atStateClaimCreated().build();
             assertTrue(claimNotified.test(caseData));
         }
 
         @Test
-        void shouldReturnFalse_whenCaseDataIsAtDraftSate() {
+        void shouldReturnFalse_whenCaseDataIsAtDraftState() {
             CaseData caseData = CaseDataBuilder.builder().atStateClaimDraft().build();
             assertFalse(claimNotified.test(caseData));
         }
@@ -65,7 +65,7 @@ class FlowPredicateTest {
     class Respondent1NotRepresented {
 
         @Test
-        void shouldReturnTrue_whenCaseDataAtIssuedSate() {
+        void shouldReturnTrue_whenCaseDataAtIssuedState() {
             CaseData caseData = CaseDataBuilder.builder().atStateClaimDraft()
                 .respondent1Represented(YesOrNo.NO)
                 .build();
@@ -74,7 +74,7 @@ class FlowPredicateTest {
         }
 
         @Test
-        void shouldReturnFalse_whenCaseDataIsAtDraftSate() {
+        void shouldReturnFalse_whenCaseDataIsAtDraftState() {
             CaseData caseData = CaseDataBuilder.builder().atStateClaimDraft().build();
             assertFalse(respondent1NotRepresented.test(caseData));
         }
@@ -84,13 +84,13 @@ class FlowPredicateTest {
     class PaymentFailedPredicate {
 
         @Test
-        void shouldReturnTrue_whenCaseDataAtIssuedSate() {
+        void shouldReturnTrue_whenCaseDataAtIssuedState() {
             CaseData caseData = CaseDataBuilder.builder().atStatePaymentFailed().build();
             assertTrue(paymentFailed.test(caseData));
         }
 
         @Test
-        void shouldReturnFalse_whenCaseDataIsAtDraftSate() {
+        void shouldReturnFalse_whenCaseDataIsAtDraftState() {
             CaseData caseData = CaseDataBuilder.builder().atStatePendingCaseIssued().build();
             assertFalse(paymentFailed.test(caseData));
         }
@@ -100,13 +100,13 @@ class FlowPredicateTest {
     class PaymentSuccessfulPredicate {
 
         @Test
-        void shouldReturnTrue_whenCaseDataAtIssuedSate() {
+        void shouldReturnTrue_whenCaseDataAtIssuedState() {
             CaseData caseData = CaseDataBuilder.builder().atStatePaymentSuccessful().build();
             assertTrue(paymentSuccessful.test(caseData));
         }
 
         @Test
-        void shouldReturnFalse_whenCaseDataIsAtDraftSate() {
+        void shouldReturnFalse_whenCaseDataIsAtDraftState() {
             CaseData caseData = CaseDataBuilder.builder().atStatePendingCaseIssued().build();
             assertFalse(paymentSuccessful.test(caseData));
         }
@@ -116,13 +116,13 @@ class FlowPredicateTest {
     class CcdStateCreatedPredicate {
 
         @Test
-        void shouldReturnTrue_whenCaseDataAtIssuedSate() {
+        void shouldReturnTrue_whenCaseDataAtIssuedState() {
             CaseData caseData = CaseDataBuilder.builder().atStateClaimCreated().build();
             assertTrue(claimIssued.test(caseData));
         }
 
         @Test
-        void shouldReturnFalse_whenCaseDataIsAtDraftSate() {
+        void shouldReturnFalse_whenCaseDataIsAtDraftState() {
             CaseData caseData = CaseDataBuilder.builder().atStatePaymentSuccessful().build();
             assertFalse(claimIssued.test(caseData));
         }
