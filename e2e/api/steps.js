@@ -308,6 +308,7 @@ const assertCorrectEventsAreAvailableToUser = async (user, state) => {
 };
 
 function addMidEventFields(pageId, responseBody) {
+  console.log(`Adding mid event fields for pageId: ${pageId}`);
   const midEventData = data[eventName].midEventData[pageId];
   const midEventField = midEventFieldForPage[pageId];
 
