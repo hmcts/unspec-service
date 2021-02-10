@@ -33,8 +33,8 @@ const createClaimData = legalRepresentation => {
   return {
     References: {
       solicitorReferences: {
-        applicantSolicitor1Reference: 'Applicant test reference',
-        respondentSolicitor1Reference: 'Respondent test reference'
+        applicantSolicitor1Reference: 'Applicant reference',
+        respondentSolicitor1Reference: 'Respondent reference'
       }
     },
     Court: {
@@ -108,7 +108,7 @@ const createClaimData = legalRepresentation => {
       }
     },
     PaymentReference: {
-      paymentReference: 'Applicant test reference'
+      paymentReference: 'Applicant reference'
     },
     StatementOfTruth: {
       applicantSolicitor1ClaimStatementOfTruth: {
@@ -135,7 +135,7 @@ module.exports = {
           code: 'FEE0209',
           version: '1'
         },
-        paymentReference: 'Applicant test reference',
+        paymentReference: 'Applicant reference',
         applicant1: applicant1WithPartyName,
         respondent1: respondent1WithPartyName,
       },
@@ -160,7 +160,7 @@ module.exports = {
     valid: {
       ...createClaimData('Yes'),
       PaymentReference: {
-        paymentReference: 'Applicant test reference'
+        paymentReference: 'Applicant reference'
       }
     }
   },
