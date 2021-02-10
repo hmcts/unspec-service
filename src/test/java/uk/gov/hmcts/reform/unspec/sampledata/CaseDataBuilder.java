@@ -266,7 +266,7 @@ public class CaseDataBuilder {
         return this;
     }
 
-    public CaseDataBuilder submitterId(String submitterId){
+    public CaseDataBuilder submitterId(String submitterId) {
         this.submitterId = submitterId;
         return this;
     }
