@@ -52,8 +52,8 @@ const createClaimData = legalRepresentation => {
       applicant1LitigationFriend: applicant1LitigationFriend
     },
     ClaimantSolicitorEmail: {
-      applicantSolicitor1CheckEmail: {
-        correct: 'Yes'
+      applicantSolicitor1UserDetails: {
+        id: 'c18d5f8d-06fa-477d-ac09-5b6129828a5b'
       }
     },
     ClaimantSolicitorOrganisation: {
@@ -148,7 +148,6 @@ module.exports = {
       },
       ClaimantSolicitorEmail: {
         applicant1: applicant1WithPartyName,
-        respondent1: respondent1WithPartyName,
         applicant1LitigationFriend: applicant1LitigationFriend,
         applicantSolicitor1UserDetails: {
           email: 'civil.damages.claims+organisation.1.solicitor.1@gmail.com',
