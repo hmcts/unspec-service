@@ -1,13 +1,13 @@
 [
   {
-    "ID": "IdamCorrectEmail",
+    "ID": "CorrectEmail",
     "ListElementCode": "email",
     "FieldType": "Text",
     "ElementLabel": "Your current logged in email:",
     "SecurityClassification": "Public"
   },
   {
-    "ID": "IdamCorrectEmail",
+    "ID": "CorrectEmail",
     "ListElementCode": "correct",
     "FieldType": "YesOrNo",
     "ElementLabel": "Would you like to use the same email address for notifications?",

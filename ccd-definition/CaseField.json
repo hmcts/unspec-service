@@ -725,17 +725,17 @@
   {
     "LiveFrom": "01/01/2017",
     "CaseTypeID": "UNSPECIFIED_CLAIMS",
-    "ID": "applicantSolicitor1IdamEmail",
+    "ID": "applicantSolicitor1CheckEmail",
     "Label": "Idam email address",
-    "FieldType": "IdamCorrectEmail",
+    "FieldType": "CorrectEmail",
     "SecurityClassification": "Public"
   },
   {
     "LiveFrom": "01/01/2017",
     "CaseTypeID": "UNSPECIFIED_CLAIMS",
-    "ID": "applicantSolicitor1IdamUserDetails",
+    "ID": "applicantSolicitor1UserDetails",
     "Label": "Claimant solicitor idam details",
-    "FieldType": "IdamUserDetails",
+    "FieldType": "UserDetails",
     "SecurityClassification": "Public"
   }
 ]

@@ -79,7 +79,7 @@
     "LiveFrom": "01/01/2017",
     "CaseTypeID": "UNSPECIFIED_CLAIMS",
     "CaseEventID": "CREATE_CLAIM",
-    "CaseFieldID": "applicantSolicitor1IdamEmail",
+    "CaseFieldID": "applicantSolicitor1CheckEmail",
     "PageFieldDisplayOrder": 1,
     "DisplayContext": "COMPLEX",
     "PageID": "ClaimantSolicitorEmail",
@@ -92,14 +92,14 @@
     "LiveFrom": "01/01/2017",
     "CaseTypeID": "UNSPECIFIED_CLAIMS",
     "CaseEventID": "CREATE_CLAIM",
-    "CaseFieldID": "applicantSolicitor1IdamUserDetails",
+    "CaseFieldID": "applicantSolicitor1UserDetails",
     "PageFieldDisplayOrder": 2,
     "DisplayContext": "COMPLEX",
     "PageID": "ClaimantSolicitorEmail",
     "PageDisplayOrder": 6,
     "PageColumnNumber": 1,
     "ShowSummaryChangeOption": "Y",
-    "FieldShowCondition": "applicantSolicitor1IdamEmail.correct = \"No\""
+    "FieldShowCondition": "applicantSolicitor1CheckEmail.correct = \"No\""
   },
   {
     "LiveFrom": "01/01/2017",

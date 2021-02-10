@@ -1,13 +1,13 @@
 [
   {
-    "ID": "IdamUserDetails",
+    "ID": "UserDetails",
     "ListElementCode": "email",
     "FieldType": "Email",
     "ElementLabel": "Email",
     "SecurityClassification": "Public"
   },
   {
-    "ID": "IdamUserDetails",
+    "ID": "UserDetails",
     "ListElementCode": "id",
     "FieldType": "Text",
     "ElementLabel": "User ID",

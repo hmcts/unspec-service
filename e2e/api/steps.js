@@ -29,6 +29,10 @@ const midEventFieldForPage = {
   ClaimValue: {
     id: 'applicantSolicitor1PbaAccounts',
     dynamicList: true
+  },
+  ClaimantLitigationFriend: {
+    id: 'applicantSolicitor1CheckEmail',
+    dynamicList: false
   }
 };
 

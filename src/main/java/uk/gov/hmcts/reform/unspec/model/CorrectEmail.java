@@ -6,7 +6,7 @@ import uk.gov.hmcts.reform.unspec.enums.YesOrNo;
 
 @Data
 @Builder
-public class IdamCorrectEmail {
+public class CorrectEmail {
 
     private final String email;
     private final YesOrNo correct;

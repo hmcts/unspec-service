@@ -4,12 +4,12 @@ module.exports = {
 
   fields: {
     idamEmailIsCorrect: {
-      id: '#applicantSolicitor1IdamEmail_correct',
+      id: '#applicantSolicitor1CheckEmail_correct',
       options: {
         yes: 'Yes',
         no: 'No'
       },
-      newEmail: '#applicantSolicitor1IdamUserDetails_email',
+      newEmail: '#applicantSolicitor1UserDetails_email',
     }
   },
 

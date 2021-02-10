@@ -193,7 +193,7 @@
     "LiveFrom": "01/01/2017",
     "ID": "IdamEmail",
     "CaseEventID": "CREATE_CLAIM",
-    "CaseFieldID": "applicantSolicitor1IdamEmail",
+    "CaseFieldID": "applicantSolicitor1CheckEmail",
     "ListElementCode": "email",
     "FieldDisplayOrder": 1,
     "DisplayContext": "READONLY"
@@ -202,7 +202,7 @@
     "LiveFrom": "01/01/2017",
     "ID": "IdamEmail",
     "CaseEventID": "CREATE_CLAIM",
-    "CaseFieldID": "applicantSolicitor1IdamEmail",
+    "CaseFieldID": "applicantSolicitor1CheckEmail",
     "ListElementCode": "correct",
     "FieldDisplayOrder": 2,
     "DisplayContext": "MANDATORY"
@@ -211,7 +211,7 @@
     "LiveFrom": "01/01/2017",
     "ID": "IdamDetails",
     "CaseEventID": "CREATE_CLAIM",
-    "CaseFieldID": "applicantSolicitor1IdamUserDetails",
+    "CaseFieldID": "applicantSolicitor1UserDetails",
     "ListElementCode": "email",
     "FieldDisplayOrder": 3,
     "DisplayContext": "MANDATORY"

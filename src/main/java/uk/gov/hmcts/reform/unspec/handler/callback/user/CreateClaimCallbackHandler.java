@@ -18,7 +18,7 @@ import uk.gov.hmcts.reform.unspec.enums.YesOrNo;
 import uk.gov.hmcts.reform.unspec.helpers.CaseDetailsConverter;
 import uk.gov.hmcts.reform.unspec.model.BusinessProcess;
 import uk.gov.hmcts.reform.unspec.model.CaseData;
-import uk.gov.hmcts.reform.unspec.model.IdamCorrectEmail;
+import uk.gov.hmcts.reform.unspec.model.CorrectEmail;
 import uk.gov.hmcts.reform.unspec.model.IdamUserDetails;
 import uk.gov.hmcts.reform.unspec.model.Party;
 import uk.gov.hmcts.reform.unspec.model.SolicitorReferences;
@@ -124,19 +124,10 @@ public class CreateClaimCallbackHandler extends CallbackHandler {
     }
 
     private CallbackResponse getIdamEmail(CallbackParams callbackParams) {
-
-        //TODO: below error
-        // Case data validation failed: The following list of fields are in an invalid state:
-        // [applicantSolicitor1IdamEmail.correct, applicantSolicitor1IdamEmail.label]
         UserDetails userDetails = idamClient.getUserDetails(callbackParams.getParams().get(BEARER_TOKEN).toString());
 
-        IdamCorrectEmail correctEmail = IdamCorrectEmail.builder()
-            .email(userDetails.getEmail())
-            .build();
-
         CaseData.CaseDataBuilder caseDataBuilder = callbackParams.getCaseData().toBuilder()
-            .applicantSolicitor1IdamEmail(correctEmail)
-            .applicantSolicitor1IdamUserDetails(IdamUserDetails.builder().id(userDetails.getId()).build());
+            .applicantSolicitor1CheckEmail(CorrectEmail.builder().email(userDetails.getEmail()).build());
 
         return AboutToStartOrSubmitCallbackResponse.builder()
             .data(caseDetailsConverter.toMap(caseDataBuilder.build()))
@@ -146,16 +137,26 @@ public class CreateClaimCallbackHandler extends CallbackHandler {
     private CallbackResponse setEmailForApplicantSolicitor1(CallbackParams callbackParams) {
         CaseData caseData = callbackParams.getCaseData();
         CaseData.CaseDataBuilder caseDataBuilder = caseData.toBuilder();
-        IdamCorrectEmail applicantSolicitor1IdamEmail = caseData.getApplicantSolicitor1IdamEmail();
-        IdamUserDetails applicantSolicitor1IdamDetails = caseData.getApplicantSolicitor1IdamUserDetails();
+        CorrectEmail applicantSolicitor1CheckEmail = caseData.getApplicantSolicitor1CheckEmail();
 
-        if (applicantSolicitor1IdamEmail.isCorrect()) {
-            caseDataBuilder.applicantSolicitor1IdamUserDetails(
-                applicantSolicitor1IdamDetails.toBuilder().email(applicantSolicitor1IdamEmail.getEmail()).build()
+        // second idam call is workaround for null pointer when hiding field in getIdamEmail callback
+        UserDetails userDetails = idamClient.getUserDetails(callbackParams.getParams().get(BEARER_TOKEN).toString());
+        IdamUserDetails.IdamUserDetailsBuilder idamDetails = IdamUserDetails.builder().id(userDetails.getId());
+
+        if (applicantSolicitor1CheckEmail.isCorrect()) {
+            caseDataBuilder.applicantSolicitor1UserDetails(
+                idamDetails.email(applicantSolicitor1CheckEmail.getEmail()).build()
+            );
+        } else {
+            IdamUserDetails applicantSolicitor1UserDetails = caseData.getApplicantSolicitor1UserDetails();
+
+            caseDataBuilder.applicantSolicitor1UserDetails(
+                idamDetails.email(applicantSolicitor1UserDetails.getEmail()).build()
             );
         }
 
-        caseDataBuilder.applicantSolicitor1IdamEmail(null);
+        //set label field to null
+        caseDataBuilder.applicantSolicitor1CheckEmail(null);
 
         return AboutToStartOrSubmitCallbackResponse.builder()
             .data(caseDetailsConverter.toMap(caseDataBuilder.build()))

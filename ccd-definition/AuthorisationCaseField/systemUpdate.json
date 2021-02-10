@@ -296,7 +296,7 @@
   {
     "LiveFrom": "01/01/2017",
     "CaseTypeID": "UNSPECIFIED_CLAIMS",
-    "CaseFieldID": "applicantSolicitor1IdamUserDetails",
+    "CaseFieldID": "applicantSolicitor1UserDetails",
     "UserRole": "caseworker-civil-systemupdate",
     "CRUD": "R"
   }

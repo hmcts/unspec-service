@@ -23,8 +23,8 @@ import uk.gov.hmcts.reform.unspec.config.MockDatabaseConfiguration;
 import uk.gov.hmcts.reform.unspec.handler.callback.BaseCallbackHandlerTest;
 import uk.gov.hmcts.reform.unspec.helpers.CaseDetailsConverter;
 import uk.gov.hmcts.reform.unspec.model.CaseData;
+import uk.gov.hmcts.reform.unspec.model.CorrectEmail;
 import uk.gov.hmcts.reform.unspec.model.Fee;
-import uk.gov.hmcts.reform.unspec.model.IdamCorrectEmail;
 import uk.gov.hmcts.reform.unspec.model.IdamUserDetails;
 import uk.gov.hmcts.reform.unspec.model.Party;
 import uk.gov.hmcts.reform.unspec.model.common.DynamicList;
@@ -251,7 +251,7 @@ class CreateClaimCallbackHandlerTest extends BaseCallbackHandlerTest {
         private static final String PAGE_ID = "idam-email";
 
         @Test
-        void shouldAddEmailLabelAndIdamIdToData_whenInvoked() {
+        void shouldAddEmailLabelToData_whenInvoked() {
             String userId = UUID.randomUUID().toString();
             String email = "example@email.com";
 
@@ -263,14 +263,9 @@ class CreateClaimCallbackHandlerTest extends BaseCallbackHandlerTest {
             var response = (AboutToStartOrSubmitCallbackResponse) handler.handle(params);
 
             assertThat(response.getData())
-                .extracting("applicantSolicitor1IdamEmail")
+                .extracting("applicantSolicitor1CheckEmail")
                 .extracting("email")
                 .isEqualTo(email);
-
-            assertThat(response.getData())
-                .extracting("applicantSolicitor1IdamUserDetails")
-                .extracting("id")
-                .isEqualTo(userId);
         }
     }
 
@@ -284,14 +279,15 @@ class CreateClaimCallbackHandlerTest extends BaseCallbackHandlerTest {
         @Test
         void shouldAddIdamEmailToIdamDetails_whenIdamEmailIsCorrect() {
             String userId = UUID.randomUUID().toString();
+            given(idamClient.getUserDetails(any()))
+                .willReturn(UserDetails.builder().email(EMAIL).id(userId).build());
 
             CaseData caseData = CaseDataBuilder.builder().atStateClaimDraft().build().toBuilder()
-                .applicantSolicitor1IdamEmail(IdamCorrectEmail.builder()
+                .applicantSolicitor1CheckEmail(CorrectEmail.builder()
                                                   .email(EMAIL)
                                                   .correct(YES)
                                                   .build())
-                .applicantSolicitor1IdamUserDetails(IdamUserDetails.builder()
-                                                        .id(userId)
+                .applicantSolicitor1UserDetails(IdamUserDetails.builder()
                                                         .email(DIFFERENT_EMAIL)
                                                         .build())
                 .build();
@@ -300,11 +296,11 @@ class CreateClaimCallbackHandlerTest extends BaseCallbackHandlerTest {
             var response = (AboutToStartOrSubmitCallbackResponse) handler.handle(params);
 
             assertThat(response.getData())
-                .extracting("applicantSolicitor1IdamEmail")
+                .extracting("applicantSolicitor1CheckEmail")
                 .isNull();
 
             assertThat(response.getData())
-                .extracting("applicantSolicitor1IdamUserDetails")
+                .extracting("applicantSolicitor1UserDetails")
                 .extracting("id", "email")
                 .containsExactly(userId, EMAIL);
         }
@@ -312,14 +308,15 @@ class CreateClaimCallbackHandlerTest extends BaseCallbackHandlerTest {
         @Test
         void shouldAddDifferentEmailToIdamDetails_whenIdamEmailIsNotCorrect() {
             String userId = UUID.randomUUID().toString();
+            given(idamClient.getUserDetails(any()))
+                .willReturn(UserDetails.builder().email(EMAIL).id(userId).build());
 
             CaseData caseData = CaseDataBuilder.builder().atStateClaimDraft().build().toBuilder()
-                .applicantSolicitor1IdamEmail(IdamCorrectEmail.builder()
+                .applicantSolicitor1CheckEmail(CorrectEmail.builder()
                                                   .email(EMAIL)
                                                   .correct(NO)
                                                   .build())
-                .applicantSolicitor1IdamUserDetails(IdamUserDetails.builder()
-                                                        .id(userId)
+                .applicantSolicitor1UserDetails(IdamUserDetails.builder()
                                                         .email(DIFFERENT_EMAIL)
                                                         .build())
                 .build();
@@ -328,11 +325,11 @@ class CreateClaimCallbackHandlerTest extends BaseCallbackHandlerTest {
             var response = (AboutToStartOrSubmitCallbackResponse) handler.handle(params);
 
             assertThat(response.getData())
-                .extracting("applicantSolicitor1IdamEmail")
+                .extracting("applicantSolicitor1CheckEmail")
                 .isNull();
 
             assertThat(response.getData())
-                .extracting("applicantSolicitor1IdamUserDetails")
+                .extracting("applicantSolicitor1UserDetails")
                 .extracting("id", "email")
                 .containsExactly(userId, DIFFERENT_EMAIL);
         }
