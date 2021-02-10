@@ -25,6 +25,7 @@ public interface FlowState {
         PENDING_CASE_ISSUED,
         PAYMENT_SUCCESSFUL,
         PAYMENT_FAILED,
+        AWAITING_CASE_NOTIFICATION,
         CLAIM_ISSUED,
         CLAIM_STAYED,
         SERVICE_ACKNOWLEDGED,
@@ -34,7 +35,9 @@ public interface FlowState {
         FULL_DEFENCE,
         CLAIM_WITHDRAWN,
         CLAIM_DISCONTINUED,
-        PROCEEDS_WITH_OFFLINE_JOURNEY;
+        CASE_PROCEEDS_IN_CASEMAN,
+        PROCEEDS_OFFLINE_UNREPRESENTED_DEFENDANT,
+        PROCEEDS_OFFLINE_ADMIT_OR_COUNTER_CLAIM;
 
         public static final String FLOW_NAME = "MAIN";
 

@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import uk.gov.hmcts.reform.authorisation.generators.AuthTokenGenerator;
 import uk.gov.hmcts.reform.idam.client.IdamClient;
-import uk.gov.hmcts.reform.prd.client.OrganisationApi;
 import uk.gov.hmcts.reform.prd.model.Organisation;
 import uk.gov.hmcts.reform.unspec.enums.CaseRole;
 import uk.gov.hmcts.reform.unspec.service.CoreCaseUserService;

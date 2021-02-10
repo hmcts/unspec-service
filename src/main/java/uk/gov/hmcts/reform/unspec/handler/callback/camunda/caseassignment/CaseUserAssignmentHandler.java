@@ -9,6 +9,7 @@ import uk.gov.hmcts.reform.unspec.callback.CallbackHandler;
 import uk.gov.hmcts.reform.unspec.callback.CallbackParams;
 import uk.gov.hmcts.reform.unspec.callback.CaseEvent;
 import uk.gov.hmcts.reform.unspec.enums.CaseRole;
+import uk.gov.hmcts.reform.unspec.helpers.CaseDetailsConverter;
 import uk.gov.hmcts.reform.unspec.model.CaseData;
 import uk.gov.hmcts.reform.unspec.service.CoreCaseUserService;
 
@@ -26,6 +27,7 @@ public class CaseUserAssignmentHandler extends CallbackHandler {
     public static final String TASK_ID = "CaseAssignmentToApplicantSolicitor1";
 
     private final CoreCaseUserService coreCaseUserService;
+    private final CaseDetailsConverter caseDetailsConverter;
 
     @Override
     protected Map<String, Callback> callbacks() {
@@ -45,13 +47,13 @@ public class CaseUserAssignmentHandler extends CallbackHandler {
     }
 
     private CallbackResponse assignSolicitorCaseRole(CallbackParams callbackParams) {
-        CaseData caseData = callbackParams.getCaseData();
+        CaseData caseData = caseDetailsConverter.toCaseData(callbackParams.getRequest().getCaseDetails());
         String caseId = caseData.getCcdCaseReference().toString();
         String submitterId = caseData.getSubmitterId();
         String organisationId = caseData.getApplicant1OrganisationPolicy().getOrganisation().getOrganisationID();
 
         coreCaseUserService.assignCase(caseId, submitterId, organisationId, CaseRole.APPLICANTSOLICITORONE);
-        coreCaseUserService.removeCaseAssignment(caseId, submitterId, organisationId);
+        coreCaseUserService.removeCreatorRoleCaseAssignment(caseId, submitterId, organisationId);
 
         return AboutToStartOrSubmitCallbackResponse.builder().build();
     }

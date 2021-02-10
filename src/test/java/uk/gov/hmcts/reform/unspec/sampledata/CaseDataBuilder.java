@@ -1,14 +1,17 @@
 package uk.gov.hmcts.reform.unspec.sampledata;
 
+import uk.gov.hmcts.reform.ccd.model.OrganisationPolicy;
 import uk.gov.hmcts.reform.unspec.enums.AllocatedTrack;
 import uk.gov.hmcts.reform.unspec.enums.CaseState;
 import uk.gov.hmcts.reform.unspec.enums.ClaimType;
 import uk.gov.hmcts.reform.unspec.enums.PersonalInjuryType;
+import uk.gov.hmcts.reform.unspec.enums.ReasonForProceedingOnPaper;
 import uk.gov.hmcts.reform.unspec.enums.RespondentResponseType;
 import uk.gov.hmcts.reform.unspec.enums.ResponseIntention;
 import uk.gov.hmcts.reform.unspec.enums.YesOrNo;
 import uk.gov.hmcts.reform.unspec.model.BusinessProcess;
 import uk.gov.hmcts.reform.unspec.model.CaseData;
+import uk.gov.hmcts.reform.unspec.model.ClaimProceedsInCaseman;
 import uk.gov.hmcts.reform.unspec.model.ClaimValue;
 import uk.gov.hmcts.reform.unspec.model.CloseClaim;
 import uk.gov.hmcts.reform.unspec.model.CourtLocation;
@@ -40,6 +43,7 @@ import java.util.List;
 
 import static java.time.LocalDate.now;
 import static uk.gov.hmcts.reform.unspec.enums.AllocatedTrack.FAST_CLAIM;
+import static uk.gov.hmcts.reform.unspec.enums.CaseState.AWAITING_CASE_NOTIFICATION;
 import static uk.gov.hmcts.reform.unspec.enums.CaseState.AWAITING_CLAIMANT_INTENTION;
 import static uk.gov.hmcts.reform.unspec.enums.CaseState.CLOSED;
 import static uk.gov.hmcts.reform.unspec.enums.CaseState.CREATED;
@@ -69,6 +73,7 @@ public class CaseDataBuilder {
     private Party applicant1;
     private Party respondent1;
     private YesOrNo respondent1Represented;
+    private String respondentSolicitor1EmailAddress;
     private ClaimValue claimValue;
     private ClaimType claimType;
     private String claimTypeOther;
@@ -84,6 +89,7 @@ public class CaseDataBuilder {
     private List<Element<CaseDocument>> systemGeneratedCaseDocuments;
     private PaymentDetails paymentDetails;
     private LocalDateTime respondentSolicitor1ResponseDeadline;
+    private LocalDate claimNotificationDate;
     //Acknowledge Service
     private ResponseIntention respondent1ClaimResponseIntentionType;
     // Request Extension
@@ -106,8 +112,13 @@ public class CaseDataBuilder {
     private ResponseDocument applicant1DefenceResponseDocument;
     private BusinessProcess businessProcess;
 
+    //Case proceeds in caseman
+    private ClaimProceedsInCaseman claimProceedsInCaseman;
+
     private CloseClaim withdrawClaim;
     private CloseClaim discontinueClaim;
+    private OrganisationPolicy applicant1OrganisationPolicy;
+    private OrganisationPolicy respondent1OrganisationPolicy;
 
     public CaseDataBuilder respondentSolicitor1claimResponseExtensionProposedDeadline(LocalDate responseDeadline) {
         this.respondentSolicitor1claimResponseExtensionProposedDeadline = responseDeadline;
@@ -239,6 +250,26 @@ public class CaseDataBuilder {
         return this;
     }
 
+    public CaseDataBuilder claimProceedsInCaseman(ClaimProceedsInCaseman claimProceedsInCaseman) {
+        this.claimProceedsInCaseman = claimProceedsInCaseman;
+        return this;
+    }
+
+    public CaseDataBuilder applicant1OrganisationPolicy(OrganisationPolicy applicant1OrganisationPolicy) {
+        this.applicant1OrganisationPolicy = applicant1OrganisationPolicy;
+        return this;
+    }
+
+    public CaseDataBuilder respondent1OrganisationPolicy(OrganisationPolicy respondent1OrganisationPolicy) {
+        this.respondent1OrganisationPolicy = respondent1OrganisationPolicy;
+        return this;
+    }
+
+    public CaseDataBuilder caseReference(Long ccdCaseReference) {
+        this.ccdCaseReference = ccdCaseReference;
+        return this;
+    }
+
     public CaseDataBuilder atState(FlowState.Main flowState) {
         switch (flowState) {
             case DRAFT:
@@ -249,6 +280,8 @@ public class CaseDataBuilder {
                 return atStatePaymentSuccessful();
             case PAYMENT_FAILED:
                 return atStatePaymentFailed();
+            case AWAITING_CASE_NOTIFICATION:
+                return atStateAwaitingCaseNotification();
             case CLAIM_ISSUED:
                 return atStateClaimCreated();
             case CLAIM_STAYED:
@@ -267,11 +300,26 @@ public class CaseDataBuilder {
                 return atStateClaimWithdrawn();
             case CLAIM_DISCONTINUED:
                 return atStateClaimDiscontinued();
-            case PROCEEDS_WITH_OFFLINE_JOURNEY:
-                return atStateProceedsOffline();
+            case PROCEEDS_OFFLINE_ADMIT_OR_COUNTER_CLAIM:
+                return atStateProceedsOfflineAdmissionOrCounterClaim();
+            case PROCEEDS_OFFLINE_UNREPRESENTED_DEFENDANT:
+                return atStateProceedsOfflineUnrepresentedDefendant();
+            case CASE_PROCEEDS_IN_CASEMAN:
+                return atStateCaseProceedsInCaseman();
             default:
                 throw new IllegalArgumentException("Invalid internal state: " + flowState);
         }
+    }
+
+    public CaseDataBuilder atStateProceedsOfflineUnrepresentedDefendant() {
+        atStateClaimDraft();
+        claimSubmittedDateTime = LocalDateTime.now();
+        legacyCaseReference = LEGACY_CASE_REFERENCE;
+        allocatedTrack = FAST_CLAIM;
+        ccdState = PROCEEDS_WITH_OFFLINE_JOURNEY;
+        ccdCaseReference = CASE_ID;
+        respondent1Represented = NO;
+        return this;
     }
 
     public CaseDataBuilder atStateClaimDiscontinued() {
@@ -348,6 +396,7 @@ public class CaseDataBuilder {
         applicant1 = PartyBuilder.builder().individual().build();
         respondent1 = PartyBuilder.builder().soleTrader().build();
         respondent1Represented = YES;
+        respondentSolicitor1EmailAddress = "civilunspecified@gmail.com";
         applicantSolicitor1ClaimStatementOfTruth = StatementOfTruthBuilder.builder().build();
 
         return this;
@@ -383,9 +432,16 @@ public class CaseDataBuilder {
         return this;
     }
 
-    public CaseDataBuilder atStateClaimCreated() {
+    public CaseDataBuilder atStateAwaitingCaseNotification() {
         atStatePaymentSuccessful();
+        ccdState = AWAITING_CASE_NOTIFICATION;
         claimIssuedDate = CLAIM_ISSUED_DATE;
+        return this;
+    }
+
+    public CaseDataBuilder atStateClaimCreated() {
+        atStateAwaitingCaseNotification();
+        claimNotificationDate = LocalDate.now();
         ccdState = CREATED;
         respondentSolicitor1ResponseDeadline = RESPONSE_DEADLINE;
         return this;
@@ -394,6 +450,15 @@ public class CaseDataBuilder {
     public CaseDataBuilder atStateClaimStayed() {
         atStateClaimCreated();
         ccdState = STAYED;
+        return this;
+    }
+
+    public CaseDataBuilder atStateCaseProceedsInCaseman() {
+        atStateAwaitingCaseNotification();
+        claimProceedsInCaseman = ClaimProceedsInCaseman.builder()
+            .date(LocalDate.now())
+            .reason(ReasonForProceedingOnPaper.APPLICATION)
+            .build();
         return this;
     }
 
@@ -416,7 +481,7 @@ public class CaseDataBuilder {
         return this;
     }
 
-    public CaseDataBuilder atStateProceedsOffline() {
+    public CaseDataBuilder atStateProceedsOfflineAdmissionOrCounterClaim() {
         atStateRespondedToClaim();
         ccdState = PROCEEDS_WITH_OFFLINE_JOURNEY;
         return this;
@@ -482,9 +547,11 @@ public class CaseDataBuilder {
             .applicant1(applicant1)
             .respondent1(respondent1)
             .respondent1Represented(respondent1Represented)
+            .respondentSolicitor1EmailAddress(respondentSolicitor1EmailAddress)
             .applicantSolicitor1ClaimStatementOfTruth(applicantSolicitor1ClaimStatementOfTruth)
             .paymentDetails(paymentDetails)
             .respondentSolicitor1ResponseDeadline(respondentSolicitor1ResponseDeadline)
+            .claimNotificationDate(claimNotificationDate)
             // Acknowledge Service
             .respondent1ClaimResponseIntentionType(respondent1ClaimResponseIntentionType)
             // Request Extension
@@ -514,6 +581,9 @@ public class CaseDataBuilder {
             .applicant1ProceedWithClaim(applicant1ProceedWithClaim)
             .applicant1DefenceResponseDocument(applicant1DefenceResponseDocument)
 
+            //Case procceds in Caseman
+            .claimProceedsInCaseman(claimProceedsInCaseman)
+
             .ccdState(ccdState)
             .businessProcess(businessProcess)
             .ccdCaseReference(ccdCaseReference)
@@ -522,6 +592,8 @@ public class CaseDataBuilder {
             .discontinueClaim(discontinueClaim)
             .respondent1DQ(respondent1DQ)
             .applicant1DQ(applicant1DQ)
+            .applicant1OrganisationPolicy(applicant1OrganisationPolicy)
+            .respondent1OrganisationPolicy(respondent1OrganisationPolicy)
             .build();
     }
 }

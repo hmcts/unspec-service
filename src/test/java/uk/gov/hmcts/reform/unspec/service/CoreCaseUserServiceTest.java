@@ -4,7 +4,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -17,7 +16,6 @@ import uk.gov.hmcts.reform.ccd.model.CaseAssignedUserRoleWithOrganisation;
 import uk.gov.hmcts.reform.ccd.model.CaseAssignedUserRolesRequest;
 import uk.gov.hmcts.reform.ccd.model.CaseAssignedUserRolesResource;
 import uk.gov.hmcts.reform.idam.client.IdamClient;
-import uk.gov.hmcts.reform.prd.model.Organisation;
 import uk.gov.hmcts.reform.unspec.config.CrossAccessUserConfiguration;
 import uk.gov.hmcts.reform.unspec.enums.CaseRole;
 
@@ -35,7 +33,6 @@ import static org.mockito.Mockito.when;
 class CoreCaseUserServiceTest {
 
     private static final String CAA_USER_AUTH_TOKEN = "Bearer caa-user-xyz";
-    private static final String CASE_USER_AUTH_TOKEN = "Bearer case-user-xyz";
     private static final String SERVICE_AUTH_TOKEN = "Bearer service-xyz";
     private static final String CASE_ID = "1";
     private static final String USER_ID = "User1";
@@ -51,13 +48,7 @@ class CoreCaseUserServiceTest {
     private IdamClient idamClient;
 
     @MockBean
-    private OrganisationService organisationService;
-
-    @MockBean
     private AuthTokenGenerator authTokenGenerator;
-
-    @Mock
-    private Organisation organisation;
 
     @Autowired
     private CoreCaseUserService service;
@@ -76,7 +67,7 @@ class CoreCaseUserServiceTest {
 
         @Test
         void shouldAssignCaseToUser_WhenSameUserWithRequestedCaseRoleDoesNotExist() {
-            when(caseAccessDataStoreApi.getUserRoles(CAA_USER_AUTH_TOKEN, SERVICE_AUTH_TOKEN, List.of(USER_ID)))
+            when(caseAccessDataStoreApi.getUserRoles(CAA_USER_AUTH_TOKEN, SERVICE_AUTH_TOKEN, List.of(CASE_ID)))
                 .thenReturn(CaseAssignedUserRolesResource.builder().caseAssignedUserRoles(List.of()).build());
 
             service.assignCase(CASE_ID, USER_ID, ORG_ID, CaseRole.APPLICANTSOLICITORONE);
@@ -95,7 +86,7 @@ class CoreCaseUserServiceTest {
                 .caseRole(CaseRole.RESPONDENTSOLICITORONE.getFormattedName())
                 .build();
 
-            when(caseAccessDataStoreApi.getUserRoles(CAA_USER_AUTH_TOKEN, SERVICE_AUTH_TOKEN, List.of(USER_ID)))
+            when(caseAccessDataStoreApi.getUserRoles(CAA_USER_AUTH_TOKEN, SERVICE_AUTH_TOKEN, List.of(CASE_ID)))
                 .thenReturn(CaseAssignedUserRolesResource.builder().caseAssignedUserRoles(List.of(caseAssignedUserRole))
                                 .build());
 
@@ -134,11 +125,11 @@ class CoreCaseUserServiceTest {
                 .caseRole(CaseRole.CREATOR.getFormattedName())
                 .build();
 
-            when(caseAccessDataStoreApi.getUserRoles(CAA_USER_AUTH_TOKEN, SERVICE_AUTH_TOKEN, List.of(USER_ID)))
+            when(caseAccessDataStoreApi.getUserRoles(CAA_USER_AUTH_TOKEN, SERVICE_AUTH_TOKEN, List.of(CASE_ID)))
                 .thenReturn(CaseAssignedUserRolesResource.builder().caseAssignedUserRoles(List.of(caseAssignedUserRole))
                                 .build());
 
-            service.removeCaseAssignment(CASE_ID, USER_ID, ORG_ID);
+            service.removeCreatorRoleCaseAssignment(CASE_ID, USER_ID, ORG_ID);
 
             verify(caseAccessDataStoreApi).removeCaseUserRoles(
                 CAA_USER_AUTH_TOKEN,
@@ -154,11 +145,11 @@ class CoreCaseUserServiceTest {
                 .caseRole(CaseRole.APPLICANTSOLICITORONE.getFormattedName())
                 .build();
 
-            when(caseAccessDataStoreApi.getUserRoles(CAA_USER_AUTH_TOKEN, SERVICE_AUTH_TOKEN, List.of(USER_ID)))
+            when(caseAccessDataStoreApi.getUserRoles(CAA_USER_AUTH_TOKEN, SERVICE_AUTH_TOKEN, List.of(CASE_ID)))
                 .thenReturn(CaseAssignedUserRolesResource.builder().caseAssignedUserRoles(List.of(caseAssignedUserRole))
                                 .build());
 
-            service.removeCaseAssignment(CASE_ID, USER_ID, ORG_ID);
+            service.removeCreatorRoleCaseAssignment(CASE_ID, USER_ID, ORG_ID);
 
             verify(caseAccessDataStoreApi, never()).removeCaseUserRoles(
                 CAA_USER_AUTH_TOKEN,

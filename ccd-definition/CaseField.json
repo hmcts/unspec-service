@@ -697,5 +697,37 @@
     "Label": "Respondent 2 organisation policy",
     "FieldType": "OrganisationPolicy",
     "SecurityClassification": "Public"
+  },
+  {
+    "LiveFrom": "01/01/2017",
+    "CaseTypeID": "UNSPECIFIED_CLAIMS",
+    "ID": "respondentSolicitor1EmailAddress",
+    "Label": "Defendant solicitor's email address?",
+    "FieldType": "Email",
+    "SecurityClassification": "Public"
+  },
+  {
+    "LiveFrom": "01/01/2017",
+    "CaseTypeID": "UNSPECIFIED_CLAIMS",
+    "ID": "claimProceedsInCaseman",
+    "Label": "Case proceeds in Caseman",
+    "FieldType": "ClaimProceedsInCaseman",
+    "SecurityClassification": "Public"
+  },
+  {
+    "LiveFrom": "01/01/2017",
+    "CaseTypeID": "UNSPECIFIED_CLAIMS",
+    "ID": "claimNotificationDate",
+    "Label": "Case notification date",
+    "FieldType": "Date",
+    "SecurityClassification": "Public"
+  },
+  {
+    "LiveFrom": "01/01/2017",
+    "CaseTypeID": "UNSPECIFIED_CLAIMS",
+    "ID": "notifyClaimLabel",
+    "Label": "If you continue the defendant legal representative's organisation will be notified and will be granted access to this claim.",
+    "FieldType": "Label",
+    "SecurityClassification": "Public"
   }
 ]

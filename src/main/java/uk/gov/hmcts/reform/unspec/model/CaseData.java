@@ -34,13 +34,14 @@ public class CaseData {
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private final CaseState ccdState;
     private final SolicitorReferences solicitorReferences;
-    private final String submitterId = "88f995a2-2314-4591-8d43-2876f25471b4";
+    private final String submitterId = "f5e5cc53-e065-43dd-8cec-2ad005a6b9a9";
     private final CourtLocation courtLocation;
     private final Party applicant1;
     private final Party applicant2;
     private final Party respondent1;
     private final Party respondent2;
     private final YesOrNo respondent1Represented;
+    private final String respondentSolicitor1EmailAddress;
     private final ClaimValue claimValue;
     private final Fee claimFee;
     private final String paymentReference;
@@ -53,6 +54,7 @@ public class CaseData {
     private final LocalDateTime claimSubmittedDateTime;
     private final LocalDate claimIssuedDate;
     private LocalDateTime confirmationOfServiceDeadline;
+    private final LocalDate claimNotificationDate;
     private final String legacyCaseReference;
     private final AllocatedTrack allocatedTrack;
     private final PaymentDetails paymentDetails;
@@ -110,6 +112,9 @@ public class CaseData {
     private final YesOrNo applicant1LitigationFriendRequired;
 
     private final LitigationFriend applicant1LitigationFriend;
+
+    @Valid
+    private final ClaimProceedsInCaseman claimProceedsInCaseman;
 
     //CCD UI flag
     private final YesOrNo applicantSolicitor1PbaAccountsIsEmpty;

@@ -21,6 +21,7 @@ import static uk.gov.hmcts.reform.unspec.enums.CaseRole.CREATOR;
 @Service
 @RequiredArgsConstructor
 public class CoreCaseUserService {
+
     Logger log = LoggerFactory.getLogger(CoreCaseUserService.class);
 
     private final CaseAccessDataStoreApi caseAccessDataStoreApi;
@@ -31,18 +32,18 @@ public class CoreCaseUserService {
     public void assignCase(String caseId, String userId, String organisationId, CaseRole caseRole) {
         String caaAccessToken = getCaaAccessToken();
 
-        if (!userHasCaseRole(userId, caaAccessToken, caseRole)) {
+        if (!userHasCaseRole(caseId, caaAccessToken, caseRole)) {
             assignUserToCaseForRole(caseId, userId, organisationId, caseRole, caaAccessToken);
         } else {
             log.info("Case already have the user with {} role", caseRole.getFormattedName());
         }
     }
 
-    public void removeCaseAssignment(String caseId, String userId, String organisationId) {
+    public void removeCreatorRoleCaseAssignment(String caseId, String userId, String organisationId) {
 
         String caaAccessToken = getCaaAccessToken();
 
-        if (userHasCaseRole(userId, caaAccessToken, CREATOR)) {
+        if (userHasCaseRole(caseId, caaAccessToken, CREATOR)) {
             removeCreatorAccess(caseId, userId, organisationId, caaAccessToken);
         } else {
             log.info("User doesn't have {} role", CREATOR.getFormattedName());
@@ -56,7 +57,8 @@ public class CoreCaseUserService {
         );
     }
 
-    private void assignUserToCaseForRole(String caseId, String userId, String organisationId, CaseRole caseRole, String caaAccessToken) {
+    private void assignUserToCaseForRole(String caseId, String userId, String organisationId,
+                                         CaseRole caseRole, String caaAccessToken) {
         CaseAssignedUserRoleWithOrganisation caseAssignedUserRoleWithOrganisation
             = CaseAssignedUserRoleWithOrganisation.builder()
             .caseDataId(caseId)
@@ -92,11 +94,11 @@ public class CoreCaseUserService {
         );
     }
 
-    private boolean userHasCaseRole(String userId, String accessToken, CaseRole caseRole) {
+    private boolean userHasCaseRole(String caseId, String accessToken, CaseRole caseRole) {
         CaseAssignedUserRolesResource userRoles = caseAccessDataStoreApi.getUserRoles(
             accessToken,
             authTokenGenerator.generate(),
-            List.of(userId)
+            List.of(caseId)
         );
 
         return userRoles.getCaseAssignedUserRoles().stream()

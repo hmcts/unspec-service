@@ -28,6 +28,9 @@ public class FlowPredicate {
     public static final Predicate<CaseData> claimIssued = caseData ->
         caseData.getClaimIssuedDate() != null;
 
+    public static final Predicate<CaseData> claimNotified = caseData ->
+        caseData.getClaimNotificationDate() != null;
+
     public static final Predicate<CaseData> respondentAcknowledgeService = caseData ->
         caseData.getRespondent1ClaimResponseIntentionType() != null
             && caseData.getRespondent1ClaimResponseDocument() == null
@@ -61,6 +64,9 @@ public class FlowPredicate {
 
     public static final Predicate<CaseData> claimTakenOffline = caseData ->
         caseData.getCcdState() == PROCEEDS_WITH_OFFLINE_JOURNEY;
+
+    public static final Predicate<CaseData> caseProceedsInCaseman = caseData ->
+        caseData.getClaimProceedsInCaseman() != null;
 
     private FlowPredicate() {
         //Utility class
