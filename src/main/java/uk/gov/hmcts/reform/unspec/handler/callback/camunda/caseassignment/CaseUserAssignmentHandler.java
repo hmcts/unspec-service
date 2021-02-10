@@ -54,7 +54,9 @@ public class CaseUserAssignmentHandler extends CallbackHandler {
 
         coreCaseUserService.assignCase(caseId, submitterId, organisationId, CaseRole.APPLICANTSOLICITORONE);
         coreCaseUserService.removeCreatorRoleCaseAssignment(caseId, submitterId, organisationId);
-
-        return AboutToStartOrSubmitCallbackResponse.builder().build();
+        
+        return AboutToStartOrSubmitCallbackResponse.builder()
+            .data(caseDetailsConverter.toMap(caseData.toBuilder().submitterId(null).build()))
+            .build();
     }
 }

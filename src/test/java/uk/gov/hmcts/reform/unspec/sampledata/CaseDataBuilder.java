@@ -117,6 +117,7 @@ public class CaseDataBuilder {
 
     private CloseClaim withdrawClaim;
     private CloseClaim discontinueClaim;
+    private String submitterId;
     private OrganisationPolicy applicant1OrganisationPolicy;
     private OrganisationPolicy respondent1OrganisationPolicy;
 
@@ -262,6 +263,11 @@ public class CaseDataBuilder {
 
     public CaseDataBuilder respondent1OrganisationPolicy(OrganisationPolicy respondent1OrganisationPolicy) {
         this.respondent1OrganisationPolicy = respondent1OrganisationPolicy;
+        return this;
+    }
+
+    public CaseDataBuilder submitterId(String submitterId){
+        this.submitterId = submitterId;
         return this;
     }
 
@@ -594,6 +600,7 @@ public class CaseDataBuilder {
             .applicant1DQ(applicant1DQ)
             .applicant1OrganisationPolicy(applicant1OrganisationPolicy)
             .respondent1OrganisationPolicy(respondent1OrganisationPolicy)
+            .submitterId(submitterId)
             .build();
     }
 }
