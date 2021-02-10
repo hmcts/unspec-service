@@ -242,6 +242,7 @@ const validateEventPages = async (data) => {
 };
 
 const assertValidData = async (data, pageId) => {
+  console.log(`asserting page: ${pageId} has valid data`);
   const validDataForPage = data.valid[pageId];
   caseData = {...caseData, ...validDataForPage};
 
