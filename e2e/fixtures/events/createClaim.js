@@ -147,9 +147,9 @@ module.exports = {
       ClaimantLitigationFriend: {
         applicant1: applicant1WithPartyName,
         applicant1LitigationFriend: applicant1LitigationFriend,
-        applicantSolicitor1CheckEmail: {
-          email: 'civil.damages.claims+organisation.1.solicitor.1@gmail.com',
-        },
+        // applicantSolicitor1CheckEmail: {
+        //   email: 'civil.damages.claims+organisation.1.solicitor.1@gmail.com',
+        // },
       },
       ClaimantSolicitorEmail: {
         applicant1: applicant1WithPartyName,
