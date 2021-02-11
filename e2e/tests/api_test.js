@@ -6,9 +6,10 @@ Scenario('Create claim', async (api) => {
   await api.createClaimWithRepresentedRespondent(config.solicitorUser);
 });
 
-Scenario('Notify claim', async (api) => {
-  await api.notifyClaim();
-});
+// Disabled as old code will not feature notify claim. Will enable in separate PR after code is merged
+// Scenario('Notify claim', async (api) => {
+//   await api.notifyClaim();
+// });
 
 Scenario('Acknowledge service', async (api) => {
   await api.acknowledgeService();
