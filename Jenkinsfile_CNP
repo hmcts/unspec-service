@@ -86,6 +86,9 @@ withPipeline(type, product, component) {
   onDemo {
     loadVaultSecrets(secrets)
   }
+  onIthc {
+    loadVaultSecrets(secrets)
+  }
 
   after('checkout') {
     onMaster {
@@ -180,6 +183,21 @@ withPipeline(type, product, component) {
   }
 
   after('smoketest:demo') {
+    steps.archiveArtifacts allowEmptyArchive: true, artifacts: 'output/**/*'
+  }
+
+  after('buildinfra:ithc') {
+    def subscription = 'nonprod'
+    withSubscription(subscription) {
+      withTeamSecrets(pipelineConf, 'ithc') {
+        archiveCoreCaseDataDefinitions('ithc')
+        uploadCoreCaseDataDefinitions('ithc')
+        uploadBpmnDiagrams('ithc')
+      }
+    }
+  }
+
+  after('smoketest:ithc') {
     steps.archiveArtifacts allowEmptyArchive: true, artifacts: 'output/**/*'
   }
 }
