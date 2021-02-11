@@ -89,6 +89,9 @@ withPipeline(type, product, component) {
   onIthc {
     loadVaultSecrets(secrets)
   }
+  onPerftest {
+    loadVaultSecrets(secrets)
+  }
 
   after('checkout') {
     onMaster {
@@ -198,6 +201,20 @@ withPipeline(type, product, component) {
   }
 
   after('smoketest:ithc') {
+    steps.archiveArtifacts allowEmptyArchive: true, artifacts: 'output/**/*'
+  }
+  after('buildinfra:perftest') {
+    def subscription = 'nonprod'
+    withSubscription(subscription) {
+      withTeamSecrets(pipelineConf, 'ithc') {
+        archiveCoreCaseDataDefinitions('ithc')
+        uploadCoreCaseDataDefinitions('ithc')
+        uploadBpmnDiagrams('ithc')
+      }
+    }
+  }
+
+  after('smoketest:perftest') {
     steps.archiveArtifacts allowEmptyArchive: true, artifacts: 'output/**/*'
   }
 }

@@ -1,0 +1,17 @@
+#!/usr/bin/env bash
+
+set -eu
+
+echo 'export ENVIRONMENT=perftest'
+
+# urls
+echo "export SERVICE_AUTH_PROVIDER_API_BASE_URL=http://rpe-service-auth-provider-perftest.service.core-compute-perftest.internal"
+echo "export IDAM_API_BASE_URL=https://idam-api.perftest.platform.hmcts.net"
+echo "export CCD_IDAM_REDIRECT_URL=https://ccd-case-management-web-perftest.service.core-compute-perftest.internal/oauth2redirect"
+echo "export CCD_DEFINITION_STORE_API_BASE_URL=http://ccd-definition-store-api-perftest.service.core-compute-perftest.internal"
+echo "export CAMUNDA_BASE_URL=http://camunda-api-perftest.service.core-compute-perftest.internal"
+
+# definition placeholders
+echo "export CCD_DEF_CASE_SERVICE_BASE_URL=http://unspec-service-perftest.service.core-compute-perftest.internal"
+echo "export https_proxy=proxyout.reform.hmcts.net:8080"
+echo "export http_proxy=proxyout.reform.hmcts.net:8080"
