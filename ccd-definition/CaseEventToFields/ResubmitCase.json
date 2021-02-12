@@ -2,7 +2,7 @@
   {
     "LiveFrom": "01/01/2017",
     "CaseTypeID": "UNSPECIFIED_CLAIMS",
-    "CaseEventID": "RESUBMIT_CASE",
+    "CaseEventID": "RESUBMIT_CLAIM",
     "CaseFieldID": "claimFee",
     "PageFieldDisplayOrder": 1,
     "DisplayContext": "COMPLEX",
@@ -14,7 +14,7 @@
   {
     "LiveFrom": "01/01/2017",
     "CaseTypeID": "UNSPECIFIED_CLAIMS",
-    "CaseEventID": "RESUBMIT_CASE",
+    "CaseEventID": "RESUBMIT_CLAIM",
     "CaseFieldID": "applicantSolicitor1PbaAccounts",
     "PageFieldDisplayOrder": 2,
     "DisplayContext": "MANDATORY",
@@ -26,7 +26,7 @@
   {
     "LiveFrom": "01/01/2017",
     "CaseTypeID": "UNSPECIFIED_CLAIMS",
-    "CaseEventID": "RESUBMIT_CASE",
+    "CaseEventID": "RESUBMIT_CLAIM",
     "CaseFieldID": "pbaPaymentFailedLabel",
     "PageFieldDisplayOrder": 3,
     "DisplayContext": "READONLY",
@@ -38,7 +38,7 @@
   {
     "LiveFrom": "01/01/2017",
     "CaseTypeID": "UNSPECIFIED_CLAIMS",
-    "CaseEventID": "RESUBMIT_CASE",
+    "CaseEventID": "RESUBMIT_CLAIM",
     "CaseFieldID": "applicantSolicitor1PbaAccountsIsEmpty",
     "PageFieldDisplayOrder": 4,
     "DisplayContext": "OPTIONAL",
@@ -52,7 +52,7 @@
   {
     "LiveFrom": "01/01/2017",
     "CaseTypeID": "UNSPECIFIED_CLAIMS",
-    "CaseEventID": "RESUBMIT_CASE",
+    "CaseEventID": "RESUBMIT_CLAIM",
     "CaseFieldID": "pbaAccountsInformationLabel",
     "PageFieldDisplayOrder": 5,
     "DisplayContext": "READONLY",
@@ -65,7 +65,7 @@
   {
     "LiveFrom": "01/01/2017",
     "CaseTypeID": "UNSPECIFIED_CLAIMS",
-    "CaseEventID": "RESUBMIT_CASE",
+    "CaseEventID": "RESUBMIT_CLAIM",
     "CaseFieldID": "noPbaAccountsLabel",
     "PageFieldDisplayOrder": 6,
     "DisplayContext": "READONLY",

@@ -204,9 +204,9 @@
   {
     "LiveFrom": "01/01/2017",
     "CaseTypeID": "UNSPECIFIED_CLAIMS",
-    "ID": "RESUBMIT_CASE",
-    "Name": "Resubmit case",
-    "Description": "Resubmits case for unsuccessful PBA payment",
+    "ID": "RESUBMIT_CLAIM",
+    "Name": "Resubmit claim",
+    "Description": "Resubmits claim for unsuccessful PBA payment",
     "DisplayOrder": 10,
     "PreConditionState(s)": "PENDING_CASE_ISSUED",
     "PostConditionState": "*",
