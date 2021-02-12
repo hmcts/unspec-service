@@ -113,17 +113,17 @@ class FlowPredicateTest {
     }
 
     @Nested
-    class CcdStateCreatedPredicate {
+    class CcdStateClaimIssuedPredicate {
 
         @Test
-        void shouldReturnTrue_whenCaseDataAtIssuedState() {
-            CaseData caseData = CaseDataBuilder.builder().atStateClaimCreated().build();
+        void shouldReturnTrue_whenCaseDataIsAtAwaitingCaseNotification() {
+            CaseData caseData = CaseDataBuilder.builder().atStateAwaitingCaseNotification().build();
             assertTrue(claimIssued.test(caseData));
         }
 
         @Test
-        void shouldReturnFalse_whenCaseDataIsAtDraftState() {
-            CaseData caseData = CaseDataBuilder.builder().atStatePaymentSuccessful().build();
+        void shouldReturnFalse_whenCaseDataAtIssuedState() {
+            CaseData caseData = CaseDataBuilder.builder().atStateClaimCreated().build();
             assertFalse(claimIssued.test(caseData));
         }
     }
