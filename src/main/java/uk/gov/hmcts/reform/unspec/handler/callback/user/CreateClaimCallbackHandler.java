@@ -17,6 +17,7 @@ import uk.gov.hmcts.reform.unspec.helpers.CaseDetailsConverter;
 import uk.gov.hmcts.reform.unspec.model.BusinessProcess;
 import uk.gov.hmcts.reform.unspec.model.CaseData;
 import uk.gov.hmcts.reform.unspec.model.Party;
+import uk.gov.hmcts.reform.unspec.model.ServedDocumentFiles;
 import uk.gov.hmcts.reform.unspec.model.SolicitorReferences;
 import uk.gov.hmcts.reform.unspec.model.common.DynamicList;
 import uk.gov.hmcts.reform.unspec.repositories.ReferenceNumberRepository;
@@ -77,6 +78,7 @@ public class CreateClaimCallbackHandler extends CallbackHandler {
             callbackKey(ABOUT_TO_START), this::emptyCallbackResponse,
             callbackKey(MID, "applicant"), this::validateDateOfBirth,
             callbackKey(MID, "fee"), this::calculateFee,
+            callbackKey(MID, "particulars-of-claim"), this::validateParticularsOfClaim,
             callbackKey(ABOUT_TO_SUBMIT), this::submitClaim,
             callbackKey(SUBMITTED), this::buildConfirmation
         );
@@ -93,6 +95,15 @@ public class CreateClaimCallbackHandler extends CallbackHandler {
 
         return AboutToStartOrSubmitCallbackResponse.builder()
             .errors(errors)
+            .build();
+    }
+
+    private CallbackResponse validateParticularsOfClaim(CallbackParams callbackParams) {
+        ServedDocumentFiles servedDocumentFiles = ofNullable(callbackParams.getCaseData().getServedDocumentFiles())
+            .orElse(ServedDocumentFiles.builder().build());
+
+        return AboutToStartOrSubmitCallbackResponse.builder()
+            .errors(servedDocumentFiles.getErrors())
             .build();
     }
 
