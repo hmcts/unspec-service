@@ -125,6 +125,13 @@ module.exports = function () {
       caseId = (await this.grabCaseNumber()).split('-').join('').substring(1);
     },
 
+    async notifyClaim() {
+      await caseViewPage.startEvent('Notify claim', caseId);
+      await this.clickContinue();
+      await event.submit('Submit', 'Notification of claim sent');
+      await event.returnToCaseDetails();
+    },
+
     async acknowledgeService(responseIntention = 'FULL') {
       await caseViewPage.startEvent('Acknowledge service', caseId);
       await respondentDetails.verifyDetails();
@@ -201,6 +208,13 @@ module.exports = function () {
       await welshLanguageRequirementsPage.enterWelshLanguageRequirements(parties.APPLICANT_SOLICITOR_1);
       await statementOfTruth.enterNameAndRole(parties.APPLICANT_SOLICITOR_1 + 'DQ');
       await event.submit('Submit your response', 'You\'ve decided to proceed with the claim');
+      await this.click('Close and Return to case details');
+    },
+
+    async respondToDefenceDropClaim() {
+      await caseViewPage.startEvent('View and respond to defence', caseId);
+      await proceedPage.dropClaim();
+      await event.submit('Submit your response', 'You\'ve decided not to proceed with the claim');
       await this.click('Close and Return to case details');
     },
 
