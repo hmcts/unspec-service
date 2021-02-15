@@ -33,6 +33,10 @@ const midEventFieldForPage = {
   ClaimantLitigationFriend: {
     id: 'applicantSolicitor1CheckEmail',
     dynamicList: false
+  },
+  ClaimantSolicitorEmail: {
+    id: 'applicantSolicitor1UserDetails',
+    dynamicList: false
   }
 };
 
@@ -314,6 +318,11 @@ function addMidEventFields(pageId, responseBody) {
 
   if (midEventField.dynamicList === true) {
     assertDynamicListListItemsHaveExpectedLabels(responseBody, midEventField.id, midEventData);
+  }
+
+  // set label fields to null in callback
+  if (pageId === 'ClaimantSolicitorEmail') {
+    deleteCaseFields('applicantSolicitor1CheckEmail');
   }
 
   caseData = {...caseData, ...midEventData};

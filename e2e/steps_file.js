@@ -100,7 +100,7 @@ module.exports = function () {
       await chooseCourtPage.enterCourt();
       await party.enterParty('applicant1', address);
       await claimantLitigationDetails.enterLitigantFriendWithDifferentAddressToApplicant(address, TEST_FILE_PATH);
-      await claimantSolicitorIdamDetailsPage.enterIdamEmail();
+      await claimantSolicitorIdamDetailsPage.enterUserEmail();
       await claimantSolicitorOrganisation.enterOrganisationDetails();
       await party.enterParty('respondent1', address);
       await respondentRepresentedPage.enterRespondentRepresented();
