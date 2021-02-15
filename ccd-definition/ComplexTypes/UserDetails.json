@@ -3,7 +3,7 @@
     "ID": "UserDetails",
     "ListElementCode": "email",
     "FieldType": "Email",
-    "ElementLabel": "Email",
+    "ElementLabel": "What email would you like to send notifications to?",
     "SecurityClassification": "Public"
   },
   {

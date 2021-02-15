@@ -34,7 +34,7 @@ const midEventFieldForPage = {
     id: 'applicantSolicitor1CheckEmail',
     dynamicList: false
   },
-  ClaimantSolicitorEmail: {
+  Notifications: {
     id: 'applicantSolicitor1UserDetails',
     dynamicList: false
   }
@@ -321,7 +321,7 @@ function addMidEventFields(pageId, responseBody) {
   }
 
   // set label fields to null in callback
-  if (pageId === 'ClaimantSolicitorEmail') {
+  if (pageId === 'Notifications') {
     deleteCaseFields('applicantSolicitor1CheckEmail');
   }
 
