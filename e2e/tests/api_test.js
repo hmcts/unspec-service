@@ -38,3 +38,8 @@ Scenario('Create claim and move it to caseman', async (api) => {
   await api.createClaimWithRepresentedRespondent(config.solicitorUser);
   await api.caseProceedsInCaseman();
 });
+
+Scenario('Resubmit claim after payment failure on PBA account ', async (api) => {
+  await api.createClaimWithFailingPBAAccount(config.solicitorUser);
+  await api.resubmitClaim(config.solicitorUser);
+});

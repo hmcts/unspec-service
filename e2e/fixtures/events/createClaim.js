@@ -1,7 +1,10 @@
-const {document, element, listElement, buildAddress} = require('../../api/dataHelper');
+const { document, element, listElement, buildAddress } = require('../../api/dataHelper');
 
-const selectedPba = listElement('PBA0077597');
-const createClaimData = legalRepresentation => {
+let selectedPba = listElement('PBA0077597');
+const validPba = listElement('PBA0077597');
+const invalidPba = listElement('PBA0078094');
+const createClaimData = (legalRepresentation, useValidPba) => {
+  selectedPba = useValidPba ? validPba : invalidPba;
   return {
     References: {
       solicitorReferences: {
@@ -82,8 +85,8 @@ const createClaimData = legalRepresentation => {
     PbaNumber: {
       applicantSolicitor1PbaAccounts: {
         list_items: [
-          selectedPba,
-          listElement('PBA0078094')
+          validPba,
+          invalidPba
         ],
         value: selectedPba
 
@@ -107,7 +110,7 @@ module.exports = {
       ClaimValue: {
         applicantSolicitor1PbaAccounts: {
           list_items: [
-            selectedPba,
+            listElement('PBA0077597'),
             listElement('PBA0078094')
           ]
         },
@@ -137,13 +140,16 @@ module.exports = {
       },
     },
     valid: {
-      ...createClaimData('Yes'),
+      ...createClaimData('Yes', true),
       PaymentReference: {
         paymentReference: 'Applicant reference'
       }
     }
   },
   createClaimLitigantInPerson: {
-    valid: createClaimData('No')
+    valid: createClaimData('No', true)
+  },
+  createClaimWithTerminatedPBAAccount: {
+    valid: createClaimData('Yes', false)
   },
 };
