@@ -16,6 +16,7 @@
     "CaseTypeID": "UNSPECIFIED_CLAIMS",
     "CaseEventID": "RESUBMIT_CLAIM",
     "CaseFieldID": "applicantSolicitor1PbaAccounts",
+    "CaseEventFieldLabel": "PBA number",
     "PageFieldDisplayOrder": 2,
     "DisplayContext": "MANDATORY",
     "PageID": "ResubmitClaim",
@@ -34,45 +35,5 @@
     "PageDisplayOrder": 1,
     "PageColumnNumber": 1,
     "ShowSummaryChangeOption": "N"
-  },
-  {
-    "LiveFrom": "01/01/2017",
-    "CaseTypeID": "UNSPECIFIED_CLAIMS",
-    "CaseEventID": "RESUBMIT_CLAIM",
-    "CaseFieldID": "applicantSolicitor1PbaAccountsIsEmpty",
-    "PageFieldDisplayOrder": 4,
-    "DisplayContext": "OPTIONAL",
-    "PageID": "ResubmitClaim",
-    "PageDisplayOrder": 1,
-    "PageColumnNumber": 1,
-    "ShowSummaryChangeOption": "N",
-    "FieldShowCondition": "claimFee = \"DO_NOT_SHOW_IN_UI\"",
-    "Comment": "Hidden field to show noPbaAccountsLabel when applicantSolicitor1PbaAccounts is empty"
-  },
-  {
-    "LiveFrom": "01/01/2017",
-    "CaseTypeID": "UNSPECIFIED_CLAIMS",
-    "CaseEventID": "RESUBMIT_CLAIM",
-    "CaseFieldID": "pbaAccountsInformationLabel",
-    "PageFieldDisplayOrder": 5,
-    "DisplayContext": "READONLY",
-    "PageID": "ResubmitClaim",
-    "PageDisplayOrder": 1,
-    "PageColumnNumber": 1,
-    "ShowSummaryChangeOption": "N",
-    "FieldShowCondition": "applicantSolicitor1PbaAccountsIsEmpty = \"No\""
-  },
-  {
-    "LiveFrom": "01/01/2017",
-    "CaseTypeID": "UNSPECIFIED_CLAIMS",
-    "CaseEventID": "RESUBMIT_CLAIM",
-    "CaseFieldID": "noPbaAccountsLabel",
-    "PageFieldDisplayOrder": 6,
-    "DisplayContext": "READONLY",
-    "PageID": "ResubmitClaim",
-    "PageDisplayOrder": 1,
-    "PageColumnNumber": 1,
-    "ShowSummaryChangeOption": "N",
-    "FieldShowCondition": "applicantSolicitor1PbaAccountsIsEmpty = \"Yes\""
   }
 ]
