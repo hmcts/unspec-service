@@ -102,7 +102,7 @@ module.exports = {
       body: 'What happens next'
     }, true);
 
-    await assertCorrectEventsAreAvailableToUser(config.solicitorUser, 'PENDING_CASE_ISSUED');
+    await assertCorrectEventsAreAvailableToUser(config.solicitorUser, 'AWAITING_CASE_NOTIFICATION');
   },
 
   notifyClaim: async() => {
