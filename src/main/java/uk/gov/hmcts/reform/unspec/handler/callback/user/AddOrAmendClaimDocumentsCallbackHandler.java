@@ -53,6 +53,7 @@ public class AddOrAmendClaimDocumentsCallbackHandler extends CallbackHandler {
     private SubmittedCallbackResponse buildConfirmation(CallbackParams callbackParams) {
         return SubmittedCallbackResponse.builder()
             .confirmationHeader("# Documents uploaded successfully")
+            .confirmationBody("<br />")
             .build();
     }
 }

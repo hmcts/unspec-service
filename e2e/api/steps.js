@@ -89,7 +89,7 @@ module.exports = {
 
     await assertSubmittedEvent('AWAITING_CASE_NOTIFICATION', {
       header: 'Documents uploaded successfully',
-      body: null
+      body: '<br />'
     }, true);
 
     await assertCorrectEventsAreAvailableToUser(config.solicitorUser, 'AWAITING_CASE_NOTIFICATION');

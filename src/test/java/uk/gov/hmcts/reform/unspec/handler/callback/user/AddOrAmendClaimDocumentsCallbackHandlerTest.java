@@ -79,6 +79,7 @@ class AddOrAmendClaimDocumentsCallbackHandlerTest extends BaseCallbackHandlerTes
                 assertThat(response).usingRecursiveComparison().isEqualTo(
                     SubmittedCallbackResponse.builder()
                         .confirmationHeader("# Documents uploaded successfully")
+                        .confirmationBody("<br />")
                         .build());
             }
         }
