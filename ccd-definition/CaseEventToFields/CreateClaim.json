@@ -164,7 +164,7 @@
     "PageDisplayOrder": 10,
     "PageColumnNumber": 1,
     "ShowSummaryChangeOption": "N",
-    "PageShowCondition": "respondent1OrgRegistered=\"No\""
+    "PageShowCondition": "respondent1Represented=\"Yes\" AND respondent1OrgRegistered=\"No\""
   },
   {
     "LiveFrom": "01/01/2017",
