@@ -100,7 +100,7 @@ public class CreateClaimCallbackHandler extends CallbackHandler {
     }
 
     private CallbackResponse validateRespondent(CallbackParams callbackParams) {
-        Party respondent = callbackParams.getCaseData().getApplicant1();
+        Party respondent = callbackParams.getCaseData().getRespondent1();
         List<String> errors = partyValidator.validate(respondent, AddressGroup.class);
         return AboutToStartOrSubmitCallbackResponse.builder()
             .errors(errors)

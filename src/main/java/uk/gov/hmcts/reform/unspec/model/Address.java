@@ -17,9 +17,9 @@ import static java.lang.String.join;
 @JsonNaming(PropertyNamingStrategy.UpperCamelCaseStrategy.class)
 public class Address {
 
-    @NotEmpty(groups = AddressGroup.class)
+    @NotEmpty(message = "The address line 1 must not be empty", groups = AddressGroup.class)
     private final String addressLine1;
-    @NotEmpty(groups = AddressGroup.class)
+    @NotEmpty(message = "The address line 2 must not be empty", groups = AddressGroup.class)
     private final String addressLine2;
     private final String addressLine3;
     private final String postTown;

@@ -7,6 +7,7 @@ import org.apache.commons.lang.StringUtils;
 import uk.gov.hmcts.reform.unspec.validation.groups.DateOfBirthGroup;
 
 import java.time.LocalDate;
+import javax.validation.Valid;
 import javax.validation.constraints.PastOrPresent;
 
 import static uk.gov.hmcts.reform.unspec.utils.PartyUtils.getPartyNameBasedOnType;
@@ -32,6 +33,7 @@ public class Party {
 
     @PastOrPresent(message = "The date entered cannot be in the future", groups = DateOfBirthGroup.class)
     private final LocalDate soleTraderDateOfBirth;
+    @Valid
     private final Address primaryAddress;
 
     private final String partyName;
