@@ -82,10 +82,10 @@ module.exports = {
     await validateEventPages(data[eventName]);
 
     await assertCallbackError('Upload', data[eventName].invalid.Upload.duplicateError,
-      'More than one particular of claim added');
+      'More than one Particulars of claim details added');
 
     await assertCallbackError('Upload', data[eventName].invalid.Upload.nullError,
-      'One particular of claim is required');
+      'You must add Particulars of claim details');
 
     await assertSubmittedEvent('AWAITING_CASE_NOTIFICATION', {
       header: 'Documents uploaded successfully',
@@ -103,6 +103,22 @@ module.exports = {
 
     await assertSubmittedEvent('CREATED', {
       header: 'Notification of claim sent',
+      body: 'What happens next'
+    });
+
+    await assertCorrectEventsAreAvailableToUser(config.solicitorUser, 'CREATED');
+    await assertCorrectEventsAreAvailableToUser(config.defendantSolicitorUser, 'CREATED');
+  },
+
+  notifyClaimDetails: async() => {
+    eventName = 'NOTIFY_DEFENDANT_OF_CLAIM_DETAILS';
+    let returnedCaseData = await apiRequest.startEvent(eventName, caseId);
+    assertContainsPopulatedFields(returnedCaseData);
+
+    await validateEventPages(data.ADD_OR_AMEND_CLAIM_DOCUMENTS);
+
+    await assertSubmittedEvent('CREATED', {
+      header: 'Defendant notified',
       body: 'What happens next'
     });
 

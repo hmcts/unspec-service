@@ -9,18 +9,22 @@ import uk.gov.hmcts.reform.ccd.client.model.AboutToStartOrSubmitCallbackResponse
 import uk.gov.hmcts.reform.ccd.client.model.SubmittedCallbackResponse;
 import uk.gov.hmcts.reform.unspec.callback.CallbackParams;
 import uk.gov.hmcts.reform.unspec.handler.callback.BaseCallbackHandlerTest;
+import uk.gov.hmcts.reform.unspec.helpers.CaseDetailsConverter;
 import uk.gov.hmcts.reform.unspec.model.CaseData;
 import uk.gov.hmcts.reform.unspec.model.ServedDocumentFiles;
 import uk.gov.hmcts.reform.unspec.sampledata.CaseDataBuilder;
 
 import static java.lang.String.format;
 import static org.assertj.core.api.Assertions.assertThat;
+import static uk.gov.hmcts.reform.unspec.callback.CallbackType.ABOUT_TO_SUBMIT;
 import static uk.gov.hmcts.reform.unspec.callback.CallbackType.MID;
 import static uk.gov.hmcts.reform.unspec.callback.CallbackType.SUBMITTED;
+import static uk.gov.hmcts.reform.unspec.callback.CaseEvent.NOTIFY_DEFENDANT_OF_CLAIM_DETAILS;
 
 @SpringBootTest(classes = {
     NotifyClaimDetailsCallbackHandler.class,
-    JacksonAutoConfiguration.class
+    JacksonAutoConfiguration.class,
+    CaseDetailsConverter.class
 })
 class NotifyClaimDetailsCallbackHandlerTest extends BaseCallbackHandlerTest {
 
@@ -67,6 +71,22 @@ class NotifyClaimDetailsCallbackHandlerTest extends BaseCallbackHandlerTest {
         }
 
         @Nested
+        class AboutToSubmit {
+
+            @Test
+            void shouldUpdateBusinessProcess_whenInvoked() {
+                CaseData caseData = CaseDataBuilder.builder().atStateAwaitingCaseDetailsNotification().build();
+                CallbackParams params = callbackParamsOf(caseData, ABOUT_TO_SUBMIT);
+                var response = (AboutToStartOrSubmitCallbackResponse) handler.handle(params);
+
+                assertThat(response.getData())
+                    .extracting("businessProcess")
+                    .extracting("camundaEvent", "status")
+                    .containsOnly(NOTIFY_DEFENDANT_OF_CLAIM_DETAILS.name(), "READY");
+            }
+        }
+
+        @Nested
         class SubmittedCallback {
 
             private static final String CONFIRMATION_SUMMARY = "<br />What happens next\n\n"
@@ -75,7 +95,7 @@ class NotifyClaimDetailsCallbackHandlerTest extends BaseCallbackHandlerTest {
 
             @Test
             void shouldReturnExpectedSubmittedCallbackResponse_whenInvoked() {
-                CaseData caseData = CaseDataBuilder.builder().atStateClaimCreated().build();
+                CaseData caseData = CaseDataBuilder.builder().atStateAwaitingCaseDetailsNotification().build();
                 CallbackParams params = callbackParamsOf(caseData, SUBMITTED);
                 SubmittedCallbackResponse response = (SubmittedCallbackResponse) handler.handle(params);
 

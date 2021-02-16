@@ -18,7 +18,7 @@
   {
     "LiveFrom": "01/01/2017",
     "CaseTypeID": "UNSPECIFIED_CLAIMS",
-    "ID": "AWAITING_CLAIM_DETAILS_NOTIFICATION",
+    "ID": "AWAITING_CASE_DETAILS_NOTIFICATION",
     "Name": "Awaiting claim details notification",
     "Description": "Awaiting claim details notification",
     "DisplayOrder": 3

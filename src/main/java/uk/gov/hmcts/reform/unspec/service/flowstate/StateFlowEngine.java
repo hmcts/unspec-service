@@ -15,6 +15,7 @@ import static uk.gov.hmcts.reform.unspec.service.flowstate.FlowPredicate.casePro
 import static uk.gov.hmcts.reform.unspec.service.flowstate.FlowPredicate.claimDetailsNotified;
 import static uk.gov.hmcts.reform.unspec.service.flowstate.FlowPredicate.claimDiscontinued;
 import static uk.gov.hmcts.reform.unspec.service.flowstate.FlowPredicate.claimIssued;
+import static uk.gov.hmcts.reform.unspec.service.flowstate.FlowPredicate.backwardsCompatible;
 import static uk.gov.hmcts.reform.unspec.service.flowstate.FlowPredicate.claimNotified;
 import static uk.gov.hmcts.reform.unspec.service.flowstate.FlowPredicate.claimTakenOffline;
 import static uk.gov.hmcts.reform.unspec.service.flowstate.FlowPredicate.claimWithdrawn;
@@ -65,6 +66,7 @@ public class StateFlowEngine {
             .state(PAYMENT_SUCCESSFUL)
                 .transitionTo(AWAITING_CASE_NOTIFICATION).onlyIf(claimIssued)
             .state(AWAITING_CASE_NOTIFICATION)
+                .transitionTo(CLAIM_ISSUED).onlyIf(backwardsCompatible)
                 .transitionTo(AWAITING_CASE_DETAILS_NOTIFICATION).onlyIf(claimNotified)
                 .transitionTo(CASE_PROCEEDS_IN_CASEMAN).onlyIf(caseProceedsInCaseman)
             .state(AWAITING_CASE_DETAILS_NOTIFICATION)

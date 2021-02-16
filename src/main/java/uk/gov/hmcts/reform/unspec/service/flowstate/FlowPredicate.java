@@ -6,6 +6,7 @@ import uk.gov.hmcts.reform.unspec.model.CaseData;
 import java.util.function.Predicate;
 
 import static uk.gov.hmcts.reform.unspec.enums.CaseState.CLOSED;
+import static uk.gov.hmcts.reform.unspec.enums.CaseState.CREATED;
 import static uk.gov.hmcts.reform.unspec.enums.CaseState.PROCEEDS_WITH_OFFLINE_JOURNEY;
 import static uk.gov.hmcts.reform.unspec.enums.CaseState.STAYED;
 import static uk.gov.hmcts.reform.unspec.enums.PaymentStatus.FAILED;
@@ -28,8 +29,12 @@ public class FlowPredicate {
     public static final Predicate<CaseData> claimIssued = caseData ->
         caseData.getClaimIssuedDate() != null;
 
+    //Temporary backwards compatibility
+    public static final Predicate<CaseData> backwardsCompatible = caseData ->
+        caseData.getClaimDetailsNotificationDate() == null && caseData.getCcdState() == CREATED;
+
     public static final Predicate<CaseData> claimNotified = caseData ->
-        caseData.getClaimNotificationDate() != null;
+        caseData.getClaimNotificationDate() != null && caseData.getCcdState() != CREATED;
 
     public static final Predicate<CaseData> claimDetailsNotified = caseData ->
         caseData.getClaimDetailsNotificationDate() != null;
