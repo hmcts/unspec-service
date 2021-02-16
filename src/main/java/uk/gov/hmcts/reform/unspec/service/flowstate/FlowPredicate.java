@@ -31,6 +31,9 @@ public class FlowPredicate {
     public static final Predicate<CaseData> claimNotified = caseData ->
         caseData.getClaimNotificationDate() != null;
 
+    public static final Predicate<CaseData> claimDetailsNotified = caseData ->
+        caseData.getClaimDetailsNotificationDate() != null;
+
     public static final Predicate<CaseData> respondentAcknowledgeService = caseData ->
         caseData.getRespondent1ClaimResponseIntentionType() != null
             && caseData.getRespondent1ClaimResponseDocument() == null

@@ -9,24 +9,23 @@ import uk.gov.hmcts.reform.ccd.client.model.AboutToStartOrSubmitCallbackResponse
 import uk.gov.hmcts.reform.ccd.client.model.SubmittedCallbackResponse;
 import uk.gov.hmcts.reform.unspec.callback.CallbackParams;
 import uk.gov.hmcts.reform.unspec.handler.callback.BaseCallbackHandlerTest;
-import uk.gov.hmcts.reform.unspec.helpers.CaseDetailsConverter;
 import uk.gov.hmcts.reform.unspec.model.CaseData;
 import uk.gov.hmcts.reform.unspec.model.ServedDocumentFiles;
 import uk.gov.hmcts.reform.unspec.sampledata.CaseDataBuilder;
 
+import static java.lang.String.format;
 import static org.assertj.core.api.Assertions.assertThat;
 import static uk.gov.hmcts.reform.unspec.callback.CallbackType.MID;
 import static uk.gov.hmcts.reform.unspec.callback.CallbackType.SUBMITTED;
 
 @SpringBootTest(classes = {
-    AddOrAmendClaimDocumentsCallbackHandler.class,
-    JacksonAutoConfiguration.class,
-    CaseDetailsConverter.class
+    NotifyClaimDetailsCallbackHandler.class,
+    JacksonAutoConfiguration.class
 })
-class AddOrAmendClaimDocumentsCallbackHandlerTest extends BaseCallbackHandlerTest {
+class NotifyClaimDetailsCallbackHandlerTest extends BaseCallbackHandlerTest {
 
     @Autowired
-    private AddOrAmendClaimDocumentsCallbackHandler handler;
+    private NotifyClaimDetailsCallbackHandler handler;
 
     @Nested
     class MidEventParticularsOfClaimCallback {
@@ -70,6 +69,10 @@ class AddOrAmendClaimDocumentsCallbackHandlerTest extends BaseCallbackHandlerTes
         @Nested
         class SubmittedCallback {
 
+            private static final String CONFIRMATION_SUMMARY = "<br />What happens next\n\n"
+                + "The defendant legal representative's organisation has been notified of the claim details.\n\n"
+                + "They must respond by %s. Your account will be updated and you will be sent an email.";
+
             @Test
             void shouldReturnExpectedSubmittedCallbackResponse_whenInvoked() {
                 CaseData caseData = CaseDataBuilder.builder().atStateClaimCreated().build();
@@ -78,8 +81,8 @@ class AddOrAmendClaimDocumentsCallbackHandlerTest extends BaseCallbackHandlerTes
 
                 assertThat(response).usingRecursiveComparison().isEqualTo(
                     SubmittedCallbackResponse.builder()
-                        .confirmationHeader("# Documents uploaded successfully")
-                        .confirmationBody("<br />")
+                        .confirmationHeader("# Defendant notified")
+                        .confirmationBody(format(CONFIRMATION_SUMMARY, "DATE"))
                         .build());
             }
         }

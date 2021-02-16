@@ -13,16 +13,20 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
+import static java.lang.String.format;
 import static uk.gov.hmcts.reform.unspec.callback.CallbackType.ABOUT_TO_START;
 import static uk.gov.hmcts.reform.unspec.callback.CallbackType.MID;
 import static uk.gov.hmcts.reform.unspec.callback.CallbackType.SUBMITTED;
-import static uk.gov.hmcts.reform.unspec.callback.CaseEvent.ADD_OR_AMEND_CLAIM_DOCUMENTS;
+import static uk.gov.hmcts.reform.unspec.callback.CaseEvent.NOTIFY_DEFENDANT_OF_CLAIM_DETAILS;
 
 @Service
 @RequiredArgsConstructor
-public class AddOrAmendClaimDocumentsCallbackHandler extends CallbackHandler implements ParticularsOfClaimValidator {
+public class NotifyClaimDetailsCallbackHandler extends CallbackHandler implements ParticularsOfClaimValidator {
 
-    private static final List<CaseEvent> EVENTS = Collections.singletonList(ADD_OR_AMEND_CLAIM_DOCUMENTS);
+    private static final List<CaseEvent> EVENTS = Collections.singletonList(NOTIFY_DEFENDANT_OF_CLAIM_DETAILS);
+    private static final String CONFIRMATION_SUMMARY = "<br />What happens next\n\n"
+        + "The defendant legal representative's organisation has been notified of the claim details.\n\n"
+        + "They must respond by %s. Your account will be updated and you will be sent an email.";
 
     @Override
     protected Map<String, Callback> callbacks() {
@@ -39,9 +43,12 @@ public class AddOrAmendClaimDocumentsCallbackHandler extends CallbackHandler imp
     }
 
     private SubmittedCallbackResponse buildConfirmation(CallbackParams callbackParams) {
+        //TODO: update with date logic
+        String body = format(CONFIRMATION_SUMMARY, "DATE");
+
         return SubmittedCallbackResponse.builder()
-            .confirmationHeader("# Documents uploaded successfully")
-            .confirmationBody("<br />")
+            .confirmationHeader("# Defendant notified")
+            .confirmationBody(body)
             .build();
     }
 }

@@ -42,6 +42,7 @@ import java.util.List;
 
 import static java.time.LocalDate.now;
 import static uk.gov.hmcts.reform.unspec.enums.AllocatedTrack.FAST_CLAIM;
+import static uk.gov.hmcts.reform.unspec.enums.CaseState.AWAITING_CASE_DETAILS_NOTIFICATION;
 import static uk.gov.hmcts.reform.unspec.enums.CaseState.AWAITING_CASE_NOTIFICATION;
 import static uk.gov.hmcts.reform.unspec.enums.CaseState.AWAITING_CLAIMANT_INTENTION;
 import static uk.gov.hmcts.reform.unspec.enums.CaseState.CLOSED;
@@ -89,6 +90,7 @@ public class CaseDataBuilder {
     private PaymentDetails paymentDetails;
     private LocalDateTime respondentSolicitor1ResponseDeadline;
     private LocalDate claimNotificationDate;
+    private LocalDate claimDetailsNotificationDate;
     //Acknowledge Service
     private ResponseIntention respondent1ClaimResponseIntentionType;
     // Request Extension
@@ -264,6 +266,8 @@ public class CaseDataBuilder {
                 return atStatePaymentFailed();
             case AWAITING_CASE_NOTIFICATION:
                 return atStateAwaitingCaseNotification();
+            case AWAITING_CASE_DETAILS_NOTIFICATION:
+                return atStateAwaitingCaseDetailsNotification();
             case CLAIM_ISSUED:
                 return atStateClaimCreated();
             case CLAIM_STAYED:
@@ -420,9 +424,16 @@ public class CaseDataBuilder {
         return this;
     }
 
-    public CaseDataBuilder atStateClaimCreated() {
+    public CaseDataBuilder atStateAwaitingCaseDetailsNotification() {
         atStateAwaitingCaseNotification();
         claimNotificationDate = LocalDate.now();
+        ccdState = AWAITING_CASE_DETAILS_NOTIFICATION;
+        return this;
+    }
+
+    public CaseDataBuilder atStateClaimCreated() {
+        atStateAwaitingCaseDetailsNotification();
+        claimDetailsNotificationDate = LocalDate.now();
         ccdState = CREATED;
         respondentSolicitor1ResponseDeadline = RESPONSE_DEADLINE;
         return this;
@@ -533,6 +544,7 @@ public class CaseDataBuilder {
             .paymentDetails(paymentDetails)
             .respondentSolicitor1ResponseDeadline(respondentSolicitor1ResponseDeadline)
             .claimNotificationDate(claimNotificationDate)
+            .claimDetailsNotificationDate(claimDetailsNotificationDate)
             // Acknowledge Service
             .respondent1ClaimResponseIntentionType(respondent1ClaimResponseIntentionType)
             // Request Extension
