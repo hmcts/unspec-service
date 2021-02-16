@@ -164,7 +164,7 @@ docmosis:
     key: 3OAD-KLTK-JALP-ELIA-EBBH-2ELH-PBKQ-GS07-E7E1-B-9F7C
 
 sendgrid:
-  api-key: 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
+  api-key: ${SENDGRID_API_KEY:false}
 
 launchdarkly:
   sdk-key: ${LAUNCH_DARKLY_SDK_KEY:fake-key}

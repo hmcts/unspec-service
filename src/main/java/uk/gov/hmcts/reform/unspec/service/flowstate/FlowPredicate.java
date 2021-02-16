@@ -30,8 +30,8 @@ public class FlowPredicate {
         caseData.getClaimIssuedDate() != null;
 
     //Temporary backwards compatibility
-    public static final Predicate<CaseData> backwardsCompatible = caseData ->
-        caseData.getClaimDetailsNotificationDate() == null && caseData.getCcdState() == CREATED;
+    public static final Predicate<CaseData> needsToBeBackwardsCompatible = caseData ->
+        caseData.getCcdState() == CREATED;
 
     public static final Predicate<CaseData> claimNotified = caseData ->
         caseData.getClaimNotificationDate() != null && caseData.getCcdState() != CREATED;
@@ -47,7 +47,7 @@ public class FlowPredicate {
     public static final Predicate<CaseData> respondentRespondToClaim = caseData ->
         caseData.getRespondent1ClaimResponseDocument() != null
             && caseData.getCcdState() != CLOSED
-            &&  caseData.getCcdState() != STAYED;
+            && caseData.getCcdState() != STAYED;
 
     public static final Predicate<CaseData> respondentAskForAnExtension = caseData ->
         caseData.getRespondentSolicitor1claimResponseExtensionProposedDeadline() != null;
