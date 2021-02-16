@@ -33,6 +33,7 @@ import uk.gov.hmcts.reform.unspec.service.FeesService;
 import uk.gov.hmcts.reform.unspec.service.OrganisationService;
 import uk.gov.hmcts.reform.unspec.service.flowstate.StateFlowEngine;
 import uk.gov.hmcts.reform.unspec.validation.DateOfBirthValidator;
+import uk.gov.hmcts.reform.unspec.validation.PartyValidator;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -66,7 +67,7 @@ import static uk.gov.hmcts.reform.unspec.utils.PartyUtils.getPartyNameBasedOnTyp
     ClaimIssueConfiguration.class,
     MockDatabaseConfiguration.class,
     ValidationAutoConfiguration.class,
-    DateOfBirthValidator.class,
+    PartyValidator.class,
     StateFlowEngine.class},
     properties = {"reference.database.enabled=false"})
 class CreateClaimCallbackHandlerTest extends BaseCallbackHandlerTest {

@@ -6,6 +6,9 @@ import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import lombok.Builder;
 import lombok.Data;
 import uk.gov.hmcts.reform.unspec.utils.ObjectUtils;
+import uk.gov.hmcts.reform.unspec.validation.groups.AddressGroup;
+
+import javax.validation.constraints.NotEmpty;
 
 import static java.lang.String.join;
 
@@ -14,7 +17,9 @@ import static java.lang.String.join;
 @JsonNaming(PropertyNamingStrategy.UpperCamelCaseStrategy.class)
 public class Address {
 
+    @NotEmpty(groups = AddressGroup.class)
     private final String addressLine1;
+    @NotEmpty(groups = AddressGroup.class)
     private final String addressLine2;
     private final String addressLine3;
     private final String postTown;

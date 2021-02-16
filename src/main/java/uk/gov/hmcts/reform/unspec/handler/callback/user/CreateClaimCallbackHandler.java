@@ -24,7 +24,9 @@ import uk.gov.hmcts.reform.unspec.service.FeesService;
 import uk.gov.hmcts.reform.unspec.service.OrganisationService;
 import uk.gov.hmcts.reform.unspec.service.flowstate.FlowState;
 import uk.gov.hmcts.reform.unspec.service.flowstate.StateFlowEngine;
-import uk.gov.hmcts.reform.unspec.validation.DateOfBirthValidator;
+import uk.gov.hmcts.reform.unspec.validation.PartyValidator;
+import uk.gov.hmcts.reform.unspec.validation.groups.AddressGroup;
+import uk.gov.hmcts.reform.unspec.validation.groups.DateOfBirthGroup;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -66,16 +68,17 @@ public class CreateClaimCallbackHandler extends CallbackHandler {
     private final ClaimIssueConfiguration claimIssueConfiguration;
     private final CaseDetailsConverter caseDetailsConverter;
     private final ReferenceNumberRepository referenceNumberRepository;
-    private final DateOfBirthValidator dateOfBirthValidator;
     private final FeesService feesService;
     private final OrganisationService organisationService;
     private final StateFlowEngine stateFlowEngine;
+    private final PartyValidator partyValidator;
 
     @Override
     protected Map<String, Callback> callbacks() {
         return Map.of(
             callbackKey(ABOUT_TO_START), this::emptyCallbackResponse,
-            callbackKey(MID, "applicant"), this::validateDateOfBirth,
+            callbackKey(MID, "applicant"), this::validateApplicant,
+            callbackKey(MID, "respondent"), this::validateRespondent,
             callbackKey(MID, "fee"), this::calculateFee,
             callbackKey(ABOUT_TO_SUBMIT), this::submitClaim,
             callbackKey(SUBMITTED), this::buildConfirmation
@@ -87,10 +90,18 @@ public class CreateClaimCallbackHandler extends CallbackHandler {
         return EVENTS;
     }
 
-    private CallbackResponse validateDateOfBirth(CallbackParams callbackParams) {
+    private CallbackResponse validateApplicant(CallbackParams callbackParams) {
         Party applicant = callbackParams.getCaseData().getApplicant1();
-        List<String> errors = dateOfBirthValidator.validate(applicant);
+        List<String> errors = partyValidator.validate(applicant, AddressGroup.class, DateOfBirthGroup.class);
 
+        return AboutToStartOrSubmitCallbackResponse.builder()
+            .errors(errors)
+            .build();
+    }
+
+    private CallbackResponse validateRespondent(CallbackParams callbackParams) {
+        Party respondent = callbackParams.getCaseData().getApplicant1();
+        List<String> errors = partyValidator.validate(respondent, AddressGroup.class);
         return AboutToStartOrSubmitCallbackResponse.builder()
             .errors(errors)
             .build();
