@@ -161,7 +161,6 @@ document_management:
 docmosis:
   tornado:
     url: http://localhost:5433
-    key: 3OAD-KLTK-JALP-ELIA-EBBH-2ELH-PBKQ-GS07-E7E1-B-9F7C
 
 sendgrid:
   api-key: ${SENDGRID_API_KEY:false}
