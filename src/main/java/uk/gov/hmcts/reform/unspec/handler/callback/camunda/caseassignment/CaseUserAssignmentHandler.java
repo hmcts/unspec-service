@@ -17,13 +17,13 @@ import java.util.List;
 import java.util.Map;
 
 import static uk.gov.hmcts.reform.unspec.callback.CallbackType.ABOUT_TO_SUBMIT;
-import static uk.gov.hmcts.reform.unspec.callback.CaseEvent.CASE_ASSIGNMENT_TO_APPLICANT_SOLICITOR1;
+import static uk.gov.hmcts.reform.unspec.callback.CaseEvent.ASSIGN_CASE_TO_APPLICANT_SOLICITOR1;
 
 @Service
 @RequiredArgsConstructor
 public class CaseUserAssignmentHandler extends CallbackHandler {
 
-    private static final List<CaseEvent> EVENTS = List.of(CASE_ASSIGNMENT_TO_APPLICANT_SOLICITOR1);
+    private static final List<CaseEvent> EVENTS = List.of(ASSIGN_CASE_TO_APPLICANT_SOLICITOR1);
     public static final String TASK_ID = "CaseAssignmentToApplicantSolicitor1";
 
     private final CoreCaseUserService coreCaseUserService;
@@ -54,7 +54,7 @@ public class CaseUserAssignmentHandler extends CallbackHandler {
 
         coreCaseUserService.assignCase(caseId, submitterId, organisationId, CaseRole.APPLICANTSOLICITORONE);
         coreCaseUserService.removeCreatorRoleCaseAssignment(caseId, submitterId, organisationId);
-        
+
         return AboutToStartOrSubmitCallbackResponse.builder()
             .data(caseDetailsConverter.toMap(caseData.toBuilder().submitterId(null).build()))
             .build();

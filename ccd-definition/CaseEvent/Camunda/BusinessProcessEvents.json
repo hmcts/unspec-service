@@ -44,7 +44,7 @@
   {
     "LiveFrom": "01/01/2017",
     "CaseTypeID": "UNSPECIFIED_CLAIMS",
-    "ID": "CASE_ASSIGNMENT_TO_APPLICANT_SOLICITOR1",
+    "ID": "ASSIGN_CASE_TO_APPLICANT_SOLICITOR1",
     "Name": "Assign to applicantSolicitor1",
     "Description": "Assign case to applicant solicitor 1",
     "PreConditionState(s)": "*",

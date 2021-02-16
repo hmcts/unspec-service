@@ -177,7 +177,7 @@
   {
     "LiveFrom": "01/01/2017",
     "CaseTypeID": "UNSPECIFIED_CLAIMS",
-    "CaseEventID": "CASE_ASSIGNMENT_TO_APPLICANT_SOLICITOR1",
+    "CaseEventID": "ASSIGN_CASE_TO_APPLICANT_SOLICITOR1",
     "UserRole": "caseworker-civil-systemupdate",
     "CRUD": "CRU"
   }

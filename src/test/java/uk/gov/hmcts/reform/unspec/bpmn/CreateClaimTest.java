@@ -32,7 +32,7 @@ class CreateClaimTest extends BpmnBaseTest {
         = "CreateClaimProceedsOfflineNotifyApplicantSolicitor1";
     private static final String NOTIFY_RPA_ON_CASE_HANDED_OFFLINE = "NOTIFY_RPA_ON_CASE_HANDED_OFFLINE";
     private static final String NOTIFY_RPA_ON_CASE_HANDED_OFFLINE_ACTIVITY_ID = "NotifyRoboticsOnCaseHandedOffline";
-    private static final String CASE_ASSIGNMENT_EVENT = "CASE_ASSIGNMENT_TO_APPLICANT_SOLICITOR1";
+    private static final String CASE_ASSIGNMENT_EVENT = "ASSIGN_CASE_TO_APPLICANT_SOLICITOR1";
     private static final String CASE_ASSIGNMENT_ACTIVITY = "CaseAssignmentToApplicantSolicitor1";
 
     public CreateClaimTest() {
