@@ -1,6 +1,7 @@
 package uk.gov.hmcts.reform.unspec.service;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import uk.gov.hmcts.reform.payments.client.PaymentsClient;
 import uk.gov.hmcts.reform.payments.client.models.FeeDto;
@@ -9,6 +10,7 @@ import uk.gov.hmcts.reform.payments.client.request.CreditAccountPaymentRequest;
 import uk.gov.hmcts.reform.unspec.config.PaymentsConfiguration;
 import uk.gov.hmcts.reform.unspec.model.CaseData;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class PaymentsService {
@@ -17,7 +19,9 @@ public class PaymentsService {
     private final PaymentsConfiguration paymentsConfiguration;
 
     public PaymentDto createCreditAccountPayment(CaseData caseData, String authToken) {
-        return paymentsClient.createCreditAccountPayment(authToken, buildRequest(caseData));
+        CreditAccountPaymentRequest paymentRequest = buildRequest(caseData);
+        log.info("CreditAccountPaymentRequest:", paymentRequest);
+        return paymentsClient.createCreditAccountPayment(authToken, paymentRequest);
     }
 
     private CreditAccountPaymentRequest buildRequest(CaseData caseData) {
