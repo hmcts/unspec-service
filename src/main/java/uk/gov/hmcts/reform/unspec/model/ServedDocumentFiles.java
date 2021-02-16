@@ -1,5 +1,6 @@
 package uk.gov.hmcts.reform.unspec.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Builder;
 import lombok.Data;
 import uk.gov.hmcts.reform.unspec.model.common.Element;
@@ -21,6 +22,7 @@ public class ServedDocumentFiles {
     private String particularsOfClaimText;
     private List<Element<Document>> certificateOfSuitability;
 
+    @JsonIgnore
     public List<String> getErrors() {
         List<String> errors = new ArrayList<>();
         if (ofNullable(particularsOfClaimDocument).isPresent() && ofNullable(particularsOfClaimText).isPresent()) {
