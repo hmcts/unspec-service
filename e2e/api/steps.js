@@ -95,17 +95,14 @@ module.exports = {
     eventName = 'RESUBMIT_CLAIM';
     caseData = {};
     await apiRequest.setupTokens(user);
-    console.log('eventName>>>>>',eventName);
-    console.log('caseId>>>>>',caseId);
-    console.log('data.RESUBMIT_CLAIM>>>>>',JSON.stringify(data.RESUBMIT_CLAIM));
-    //await apiRequest.startEvent(eventName, caseId);
-    //await validateEventPages(data.RESUBMIT_CLAIM);
-    //await assertSubmittedEvent('PENDING_CASE_ISSUED', {
-    //  header: 'Claim pending',
-    //  body: 'What happens next'
-   // }, true);
+    await apiRequest.startEvent(eventName, caseId);
+    await validateEventPages(data.RESUBMIT_CLAIM);
+    await assertSubmittedEvent('PENDING_CASE_ISSUED', {
+     header: 'Claim pending',
+     body: 'What happens next'
+   }, true);
 
-    //await assertCorrectEventsAreAvailableToUser(config.solicitorUser, 'AWAITING_CASE_NOTIFICATION');
+    await assertCorrectEventsAreAvailableToUser(config.solicitorUser, 'AWAITING_CASE_NOTIFICATION');
   },
 
   notifyClaim: async() => {

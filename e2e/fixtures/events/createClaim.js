@@ -89,7 +89,6 @@ const createClaimData = (legalRepresentation, useValidPba) => {
           invalidPba
         ],
         value: selectedPba
-
       }
     },
     PaymentReference: {
