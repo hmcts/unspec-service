@@ -159,12 +159,11 @@
     "CaseFieldID": "respondentSolicitor1OrgLabel",
     "PageFieldDisplayOrder": 1,
     "DisplayContext": "READONLY",
-    "PageID": "UnRegisteredDefendantSolicitorOrganisationDetails",
-    "PageLabel": "Defendant's legal representative’s details",
-    "PageDisplayOrder": 10,
+    "PageID": "DefendantSolicitorOrganisation",
+    "PageDisplayOrder": 9,
     "PageColumnNumber": 1,
     "ShowSummaryChangeOption": "N",
-    "PageShowCondition": "respondent1Represented=\"Yes\" AND respondent1OrgRegistered=\"No\""
+    "FieldShowCondition": "respondent1OrgRegistered=\"No\""
   },
   {
     "LiveFrom": "01/01/2017",
@@ -173,10 +172,11 @@
     "CaseFieldID": "respondentSolicitor1OrganisationDetails",
     "PageFieldDisplayOrder": 2,
     "DisplayContext": "COMPLEX",
-    "PageID": "UnRegisteredDefendantSolicitorOrganisationDetails",
-    "PageDisplayOrder": 10,
+    "PageID": "DefendantSolicitorOrganisation",
+    "PageDisplayOrder": 9,
     "PageColumnNumber": 1,
-    "ShowSummaryChangeOption": "Y"
+    "ShowSummaryChangeOption": "Y",
+    "FieldShowCondition": "respondent1OrgRegistered=\"No\""
   },
   {
     "LiveFrom": "01/01/2017",
