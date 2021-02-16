@@ -206,10 +206,10 @@ withPipeline(type, product, component) {
   after('buildinfra:perftest') {
     def subscription = 'nonprod'
     withSubscription(subscription) {
-      withTeamSecrets(pipelineConf, 'ithc') {
-        archiveCoreCaseDataDefinitions('ithc')
-        uploadCoreCaseDataDefinitions('ithc')
-        uploadBpmnDiagrams('ithc')
+      withTeamSecrets(pipelineConf, 'perftest') {
+        archiveCoreCaseDataDefinitions('perftest')
+        uploadCoreCaseDataDefinitions('perftest')
+        uploadBpmnDiagrams('perftest')
       }
     }
   }
