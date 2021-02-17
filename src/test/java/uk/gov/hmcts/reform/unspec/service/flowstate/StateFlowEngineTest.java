@@ -18,7 +18,6 @@ import uk.gov.hmcts.reform.unspec.stateflow.StateFlow;
 import uk.gov.hmcts.reform.unspec.stateflow.model.State;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static uk.gov.hmcts.reform.unspec.service.flowstate.FlowState.Main.AWAITING_CASE_DETAILS_NOTIFICATION;
 import static uk.gov.hmcts.reform.unspec.service.flowstate.FlowState.Main.AWAITING_CASE_NOTIFICATION;
 import static uk.gov.hmcts.reform.unspec.service.flowstate.FlowState.Main.CASE_PROCEEDS_IN_CASEMAN;
 import static uk.gov.hmcts.reform.unspec.service.flowstate.FlowState.Main.CLAIM_DISCONTINUED;
@@ -151,12 +150,11 @@ class StateFlowEngineTest {
                 .isNotNull()
                 .isEqualTo(CLAIM_STAYED.fullName());
             assertThat(stateFlow.getStateHistory())
-                .hasSize(7)
+                .hasSize(6)
                 .extracting(State::getName)
                 .containsExactly(
                     DRAFT.fullName(), PENDING_CASE_ISSUED.fullName(), PAYMENT_SUCCESSFUL.fullName(),
-                    AWAITING_CASE_NOTIFICATION.fullName(), AWAITING_CASE_DETAILS_NOTIFICATION.fullName(),
-                    CLAIM_ISSUED.fullName(), CLAIM_STAYED.fullName()
+                    AWAITING_CASE_NOTIFICATION.fullName(), CLAIM_ISSUED.fullName(), CLAIM_STAYED.fullName()
                 );
         }
 
@@ -230,12 +228,11 @@ class StateFlowEngineTest {
                 .isNotNull()
                 .isEqualTo(RESPONDED_TO_CLAIM.fullName());
             assertThat(stateFlow.getStateHistory())
-                .hasSize(7)
+                .hasSize(6)
                 .extracting(State::getName)
                 .containsExactly(
                     DRAFT.fullName(), PENDING_CASE_ISSUED.fullName(), PAYMENT_SUCCESSFUL.fullName(),
-                    AWAITING_CASE_NOTIFICATION.fullName(), AWAITING_CASE_DETAILS_NOTIFICATION.fullName(),
-                    CLAIM_ISSUED.fullName(), RESPONDED_TO_CLAIM.fullName()
+                    AWAITING_CASE_NOTIFICATION.fullName(), CLAIM_ISSUED.fullName(), RESPONDED_TO_CLAIM.fullName()
                 );
         }
 
@@ -250,13 +247,12 @@ class StateFlowEngineTest {
                 .isNotNull()
                 .isEqualTo(CLAIM_STAYED.fullName());
             assertThat(stateFlow.getStateHistory())
-                .hasSize(9)
+                .hasSize(8)
                 .extracting(State::getName)
                 .containsExactly(
                     DRAFT.fullName(), PENDING_CASE_ISSUED.fullName(), PAYMENT_SUCCESSFUL.fullName(),
-                    AWAITING_CASE_NOTIFICATION.fullName(), AWAITING_CASE_DETAILS_NOTIFICATION.fullName(),
-                    CLAIM_ISSUED.fullName(), RESPONDED_TO_CLAIM.fullName(), FULL_DEFENCE.fullName(),
-                    CLAIM_STAYED.fullName()
+                    AWAITING_CASE_NOTIFICATION.fullName(), CLAIM_ISSUED.fullName(), RESPONDED_TO_CLAIM.fullName(),
+                    FULL_DEFENCE.fullName(), CLAIM_STAYED.fullName()
                 );
         }
 
@@ -271,12 +267,11 @@ class StateFlowEngineTest {
                 .isNotNull()
                 .isEqualTo(PROCEEDS_OFFLINE_ADMIT_OR_COUNTER_CLAIM.fullName());
             assertThat(stateFlow.getStateHistory())
-                .hasSize(8)
+                .hasSize(7)
                 .extracting(State::getName)
                 .containsExactly(
                     DRAFT.fullName(), PENDING_CASE_ISSUED.fullName(), PAYMENT_SUCCESSFUL.fullName(),
-                    AWAITING_CASE_NOTIFICATION.fullName(), AWAITING_CASE_DETAILS_NOTIFICATION.fullName(),
-                    CLAIM_ISSUED.fullName(), RESPONDED_TO_CLAIM.fullName(),
+                    AWAITING_CASE_NOTIFICATION.fullName(), CLAIM_ISSUED.fullName(), RESPONDED_TO_CLAIM.fullName(),
                     PROCEEDS_OFFLINE_ADMIT_OR_COUNTER_CLAIM.fullName()
                 );
         }
