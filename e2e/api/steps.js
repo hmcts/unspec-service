@@ -17,7 +17,7 @@ const data = {
   CREATE_CLAIM: claimData.createClaim,
   CREATE_CLAIM_RESPONDENT_LIP: claimData.createClaimLitigantInPerson,
   CREATE_CLAIM_TERMINATED_PBA: claimData.createClaimWithTerminatedPBAAccount,
-  RESUBMIT_CLAIM: require('../fixtures/events/resubmitClaim.js'),
+  RESUBMIT_CLAIM: claimData.resubmitClaim,
   ACKNOWLEDGE_SERVICE: require('../fixtures/events/acknowledgeService.js'),
   REQUEST_EXTENSION: require('../fixtures/events/requestExtension.js'),
   RESPOND_EXTENSION: require('../fixtures/events/respondExtension.js'),

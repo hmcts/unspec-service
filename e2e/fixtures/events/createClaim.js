@@ -152,4 +152,7 @@ module.exports = {
   createClaimWithTerminatedPBAAccount: {
     valid: createClaimData('Yes', false)
   },
+  resubmitClaim: {
+    valid: createClaimData('Yes', true)
+  },
 };

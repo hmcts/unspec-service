@@ -10,7 +10,6 @@ import uk.gov.hmcts.reform.payments.client.request.CreditAccountPaymentRequest;
 import uk.gov.hmcts.reform.unspec.config.PaymentsConfiguration;
 import uk.gov.hmcts.reform.unspec.model.CaseData;
 
-@Slf4j
 @Service
 @RequiredArgsConstructor
 public class PaymentsService {
@@ -19,9 +18,7 @@ public class PaymentsService {
     private final PaymentsConfiguration paymentsConfiguration;
 
     public PaymentDto createCreditAccountPayment(CaseData caseData, String authToken) {
-        CreditAccountPaymentRequest paymentRequest = buildRequest(caseData);
-        log.info("CreditAccountPaymentRequest:", paymentRequest);
-        return paymentsClient.createCreditAccountPayment(authToken, paymentRequest);
+        return paymentsClient.createCreditAccountPayment(authToken, buildRequest(caseData));
     }
 
     private CreditAccountPaymentRequest buildRequest(CaseData caseData) {
