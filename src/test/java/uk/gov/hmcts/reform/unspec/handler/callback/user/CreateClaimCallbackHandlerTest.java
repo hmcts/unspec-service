@@ -32,7 +32,6 @@ import uk.gov.hmcts.reform.unspec.sampledata.PartyBuilder;
 import uk.gov.hmcts.reform.unspec.service.FeesService;
 import uk.gov.hmcts.reform.unspec.service.OrganisationService;
 import uk.gov.hmcts.reform.unspec.service.flowstate.StateFlowEngine;
-import uk.gov.hmcts.reform.unspec.validation.DateOfBirthValidator;
 import uk.gov.hmcts.reform.unspec.validation.PartyValidator;
 
 import java.math.BigDecimal;
