@@ -11,7 +11,7 @@ const createClaimData = legalRepresentation => {
     },
     Court: {
       courtLocation: {
-        applicantPreferredCourt: 'Test Preferred Court'
+        applicantPreferredCourt: '344'
       }
     },
     Claimant: {
