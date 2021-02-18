@@ -127,7 +127,8 @@ public class CreateClaimCallbackHandler extends CallbackHandler {
         UserDetails userDetails = idamClient.getUserDetails(callbackParams.getParams().get(BEARER_TOKEN).toString());
 
         CaseData.CaseDataBuilder caseDataBuilder = callbackParams.getCaseData().toBuilder()
-            .applicantSolicitor1CheckEmail(CorrectEmail.builder().email(userDetails.getEmail()).build());
+            .applicantSolicitor1CheckEmail(CorrectEmail.builder().email(userDetails.getEmail()).build())
+            .applicantSolicitor1UserDetails(IdamUserDetails.builder().build());
 
         return AboutToStartOrSubmitCallbackResponse.builder()
             .data(caseDetailsConverter.toMap(caseDataBuilder.build()))

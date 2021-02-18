@@ -267,6 +267,32 @@ class CreateClaimCallbackHandlerTest extends BaseCallbackHandlerTest {
                 .extracting("email")
                 .isEqualTo(email);
         }
+
+        @Test
+        void shouldRemoveExistingEmail_whenOneHasAlreadyBeenEntered() {
+            String userId = UUID.randomUUID().toString();
+            String email = "example@email.com";
+
+            given(idamClient.getUserDetails(any()))
+                .willReturn(UserDetails.builder().email(email).id(userId).build());
+
+            CaseData caseData = CaseDataBuilder.builder().atStateClaimDraft().build().toBuilder()
+                .applicantSolicitor1UserDetails(IdamUserDetails.builder()
+                                                    .email("email@example.com")
+                                                    .build())
+                .build();
+            CallbackParams params = callbackParamsOf(caseData, MID, PAGE_ID);
+            var response = (AboutToStartOrSubmitCallbackResponse) handler.handle(params);
+
+            assertThat(response.getData())
+                .extracting("applicantSolicitor1CheckEmail")
+                .extracting("email")
+                .isEqualTo(email);
+            assertThat(response.getData())
+                .extracting("applicantSolicitor1UserDetails")
+                .extracting("email")
+                .isNull();
+        }
     }
 
     @Nested
@@ -284,12 +310,12 @@ class CreateClaimCallbackHandlerTest extends BaseCallbackHandlerTest {
 
             CaseData caseData = CaseDataBuilder.builder().atStateClaimDraft().build().toBuilder()
                 .applicantSolicitor1CheckEmail(CorrectEmail.builder()
-                                                  .email(EMAIL)
-                                                  .correct(YES)
-                                                  .build())
+                                                   .email(EMAIL)
+                                                   .correct(YES)
+                                                   .build())
                 .applicantSolicitor1UserDetails(IdamUserDetails.builder()
-                                                        .email(DIFFERENT_EMAIL)
-                                                        .build())
+                                                    .email(DIFFERENT_EMAIL)
+                                                    .build())
                 .build();
 
             CallbackParams params = callbackParamsOf(caseData, MID, PAGE_ID);
@@ -313,12 +339,12 @@ class CreateClaimCallbackHandlerTest extends BaseCallbackHandlerTest {
 
             CaseData caseData = CaseDataBuilder.builder().atStateClaimDraft().build().toBuilder()
                 .applicantSolicitor1CheckEmail(CorrectEmail.builder()
-                                                  .email(EMAIL)
-                                                  .correct(NO)
-                                                  .build())
+                                                   .email(EMAIL)
+                                                   .correct(NO)
+                                                   .build())
                 .applicantSolicitor1UserDetails(IdamUserDetails.builder()
-                                                        .email(DIFFERENT_EMAIL)
-                                                        .build())
+                                                    .email(DIFFERENT_EMAIL)
+                                                    .build())
                 .build();
 
             CallbackParams params = callbackParamsOf(caseData, MID, PAGE_ID);
