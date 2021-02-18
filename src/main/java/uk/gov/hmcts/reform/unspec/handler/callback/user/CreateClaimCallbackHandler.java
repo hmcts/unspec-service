@@ -45,6 +45,7 @@ import static uk.gov.hmcts.reform.unspec.callback.CallbackType.MID;
 import static uk.gov.hmcts.reform.unspec.callback.CallbackType.SUBMITTED;
 import static uk.gov.hmcts.reform.unspec.callback.CaseEvent.CREATE_CLAIM;
 import static uk.gov.hmcts.reform.unspec.enums.AllocatedTrack.getAllocatedTrack;
+import static uk.gov.hmcts.reform.unspec.enums.YesOrNo.NO;
 import static uk.gov.hmcts.reform.unspec.enums.YesOrNo.YES;
 import static uk.gov.hmcts.reform.unspec.helpers.DateFormatHelper.DATE_TIME_AT;
 import static uk.gov.hmcts.reform.unspec.helpers.DateFormatHelper.formatLocalDateTime;
@@ -64,6 +65,9 @@ public class CreateClaimCallbackHandler extends CallbackHandler {
         + " 4pm if you're doing this on the due day";
 
     public static final String LIP_CONFIRMATION_BODY = "<br />You do not need to do anything.\n\n"
+        + "Your claim will be considered by the court and you will be informed of the outcome by post.";
+
+    public static final String UNREGISTERED_ORG_CONFIRMATION_BODY = "<br />You do not need to do anything.\n\n"
         + "Your claim will be considered by the court and you will be informed of the outcome by post.";
 
     private final ClaimIssueConfiguration claimIssueConfiguration;
@@ -124,7 +128,7 @@ public class CreateClaimCallbackHandler extends CallbackHandler {
         CaseData.CaseDataBuilder caseDataBuilder = caseData.toBuilder()
             .claimFee(feesService.getFeeDataByClaimValue(caseData.getClaimValue()))
             .applicantSolicitor1PbaAccounts(DynamicList.fromList(pbaNumbers))
-            .applicantSolicitor1PbaAccountsIsEmpty(pbaNumbers.isEmpty() ? YES : YesOrNo.NO)
+            .applicantSolicitor1PbaAccountsIsEmpty(pbaNumbers.isEmpty() ? YES : NO)
             .paymentReference(paymentReference);
 
         return AboutToStartOrSubmitCallbackResponse.builder()
@@ -163,17 +167,22 @@ public class CreateClaimCallbackHandler extends CallbackHandler {
 
     private SubmittedCallbackResponse buildConfirmation(CallbackParams callbackParams) {
         CaseData caseData = callbackParams.getCaseData();
+        String claimNumber = caseData.getLegacyCaseReference();
 
-        if (caseData.getRespondent1Represented() == YesOrNo.NO) {
+        if (caseData.getRespondent1Represented() == NO) {
             return SubmittedCallbackResponse.builder()
                 .confirmationHeader("# Your claim will now progress offline")
                 .confirmationBody(LIP_CONFIRMATION_BODY)
+                .build();
+        } else if (caseData.getRespondent1OrgRegistered() == NO) {
+            return SubmittedCallbackResponse.builder()
+                .confirmationHeader(format("# Your claim will now progress offline: %s", claimNumber))
+                .confirmationBody(UNREGISTERED_ORG_CONFIRMATION_BODY)
                 .build();
         }
 
         LocalDateTime serviceDeadline = LocalDate.now().plusDays(112).atTime(23, 59);
         String formattedServiceDeadline = formatLocalDateTime(serviceDeadline, DATE_TIME_AT);
-        String claimNumber = caseData.getLegacyCaseReference();
 
         String body = format(
             CONFIRMATION_SUMMARY,
