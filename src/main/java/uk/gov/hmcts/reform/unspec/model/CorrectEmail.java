@@ -5,7 +5,7 @@ import lombok.Data;
 import uk.gov.hmcts.reform.unspec.enums.YesOrNo;
 
 @Data
-@Builder
+@Builder(toBuilder = true)
 public class CorrectEmail {
 
     private final String email;

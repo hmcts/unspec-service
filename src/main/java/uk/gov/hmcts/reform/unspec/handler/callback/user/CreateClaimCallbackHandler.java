@@ -157,7 +157,7 @@ public class CreateClaimCallbackHandler extends CallbackHandler {
         }
 
         //set label field to null
-        caseDataBuilder.applicantSolicitor1CheckEmail(null);
+        caseDataBuilder.applicantSolicitor1CheckEmail(applicantSolicitor1CheckEmail.toBuilder().email("").build());
 
         return AboutToStartOrSubmitCallbackResponse.builder()
             .data(caseDetailsConverter.toMap(caseDataBuilder.build()))

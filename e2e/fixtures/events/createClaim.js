@@ -153,6 +153,9 @@ module.exports = {
       Notifications: {
         applicant1: applicant1WithPartyName,
         applicant1LitigationFriend: applicant1LitigationFriend,
+        applicantSolicitor1CheckEmail: {
+          correct: 'No'
+        },
         applicantSolicitor1UserDetails: {
           email: 'civilunspecified@gmail.com',
           id: 'c18d5f8d-06fa-477d-ac09-5b6129828a5b'

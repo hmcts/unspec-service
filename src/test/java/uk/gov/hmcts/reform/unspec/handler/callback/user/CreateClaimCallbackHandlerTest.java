@@ -323,7 +323,13 @@ class CreateClaimCallbackHandlerTest extends BaseCallbackHandlerTest {
 
             assertThat(response.getData())
                 .extracting("applicantSolicitor1CheckEmail")
+                .extracting("email")
                 .isNull();
+
+            assertThat(response.getData())
+                .extracting("applicantSolicitor1CheckEmail")
+                .extracting("correct")
+                .isEqualTo("Yes");
 
             assertThat(response.getData())
                 .extracting("applicantSolicitor1UserDetails")
@@ -352,7 +358,13 @@ class CreateClaimCallbackHandlerTest extends BaseCallbackHandlerTest {
 
             assertThat(response.getData())
                 .extracting("applicantSolicitor1CheckEmail")
+                .extracting("email")
                 .isNull();
+
+            assertThat(response.getData())
+                .extracting("applicantSolicitor1CheckEmail")
+                .extracting("correct")
+                .isEqualTo("No");
 
             assertThat(response.getData())
                 .extracting("applicantSolicitor1UserDetails")
