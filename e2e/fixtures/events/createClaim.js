@@ -110,8 +110,8 @@ module.exports = {
       ClaimValue: {
         applicantSolicitor1PbaAccounts: {
           list_items: [
-            listElement('PBA0077597'),
-            listElement('PBA0078094')
+            validPba,
+            invalidPba
           ]
         },
         applicantSolicitor1PbaAccountsIsEmpty: 'No',
