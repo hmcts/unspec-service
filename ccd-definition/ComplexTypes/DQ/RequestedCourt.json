@@ -31,11 +31,12 @@
   },
   {
     "ID": "RequestedCourt",
-    "ListElementCode": "name",
+    "ListElementCode": "responseCourtCode",
     "FieldType": "Text",
     "ElementLabel": "The code of your preferred County Court hearing centre",
     "FieldShowCondition": "requestHearingAtSpecificCourt = \"Yes\"",
-    "SecurityClassification": "Public"
+    "SecurityClassification": "Public",
+    "RegularExpression": "[0-9]{3}"
   },
   {
     "ID": "RequestedCourt",

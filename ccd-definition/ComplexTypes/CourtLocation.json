@@ -6,8 +6,7 @@
     "ElementLabel": "Court Code",
     "HintText": "This should be your preferred County Court hearing centre.",
     "SecurityClassification": "Public",
-    "Max": 3,
-    "Min": 3
+    "RegularExpression": "[0-9]{3}"
   },
   {
     "ID": "CourtLocation",
