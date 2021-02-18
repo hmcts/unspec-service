@@ -117,7 +117,7 @@ module.exports = {
 
     await validateEventPages(data.ADD_OR_AMEND_CLAIM_DOCUMENTS);
 
-    await assertSubmittedEvent('AWAITING_CASE_DETAILS_NOTIFICATION', {
+    await assertSubmittedEvent('CREATED', {
       header: 'Defendant notified',
       body: 'What happens next'
     });
