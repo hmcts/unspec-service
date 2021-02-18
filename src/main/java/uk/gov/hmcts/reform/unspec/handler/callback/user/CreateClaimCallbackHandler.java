@@ -83,7 +83,6 @@ public class CreateClaimCallbackHandler extends CallbackHandler {
             callbackKey(MID, "applicant"), this::validateDateOfBirth,
             callbackKey(MID, "fee"), this::calculateFee,
             callbackKey(MID, "idam-email"), this::getIdamEmail,
-            callbackKey(MID, "set-email"), this::setEmailForApplicantSolicitor1,
             callbackKey(ABOUT_TO_SUBMIT), this::submitClaim,
             callbackKey(SUBMITTED), this::buildConfirmation
         );
@@ -135,35 +134,6 @@ public class CreateClaimCallbackHandler extends CallbackHandler {
             .build();
     }
 
-    private CallbackResponse setEmailForApplicantSolicitor1(CallbackParams callbackParams) {
-        CaseData caseData = callbackParams.getCaseData();
-        CaseData.CaseDataBuilder caseDataBuilder = caseData.toBuilder();
-        CorrectEmail applicantSolicitor1CheckEmail = caseData.getApplicantSolicitor1CheckEmail();
-
-        // second idam call is workaround for null pointer when hiding field in getIdamEmail callback
-        UserDetails userDetails = idamClient.getUserDetails(callbackParams.getParams().get(BEARER_TOKEN).toString());
-        IdamUserDetails.IdamUserDetailsBuilder idamDetails = IdamUserDetails.builder().id(userDetails.getId());
-
-        if (applicantSolicitor1CheckEmail.isCorrect()) {
-            caseDataBuilder.applicantSolicitor1UserDetails(
-                idamDetails.email(applicantSolicitor1CheckEmail.getEmail()).build()
-            );
-        } else {
-            IdamUserDetails applicantSolicitor1UserDetails = caseData.getApplicantSolicitor1UserDetails();
-
-            caseDataBuilder.applicantSolicitor1UserDetails(
-                idamDetails.email(applicantSolicitor1UserDetails.getEmail()).build()
-            );
-        }
-
-        //set label field to null
-        caseDataBuilder.applicantSolicitor1CheckEmail(applicantSolicitor1CheckEmail.toBuilder().email("").build());
-
-        return AboutToStartOrSubmitCallbackResponse.builder()
-            .data(caseDetailsConverter.toMap(caseDataBuilder.build()))
-            .build();
-    }
-
     private List<String> getPbaAccounts(String authToken) {
         return organisationService.findOrganisation(authToken)
             .map(Organisation::getPaymentAccount)
@@ -172,17 +142,30 @@ public class CreateClaimCallbackHandler extends CallbackHandler {
 
     private CallbackResponse submitClaim(CallbackParams callbackParams) {
         CaseData caseData = callbackParams.getCaseData();
+        // second idam call is workaround for null pointer when hiding field in getIdamEmail callback
+        UserDetails userDetails = idamClient.getUserDetails(callbackParams.getParams().get(BEARER_TOKEN).toString());
+        IdamUserDetails.IdamUserDetailsBuilder idam = IdamUserDetails.builder().id(userDetails.getId());
+        CorrectEmail applicantSolicitor1CheckEmail = caseData.getApplicantSolicitor1CheckEmail();
+        CaseData.CaseDataBuilder dataBuilder = caseData.toBuilder();
 
-        CaseData updatedCaseData = caseData.toBuilder()
-            .legacyCaseReference(referenceNumberRepository.getReferenceNumber())
-            .claimSubmittedDateTime(LocalDateTime.now())
-            .allocatedTrack(getAllocatedTrack(caseData.getClaimValue().toPounds(), caseData.getClaimType()))
-            .businessProcess(BusinessProcess.ready(CREATE_CLAIM))
-            .build();
+        if (applicantSolicitor1CheckEmail.isCorrect()) {
+            dataBuilder.applicantSolicitor1UserDetails(idam.email(applicantSolicitor1CheckEmail.getEmail()).build());
+        } else {
+            IdamUserDetails applicantSolicitor1UserDetails = caseData.getApplicantSolicitor1UserDetails();
+            dataBuilder.applicantSolicitor1UserDetails(idam.email(applicantSolicitor1UserDetails.getEmail()).build());
+        }
+
+        dataBuilder.legacyCaseReference(referenceNumberRepository.getReferenceNumber());
+        dataBuilder.claimSubmittedDateTime(LocalDateTime.now());
+        dataBuilder.allocatedTrack(getAllocatedTrack(caseData.getClaimValue().toPounds(), caseData.getClaimType()));
+        dataBuilder.businessProcess(BusinessProcess.ready(CREATE_CLAIM));
+
+        //set check email field to null for GDPR
+        dataBuilder.applicantSolicitor1CheckEmail(CorrectEmail.builder().build());
 
         return AboutToStartOrSubmitCallbackResponse.builder()
-            .data(caseDetailsConverter.toMap(updatedCaseData))
-            .state(getState(updatedCaseData))
+            .data(caseDetailsConverter.toMap(dataBuilder.build()))
+            .state(getState(dataBuilder.build()))
             .build();
     }
 

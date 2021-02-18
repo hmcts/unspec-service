@@ -33,10 +33,6 @@ const midEventFieldForPage = {
   ClaimantLitigationFriend: {
     id: 'applicantSolicitor1CheckEmail',
     dynamicList: false
-  },
-  Notifications: {
-    id: 'applicantSolicitor1UserDetails',
-    dynamicList: false
   }
 };
 
@@ -60,6 +56,8 @@ module.exports = {
 
     await assertCorrectEventsAreAvailableToUser(config.solicitorUser, 'AWAITING_CASE_NOTIFICATION');
     await assertCorrectEventsAreAvailableToUser(config.defendantSolicitorUser, 'AWAITING_CASE_NOTIFICATION');
+    //field is deleted in about to submit callback
+    deleteCaseFields('applicantSolicitor1CheckEmail');
   },
 
   createClaimWithRespondentLitigantInPerson: async (user) => {
@@ -78,6 +76,8 @@ module.exports = {
     await assignCaseToDefendant(caseId);
     await assertCorrectEventsAreAvailableToUser(config.solicitorUser, 'PROCEEDS_WITH_OFFLINE_JOURNEY');
     await assertCorrectEventsAreAvailableToUser(config.defendantSolicitorUser, 'PROCEEDS_WITH_OFFLINE_JOURNEY');
+    //field is deleted in about to submit callback
+    deleteCaseFields('applicantSolicitor1CheckEmail');
   },
 
   notifyClaim: async() => {
@@ -318,11 +318,6 @@ function addMidEventFields(pageId, responseBody) {
 
   if (midEventField.dynamicList === true) {
     assertDynamicListListItemsHaveExpectedLabels(responseBody, midEventField.id, midEventData);
-  }
-
-  // set label fields to null in callback
-  if (pageId === 'Notifications') {
-    deleteCaseFields('applicantSolicitor1CheckEmail');
   }
 
   caseData = {...caseData, ...midEventData};
