@@ -7,8 +7,6 @@ module.exports = {
     events.CASE_PROCEEDS_IN_CASEMAN
   ],
   CREATED: [
-    events.REQUEST_EXTENSION,
-    events.RESPOND_EXTENSION,
     events.ACKNOWLEDGE_SERVICE,
     events.ADD_DEFENDANT_LITIGATION_FRIEND,
     events.DEFENDANT_RESPONSE,
