@@ -26,14 +26,6 @@
   {
     "LiveFrom": "01/01/2017",
     "CaseTypeID": "UNSPECIFIED_CLAIMS",
-    "ID": "submitterId",
-    "Label": "Applicant solicitor identifier",
-    "FieldType": "Text",
-    "SecurityClassification": "Public"
-  },
-  {
-    "LiveFrom": "01/01/2017",
-    "CaseTypeID": "UNSPECIFIED_CLAIMS",
     "ID": "courtLocation",
     "Label": "Choose court location",
     "FieldType": "CourtLocation",
@@ -217,7 +209,7 @@
     "LiveFrom": "01/01/2017",
     "CaseTypeID": "UNSPECIFIED_CLAIMS",
     "ID": "servedDocumentFiles",
-    "Label": "Upload your documents",
+    "Label": "Upload documents in the following machine readable formats",
     "FieldType": "ServedDocumentFiles",
     "SecurityClassification": "Public"
   },
@@ -728,6 +720,22 @@
     "ID": "notifyClaimLabel",
     "Label": "If you continue the defendant legal representative's organisation will be notified and will be granted access to this claim.",
     "FieldType": "Label",
+    "SecurityClassification": "Public"
+  },
+  {
+    "LiveFrom": "01/01/2017",
+    "CaseTypeID": "UNSPECIFIED_CLAIMS",
+    "ID": "applicantSolicitor1CheckEmail",
+    "Label": "Notifications",
+    "FieldType": "CorrectEmail",
+    "SecurityClassification": "Public"
+  },
+  {
+    "LiveFrom": "01/01/2017",
+    "CaseTypeID": "UNSPECIFIED_CLAIMS",
+    "ID": "applicantSolicitor1UserDetails",
+    "Label": "Notification details",
+    "FieldType": "UserDetails",
     "SecurityClassification": "Public"
   }
 ]

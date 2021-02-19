@@ -19,6 +19,7 @@ import uk.gov.hmcts.reform.unspec.handler.callback.BaseCallbackHandlerTest;
 import uk.gov.hmcts.reform.unspec.helpers.CaseDetailsConverter;
 import uk.gov.hmcts.reform.unspec.model.BusinessProcess;
 import uk.gov.hmcts.reform.unspec.model.CaseData;
+import uk.gov.hmcts.reform.unspec.model.IdamUserDetails;
 import uk.gov.hmcts.reform.unspec.sampledata.CaseDataBuilder;
 import uk.gov.hmcts.reform.unspec.service.CoreCaseUserService;
 
@@ -50,7 +51,10 @@ class CaseUserAssignmentHandlerTest extends BaseCallbackHandlerTest {
     void setup() {
         caseData = new CaseDataBuilder().atStateClaimDraft()
             .caseReference(CaseDataBuilder.CASE_ID)
-            .submitterId("f5e5cc53-e065-43dd-8cec-2ad005a6b9a9")
+            .applicantSolicitor1UserDetails(IdamUserDetails.builder()
+                                                .id("f5e5cc53-e065-43dd-8cec-2ad005a6b9a9")
+                                                .email("applicant@someorg.com")
+                                                .build())
             .businessProcess(BusinessProcess.builder().status(BusinessProcessStatus.READY).build())
             .applicant1OrganisationPolicy(OrganisationPolicy.builder()
                                               .organisation(Organisation.builder().organisationID("OrgId1").build())
@@ -72,14 +76,14 @@ class CaseUserAssignmentHandlerTest extends BaseCallbackHandlerTest {
 
         verify(coreCaseUserService).assignCase(
             caseData.getCcdCaseReference().toString(),
-            caseData.getSubmitterId(),
+            caseData.getApplicantSolicitor1UserDetails().getId(),
             "OrgId1",
             CaseRole.APPLICANTSOLICITORONE
         );
 
         verify(coreCaseUserService).removeCreatorRoleCaseAssignment(
             caseData.getCcdCaseReference().toString(),
-            caseData.getSubmitterId(),
+            caseData.getApplicantSolicitor1UserDetails().getId(),
             "OrgId1"
         );
     }
@@ -90,6 +94,6 @@ class CaseUserAssignmentHandlerTest extends BaseCallbackHandlerTest {
             = (AboutToStartOrSubmitCallbackResponse) caseUserAssignmentHandler.handle(params);
 
         CaseData data = objectMapper.convertValue(response.getData(), CaseData.class);
-        assertThat(data.getSubmitterId()).isNull();
+        assertThat(data.getApplicantSolicitor1UserDetails().getId()).isNull();
     }
 }

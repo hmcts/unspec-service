@@ -16,6 +16,7 @@ const expectedEvents =  require('../fixtures/ccd/expectedEvents.js');
 const data = {
   CREATE_CLAIM: claimData.createClaim,
   CREATE_CLAIM_RESPONDENT_LIP: claimData.createClaimLitigantInPerson,
+  ADD_OR_AMEND_CLAIM_DOCUMENTS: require('../fixtures/events/addOrAmendClaimDocuments.js'),
   ACKNOWLEDGE_SERVICE: require('../fixtures/events/acknowledgeService.js'),
   REQUEST_EXTENSION: require('../fixtures/events/requestExtension.js'),
   RESPOND_EXTENSION: require('../fixtures/events/respondExtension.js'),
@@ -29,6 +30,10 @@ const midEventFieldForPage = {
   ClaimValue: {
     id: 'applicantSolicitor1PbaAccounts',
     dynamicList: true
+  },
+  ClaimantLitigationFriend: {
+    id: 'applicantSolicitor1CheckEmail',
+    dynamicList: false
   }
 };
 
@@ -52,6 +57,8 @@ module.exports = {
 
     await assertCorrectEventsAreAvailableToUser(config.solicitorUser, 'AWAITING_CASE_NOTIFICATION');
     await assertCorrectEventsAreAvailableToUser(config.defendantSolicitorUser, 'AWAITING_CASE_NOTIFICATION');
+    //field is deleted in about to submit callback
+    deleteCaseFields('applicantSolicitor1CheckEmail');
   },
 
   createClaimWithRespondentLitigantInPerson: async (user) => {
@@ -70,6 +77,31 @@ module.exports = {
     await assignCaseToDefendant(caseId);
     await assertCorrectEventsAreAvailableToUser(config.solicitorUser, 'PROCEEDS_WITH_OFFLINE_JOURNEY');
     await assertCorrectEventsAreAvailableToUser(config.defendantSolicitorUser, 'PROCEEDS_WITH_OFFLINE_JOURNEY');
+    //field is deleted in about to submit callback
+    deleteCaseFields('applicantSolicitor1CheckEmail');
+  },
+
+  amendClaimDocuments: async () => {
+    eventName = 'ADD_OR_AMEND_CLAIM_DOCUMENTS';
+    let returnedCaseData = await apiRequest.startEvent(eventName, caseId);
+    assertContainsPopulatedFields(returnedCaseData);
+    caseData = returnedCaseData;
+
+    await validateEventPages(data[eventName]);
+
+    await assertCallbackError('Upload', data[eventName].invalid.Upload.duplicateError,
+      'More than one particular of claim added');
+
+    await assertCallbackError('Upload', data[eventName].invalid.Upload.nullError,
+      'One particular of claim is required');
+
+    await assertSubmittedEvent('AWAITING_CASE_NOTIFICATION', {
+      header: 'Documents uploaded successfully',
+      body: '<br />'
+    }, true);
+
+    await assertCorrectEventsAreAvailableToUser(config.solicitorUser, 'AWAITING_CASE_NOTIFICATION');
+    await assertCorrectEventsAreAvailableToUser(config.defendantSolicitorUser, 'AWAITING_CASE_NOTIFICATION');
   },
 
   notifyClaim: async() => {
@@ -238,6 +270,7 @@ const validateEventPages = async (data) => {
 };
 
 const assertValidData = async (data, pageId) => {
+  console.log(`asserting page: ${pageId} has valid data`);
   const validDataForPage = data.valid[pageId];
   caseData = {...caseData, ...validDataForPage};
 
@@ -303,6 +336,7 @@ const assertCorrectEventsAreAvailableToUser = async (user, state) => {
 };
 
 function addMidEventFields(pageId, responseBody) {
+  console.log(`Adding mid event fields for pageId: ${pageId}`);
   const midEventData = data[eventName].midEventData[pageId];
   const midEventField = midEventFieldForPage[pageId];
 

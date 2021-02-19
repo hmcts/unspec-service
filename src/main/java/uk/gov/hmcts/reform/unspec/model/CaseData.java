@@ -34,10 +34,11 @@ public class CaseData {
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private final CaseState ccdState;
     private final SolicitorReferences solicitorReferences;
-    private final String submitterId;
     private final CourtLocation courtLocation;
     private final Party applicant1;
     private final Party applicant2;
+    private final CorrectEmail applicantSolicitor1CheckEmail;
+    private final IdamUserDetails applicantSolicitor1UserDetails;
     private final Party respondent1;
     private final Party respondent2;
     private final YesOrNo respondent1Represented;

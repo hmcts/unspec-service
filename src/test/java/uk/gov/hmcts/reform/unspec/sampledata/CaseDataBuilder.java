@@ -14,7 +14,9 @@ import uk.gov.hmcts.reform.unspec.model.CaseData;
 import uk.gov.hmcts.reform.unspec.model.ClaimProceedsInCaseman;
 import uk.gov.hmcts.reform.unspec.model.ClaimValue;
 import uk.gov.hmcts.reform.unspec.model.CloseClaim;
+import uk.gov.hmcts.reform.unspec.model.CorrectEmail;
 import uk.gov.hmcts.reform.unspec.model.CourtLocation;
+import uk.gov.hmcts.reform.unspec.model.IdamUserDetails;
 import uk.gov.hmcts.reform.unspec.model.Party;
 import uk.gov.hmcts.reform.unspec.model.PaymentDetails;
 import uk.gov.hmcts.reform.unspec.model.ResponseDocument;
@@ -90,6 +92,8 @@ public class CaseDataBuilder {
     private PaymentDetails paymentDetails;
     private LocalDateTime respondentSolicitor1ResponseDeadline;
     private LocalDate claimNotificationDate;
+    private CorrectEmail applicantSolicitor1CheckEmail;
+    private IdamUserDetails applicantSolicitor1UserDetails;
     //Acknowledge Service
     private ResponseIntention respondent1ClaimResponseIntentionType;
     // Request Extension
@@ -117,7 +121,6 @@ public class CaseDataBuilder {
 
     private CloseClaim withdrawClaim;
     private CloseClaim discontinueClaim;
-    private String submitterId;
     private OrganisationPolicy applicant1OrganisationPolicy;
     private OrganisationPolicy respondent1OrganisationPolicy;
 
@@ -266,11 +269,6 @@ public class CaseDataBuilder {
         return this;
     }
 
-    public CaseDataBuilder submitterId(String submitterId) {
-        this.submitterId = submitterId;
-        return this;
-    }
-
     public CaseDataBuilder caseReference(Long ccdCaseReference) {
         this.ccdCaseReference = ccdCaseReference;
         return this;
@@ -405,6 +403,7 @@ public class CaseDataBuilder {
         respondentSolicitor1EmailAddress = "civilunspecified@gmail.com";
         applicantSolicitor1ClaimStatementOfTruth = StatementOfTruthBuilder.builder().build();
         claimSubmittedDateTime = LocalDateTime.now();
+        applicantSolicitor1CheckEmail = CorrectEmail.builder().email("civilunspecified@gmail.com").correct(YES).build();
         return this;
     }
 
@@ -530,6 +529,11 @@ public class CaseDataBuilder {
         return this;
     }
 
+    public CaseDataBuilder applicantSolicitor1UserDetails(IdamUserDetails applicantSolicitor1UserDetails) {
+        this.applicantSolicitor1UserDetails = applicantSolicitor1UserDetails;
+        return this;
+    }
+
     public static CaseDataBuilder builder() {
         return new CaseDataBuilder();
     }
@@ -557,6 +561,8 @@ public class CaseDataBuilder {
             .paymentDetails(paymentDetails)
             .respondentSolicitor1ResponseDeadline(respondentSolicitor1ResponseDeadline)
             .claimNotificationDate(claimNotificationDate)
+            .applicantSolicitor1CheckEmail(applicantSolicitor1CheckEmail)
+            .applicantSolicitor1UserDetails(applicantSolicitor1UserDetails)
             // Acknowledge Service
             .respondent1ClaimResponseIntentionType(respondent1ClaimResponseIntentionType)
             // Request Extension
@@ -599,7 +605,6 @@ public class CaseDataBuilder {
             .applicant1DQ(applicant1DQ)
             .applicant1OrganisationPolicy(applicant1OrganisationPolicy)
             .respondent1OrganisationPolicy(respondent1OrganisationPolicy)
-            .submitterId(submitterId)
             .build();
     }
 }
