@@ -35,6 +35,12 @@ module.exports = {
     description: 'Withdraw a claim',
     order: 10
   },
+  ADD_OR_AMEND_CLAIM_DOCUMENTS: {
+    id: 'ADD_OR_AMEND_CLAIM_DOCUMENTS',
+    name: 'Add or amend claim documents',
+    description: 'Add or amend documents attached to the claim',
+    order: 10
+  },
   DISCONTINUE_CLAIM: {
     id: 'DISCONTINUE_CLAIM',
     name: 'Discontinue claim',

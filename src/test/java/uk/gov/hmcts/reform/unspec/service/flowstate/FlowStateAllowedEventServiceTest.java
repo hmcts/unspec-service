@@ -27,6 +27,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.params.provider.Arguments.of;
 import static uk.gov.hmcts.reform.unspec.callback.CaseEvent.ACKNOWLEDGE_SERVICE;
 import static uk.gov.hmcts.reform.unspec.callback.CaseEvent.ADD_DEFENDANT_LITIGATION_FRIEND;
+import static uk.gov.hmcts.reform.unspec.callback.CaseEvent.ADD_OR_AMEND_CLAIM_DOCUMENTS;
 import static uk.gov.hmcts.reform.unspec.callback.CaseEvent.CASE_PROCEEDS_IN_CASEMAN;
 import static uk.gov.hmcts.reform.unspec.callback.CaseEvent.CLAIMANT_RESPONSE;
 import static uk.gov.hmcts.reform.unspec.callback.CaseEvent.CREATE_CLAIM;
@@ -98,7 +99,8 @@ class FlowStateAllowedEventServiceTest {
                 .containsExactlyInAnyOrder(
                     NOTIFY_DEFENDANT_OF_CLAIM,
                     ADD_DEFENDANT_LITIGATION_FRIEND,
-                    CASE_PROCEEDS_IN_CASEMAN
+                    CASE_PROCEEDS_IN_CASEMAN,
+                    ADD_OR_AMEND_CLAIM_DOCUMENTS
                 );
         }
 
@@ -154,6 +156,8 @@ class FlowStateAllowedEventServiceTest {
             "AWAITING_CASE_NOTIFICATION,NOTIFY_DEFENDANT_OF_CLAIM",
             "AWAITING_CASE_NOTIFICATION,ADD_DEFENDANT_LITIGATION_FRIEND",
             "AWAITING_CASE_NOTIFICATION,CASE_PROCEEDS_IN_CASEMAN",
+            "AWAITING_CASE_NOTIFICATION,ADD_OR_AMEND_CLAIM_DOCUMENTS",
+            "SERVICE_ACKNOWLEDGED,REQUEST_EXTENSION",
             "SERVICE_ACKNOWLEDGED,DEFENDANT_RESPONSE",
             "RESPONDED_TO_CLAIM,CLAIMANT_RESPONSE",
             "RESPONDED_TO_CLAIM,DISCONTINUE_CLAIM"
@@ -185,12 +189,7 @@ class FlowStateAllowedEventServiceTest {
                 of(ACKNOWLEDGE_SERVICE, new String[]{CLAIM_ISSUED.fullName()}),
                 of(NOTIFY_DEFENDANT_OF_CLAIM, new String[]{AWAITING_CASE_NOTIFICATION.fullName()}),
                 of(CLAIMANT_RESPONSE, new String[]{RESPONDED_TO_CLAIM.fullName()}),
-                of(
-                    DEFENDANT_RESPONSE,
-                    new String[]{
-                        SERVICE_ACKNOWLEDGED.fullName(),
-                    }
-                ),
+                of(DEFENDANT_RESPONSE, new String[]{SERVICE_ACKNOWLEDGED.fullName()}),
                 of(
                     WITHDRAW_CLAIM,
                     new String[]{DRAFT.fullName(), CLAIM_ISSUED.fullName(), CLAIM_STAYED.fullName(),
@@ -214,7 +213,8 @@ class FlowStateAllowedEventServiceTest {
                     new String[]{AWAITING_CASE_NOTIFICATION.fullName(), CLAIM_ISSUED.fullName(),
                         SERVICE_ACKNOWLEDGED.fullName(), RESPONDED_TO_CLAIM.fullName(), FULL_DEFENCE.fullName()
                     }
-                )
+                ),
+                of(ADD_OR_AMEND_CLAIM_DOCUMENTS, new String[]{AWAITING_CASE_NOTIFICATION.fullName()})
             );
         }
     }
@@ -256,6 +256,11 @@ class FlowStateAllowedEventServiceTest {
                     true,
                     CaseDetailsBuilder.builder().atStateAwaitingCaseNotification().build(),
                     CASE_PROCEEDS_IN_CASEMAN
+                ),
+                of(
+                    true,
+                    CaseDetailsBuilder.builder().atStateAwaitingCaseNotification().build(),
+                    ADD_OR_AMEND_CLAIM_DOCUMENTS
                 ),
                 of(
                     false,
