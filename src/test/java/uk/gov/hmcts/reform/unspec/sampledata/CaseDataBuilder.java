@@ -249,7 +249,7 @@ public class CaseDataBuilder {
         this.respondent1OrganisationPolicy = respondent1OrganisationPolicy;
         return this;
     }
-    
+
     public CaseDataBuilder respondent1Represented(YesOrNo isRepresented) {
         this.respondent1Represented = isRepresented;
         return this;
