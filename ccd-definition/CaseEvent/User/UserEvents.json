@@ -160,5 +160,18 @@
     "SecurityClassification": "Public",
     "ShowSummary": "N",
     "ShowEventNotes": "N"
+  },
+  {
+    "LiveFrom": "01/01/2017",
+    "CaseTypeID": "UNSPECIFIED_CLAIMS",
+    "ID": "INFORM_AGREED_EXTENSION_DATE",
+    "Name": "Inform agreed extension date",
+    "Description": "Enter an extension date that has already been agreed with other parties",
+    "DisplayOrder": 10,
+    "PreConditionState(s)": "CREATED",
+    "PostConditionState": "*",
+    "SecurityClassification": "Public",
+    "ShowSummary": "N",
+    "ShowEventNotes": "N"
   }
 ]

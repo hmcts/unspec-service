@@ -20,6 +20,7 @@ import uk.gov.hmcts.reform.unspec.model.dq.Respondent1DQ;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.List;
 import javax.validation.Valid;
 
@@ -66,6 +67,7 @@ public class CaseData {
     private final List<Element<CaseDocument>> systemGeneratedCaseDocuments;
 
     private final LocalDateTime respondentSolicitor1ResponseDeadline;
+    private final Date respondentSolicitor1AgreedDeadlineExtension;
     private final ResponseIntention respondent1ClaimResponseIntentionType;
     private final ServedDocumentFiles servedDocumentFiles;
 
