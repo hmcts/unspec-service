@@ -141,9 +141,17 @@ module.exports = {
       PaymentReference: {
         paymentReference: 'Applicant reference'
       }
+    },
+    invalid:{
+      Court: {
+        courtLocation: {
+          applicantPreferredCourt: "3a3"
+        }
+      }
     }
   },
   createClaimLitigantInPerson: {
     valid: createClaimData('No')
   },
+
 };
