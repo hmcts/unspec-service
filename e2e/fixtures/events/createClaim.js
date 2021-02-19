@@ -1,4 +1,4 @@
-const { document, element, listElement, buildAddress } = require('../../api/dataHelper');
+const { document, listElement, buildAddress } = require('../../api/dataHelper');
 
 const respondent1 = {
   type: 'INDIVIDUAL',
