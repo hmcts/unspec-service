@@ -16,6 +16,7 @@ const expectedEvents =  require('../fixtures/ccd/expectedEvents.js');
 const data = {
   CREATE_CLAIM: claimData.createClaim,
   CREATE_CLAIM_RESPONDENT_LIP: claimData.createClaimLitigantInPerson,
+  CREATE_CLAIM_RESPONDENT_SOLICITOR_FIRM_NOT_IN_MY_HMCTS: claimData.createClaimRespondentSolFirmNotInMyHmcts,
   ACKNOWLEDGE_SERVICE: require('../fixtures/events/acknowledgeService.js'),
   REQUEST_EXTENSION: require('../fixtures/events/requestExtension.js'),
   RESPOND_EXTENSION: require('../fixtures/events/respondExtension.js'),
@@ -66,6 +67,24 @@ module.exports = {
         header: 'Your claim will now progress offline',
         body: 'You do not need to do anything'
       }, true);
+
+    await assignCaseToDefendant(caseId);
+    await assertCorrectEventsAreAvailableToUser(config.solicitorUser, 'PROCEEDS_WITH_OFFLINE_JOURNEY');
+    await assertCorrectEventsAreAvailableToUser(config.defendantSolicitorUser, 'PROCEEDS_WITH_OFFLINE_JOURNEY');
+  },
+
+  createClaimWithRespondentSolicitorFirmNotInMyHmcts: async (user) => {
+    eventName = 'CREATE_CLAIM';
+    caseId = null;
+    caseData = {};
+    await apiRequest.setupTokens(user);
+    await apiRequest.startEvent(eventName);
+    await validateEventPages(data.CREATE_CLAIM_RESPONDENT_LIP);
+
+    await assertSubmittedEvent('PROCEEDS_WITH_OFFLINE_JOURNEY', {
+      header: 'Your claim will now progress offline',
+      body: 'You do not need to do anything'
+    }, true);
 
     await assignCaseToDefendant(caseId);
     await assertCorrectEventsAreAvailableToUser(config.solicitorUser, 'PROCEEDS_WITH_OFFLINE_JOURNEY');
