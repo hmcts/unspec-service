@@ -1,8 +1,37 @@
 const { document, element, listElement, buildAddress } = require('../../api/dataHelper');
 
+const respondent1 = {
+  type: 'INDIVIDUAL',
+  individualFirstName: 'John',
+  individualLastName: 'Doe',
+  individualTitle: 'Sir',
+  primaryAddress: buildAddress('respondent')
+};
+const respondent1WithPartyName = {
+  ...respondent1,
+  partyName: 'Sir John Doe',
+  partyTypeDisplayValue: 'Individual',
+};
+const applicant1 = {
+  type: 'COMPANY',
+  companyName: 'Test Inc',
+  primaryAddress: buildAddress('applicant')
+};
+const applicant1WithPartyName = {
+  ...applicant1,
+  partyName: 'Test Inc',
+  partyTypeDisplayValue: 'Company',
+};
+const applicant1LitigationFriend = {
+  fullName: 'Bob the litigant friend',
+  hasSameAddressAsLitigant: 'No',
+  primaryAddress: buildAddress('litigant friend')
+};
+
 let selectedPba = listElement('PBA0077597');
 const validPba = listElement('PBA0077597');
 const invalidPba = listElement('PBA0078094');
+
 const createClaimData = (legalRepresentation, useValidPba) => {
   selectedPba = useValidPba ? validPba : invalidPba;
   return {
@@ -18,20 +47,22 @@ const createClaimData = (legalRepresentation, useValidPba) => {
       }
     },
     Claimant: {
-      applicant1: {
-        type: 'COMPANY',
-        companyName: 'Test Inc',
-        primaryAddress: buildAddress('applicant')
-      }
+      applicant1: applicant1
     },
     ClaimantLitigationFriendRequired: {
       applicant1LitigationFriendRequired: 'Yes',
     },
     ClaimantLitigationFriend: {
-      applicant1LitigationFriend: {
-        fullName: 'Bob the litigant friend',
-        hasSameAddressAsLitigant: 'No',
-        primaryAddress: buildAddress('litigant friend')
+      applicant1LitigationFriend: applicant1LitigationFriend
+    },
+    Notifications: {
+      applicantSolicitor1CheckEmail: {
+        email: 'civil.damages.claims+organisation.1.solicitor.1@gmail.com',
+        correct: 'No'
+      },
+      applicantSolicitor1UserDetails: {
+        email: 'civilunspecified@gmail.com',
+        id: 'c18d5f8d-06fa-477d-ac09-5b6129828a5b'
       }
     },
     ClaimantSolicitorOrganisation: {
@@ -44,14 +75,7 @@ const createClaimData = (legalRepresentation, useValidPba) => {
       }
     },
     Defendant: {
-      respondent1: {
-        type: 'INDIVIDUAL',
-        individualFirstName: 'John',
-        individualLastName: 'Doe',
-        individualTitle: 'Sir',
-        individualDateOfBirth: null,
-        primaryAddress: buildAddress('respondent')
-      }
+      respondent1: respondent1
     },
     LegalRepresentation: {
       respondent1Represented: `${legalRepresentation}`
@@ -121,22 +145,15 @@ module.exports = {
           version: '1'
         },
         paymentReference: 'Applicant reference',
-        applicant1: {
-          type: 'COMPANY',
-          companyName: 'Test Inc',
-          partyName: 'Test Inc',
-          partyTypeDisplayValue: 'Company',
-          primaryAddress: buildAddress('applicant')
+        applicant1: applicant1WithPartyName,
+        respondent1: respondent1WithPartyName,
+      },
+      ClaimantLitigationFriend: {
+        applicant1: applicant1WithPartyName,
+        applicant1LitigationFriend: applicant1LitigationFriend,
+        applicantSolicitor1CheckEmail: {
+          email: 'civil.damages.claims+organisation.1.solicitor.1@gmail.com',
         },
-        respondent1: {
-          type: 'INDIVIDUAL',
-          individualFirstName: 'John',
-          individualLastName: 'Doe',
-          individualTitle: 'Sir',
-          partyName: 'Sir John Doe',
-          partyTypeDisplayValue: 'Individual',
-          primaryAddress: buildAddress('respondent')
-        }
       },
     },
     valid: {
