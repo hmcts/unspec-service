@@ -27,6 +27,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.params.provider.Arguments.of;
 import static uk.gov.hmcts.reform.unspec.callback.CaseEvent.ACKNOWLEDGE_SERVICE;
 import static uk.gov.hmcts.reform.unspec.callback.CaseEvent.ADD_DEFENDANT_LITIGATION_FRIEND;
+import static uk.gov.hmcts.reform.unspec.callback.CaseEvent.ADD_OR_AMEND_CLAIM_DOCUMENTS;
 import static uk.gov.hmcts.reform.unspec.callback.CaseEvent.CASE_PROCEEDS_IN_CASEMAN;
 import static uk.gov.hmcts.reform.unspec.callback.CaseEvent.CLAIMANT_RESPONSE;
 import static uk.gov.hmcts.reform.unspec.callback.CaseEvent.CREATE_CLAIM;
@@ -106,7 +107,8 @@ class FlowStateAllowedEventServiceTest {
                 .containsExactlyInAnyOrder(
                     NOTIFY_DEFENDANT_OF_CLAIM,
                     ADD_DEFENDANT_LITIGATION_FRIEND,
-                    CASE_PROCEEDS_IN_CASEMAN
+                    CASE_PROCEEDS_IN_CASEMAN,
+                    ADD_OR_AMEND_CLAIM_DOCUMENTS
                 );
         }
 
@@ -178,6 +180,7 @@ class FlowStateAllowedEventServiceTest {
             "AWAITING_CASE_NOTIFICATION,NOTIFY_DEFENDANT_OF_CLAIM",
             "AWAITING_CASE_NOTIFICATION,ADD_DEFENDANT_LITIGATION_FRIEND",
             "AWAITING_CASE_NOTIFICATION,CASE_PROCEEDS_IN_CASEMAN",
+            "AWAITING_CASE_NOTIFICATION,ADD_OR_AMEND_CLAIM_DOCUMENTS",
             "SERVICE_ACKNOWLEDGED,REQUEST_EXTENSION",
             "SERVICE_ACKNOWLEDGED,DEFENDANT_RESPONSE",
             "EXTENSION_REQUESTED,RESPOND_EXTENSION",
@@ -249,7 +252,8 @@ class FlowStateAllowedEventServiceTest {
                         SERVICE_ACKNOWLEDGED.fullName(), EXTENSION_REQUESTED.fullName(),
                         EXTENSION_RESPONDED.fullName(), RESPONDED_TO_CLAIM.fullName(), FULL_DEFENCE.fullName()
                     }
-                )
+                ),
+                of(ADD_OR_AMEND_CLAIM_DOCUMENTS, new String[]{AWAITING_CASE_NOTIFICATION.fullName()})
             );
         }
     }
@@ -299,6 +303,11 @@ class FlowStateAllowedEventServiceTest {
                     true,
                     CaseDetailsBuilder.builder().atStateAwaitingCaseNotification().build(),
                     CASE_PROCEEDS_IN_CASEMAN
+                ),
+                of(
+                    true,
+                    CaseDetailsBuilder.builder().atStateAwaitingCaseNotification().build(),
+                    ADD_OR_AMEND_CLAIM_DOCUMENTS
                 ),
                 of(
                     false,
