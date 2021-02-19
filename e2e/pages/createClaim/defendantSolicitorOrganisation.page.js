@@ -1,4 +1,4 @@
-const { I } = inject()
+const { I } = inject();
 
 module.exports = {
 
@@ -19,7 +19,7 @@ module.exports = {
     I.waitForElement(this.fields.respondent1OrgRepresented.id);
     await within(this.fields.respondent1OrgRepresented.id, () => {
       I.click(this.fields.respondent1OrgRepresented.options.yes);
-    })
+    });
     I.waitForElement(this.fields.orgPolicyReference);
     I.fillField(this.fields.orgPolicyReference, 'Defendant policy reference');
     I.fillField(this.fields.searchText, 'Civil Damages Claims');
@@ -32,8 +32,8 @@ module.exports = {
     I.waitForElement(this.fields.respondent1OrgRepresented.id);
     await within(this.fields.respondent1OrgRepresented.id, () => {
       I.click(this.fields.respondent1OrgRepresented.options.no);
-    })
+    });
     await I.clickContinue();
   }
-}
+};
 
