@@ -13,7 +13,9 @@ import uk.gov.hmcts.reform.unspec.model.CaseData;
 import uk.gov.hmcts.reform.unspec.model.ClaimProceedsInCaseman;
 import uk.gov.hmcts.reform.unspec.model.ClaimValue;
 import uk.gov.hmcts.reform.unspec.model.CloseClaim;
+import uk.gov.hmcts.reform.unspec.model.CorrectEmail;
 import uk.gov.hmcts.reform.unspec.model.CourtLocation;
+import uk.gov.hmcts.reform.unspec.model.IdamUserDetails;
 import uk.gov.hmcts.reform.unspec.model.Party;
 import uk.gov.hmcts.reform.unspec.model.PaymentDetails;
 import uk.gov.hmcts.reform.unspec.model.ResponseDocument;
@@ -91,6 +93,8 @@ public class CaseDataBuilder {
     private LocalDateTime respondentSolicitor1ResponseDeadline;
     private LocalDate claimNotificationDate;
     private LocalDate claimDetailsNotificationDate;
+    private CorrectEmail applicantSolicitor1CheckEmail;
+    private IdamUserDetails applicantSolicitor1UserDetails;
     //Acknowledge Service
     private ResponseIntention respondent1ClaimResponseIntentionType;
     // Request Extension
@@ -385,6 +389,7 @@ public class CaseDataBuilder {
         respondentSolicitor1EmailAddress = "civilunspecified@gmail.com";
         applicantSolicitor1ClaimStatementOfTruth = StatementOfTruthBuilder.builder().build();
         claimSubmittedDateTime = LocalDateTime.now();
+        applicantSolicitor1CheckEmail = CorrectEmail.builder().email("civilunspecified@gmail.com").correct(YES).build();
         return this;
     }
 
@@ -545,6 +550,8 @@ public class CaseDataBuilder {
             .respondentSolicitor1ResponseDeadline(respondentSolicitor1ResponseDeadline)
             .claimNotificationDate(claimNotificationDate)
             .claimDetailsNotificationDate(claimDetailsNotificationDate)
+            .applicantSolicitor1CheckEmail(applicantSolicitor1CheckEmail)
+            .applicantSolicitor1UserDetails(applicantSolicitor1UserDetails)
             // Acknowledge Service
             .respondent1ClaimResponseIntentionType(respondent1ClaimResponseIntentionType)
             // Request Extension

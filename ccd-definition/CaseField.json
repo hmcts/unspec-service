@@ -725,6 +725,22 @@
   {
     "LiveFrom": "01/01/2017",
     "CaseTypeID": "UNSPECIFIED_CLAIMS",
+    "ID": "applicantSolicitor1CheckEmail",
+    "Label": "Notifications",
+    "FieldType": "CorrectEmail",
+    "SecurityClassification": "Public"
+  },
+  {
+    "LiveFrom": "01/01/2017",
+    "CaseTypeID": "UNSPECIFIED_CLAIMS",
+    "ID": "applicantSolicitor1UserDetails",
+    "Label": "Notification details",
+    "FieldType": "UserDetails",
+    "SecurityClassification": "Public"
+  },
+  {
+    "LiveFrom": "01/01/2017",
+    "CaseTypeID": "UNSPECIFIED_CLAIMS",
     "ID": "claimDetailsNotificationDate",
     "Label": "Case details notification date",
     "FieldType": "Date",
