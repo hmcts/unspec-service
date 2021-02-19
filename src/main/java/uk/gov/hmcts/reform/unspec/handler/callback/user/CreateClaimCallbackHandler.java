@@ -67,8 +67,9 @@ public class CreateClaimCallbackHandler extends CallbackHandler {
     public static final String LIP_CONFIRMATION_BODY = "<br />You do not need to do anything.\n\n"
         + "Your claim will be considered by the court and you will be informed of the outcome by post.";
 
-    public static final String UNREGISTERED_ORG_CONFIRMATION_BODY = "<br />You do not need to do anything.\n\n"
-        + "Your claim will be considered by the court and you will be informed of the outcome by post.";
+    public static final String UNREGISTERED_ORG_CONFIRMATION_BODY = "<br />\n\n### What you need to do\n\n"
+        + "\n* Serve the claim on the defendant by Date1."
+        + "\n* File the certificate of service with CCMC by Date2.";
 
     private final ClaimIssueConfiguration claimIssueConfiguration;
     private final CaseDetailsConverter caseDetailsConverter;

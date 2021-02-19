@@ -1,5 +1,6 @@
 package uk.gov.hmcts.reform.unspec.sampledata;
 
+import uk.gov.hmcts.reform.ccd.model.OrganisationPolicy;
 import uk.gov.hmcts.reform.unspec.enums.AllocatedTrack;
 import uk.gov.hmcts.reform.unspec.enums.CaseState;
 import uk.gov.hmcts.reform.unspec.enums.ClaimType;
@@ -116,6 +117,8 @@ public class CaseDataBuilder {
 
     private CloseClaim withdrawClaim;
     private CloseClaim discontinueClaim;
+    private YesOrNo respondent1OrgRegistered;
+    private OrganisationPolicy respondent1OrganisationPolicy;
 
     public CaseDataBuilder respondentSolicitor1claimResponseExtensionProposedDeadline(LocalDate responseDeadline) {
         this.respondentSolicitor1claimResponseExtensionProposedDeadline = responseDeadline;
@@ -242,8 +245,18 @@ public class CaseDataBuilder {
         return this;
     }
 
+    public CaseDataBuilder respondent1OrganisationPolicy(OrganisationPolicy respondent1OrganisationPolicy) {
+        this.respondent1OrganisationPolicy = respondent1OrganisationPolicy;
+        return this;
+    }
+    
     public CaseDataBuilder respondent1Represented(YesOrNo isRepresented) {
         this.respondent1Represented = isRepresented;
+        return this;
+    }
+
+    public CaseDataBuilder respondent1OrgRegistered(YesOrNo respondent1OrgRegistered) {
+        this.respondent1OrgRegistered = respondent1OrgRegistered;
         return this;
     }
 
@@ -528,6 +541,8 @@ public class CaseDataBuilder {
             .applicant1(applicant1)
             .respondent1(respondent1)
             .respondent1Represented(respondent1Represented)
+            .respondent1OrgRegistered(respondent1OrgRegistered)
+            .respondent1OrganisationPolicy(respondent1OrganisationPolicy)
             .respondentSolicitor1EmailAddress(respondentSolicitor1EmailAddress)
             .applicantSolicitor1ClaimStatementOfTruth(applicantSolicitor1ClaimStatementOfTruth)
             .paymentDetails(paymentDetails)
