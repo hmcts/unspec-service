@@ -53,7 +53,7 @@ module.exports = {
     await assertCorrectEventsAreAvailableToUser(config.solicitorUser, 'AWAITING_CASE_NOTIFICATION');
     await assertCorrectEventsAreAvailableToUser(config.defendantSolicitorUser, 'AWAITING_CASE_NOTIFICATION');
     await assertCallbackError('Court', data[eventName].invalid.Court.courtLocation.applicantPreferredCourt,
-      'The data entered is not valid for this type of field.', 'Case data validation failed' )
+      'The data entered is not valid for this type of field.', 'Case data validation failed' );
   },
 
   createClaimWithRespondentLitigantInPerson: async (user) => {
