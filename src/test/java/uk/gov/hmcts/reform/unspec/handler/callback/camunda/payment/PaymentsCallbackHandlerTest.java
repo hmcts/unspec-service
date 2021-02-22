@@ -78,7 +78,7 @@ class PaymentsCallbackHandlerTest extends BaseCallbackHandlerTest {
     }
 
     @ParameterizedTest
-    @ValueSource(ints = {403})
+    @ValueSource(ints = {400, 403})
     void shouldUpdateFailureReason_whenForbiddenExceptionThrown(int status) {
         doThrow(buildFeignException(status)).when(paymentsService).createCreditAccountPayment(any(), any());
 
@@ -94,7 +94,7 @@ class PaymentsCallbackHandlerTest extends BaseCallbackHandlerTest {
     }
 
     @ParameterizedTest
-    @ValueSource(ints = {400, 404, 422, 504})
+    @ValueSource(ints = {404, 422, 504})
     void shouldAddError_whenOtherExceptionThrown(int status) {
         doThrow(buildFeignException(status)).when(paymentsService).createCreditAccountPayment(any(), any());
 
