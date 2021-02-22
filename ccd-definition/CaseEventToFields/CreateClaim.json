@@ -146,7 +146,7 @@
     "DisplayContext": "MANDATORY",
     "PageID": "DefendantSolicitorOrganisation",
     "PageLabel": "Search for the legal representative’s organisation",
-    "PageDisplayOrder": 9,
+    "PageDisplayOrder": 10,
     "PageColumnNumber": 1,
     "ShowSummaryChangeOption": "Y",
     "CallBackURLMidEvent": "${CCD_DEF_CASE_SERVICE_BASE_URL}/cases/callbacks/mid/repOrgPolicy",
@@ -159,6 +159,19 @@
     "CaseFieldID": "respondent1OrganisationPolicy",
     "PageFieldDisplayOrder": 2,
     "DisplayContext": "COMPLEX",
+    "PageID": "DefendantSolicitorOrganisation",
+    "PageDisplayOrder": 10,
+    "PageColumnNumber": 1,
+    "FieldShowCondition": "respondent1OrgRegistered=\"Yes\"",
+    "ShowSummaryChangeOption": "Y"
+  },
+  {
+    "LiveFrom": "01/01/2017",
+    "CaseTypeID": "UNSPECIFIED_CLAIMS",
+    "CaseEventID": "CREATE_CLAIM",
+    "CaseFieldID": "respondentSolicitor1EmailAddress",
+    "PageFieldDisplayOrder": 3,
+    "DisplayContext": "MANDATORY",
     "PageID": "DefendantSolicitorOrganisation",
     "PageDisplayOrder": 10,
     "PageColumnNumber": 1,
@@ -189,19 +202,6 @@
     "PageID": "UnRegisteredDefendantSolicitorOrganisation",
     "PageDisplayOrder": 11,
     "PageColumnNumber": 1,
-    "ShowSummaryChangeOption": "Y"
-  },
-  {
-    "LiveFrom": "01/01/2017",
-    "CaseTypeID": "UNSPECIFIED_CLAIMS",
-    "CaseEventID": "CREATE_CLAIM",
-    "CaseFieldID": "respondentSolicitor1EmailAddress",
-    "PageFieldDisplayOrder": 3,
-    "DisplayContext": "MANDATORY",
-    "PageID": "DefendantSolicitorOrganisation",
-    "PageDisplayOrder": 12,
-    "PageColumnNumber": 1,
-    "FieldShowCondition": "respondent1OrgRegistered=\"Yes\"",
     "ShowSummaryChangeOption": "Y"
   },
   {
