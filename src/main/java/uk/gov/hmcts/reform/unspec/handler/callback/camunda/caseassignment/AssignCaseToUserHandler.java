@@ -22,7 +22,7 @@ import static uk.gov.hmcts.reform.unspec.callback.CaseEvent.ASSIGN_CASE_TO_APPLI
 
 @Service
 @RequiredArgsConstructor
-public class CaseUserAssignmentHandler extends CallbackHandler {
+public class AssignCaseToUserHandler extends CallbackHandler {
 
     private static final List<CaseEvent> EVENTS = List.of(ASSIGN_CASE_TO_APPLICANT_SOLICITOR1);
     public static final String TASK_ID = "CaseAssignmentToApplicantSolicitor1";

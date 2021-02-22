@@ -29,14 +29,14 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.verify;
 
 @SpringBootTest(classes = {
-    CaseUserAssignmentHandler.class,
+    AssignCaseToUserHandler.class,
     JacksonAutoConfiguration.class,
     CaseDetailsConverter.class
 })
-class CaseUserAssignmentHandlerTest extends BaseCallbackHandlerTest {
+class AssignCaseToUserHandlerTest extends BaseCallbackHandlerTest {
 
     @Autowired
-    private CaseUserAssignmentHandler caseUserAssignmentHandler;
+    private AssignCaseToUserHandler assignCaseToUserHandler;
 
     @MockBean
     private CoreCaseUserService coreCaseUserService;
@@ -72,7 +72,7 @@ class CaseUserAssignmentHandlerTest extends BaseCallbackHandlerTest {
     @Test
     void shouldAssignCaseToApplicantSolicitorOneAndRemoveCreator() {
 
-        caseUserAssignmentHandler.handle(params);
+        assignCaseToUserHandler.handle(params);
 
         verify(coreCaseUserService).assignCase(
             caseData.getCcdCaseReference().toString(),
@@ -91,7 +91,7 @@ class CaseUserAssignmentHandlerTest extends BaseCallbackHandlerTest {
     @Test
     void shouldRemoveSubmitterIdAfterCaseAssignment() {
         AboutToStartOrSubmitCallbackResponse response
-            = (AboutToStartOrSubmitCallbackResponse) caseUserAssignmentHandler.handle(params);
+            = (AboutToStartOrSubmitCallbackResponse) assignCaseToUserHandler.handle(params);
 
         CaseData data = objectMapper.convertValue(response.getData(), CaseData.class);
         assertThat(data.getApplicantSolicitor1UserDetails().getId()).isNull();
