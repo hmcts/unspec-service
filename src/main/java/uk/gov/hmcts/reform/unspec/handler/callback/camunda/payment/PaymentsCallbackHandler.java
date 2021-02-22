@@ -61,7 +61,7 @@ public class PaymentsCallbackHandler extends CallbackHandler {
                 .paymentDetails(PaymentDetails.builder().status(SUCCESS).reference(paymentReference).build())
                 .build();
         } catch (FeignException e) {
-            if (e.status() == 403) {
+            if (e.status() == 403 || e.status() == 400) {
                 caseData = updateWithBusinessError(caseData, e);
             } else {
                 errors.add(ERROR_MESSAGE);
