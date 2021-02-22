@@ -60,7 +60,7 @@ module.exports = {
     let i;
     for(i=0; i<data[eventName].invalid.Court.courtLocation.applicantPreferredCourt.length; i++) {
       await assertError('Court', data[eventName].invalid.Court.courtLocation.applicantPreferredCourt[i],
-        'The data entered is not valid for this type of field.', 'Case data validation failed');
+        null, 'Case data validation failed');
     }
 
     //field is deleted in about to submit callback
