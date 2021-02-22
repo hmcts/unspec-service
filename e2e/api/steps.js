@@ -57,9 +57,11 @@ module.exports = {
 
     await assertCorrectEventsAreAvailableToUser(config.solicitorUser, 'AWAITING_CASE_NOTIFICATION');
     await assertCorrectEventsAreAvailableToUser(config.defendantSolicitorUser, 'AWAITING_CASE_NOTIFICATION');
-
-    await assertCallbackError('Court', data[eventName].invalid.Court.courtLocation.applicantPreferredCourt,
-      'The data entered is not valid for this type of field.', 'Case data validation failed' );
+    let i;
+    for(i=0; i<data[eventName].invalid.Court.courtLocation.applicantPreferredCourt.length; i++) {
+      await assertError('Court', data[eventName].invalid.Court.courtLocation.applicantPreferredCourt[i],
+        'The data entered is not valid for this type of field.', 'Case data validation failed');
+    }
 
     //field is deleted in about to submit callback
     deleteCaseFields('applicantSolicitor1CheckEmail');
@@ -94,10 +96,10 @@ module.exports = {
 
     await validateEventPages(data[eventName]);
 
-    await assertCallbackError('Upload', data[eventName].invalid.Upload.duplicateError,
+    await assertError('Upload', data[eventName].invalid.Upload.duplicateError,
       'More than one particular of claim added');
 
-    await assertCallbackError('Upload', data[eventName].invalid.Upload.nullError,
+    await assertError('Upload', data[eventName].invalid.Upload.nullError,
       'One particular of claim is required');
 
     await assertSubmittedEvent('AWAITING_CASE_NOTIFICATION', {
@@ -132,7 +134,7 @@ module.exports = {
 
     await validateEventPages(data.ACKNOWLEDGE_SERVICE);
 
-    await assertCallbackError('ConfirmDetails', data[eventName].invalid.ConfirmDetails.futureDateOfBirth,
+    await assertError('ConfirmDetails', data[eventName].invalid.ConfirmDetails.futureDateOfBirth,
       'The date entered cannot be in the future');
 
     await assertSubmittedEvent('CREATED', {
@@ -153,9 +155,9 @@ module.exports = {
 
     await validateEventPages(data.REQUEST_EXTENSION);
 
-    await assertCallbackError('ProposeDeadline', data[eventName].invalid.ProposeDeadline.past,
+    await assertError('ProposeDeadline', data[eventName].invalid.ProposeDeadline.past,
       'The proposed deadline must be a date in the future');
-    await assertCallbackError('ProposeDeadline', data[eventName].invalid.ProposeDeadline.beforeCurrentDeadline,
+    await assertError('ProposeDeadline', data[eventName].invalid.ProposeDeadline.beforeCurrentDeadline,
       'The proposed deadline must be after the current deadline');
 
     await assertSubmittedEvent('CREATED', {
@@ -175,9 +177,9 @@ module.exports = {
 
     await validateEventPages(data.RESPOND_EXTENSION);
 
-    await assertCallbackError('Counter', data[eventName].invalid.Counter.past,
+    await assertError('Counter', data[eventName].invalid.Counter.past,
       'The proposed deadline must be a date in the future');
-    await assertCallbackError('Counter', data[eventName].invalid.Counter.beforeCurrentDeadline,
+    await assertError('Counter', data[eventName].invalid.Counter.beforeCurrentDeadline,
       'The proposed deadline must be after the current deadline');
 
     await assertSubmittedEvent('CREATED', {
@@ -198,11 +200,11 @@ module.exports = {
 
     await validateEventPages(data.DEFENDANT_RESPONSE);
 
-    await assertCallbackError('ConfirmDetails', data[eventName].invalid.ConfirmDetails.futureDateOfBirth,
+    await assertError('ConfirmDetails', data[eventName].invalid.ConfirmDetails.futureDateOfBirth,
       'The date entered cannot be in the future');
-    await assertCallbackError('Hearing', data[eventName].invalid.Hearing.past,
+    await assertError('Hearing', data[eventName].invalid.Hearing.past,
       'The date cannot be in the past and must not be more than a year in the future');
-    await assertCallbackError('Hearing', data[eventName].invalid.Hearing.moreThanYear,
+    await assertError('Hearing', data[eventName].invalid.Hearing.moreThanYear,
       'The date cannot be in the past and must not be more than a year in the future');
     await assertSubmittedEvent('AWAITING_CLAIMANT_INTENTION', {
       header: 'You\'ve submitted your response',
@@ -221,9 +223,9 @@ module.exports = {
 
     await validateEventPages(data.CLAIMANT_RESPONSE);
 
-    await assertCallbackError('Hearing', data[eventName].invalid.Hearing.past,
+    await assertError('Hearing', data[eventName].invalid.Hearing.past,
       'The date cannot be in the past and must not be more than a year in the future');
-    await assertCallbackError('Hearing', data[eventName].invalid.Hearing.moreThanYear,
+    await assertError('Hearing', data[eventName].invalid.Hearing.moreThanYear,
       'The date cannot be in the past and must not be more than a year in the future');
 
     await assertSubmittedEvent('STAYED', {
@@ -256,7 +258,7 @@ module.exports = {
 
     await validateEventPages(data.CASE_PROCEEDS_IN_CASEMAN);
 
-    await assertCallbackError('CaseProceedsInCaseman', data[eventName].invalid.CaseProceedsInCaseman,
+    await assertError('CaseProceedsInCaseman', data[eventName].invalid.CaseProceedsInCaseman,
       'The date entered cannot be in the future');
 
     //TODO CMC-1245 confirmation page for event
@@ -291,7 +293,7 @@ const assertValidData = async (data, pageId) => {
   assert.deepEqual(responseBody.data, caseData);
 };
 
-const assertCallbackError = async (pageId, eventData, expectedErrorMessage, responseBodyMessage = 'Unable to proceed because there are one or more callback Errors or Warnings' ) => {
+const assertError = async (pageId, eventData, expectedErrorMessage, responseBodyMessage = 'Unable to proceed because there are one or more callback Errors or Warnings' ) => {
   const response = await apiRequest.validatePage(eventName, pageId, {...caseData, ...eventData}, 422);
   const responseBody = await response.json();
   assert.equal(response.status, 422);

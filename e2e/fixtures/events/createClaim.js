@@ -160,7 +160,7 @@ module.exports = {
     invalid:{
       Court: {
         courtLocation: {
-          applicantPreferredCourt: '3a3'
+          applicantPreferredCourt: ['3a3','21','3333']
         }
       }
     }
