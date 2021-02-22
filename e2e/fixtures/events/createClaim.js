@@ -168,5 +168,4 @@ module.exports = {
   createClaimLitigantInPerson: {
     valid: createClaimData('No')
   },
-
 };
