@@ -24,7 +24,7 @@ Scenario('Solicitor notifies defendant solicitor of claim', async (I) => {
   await I.see(caseEventMessage('Notify claim'));
 });
 
-Scenario('Solicitor notifies defendant solicitor of claim detials', async (I) => {
+Scenario('Solicitor notifies defendant solicitor of claim details', async (I) => {
   await I.notifyClaimDetails();
   await I.see(caseEventMessage('Notify claim details'));
 });
