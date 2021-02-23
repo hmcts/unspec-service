@@ -47,6 +47,7 @@ java:
     CMC_DB_PASSWORD: hmcts
     CMC_DB_CONNECTION_OPTIONS: '?sslmode=allow'
     REFERENCE_DATABASE_MIGRATION: true
+    DOCMOSIS_TORNADO_URL: https://docmosis.sandbox.platform.hmcts.net
     FEIGN_CLIENT_CONFIG_REMOTERUNTIMESERVICE_URL: http://camunda-${SERVICE_FQDN}/engine-rest/
     FEIGN_CLIENT_CONFIG_REMOTEEXTERNALTASKSERVICE_URL: http://camunda-${SERVICE_FQDN}/engine-rest/
     FEIGN_CLIENT_CONFIG_REMOTEREPOSITORYSERVICE_URL: http://camunda-${SERVICE_FQDN}/engine-rest/
