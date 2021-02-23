@@ -262,7 +262,11 @@ class FlowStateAllowedEventServiceTest {
                 of(true, CaseDetailsBuilder.builder().atStateExtensionRequested().build(), DEFENDANT_RESPONSE),
                 of(true, CaseDetailsBuilder.builder().atStateExtensionRequested().build(), WITHDRAW_CLAIM),
                 of(true, CaseDetailsBuilder.builder().atStateExtensionRequested().build(), DISCONTINUE_CLAIM),
-                of(true, CaseDetailsBuilder.builder().atStateServiceAcknowledge().build(), INFORM_AGREED_EXTENSION_DATE),
+                of(
+                    true,
+                    CaseDetailsBuilder.builder().atStateServiceAcknowledge().build(),
+                    INFORM_AGREED_EXTENSION_DATE
+                ),
                 of(true, CaseDetailsBuilder.builder().atStateServiceAcknowledge().build(), WITHDRAW_CLAIM),
                 of(true, CaseDetailsBuilder.builder().atStateServiceAcknowledge().build(), DEFENDANT_RESPONSE),
                 of(true, CaseDetailsBuilder.builder().atStateServiceAcknowledge().build(), DISCONTINUE_CLAIM),
