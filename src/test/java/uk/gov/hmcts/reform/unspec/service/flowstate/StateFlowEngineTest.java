@@ -26,8 +26,6 @@ import static uk.gov.hmcts.reform.unspec.service.flowstate.FlowState.Main.CLAIM_
 import static uk.gov.hmcts.reform.unspec.service.flowstate.FlowState.Main.CLAIM_STAYED;
 import static uk.gov.hmcts.reform.unspec.service.flowstate.FlowState.Main.CLAIM_WITHDRAWN;
 import static uk.gov.hmcts.reform.unspec.service.flowstate.FlowState.Main.DRAFT;
-import static uk.gov.hmcts.reform.unspec.service.flowstate.FlowState.Main.EXTENSION_REQUESTED;
-import static uk.gov.hmcts.reform.unspec.service.flowstate.FlowState.Main.EXTENSION_RESPONDED;
 import static uk.gov.hmcts.reform.unspec.service.flowstate.FlowState.Main.FULL_DEFENCE;
 import static uk.gov.hmcts.reform.unspec.service.flowstate.FlowState.Main.PAYMENT_SUCCESSFUL;
 import static uk.gov.hmcts.reform.unspec.service.flowstate.FlowState.Main.PENDING_CASE_ISSUED;
@@ -328,20 +326,18 @@ class StateFlowEngineTest {
 
         @ParameterizedTest
         @CsvSource({
-            "true,EXTENSION_REQUESTED",
-            "true,SERVICE_ACKNOWLEDGED",
             "true,CLAIM_ISSUED",
             "true,PAYMENT_SUCCESSFUL",
             "true,PENDING_CASE_ISSUED",
             "true,DRAFT",
-            "false,EXTENSION_RESPONDED",
             "false,RESPONDED_TO_CLAIM",
             "false,FULL_DEFENCE",
-            "false,CLAIM_STAYED"
+            "false,CLAIM_STAYED",
+            "false,SERVICE_ACKNOWLEDGED",
         })
-        void shouldReturnValidResult_whenCaseDataAtStateExtensionRequested(boolean expected, FlowState.Main state) {
+        void shouldReturnValidResult_whenCaseDataAtStateClaimCreated(boolean expected, FlowState.Main state) {
             CaseDetails caseDetails = CaseDetailsBuilder.builder()
-                .atStateExtensionRequested()
+                .atStateClaimCreated()
                 .build();
 
             assertThat(stateFlowEngine.hasTransitionedTo(caseDetails, state)).isEqualTo(expected);
