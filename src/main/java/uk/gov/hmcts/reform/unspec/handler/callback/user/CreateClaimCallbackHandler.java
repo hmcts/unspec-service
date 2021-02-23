@@ -57,12 +57,8 @@ import static uk.gov.hmcts.reform.unspec.service.flowstate.FlowState.fromFullNam
 public class CreateClaimCallbackHandler extends CallbackHandler {
 
     private static final List<CaseEvent> EVENTS = Collections.singletonList(CREATE_CLAIM);
-    public static final String CONFIRMATION_SUMMARY = "<br />Follow these steps to serve a claim:"
-        + "\n* [Download the sealed claim form](%s)"
-        + "\n* Send the form, particulars of claim and "
-        + "<a href=\"%s\" target=\"_blank\">a response pack</a> (PDF, 266 KB) to the defendant by %s"
-        + "\n* Confirm service online within 21 days of sending the form, particulars and response pack, before"
-        + " 4pm if you're doing this on the due day";
+    public static final String CONFIRMATION_SUMMARY = "<br />What happens next:"
+        + "\n\n* You have until %s to notify the defendant of the claim and claim details.";
 
     public static final String LIP_CONFIRMATION_BODY = "<br />You do not need to do anything.\n\n"
         + "Your claim will be considered by the court and you will be informed of the outcome by post.";
@@ -192,8 +188,6 @@ public class CreateClaimCallbackHandler extends CallbackHandler {
 
         String body = format(
             CONFIRMATION_SUMMARY,
-            format("/cases/case-details/%s#CaseDocuments", caseData.getCcdCaseReference()),
-            claimIssueConfiguration.getResponsePackLink(),
             formattedServiceDeadline
         );
 

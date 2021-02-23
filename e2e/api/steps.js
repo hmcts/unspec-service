@@ -50,7 +50,7 @@ module.exports = {
 
     await assertSubmittedEvent('PENDING_CASE_ISSUED', {
       header: 'Your claim has been issued',
-      body: 'Follow these steps to serve a claim'
+      body: 'What happens next'
     }, true);
     await assignCaseToDefendant(caseId);
 
@@ -276,7 +276,6 @@ const assertSubmittedEvent = async (expectedState, submittedCallbackResponseCont
   await apiRequest.startEvent(eventName, caseId);
   const response = await apiRequest.submitEvent(eventName, caseData, caseId);
   const responseBody = await response.json();
-
   assert.equal(response.status, 201);
   assert.equal(responseBody.state, expectedState);
   if (hasSubmittedCallback) {
