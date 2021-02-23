@@ -35,6 +35,12 @@ module.exports = {
     description: 'Withdraw a claim',
     order: 10
   },
+  ADD_OR_AMEND_CLAIM_DOCUMENTS: {
+    id: 'ADD_OR_AMEND_CLAIM_DOCUMENTS',
+    name: 'Add or amend claim documents',
+    description: 'Add or amend documents attached to the claim',
+    order: 10
+  },
   DISCONTINUE_CLAIM: {
     id: 'DISCONTINUE_CLAIM',
     name: 'Discontinue claim',
@@ -46,5 +52,11 @@ module.exports = {
     id: 'CASE_PROCEEDS_IN_CASEMAN',
     name: 'Case proceeds in Caseman',
     order: 8
+  },
+  INFORM_AGREED_EXTENSION_DATE: {
+    description: 'Enter an extension date that has already been agreed with other parties',
+    id: 'INFORM_AGREED_EXTENSION_DATE',
+    name: 'Inform agreed extension date',
+    order: 11
   }
 };

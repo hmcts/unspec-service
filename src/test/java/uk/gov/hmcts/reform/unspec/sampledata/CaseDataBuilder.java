@@ -13,7 +13,9 @@ import uk.gov.hmcts.reform.unspec.model.CaseData;
 import uk.gov.hmcts.reform.unspec.model.ClaimProceedsInCaseman;
 import uk.gov.hmcts.reform.unspec.model.ClaimValue;
 import uk.gov.hmcts.reform.unspec.model.CloseClaim;
+import uk.gov.hmcts.reform.unspec.model.CorrectEmail;
 import uk.gov.hmcts.reform.unspec.model.CourtLocation;
+import uk.gov.hmcts.reform.unspec.model.IdamUserDetails;
 import uk.gov.hmcts.reform.unspec.model.Party;
 import uk.gov.hmcts.reform.unspec.model.PaymentDetails;
 import uk.gov.hmcts.reform.unspec.model.ResponseDocument;
@@ -89,6 +91,10 @@ public class CaseDataBuilder {
     private PaymentDetails paymentDetails;
     private LocalDateTime respondentSolicitor1ResponseDeadline;
     private LocalDate claimNotificationDate;
+    private CorrectEmail applicantSolicitor1CheckEmail;
+    private IdamUserDetails applicantSolicitor1UserDetails;
+    //Deadline extension
+    private LocalDate respondentSolicitor1AgreedDeadlineExtension;
     //Acknowledge Service
     private ResponseIntention respondent1ClaimResponseIntentionType;
     // Defendant Response
@@ -110,6 +116,11 @@ public class CaseDataBuilder {
 
     public CaseDataBuilder respondentSolicitor1ResponseDeadline(LocalDateTime respondentSolicitor1ResponseDeadline) {
         this.respondentSolicitor1ResponseDeadline = respondentSolicitor1ResponseDeadline;
+        return this;
+    }
+
+    public CaseDataBuilder respondentSolicitor1AgreedDeadlineExtension(LocalDate extensionDate) {
+        this.respondentSolicitor1AgreedDeadlineExtension = extensionDate;
         return this;
     }
 
@@ -232,6 +243,8 @@ public class CaseDataBuilder {
                 return atStateAwaitingCaseNotification();
             case CLAIM_ISSUED:
                 return atStateClaimCreated();
+            case EXTENSION_REQUESTED:
+                return atStateExtensionRequested();
             case CLAIM_STAYED:
                 return atStateClaimStayed();
             case SERVICE_ACKNOWLEDGED:
@@ -343,6 +356,7 @@ public class CaseDataBuilder {
         respondentSolicitor1EmailAddress = "civilunspecified@gmail.com";
         applicantSolicitor1ClaimStatementOfTruth = StatementOfTruthBuilder.builder().build();
         claimSubmittedDateTime = LocalDateTime.now();
+        applicantSolicitor1CheckEmail = CorrectEmail.builder().email("civilunspecified@gmail.com").correct(YES).build();
         return this;
     }
 
@@ -387,6 +401,12 @@ public class CaseDataBuilder {
         claimNotificationDate = LocalDate.now();
         ccdState = CREATED;
         respondentSolicitor1ResponseDeadline = RESPONSE_DEADLINE;
+        return this;
+    }
+
+    public CaseDataBuilder atStateExtensionRequested() {
+        atStateServiceAcknowledge();
+        respondentSolicitor1AgreedDeadlineExtension = LocalDate.now();
         return this;
     }
 
@@ -478,6 +498,10 @@ public class CaseDataBuilder {
             .paymentDetails(paymentDetails)
             .respondentSolicitor1ResponseDeadline(respondentSolicitor1ResponseDeadline)
             .claimNotificationDate(claimNotificationDate)
+            .applicantSolicitor1CheckEmail(applicantSolicitor1CheckEmail)
+            .applicantSolicitor1UserDetails(applicantSolicitor1UserDetails)
+            //Deadline extension
+            .respondentSolicitor1AgreedDeadlineExtension(respondentSolicitor1AgreedDeadlineExtension)
             // Acknowledge Service
             .respondent1ClaimResponseIntentionType(respondent1ClaimResponseIntentionType)
             // Defendant Response

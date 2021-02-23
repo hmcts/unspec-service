@@ -9,6 +9,7 @@ const caseViewPage = require('./pages/caseView.page');
 const createCasePage = require('./pages/createClaim/createCase.page');
 const solicitorReferencesPage = require('./pages/createClaim/solicitorReferences.page');
 const claimantSolicitorOrganisation = require('./pages/createClaim/claimantSolicitorOrganisation.page');
+const claimantSolicitorIdamDetailsPage = require('./pages/createClaim/idamEmail.page');
 const defendantSolicitorOrganisation = require('./pages/createClaim/defendantSolicitorOrganisation.page');
 const chooseCourtPage = require('./pages/createClaim/chooseCourt.page');
 const claimantLitigationDetails = require('./pages/createClaim/claimantLitigationDetails.page');
@@ -21,6 +22,8 @@ const pbaNumberPage = require('./pages/createClaim/pbaNumber.page');
 const paymentReferencePage = require('./pages/createClaim/paymentReference.page');
 
 const responseIntentionPage = require('./pages/acknowledgeSerivce/responseIntention.page');
+
+const extensionDatePage = require('./pages/informAgreedExtensionDate/date.page');
 
 const responseTypePage = require('./pages/respondToClaim/responseType.page');
 const uploadResponsePage = require('./pages/respondToClaim/uploadResponseDocument.page');
@@ -92,6 +95,7 @@ module.exports = function () {
       await chooseCourtPage.enterCourt();
       await party.enterParty('applicant1', address);
       await claimantLitigationDetails.enterLitigantFriendWithDifferentAddressToApplicant(address, TEST_FILE_PATH);
+      await claimantSolicitorIdamDetailsPage.enterUserEmail();
       await claimantSolicitorOrganisation.enterOrganisationDetails();
       await party.enterParty('respondent1', address);
       await respondentRepresentedPage.enterRespondentRepresented();
@@ -122,6 +126,13 @@ module.exports = function () {
       await confirmDetailsPage.confirmReference();
       await responseIntentionPage.selectResponseIntention();
       await event.submit('Acknowledge service', 'You\'ve acknowledged service');
+      await event.returnToCaseDetails();
+    },
+
+    async informAgreedExtensionDate() {
+      await caseViewPage.startEvent('Inform agreed extension date', caseId);
+      await extensionDatePage.enterExtensionDate();
+      await event.submit('Submit', 'Extension deadline submitted');
       await event.returnToCaseDetails();
     },
 

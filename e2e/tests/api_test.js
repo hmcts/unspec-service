@@ -6,12 +6,20 @@ Scenario('Create claim', async (api) => {
   await api.createClaimWithRepresentedRespondent(config.solicitorUser);
 });
 
+Scenario('Amend claim documents', async (api) => {
+  await api.amendClaimDocuments();
+});
+
 Scenario('Notify claim', async (api) => {
   await api.notifyClaim();
 });
 
 Scenario('Acknowledge service', async (api) => {
   await api.acknowledgeService();
+});
+
+Scenario('Inform agreed extension date', async (api) => {
+  await api.informAgreedExtensionDate();
 });
 
 Scenario('Defendant response', async (api) => {
