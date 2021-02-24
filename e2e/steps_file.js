@@ -16,19 +16,13 @@ const claimantLitigationDetails = require('./pages/createClaim/claimantLitigatio
 const claimTypePage = require('./pages/createClaim/claimType.page');
 const respondentRepresentedPage = require('./pages/createClaim/isRespondentRepresented.page');
 const personalInjuryTypePage = require('./pages/createClaim/personalInjuryType.page');
+const detailsOfClaimPage = require('./pages/createClaim/detailsOfClaim.page');
 const uploadParticularsOfClaim = require('./pages/createClaim/uploadParticularsOfClaim.page');
 const claimValuePage = require('./pages/createClaim/claimValue.page');
 const pbaNumberPage = require('./pages/createClaim/pbaNumber.page');
 const paymentReferencePage = require('./pages/createClaim/paymentReference.page');
 
 const responseIntentionPage = require('./pages/acknowledgeSerivce/responseIntention.page');
-
-const proposeDeadline = require('./pages/requestExtension/proposeDeadline.page');
-const extensionAlreadyAgreed = require('./pages/requestExtension/extensionAlreadyAgreed.page');
-
-const respondToExtensionPage = require('./pages/respondExtension/respond.page');
-const counterExtensionPage = require('./pages/respondExtension/counter.page');
-const rejectionReasonPage = require('./pages/respondExtension/reason.page');
 
 const responseTypePage = require('./pages/respondToClaim/responseType.page');
 const uploadResponsePage = require('./pages/respondToClaim/uploadResponseDocument.page');
@@ -107,6 +101,7 @@ module.exports = function () {
       await defendantSolicitorOrganisation.enterOrganisationDetails();
       await claimTypePage.selectClaimType();
       await personalInjuryTypePage.selectPersonalInjuryType();
+      await detailsOfClaimPage.enterDetailsOfClaim();
       await uploadParticularsOfClaim.upload(TEST_FILE_PATH);
       await claimValuePage.enterClaimValue();
       await pbaNumberPage.selectPbaNumber();
@@ -139,23 +134,6 @@ module.exports = function () {
       await defendantLitigationFriendPage.enterLitigantFriendWithDifferentAddressToDefendant(address, TEST_FILE_PATH);
       this.waitForText('Submit');
       await this.retryUntilExists(() => this.click('Submit'), CASE_HEADER);
-    },
-
-    async requestExtension() {
-      await caseViewPage.startEvent('Request extension', caseId);
-      await proposeDeadline.enterExtensionProposedDeadline();
-      await extensionAlreadyAgreed.selectAlreadyAgreed();
-      await event.submit('Ask for extension', 'You asked for extra time to respond');
-      await event.returnToCaseDetails();
-    },
-
-    async respondToExtension() {
-      await caseViewPage.startEvent('Respond to extension request', caseId);
-      await respondToExtensionPage.selectDoNotAccept();
-      await counterExtensionPage.enterCounterDate();
-      await rejectionReasonPage.enterResponse();
-      await event.submit('Respond to request', 'You\'ve responded to the request for more time');
-      await event.returnToCaseDetails();
     },
 
     async respondToClaim() {

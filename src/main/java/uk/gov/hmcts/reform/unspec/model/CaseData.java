@@ -43,6 +43,7 @@ public class CaseData {
     private final Party respondent2;
     private final YesOrNo respondent1Represented;
     private final String respondentSolicitor1EmailAddress;
+    private final String detailsOfClaim;
     private final ClaimValue claimValue;
     private final Fee claimFee;
     private final String paymentReference;
@@ -70,15 +71,6 @@ public class CaseData {
     private final LocalDateTime respondentSolicitor1ResponseDeadline;
     private final ResponseIntention respondent1ClaimResponseIntentionType;
     private final ServedDocumentFiles servedDocumentFiles;
-
-    private final LocalDate respondentSolicitor1claimResponseExtensionProposedDeadline;
-    private final YesOrNo respondentSolicitor1claimResponseExtensionAlreadyAgreed;
-    private final String respondentSolicitor1claimResponseExtensionReason;
-
-    private final YesOrNo respondentSolicitor1claimResponseExtensionAccepted;
-    private final YesOrNo respondentSolicitor1claimResponseExtensionCounter;
-    private final LocalDate respondentSolicitor1claimResponseExtensionCounterDate;
-    private final String respondentSolicitor1claimResponseExtensionRejectionReason;
 
     private final RespondentResponseType respondent1ClaimResponseType;
     private final ResponseDocument respondent1ClaimResponseDocument;
