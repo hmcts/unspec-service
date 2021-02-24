@@ -51,7 +51,7 @@ module.exports = {
     description: 'Case will proceed offline in Caseman system',
     id: 'CASE_PROCEEDS_IN_CASEMAN',
     name: 'Case proceeds in Caseman',
-    order: 11
+    order: 8
   },
   RESUBMIT_CLAIM: {
     id: 'RESUBMIT_CLAIM',
