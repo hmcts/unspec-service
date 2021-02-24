@@ -65,6 +65,7 @@ public class CaseData {
     private final OrganisationPolicy applicant2OrganisationPolicy;
     private final OrganisationPolicy respondent1OrganisationPolicy;
     private final OrganisationPolicy respondent2OrganisationPolicy;
+    private final SolicitorOrganisationDetails respondentSolicitor1OrganisationDetails;
     private final StatementOfTruth applicant1ServiceStatementOfTruthToRespondentSolicitor1;
     private final List<Element<CaseDocument>> systemGeneratedCaseDocuments;
 
