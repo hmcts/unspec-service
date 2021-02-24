@@ -145,7 +145,7 @@ module.exports = {
     caseData = returnedCaseData;
     deleteCaseFields('systemGeneratedCaseDocuments');
 
-    await validateEventPages(data.REQUEST_EXTENSION);
+    await validateEventPages(data[eventName]);
 
     await assertCallbackError('ExtensionDate', data[eventName].invalid.ExtensionDate.past,
       'The agreed extension date must be a date in the future');
