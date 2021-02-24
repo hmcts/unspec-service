@@ -25,7 +25,7 @@
     "ID": "RequestedCourt",
     "ListElementCode": "courtFinderLabel",
     "FieldType": "Label",
-    "ElementLabel": "<a target=\"_blank\" href=\"courttribunalfinder.service.gov.uk/search/address\">Use court finder</a> (opens in a new window) to find the 3 digit court code of your preferred court.",
+    "ElementLabel": "<a target=\"_blank\" href=\"https://courttribunalfinder.service.gov.uk/search/address\">Use court finder</a> (opens in a new window) to find the 3 digit court code of your preferred court.",
     "FieldShowCondition": "requestHearingAtSpecificCourt = \"Yes\"",
     "SecurityClassification": "Public"
   },
