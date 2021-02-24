@@ -78,7 +78,7 @@ class PaymentsCallbackHandlerTest extends BaseCallbackHandlerTest {
     }
 
     @ParameterizedTest
-    @ValueSource(ints = {400, 403})
+    @ValueSource(ints = {403})
     void shouldUpdateFailureReason_whenForbiddenExceptionThrown(int status) {
         doThrow(buildFeignException(status)).when(paymentsService).createCreditAccountPayment(any(), any());
 
@@ -90,6 +90,16 @@ class PaymentsCallbackHandlerTest extends BaseCallbackHandlerTest {
             .isEqualTo(PAYMENT_ERROR_MESSAGE);
         assertThat(response.getData()).extracting("paymentDetails").extracting("errorCode")
             .isEqualTo(PAYMENT_ERROR_CODE);
+        assertThat(response.getErrors()).isEmpty();
+    }
+
+    @Test
+    void shouldNotThrowError_whenPaymentIsResubmittedWithInTwoMinutes() {
+        doThrow(buildFeignException(400)).when(paymentsService).createCreditAccountPayment(any(), any());
+
+        var response = (AboutToStartOrSubmitCallbackResponse) handler.handle(params);
+
+        verify(paymentsService).createCreditAccountPayment(caseData, "BEARER_TOKEN");
         assertThat(response.getErrors()).isEmpty();
     }
 
