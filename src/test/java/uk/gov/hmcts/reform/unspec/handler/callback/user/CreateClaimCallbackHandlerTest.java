@@ -496,8 +496,6 @@ class CreateClaimCallbackHandlerTest extends BaseCallbackHandlerTest {
 
                 String body = format(
                     CONFIRMATION_SUMMARY,
-                    format("/cases/case-details/%s#CaseDocuments", CASE_ID),
-                    responsePackLink,
                     formatLocalDateTime(serviceDeadline, DATE_TIME_AT)
                 );
 
