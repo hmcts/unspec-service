@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.jackson.JacksonAutoConfiguration;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import uk.gov.hmcts.reform.ccd.client.model.AboutToStartOrSubmitCallbackResponse;
 import uk.gov.hmcts.reform.unspec.callback.CallbackParams;
 import uk.gov.hmcts.reform.unspec.config.properties.notification.NotificationsProperties;
 import uk.gov.hmcts.reform.unspec.handler.callback.BaseCallbackHandlerTest;
@@ -15,8 +16,10 @@ import uk.gov.hmcts.reform.unspec.sampledata.CallbackParamsBuilder;
 import uk.gov.hmcts.reform.unspec.sampledata.CaseDataBuilder;
 import uk.gov.hmcts.reform.unspec.service.NotificationService;
 
+import java.time.LocalDate;
 import java.util.Map;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.verify;
 import static uk.gov.hmcts.reform.unspec.callback.CallbackType.ABOUT_TO_SUBMIT;
 import static uk.gov.hmcts.reform.unspec.helpers.DateFormatHelper.DATE;
@@ -24,46 +27,51 @@ import static uk.gov.hmcts.reform.unspec.helpers.DateFormatHelper.formatLocalDat
 import static uk.gov.hmcts.reform.unspec.sampledata.CaseDataBuilder.CLAIM_ISSUED_DATE;
 
 @SpringBootTest(classes = {
-    CreateClaimRespondentNotificationHandler.class,
+    DefendantClaimDetailsNotificationHandler.class,
     NotificationsProperties.class,
     JacksonAutoConfiguration.class,
     CaseDetailsConverter.class
 })
-class CreateClaimRespondentNotificationHandlerTest extends BaseCallbackHandlerTest {
+class DefendantClaimDetailsNotificationHandlerTest extends BaseCallbackHandlerTest {
 
     @MockBean
     private NotificationService notificationService;
+
     @Autowired
     private NotificationsProperties notificationsProperties;
 
     @Autowired
-    private CreateClaimRespondentNotificationHandler handler;
+    private DefendantClaimDetailsNotificationHandler handler;
 
     @Nested
     class AboutToSubmitCallback {
 
         @Test
         void shouldNotifyRespondentSolicitor_whenInvoked() {
-            CaseData caseData = CaseDataBuilder.builder().atStateRespondedToClaim().build();
+            CaseData caseData = CaseDataBuilder.builder().atStateAwaitingCaseNotification().build();
             CallbackParams params = CallbackParamsBuilder.builder().of(ABOUT_TO_SUBMIT, caseData).build();
 
-            handler.handle(params);
+            var response = (AboutToStartOrSubmitCallbackResponse) handler.handle(params);
 
             verify(notificationService).sendMail(
                 "civilunspecified@gmail.com",
                 notificationsProperties.getRespondentSolicitorClaimIssueEmailTemplate(),
                 getExpectedMap(),
-                "create-claim-respondent-notification-000LR001"
+                "claim-details-respondent-notification-000LR001"
             );
+
+            assertThat(response.getData())
+                .extracting("claimDetailsNotificationDate")
+                .isEqualTo(LocalDate.now().toString());
         }
 
         private Map<String, String> getExpectedMap() {
             return Map.of(
                 "claimReferenceNumber", "000LR001",
-                "claimantName", "Mr. John Rambo",
                 "defendantName", "Mr. Sole Trader",
                 "issuedOn", formatLocalDate(CLAIM_ISSUED_DATE, DATE)
             );
         }
     }
+
 }
