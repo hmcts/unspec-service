@@ -8,6 +8,7 @@ import uk.gov.hmcts.reform.unspec.enums.AllocatedTrack;
 import uk.gov.hmcts.reform.unspec.model.CaseData;
 import uk.gov.hmcts.reform.unspec.model.LitigationFriend;
 import uk.gov.hmcts.reform.unspec.model.Party;
+import uk.gov.hmcts.reform.unspec.model.SolicitorOrganisationDetails;
 import uk.gov.hmcts.reform.unspec.model.SolicitorReferences;
 import uk.gov.hmcts.reform.unspec.model.robotics.CaseHeader;
 import uk.gov.hmcts.reform.unspec.model.robotics.ClaimDetails;
@@ -17,6 +18,7 @@ import uk.gov.hmcts.reform.unspec.model.robotics.Solicitor;
 import uk.gov.hmcts.reform.unspec.utils.PartyUtils;
 
 import java.util.List;
+import java.util.function.Consumer;
 
 import static java.time.format.DateTimeFormatter.ISO_DATE;
 import static java.util.Objects.requireNonNull;
@@ -94,7 +96,8 @@ public class RoboticsDataMapper {
     }
 
     private Solicitor buildRespondentSolicitor(CaseData caseData, String id) {
-        return Solicitor.builder()
+        Solicitor.SolicitorBuilder solicitorBuilder = Solicitor.builder();
+        solicitorBuilder
             .id(id)
             .organisationId(ofNullable(caseData.getRespondent1OrganisationPolicy())
                                 .map(organisationPolicy -> organisationPolicy.getOrganisation().getOrganisationID())
@@ -103,8 +106,25 @@ public class RoboticsDataMapper {
             .reference(ofNullable(caseData.getSolicitorReferences())
                            .map(SolicitorReferences::getRespondentSolicitor1Reference)
                            .orElse(null)
-            )
-            .build();
+            );
+
+        ofNullable(caseData.getRespondentSolicitor1OrganisationDetails())
+            .ifPresent(buildOrganisationDetails(solicitorBuilder));
+
+        return solicitorBuilder.build();
+    }
+
+    private Consumer<SolicitorOrganisationDetails> buildOrganisationDetails(
+         Solicitor.SolicitorBuilder solicitorBuilder
+    ) {
+        return organisationDetails -> {
+            solicitorBuilder.name(organisationDetails.getOrganisationName());
+            solicitorBuilder.contactTelephoneNumber(organisationDetails.getPhoneNumber());
+            solicitorBuilder.contactFaxNumber(organisationDetails.getFax());
+            solicitorBuilder.contactDX(organisationDetails.getDx());
+            solicitorBuilder.contactEmailAddress(organisationDetails.getEmail());
+            solicitorBuilder.addresses(addressMapper.toRoboticsAddresses(organisationDetails.getAddress()));
+        };
     }
 
     private Solicitor buildApplicantSolicitor(CaseData caseData, String id) {
