@@ -28,6 +28,7 @@ import uk.gov.hmcts.reform.unspec.service.OrganisationService;
 import uk.gov.hmcts.reform.unspec.service.flowstate.FlowState;
 import uk.gov.hmcts.reform.unspec.service.flowstate.StateFlowEngine;
 import uk.gov.hmcts.reform.unspec.validation.DateOfBirthValidator;
+import uk.gov.hmcts.reform.unspec.validation.interfaces.ParticularsOfClaimValidator;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -53,7 +54,7 @@ import static uk.gov.hmcts.reform.unspec.service.flowstate.FlowState.fromFullNam
 
 @Service
 @RequiredArgsConstructor
-public class CreateClaimCallbackHandler extends CallbackHandler {
+public class CreateClaimCallbackHandler extends CallbackHandler implements ParticularsOfClaimValidator {
 
     private static final List<CaseEvent> EVENTS = Collections.singletonList(CREATE_CLAIM);
     public static final String CONFIRMATION_SUMMARY = "<br />What happens next:"
@@ -77,6 +78,7 @@ public class CreateClaimCallbackHandler extends CallbackHandler {
             callbackKey(MID, "applicant"), this::validateDateOfBirth,
             callbackKey(MID, "fee"), this::calculateFee,
             callbackKey(MID, "idam-email"), this::getIdamEmail,
+            callbackKey(MID, "particulars-of-claim"), this::validateParticularsOfClaim,
             callbackKey(ABOUT_TO_SUBMIT), this::submitClaim,
             callbackKey(SUBMITTED), this::buildConfirmation
         );
