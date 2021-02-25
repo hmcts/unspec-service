@@ -6,12 +6,12 @@ const chai = require('chai');
 
 chai.use(deepEqualInAnyOrder);
 
-const { expect } = chai;
+const {expect} = chai;
 
 const {waitForFinishedBusinessProcess, assignCaseToDefendant} = require('../api/testingSupport');
 const apiRequest = require('./apiRequest.js');
 const claimData = require('../fixtures/events/createClaim.js');
-const expectedEvents =  require('../fixtures/ccd/expectedEvents.js');
+const expectedEvents = require('../fixtures/ccd/expectedEvents.js');
 
 const data = {
   CREATE_CLAIM: claimData.createClaim,
@@ -20,8 +20,6 @@ const data = {
   RESUBMIT_CLAIM: require('../fixtures/events/resubmitClaim.js'),
   ADD_OR_AMEND_CLAIM_DOCUMENTS: require('../fixtures/events/addOrAmendClaimDocuments.js'),
   ACKNOWLEDGE_SERVICE: require('../fixtures/events/acknowledgeService.js'),
-  REQUEST_EXTENSION: require('../fixtures/events/requestExtension.js'),
-  RESPOND_EXTENSION: require('../fixtures/events/respondExtension.js'),
   DEFENDANT_RESPONSE: require('../fixtures/events/defendantResponse.js'),
   CLAIMANT_RESPONSE: require('../fixtures/events/claimantResponse.js'),
   ADD_DEFENDANT_LITIGATION_FRIEND: require('../fixtures/events/addDefendantLitigationFriend.js'),
@@ -59,6 +57,12 @@ module.exports = {
 
     await assertCorrectEventsAreAvailableToUser(config.solicitorUser, 'AWAITING_CASE_NOTIFICATION');
     await assertCorrectEventsAreAvailableToUser(config.defendantSolicitorUser, 'AWAITING_CASE_NOTIFICATION');
+    let i;
+    for(i=0; i<data[eventName].invalid.Court.courtLocation.applicantPreferredCourt.length; i++) {
+      await assertError('Court', data[eventName].invalid.Court.courtLocation.applicantPreferredCourt[i],
+        null, 'Case data validation failed');
+    }
+
     //field is deleted in about to submit callback
     deleteCaseFields('applicantSolicitor1CheckEmail');
   },
@@ -72,9 +76,9 @@ module.exports = {
     await validateEventPages(data.CREATE_CLAIM_RESPONDENT_LIP);
 
     await assertSubmittedEvent('PROCEEDS_WITH_OFFLINE_JOURNEY', {
-        header: 'Your claim will now progress offline',
-        body: 'You do not need to do anything'
-      }, true);
+      header: 'Your claim will now progress offline',
+      body: 'You do not need to do anything'
+    }, true);
 
     await assignCaseToDefendant(caseId);
     await assertCorrectEventsAreAvailableToUser(config.solicitorUser, 'PROCEEDS_WITH_OFFLINE_JOURNEY');
@@ -122,11 +126,11 @@ module.exports = {
 
     await validateEventPages(data[eventName]);
 
-    await assertCallbackError('Upload', data[eventName].invalid.Upload.duplicateError,
-      'More than one particular of claim added');
+    await assertError('Upload', data[eventName].invalid.Upload.duplicateError,
+      'More than one Particulars of claim details added');
 
-    await assertCallbackError('Upload', data[eventName].invalid.Upload.nullError,
-      'One particular of claim is required');
+    await assertError('Upload', data[eventName].invalid.Upload.nullError,
+      'You must add Particulars of claim details');
 
     await assertSubmittedEvent('AWAITING_CASE_NOTIFICATION', {
       header: 'Documents uploaded successfully',
@@ -137,13 +141,29 @@ module.exports = {
     await assertCorrectEventsAreAvailableToUser(config.defendantSolicitorUser, 'AWAITING_CASE_NOTIFICATION');
   },
 
-  notifyClaim: async() => {
+  notifyClaim: async () => {
     eventName = 'NOTIFY_DEFENDANT_OF_CLAIM';
     let returnedCaseData = await apiRequest.startEvent(eventName, caseId);
     assertContainsPopulatedFields(returnedCaseData);
 
-    await assertSubmittedEvent('CREATED', {
+    await assertSubmittedEvent('AWAITING_CASE_DETAILS_NOTIFICATION', {
       header: 'Notification of claim sent',
+      body: 'What happens next'
+    });
+
+    await assertCorrectEventsAreAvailableToUser(config.solicitorUser, 'AWAITING_CASE_DETAILS_NOTIFICATION');
+    await assertCorrectEventsAreAvailableToUser(config.defendantSolicitorUser, 'AWAITING_CASE_DETAILS_NOTIFICATION');
+  },
+
+  notifyClaimDetails: async() => {
+    eventName = 'NOTIFY_DEFENDANT_OF_CLAIM_DETAILS';
+    let returnedCaseData = await apiRequest.startEvent(eventName, caseId);
+    assertContainsPopulatedFields(returnedCaseData);
+
+    await validateEventPages(data.ADD_OR_AMEND_CLAIM_DOCUMENTS);
+
+    await assertSubmittedEvent('CREATED', {
+      header: 'Defendant notified',
       body: 'What happens next'
     });
 
@@ -160,57 +180,12 @@ module.exports = {
 
     await validateEventPages(data.ACKNOWLEDGE_SERVICE);
 
-    await assertCallbackError('ConfirmDetails', data[eventName].invalid.ConfirmDetails.futureDateOfBirth,
+    await assertError('ConfirmDetails', data[eventName].invalid.ConfirmDetails.futureDateOfBirth,
       'The date entered cannot be in the future');
 
     await assertSubmittedEvent('CREATED', {
       header: 'You\'ve acknowledged service',
       body: 'You need to respond before'
-    }, true);
-
-    await assertCorrectEventsAreAvailableToUser(config.solicitorUser, 'CREATED');
-    await assertCorrectEventsAreAvailableToUser(config.defendantSolicitorUser, 'CREATED');
-  },
-
-  requestExtension: async () => {
-    eventName = 'REQUEST_EXTENSION';
-    let returnedCaseData = await apiRequest.startEvent(eventName, caseId);
-    assertContainsPopulatedFields(returnedCaseData);
-    caseData = returnedCaseData;
-    deleteCaseFields('systemGeneratedCaseDocuments');
-
-    await validateEventPages(data.REQUEST_EXTENSION);
-
-    await assertCallbackError('ProposeDeadline', data[eventName].invalid.ProposeDeadline.past,
-      'The proposed deadline must be a date in the future');
-    await assertCallbackError('ProposeDeadline', data[eventName].invalid.ProposeDeadline.beforeCurrentDeadline,
-      'The proposed deadline must be after the current deadline');
-
-    await assertSubmittedEvent('CREATED', {
-      header: 'You asked for extra time to respond',
-      body: 'You asked if you can respond before 4pm on'
-    }, true);
-
-    await assertCorrectEventsAreAvailableToUser(config.solicitorUser, 'CREATED');
-    await assertCorrectEventsAreAvailableToUser(config.defendantSolicitorUser, 'CREATED');
-  },
-
-  respondExtension: async () => {
-    eventName = 'RESPOND_EXTENSION';
-    let returnedCaseData = await apiRequest.startEvent(eventName, caseId);
-    assertContainsPopulatedFields(returnedCaseData);
-    caseData = returnedCaseData;
-
-    await validateEventPages(data.RESPOND_EXTENSION);
-
-    await assertCallbackError('Counter', data[eventName].invalid.Counter.past,
-      'The proposed deadline must be a date in the future');
-    await assertCallbackError('Counter', data[eventName].invalid.Counter.beforeCurrentDeadline,
-      'The proposed deadline must be after the current deadline');
-
-    await assertSubmittedEvent('CREATED', {
-      header: 'You\'ve responded to the request for more time',
-      body: 'The defendant must respond before 4pm on'
     }, true);
 
     await assertCorrectEventsAreAvailableToUser(config.solicitorUser, 'CREATED');
@@ -226,11 +201,11 @@ module.exports = {
 
     await validateEventPages(data.DEFENDANT_RESPONSE);
 
-    await assertCallbackError('ConfirmDetails', data[eventName].invalid.ConfirmDetails.futureDateOfBirth,
+    await assertError('ConfirmDetails', data[eventName].invalid.ConfirmDetails.futureDateOfBirth,
       'The date entered cannot be in the future');
-    await assertCallbackError('Hearing', data[eventName].invalid.Hearing.past,
+    await assertError('Hearing', data[eventName].invalid.Hearing.past,
       'The date cannot be in the past and must not be more than a year in the future');
-    await assertCallbackError('Hearing', data[eventName].invalid.Hearing.moreThanYear,
+    await assertError('Hearing', data[eventName].invalid.Hearing.moreThanYear,
       'The date cannot be in the past and must not be more than a year in the future');
 
     await assertSubmittedEvent('AWAITING_CLAIMANT_INTENTION', {
@@ -250,9 +225,9 @@ module.exports = {
 
     await validateEventPages(data.CLAIMANT_RESPONSE);
 
-    await assertCallbackError('Hearing', data[eventName].invalid.Hearing.past,
+    await assertError('Hearing', data[eventName].invalid.Hearing.past,
       'The date cannot be in the past and must not be more than a year in the future');
-    await assertCallbackError('Hearing', data[eventName].invalid.Hearing.moreThanYear,
+    await assertError('Hearing', data[eventName].invalid.Hearing.moreThanYear,
       'The date cannot be in the past and must not be more than a year in the future');
 
     await assertSubmittedEvent('STAYED', {
@@ -285,7 +260,7 @@ module.exports = {
 
     await validateEventPages(data.CASE_PROCEEDS_IN_CASEMAN);
 
-    await assertCallbackError('CaseProceedsInCaseman', data[eventName].invalid.CaseProceedsInCaseman,
+    await assertError('CaseProceedsInCaseman', data[eventName].invalid.CaseProceedsInCaseman,
       'The date entered cannot be in the future');
 
     //TODO CMC-1245 confirmation page for event
@@ -320,13 +295,15 @@ const assertValidData = async (data, pageId) => {
   assert.deepEqual(responseBody.data, caseData);
 };
 
-const assertCallbackError = async (pageId, eventData, expectedErrorMessage) => {
+const assertError = async (pageId, eventData, expectedErrorMessage, responseBodyMessage = 'Unable to proceed because there are one or more callback Errors or Warnings' ) => {
   const response = await apiRequest.validatePage(eventName, pageId, {...caseData, ...eventData}, 422);
   const responseBody = await response.json();
 
   assert.equal(response.status, 422);
-  assert.equal(responseBody.message, 'Unable to proceed because there are one or more callback Errors or Warnings');
-  assert.equal(responseBody.callbackErrors[0], expectedErrorMessage);
+  assert.equal(responseBody.message, responseBodyMessage);
+  if(responseBody.callbackErrors != null){
+    assert.equal(responseBody.callbackErrors[0], expectedErrorMessage);
+  }
 };
 
 const assertSubmittedEvent = async (expectedState, submittedCallbackResponseContains, hasSubmittedCallback) => {

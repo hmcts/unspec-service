@@ -43,7 +43,7 @@ const createClaimData = (legalRepresentation, useValidPba) => {
     },
     Court: {
       courtLocation: {
-        applicantPreferredCourt: 'Test Preferred Court'
+        applicantPreferredCourt: '344'
       }
     },
     Claimant: {
@@ -95,6 +95,9 @@ const createClaimData = (legalRepresentation, useValidPba) => {
     },
     PersonalInjuryType: {
       personalInjuryType: 'ROAD_ACCIDENT'
+    },
+    Details: {
+      detailsOfClaim: 'Test details of claim'
     },
     Upload: {
       servedDocumentFiles: {
@@ -160,6 +163,13 @@ module.exports = {
       ...createClaimData('Yes', true),
       PaymentReference: {
         paymentReference: 'Applicant reference'
+      }
+    },
+    invalid:{
+      Court: {
+        courtLocation: {
+          applicantPreferredCourt: ['3a3','21','3333']
+        }
       }
     }
   },
