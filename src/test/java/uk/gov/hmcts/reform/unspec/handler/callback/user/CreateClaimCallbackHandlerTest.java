@@ -5,7 +5,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.jackson.JacksonAutoConfiguration;
 import org.springframework.boot.autoconfigure.validation.ValidationAutoConfiguration;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -17,7 +16,6 @@ import uk.gov.hmcts.reform.idam.client.IdamClient;
 import uk.gov.hmcts.reform.idam.client.models.UserDetails;
 import uk.gov.hmcts.reform.prd.model.Organisation;
 import uk.gov.hmcts.reform.unspec.callback.CallbackParams;
-import uk.gov.hmcts.reform.unspec.config.ClaimIssueConfiguration;
 import uk.gov.hmcts.reform.unspec.config.MockDatabaseConfiguration;
 import uk.gov.hmcts.reform.unspec.handler.callback.BaseCallbackHandlerTest;
 import uk.gov.hmcts.reform.unspec.helpers.CaseDetailsConverter;
@@ -69,7 +67,6 @@ import static uk.gov.hmcts.reform.unspec.utils.PartyUtils.getPartyNameBasedOnTyp
     CreateClaimCallbackHandler.class,
     JacksonAutoConfiguration.class,
     CaseDetailsConverter.class,
-    ClaimIssueConfiguration.class,
     MockDatabaseConfiguration.class,
     ValidationAutoConfiguration.class,
     DateOfBirthValidator.class,
@@ -90,9 +87,6 @@ class CreateClaimCallbackHandlerTest extends BaseCallbackHandlerTest {
 
     @Autowired
     private CreateClaimCallbackHandler handler;
-
-    @Value("${unspecified.response-pack-url}")
-    private String responsePackLink;
 
     @Nested
     class AboutToStartCallback {
