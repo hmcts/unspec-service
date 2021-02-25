@@ -22,7 +22,6 @@ import uk.gov.hmcts.reform.unspec.model.CaseData;
 import uk.gov.hmcts.reform.unspec.model.CorrectEmail;
 import uk.gov.hmcts.reform.unspec.model.IdamUserDetails;
 import uk.gov.hmcts.reform.unspec.model.Party;
-import uk.gov.hmcts.reform.unspec.model.ServedDocumentFiles;
 import uk.gov.hmcts.reform.unspec.model.SolicitorReferences;
 import uk.gov.hmcts.reform.unspec.model.common.DynamicList;
 import uk.gov.hmcts.reform.unspec.repositories.ReferenceNumberRepository;
@@ -31,6 +30,7 @@ import uk.gov.hmcts.reform.unspec.service.OrganisationService;
 import uk.gov.hmcts.reform.unspec.service.flowstate.FlowState;
 import uk.gov.hmcts.reform.unspec.service.flowstate.StateFlowEngine;
 import uk.gov.hmcts.reform.unspec.validation.DateOfBirthValidator;
+import uk.gov.hmcts.reform.unspec.validation.interfaces.ParticularsOfClaimValidator;
 import uk.gov.hmcts.reform.unspec.validation.OrgPolicyValidator;
 
 import java.time.LocalDate;
@@ -59,7 +59,7 @@ import static uk.gov.hmcts.reform.unspec.service.flowstate.FlowState.fromFullNam
 
 @Service
 @RequiredArgsConstructor
-public class CreateClaimCallbackHandler extends CallbackHandler {
+public class CreateClaimCallbackHandler extends CallbackHandler implements ParticularsOfClaimValidator {
 
     private static final List<CaseEvent> EVENTS = Collections.singletonList(CREATE_CLAIM);
     public static final String CONFIRMATION_SUMMARY = "<br />Follow these steps to serve a claim:"
@@ -122,15 +122,6 @@ public class CreateClaimCallbackHandler extends CallbackHandler {
 
         return AboutToStartOrSubmitCallbackResponse.builder()
             .errors(errors)
-            .build();
-    }
-
-    private CallbackResponse validateParticularsOfClaim(CallbackParams callbackParams) {
-        ServedDocumentFiles servedDocumentFiles = ofNullable(callbackParams.getCaseData().getServedDocumentFiles())
-            .orElse(ServedDocumentFiles.builder().build());
-
-        return AboutToStartOrSubmitCallbackResponse.builder()
-            .errors(servedDocumentFiles.getErrors())
             .build();
     }
 
