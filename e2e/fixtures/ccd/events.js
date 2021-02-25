@@ -64,11 +64,5 @@ module.exports = {
     name: 'Resubmit claim',
     description: 'Resubmits claim for unsuccessful PBA payment',
     order: 10
-  },
-  RESUBMIT_CLAIM: {
-    id: 'RESUBMIT_CLAIM',
-    name: 'Resubmit claim',
-    description: 'Resubmits claim for unsuccessful PBA payment',
-    order: 10
   }
 };
