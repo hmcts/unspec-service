@@ -210,12 +210,12 @@ class StateFlowEngineTest {
                 .isNotNull()
                 .isEqualTo(EXTENSION_REQUESTED.fullName());
             assertThat(stateFlow.getStateHistory())
-                .hasSize(7)
+                .hasSize(8)
                 .extracting(State::getName)
                 .containsExactly(
                     DRAFT.fullName(), PENDING_CASE_ISSUED.fullName(), PAYMENT_SUCCESSFUL.fullName(),
-                    AWAITING_CASE_NOTIFICATION.fullName(), CLAIM_ISSUED.fullName(),
-                    SERVICE_ACKNOWLEDGED.fullName(), EXTENSION_REQUESTED.fullName()
+                    AWAITING_CASE_NOTIFICATION.fullName(), AWAITING_CASE_DETAILS_NOTIFICATION.fullName(),
+                    CLAIM_ISSUED.fullName(), SERVICE_ACKNOWLEDGED.fullName(), EXTENSION_REQUESTED.fullName()
                 );
         }
 
