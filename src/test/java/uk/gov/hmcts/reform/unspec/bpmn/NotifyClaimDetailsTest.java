@@ -7,34 +7,49 @@ import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static uk.gov.hmcts.reform.unspec.handler.tasks.StartBusinessProcessTaskHandler.FLOW_STATE;
+import static uk.gov.hmcts.reform.unspec.service.flowstate.FlowState.Main.AWAITING_CASE_NOTIFICATION;
 
-class RequestExtensionTest extends BpmnBaseTest {
+class NotifyClaimDetailsTest extends BpmnBaseTest {
 
-    public static final String MESSAGE_NAME = "REQUEST_EXTENSION";
-    public static final String PROCESS_ID = "REQUEST_EXTENSION_PROCESS_ID";
+    public static final String MESSAGE_NAME = "NOTIFY_DEFENDANT_OF_CLAIM_DETAILS";
+    public static final String PROCESS_ID = "NOTIFY_CLAIM_DETAILS";
 
-    public static final String NOTIFY_APPLICANT_SOLICITOR_1 = "NOTIFY_APPLICANT_SOLICITOR1_FOR_REQUEST_FOR_EXTENSION";
-    private static final String ACTIVITY_ID = "RequestExtensionNotifyApplicantSolicitor1";
+    public static final String NOTIFY_RESPONDENT_SOLICITOR_1_CLAIM_DETAILS
+        = "NOTIFY_RESPONDENT_SOLICITOR1_FOR_CLAIM_DETAILS";
+    private static final String NOTIFY_RESPONDENT_SOLICITOR_1_CLAIM_DETAILS_ACTIVITY_ID
+        = "NotifyClaimDetailsRespondentSolicitor1";
 
-    public RequestExtensionTest() {
-        super("request_extension.bpmn", "REQUEST_EXTENSION_PROCESS_ID");
+    public NotifyClaimDetailsTest() {
+        super("notify_claim_details.bpmn", PROCESS_ID);
     }
 
     @Test
-    void shouldSuccessfullyCompleteRequestExtension() {
+    void shouldSuccessfullyCompleteNotifyClaim_whenCalled() {
         //assert process has started
         assertFalse(processInstance.isEnded());
 
         //assert message start event
         assertThat(getProcessDefinitionByMessage(MESSAGE_NAME).getKey()).isEqualTo(PROCESS_ID);
 
+        VariableMap variables = Variables.createVariables();
+        variables.putValue(FLOW_STATE, AWAITING_CASE_NOTIFICATION.fullName());
+
         //complete the start business process
         ExternalTask startBusiness = assertNextExternalTask(START_BUSINESS_TOPIC);
-        assertCompleteExternalTask(startBusiness, START_BUSINESS_TOPIC, START_BUSINESS_EVENT, START_BUSINESS_ACTIVITY);
+        assertCompleteExternalTask(
+            startBusiness,
+            START_BUSINESS_TOPIC,
+            START_BUSINESS_EVENT,
+            START_BUSINESS_ACTIVITY,
+            variables
+        );
 
         //complete the notification
         ExternalTask notificationTask = assertNextExternalTask(PROCESS_CASE_EVENT);
-        assertCompleteExternalTask(notificationTask, PROCESS_CASE_EVENT, NOTIFY_APPLICANT_SOLICITOR_1, ACTIVITY_ID);
+        assertCompleteExternalTask(notificationTask, PROCESS_CASE_EVENT, NOTIFY_RESPONDENT_SOLICITOR_1_CLAIM_DETAILS,
+                                   NOTIFY_RESPONDENT_SOLICITOR_1_CLAIM_DETAILS_ACTIVITY_ID
+        );
 
         //end business process
         ExternalTask endBusinessProcess = assertNextExternalTask(END_BUSINESS_PROCESS);

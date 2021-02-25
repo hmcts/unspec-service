@@ -14,16 +14,12 @@ Scenario('Notify claim', async (api) => {
   await api.notifyClaim();
 });
 
+Scenario('Notify claim details', async (api) => {
+  await api.notifyClaimDetails();
+});
+
 Scenario('Acknowledge service', async (api) => {
   await api.acknowledgeService();
-});
-
-Scenario('Request extension', async (api) => {
-  await api.requestExtension();
-});
-
-Scenario('Respond extension', async (api) => {
-  await api.respondExtension();
 });
 
 Scenario('Defendant response', async (api) => {

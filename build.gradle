@@ -9,7 +9,7 @@ plugins {
   id 'org.sonarqube' version '3.1.1'
   id 'au.com.dius.pact' version '4.2.0'
   id "io.freefair.lombok" version "5.3.0"
-  id "org.flywaydb.flyway" version "7.5.3"
+  id "org.flywaydb.flyway" version "7.5.4"
   id 'net.ltgt.apt' version '0.21'
 }
 
@@ -188,6 +188,7 @@ task lintUserInterfaceTests(type: Exec, description: 'Runs linting of E2E tests.
 
 task awaitApplicationReadiness(type: Exec, description: 'Awaits until application is ready.') {
   commandLine './bin/wait-for.sh', System.env.URL
+  commandLine './bin/wait-for.sh', System.env.SERVICE_URL
 }
 
 task runSmokeTests(type: Exec, description: 'Runs smoke tests.') {
@@ -315,7 +316,7 @@ dependencies {
   implementation group: 'org.springframework.security', name: 'spring-security-config'
   implementation group: 'org.springframework.boot', name: 'spring-boot-starter-oauth2-client'
   implementation group: 'org.springframework.boot', name: 'spring-boot-starter-oauth2-resource-server'
-  implementation group: 'com.nimbusds', name: 'nimbus-jose-jwt', version: '9.5'
+  implementation group: 'com.nimbusds', name: 'nimbus-jose-jwt', version: '9.7'
   implementation group: 'io.jsonwebtoken', name: 'jjwt', version: '0.9.1'
   implementation group: 'uk.gov.hmcts.reform', name: 'idam-client', version: '2.0.0'
 
@@ -341,9 +342,9 @@ dependencies {
 
   implementation group: 'com.launchdarkly', name: 'launchdarkly-java-server-sdk', version: '5.2.3'
 
-  testImplementation group: 'org.mockito', name: 'mockito-core', version: '3.7.7'
-  testImplementation group: 'org.mockito', name: 'mockito-junit-jupiter', version: '3.7.7'
-  testImplementation group: 'org.mockito', name: 'mockito-inline', version: '3.7.7'
+  testImplementation group: 'org.mockito', name: 'mockito-core', version: '3.8.0'
+  testImplementation group: 'org.mockito', name: 'mockito-junit-jupiter', version: '3.8.0'
+  testImplementation group: 'org.mockito', name: 'mockito-inline', version: '3.8.0'
 
   testAnnotationProcessor group: 'org.projectlombok', name: 'lombok', version: versions.lombok
   testCompileOnly group: 'org.projectlombok', name: 'lombok', version: versions.lombok
