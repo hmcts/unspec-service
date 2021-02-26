@@ -352,7 +352,7 @@ class CreateClaimCallbackHandlerTest extends BaseCallbackHandlerTest {
 
             @BeforeEach
             void setup() {
-                caseData = CaseDataBuilder.builder().atStateClaimDraft().respondent1Represented(NO).build();
+                caseData = CaseDataBuilder.builder().atStateProceedsOfflineUnrepresentedDefendant().build();
                 params = callbackParamsOf(caseData, ABOUT_TO_SUBMIT);
                 userId = UUID.randomUUID().toString();
 

@@ -264,12 +264,8 @@ public class CaseDataBuilder {
     }
 
     public CaseDataBuilder atStateProceedsOfflineUnrepresentedDefendant() {
-        atStateClaimDraft();
-        claimSubmittedDateTime = LocalDateTime.now();
-        legacyCaseReference = LEGACY_CASE_REFERENCE;
-        allocatedTrack = FAST_CLAIM;
+        atStatePaymentSuccessful();
         ccdState = PROCEEDS_WITH_OFFLINE_JOURNEY;
-        ccdCaseReference = CASE_ID;
         respondent1Represented = NO;
         return this;
     }

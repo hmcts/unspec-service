@@ -51,7 +51,6 @@ public class StateFlowEngine {
     public StateFlow build() {
         return StateFlowBuilder.<FlowState.Main>flow(FLOW_NAME)
             .initial(DRAFT)
-                .transitionTo(PROCEEDS_OFFLINE_UNREPRESENTED_DEFENDANT).onlyIf(respondent1NotRepresented)
                 .transitionTo(PENDING_CASE_ISSUED).onlyIf(pendingCaseIssued)
             .state(PENDING_CASE_ISSUED)
                 .transitionTo(PAYMENT_SUCCESSFUL).onlyIf(paymentSuccessful)
@@ -60,6 +59,7 @@ public class StateFlowEngine {
                 .transitionTo(PAYMENT_SUCCESSFUL).onlyIf(paymentSuccessful)
             .state(PAYMENT_SUCCESSFUL)
                 .transitionTo(AWAITING_CASE_NOTIFICATION).onlyIf(claimIssued)
+                .transitionTo(PROCEEDS_OFFLINE_UNREPRESENTED_DEFENDANT).onlyIf(respondent1NotRepresented)
             .state(AWAITING_CASE_NOTIFICATION)
                 .transitionTo(AWAITING_CASE_DETAILS_NOTIFICATION).onlyIf(claimNotified)
                 .transitionTo(CASE_PROCEEDS_IN_CASEMAN).onlyIf(caseProceedsInCaseman)
