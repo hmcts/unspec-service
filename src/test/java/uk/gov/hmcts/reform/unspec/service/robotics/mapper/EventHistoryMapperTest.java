@@ -136,6 +136,140 @@ class EventHistoryMapperTest {
         );
     }
 
+    @Test
+    void shouldPrepareExpectedEvents_whenClaimWithRespondentPartAdmission() {
+        CaseData caseData = CaseDataBuilder.builder().atStateRespondentPartAdmission().build();
+        Event expectedReceiptOfPartAdmission = Event.builder()
+            .eventSequence(4)
+            .eventCode("60")
+            .dateReceived("TODO")
+            .litigiousPartyID("002")
+            .build();
+        List<Event> expectedMiscellaneousEvents = List.of(
+            Event.builder()
+                .eventSequence(1)
+                .eventCode("999")
+                .dateReceived("TODO")
+                .eventDetails(EventDetails.builder()
+                                  .miscText("Claimant has notified defendant")
+                                  .build())
+                .build(),
+            Event.builder()
+                .eventSequence(5)
+                .eventCode("999")
+                .dateReceived("TODO")
+                .eventDetails(EventDetails.builder()
+                                  .miscText("RPA Reason: Defendant partial admission.")
+                                  .build())
+                .build()
+        );
+        Event expectedAcknowledgementOfServiceReceived = Event.builder()
+            .eventSequence(2)
+            .eventCode("38")
+            .dateReceived("TODO")
+            .litigiousPartyID("002")
+            .eventDetails(EventDetails.builder()
+                              .responseIntention("contest jurisdiction")
+                              .build())
+            .build();
+        Event expectedConsentExtensionFilingDefence = Event.builder()
+            .eventSequence(3)
+            .eventCode("45")
+            .dateReceived("TODO")
+            .litigiousPartyID("002")
+            .eventDetails(EventDetails.builder()
+                              .agreedExtensionDate("TODO")
+                              .build())
+            .build();
+
+        var eventHistory = mapper.buildEvents(caseData);
+
+        assertThat(eventHistory).isNotNull();
+        assertThat(eventHistory).extracting("receiptOfPartAdmission").asList()
+            .containsExactly(expectedReceiptOfPartAdmission);
+        assertThat(eventHistory).extracting("miscellaneous").asList()
+            .containsExactly(expectedMiscellaneousEvents.get(0), expectedMiscellaneousEvents.get(1));
+        assertThat(eventHistory).extracting("acknowledgementOfServiceReceived").asList()
+            .containsExactly(expectedAcknowledgementOfServiceReceived);
+        assertThat(eventHistory).extracting("consentExtensionFilingDefence").asList()
+            .containsExactly(expectedConsentExtensionFilingDefence);
+        assertEmptyEvents(
+            eventHistory,
+            "defenceFiled",
+            "defenceAndCounterClaim",
+            "receiptOfAdmission",
+            "replyToDefence",
+            "directionsQuestionnaireFiled"
+        );
+    }
+
+    @Test
+    void shouldPrepareExpectedEvents_whenClaimWithRespondentCounterClaim() {
+        CaseData caseData = CaseDataBuilder.builder().atStateRespondentCounterClaim().build();
+        Event expectedDefenceAndCounterClaim = Event.builder()
+            .eventSequence(4)
+            .eventCode("52")
+            .dateReceived("TODO")
+            .litigiousPartyID("002")
+            .build();
+        List<Event> expectedMiscellaneousEvents = List.of(
+            Event.builder()
+                .eventSequence(1)
+                .eventCode("999")
+                .dateReceived("TODO")
+                .eventDetails(EventDetails.builder()
+                                  .miscText("Claimant has notified defendant")
+                                  .build())
+                .build(),
+            Event.builder()
+                .eventSequence(5)
+                .eventCode("999")
+                .dateReceived("TODO")
+                .eventDetails(EventDetails.builder()
+                                  .miscText("RPA Reason: Defendant rejects and counter claims.")
+                                  .build())
+                .build()
+        );
+        Event expectedAcknowledgementOfServiceReceived = Event.builder()
+            .eventSequence(2)
+            .eventCode("38")
+            .dateReceived("TODO")
+            .litigiousPartyID("002")
+            .eventDetails(EventDetails.builder()
+                              .responseIntention("contest jurisdiction")
+                              .build())
+            .build();
+        Event expectedConsentExtensionFilingDefence = Event.builder()
+            .eventSequence(3)
+            .eventCode("45")
+            .dateReceived("TODO")
+            .litigiousPartyID("002")
+            .eventDetails(EventDetails.builder()
+                              .agreedExtensionDate("TODO")
+                              .build())
+            .build();
+
+        var eventHistory = mapper.buildEvents(caseData);
+
+        assertThat(eventHistory).isNotNull();
+        assertThat(eventHistory).extracting("defenceAndCounterClaim").asList()
+            .containsExactly(expectedDefenceAndCounterClaim);
+        assertThat(eventHistory).extracting("miscellaneous").asList()
+            .containsExactly(expectedMiscellaneousEvents.get(0), expectedMiscellaneousEvents.get(1));
+        assertThat(eventHistory).extracting("acknowledgementOfServiceReceived").asList()
+            .containsExactly(expectedAcknowledgementOfServiceReceived);
+        assertThat(eventHistory).extracting("consentExtensionFilingDefence").asList()
+            .containsExactly(expectedConsentExtensionFilingDefence);
+        assertEmptyEvents(
+            eventHistory,
+            "defenceFiled",
+            "receiptOfAdmission",
+            "receiptOfPartAdmission",
+            "replyToDefence",
+            "directionsQuestionnaireFiled"
+        );
+    }
+
     @ParameterizedTest
     @EnumSource(value = FlowState.Main.class, mode = EnumSource.Mode.EXCLUDE, names = {
         "RESPONDENT_FULL_ADMISSION",
