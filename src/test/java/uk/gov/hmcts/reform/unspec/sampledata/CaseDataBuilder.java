@@ -344,7 +344,7 @@ public class CaseDataBuilder {
             .respondentSolicitor1Reference("6789")
             .build();
         courtLocation = CourtLocation.builder()
-            .applicantPreferredCourt("The court location")
+            .applicantPreferredCourt("121")
             .build();
         claimValue = ClaimValue.builder()
             .statementOfValueInPennies(BigDecimal.valueOf(10000000))
