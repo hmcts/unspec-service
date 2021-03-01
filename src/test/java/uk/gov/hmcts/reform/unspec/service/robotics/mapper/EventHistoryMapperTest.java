@@ -111,7 +111,7 @@ class EventHistoryMapperTest {
             .dateReceived(caseData.getDefendantResponseDate().format(ISO_DATE))
             .litigiousPartyID("002")
             .eventDetails(EventDetails.builder()
-                              .agreedExtensionDate("TODO")
+                              .agreedExtensionDate("")
                               .build())
             .build();
 
@@ -178,7 +178,7 @@ class EventHistoryMapperTest {
             .dateReceived(caseData.getDefendantResponseDate().format(ISO_DATE))
             .litigiousPartyID("002")
             .eventDetails(EventDetails.builder()
-                              .agreedExtensionDate("TODO")
+                              .agreedExtensionDate("")
                               .build())
             .build();
 
@@ -245,7 +245,7 @@ class EventHistoryMapperTest {
             .dateReceived(caseData.getDefendantResponseDate().format(ISO_DATE))
             .litigiousPartyID("002")
             .eventDetails(EventDetails.builder()
-                              .agreedExtensionDate("TODO")
+                              .agreedExtensionDate("")
                               .build())
             .build();
 
