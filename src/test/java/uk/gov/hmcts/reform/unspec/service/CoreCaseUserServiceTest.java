@@ -63,14 +63,45 @@ class CoreCaseUserServiceTest {
     }
 
     @Nested
-    class AssignCase {
+    class AssignCaseToDefendant {
+
+        @Test
+        void shouldAssignCaseToUser_WhenRequested() {
+
+            service.assignCaseToDefendant(CASE_ID, USER_ID, ORG_ID);
+
+            verify(caseAccessDataStoreApi).addCaseUserRoles(
+                CAA_USER_AUTH_TOKEN,
+                SERVICE_AUTH_TOKEN,
+                getAddCaseAssignedUserRolesRequest(CaseRole.RESPONDENTSOLICITORONE)
+            );
+        }
+
+        private AddCaseAssignedUserRolesRequest getAddCaseAssignedUserRolesRequest(CaseRole caseRole) {
+            CaseAssignedUserRoleWithOrganisation caseAssignedUserRoleWithOrganisation
+                = CaseAssignedUserRoleWithOrganisation.builder()
+                .caseDataId(CASE_ID)
+                .userId(USER_ID)
+                .caseRole(caseRole.getFormattedName())
+                .organisationId(ORG_ID)
+                .build();
+
+            return AddCaseAssignedUserRolesRequest.builder()
+                .caseAssignedUserRoles(List.of(caseAssignedUserRoleWithOrganisation))
+                .build();
+        }
+
+    }
+
+    @Nested
+    class AssignCaseToClaimant {
 
         @Test
         void shouldAssignCaseToUser_WhenSameUserWithRequestedCaseRoleDoesNotExist() {
             when(caseAccessDataStoreApi.getUserRoles(CAA_USER_AUTH_TOKEN, SERVICE_AUTH_TOKEN, List.of(CASE_ID)))
                 .thenReturn(CaseAssignedUserRolesResource.builder().caseAssignedUserRoles(List.of()).build());
 
-            service.assignCase(CASE_ID, USER_ID, ORG_ID, CaseRole.APPLICANTSOLICITORONE);
+            service.assignCaseToClaimant(CASE_ID, USER_ID, ORG_ID);
 
             verify(caseAccessDataStoreApi).addCaseUserRoles(
                 CAA_USER_AUTH_TOKEN,
@@ -90,7 +121,7 @@ class CoreCaseUserServiceTest {
                 .thenReturn(CaseAssignedUserRolesResource.builder().caseAssignedUserRoles(List.of(caseAssignedUserRole))
                                 .build());
 
-            service.assignCase(CASE_ID, USER_ID, ORG_ID, CaseRole.APPLICANTSOLICITORONE);
+            service.assignCaseToClaimant(CASE_ID, USER_ID, ORG_ID);
 
             verify(caseAccessDataStoreApi, never()).addCaseUserRoles(
                 CAA_USER_AUTH_TOKEN,

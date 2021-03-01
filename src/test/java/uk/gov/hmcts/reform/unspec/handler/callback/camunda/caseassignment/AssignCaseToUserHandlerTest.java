@@ -14,7 +14,6 @@ import uk.gov.hmcts.reform.ccd.model.OrganisationPolicy;
 import uk.gov.hmcts.reform.unspec.callback.CallbackParams;
 import uk.gov.hmcts.reform.unspec.callback.CallbackType;
 import uk.gov.hmcts.reform.unspec.enums.BusinessProcessStatus;
-import uk.gov.hmcts.reform.unspec.enums.CaseRole;
 import uk.gov.hmcts.reform.unspec.handler.callback.BaseCallbackHandlerTest;
 import uk.gov.hmcts.reform.unspec.helpers.CaseDetailsConverter;
 import uk.gov.hmcts.reform.unspec.model.BusinessProcess;
@@ -74,11 +73,10 @@ class AssignCaseToUserHandlerTest extends BaseCallbackHandlerTest {
 
         assignCaseToUserHandler.handle(params);
 
-        verify(coreCaseUserService).assignCase(
+        verify(coreCaseUserService).assignCaseToClaimant(
             caseData.getCcdCaseReference().toString(),
             caseData.getApplicantSolicitor1UserDetails().getId(),
-            "OrgId1",
-            CaseRole.APPLICANTSOLICITORONE
+            "OrgId1"
         );
 
         verify(coreCaseUserService).removeCreatorRoleCaseAssignment(

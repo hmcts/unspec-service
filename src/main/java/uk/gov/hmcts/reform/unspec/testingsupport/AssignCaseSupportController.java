@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.RestController;
 import uk.gov.hmcts.reform.authorisation.generators.AuthTokenGenerator;
 import uk.gov.hmcts.reform.idam.client.IdamClient;
 import uk.gov.hmcts.reform.prd.model.Organisation;
-import uk.gov.hmcts.reform.unspec.enums.CaseRole;
 import uk.gov.hmcts.reform.unspec.service.CoreCaseUserService;
 import uk.gov.hmcts.reform.unspec.service.OrganisationService;
 
@@ -45,6 +44,6 @@ public class AssignCaseSupportController {
         String organisationId = organisationService.findOrganisation(authorisation)
             .map(Organisation::getOrganisationIdentifier).orElse(null);
 
-        coreCaseUserService.assignCase(caseId, userId, organisationId, CaseRole.RESPONDENTSOLICITORONE);
+        coreCaseUserService.assignCaseToDefendant(caseId, userId, organisationId);
     }
 }

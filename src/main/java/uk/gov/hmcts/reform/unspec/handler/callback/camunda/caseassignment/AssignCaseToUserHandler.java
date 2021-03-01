@@ -8,7 +8,6 @@ import uk.gov.hmcts.reform.unspec.callback.Callback;
 import uk.gov.hmcts.reform.unspec.callback.CallbackHandler;
 import uk.gov.hmcts.reform.unspec.callback.CallbackParams;
 import uk.gov.hmcts.reform.unspec.callback.CaseEvent;
-import uk.gov.hmcts.reform.unspec.enums.CaseRole;
 import uk.gov.hmcts.reform.unspec.helpers.CaseDetailsConverter;
 import uk.gov.hmcts.reform.unspec.model.CaseData;
 import uk.gov.hmcts.reform.unspec.model.IdamUserDetails;
@@ -54,7 +53,7 @@ public class AssignCaseToUserHandler extends CallbackHandler {
         String submitterId = userDetails.getId();
         String organisationId = caseData.getApplicant1OrganisationPolicy().getOrganisation().getOrganisationID();
 
-        coreCaseUserService.assignCase(caseId, submitterId, organisationId, CaseRole.APPLICANTSOLICITORONE);
+        coreCaseUserService.assignCaseToClaimant(caseId, submitterId, organisationId);
         coreCaseUserService.removeCreatorRoleCaseAssignment(caseId, submitterId, organisationId);
 
         CaseData updated = caseData.toBuilder()
