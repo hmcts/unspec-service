@@ -36,9 +36,11 @@ public class CaseEventTaskHandler implements BaseExternalTaskHandler {
         ExternalTaskInput variables = mapper.convertValue(externalTask.getAllVariables(), ExternalTaskInput.class);
         String caseId = variables.getCaseId();
         StartEventResponse startEventResponse = coreCaseDataService.startUpdate(caseId, variables.getCaseEvent());
-        data = caseDetailsConverter.toCaseData(startEventResponse.getCaseDetails());
-        BusinessProcess businessProcess = data.getBusinessProcess().updateActivityId(externalTask.getActivityId());
-        coreCaseDataService.submitUpdate(caseId, caseDataContent(startEventResponse, businessProcess));
+        CaseData startEventData = caseDetailsConverter.toCaseData(startEventResponse.getCaseDetails());
+        BusinessProcess businessProcess = startEventData.getBusinessProcess()
+            .updateActivityId(externalTask.getActivityId());
+
+        data = coreCaseDataService.submitUpdate(caseId, caseDataContent(startEventResponse, businessProcess));
     }
 
     @Override

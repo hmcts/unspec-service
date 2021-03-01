@@ -13,7 +13,6 @@ import uk.gov.hmcts.reform.unspec.callback.CallbackHandler;
 import uk.gov.hmcts.reform.unspec.callback.CallbackParams;
 import uk.gov.hmcts.reform.unspec.callback.CaseEvent;
 import uk.gov.hmcts.reform.unspec.config.ClaimIssueConfiguration;
-import uk.gov.hmcts.reform.unspec.enums.CaseState;
 import uk.gov.hmcts.reform.unspec.enums.YesOrNo;
 import uk.gov.hmcts.reform.unspec.helpers.CaseDetailsConverter;
 import uk.gov.hmcts.reform.unspec.model.BusinessProcess;
@@ -26,7 +25,6 @@ import uk.gov.hmcts.reform.unspec.model.common.DynamicList;
 import uk.gov.hmcts.reform.unspec.repositories.ReferenceNumberRepository;
 import uk.gov.hmcts.reform.unspec.service.FeesService;
 import uk.gov.hmcts.reform.unspec.service.OrganisationService;
-import uk.gov.hmcts.reform.unspec.service.flowstate.FlowState;
 import uk.gov.hmcts.reform.unspec.service.flowstate.StateFlowEngine;
 import uk.gov.hmcts.reform.unspec.validation.DateOfBirthValidator;
 import uk.gov.hmcts.reform.unspec.validation.interfaces.ParticularsOfClaimValidator;
@@ -50,8 +48,6 @@ import static uk.gov.hmcts.reform.unspec.callback.CaseEvent.CREATE_CLAIM;
 import static uk.gov.hmcts.reform.unspec.enums.AllocatedTrack.getAllocatedTrack;
 import static uk.gov.hmcts.reform.unspec.helpers.DateFormatHelper.DATE_TIME_AT;
 import static uk.gov.hmcts.reform.unspec.helpers.DateFormatHelper.formatLocalDateTime;
-import static uk.gov.hmcts.reform.unspec.service.flowstate.FlowState.Main.PENDING_CASE_ISSUED;
-import static uk.gov.hmcts.reform.unspec.service.flowstate.FlowState.fromFullName;
 
 @Service
 @RequiredArgsConstructor
@@ -167,15 +163,7 @@ public class CreateClaimCallbackHandler extends CallbackHandler implements Parti
 
         return AboutToStartOrSubmitCallbackResponse.builder()
             .data(caseDetailsConverter.toMap(dataBuilder.build()))
-            .state(getState(dataBuilder.build()))
             .build();
-    }
-
-    private String getState(CaseData updatedCaseData) {
-        FlowState flowState = fromFullName(stateFlowEngine.evaluate(updatedCaseData).getState().getName());
-        return String.valueOf(
-            flowState == PENDING_CASE_ISSUED ? CaseState.PENDING_CASE_ISSUED : CaseState.PROCEEDS_WITH_OFFLINE_JOURNEY
-        );
     }
 
     private SubmittedCallbackResponse buildConfirmation(CallbackParams callbackParams) {

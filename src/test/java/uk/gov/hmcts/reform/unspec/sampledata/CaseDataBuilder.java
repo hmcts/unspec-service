@@ -266,6 +266,7 @@ public class CaseDataBuilder {
     public CaseDataBuilder atStateProceedsOfflineUnrepresentedDefendant() {
         atStatePaymentSuccessful();
         ccdState = PROCEEDS_WITH_OFFLINE_JOURNEY;
+        claimIssuedDate = CLAIM_ISSUED_DATE;
         respondent1Represented = NO;
         return this;
     }

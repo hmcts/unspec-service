@@ -9,6 +9,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static uk.gov.hmcts.reform.unspec.callback.CaseEvent.MAKE_PBA_PAYMENT;
 import static uk.gov.hmcts.reform.unspec.handler.tasks.StartBusinessProcessTaskHandler.FLOW_STATE;
+import static uk.gov.hmcts.reform.unspec.service.flowstate.FlowState.Main.AWAITING_CASE_NOTIFICATION;
 import static uk.gov.hmcts.reform.unspec.service.flowstate.FlowState.Main.PAYMENT_FAILED;
 import static uk.gov.hmcts.reform.unspec.service.flowstate.FlowState.Main.PAYMENT_SUCCESSFUL;
 import static uk.gov.hmcts.reform.unspec.service.flowstate.FlowState.Main.PENDING_CASE_ISSUED;
@@ -70,7 +71,7 @@ class CreateClaimTest extends BpmnBaseTest {
         );
 
         //complete the document generation
-        variables.putValue(FLOW_STATE, PENDING_CASE_ISSUED.fullName());
+        variables.putValue(FLOW_STATE, AWAITING_CASE_NOTIFICATION.fullName());
 
         ExternalTask documentGeneration = assertNextExternalTask(PROCESS_CASE_EVENT);
         assertCompleteExternalTask(
