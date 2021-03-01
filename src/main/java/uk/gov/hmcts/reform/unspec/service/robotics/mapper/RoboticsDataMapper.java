@@ -118,12 +118,13 @@ public class RoboticsDataMapper {
          Solicitor.SolicitorBuilder solicitorBuilder
     ) {
         return organisationDetails -> {
-            solicitorBuilder.name(organisationDetails.getOrganisationName());
-            solicitorBuilder.contactTelephoneNumber(organisationDetails.getPhoneNumber());
-            solicitorBuilder.contactFaxNumber(organisationDetails.getFax());
-            solicitorBuilder.contactDX(organisationDetails.getDx());
-            solicitorBuilder.contactEmailAddress(organisationDetails.getEmail());
-            solicitorBuilder.addresses(addressMapper.toRoboticsAddresses(organisationDetails.getAddress()));
+            solicitorBuilder
+                .name(organisationDetails.getOrganisationName())
+                .contactTelephoneNumber(organisationDetails.getPhoneNumber())
+                .contactFaxNumber(organisationDetails.getFax())
+                .contactDX(organisationDetails.getDx())
+                .contactEmailAddress(organisationDetails.getEmail())
+                .addresses(addressMapper.toRoboticsAddresses(organisationDetails.getAddress()));
         };
     }
 
