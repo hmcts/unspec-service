@@ -115,9 +115,9 @@ public class RoboticsDataMapper {
     }
 
     private Consumer<SolicitorOrganisationDetails> buildOrganisationDetails(
-         Solicitor.SolicitorBuilder solicitorBuilder
+        Solicitor.SolicitorBuilder solicitorBuilder
     ) {
-        return organisationDetails -> {
+        return organisationDetails ->
             solicitorBuilder
                 .name(organisationDetails.getOrganisationName())
                 .contactTelephoneNumber(organisationDetails.getPhoneNumber())
@@ -125,7 +125,6 @@ public class RoboticsDataMapper {
                 .contactDX(organisationDetails.getDx())
                 .contactEmailAddress(organisationDetails.getEmail())
                 .addresses(addressMapper.toRoboticsAddresses(organisationDetails.getAddress()));
-        };
     }
 
     private Solicitor buildApplicantSolicitor(CaseData caseData, String id) {
