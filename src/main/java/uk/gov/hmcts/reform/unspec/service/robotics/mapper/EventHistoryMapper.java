@@ -13,20 +13,10 @@ import uk.gov.hmcts.reform.unspec.stateflow.model.State;
 import java.util.List;
 
 import static java.time.format.DateTimeFormatter.ISO_DATE;
-import static uk.gov.hmcts.reform.unspec.service.flowstate.FlowState.Main.PROCEEDS_OFFLINE_UNREPRESENTED_DEFENDANT;
-import static uk.gov.hmcts.reform.unspec.service.flowstate.FlowState.Main.RESPONDENT_COUNTER_CLAIM;
-import static uk.gov.hmcts.reform.unspec.service.flowstate.FlowState.Main.RESPONDENT_FULL_ADMISSION;
-import static uk.gov.hmcts.reform.unspec.service.flowstate.FlowState.Main.RESPONDENT_PART_ADMISSION;
 
 @Component
 @RequiredArgsConstructor
 public class EventHistoryMapper {
-
-    private static final List<FlowState.Main> DEFENDANT_RESPONSE_STATE_FLOWS = List.of(
-        RESPONDENT_FULL_ADMISSION,
-        RESPONDENT_PART_ADMISSION,
-        RESPONDENT_COUNTER_CLAIM
-    );
 
     private final StateFlowEngine stateFlowEngine;
 
@@ -34,11 +24,19 @@ public class EventHistoryMapper {
         EventHistory.EventHistoryBuilder builder = EventHistory.builder();
         State state = stateFlowEngine.evaluate(caseData).getState();
         FlowState.Main mainFlowState = (FlowState.Main) FlowState.fromFullName(state.getName());
-        if (DEFENDANT_RESPONSE_STATE_FLOWS.contains(mainFlowState)) {
-            buildDefendantResponse(mainFlowState, caseData, builder);
-        }
-        if (mainFlowState == PROCEEDS_OFFLINE_UNREPRESENTED_DEFENDANT) {
-            buildUnrepresentedDefendant(caseData, builder);
+        switch (mainFlowState) {
+            case PROCEEDS_OFFLINE_UNREPRESENTED_DEFENDANT:
+                buildUnrepresentedDefendant(caseData, builder);
+                break;
+            case RESPONDENT_FULL_ADMISSION:
+                buildRespondentFullAdmission(caseData, builder);
+                break;
+            case RESPONDENT_PART_ADMISSION:
+                buildRespondentPartAdmission(caseData, builder);
+                break;
+            case RESPONDENT_COUNTER_CLAIM:
+                buildRespondentCounterClaim(caseData, builder);
+                break;
         }
         return builder.build();
     }
@@ -57,52 +55,49 @@ public class EventHistoryMapper {
             ));
     }
 
-    private void buildDefendantResponse(FlowState.Main mainFlowState, CaseData caseData, EventHistory.EventHistoryBuilder builder) {
-        String rpaReason;
-        switch (mainFlowState) {
-            case RESPONDENT_FULL_ADMISSION:
-                rpaReason = "Defendant fully admits.";
-                builder.receiptOfAdmission(
-                    List.of(
-                        Event.builder()
-                            .eventSequence(4)
-                            .eventCode("40")
-                            .dateReceived("TODO")
-                            .litigiousPartyID("002")
-                            .build()
-                    )
-                );
-                break;
-            case RESPONDENT_PART_ADMISSION:
-                rpaReason = "Defendant partial admission.";
-                builder.receiptOfPartAdmission(
-                    List.of(
-                        Event.builder()
-                            .eventSequence(4)
-                            .eventCode("60")
-                            .dateReceived("TODO")
-                            .litigiousPartyID("002")
-                            .build()
-                    )
-                );
-                break;
-            case RESPONDENT_COUNTER_CLAIM:
-                rpaReason = "Defendant rejects and counter claims.";
-                builder.defenceAndCounterClaim(
-                    List.of(
-                        Event.builder()
-                            .eventSequence(4)
-                            .eventCode("52")
-                            .dateReceived("TODO")
-                            .litigiousPartyID("002")
-                            .build()
-                    )
-                );
-                break;
-            default:
-                throw new IllegalArgumentException("Invalid defendant response state flow: " + mainFlowState);
-        }
+    private void buildRespondentFullAdmission(CaseData caseData, EventHistory.EventHistoryBuilder builder) {
+        builder.receiptOfAdmission(
+            List.of(
+                Event.builder()
+                    .eventSequence(4)
+                    .eventCode("40")
+                    .dateReceived("TODO")
+                    .litigiousPartyID("002")
+                    .build()
+            )
+        );
+        buildCommonDefendantResponseEvents(builder, "Defendant fully admits.");
+    }
 
+    private void buildRespondentPartAdmission(CaseData caseData, EventHistory.EventHistoryBuilder builder) {
+        builder.receiptOfPartAdmission(
+            List.of(
+                Event.builder()
+                    .eventSequence(4)
+                    .eventCode("60")
+                    .dateReceived("TODO")
+                    .litigiousPartyID("002")
+                    .build()
+            )
+        );
+        buildCommonDefendantResponseEvents(builder, "Defendant partial admission.");
+    }
+
+    private void buildRespondentCounterClaim(CaseData caseData, EventHistory.EventHistoryBuilder builder) {
+        builder.defenceAndCounterClaim(
+            List.of(
+                Event.builder()
+                    .eventSequence(4)
+                    .eventCode("52")
+                    .dateReceived("TODO")
+                    .litigiousPartyID("002")
+                    .build()
+            )
+        );
+        buildCommonDefendantResponseEvents(builder, "Defendant rejects and counter claims.");
+    }
+
+    private void buildCommonDefendantResponseEvents(EventHistory.EventHistoryBuilder builder, String rpaReason) {
         builder.miscellaneous(
             List.of(
                 Event.builder()
