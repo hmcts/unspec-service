@@ -33,6 +33,7 @@ import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static uk.gov.hmcts.reform.unspec.callback.CallbackType.ABOUT_TO_SUBMIT;
+import static uk.gov.hmcts.reform.unspec.enums.CaseState.AWAITING_CASE_NOTIFICATION;
 import static uk.gov.hmcts.reform.unspec.enums.CaseState.PROCEEDS_WITH_OFFLINE_JOURNEY;
 import static uk.gov.hmcts.reform.unspec.model.documents.DocumentType.SEALED_CLAIM;
 
@@ -86,41 +87,34 @@ class GenerateClaimFormCallbackHandlerTest extends BaseCallbackHandlerTest {
     @Nested
     class AboutToSubmitCallback {
 
-        @Nested
-        class Respondent1DoesNotHaveLegalRepresentation {
+        @Test
+        void shouldGenerateDocumentAndSetStateAsProceedsWithOfflineJourney_whenRespondentIsNotRepresented() {
+            CaseData caseData = CaseDataBuilder.builder().atStateProceedsOfflineUnrepresentedDefendant().build();
+            CallbackParams params = callbackParamsOf(caseData, ABOUT_TO_SUBMIT);
 
-            @Test
-            void shouldGenerateDocumentAndSetStateAsProceedsWithOfflineJourney_whenRespondentIsNotRepresented() {
-                CaseData caseData = CaseDataBuilder.builder().atStateProceedsOfflineUnrepresentedDefendant().build();
-                CallbackParams params = callbackParamsOf(caseData, ABOUT_TO_SUBMIT);
+            var response = (AboutToStartOrSubmitCallbackResponse) handler.handle(params);
 
-                var response = (AboutToStartOrSubmitCallbackResponse) handler.handle(params);
+            CaseData updatedData = mapper.convertValue(response.getData(), CaseData.class);
 
-                CaseData updatedData = mapper.convertValue(response.getData(), CaseData.class);
-
-                assertThat(updatedData.getSystemGeneratedCaseDocuments().get(0).getValue()).isEqualTo(DOCUMENT);
-                assertThat(response.getState()).isEqualTo(PROCEEDS_WITH_OFFLINE_JOURNEY.toString());
-            }
+            assertThat(updatedData.getSystemGeneratedCaseDocuments().get(0).getValue()).isEqualTo(DOCUMENT);
+            assertThat(response.getState()).isEqualTo(PROCEEDS_WITH_OFFLINE_JOURNEY.toString());
         }
+    }
 
-        @Nested
-        class Respondent1HasLegalRepresentation {
+    @Test
+    void shouldGenerateDocumentAndSetStateAsAwaitingCaseNotification_whenRespondentIsRepresented() {
+        CaseData caseData = CaseDataBuilder.builder().atStateAwaitingCaseNotification().build();
+        CallbackParams params = callbackParamsOf(caseData, ABOUT_TO_SUBMIT);
 
-            @Test
-            void shouldAddDocumentToSystemGeneratedDocuments_whenCalled() {
-                CaseData caseData = CaseDataBuilder.builder().atStateClaimCreated().build();
-                CallbackParams params = callbackParamsOf(caseData, ABOUT_TO_SUBMIT);
+        var response = (AboutToStartOrSubmitCallbackResponse) handler.handle(params);
 
-                var response = (AboutToStartOrSubmitCallbackResponse) handler.handle(params);
+        verify(sealedClaimFormGenerator).generate(caseData, "BEARER_TOKEN");
 
-                verify(sealedClaimFormGenerator).generate(caseData, "BEARER_TOKEN");
+        CaseData updatedData = mapper.convertValue(response.getData(), CaseData.class);
 
-                CaseData updatedData = mapper.convertValue(response.getData(), CaseData.class);
-
-                assertThat(updatedData.getSystemGeneratedCaseDocuments().get(0).getValue()).isEqualTo(DOCUMENT);
-                assertThat(updatedData.getClaimIssuedDate()).isEqualTo(claimIssuedDate);
-                assertThat(updatedData.getRespondentSolicitor1ResponseDeadline()).isEqualTo(deadline);
-            }
-        }
+        assertThat(updatedData.getSystemGeneratedCaseDocuments().get(0).getValue()).isEqualTo(DOCUMENT);
+        assertThat(updatedData.getClaimIssuedDate()).isEqualTo(claimIssuedDate);
+        assertThat(updatedData.getRespondentSolicitor1ResponseDeadline()).isEqualTo(deadline);
+        assertThat(response.getState()).isEqualTo(AWAITING_CASE_NOTIFICATION.toString());
     }
 }
