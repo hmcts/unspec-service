@@ -280,7 +280,6 @@ class EventHistoryMapperTest {
     void shouldBuildEmptyEventHistory_whenNoMappingsDefinedForStateFlow(FlowState.Main flowStateMain) {
         CaseData caseData = CaseDataBuilder.builder().atState(flowStateMain).build();
 
-
         var eventHistory = mapper.buildEvents(caseData);
 
         assertThat(eventHistory).isNotNull();

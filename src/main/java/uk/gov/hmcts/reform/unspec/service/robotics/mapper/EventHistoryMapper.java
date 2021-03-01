@@ -37,6 +37,8 @@ public class EventHistoryMapper {
             case RESPONDENT_COUNTER_CLAIM:
                 buildRespondentCounterClaim(caseData, builder);
                 break;
+            default:
+                break;
         }
         return builder.build();
     }
@@ -66,7 +68,7 @@ public class EventHistoryMapper {
                     .build()
             )
         );
-        buildCommonDefendantResponseEvents(builder, caseData,"Defendant fully admits.");
+        buildCommonDefendantResponseEvents(builder, caseData, "Defendant fully admits.");
     }
 
     private void buildRespondentPartAdmission(CaseData caseData, EventHistory.EventHistoryBuilder builder) {
@@ -80,7 +82,7 @@ public class EventHistoryMapper {
                     .build()
             )
         );
-        buildCommonDefendantResponseEvents(builder, caseData,"Defendant partial admission.");
+        buildCommonDefendantResponseEvents(builder, caseData, "Defendant partial admission.");
     }
 
     private void buildRespondentCounterClaim(CaseData caseData, EventHistory.EventHistoryBuilder builder) {
