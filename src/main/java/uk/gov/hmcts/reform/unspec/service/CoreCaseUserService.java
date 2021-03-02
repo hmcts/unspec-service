@@ -29,27 +29,36 @@ public class CoreCaseUserService {
     private final CrossAccessUserConfiguration crossAccessUserConfiguration;
     private final AuthTokenGenerator authTokenGenerator;
 
-    public void assignCaseToDefendant(String caseId, String userId, String organisationId) {
-        assignUserToCaseForRole(caseId, userId, organisationId, CaseRole.RESPONDENTSOLICITORONE);
-    }
+    public void assignCase(String caseId, String userId, String organisationId, CaseRole caseRole) {
+        String caaAccessToken = getCaaAccessToken();
 
-    public void assignCaseToClaimant(String caseId, String userId, String organisationId) {
-        if (!userHasCaseRole(caseId, CaseRole.APPLICANTSOLICITORONE)) {
-            assignUserToCaseForRole(caseId, userId, organisationId, CaseRole.APPLICANTSOLICITORONE);
+        if (!userHasCaseRole(caseId, caaAccessToken, caseRole)) {
+            assignUserToCaseForRole(caseId, userId, organisationId, caseRole, caaAccessToken);
         } else {
-            log.info("Case already have the user with {} role", CaseRole.APPLICANTSOLICITORONE.getFormattedName());
+            log.info("Case already have the user with {} role", caseRole.getFormattedName());
         }
     }
 
     public void removeCreatorRoleCaseAssignment(String caseId, String userId, String organisationId) {
-        if (userHasCaseRole(caseId, CREATOR)) {
-            removeCreatorAccess(caseId, userId, organisationId);
+
+        String caaAccessToken = getCaaAccessToken();
+
+        if (userHasCaseRole(caseId, caaAccessToken, CREATOR)) {
+            removeCreatorAccess(caseId, userId, organisationId, caaAccessToken);
         } else {
             log.info("User doesn't have {} role", CREATOR.getFormattedName());
         }
     }
 
-    public void assignUserToCaseForRole(String caseId, String userId, String organisationId, CaseRole caseRole) {
+    private String getCaaAccessToken() {
+        return idamClient.getAccessToken(
+            crossAccessUserConfiguration.getUserName(),
+            crossAccessUserConfiguration.getPassword()
+        );
+    }
+
+    private void assignUserToCaseForRole(String caseId, String userId, String organisationId,
+                                         CaseRole caseRole, String caaAccessToken) {
         CaseAssignedUserRoleWithOrganisation caseAssignedUserRoleWithOrganisation
             = CaseAssignedUserRoleWithOrganisation.builder()
             .caseDataId(caseId)
@@ -59,7 +68,7 @@ public class CoreCaseUserService {
             .build();
 
         caseAccessDataStoreApi.addCaseUserRoles(
-            getCaaAccessToken(),
+            caaAccessToken,
             authTokenGenerator.generate(),
             AddCaseAssignedUserRolesRequest.builder()
                 .caseAssignedUserRoles(List.of(caseAssignedUserRoleWithOrganisation))
@@ -67,7 +76,7 @@ public class CoreCaseUserService {
         );
     }
 
-    private void removeCreatorAccess(String caseId, String userId, String organisationId) {
+    private void removeCreatorAccess(String caseId, String userId, String organisationId, String caaAccessToken) {
         CaseAssignedUserRoleWithOrganisation caseAssignedUserRoleWithOrganisation
             = CaseAssignedUserRoleWithOrganisation.builder()
             .caseDataId(caseId)
@@ -77,7 +86,7 @@ public class CoreCaseUserService {
             .build();
 
         caseAccessDataStoreApi.removeCaseUserRoles(
-            getCaaAccessToken(),
+            caaAccessToken,
             authTokenGenerator.generate(),
             CaseAssignedUserRolesRequest.builder()
                 .caseAssignedUserRoles(List.of(caseAssignedUserRoleWithOrganisation))
@@ -85,21 +94,14 @@ public class CoreCaseUserService {
         );
     }
 
-    private boolean userHasCaseRole(String caseId, CaseRole caseRole) {
+    private boolean userHasCaseRole(String caseId, String accessToken, CaseRole caseRole) {
         CaseAssignedUserRolesResource userRoles = caseAccessDataStoreApi.getUserRoles(
-            getCaaAccessToken(),
+            accessToken,
             authTokenGenerator.generate(),
             List.of(caseId)
         );
 
         return userRoles.getCaseAssignedUserRoles().stream()
             .anyMatch(c -> c.getCaseRole().equals(caseRole.getFormattedName()));
-    }
-
-    private String getCaaAccessToken() {
-        return idamClient.getAccessToken(
-            crossAccessUserConfiguration.getUserName(),
-            crossAccessUserConfiguration.getPassword()
-        );
     }
 }
