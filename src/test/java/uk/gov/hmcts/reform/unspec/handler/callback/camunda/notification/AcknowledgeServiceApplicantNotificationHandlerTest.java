@@ -24,7 +24,6 @@ import static uk.gov.hmcts.reform.unspec.callback.CallbackType.ABOUT_TO_SUBMIT;
 import static uk.gov.hmcts.reform.unspec.handler.callback.camunda.notification.NotificationData.CLAIM_REFERENCE_NUMBER;
 import static uk.gov.hmcts.reform.unspec.handler.callback.camunda.notification.NotificationData.RESPONDENT_NAME;
 import static uk.gov.hmcts.reform.unspec.handler.callback.camunda.notification.NotificationData.RESPONSE_DEADLINE;
-import static uk.gov.hmcts.reform.unspec.handler.callback.camunda.notification.NotificationData.SOLICITOR_REFERENCE;
 import static uk.gov.hmcts.reform.unspec.sampledata.CaseDataBuilder.LEGACY_CASE_REFERENCE;
 
 @SpringBootTest(classes = {
@@ -52,7 +51,7 @@ class AcknowledgeServiceApplicantNotificationHandlerTest extends BaseCallbackHan
 
         @Test
         void shouldNotifyApplicantSolicitor_whenInvoked() {
-            CaseData caseData = CaseDataBuilder.builder().atStateExtensionRequested().build();
+            CaseData caseData = CaseDataBuilder.builder().atStateClaimCreated().build();
             CallbackParams params = CallbackParamsBuilder.builder().of(ABOUT_TO_SUBMIT, caseData).build();
 
             handler.handle(params);
@@ -70,7 +69,6 @@ class AcknowledgeServiceApplicantNotificationHandlerTest extends BaseCallbackHan
             return Map.of(
                 CLAIM_REFERENCE_NUMBER, LEGACY_CASE_REFERENCE,
                 RESPONDENT_NAME, caseData.getRespondent1().getPartyName(),
-                SOLICITOR_REFERENCE, "claimant solicitor",
                 RESPONSE_DEADLINE, caseData.getRespondentSolicitor1ResponseDeadline().toString()
             );
         }

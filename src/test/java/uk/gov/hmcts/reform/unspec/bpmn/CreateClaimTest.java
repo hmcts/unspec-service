@@ -3,6 +3,7 @@ package uk.gov.hmcts.reform.unspec.bpmn;
 import org.camunda.bpm.engine.externaltask.ExternalTask;
 import org.camunda.bpm.engine.variable.VariableMap;
 import org.camunda.bpm.engine.variable.Variables;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -18,16 +19,11 @@ class CreateClaimTest extends BpmnBaseTest {
 
     public static final String MESSAGE_NAME = "CREATE_CLAIM";
     public static final String PROCESS_ID = "CREATE_CLAIM_PROCESS_ID";
-
-    public static final String NOTIFY_RESPONDENT_SOLICITOR_1_CLAIM_ISSUE
-        = "NOTIFY_RESPONDENT_SOLICITOR1_FOR_CLAIM_ISSUE";
-    private static final String NOTIFY_RESPONDENT_SOLICITOR_1_CLAIM_ISSUE_ACTIVITY_ID
-        = "CreateClaimPaymentSuccessfulNotifyRespondentSolicitor1";
     public static final String NOTIFY_RESPONDENT_SOLICITOR_1_FAILED_PAYMENT
         = "NOTIFY_APPLICANT_SOLICITOR1_FOR_FAILED_PAYMENT";
     private static final String NOTIFY_RESPONDENT_SOLICITOR_1_FAILED_PAYMENT_ACTIVITY_ID
         = "CreateClaimPaymentFailedNotifyApplicantSolicitor1";
-    private static final String MAKE_PAYMENT_ACTIVITY_ID = "CreateClaimMakePayment";
+    private static final String MAKE_PAYMENT_ACTIVITY_ID = "MakePBAPayment";
     public static final String PROCESS_PAYMENT_TOPIC = "processPayment";
     public static final String GENERATE_CLAIM_FORM = "GENERATE_CLAIM_FORM";
     public static final String CLAIM_FORM_ACTIVITY_ID = "GenerateClaimForm";
@@ -40,6 +36,11 @@ class CreateClaimTest extends BpmnBaseTest {
 
     public CreateClaimTest() {
         super("create_claim.bpmn", "CREATE_CLAIM_PROCESS_ID");
+    }
+
+    @BeforeEach
+    void deployPbaPayment() {
+        deployDiagram("make_pba_payment.bpmn");
     }
 
     @Test
@@ -82,12 +83,6 @@ class CreateClaimTest extends BpmnBaseTest {
             PROCESS_CASE_EVENT,
             GENERATE_CLAIM_FORM,
             CLAIM_FORM_ACTIVITY_ID
-        );
-
-        //complete the notification
-        ExternalTask notificationTask = assertNextExternalTask(PROCESS_CASE_EVENT);
-        assertCompleteExternalTask(notificationTask, PROCESS_CASE_EVENT, NOTIFY_RESPONDENT_SOLICITOR_1_CLAIM_ISSUE,
-                                   NOTIFY_RESPONDENT_SOLICITOR_1_CLAIM_ISSUE_ACTIVITY_ID
         );
 
         //end business process

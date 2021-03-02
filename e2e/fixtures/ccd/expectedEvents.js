@@ -1,9 +1,19 @@
-const events =  require('./events.js');
+const events = require('./events.js');
 
 module.exports = {
+  AWAITING_CASE_NOTIFICATION: [
+    events.NOTIFY_DEFENDANT_OF_CLAIM,
+    events.ADD_DEFENDANT_LITIGATION_FRIEND,
+    events.CASE_PROCEEDS_IN_CASEMAN,
+    events.ADD_OR_AMEND_CLAIM_DOCUMENTS
+  ],
+  AWAITING_CASE_DETAILS_NOTIFICATION: [
+    events.NOTIFY_DEFENDANT_OF_CLAIM_DETAILS,
+    events.ADD_DEFENDANT_LITIGATION_FRIEND,
+    events.CASE_PROCEEDS_IN_CASEMAN,
+    events.ADD_OR_AMEND_CLAIM_DOCUMENTS
+  ],
   CREATED: [
-    events.REQUEST_EXTENSION,
-    events.RESPOND_EXTENSION,
     events.ACKNOWLEDGE_SERVICE,
     events.ADD_DEFENDANT_LITIGATION_FRIEND,
     events.DEFENDANT_RESPONSE,
@@ -14,5 +24,10 @@ module.exports = {
     events.ADD_DEFENDANT_LITIGATION_FRIEND,
     events.CLAIMANT_RESPONSE,
     events.CASE_PROCEEDS_IN_CASEMAN
+  ],
+  PENDING_CASE_ISSUED: [
+    events.RESUBMIT_CLAIM,
+    events.ADD_DEFENDANT_LITIGATION_FRIEND,
+    events.NOTIFY_DEFENDANT_OF_CLAIM
   ]
 };
