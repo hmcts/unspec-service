@@ -59,10 +59,16 @@ module.exports = {
     name: 'Case proceeds in Caseman',
     order: 9
   },
+  RESUBMIT_CLAIM: {
+    id: 'RESUBMIT_CLAIM',
+    name: 'Resubmit claim',
+    description: 'Resubmits claim for unsuccessful PBA payment',
+    order: 12
+  },
   INFORM_AGREED_EXTENSION_DATE: {
     description: 'Enter an extension date that has already been agreed with other parties',
     id: 'INFORM_AGREED_EXTENSION_DATE',
     name: 'Inform agreed extension date',
-    order: 12
+    order: 13
   }
 };
