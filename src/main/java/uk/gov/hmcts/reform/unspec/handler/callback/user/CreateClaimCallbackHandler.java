@@ -94,6 +94,7 @@ public class CreateClaimCallbackHandler extends CallbackHandler implements Parti
             callbackKey(MID, "fee"), this::calculateFee,
             callbackKey(MID, "idam-email"), this::getIdamEmail,
             callbackKey(MID, "particulars-of-claim"), this::validateParticularsOfClaim,
+            callbackKey(MID, "appOrgPolicy"), this::validateApplicantSolicitorOrgPolicy,
             callbackKey(MID, "repOrgPolicy"), this::validateRespondentSolicitorOrgPolicy,
             callbackKey(ABOUT_TO_SUBMIT), this::submitClaim,
             callbackKey(SUBMITTED), this::buildConfirmation
@@ -108,6 +109,16 @@ public class CreateClaimCallbackHandler extends CallbackHandler implements Parti
     private CallbackResponse validateDateOfBirth(CallbackParams callbackParams) {
         Party applicant = callbackParams.getCaseData().getApplicant1();
         List<String> errors = dateOfBirthValidator.validate(applicant);
+
+        return AboutToStartOrSubmitCallbackResponse.builder()
+            .errors(errors)
+            .build();
+    }
+
+    private CallbackResponse validateApplicantSolicitorOrgPolicy(CallbackParams callbackParams) {
+        CaseData caseData = callbackParams.getCaseData();
+        OrganisationPolicy applicant1OrganisationPolicy = caseData.getApplicant1OrganisationPolicy();
+        List<String> errors = orgPolicyValidator.validate(applicant1OrganisationPolicy, YES);
 
         return AboutToStartOrSubmitCallbackResponse.builder()
             .errors(errors)

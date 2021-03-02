@@ -116,6 +116,7 @@ public class CaseDataBuilder {
     private CloseClaim discontinueClaim;
     private YesOrNo respondent1OrgRegistered;
     private OrganisationPolicy respondent1OrganisationPolicy;
+    private OrganisationPolicy applicant1OrganisationPolicy;
 
     public CaseDataBuilder respondentSolicitor1ResponseDeadline(LocalDateTime respondentSolicitor1ResponseDeadline) {
         this.respondentSolicitor1ResponseDeadline = respondentSolicitor1ResponseDeadline;
@@ -214,6 +215,11 @@ public class CaseDataBuilder {
 
     public CaseDataBuilder legacyCaseReference(String legacyCaseReference) {
         this.legacyCaseReference = legacyCaseReference;
+        return this;
+    }
+
+    public CaseDataBuilder applicant1OrganisationPolicy(OrganisationPolicy applicant1OrganisationPolicy) {
+        this.applicant1OrganisationPolicy = applicant1OrganisationPolicy;
         return this;
     }
 
@@ -502,6 +508,7 @@ public class CaseDataBuilder {
             .respondent1Represented(respondent1Represented)
             .respondent1OrgRegistered(respondent1OrgRegistered)
             .respondent1OrganisationPolicy(respondent1OrganisationPolicy)
+            .applicant1OrganisationPolicy(applicant1OrganisationPolicy)
             .respondentSolicitor1EmailAddress(respondentSolicitor1EmailAddress)
             .applicantSolicitor1ClaimStatementOfTruth(applicantSolicitor1ClaimStatementOfTruth)
             .paymentDetails(paymentDetails)
