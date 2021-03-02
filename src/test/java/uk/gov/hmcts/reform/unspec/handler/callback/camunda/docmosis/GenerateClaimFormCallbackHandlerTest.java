@@ -86,7 +86,7 @@ class GenerateClaimFormCallbackHandlerTest extends BaseCallbackHandlerTest {
 
         @Test
         void shouldAddDocumentToSystemGeneratedDocuments_whenCalled() {
-            CaseData caseData = CaseDataBuilder.builder().atStateClaimCreated().build();
+            CaseData caseData = CaseDataBuilder.builder().atStatePaymentSuccessful().build();
             CallbackParams params = callbackParamsOf(caseData, ABOUT_TO_SUBMIT);
 
             var response = (AboutToStartOrSubmitCallbackResponse) handler.handle(params);
