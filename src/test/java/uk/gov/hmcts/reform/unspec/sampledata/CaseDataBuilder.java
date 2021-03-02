@@ -13,7 +13,9 @@ import uk.gov.hmcts.reform.unspec.model.CaseData;
 import uk.gov.hmcts.reform.unspec.model.ClaimProceedsInCaseman;
 import uk.gov.hmcts.reform.unspec.model.ClaimValue;
 import uk.gov.hmcts.reform.unspec.model.CloseClaim;
+import uk.gov.hmcts.reform.unspec.model.CorrectEmail;
 import uk.gov.hmcts.reform.unspec.model.CourtLocation;
+import uk.gov.hmcts.reform.unspec.model.IdamUserDetails;
 import uk.gov.hmcts.reform.unspec.model.Party;
 import uk.gov.hmcts.reform.unspec.model.PaymentDetails;
 import uk.gov.hmcts.reform.unspec.model.ResponseDocument;
@@ -42,6 +44,7 @@ import java.util.List;
 
 import static java.time.LocalDate.now;
 import static uk.gov.hmcts.reform.unspec.enums.AllocatedTrack.FAST_CLAIM;
+import static uk.gov.hmcts.reform.unspec.enums.CaseState.AWAITING_CASE_DETAILS_NOTIFICATION;
 import static uk.gov.hmcts.reform.unspec.enums.CaseState.AWAITING_CASE_NOTIFICATION;
 import static uk.gov.hmcts.reform.unspec.enums.CaseState.AWAITING_CLAIMANT_INTENTION;
 import static uk.gov.hmcts.reform.unspec.enums.CaseState.CLOSED;
@@ -89,17 +92,11 @@ public class CaseDataBuilder {
     private PaymentDetails paymentDetails;
     private LocalDateTime respondentSolicitor1ResponseDeadline;
     private LocalDate claimNotificationDate;
+    private LocalDate claimDetailsNotificationDate;
+    private CorrectEmail applicantSolicitor1CheckEmail;
+    private IdamUserDetails applicantSolicitor1UserDetails;
     //Acknowledge Service
     private ResponseIntention respondent1ClaimResponseIntentionType;
-    // Request Extension
-    private LocalDate respondentSolicitor1claimResponseExtensionProposedDeadline;
-    private YesOrNo respondentSolicitor1claimResponseExtensionAlreadyAgreed;
-    private String respondentSolicitor1claimResponseExtensionReason;
-    // Respond To Extension Request
-    private YesOrNo respondentSolicitor1claimResponseExtensionAccepted;
-    private YesOrNo respondentSolicitor1claimResponseExtensionCounter;
-    private LocalDate respondentSolicitor1claimResponseExtensionCounterDate;
-    private String respondentSolicitor1claimResponseExtensionRejectionReason;
     // Defendant Response
     private RespondentResponseType respondent1ClaimResponseType;
     private ResponseDocument respondent1ClaimResponseDocument;
@@ -117,33 +114,8 @@ public class CaseDataBuilder {
     private CloseClaim withdrawClaim;
     private CloseClaim discontinueClaim;
 
-    public CaseDataBuilder respondentSolicitor1claimResponseExtensionProposedDeadline(LocalDate responseDeadline) {
-        this.respondentSolicitor1claimResponseExtensionProposedDeadline = responseDeadline;
-        return this;
-    }
-
     public CaseDataBuilder respondentSolicitor1ResponseDeadline(LocalDateTime respondentSolicitor1ResponseDeadline) {
         this.respondentSolicitor1ResponseDeadline = respondentSolicitor1ResponseDeadline;
-        return this;
-    }
-
-    public CaseDataBuilder respondentSolicitor1claimResponseExtensionAccepted(YesOrNo yesOrNo) {
-        this.respondentSolicitor1claimResponseExtensionAccepted = yesOrNo;
-        return this;
-    }
-
-    public CaseDataBuilder respondentSolicitor1claimResponseExtensionCounter(YesOrNo yesOrNo) {
-        this.respondentSolicitor1claimResponseExtensionCounter = yesOrNo;
-        return this;
-    }
-
-    public CaseDataBuilder respondentSolicitor1claimResponseExtensionAlreadyAgreed(YesOrNo yesOrNo) {
-        this.respondentSolicitor1claimResponseExtensionAlreadyAgreed = yesOrNo;
-        return this;
-    }
-
-    public CaseDataBuilder respondentSolicitor1claimResponseExtensionCounterDate(LocalDate date) {
-        this.respondentSolicitor1claimResponseExtensionCounterDate = date;
         return this;
     }
 
@@ -264,20 +236,24 @@ public class CaseDataBuilder {
                 return atStatePaymentFailed();
             case AWAITING_CASE_NOTIFICATION:
                 return atStateAwaitingCaseNotification();
+            case AWAITING_CASE_DETAILS_NOTIFICATION:
+                return atStateAwaitingCaseDetailsNotification();
             case CLAIM_ISSUED:
                 return atStateClaimCreated();
             case CLAIM_STAYED:
                 return atStateClaimStayed();
             case SERVICE_ACKNOWLEDGED:
                 return atStateServiceAcknowledge();
-            case EXTENSION_REQUESTED:
-                return atStateExtensionRequested();
-            case EXTENSION_RESPONDED:
-                return atStateExtensionResponded();
-            case RESPONDED_TO_CLAIM:
-                return atStateRespondedToClaim();
-            case FULL_DEFENCE:
-                return atStateFullDefence();
+            case RESPONDENT_FULL_DEFENCE:
+                return atStateRespondentFullDefence();
+            case RESPONDENT_FULL_ADMISSION:
+                return atStateRespondentFullAdmission();
+            case RESPONDENT_PART_ADMISSION:
+                return atStateRespondentPartAdmission();
+            case RESPONDENT_COUNTER_CLAIM:
+                return atStateRespondentCounterClaim();
+            case APPLICANT_RESPOND_TO_DEFENCE:
+                return atStateApplicantRespondToDefence();
             case CLAIM_WITHDRAWN:
                 return atStateClaimWithdrawn();
             case CLAIM_DISCONTINUED:
@@ -381,6 +357,7 @@ public class CaseDataBuilder {
         respondentSolicitor1EmailAddress = "civilunspecified@gmail.com";
         applicantSolicitor1ClaimStatementOfTruth = StatementOfTruthBuilder.builder().build();
         claimSubmittedDateTime = LocalDateTime.now();
+        applicantSolicitor1CheckEmail = CorrectEmail.builder().email("civilunspecified@gmail.com").correct(YES).build();
         return this;
     }
 
@@ -420,9 +397,16 @@ public class CaseDataBuilder {
         return this;
     }
 
-    public CaseDataBuilder atStateClaimCreated() {
+    public CaseDataBuilder atStateAwaitingCaseDetailsNotification() {
         atStateAwaitingCaseNotification();
         claimNotificationDate = LocalDate.now();
+        ccdState = AWAITING_CASE_DETAILS_NOTIFICATION;
+        return this;
+    }
+
+    public CaseDataBuilder atStateClaimCreated() {
+        atStateAwaitingCaseDetailsNotification();
+        claimDetailsNotificationDate = LocalDate.now();
         ccdState = CREATED;
         respondentSolicitor1ResponseDeadline = RESPONSE_DEADLINE;
         return this;
@@ -443,33 +427,46 @@ public class CaseDataBuilder {
         return this;
     }
 
-    public CaseDataBuilder atStateRespondedToClaim() {
-        atStateRespondedToClaim(RespondentResponseType.FULL_DEFENCE);
+    public CaseDataBuilder atStateRespondentFullDefence() {
+        atStateRespondentRespondToClaim(RespondentResponseType.FULL_DEFENCE);
+        respondent1ClaimResponseDocument = ResponseDocument.builder()
+            .file(DocumentBuilder.builder().documentName("defendant-response.pdf").build())
+            .build();
+        respondent1DQ();
         return this;
     }
 
-    public CaseDataBuilder atStateRespondedToClaim(RespondentResponseType respondentResponseType) {
+    public CaseDataBuilder atStateRespondentFullAdmission() {
+        atStateRespondentRespondToClaim(RespondentResponseType.FULL_ADMISSION);
+        return this;
+    }
+
+    public CaseDataBuilder atStateRespondentPartAdmission() {
+        atStateRespondentRespondToClaim(RespondentResponseType.PART_ADMISSION);
+        return this;
+    }
+
+    public CaseDataBuilder atStateRespondentCounterClaim() {
+        atStateRespondentRespondToClaim(RespondentResponseType.COUNTER_CLAIM);
+        return this;
+    }
+
+    public CaseDataBuilder atStateRespondentRespondToClaim(RespondentResponseType respondentResponseType) {
         atStateServiceAcknowledge();
         respondent1ClaimResponseType = respondentResponseType;
-        if (respondentResponseType == RespondentResponseType.FULL_DEFENCE) {
-            respondent1ClaimResponseDocument = ResponseDocument.builder()
-                .file(DocumentBuilder.builder().documentName("defendant-response.pdf").build())
-                .build();
-            respondent1DQ();
-        }
         applicantSolicitorResponseDeadlineToRespondentSolicitor1 = APPLICANT_RESPONSE_DEADLINE;
         ccdState = AWAITING_CLAIMANT_INTENTION;
         return this;
     }
 
     public CaseDataBuilder atStateProceedsOfflineAdmissionOrCounterClaim() {
-        atStateRespondedToClaim();
+        atStateRespondentFullDefence();
         ccdState = PROCEEDS_WITH_OFFLINE_JOURNEY;
         return this;
     }
 
-    public CaseDataBuilder atStateFullDefence() {
-        atStateRespondedToClaim();
+    public CaseDataBuilder atStateApplicantRespondToDefence() {
+        atStateRespondentFullDefence();
         applicant1ProceedWithClaim = YES;
         applicant1DefenceResponseDocument = ResponseDocument.builder()
             .file(DocumentBuilder.builder().documentName("claimant-response.pdf").build())
@@ -481,23 +478,6 @@ public class CaseDataBuilder {
     public CaseDataBuilder atStateServiceAcknowledge() {
         atStateClaimCreated();
         respondent1ClaimResponseIntentionType = FULL_DEFENCE;
-        return this;
-    }
-
-    public CaseDataBuilder atStateExtensionRequested() {
-        atStateServiceAcknowledge();
-        respondentSolicitor1claimResponseExtensionProposedDeadline = now().plusDays(21);
-        respondentSolicitor1claimResponseExtensionAlreadyAgreed = NO;
-        respondentSolicitor1claimResponseExtensionReason = "Need little more time";
-        return this;
-    }
-
-    public CaseDataBuilder atStateExtensionResponded() {
-        atStateExtensionRequested();
-        respondentSolicitor1claimResponseExtensionAccepted = NO;
-        respondentSolicitor1claimResponseExtensionCounter = YES;
-        respondentSolicitor1claimResponseExtensionCounterDate = now().plusDays(19);
-        respondentSolicitor1claimResponseExtensionRejectionReason = "This seems reasonable";
         return this;
     }
 
@@ -533,25 +513,11 @@ public class CaseDataBuilder {
             .paymentDetails(paymentDetails)
             .respondentSolicitor1ResponseDeadline(respondentSolicitor1ResponseDeadline)
             .claimNotificationDate(claimNotificationDate)
+            .claimDetailsNotificationDate(claimDetailsNotificationDate)
+            .applicantSolicitor1CheckEmail(applicantSolicitor1CheckEmail)
+            .applicantSolicitor1UserDetails(applicantSolicitor1UserDetails)
             // Acknowledge Service
             .respondent1ClaimResponseIntentionType(respondent1ClaimResponseIntentionType)
-            // Request Extension
-            .respondentSolicitor1claimResponseExtensionProposedDeadline(
-                respondentSolicitor1claimResponseExtensionProposedDeadline
-            )
-            .respondentSolicitor1claimResponseExtensionAlreadyAgreed(
-                respondentSolicitor1claimResponseExtensionAlreadyAgreed
-            )
-            .respondentSolicitor1claimResponseExtensionReason(respondentSolicitor1claimResponseExtensionReason)
-            // Respond To Extension Request
-            .respondentSolicitor1claimResponseExtensionAccepted(respondentSolicitor1claimResponseExtensionAccepted)
-            .respondentSolicitor1claimResponseExtensionCounter(respondentSolicitor1claimResponseExtensionCounter)
-            .respondentSolicitor1claimResponseExtensionRejectionReason(
-                respondentSolicitor1claimResponseExtensionRejectionReason
-            )
-            .respondentSolicitor1claimResponseExtensionCounterDate(
-                respondentSolicitor1claimResponseExtensionCounterDate
-            )
             // Defendant Response
             .respondent1ClaimResponseType(respondent1ClaimResponseType)
             .respondent1ClaimResponseDocument(respondent1ClaimResponseDocument)

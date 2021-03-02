@@ -9,12 +9,14 @@ const caseViewPage = require('./pages/caseView.page');
 const createCasePage = require('./pages/createClaim/createCase.page');
 const solicitorReferencesPage = require('./pages/createClaim/solicitorReferences.page');
 const claimantSolicitorOrganisation = require('./pages/createClaim/claimantSolicitorOrganisation.page');
+const claimantSolicitorIdamDetailsPage = require('./pages/createClaim/idamEmail.page');
 const defendantSolicitorOrganisation = require('./pages/createClaim/defendantSolicitorOrganisation.page');
 const chooseCourtPage = require('./pages/createClaim/chooseCourt.page');
 const claimantLitigationDetails = require('./pages/createClaim/claimantLitigationDetails.page');
 const claimTypePage = require('./pages/createClaim/claimType.page');
 const respondentRepresentedPage = require('./pages/createClaim/isRespondentRepresented.page');
 const personalInjuryTypePage = require('./pages/createClaim/personalInjuryType.page');
+const detailsOfClaimPage = require('./pages/createClaim/detailsOfClaim.page');
 const uploadParticularsOfClaim = require('./pages/createClaim/uploadParticularsOfClaim.page');
 const claimValuePage = require('./pages/createClaim/claimValue.page');
 const pbaNumberPage = require('./pages/createClaim/pbaNumber.page');
@@ -24,13 +26,6 @@ const responseIntentionPage = require('./pages/acknowledgeService/responseIntent
 
 const caseProceedsInCasemanPage = require('./pages/caseProceedsInCaseman/caseProceedsInCaseman.page');
 const takeCaseOffline = require('./pages/caseProceedsInCaseman/takeCaseOffline.page');
-
-const proposeDeadline = require('./pages/requestExtension/proposeDeadline.page');
-const extensionAlreadyAgreed = require('./pages/requestExtension/extensionAlreadyAgreed.page');
-
-const respondToExtensionPage = require('./pages/respondExtension/respond.page');
-const counterExtensionPage = require('./pages/respondExtension/counter.page');
-const rejectionReasonPage = require('./pages/respondExtension/reason.page');
 
 const responseTypePage = require('./pages/respondToClaim/responseType.page');
 const uploadResponsePage = require('./pages/respondToClaim/uploadResponseDocument.page');
@@ -102,6 +97,7 @@ module.exports = function () {
       await chooseCourtPage.enterCourt();
       await party.enterParty('applicant1', address);
       await claimantLitigationDetails.enterLitigantFriendWithDifferentAddressToApplicant(address, TEST_FILE_PATH);
+      await claimantSolicitorIdamDetailsPage.enterUserEmail();
       await claimantSolicitorOrganisation.enterOrganisationDetails();
       await party.enterParty('respondent1', address);
 
@@ -114,6 +110,7 @@ module.exports = function () {
 
       await claimTypePage.selectClaimType();
       await personalInjuryTypePage.selectPersonalInjuryType();
+      await detailsOfClaimPage.enterDetailsOfClaim();
       await uploadParticularsOfClaim.upload(TEST_FILE_PATH);
       await claimValuePage.enterClaimValue();
       await pbaNumberPage.selectPbaNumber();
@@ -132,6 +129,13 @@ module.exports = function () {
       await event.returnToCaseDetails();
     },
 
+    async notifyClaimDetails() {
+      await caseViewPage.startEvent('Notify claim details', caseId);
+      await this.clickContinue();
+      await event.submit('Submit', 'Defendant notified');
+      await event.returnToCaseDetails();
+    },
+
     async acknowledgeService(responseIntention = 'FULL') {
       await caseViewPage.startEvent('Acknowledge service', caseId);
       await respondentDetails.verifyDetails();
@@ -146,23 +150,6 @@ module.exports = function () {
       await defendantLitigationFriendPage.enterLitigantFriendWithDifferentAddressToDefendant(address, TEST_FILE_PATH);
       this.waitForText('Submit');
       await this.retryUntilExists(() => this.click('Submit'), CASE_HEADER);
-    },
-
-    async requestExtension() {
-      await caseViewPage.startEvent('Request extension', caseId);
-      await proposeDeadline.enterExtensionProposedDeadline();
-      await extensionAlreadyAgreed.selectAlreadyAgreed();
-      await event.submit('Ask for extension', 'You asked for extra time to respond');
-      await event.returnToCaseDetails();
-    },
-
-    async respondToExtension() {
-      await caseViewPage.startEvent('Respond to extension request', caseId);
-      await respondToExtensionPage.selectDoNotAccept();
-      await counterExtensionPage.enterCounterDate();
-      await rejectionReasonPage.enterResponse();
-      await event.submit('Respond to request', 'You\'ve responded to the request for more time');
-      await event.returnToCaseDetails();
     },
 
     async respondToClaim(responseType = 'FULL') {
