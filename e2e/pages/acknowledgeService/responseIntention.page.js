@@ -13,6 +13,17 @@ module.exports = {
     }
   },
 
+  // async selectResponseIntention(responseIntention) {
+  //   if (!this.fields.responseIntention.options.hasOwnProperty(responseIntention)) {
+  //     throw new Error(`Response intention: ${responseIntention} does not exist`)
+  //   }
+  //   I.waitForElement(this.fields.responseIntention.id);
+  //   await within(this.fields.responseIntention.id, () => {
+  //     I.click(this.fields.responseIntention.options[responseIntention]);
+  //   });
+  //   await I.clickContinue();
+  // },
+
   async selectResponseIntentionFullDefence() {
     I.waitForElement(this.fields.responseIntention.id);
     await within(this.fields.responseIntention.id, () => {

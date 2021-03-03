@@ -116,7 +116,8 @@ module.exports = function () {
       await pbaNumberPage.selectPbaNumber();
       await paymentReferencePage.updatePaymentReference();
       await statementOfTruth.enterNameAndRole('claim');
-      await (litigantInPerson ? event.submit('Issue claim', 'Your claim will now progress offline') : event.submit('Issue claim', 'Your claim has been issued'));
+      let expectedMessage = litigantInPerson ? 'Your claim will now progress offline' : 'Your claim has been issued';
+      await event.submit('Issue claim', expectedMessage);
 
       await event.returnToCaseDetails();
       caseId = (await this.grabCaseNumber()).split('-').join('').substring(1);
@@ -208,6 +209,10 @@ module.exports = function () {
       await caseViewPage.startEvent('Case proceeds in Caseman', caseId);
       await caseProceedsInCasemanPage.enterTransferDate();
       await takeCaseOffline.takeCaseOffline();
+    },
+
+    async assertNoEventsAvailable() {
+      await caseViewPage.assertNoEventsAvailable();
     },
 
     async clickContinue() {
