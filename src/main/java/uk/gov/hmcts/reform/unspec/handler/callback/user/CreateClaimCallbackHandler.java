@@ -59,17 +59,17 @@ public class CreateClaimCallbackHandler extends CallbackHandler implements Parti
 
     private static final List<CaseEvent> EVENTS = Collections.singletonList(CREATE_CLAIM);
     public static final String CONFIRMATION_SUMMARY = "<br />Follow these steps to serve a claim:"
-        + "\n* [Download the sealed claim form](%s)"
-        + "\n* Send the form, particulars of claim and "
+        + "%n* [Download the sealed claim form](%s)"
+        + "%n* Send the form, particulars of claim and "
         + "<a href=\"%s\" target=\"_blank\">a response pack</a> (PDF, 266 KB) to the defendant by %s"
-        + "\n* Confirm service online within 21 days of sending the form, particulars and response pack, before"
+        + "%n* Confirm service online within 21 days of sending the form, particulars and response pack, before"
         + " 4pm if you're doing this on the due day";
 
     public static final String LIP_CONFIRMATION_BODY = "<br />To continue your claim by post you need to:"
-        + "\n* [Download the sealed claim form](%s)"
-        + "\n* Send the claim form, <a href=\"%s\" target=\"_blank\">a response pack</a> (PDF, 266 KB) "
+        + "%n* [Download the sealed claim form](%s)"
+        + "%n* Send the claim form, <a href=\"%s\" target=\"_blank\">a response pack</a> (PDF, 266 KB) "
         + "and any supporting documents to the defendant by %s"
-        + "\n\nOnce you have served the claim send the Certificate of Service and any supporting documents to the "
+        + "%n%nOnce you have served the claim send the Certificate of Service and any supporting documents to the "
         + "County Court Claims Centre.";
 
     private final ClaimIssueConfiguration claimIssueConfiguration;
