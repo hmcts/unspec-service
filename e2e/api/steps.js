@@ -77,7 +77,7 @@ module.exports = {
 
     await assertSubmittedEvent('PROCEEDS_WITH_OFFLINE_JOURNEY', {
       header: 'Your claim has been issued',
-      body: 'To continue your claim by post you need to '
+      body: 'To continue your claim by post you need to'
     }, true);
 
     await assignCaseToDefendant(caseId);
