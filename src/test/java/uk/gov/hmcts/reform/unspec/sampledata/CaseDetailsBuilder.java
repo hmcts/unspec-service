@@ -79,15 +79,22 @@ public class CaseDetailsBuilder {
         return this;
     }
 
+    public CaseDetailsBuilder atStateExtensionRequested() {
+        CaseData caseData = CaseDataBuilder.builder().atStateExtensionRequested().build();
+        this.data = mapper.convertValue(caseData, Map.class);
+        this.state = CREATED.name();
+        return this;
+    }
+
     public CaseDetailsBuilder atStateRespondedToClaim() {
-        CaseData caseData = CaseDataBuilder.builder().atStateRespondedToClaim().build();
+        CaseData caseData = CaseDataBuilder.builder().atStateRespondentFullDefence().build();
         this.data = mapper.convertValue(caseData, Map.class);
         this.state = AWAITING_CLAIMANT_INTENTION.name();
         return this;
     }
 
     public CaseDetailsBuilder atStateFullDefence() {
-        CaseData caseData = CaseDataBuilder.builder().atStateFullDefence().build();
+        CaseData caseData = CaseDataBuilder.builder().atStateApplicantRespondToDefence().build();
         this.data = mapper.convertValue(caseData, Map.class);
         this.state = AWAITING_CLAIMANT_INTENTION.name();
         return this;
