@@ -137,11 +137,11 @@ module.exports = function () {
       await event.returnToCaseDetails();
     },
 
-    async acknowledgeService(responseIntention = 'FULL') {
+    async acknowledgeService(responseIntention) {
       await caseViewPage.startEvent('Acknowledge service', caseId);
       await respondentDetails.verifyDetails();
       await confirmDetailsPage.confirmReference();
-      await (responseIntention == 'FULL' ? responseIntentionPage.selectResponseIntentionFullDefence() : responseIntentionPage.selectResponseIntentionPartDefence());
+      await responseIntentionPage.selectResponseIntention(responseIntention);
       await event.submit('Acknowledge service', 'You\'ve acknowledged service');
       await event.returnToCaseDetails();
     },
@@ -153,15 +153,17 @@ module.exports = function () {
       await this.retryUntilExists(() => this.click('Submit'), CASE_HEADER);
     },
 
-    async respondToClaim(responseType = 'FULL') {
+    async respondToClaim(responseType) {
       await caseViewPage.startEvent('Respond to claim', caseId);
-      await (responseType == 'FULL' ? this.respondToClaimFullDefence() : responseTypePage.selectPartDefence());
+      await responseTypePage.selectResponseType(responseType);
+      if (responseType === 'fullDefence') {
+        await this.respondToClaimFullDefence();
+      }
       await event.submit('Submit response', 'You\'ve submitted your response');
       await event.returnToCaseDetails();
     },
 
     async respondToClaimFullDefence() {
-      await responseTypePage.selectFullDefence();
       await uploadResponsePage.uploadResponseDocuments(TEST_FILE_PATH);
       await respondentDetails.verifyDetails();
       await confirmDetailsPage.confirmReference();

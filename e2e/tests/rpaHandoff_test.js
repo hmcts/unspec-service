@@ -4,7 +4,7 @@ const {dateTime} = require('../api/dataHelper');
 
 const getCaseId = caseNumber => `${caseNumber.split('-').join('').replace(/#/, '')}`;
 
-Feature('RPA Handoff points tests @rpa-handoff-tests');
+Feature('RPA handoff points tests @rpa-handoff-tests');
 
 Scenario('Take claim offline', async (I) => {
   await I.login(config.solicitorUser);
@@ -23,8 +23,8 @@ Scenario('Defendant - Defend part of Claim', async (I) => {
   await I.createCase();
   await I.notifyClaim();
   await I.notifyClaimDetails();
-  await I.acknowledgeService('PART');
-  await I.respondToClaim('PART');
+  await I.acknowledgeService('partDefence');
+  await I.respondToClaim('partAdmission');
 });
 
 Scenario('Defendant - Defends, Claimant decides not to proceed', async (I) => {
@@ -32,9 +32,20 @@ Scenario('Defendant - Defends, Claimant decides not to proceed', async (I) => {
   await I.createCase();
   await I.notifyClaim();
   await I.notifyClaimDetails();
-  await I.acknowledgeService();
-  await I.respondToClaim();
+  await I.acknowledgeService('fullDefence');
+  await I.respondToClaim('fullDefence');
   await I.respondToDefenceDropClaim();
+  await I.assertNoEventsAvailable();
+});
+
+Scenario('Defendant - Defends, Claimant decides to proceed', async (I) => {
+  await I.login(config.solicitorUser);
+  await I.createCase();
+  await I.notifyClaim();
+  await I.notifyClaimDetails();
+  await I.acknowledgeService('fullDefence');
+  await I.respondToClaim('fullDefence');
+  await I.respondToDefence();
   await I.assertNoEventsAvailable();
 });
 
@@ -44,8 +55,8 @@ Scenario('Claimant does not respond to defence with defined timescale', async (I
   let caseId = getCaseId(await I.grabCaseNumber());
   await I.notifyClaim();
   await I.notifyClaimDetails();
-  await I.acknowledgeService('PART');
-  await I.respondToClaim('FULL');
+  await I.acknowledgeService('partDefence');
+  await I.respondToClaim('fullDefence');
 
   await waitForFinishedBusinessProcess(caseId);
   await updateCaseData(caseId, {applicantSolicitorSecondResponseDeadlineToRespondentSolicitor1: dateTime(-1)});
