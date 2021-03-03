@@ -9,7 +9,7 @@ const CASE_LIST = 'exui-case-list';
 
 let caseNumber;
 
-Feature('Claim creation @claim-tests');
+Feature('Claim creation @e2e-tests');
 
 Scenario('Solicitor creates claim @create-claim', async (I) => {
   await I.login(config.solicitorUser);
