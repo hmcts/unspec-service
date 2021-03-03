@@ -62,6 +62,7 @@ import static uk.gov.hmcts.reform.unspec.enums.CaseState.PROCEEDS_WITH_OFFLINE_J
 import static uk.gov.hmcts.reform.unspec.enums.YesOrNo.NO;
 import static uk.gov.hmcts.reform.unspec.enums.YesOrNo.YES;
 import static uk.gov.hmcts.reform.unspec.handler.callback.user.CreateClaimCallbackHandler.CONFIRMATION_SUMMARY;
+import static uk.gov.hmcts.reform.unspec.handler.callback.user.CreateClaimCallbackHandler.LIP_CONFIRMATION_BODY;
 import static uk.gov.hmcts.reform.unspec.helpers.DateFormatHelper.DATE_TIME_AT;
 import static uk.gov.hmcts.reform.unspec.helpers.DateFormatHelper.formatLocalDateTime;
 import static uk.gov.hmcts.reform.unspec.utils.PartyUtils.getPartyNameBasedOnType;
@@ -508,19 +509,28 @@ class CreateClaimCallbackHandlerTest extends BaseCallbackHandlerTest {
         @Nested
         class Respondent1DoesNotHaveLegalRepresentation {
 
-            public static final String LIP_CONFIRMATION_BODY = "<br />You do not need to do anything.\n\n"
-                + "Your claim will be considered by the court and you will be informed of the outcome by post.";
-
             @Test
             void shouldReturnExpectedSubmittedCallbackResponse_whenRespondent1DoesNotHaveRepresentation() {
-                CaseData caseData = CaseDataBuilder.builder().atStateClaimCreated().respondent1Represented(NO).build();
+                CaseData caseData = CaseDataBuilder.builder().atStateProceedsOfflineUnrepresentedDefendant().build();
                 CallbackParams params = callbackParamsOf(caseData, SUBMITTED);
                 SubmittedCallbackResponse response = (SubmittedCallbackResponse) handler.handle(params);
 
+                LocalDateTime serviceDeadline = now().plusDays(112).atTime(23, 59);
+
+                String body = format(
+                    LIP_CONFIRMATION_BODY,
+                    format("/cases/case-details/%s#CaseDocuments", CASE_ID),
+                    responsePackLink,
+                    formatLocalDateTime(serviceDeadline, DATE_TIME_AT)
+                );
+
                 assertThat(response).usingRecursiveComparison().isEqualTo(
                     SubmittedCallbackResponse.builder()
-                        .confirmationHeader("# Your claim will now progress offline")
-                        .confirmationBody(LIP_CONFIRMATION_BODY)
+                        .confirmationHeader(format(
+                            "# Your claim has been issued%n## Claim number: %s",
+                            REFERENCE_NUMBER
+                        ))
+                        .confirmationBody(body)
                         .build());
             }
         }

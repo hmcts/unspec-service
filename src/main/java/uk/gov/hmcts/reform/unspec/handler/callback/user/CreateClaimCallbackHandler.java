@@ -65,8 +65,12 @@ public class CreateClaimCallbackHandler extends CallbackHandler implements Parti
         + "\n* Confirm service online within 21 days of sending the form, particulars and response pack, before"
         + " 4pm if you're doing this on the due day";
 
-    public static final String LIP_CONFIRMATION_BODY = "<br />You do not need to do anything.\n\n"
-        + "Your claim will be considered by the court and you will be informed of the outcome by post.";
+    public static final String LIP_CONFIRMATION_BODY = "<br />To continue your claim by post you need to:"
+        + "\n* [Download the sealed claim form](%s)"
+        + "\n* Send the claim form, <a href=\"%s\" target=\"_blank\">a response pack</a> (PDF, 266 KB) "
+        + "and any supporting documents to the defendant by %s"
+        + "\n\nOnce you have served the claim send the Certificate of Service and any supporting documents to the "
+        + "County Court Claims Centre.";
 
     private final ClaimIssueConfiguration claimIssueConfiguration;
     private final CaseDetailsConverter caseDetailsConverter;
@@ -180,28 +184,23 @@ public class CreateClaimCallbackHandler extends CallbackHandler implements Parti
 
     private SubmittedCallbackResponse buildConfirmation(CallbackParams callbackParams) {
         CaseData caseData = callbackParams.getCaseData();
-
-        if (caseData.getRespondent1Represented() == YesOrNo.NO) {
-            return SubmittedCallbackResponse.builder()
-                .confirmationHeader("# Your claim will now progress offline")
-                .confirmationBody(LIP_CONFIRMATION_BODY)
-                .build();
-        }
-
-        LocalDateTime serviceDeadline = LocalDate.now().plusDays(112).atTime(23, 59);
-        String formattedServiceDeadline = formatLocalDateTime(serviceDeadline, DATE_TIME_AT);
         String claimNumber = caseData.getLegacyCaseReference();
-
-        String body = format(
-            CONFIRMATION_SUMMARY,
-            format("/cases/case-details/%s#CaseDocuments", caseData.getCcdCaseReference()),
-            claimIssueConfiguration.getResponsePackLink(),
-            formattedServiceDeadline
-        );
 
         return SubmittedCallbackResponse.builder()
             .confirmationHeader(format("# Your claim has been issued%n## Claim number: %s", claimNumber))
-            .confirmationBody(body)
+            .confirmationBody(getBody(caseData.getRespondent1Represented(), caseData.getCcdCaseReference()))
             .build();
+    }
+
+    private String getBody(YesOrNo respondentRepresented, Long caseReference) {
+        LocalDateTime serviceDeadline = LocalDate.now().plusDays(112).atTime(23, 59);
+        String formattedServiceDeadline = formatLocalDateTime(serviceDeadline, DATE_TIME_AT);
+
+        return format(
+            respondentRepresented == YesOrNo.NO ? LIP_CONFIRMATION_BODY : CONFIRMATION_SUMMARY,
+            format("/cases/case-details/%s#CaseDocuments", caseReference),
+            claimIssueConfiguration.getResponsePackLink(),
+            formattedServiceDeadline
+        );
     }
 }
