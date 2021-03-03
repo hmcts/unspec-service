@@ -528,11 +528,9 @@ class CreateClaimCallbackHandlerTest extends BaseCallbackHandlerTest {
                 CallbackParams params = callbackParamsOf(caseData, SUBMITTED);
                 SubmittedCallbackResponse response = (SubmittedCallbackResponse) handler.handle(params);
 
-                LocalDateTime serviceDeadline = now().plusDays(112).atTime(23, 59);
-
                 String body = format(
                     CONFIRMATION_SUMMARY,
-                    formatLocalDateTime(serviceDeadline, DATE_TIME_AT)
+                    format("/cases/case-details/%s#CaseDocuments", CASE_ID)
                 );
 
                 assertThat(response).usingRecursiveComparison().isEqualTo(
