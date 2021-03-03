@@ -78,11 +78,11 @@ public class InformAgreedExtensionDateCallbackHandler extends CallbackHandler {
         CaseData caseData = callbackParams.getCaseData();
         LocalDateTime responseDeadline = caseData.getRespondentSolicitor1ResponseDeadline();
 
-        String body = format("<br />What happens next %n%n. You must respond to the claimant by %s",
+        String body = format("<br />What happens next.%n%n You must respond to the claimant by %s",
             formatLocalDateTime(responseDeadline, DATE)
         );
         return SubmittedCallbackResponse.builder()
-            .confirmationHeader("Extension deadline submitted")
+            .confirmationHeader("# Extension deadline submitted")
             .confirmationBody(body)
             .build();
     }
