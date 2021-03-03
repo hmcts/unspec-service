@@ -9,6 +9,12 @@ module.exports = {
     return date.toISOString().slice(0, 10);
   },
 
+  dateTime: (days = 0) => {
+    const date = new Date();
+    date.setDate(date.getDate() + days);
+    return date.toISOString();
+  },
+
   document: filename => {
     return {
       document_url: `${config.url.dmStore}/documents/fakeUrl`,
