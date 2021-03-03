@@ -132,7 +132,7 @@ class InformAgreedExtensionDateCallbackHandlerTest extends BaseCallbackHandlerTe
     @Nested
     class SubmittedCallback {
 
-        private static final String BODY = "<br />What happens next %n%n. You must respond to the claimant by %s";
+        private static final String BODY = "<br />What happens next.%n%n You must respond to the claimant by %s";
 
         @Test
         void shouldReturnExpectedResponse_whenInvoked() {
@@ -146,7 +146,7 @@ class InformAgreedExtensionDateCallbackHandlerTest extends BaseCallbackHandlerTe
 
             assertThat(response).isEqualTo(
                 SubmittedCallbackResponse.builder()
-                    .confirmationHeader("Extension deadline submitted")
+                    .confirmationHeader("# Extension deadline submitted")
                     .confirmationBody(format(BODY, formatLocalDateTime(responseDeadline, DATE)))
                     .build());
         }
