@@ -47,13 +47,13 @@ Scenario('Claimant does not respond to defence with defined timescale', async (I
   await I.acknowledgeService('PART');
   await I.respondToClaim('FULL');
 
-  await waitForFinishedBusinessProcess(caseId)
-  await updateCaseData(caseId, {applicantSolicitorSecondResponseDeadlineToRespondentSolicitor1: dateTime(-1)})
+  await waitForFinishedBusinessProcess(caseId);
+  await updateCaseData(caseId, {applicantSolicitorSecondResponseDeadlineToRespondentSolicitor1: dateTime(-1)});
 
-  console.log('Start waiting for Case strikeout scheduler ' + dateTime())
+  console.log('Start waiting for Case strikeout scheduler ' + dateTime());
   // 5 min sleep waiting for Case strikeout scheduler
   await sleep(300);
-  console.log('Waiting finished ' + dateTime())
+  console.log('Waiting finished ' + dateTime());
   await I.assertNoEventsAvailable();
 });
 
