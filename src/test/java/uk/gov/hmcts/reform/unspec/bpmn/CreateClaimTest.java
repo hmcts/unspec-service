@@ -3,6 +3,7 @@ package uk.gov.hmcts.reform.unspec.bpmn;
 import org.camunda.bpm.engine.externaltask.ExternalTask;
 import org.camunda.bpm.engine.variable.VariableMap;
 import org.camunda.bpm.engine.variable.Variables;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -22,7 +23,7 @@ class CreateClaimTest extends BpmnBaseTest {
         = "NOTIFY_APPLICANT_SOLICITOR1_FOR_FAILED_PAYMENT";
     private static final String NOTIFY_RESPONDENT_SOLICITOR_1_FAILED_PAYMENT_ACTIVITY_ID
         = "CreateClaimPaymentFailedNotifyApplicantSolicitor1";
-    private static final String MAKE_PAYMENT_ACTIVITY_ID = "CreateClaimMakePayment";
+    private static final String MAKE_PAYMENT_ACTIVITY_ID = "MakePBAPayment";
     public static final String PROCESS_PAYMENT_TOPIC = "processPayment";
     public static final String GENERATE_CLAIM_FORM = "GENERATE_CLAIM_FORM";
     public static final String CLAIM_FORM_ACTIVITY_ID = "GenerateClaimForm";
@@ -32,9 +33,16 @@ class CreateClaimTest extends BpmnBaseTest {
         = "CreateClaimProceedsOfflineNotifyApplicantSolicitor1";
     private static final String NOTIFY_RPA_ON_CASE_HANDED_OFFLINE = "NOTIFY_RPA_ON_CASE_HANDED_OFFLINE";
     private static final String NOTIFY_RPA_ON_CASE_HANDED_OFFLINE_ACTIVITY_ID = "NotifyRoboticsOnCaseHandedOffline";
+    private static final String CASE_ASSIGNMENT_EVENT = "ASSIGN_CASE_TO_APPLICANT_SOLICITOR1";
+    private static final String CASE_ASSIGNMENT_ACTIVITY = "CaseAssignmentToApplicantSolicitor1";
 
     public CreateClaimTest() {
         super("create_claim.bpmn", "CREATE_CLAIM_PROCESS_ID");
+    }
+
+    @BeforeEach
+    void deployPbaPayment() {
+        deployDiagram("make_pba_payment.bpmn");
     }
 
     @Test
@@ -57,6 +65,9 @@ class CreateClaimTest extends BpmnBaseTest {
             START_BUSINESS_ACTIVITY,
             variables
         );
+
+        //complete the case assignment process
+        completeCaseAssignment(variables);
 
         variables.putValue(FLOW_STATE, PAYMENT_SUCCESSFUL.fullName());
 
@@ -108,6 +119,9 @@ class CreateClaimTest extends BpmnBaseTest {
             variables
         );
 
+        //complete the case assignment process
+        completeCaseAssignment(variables);
+
         variables.putValue(FLOW_STATE, PAYMENT_FAILED.fullName());
 
         //complete the payment
@@ -158,6 +172,9 @@ class CreateClaimTest extends BpmnBaseTest {
             variables
         );
 
+        //complete the case assignment process
+        completeCaseAssignment(variables);
+
         //complete the notification
         ExternalTask notificationTask = assertNextExternalTask(PROCESS_CASE_EVENT);
         assertCompleteExternalTask(
@@ -182,6 +199,17 @@ class CreateClaimTest extends BpmnBaseTest {
         completeBusinessProcess(endBusinessProcess);
 
         assertNoExternalTasksLeft();
+    }
+
+    private void completeCaseAssignment(VariableMap variables) {
+        ExternalTask caseAssignment = assertNextExternalTask(PROCESS_CASE_EVENT);
+        assertCompleteExternalTask(
+            caseAssignment,
+            PROCESS_CASE_EVENT,
+            CASE_ASSIGNMENT_EVENT,
+            CASE_ASSIGNMENT_ACTIVITY,
+            variables
+        );
     }
 
     @Test

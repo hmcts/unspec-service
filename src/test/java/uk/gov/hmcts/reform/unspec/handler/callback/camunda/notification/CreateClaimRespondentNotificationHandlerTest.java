@@ -44,7 +44,7 @@ class CreateClaimRespondentNotificationHandlerTest extends BaseCallbackHandlerTe
 
         @Test
         void shouldNotifyRespondentSolicitor_whenInvoked() {
-            CaseData caseData = CaseDataBuilder.builder().atStateRespondedToClaim().build();
+            CaseData caseData = CaseDataBuilder.builder().atStateRespondentFullDefence().build();
             CallbackParams params = CallbackParamsBuilder.builder().of(ABOUT_TO_SUBMIT, caseData).build();
 
             handler.handle(params);
@@ -60,7 +60,6 @@ class CreateClaimRespondentNotificationHandlerTest extends BaseCallbackHandlerTe
         private Map<String, String> getExpectedMap() {
             return Map.of(
                 "claimReferenceNumber", "000LR001",
-                "defendantSolicitorName", "Placeholder name",
                 "claimantName", "Mr. John Rambo",
                 "defendantName", "Mr. Sole Trader",
                 "issuedOn", formatLocalDate(CLAIM_ISSUED_DATE, DATE)
