@@ -16,7 +16,7 @@ Scenario('Solicitor creates claim @create-claim', async (I) => {
   await I.createCase();
 
   caseNumber = await I.grabCaseNumber();
-  await I.see(`Case #${caseId()} has been created.`);
+  await I.see(`Case ${caseNumber} has been created.`);
 });
 
 Scenario('Solicitor notifies defendant solicitor of claim', async (I) => {
@@ -32,6 +32,11 @@ Scenario('Solicitor notifies defendant solicitor of claim details', async (I) =>
 Scenario('Solicitor acknowledges service', async (I) => {
   await I.acknowledgeService();
   await I.see(caseEventMessage('Acknowledge service'));
+});
+
+Scenario('Solicitor requests deadline extension', async (I) => {
+  await I.informAgreedExtensionDate();
+  await I.see(caseEventMessage('Inform agreed extension date'));
 });
 
 Scenario('Solicitor adds defendant litigation friend', async (I) => {
