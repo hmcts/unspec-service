@@ -18,6 +18,10 @@ Scenario('Notify claim details', async (api) => {
   await api.notifyClaimDetails();
 });
 
+Scenario('Amend party details', async (api) => {
+  await api.amendPartyDetails();
+});
+
 Scenario('Acknowledge service', async (api) => {
   await api.acknowledgeService();
 });
