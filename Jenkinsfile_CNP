@@ -128,6 +128,7 @@ withPipeline(type, product, component) {
     env.SERVICE_AUTH_PROVIDER_API_BASE_URL = "http://rpe-service-auth-provider-aat.service.core-compute-aat.internal"
     env.CCD_DATA_STORE_URL = "http://ccd-data-store-api-unspec-service-pr-${CHANGE_ID}.service.core-compute-preview.internal"
     env.DM_STORE_URL = "http://dm-store-aat.service.core-compute-aat.internal"
+    sh """ ./gradlew runRpaHandOffTests """
     dir("${WORKSPACE}/bin") {
       sh """
     eval \$(./variables/load-preview-environment-variables.sh ${CHANGE_ID})
