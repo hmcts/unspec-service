@@ -33,6 +33,8 @@ class CreateClaimTest extends BpmnBaseTest {
         = "CreateClaimProceedsOfflineNotifyApplicantSolicitor1";
     private static final String NOTIFY_RPA_ON_CASE_HANDED_OFFLINE = "NOTIFY_RPA_ON_CASE_HANDED_OFFLINE";
     private static final String NOTIFY_RPA_ON_CASE_HANDED_OFFLINE_ACTIVITY_ID = "NotifyRoboticsOnCaseHandedOffline";
+    private static final String CASE_ASSIGNMENT_EVENT = "ASSIGN_CASE_TO_APPLICANT_SOLICITOR1";
+    private static final String CASE_ASSIGNMENT_ACTIVITY = "CaseAssignmentToApplicantSolicitor1";
 
     public CreateClaimTest() {
         super("create_claim.bpmn", "CREATE_CLAIM_PROCESS_ID");
@@ -57,6 +59,9 @@ class CreateClaimTest extends BpmnBaseTest {
             START_BUSINESS_ACTIVITY,
             variables
         );
+
+        //complete the case assignment process
+        completeCaseAssignment(variables);
 
         //complete the payment
         variables.putValue(FLOW_STATE, PAYMENT_SUCCESSFUL.fullName());
@@ -111,6 +116,9 @@ class CreateClaimTest extends BpmnBaseTest {
             variables
         );
 
+        //complete the case assignment process
+        completeCaseAssignment(variables);
+
         //complete the payment
         variables.putValue(FLOW_STATE, PAYMENT_FAILED.fullName());
 
@@ -159,6 +167,9 @@ class CreateClaimTest extends BpmnBaseTest {
             variables
         );
 
+        //complete the case assignment process
+        completeCaseAssignment(variables);
+
         //complete the payment
         variables.putValue(FLOW_STATE, PAYMENT_SUCCESSFUL.fullName());
 
@@ -206,6 +217,17 @@ class CreateClaimTest extends BpmnBaseTest {
         completeBusinessProcess(endBusinessProcess);
 
         assertNoExternalTasksLeft();
+    }
+
+    private void completeCaseAssignment(VariableMap variables) {
+        ExternalTask caseAssignment = assertNextExternalTask(PROCESS_CASE_EVENT);
+        assertCompleteExternalTask(
+            caseAssignment,
+            PROCESS_CASE_EVENT,
+            CASE_ASSIGNMENT_EVENT,
+            CASE_ASSIGNMENT_ACTIVITY,
+            variables
+        );
     }
 
     @Test
