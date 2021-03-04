@@ -1,6 +1,7 @@
 package uk.gov.hmcts.reform.unspec.launchdarkly;
 
 import com.launchdarkly.sdk.LDUser;
+import com.launchdarkly.sdk.LDValue;
 import com.launchdarkly.sdk.server.interfaces.LDClientInterface;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +26,10 @@ public class FeatureToggleService {
 
     public boolean isFeatureEnabled(String feature) {
         return internalClient.boolVariation(feature, createLDUser(), false);
+    }
+
+    public LDValue jsonValueFeature(String feature) {
+        return internalClient.jsonValueVariation(feature, createLDUser(), LDValue.parse("{}"));
     }
 
     public boolean isFeatureEnabled(String feature, LDUser user) {

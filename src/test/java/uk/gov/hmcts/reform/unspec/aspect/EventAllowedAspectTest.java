@@ -16,12 +16,14 @@ import uk.gov.hmcts.reform.ccd.client.model.CallbackRequest;
 import uk.gov.hmcts.reform.unspec.callback.CallbackParams;
 import uk.gov.hmcts.reform.unspec.callback.CallbackType;
 import uk.gov.hmcts.reform.unspec.helpers.CaseDetailsConverter;
+import uk.gov.hmcts.reform.unspec.launchdarkly.OnboardingOrganisationControlService;
 import uk.gov.hmcts.reform.unspec.sampledata.CallbackParamsBuilder;
 import uk.gov.hmcts.reform.unspec.sampledata.CaseDetailsBuilder;
 import uk.gov.hmcts.reform.unspec.service.flowstate.FlowStateAllowedEventService;
 import uk.gov.hmcts.reform.unspec.service.flowstate.StateFlowEngine;
 
 import java.util.List;
+import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.never;
@@ -37,6 +39,7 @@ import static uk.gov.hmcts.reform.unspec.callback.CaseEvent.DEFENDANT_RESPONSE;
     FlowStateAllowedEventService.class,
     JacksonAutoConfiguration.class,
     CaseDetailsConverter.class,
+    OnboardingOrganisationControlService.class,
     StateFlowEngine.class})
 class EventAllowedAspectTest {
 
@@ -47,6 +50,8 @@ class EventAllowedAspectTest {
     EventAllowedAspect eventAllowedAspect;
     @MockBean
     ProceedingJoinPoint proceedingJoinPoint;
+    @MockBean
+    OnboardingOrganisationControlService onboardingOrganisationControlService;
 
     @ParameterizedTest
     @EnumSource(value = CallbackType.class, mode = EnumSource.Mode.EXCLUDE, names = {"ABOUT_TO_START"})
@@ -90,9 +95,12 @@ class EventAllowedAspectTest {
     void shouldProceedToMethodInvocation_whenEventIsAllowed() {
         AboutToStartOrSubmitCallbackResponse response = AboutToStartOrSubmitCallbackResponse.builder().build();
         when(proceedingJoinPoint.proceed()).thenReturn(response);
+        String userToken = "Bearer:userToken";
+        when(onboardingOrganisationControlService.isOrganisationAllowed(userToken)).thenReturn(true);
 
         CallbackParams callbackParams = CallbackParamsBuilder.builder()
             .type(ABOUT_TO_START)
+            .params(Map.of(CallbackParams.Params.BEARER_TOKEN, userToken))
             .request(CallbackRequest.builder()
                          .eventId(CLAIMANT_RESPONSE.name())
                          .caseDetails(CaseDetailsBuilder.builder().atStateRespondedToClaim().build())
