@@ -72,6 +72,7 @@ public class CaseData {
     private final List<Element<CaseDocument>> systemGeneratedCaseDocuments;
 
     private final LocalDateTime respondentSolicitor1ResponseDeadline;
+    private final LocalDate respondentSolicitor1AgreedDeadlineExtension;
     private final ResponseIntention respondent1ClaimResponseIntentionType;
     private final ServedDocumentFiles servedDocumentFiles;
 
