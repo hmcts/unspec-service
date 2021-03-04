@@ -58,6 +58,7 @@ public class CaseData {
     private final LocalDate claimIssuedDate;
     private final LocalDateTime confirmationOfServiceDeadline;
     private final LocalDate claimNotificationDate;
+    private final LocalDate claimDetailsNotificationDate;
     private final String legacyCaseReference;
     private final AllocatedTrack allocatedTrack;
     private final PaymentDetails paymentDetails;
@@ -71,6 +72,7 @@ public class CaseData {
     private final List<Element<CaseDocument>> systemGeneratedCaseDocuments;
 
     private final LocalDateTime respondentSolicitor1ResponseDeadline;
+    private final LocalDate respondentSolicitor1AgreedDeadlineExtension;
     private final ResponseIntention respondent1ClaimResponseIntentionType;
     private final ServedDocumentFiles servedDocumentFiles;
 

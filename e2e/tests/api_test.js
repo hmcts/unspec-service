@@ -14,8 +14,16 @@ Scenario('Notify claim', async (api) => {
   await api.notifyClaim();
 });
 
+Scenario('Notify claim details', async (api) => {
+  await api.notifyClaimDetails();
+});
+
 Scenario('Acknowledge service', async (api) => {
   await api.acknowledgeService();
+});
+
+Scenario('Inform agreed extension date', async (api) => {
+  await api.informAgreedExtensionDate();
 });
 
 Scenario('Defendant response', async (api) => {
@@ -37,4 +45,10 @@ Scenario('Create claim where respondent solicitor is not registered in my hmcts'
 Scenario('Create claim and move it to caseman', async (api) => {
   await api.createClaimWithRepresentedRespondent(config.solicitorUser);
   await api.caseProceedsInCaseman();
+});
+
+// This will be enabled when PAY-3817 issue of two minutes is fixed
+Scenario.skip('Resubmit claim after payment failure on PBA account ', async (api) => {
+  await api.createClaimWithFailingPBAAccount(config.solicitorUser);
+  await api.resubmitClaim(config.solicitorUser);
 });

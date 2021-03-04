@@ -16,9 +16,12 @@ const expectedEvents = require('../fixtures/ccd/expectedEvents.js');
 const data = {
   CREATE_CLAIM: claimData.createClaim,
   CREATE_CLAIM_RESPONDENT_LIP: claimData.createClaimLitigantInPerson,
+  CREATE_CLAIM_TERMINATED_PBA: claimData.createClaimWithTerminatedPBAAccount,
+  RESUBMIT_CLAIM: require('../fixtures/events/resubmitClaim.js'),
   ADD_OR_AMEND_CLAIM_DOCUMENTS: require('../fixtures/events/addOrAmendClaimDocuments.js'),
   CREATE_CLAIM_RESPONDENT_SOLICITOR_FIRM_NOT_IN_MY_HMCTS: claimData.createClaimRespondentSolFirmNotInMyHmcts,
   ACKNOWLEDGE_SERVICE: require('../fixtures/events/acknowledgeService.js'),
+  INFORM_AGREED_EXTENSION_DATE: require('../fixtures/events/informAgreeExtensionDate.js'),
   DEFENDANT_RESPONSE: require('../fixtures/events/defendantResponse.js'),
   CLAIMANT_RESPONSE: require('../fixtures/events/claimantResponse.js'),
   ADD_DEFENDANT_LITIGATION_FRIEND: require('../fixtures/events/addDefendantLitigationFriend.js'),
@@ -48,11 +51,11 @@ module.exports = {
     await apiRequest.startEvent(eventName);
     await validateEventPages(data.CREATE_CLAIM);
 
-    await assertSubmittedEvent('PENDING_CASE_ISSUED', {
-      header: 'Your claim has been issued',
-      body: 'Follow these steps to serve a claim'
-    }, true);
-    await assignCaseToDefendant(caseId);
+     await assertSubmittedEvent('PENDING_CASE_ISSUED', {
+       header: 'Your claim has been issued',
+       body: 'You have until DATE to notify the defendant of the claim and claim details.'
+     }, true);
+     await assignCaseToDefendant(caseId);
 
     await assertCorrectEventsAreAvailableToUser(config.solicitorUser, 'AWAITING_CASE_NOTIFICATION');
     await assertCorrectEventsAreAvailableToUser(config.defendantSolicitorUser, 'AWAITING_CASE_NOTIFICATION');
@@ -64,7 +67,6 @@ module.exports = {
 
     //field is deleted in about to submit callback
     deleteCaseFields('applicantSolicitor1CheckEmail');
-
   },
 
   createClaimWithRespondentLitigantInPerson: async (user) => {
@@ -105,6 +107,36 @@ module.exports = {
     deleteCaseFields('applicantSolicitor1CheckEmail');
   },
 
+  createClaimWithFailingPBAAccount: async (user) => {
+    eventName = 'CREATE_CLAIM';
+    caseId = null;
+    caseData = {};
+    await apiRequest.setupTokens(user);
+    await apiRequest.startEvent(eventName);
+    await validateEventPages(data.CREATE_CLAIM_TERMINATED_PBA);
+    await assertSubmittedEvent('PENDING_CASE_ISSUED', {
+      header: 'Your claim has been issued',
+      body: 'You have until DATE to notify the defendant of the claim and claim details.'
+    }, true);
+    await assignCaseToDefendant(caseId);
+
+    await assertCorrectEventsAreAvailableToUser(config.solicitorUser, 'PENDING_CASE_ISSUED');
+  },
+
+  resubmitClaim: async (user) => {
+    eventName = 'RESUBMIT_CLAIM';
+    caseData = {};
+    await apiRequest.setupTokens(user);
+    await apiRequest.startEvent(eventName, caseId);
+    await validateEventPages(data.RESUBMIT_CLAIM);
+    await assertSubmittedEvent('PENDING_CASE_ISSUED', {
+      header: 'Claim pending',
+      body: 'What happens next'
+    }, true);
+
+    await assertCorrectEventsAreAvailableToUser(config.solicitorUser, 'AWAITING_CASE_NOTIFICATION');
+  },
+
   amendClaimDocuments: async () => {
     eventName = 'ADD_OR_AMEND_CLAIM_DOCUMENTS';
     let returnedCaseData = await apiRequest.startEvent(eventName, caseId);
@@ -114,10 +146,10 @@ module.exports = {
     await validateEventPages(data[eventName]);
 
     await assertError('Upload', data[eventName].invalid.Upload.duplicateError,
-      'More than one particular of claim added');
+      'More than one Particulars of claim details added');
 
     await assertError('Upload', data[eventName].invalid.Upload.nullError,
-      'One particular of claim is required');
+      'You must add Particulars of claim details');
 
     await assertSubmittedEvent('AWAITING_CASE_NOTIFICATION', {
       header: 'Documents uploaded successfully',
@@ -133,8 +165,24 @@ module.exports = {
     let returnedCaseData = await apiRequest.startEvent(eventName, caseId);
     assertContainsPopulatedFields(returnedCaseData);
 
-    await assertSubmittedEvent('CREATED', {
+    await assertSubmittedEvent('AWAITING_CASE_DETAILS_NOTIFICATION', {
       header: 'Notification of claim sent',
+      body: 'What happens next'
+    });
+
+    await assertCorrectEventsAreAvailableToUser(config.solicitorUser, 'AWAITING_CASE_DETAILS_NOTIFICATION');
+    await assertCorrectEventsAreAvailableToUser(config.defendantSolicitorUser, 'AWAITING_CASE_DETAILS_NOTIFICATION');
+  },
+
+  notifyClaimDetails: async() => {
+    eventName = 'NOTIFY_DEFENDANT_OF_CLAIM_DETAILS';
+    let returnedCaseData = await apiRequest.startEvent(eventName, caseId);
+    assertContainsPopulatedFields(returnedCaseData);
+
+    await validateEventPages(data.ADD_OR_AMEND_CLAIM_DOCUMENTS);
+
+    await assertSubmittedEvent('CREATED', {
+      header: 'Defendant notified',
       body: 'What happens next'
     });
 
@@ -163,6 +211,29 @@ module.exports = {
     await assertCorrectEventsAreAvailableToUser(config.defendantSolicitorUser, 'CREATED');
   },
 
+  informAgreedExtensionDate: async () => {
+    eventName = 'INFORM_AGREED_EXTENSION_DATE';
+    let returnedCaseData = await apiRequest.startEvent(eventName, caseId);
+    assertContainsPopulatedFields(returnedCaseData);
+    caseData = returnedCaseData;
+    deleteCaseFields('systemGeneratedCaseDocuments');
+
+    await validateEventPages(data[eventName]);
+
+    await assertError('ExtensionDate', data[eventName].invalid.ExtensionDate.past,
+      'The agreed extension date must be a date in the future');
+    await assertError('ExtensionDate', data[eventName].invalid.ExtensionDate.beforeCurrentDeadline,
+      'The agreed extension date must be after the current deadline');
+
+    await assertSubmittedEvent('CREATED', {
+      header: 'Extension deadline submitted',
+      body: 'What happens next'
+    }, true);
+
+    await assertCorrectEventsAreAvailableToUser(config.solicitorUser, 'CREATED');
+    await assertCorrectEventsAreAvailableToUser(config.defendantSolicitorUser, 'CREATED');
+  },
+
   defendantResponse: async () => {
     eventName = 'DEFENDANT_RESPONSE';
     let returnedCaseData = await apiRequest.startEvent(eventName, caseId);
@@ -178,6 +249,7 @@ module.exports = {
       'The date cannot be in the past and must not be more than a year in the future');
     await assertError('Hearing', data[eventName].invalid.Hearing.moreThanYear,
       'The date cannot be in the past and must not be more than a year in the future');
+
     await assertSubmittedEvent('AWAITING_CLAIMANT_INTENTION', {
       header: 'You\'ve submitted your response',
       body: 'We will let you know when they respond.'
@@ -268,6 +340,7 @@ const assertValidData = async (data, pageId) => {
 const assertError = async (pageId, eventData, expectedErrorMessage, responseBodyMessage = 'Unable to proceed because there are one or more callback Errors or Warnings' ) => {
   const response = await apiRequest.validatePage(eventName, pageId, {...caseData, ...eventData}, 422);
   const responseBody = await response.json();
+
   assert.equal(response.status, 422);
   assert.equal(responseBody.message, responseBodyMessage);
   if(responseBody.callbackErrors != null){
