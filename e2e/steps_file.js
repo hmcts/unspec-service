@@ -102,14 +102,12 @@ module.exports = function () {
       await claimantSolicitorIdamDetailsPage.enterUserEmail();
       await claimantSolicitorOrganisation.enterOrganisationDetails();
       await party.enterParty('respondent1', address);
-
       if (litigantInPerson) {
-        await respondentRepresentedPage.enterRespondentNotRepresented();
+        await respondentRepresentedPage.enterRespondentRepresented('no');
       } else {
-        await respondentRepresentedPage.enterRespondentRepresented();
+        await respondentRepresentedPage.enterRespondentRepresented('yes');
         await defendantSolicitorOrganisation.enterOrganisationDetails();
       }
-
       await claimTypePage.selectClaimType();
       await personalInjuryTypePage.selectPersonalInjuryType();
       await detailsOfClaimPage.enterDetailsOfClaim();
