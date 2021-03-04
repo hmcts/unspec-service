@@ -96,12 +96,15 @@ public class CaseDataBuilder {
     private LocalDate claimDetailsNotificationDate;
     private CorrectEmail applicantSolicitor1CheckEmail;
     private IdamUserDetails applicantSolicitor1UserDetails;
+    //Deadline extension
+    private LocalDate respondentSolicitor1AgreedDeadlineExtension;
     //Acknowledge Service
     private ResponseIntention respondent1ClaimResponseIntentionType;
     // Defendant Response
     private RespondentResponseType respondent1ClaimResponseType;
     private ResponseDocument respondent1ClaimResponseDocument;
     private LocalDateTime applicantSolicitorResponseDeadlineToRespondentSolicitor1;
+    private LocalDate defendantResponseDate;
     private Respondent1DQ respondent1DQ;
     private Applicant1DQ applicant1DQ;
     // Claimant Response
@@ -119,6 +122,11 @@ public class CaseDataBuilder {
 
     public CaseDataBuilder respondentSolicitor1ResponseDeadline(LocalDateTime respondentSolicitor1ResponseDeadline) {
         this.respondentSolicitor1ResponseDeadline = respondentSolicitor1ResponseDeadline;
+        return this;
+    }
+
+    public CaseDataBuilder respondentSolicitor1AgreedDeadlineExtension(LocalDate extensionDate) {
+        this.respondentSolicitor1AgreedDeadlineExtension = extensionDate;
         return this;
     }
 
@@ -258,6 +266,8 @@ public class CaseDataBuilder {
                 return atStateAwaitingCaseDetailsNotification();
             case CLAIM_ISSUED:
                 return atStateClaimCreated();
+            case EXTENSION_REQUESTED:
+                return atStateExtensionRequested();
             case CLAIM_STAYED:
                 return atStateClaimStayed();
             case SERVICE_ACKNOWLEDGED:
@@ -362,7 +372,7 @@ public class CaseDataBuilder {
             .respondentSolicitor1Reference("6789")
             .build();
         courtLocation = CourtLocation.builder()
-            .applicantPreferredCourt("The court location")
+            .applicantPreferredCourt("121")
             .build();
         claimValue = ClaimValue.builder()
             .statementOfValueInPennies(BigDecimal.valueOf(10000000))
@@ -430,6 +440,12 @@ public class CaseDataBuilder {
         return this;
     }
 
+    public CaseDataBuilder atStateExtensionRequested() {
+        atStateServiceAcknowledge();
+        respondentSolicitor1AgreedDeadlineExtension = LocalDate.now();
+        return this;
+    }
+
     public CaseDataBuilder atStateClaimStayed() {
         atStateClaimCreated();
         ccdState = STAYED;
@@ -473,6 +489,7 @@ public class CaseDataBuilder {
         atStateServiceAcknowledge();
         respondent1ClaimResponseType = respondentResponseType;
         applicantSolicitorResponseDeadlineToRespondentSolicitor1 = APPLICANT_RESPONSE_DEADLINE;
+        defendantResponseDate = LocalDate.now();
         ccdState = AWAITING_CLAIMANT_INTENTION;
         return this;
     }
@@ -539,6 +556,8 @@ public class CaseDataBuilder {
             .claimDetailsNotificationDate(claimDetailsNotificationDate)
             .applicantSolicitor1CheckEmail(applicantSolicitor1CheckEmail)
             .applicantSolicitor1UserDetails(applicantSolicitor1UserDetails)
+            //Deadline extension
+            .respondentSolicitor1AgreedDeadlineExtension(respondentSolicitor1AgreedDeadlineExtension)
             // Acknowledge Service
             .respondent1ClaimResponseIntentionType(respondent1ClaimResponseIntentionType)
             // Defendant Response
@@ -547,6 +566,7 @@ public class CaseDataBuilder {
             .applicantSolicitorResponseDeadlineToRespondentSolicitor1(
                 applicantSolicitorResponseDeadlineToRespondentSolicitor1
             )
+            .defendantResponseDate(defendantResponseDate)
             // Claimant Response
             .applicant1ProceedWithClaim(applicant1ProceedWithClaim)
             .applicant1DefenceResponseDocument(applicant1DefenceResponseDocument)
