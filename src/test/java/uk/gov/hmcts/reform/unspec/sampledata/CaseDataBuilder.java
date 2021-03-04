@@ -104,6 +104,7 @@ public class CaseDataBuilder {
     private RespondentResponseType respondent1ClaimResponseType;
     private ResponseDocument respondent1ClaimResponseDocument;
     private LocalDateTime applicantSolicitorResponseDeadlineToRespondentSolicitor1;
+    private LocalDate defendantResponseDate;
     private Respondent1DQ respondent1DQ;
     private Applicant1DQ applicant1DQ;
     // Claimant Response
@@ -377,7 +378,7 @@ public class CaseDataBuilder {
             .respondentSolicitor1Reference("6789")
             .build();
         courtLocation = CourtLocation.builder()
-            .applicantPreferredCourt("The court location")
+            .applicantPreferredCourt("121")
             .build();
         claimValue = ClaimValue.builder()
             .statementOfValueInPennies(BigDecimal.valueOf(10000000))
@@ -494,6 +495,7 @@ public class CaseDataBuilder {
         atStateServiceAcknowledge();
         respondent1ClaimResponseType = respondentResponseType;
         applicantSolicitorResponseDeadlineToRespondentSolicitor1 = APPLICANT_RESPONSE_DEADLINE;
+        defendantResponseDate = LocalDate.now();
         ccdState = AWAITING_CLAIMANT_INTENTION;
         return this;
     }
@@ -571,6 +573,7 @@ public class CaseDataBuilder {
             .applicantSolicitorResponseDeadlineToRespondentSolicitor1(
                 applicantSolicitorResponseDeadlineToRespondentSolicitor1
             )
+            .defendantResponseDate(defendantResponseDate)
             // Claimant Response
             .applicant1ProceedWithClaim(applicant1ProceedWithClaim)
             .applicant1DefenceResponseDocument(applicant1DefenceResponseDocument)
