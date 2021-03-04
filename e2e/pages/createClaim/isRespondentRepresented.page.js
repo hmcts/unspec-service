@@ -24,6 +24,5 @@ module.exports = {
 
     await I.clickContinue();
   }
-
 };
 
