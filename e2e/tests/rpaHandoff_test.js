@@ -14,17 +14,14 @@ Scenario('Take claim offline', async (I) => {
   await I.acknowledgeService('fullDefence');
   await I.caseProceedsInCaseman();
   await I.assertNoEventsAvailable();
-
 });
 
 Scenario('Defendant - Litigant In Person', async (I) => {
-  await I.login(config.solicitorUser);
   await I.createCase(true);
   await I.assertNoEventsAvailable();
 });
 
 Scenario('Defendant - Defend part of Claim', async (I) => {
-  await I.login(config.solicitorUser);
   await I.createCase();
   await I.notifyClaim();
   await I.notifyClaimDetails();
@@ -33,7 +30,6 @@ Scenario('Defendant - Defend part of Claim', async (I) => {
 });
 
 Scenario('Defendant - Defends, Claimant decides not to proceed', async (I) => {
-  await I.login(config.solicitorUser);
   await I.createCase();
   await I.notifyClaim();
   await I.notifyClaimDetails();
@@ -44,7 +40,6 @@ Scenario('Defendant - Defends, Claimant decides not to proceed', async (I) => {
 });
 
 Scenario('Defendant - Defends, Claimant decides to proceed', async (I) => {
-  await I.login(config.solicitorUser);
   await I.createCase();
   await I.notifyClaim();
   await I.notifyClaimDetails();
@@ -55,7 +50,6 @@ Scenario('Defendant - Defends, Claimant decides to proceed', async (I) => {
 });
 
 Scenario('Claimant does not respond to defence with defined timescale', async (I) => {
-  await I.login(config.solicitorUser);
   await I.createCase();
   let caseId = getCaseId(await I.grabCaseNumber());
   await I.notifyClaim();
