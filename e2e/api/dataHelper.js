@@ -6,7 +6,7 @@ const getDateTimeISOString = days => {
   const date = new Date();
   date.setDate(date.getDate() + days);
   return date.toISOString();
-}
+};
 
 module.exports = {
   date: (days = 0) => {
