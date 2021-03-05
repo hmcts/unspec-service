@@ -28,12 +28,12 @@ public class FeatureToggleService {
         return internalClient.boolVariation(feature, createLDUser(), false);
     }
 
-    public LDValue jsonValueFeature(String feature) {
-        return internalClient.jsonValueVariation(feature, createLDUser(), LDValue.parse("{}"));
-    }
-
     public boolean isFeatureEnabled(String feature, LDUser user) {
         return internalClient.boolVariation(feature, user, false);
+    }
+
+    public LDValue jsonValueFeature(String feature) {
+        return internalClient.jsonValueVariation(feature, createLDUser(), LDValue.parse("{}"));
     }
 
     public LDUser createLDUser() {

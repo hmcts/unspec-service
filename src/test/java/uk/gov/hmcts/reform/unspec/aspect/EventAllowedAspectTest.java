@@ -16,7 +16,7 @@ import uk.gov.hmcts.reform.ccd.client.model.CallbackRequest;
 import uk.gov.hmcts.reform.unspec.callback.CallbackParams;
 import uk.gov.hmcts.reform.unspec.callback.CallbackType;
 import uk.gov.hmcts.reform.unspec.helpers.CaseDetailsConverter;
-import uk.gov.hmcts.reform.unspec.launchdarkly.OnboardingOrganisationControlService;
+import uk.gov.hmcts.reform.unspec.launchdarkly.OnBoardingOrganisationControlService;
 import uk.gov.hmcts.reform.unspec.sampledata.CallbackParamsBuilder;
 import uk.gov.hmcts.reform.unspec.sampledata.CaseDetailsBuilder;
 import uk.gov.hmcts.reform.unspec.service.flowstate.FlowStateAllowedEventService;
@@ -39,19 +39,20 @@ import static uk.gov.hmcts.reform.unspec.callback.CaseEvent.DEFENDANT_RESPONSE;
     FlowStateAllowedEventService.class,
     JacksonAutoConfiguration.class,
     CaseDetailsConverter.class,
-    OnboardingOrganisationControlService.class,
+    OnBoardingOrganisationControlService.class,
     StateFlowEngine.class})
 class EventAllowedAspectTest {
 
     private static final String ERROR_MESSAGE = "This action cannot currently be performed because it has either "
         + "already been completed or another action must be completed first.";
+    public static final String USER_TOKEN = "Bearer:userToken";
 
     @Autowired
     EventAllowedAspect eventAllowedAspect;
     @MockBean
     ProceedingJoinPoint proceedingJoinPoint;
     @MockBean
-    OnboardingOrganisationControlService onboardingOrganisationControlService;
+    OnBoardingOrganisationControlService onboardingOrganisationControlService;
 
     @ParameterizedTest
     @EnumSource(value = CallbackType.class, mode = EnumSource.Mode.EXCLUDE, names = {"ABOUT_TO_START"})
@@ -79,6 +80,7 @@ class EventAllowedAspectTest {
 
         CallbackParams callbackParams = CallbackParamsBuilder.builder()
             .type(ABOUT_TO_START)
+            .params(Map.of(CallbackParams.Params.BEARER_TOKEN, USER_TOKEN))
             .request(CallbackRequest.builder()
                          .eventId(DEFENDANT_RESPONSE.name())
                          .caseDetails(CaseDetailsBuilder.builder().atStateClaimDraft().build())
@@ -95,12 +97,11 @@ class EventAllowedAspectTest {
     void shouldProceedToMethodInvocation_whenEventIsAllowed() {
         AboutToStartOrSubmitCallbackResponse response = AboutToStartOrSubmitCallbackResponse.builder().build();
         when(proceedingJoinPoint.proceed()).thenReturn(response);
-        String userToken = "Bearer:userToken";
-        when(onboardingOrganisationControlService.isOrganisationAllowed(userToken)).thenReturn(true);
+        when(onboardingOrganisationControlService.isOrganisationAllowed(USER_TOKEN)).thenReturn(true);
 
         CallbackParams callbackParams = CallbackParamsBuilder.builder()
             .type(ABOUT_TO_START)
-            .params(Map.of(CallbackParams.Params.BEARER_TOKEN, userToken))
+            .params(Map.of(CallbackParams.Params.BEARER_TOKEN, USER_TOKEN))
             .request(CallbackRequest.builder()
                          .eventId(CLAIMANT_RESPONSE.name())
                          .caseDetails(CaseDetailsBuilder.builder().atStateRespondedToClaim().build())

@@ -9,9 +9,12 @@ import org.springframework.boot.autoconfigure.jackson.JacksonAutoConfiguration;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
+import uk.gov.hmcts.reform.idam.client.models.UserInfo;
 import uk.gov.hmcts.reform.prd.model.Organisation;
 import uk.gov.hmcts.reform.unspec.service.OrganisationService;
+import uk.gov.hmcts.reform.unspec.service.UserService;
 
+import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -20,19 +23,21 @@ import static org.mockito.Mockito.when;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(classes = {
-    OnboardingOrganisationControlService.class,
+    OnBoardingOrganisationControlService.class,
     JacksonAutoConfiguration.class
 })
-class OnboardingOrganisationControlServiceTest {
+class OnBoardingOrganisationControlServiceTest {
 
     public static final String USER_TOKEN = "bearer:userToken";
     @MockBean
     private FeatureToggleService featureToggleService;
     @MockBean
     private OrganisationService organisationService;
+    @MockBean
+    private UserService userService;
 
     @Autowired
-    private OnboardingOrganisationControlService onboardingOrganisationControlService;
+    private OnBoardingOrganisationControlService onBoardingOrganisationControlService;
 
     @BeforeEach
     void setUp() {
@@ -44,11 +49,22 @@ class OnboardingOrganisationControlServiceTest {
     }
 
     @Test
+    void shouldReturnTrue_whenUserIsSystemUser() {
+        when(userService.getUserInfo(USER_TOKEN))
+            .thenReturn(UserInfo.builder().roles(List.of("caseworker-civil-systemupdate")).build());
+
+        assertTrue(onBoardingOrganisationControlService.isOrganisationAllowed(USER_TOKEN));
+    }
+
+    @Test
     void shouldReturnTrue_whenOrganisationAllowed() {
         when(organisationService.findOrganisation(USER_TOKEN))
             .thenReturn(Optional.of(Organisation.builder().organisationIdentifier("0FA7S8S").build()));
 
-        assertTrue(onboardingOrganisationControlService.isOrganisationAllowed(USER_TOKEN));
+        when(userService.getUserInfo(USER_TOKEN))
+            .thenReturn(UserInfo.builder().roles(List.of("caseworker-civil-solicitor")).build());
+
+        assertTrue(onBoardingOrganisationControlService.isOrganisationAllowed(USER_TOKEN));
     }
 
     @Test
@@ -56,6 +72,9 @@ class OnboardingOrganisationControlServiceTest {
         when(organisationService.findOrganisation(USER_TOKEN))
             .thenReturn(Optional.of(Organisation.builder().organisationIdentifier("0F99S99").build()));
 
-        assertFalse(onboardingOrganisationControlService.isOrganisationAllowed(USER_TOKEN));
+        when(userService.getUserInfo(USER_TOKEN))
+            .thenReturn(UserInfo.builder().roles(List.of("caseworker-civil-solicitor")).build());
+
+        assertFalse(onBoardingOrganisationControlService.isOrganisationAllowed(USER_TOKEN));
     }
 }

@@ -11,7 +11,7 @@ import uk.gov.hmcts.reform.ccd.client.model.AboutToStartOrSubmitCallbackResponse
 import uk.gov.hmcts.reform.ccd.client.model.CaseDetails;
 import uk.gov.hmcts.reform.unspec.callback.CallbackParams;
 import uk.gov.hmcts.reform.unspec.callback.CaseEvent;
-import uk.gov.hmcts.reform.unspec.launchdarkly.OnboardingOrganisationControlService;
+import uk.gov.hmcts.reform.unspec.launchdarkly.OnBoardingOrganisationControlService;
 import uk.gov.hmcts.reform.unspec.service.flowstate.FlowStateAllowedEventService;
 
 import java.util.List;
@@ -30,7 +30,7 @@ public class EventAllowedAspect {
         + "already been completed or another action must be completed first.";
 
     private final FlowStateAllowedEventService flowStateAllowedEventService;
-    private final OnboardingOrganisationControlService onboardingOrganisationControlService;
+    private final OnBoardingOrganisationControlService onboardingOrganisationControlService;
 
     @Pointcut("execution(* *(*)) && @annotation(EventAllowed)")
     public void eventAllowedPointCut() {
