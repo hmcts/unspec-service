@@ -104,6 +104,7 @@ public class CaseDataBuilder {
     private RespondentResponseType respondent1ClaimResponseType;
     private ResponseDocument respondent1ClaimResponseDocument;
     private LocalDateTime applicantSolicitorResponseDeadlineToRespondentSolicitor1;
+    private LocalDate defendantResponseDate;
     private Respondent1DQ respondent1DQ;
     private Applicant1DQ applicant1DQ;
     // Claimant Response
@@ -116,6 +117,7 @@ public class CaseDataBuilder {
 
     private CloseClaim withdrawClaim;
     private CloseClaim discontinueClaim;
+    private YesOrNo respondent1OrgRegistered;
     private OrganisationPolicy applicant1OrganisationPolicy;
     private OrganisationPolicy respondent1OrganisationPolicy;
 
@@ -226,6 +228,11 @@ public class CaseDataBuilder {
 
     public CaseDataBuilder respondent1Represented(YesOrNo isRepresented) {
         this.respondent1Represented = isRepresented;
+        return this;
+    }
+
+    public CaseDataBuilder respondent1OrgRegistered(YesOrNo respondent1OrgRegistered) {
+        this.respondent1OrgRegistered = respondent1OrgRegistered;
         return this;
     }
 
@@ -371,7 +378,7 @@ public class CaseDataBuilder {
             .respondentSolicitor1Reference("6789")
             .build();
         courtLocation = CourtLocation.builder()
-            .applicantPreferredCourt("The court location")
+            .applicantPreferredCourt("121")
             .build();
         claimValue = ClaimValue.builder()
             .statementOfValueInPennies(BigDecimal.valueOf(10000000))
@@ -488,6 +495,7 @@ public class CaseDataBuilder {
         atStateServiceAcknowledge();
         respondent1ClaimResponseType = respondentResponseType;
         applicantSolicitorResponseDeadlineToRespondentSolicitor1 = APPLICANT_RESPONSE_DEADLINE;
+        defendantResponseDate = LocalDate.now();
         ccdState = AWAITING_CLAIMANT_INTENTION;
         return this;
     }
@@ -546,6 +554,7 @@ public class CaseDataBuilder {
             .applicant1(applicant1)
             .respondent1(respondent1)
             .respondent1Represented(respondent1Represented)
+            .respondent1OrgRegistered(respondent1OrgRegistered)
             .respondentSolicitor1EmailAddress(respondentSolicitor1EmailAddress)
             .applicantSolicitor1ClaimStatementOfTruth(applicantSolicitor1ClaimStatementOfTruth)
             .paymentDetails(paymentDetails)
@@ -564,6 +573,7 @@ public class CaseDataBuilder {
             .applicantSolicitorResponseDeadlineToRespondentSolicitor1(
                 applicantSolicitorResponseDeadlineToRespondentSolicitor1
             )
+            .defendantResponseDate(defendantResponseDate)
             // Claimant Response
             .applicant1ProceedWithClaim(applicant1ProceedWithClaim)
             .applicant1DefenceResponseDocument(applicant1DefenceResponseDocument)
