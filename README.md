@@ -1,8 +1,8 @@
-# unspec-service
+# civil-damages-claims
 
 [![Build Status](https://travis-ci.org/hmcts/unspec-service.svg?branch=master)](https://travis-ci.org/hmcts/unspec-service)
 
-Civil Unspecified's CCD Callback Service.
+Civil Damages Claims's CCD Callback Service.
 
 ### Contents:
 - [Prerequisites](#prerequisites)
@@ -62,42 +62,37 @@ To run smoke tests enter `yarn test:smoke`.
 
 To run API tests enter `yarn test:api`.
 
-### Pact or contract testing
+### Contract testing
 
-Before running, you should set the API token to connect to the pactflow portal as follows:
 
-```bash
-export PACT_BROKER_TOKEN= <api token here>
-```
-The API Token can be obtained by contacting the Civil Damages team.
-#### Run and generate pact
+#### Generate contracts
 
-You can run contract or pact tests as follows:
+You can generate contracts as follows:
 
 ```
 ./gradlew contract
 ```
-#### Run pact broker local docker
-You can then publish your pact tests locally by first running the pact docker-compose:
 
-```
-docker-compose -f docker-pactbroker-compose.yml up -d
-```
-#### Publish pact to broker
-and then using it to publish your tests:
+#### Publish contracts
 
-```
-./gradlew pactPublish
-```
-if you want to publish the pact to hmcts pact broker, please set this env variable accordingly before running the publish command.
+If you want to publish the contracts to hmcts pact broker, please set this env variable accordingly before running the publish command.
 ```
 export PACT_BROKER_FULL_URL=http://pact-broker.platform.hmcts.net/
-./gradlew pactPublish
 ```
-and if you want to publish the RPA pact to the PactFlow pact broker, please set this env variable accordingly before running the publish command.
-By setting your env variable to this, the IDAM pact will be ignored and only the RPA pact will be published to PactFlow.
+and if you want to publish the RPA contract to the PactFlow pact broker, please set this env variable accordingly before running the publish command.
+By setting your env variable to this, the IDAM contract will be ignored and only the RPA contract will be published to PactFlow.
 ```
 export PACT_BROKER_FULL_URL=https://civil-damages-claims.pactflow.io/
+```
+Before running, you should set the API token to connect to the pactflow portal as follows:
+
+```bash
+export PACT_BROKER_TOKEN=<api token here>
+```
+The API Token can be obtained on [Confluence](https://tools.hmcts.net/confluence/display/CU/Pactflow).
+
+To publish your contracts:
+```
 ./gradlew pactPublish
 ```
 
