@@ -64,6 +64,12 @@ To run API tests enter `yarn test:api`.
 
 ### Pact or contract testing
 
+Before running, you should set the API token to connect to the pactflow portal as follows:
+
+```bash
+export PACT_BROKER_TOKEN= <api token here>
+```
+The API Token can be obtained by contacting the Civil Damages team.
 #### Run and generate pact
 
 You can run contract or pact tests as follows:
@@ -88,6 +94,14 @@ if you want to publish the pact to hmcts pact broker, please set this env variab
 export PACT_BROKER_FULL_URL=http://pact-broker.platform.hmcts.net/
 ./gradlew pactPublish
 ```
+and if you want to publish the RPA pact to the PactFlow pact broker, please set this env variable accordingly before running the publish command.
+By setting your env variable to this, the IDAM pact will be ignored and only the RPA pact will be published to PactFlow.
+```
+export PACT_BROKER_FULL_URL=https://civil-damages-claims.pactflow.io/
+./gradlew pactPublish
+```
+
+* If connecting to Pactflow, please disable the HMCTS VPN.
 
 ## Building and deploying the application
 
