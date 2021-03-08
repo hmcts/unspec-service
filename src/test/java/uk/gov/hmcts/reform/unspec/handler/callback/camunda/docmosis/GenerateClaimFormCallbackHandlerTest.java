@@ -12,7 +12,6 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import uk.gov.hmcts.reform.ccd.client.model.AboutToStartOrSubmitCallbackResponse;
 import uk.gov.hmcts.reform.unspec.callback.CallbackParams;
-import uk.gov.hmcts.reform.unspec.enums.YesOrNo;
 import uk.gov.hmcts.reform.unspec.handler.callback.BaseCallbackHandlerTest;
 import uk.gov.hmcts.reform.unspec.helpers.CaseDetailsConverter;
 import uk.gov.hmcts.reform.unspec.model.CaseData;
@@ -31,11 +30,13 @@ import static java.time.LocalDate.now;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static uk.gov.hmcts.reform.unspec.callback.CallbackType.ABOUT_TO_SUBMIT;
 import static uk.gov.hmcts.reform.unspec.enums.CaseState.AWAITING_CASE_NOTIFICATION;
 import static uk.gov.hmcts.reform.unspec.enums.CaseState.PROCEEDS_WITH_OFFLINE_JOURNEY;
+import static uk.gov.hmcts.reform.unspec.enums.YesOrNo.NO;
 import static uk.gov.hmcts.reform.unspec.model.documents.DocumentType.SEALED_CLAIM;
 
 @ExtendWith(SpringExtension.class)
@@ -95,6 +96,8 @@ class GenerateClaimFormCallbackHandlerTest extends BaseCallbackHandlerTest {
 
             var response = (AboutToStartOrSubmitCallbackResponse) handler.handle(params);
 
+            verify(sealedClaimFormGenerator).generate(any(CaseData.class), eq("BEARER_TOKEN"));
+
             CaseData updatedData = mapper.convertValue(response.getData(), CaseData.class);
 
             assertThat(updatedData.getSystemGeneratedCaseDocuments().get(0).getValue()).isEqualTo(DOCUMENT);
@@ -104,12 +107,13 @@ class GenerateClaimFormCallbackHandlerTest extends BaseCallbackHandlerTest {
 
     @Test
     void shouldGenerateDocumentAndSetStateAsAwaitingCaseNotification_whenRespondentIsRepresented() {
-        CaseData caseData = CaseDataBuilder.builder().atStateAwaitingCaseNotification().build();
+        CaseData caseData = CaseDataBuilder.builder().atStateAwaitingCaseNotification()
+            .build();
         CallbackParams params = callbackParamsOf(caseData, ABOUT_TO_SUBMIT);
 
         var response = (AboutToStartOrSubmitCallbackResponse) handler.handle(params);
 
-        verify(sealedClaimFormGenerator).generate(caseData, "BEARER_TOKEN");
+        verify(sealedClaimFormGenerator).generate(any(CaseData.class), eq("BEARER_TOKEN"));
 
         CaseData updatedData = mapper.convertValue(response.getData(), CaseData.class);
 
@@ -122,13 +126,13 @@ class GenerateClaimFormCallbackHandlerTest extends BaseCallbackHandlerTest {
     @Test
     void shouldGenerateDocumentAndSetStateAsProceedsWithOfflineJourney_whenRespondentSolicitorUnregistered() {
         CaseData caseData = CaseDataBuilder.builder().atStateAwaitingCaseNotification()
-            .respondent1OrgRegistered(YesOrNo.NO)
+            .respondent1OrgRegistered(NO)
             .build();
         CallbackParams params = callbackParamsOf(caseData, ABOUT_TO_SUBMIT);
 
         var response = (AboutToStartOrSubmitCallbackResponse) handler.handle(params);
 
-        verify(sealedClaimFormGenerator).generate(caseData, "BEARER_TOKEN");
+        verify(sealedClaimFormGenerator).generate(any(CaseData.class), eq("BEARER_TOKEN"));
 
         CaseData updatedData = mapper.convertValue(response.getData(), CaseData.class);
 
