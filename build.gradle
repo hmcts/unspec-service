@@ -7,7 +7,7 @@ plugins {
   id 'org.owasp.dependencycheck' version '6.1.1'
   id 'com.github.ben-manes.versions' version '0.36.0'
   id 'org.sonarqube' version '3.1.1'
-  id 'au.com.dius.pact' version '4.2.0'
+  id 'au.com.dius.pact' version '4.2.1'
   id "io.freefair.lombok" version "5.3.0"
   id "org.flywaydb.flyway" version "7.5.4"
   id 'net.ltgt.apt' version '0.21'
@@ -196,13 +196,11 @@ task runSmokeTests(type: Exec, description: 'Runs smoke tests.') {
 }
 
 task runFunctionalTests(type: Exec, description: 'Runs functional tests.') {
-  onlyIf(new Spec<Task>() {
-    boolean isSatisfiedBy(Task task) {
-      String skipTestsEnvironmentVariable = System.env.SKIP_FUNCTIONAL_TESTS
-      return skipTestsEnvironmentVariable == null || skipTestsEnvironmentVariable == 'false'
-    }
-  })
   commandLine '/usr/bin/yarn', '--silent', 'test:functional'
+}
+
+task runRpaHandOffTests(type: Exec, description: 'Runs functional tests.') {
+  commandLine '/usr/bin/yarn', '--silent', 'test:rpa'
 }
 
 def inStrictOrder(Task... tasks) {
