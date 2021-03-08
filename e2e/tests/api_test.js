@@ -22,6 +22,10 @@ Scenario('Acknowledge service', async (api) => {
   await api.acknowledgeService();
 });
 
+Scenario('Inform agreed extension date', async (api) => {
+  await api.informAgreedExtensionDate();
+});
+
 Scenario('Defendant response', async (api) => {
   await api.defendantResponse();
 });
@@ -32,6 +36,10 @@ Scenario('Claimant response', async (api) => {
 
 Scenario('Create claim where respondent is litigant in person', async (api) => {
   await api.createClaimWithRespondentLitigantInPerson(config.solicitorUser);
+});
+
+Scenario('Create claim where respondent solicitor is not registered in my hmcts', async (api) => {
+  await api.createClaimWithRespondentSolicitorFirmNotInMyHmcts(config.solicitorUser);
 });
 
 Scenario('Create claim and move it to caseman', async (api) => {
