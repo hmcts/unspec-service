@@ -45,12 +45,18 @@ public class EventAllowedAspect {
         if (callbackParams.getType() != ABOUT_TO_START) {
             return joinPoint.proceed();
         }
-        CaseEvent caseEvent = CaseEvent.valueOf(callbackParams.getRequest().getEventId());
-        CaseDetails caseDetails = callbackParams.getRequest().getCaseDetails();
         String userBearerToken = callbackParams.getParams().get(BEARER_TOKEN).toString();
 
-        if (flowStateAllowedEventService.isAllowed(caseDetails, caseEvent)
-            && onboardingOrganisationControlService.isOrganisationAllowed(userBearerToken)) {
+        if (!onboardingOrganisationControlService.isOrganisationAllowed(userBearerToken)) {
+            return AboutToStartOrSubmitCallbackResponse.builder()
+                .errors(List.of("This organisation is not currently registered to use this service."))
+                .build();
+        }
+
+        CaseEvent caseEvent = CaseEvent.valueOf(callbackParams.getRequest().getEventId());
+        CaseDetails caseDetails = callbackParams.getRequest().getCaseDetails();
+
+        if (flowStateAllowedEventService.isAllowed(caseDetails, caseEvent)) {
             return joinPoint.proceed();
         } else {
             log.info(format(

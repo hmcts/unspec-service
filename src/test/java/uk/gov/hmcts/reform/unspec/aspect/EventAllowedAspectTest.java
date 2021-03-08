@@ -72,11 +72,37 @@ class EventAllowedAspectTest {
 
     @Test
     @SneakyThrows
+    void shouldNotProceedToMethodInvocation_whenOrganisationIsNotAllowed() {
+        AboutToStartOrSubmitCallbackResponse response = AboutToStartOrSubmitCallbackResponse.builder()
+            .errors(List.of("This organisation is not currently registered to use this service."))
+            .build();
+        when(proceedingJoinPoint.proceed()).thenReturn(response);
+
+        when(onboardingOrganisationControlService.isOrganisationAllowed(USER_TOKEN)).thenReturn(false);
+
+        CallbackParams callbackParams = CallbackParamsBuilder.builder()
+            .type(ABOUT_TO_START)
+            .params(Map.of(CallbackParams.Params.BEARER_TOKEN, USER_TOKEN))
+            .request(CallbackRequest.builder()
+                         .eventId(DEFENDANT_RESPONSE.name())
+                         .caseDetails(CaseDetailsBuilder.builder().atStateClaimDraft().build())
+                         .build())
+            .build();
+        Object result = eventAllowedAspect.checkEventAllowed(proceedingJoinPoint, callbackParams);
+
+        assertThat(result).isEqualTo(response);
+        verify(proceedingJoinPoint, never()).proceed();
+    }
+
+    @Test
+    @SneakyThrows
     void shouldNotProceedToMethodInvocation_whenEventIsNotAllowed() {
         AboutToStartOrSubmitCallbackResponse response = AboutToStartOrSubmitCallbackResponse.builder()
             .errors(List.of(ERROR_MESSAGE))
             .build();
         when(proceedingJoinPoint.proceed()).thenReturn(response);
+
+        when(onboardingOrganisationControlService.isOrganisationAllowed(USER_TOKEN)).thenReturn(true);
 
         CallbackParams callbackParams = CallbackParamsBuilder.builder()
             .type(ABOUT_TO_START)
