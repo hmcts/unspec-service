@@ -16,6 +16,7 @@ import uk.gov.hmcts.reform.unspec.callback.CaseEvent;
 import uk.gov.hmcts.reform.unspec.enums.CaseState;
 import uk.gov.hmcts.reform.unspec.enums.YesOrNo;
 import uk.gov.hmcts.reform.unspec.helpers.CaseDetailsConverter;
+import uk.gov.hmcts.reform.unspec.launchdarkly.OnBoardingOrganisationControlService;
 import uk.gov.hmcts.reform.unspec.model.BusinessProcess;
 import uk.gov.hmcts.reform.unspec.model.CaseData;
 import uk.gov.hmcts.reform.unspec.model.CorrectEmail;
@@ -79,11 +80,13 @@ public class CreateClaimCallbackHandler extends CallbackHandler implements Parti
     private final StateFlowEngine stateFlowEngine;
     private final IdamClient idamClient;
     private final OrgPolicyValidator orgPolicyValidator;
+    private final OnBoardingOrganisationControlService onboardingOrganisationControlService;
 
     @Override
     protected Map<String, Callback> callbacks() {
         return Map.of(
             callbackKey(ABOUT_TO_START), this::emptyCallbackResponse,
+            callbackKey(MID, "eligibilityCheck"), this::eligibilityCheck,
             callbackKey(MID, "applicant"), this::validateDateOfBirth,
             callbackKey(MID, "fee"), this::calculateFee,
             callbackKey(MID, "idam-email"), this::getIdamEmail,
@@ -98,6 +101,14 @@ public class CreateClaimCallbackHandler extends CallbackHandler implements Parti
     @Override
     public List<CaseEvent> handledEvents() {
         return EVENTS;
+    }
+
+    private CallbackResponse eligibilityCheck(CallbackParams callbackParams) {
+        String userBearerToken = callbackParams.getParams().get(BEARER_TOKEN).toString();
+        List<String> errors = onboardingOrganisationControlService.isOrganisationAllowed(userBearerToken);
+        return AboutToStartOrSubmitCallbackResponse.builder()
+            .errors(errors)
+            .build();
     }
 
     private CallbackResponse validateDateOfBirth(CallbackParams callbackParams) {

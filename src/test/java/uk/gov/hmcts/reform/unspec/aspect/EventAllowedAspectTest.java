@@ -16,14 +16,12 @@ import uk.gov.hmcts.reform.ccd.client.model.CallbackRequest;
 import uk.gov.hmcts.reform.unspec.callback.CallbackParams;
 import uk.gov.hmcts.reform.unspec.callback.CallbackType;
 import uk.gov.hmcts.reform.unspec.helpers.CaseDetailsConverter;
-import uk.gov.hmcts.reform.unspec.launchdarkly.OnBoardingOrganisationControlService;
 import uk.gov.hmcts.reform.unspec.sampledata.CallbackParamsBuilder;
 import uk.gov.hmcts.reform.unspec.sampledata.CaseDetailsBuilder;
 import uk.gov.hmcts.reform.unspec.service.flowstate.FlowStateAllowedEventService;
 import uk.gov.hmcts.reform.unspec.service.flowstate.StateFlowEngine;
 
 import java.util.List;
-import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.never;
@@ -39,20 +37,16 @@ import static uk.gov.hmcts.reform.unspec.callback.CaseEvent.DEFENDANT_RESPONSE;
     FlowStateAllowedEventService.class,
     JacksonAutoConfiguration.class,
     CaseDetailsConverter.class,
-    OnBoardingOrganisationControlService.class,
     StateFlowEngine.class})
 class EventAllowedAspectTest {
 
     private static final String ERROR_MESSAGE = "This action cannot currently be performed because it has either "
         + "already been completed or another action must be completed first.";
-    public static final String USER_TOKEN = "Bearer:userToken";
 
     @Autowired
     EventAllowedAspect eventAllowedAspect;
     @MockBean
     ProceedingJoinPoint proceedingJoinPoint;
-    @MockBean
-    OnBoardingOrganisationControlService onboardingOrganisationControlService;
 
     @ParameterizedTest
     @EnumSource(value = CallbackType.class, mode = EnumSource.Mode.EXCLUDE, names = {"ABOUT_TO_START"})
@@ -72,41 +66,14 @@ class EventAllowedAspectTest {
 
     @Test
     @SneakyThrows
-    void shouldNotProceedToMethodInvocation_whenOrganisationIsNotAllowed() {
-        AboutToStartOrSubmitCallbackResponse response = AboutToStartOrSubmitCallbackResponse.builder()
-            .errors(List.of("This organisation is not currently registered to use this service."))
-            .build();
-        when(proceedingJoinPoint.proceed()).thenReturn(response);
-
-        when(onboardingOrganisationControlService.isOrganisationAllowed(USER_TOKEN)).thenReturn(false);
-
-        CallbackParams callbackParams = CallbackParamsBuilder.builder()
-            .type(ABOUT_TO_START)
-            .params(Map.of(CallbackParams.Params.BEARER_TOKEN, USER_TOKEN))
-            .request(CallbackRequest.builder()
-                         .eventId(DEFENDANT_RESPONSE.name())
-                         .caseDetails(CaseDetailsBuilder.builder().atStateClaimDraft().build())
-                         .build())
-            .build();
-        Object result = eventAllowedAspect.checkEventAllowed(proceedingJoinPoint, callbackParams);
-
-        assertThat(result).isEqualTo(response);
-        verify(proceedingJoinPoint, never()).proceed();
-    }
-
-    @Test
-    @SneakyThrows
     void shouldNotProceedToMethodInvocation_whenEventIsNotAllowed() {
         AboutToStartOrSubmitCallbackResponse response = AboutToStartOrSubmitCallbackResponse.builder()
             .errors(List.of(ERROR_MESSAGE))
             .build();
         when(proceedingJoinPoint.proceed()).thenReturn(response);
 
-        when(onboardingOrganisationControlService.isOrganisationAllowed(USER_TOKEN)).thenReturn(true);
-
         CallbackParams callbackParams = CallbackParamsBuilder.builder()
             .type(ABOUT_TO_START)
-            .params(Map.of(CallbackParams.Params.BEARER_TOKEN, USER_TOKEN))
             .request(CallbackRequest.builder()
                          .eventId(DEFENDANT_RESPONSE.name())
                          .caseDetails(CaseDetailsBuilder.builder().atStateClaimDraft().build())
@@ -123,11 +90,9 @@ class EventAllowedAspectTest {
     void shouldProceedToMethodInvocation_whenEventIsAllowed() {
         AboutToStartOrSubmitCallbackResponse response = AboutToStartOrSubmitCallbackResponse.builder().build();
         when(proceedingJoinPoint.proceed()).thenReturn(response);
-        when(onboardingOrganisationControlService.isOrganisationAllowed(USER_TOKEN)).thenReturn(true);
 
         CallbackParams callbackParams = CallbackParamsBuilder.builder()
             .type(ABOUT_TO_START)
-            .params(Map.of(CallbackParams.Params.BEARER_TOKEN, USER_TOKEN))
             .request(CallbackRequest.builder()
                          .eventId(CLAIMANT_RESPONSE.name())
                          .caseDetails(CaseDetailsBuilder.builder().atStateRespondedToClaim().build())

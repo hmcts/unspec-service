@@ -11,13 +11,11 @@ import uk.gov.hmcts.reform.ccd.client.model.AboutToStartOrSubmitCallbackResponse
 import uk.gov.hmcts.reform.ccd.client.model.CaseDetails;
 import uk.gov.hmcts.reform.unspec.callback.CallbackParams;
 import uk.gov.hmcts.reform.unspec.callback.CaseEvent;
-import uk.gov.hmcts.reform.unspec.launchdarkly.OnBoardingOrganisationControlService;
 import uk.gov.hmcts.reform.unspec.service.flowstate.FlowStateAllowedEventService;
 
 import java.util.List;
 
 import static java.lang.String.format;
-import static uk.gov.hmcts.reform.unspec.callback.CallbackParams.Params.BEARER_TOKEN;
 import static uk.gov.hmcts.reform.unspec.callback.CallbackType.ABOUT_TO_START;
 
 @Slf4j
@@ -30,7 +28,6 @@ public class EventAllowedAspect {
         + "already been completed or another action must be completed first.";
 
     private final FlowStateAllowedEventService flowStateAllowedEventService;
-    private final OnBoardingOrganisationControlService onboardingOrganisationControlService;
 
     @Pointcut("execution(* *(*)) && @annotation(EventAllowed)")
     public void eventAllowedPointCut() {
@@ -45,17 +42,8 @@ public class EventAllowedAspect {
         if (callbackParams.getType() != ABOUT_TO_START) {
             return joinPoint.proceed();
         }
-        String userBearerToken = callbackParams.getParams().get(BEARER_TOKEN).toString();
-
-        if (!onboardingOrganisationControlService.isOrganisationAllowed(userBearerToken)) {
-            return AboutToStartOrSubmitCallbackResponse.builder()
-                .errors(List.of("This organisation is not currently registered to use this service."))
-                .build();
-        }
-
         CaseEvent caseEvent = CaseEvent.valueOf(callbackParams.getRequest().getEventId());
         CaseDetails caseDetails = callbackParams.getRequest().getCaseDetails();
-
         if (flowStateAllowedEventService.isAllowed(caseDetails, caseEvent)) {
             return joinPoint.proceed();
         } else {

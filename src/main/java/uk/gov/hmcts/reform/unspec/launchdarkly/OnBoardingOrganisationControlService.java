@@ -10,6 +10,8 @@ import uk.gov.hmcts.reform.prd.model.Organisation;
 import uk.gov.hmcts.reform.unspec.service.OrganisationService;
 import uk.gov.hmcts.reform.unspec.service.UserService;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 @Slf4j
@@ -17,31 +19,46 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class OnBoardingOrganisationControlService {
 
+    public static final String ORG_NOT_REGISTERED = "your organisation is %s, unfortunately that org "
+        + "is not part of pilot and therefore cannot use Civil Damages service";
+    
     private final FeatureToggleService featureToggleService;
     private final OrganisationService organisationService;
     private final ObjectMapper objectMapper;
     private final UserService userService;
 
-    public boolean isOrganisationAllowed(String userBearer) {
+    public List<String> isOrganisationAllowed(String userBearer) {
+        List<String> errors = new ArrayList<>();
         boolean isSystemUpdateUser = userService.getUserInfo(userBearer).getRoles().stream()
             .anyMatch(r -> r.equals("caseworker-civil-systemupdate"));
 
         if (isSystemUpdateUser) {
-            return true;
+            return errors;
         }
+
+        Optional<Organisation> userOrganisation = organisationService.findOrganisation(userBearer);
 
         try {
-            Optional<Organisation> userOrganisation = organisationService.findOrganisation(userBearer);
-            LDValue ldValue = featureToggleService.jsonValueFeature("registeredFirms");
+            LDValue registeredFirms = featureToggleService.jsonValueFeature("registeredFirms");
 
             OnboardedOrganisation onboardedOrganisation
-                = objectMapper.readValue(ldValue.toJsonString(), OnboardedOrganisation.class);
+                = objectMapper.readValue(registeredFirms.toJsonString(), OnboardedOrganisation.class);
 
-            return userOrganisation.map(org -> hasSameOrganisation(onboardedOrganisation, org)).orElse(false);
+            Boolean orgIsInMyHmcts = userOrganisation.map(userOrg -> hasSameOrganisation(
+                onboardedOrganisation,
+                userOrg
+            )).orElse(false);
+
+            if (!orgIsInMyHmcts) {
+                errors.add(String.format(
+                    ORG_NOT_REGISTERED,
+                    userOrganisation.map(Organisation::getName).orElse("UnRegistered")
+                ));
+            }
         } catch (JsonProcessingException jsonProcessingException) {
-            log.error("invalid list of registered firms");
+            log.error("invalid json list of registered firms in launch darkly config");
         }
-        return false;
+        return errors;
     }
 
     private boolean hasSameOrganisation(OnboardedOrganisation onboardedOrganisation, Organisation org) {

@@ -17,9 +17,9 @@ import uk.gov.hmcts.reform.unspec.service.UserService;
 import java.util.List;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.when;
+import static uk.gov.hmcts.reform.unspec.launchdarkly.OnBoardingOrganisationControlService.ORG_NOT_REGISTERED;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(classes = {
@@ -49,32 +49,34 @@ class OnBoardingOrganisationControlServiceTest {
     }
 
     @Test
-    void shouldReturnTrue_whenUserIsSystemUser() {
+    void shouldNotReturnError_whenUserIsSystemUser() {
         when(userService.getUserInfo(USER_TOKEN))
             .thenReturn(UserInfo.builder().roles(List.of("caseworker-civil-systemupdate")).build());
 
-        assertTrue(onBoardingOrganisationControlService.isOrganisationAllowed(USER_TOKEN));
+        assertThat(onBoardingOrganisationControlService.isOrganisationAllowed(USER_TOKEN)).isEmpty();
     }
 
     @Test
-    void shouldReturnTrue_whenOrganisationAllowed() {
+    void shouldNotReturnError_whenOrganisationAllowed() {
         when(organisationService.findOrganisation(USER_TOKEN))
             .thenReturn(Optional.of(Organisation.builder().organisationIdentifier("0FA7S8S").build()));
 
         when(userService.getUserInfo(USER_TOKEN))
             .thenReturn(UserInfo.builder().roles(List.of("caseworker-civil-solicitor")).build());
 
-        assertTrue(onBoardingOrganisationControlService.isOrganisationAllowed(USER_TOKEN));
+        assertThat(onBoardingOrganisationControlService.isOrganisationAllowed(USER_TOKEN)).isEmpty();
     }
 
     @Test
-    void shouldReturnFalse_whenOrganisationNotAllowed() {
+    void shouldReturnError_whenOrganisationNotAllowed() {
+        String firm = "Solicitor tribunal ltd";
         when(organisationService.findOrganisation(USER_TOKEN))
-            .thenReturn(Optional.of(Organisation.builder().organisationIdentifier("0F99S99").build()));
+            .thenReturn(Optional.of(Organisation.builder().name(firm).organisationIdentifier("0F99S99").build()));
 
         when(userService.getUserInfo(USER_TOKEN))
             .thenReturn(UserInfo.builder().roles(List.of("caseworker-civil-solicitor")).build());
 
-        assertFalse(onBoardingOrganisationControlService.isOrganisationAllowed(USER_TOKEN));
+        assertThat(onBoardingOrganisationControlService.isOrganisationAllowed(USER_TOKEN))
+            .contains(String.format(ORG_NOT_REGISTERED, firm));
     }
 }
