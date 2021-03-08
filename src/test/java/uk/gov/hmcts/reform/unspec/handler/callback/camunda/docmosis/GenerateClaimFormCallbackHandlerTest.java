@@ -12,6 +12,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import uk.gov.hmcts.reform.ccd.client.model.AboutToStartOrSubmitCallbackResponse;
 import uk.gov.hmcts.reform.unspec.callback.CallbackParams;
+import uk.gov.hmcts.reform.unspec.enums.YesOrNo;
 import uk.gov.hmcts.reform.unspec.handler.callback.BaseCallbackHandlerTest;
 import uk.gov.hmcts.reform.unspec.helpers.CaseDetailsConverter;
 import uk.gov.hmcts.reform.unspec.model.CaseData;
@@ -116,5 +117,22 @@ class GenerateClaimFormCallbackHandlerTest extends BaseCallbackHandlerTest {
         assertThat(updatedData.getClaimIssuedDate()).isEqualTo(claimIssuedDate);
         assertThat(updatedData.getRespondentSolicitor1ResponseDeadline()).isEqualTo(deadline);
         assertThat(response.getState()).isEqualTo(AWAITING_CASE_NOTIFICATION.toString());
+    }
+
+    @Test
+    void shouldGenerateDocumentAndSetStateAsProceedsWithOfflineJourney_whenRespondentSolicitorUnregistered() {
+        CaseData caseData = CaseDataBuilder.builder().atStateAwaitingCaseNotification()
+            .respondent1OrgRegistered(YesOrNo.NO)
+            .build();
+        CallbackParams params = callbackParamsOf(caseData, ABOUT_TO_SUBMIT);
+
+        var response = (AboutToStartOrSubmitCallbackResponse) handler.handle(params);
+
+        verify(sealedClaimFormGenerator).generate(caseData, "BEARER_TOKEN");
+
+        CaseData updatedData = mapper.convertValue(response.getData(), CaseData.class);
+
+        assertThat(updatedData.getSystemGeneratedCaseDocuments().get(0).getValue()).isEqualTo(DOCUMENT);
+        assertThat(response.getState()).isEqualTo(PROCEEDS_WITH_OFFLINE_JOURNEY.toString());
     }
 }
