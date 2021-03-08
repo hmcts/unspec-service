@@ -3,18 +3,18 @@
 const defaultPassword = 'Password12!';
 
 module.exports = {
-  proxyServer: process.env.PROXY_SERVER,
+  proxyServer: 'proxyout.reform.hmcts.net:8080',
   idamStub: {
     enabled: process.env.IDAM_STUB_ENABLED || false,
     url: 'http://localhost:5555'
   },
   url: {
-    manageCase: process.env.URL || 'http://localhost:3333',
-    authProviderApi: process.env.SERVICE_AUTH_PROVIDER_API_BASE_URL || 'http://localhost:4502',
-    ccdDataStore: process.env.CCD_DATA_STORE_URL || 'http://localhost:4452',
-    dmStore: process.env.DM_STORE_URL || 'http://dm-store:8080',
-    idamApi: process.env.IDAM_API_URL || 'http://localhost:5000',
-    unspecService: process.env.UNSPEC_SERVICE_URL || 'http://localhost:4000',
+    manageCase: 'https://manage-case.aat.platform.hmcts.net',
+    authProviderApi: 'http://rpe-service-auth-provider-aat.service.core-compute-aat.internal',
+    ccdDataStore: 'http://ccd-data-store-api-aat.service.core-compute-aat.internal',
+    dmStore: 'http://dm-store-aat.service.core-compute-aat.internal',
+    idamApi: 'https://idam-api.aat.platform.hmcts.net',
+    unspecService: 'http://unspec-service-aat.service.core-compute-aat.internal',
   },
   s2s: {
     microservice: 'unspec_service',
