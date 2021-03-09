@@ -122,7 +122,7 @@ class CreateClaimCallbackHandlerTest extends BaseCallbackHandlerTest {
                                 .build())
                 .build();
 
-            given(onBoardingOrganisationControlService.isOrganisationAllowed("BEARER_TOKEN"))
+            given(onBoardingOrganisationControlService.validateOrganisation("BEARER_TOKEN"))
                 .willReturn(List.of(String.format(ORG_NOT_REGISTERED, "Solicitor tribunal ltd")));
 
             CallbackParams params = callbackParamsOf(caseData, MID, PAGE_ID);
@@ -141,7 +141,7 @@ class CreateClaimCallbackHandlerTest extends BaseCallbackHandlerTest {
                                 .build())
                 .build();
 
-            given(onBoardingOrganisationControlService.isOrganisationAllowed("BEARER_TOKEN"))
+            given(onBoardingOrganisationControlService.validateOrganisation("BEARER_TOKEN"))
                 .willReturn(List.of());
 
             CallbackParams params = callbackParamsOf(caseData, MID, PAGE_ID);

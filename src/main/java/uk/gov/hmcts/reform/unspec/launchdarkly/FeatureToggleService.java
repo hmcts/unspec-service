@@ -1,7 +1,6 @@
 package uk.gov.hmcts.reform.unspec.launchdarkly;
 
 import com.launchdarkly.sdk.LDUser;
-import com.launchdarkly.sdk.LDValue;
 import com.launchdarkly.sdk.server.interfaces.LDClientInterface;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,23 +24,22 @@ public class FeatureToggleService {
     }
 
     public boolean isFeatureEnabled(String feature) {
-        return internalClient.boolVariation(feature, createLDUser(), false);
+        return internalClient.boolVariation(feature, createLDUser().build(), false);
     }
 
     public boolean isFeatureEnabled(String feature, LDUser user) {
         return internalClient.boolVariation(feature, user, false);
     }
 
-    public LDValue jsonValueFeature(String feature) {
-        return internalClient.jsonValueVariation(feature, createLDUser(), LDValue.parse("{}"));
+    public boolean isOrganisationOnboarded(String orgId) {
+        LDUser ldUser = createLDUser().custom("orgId", orgId).build();
+        return internalClient.boolVariation("isOrganisationOnboarded", ldUser, false);
     }
 
-    public LDUser createLDUser() {
-        LDUser.Builder builder = new LDUser.Builder("civil-unspec-service")
+    public LDUser.Builder createLDUser() {
+        return new LDUser.Builder("civil-unspec-service")
             .custom("timestamp", String.valueOf(System.currentTimeMillis()))
             .custom("environment", environment);
-
-        return builder.build();
     }
 
     private void close() {
