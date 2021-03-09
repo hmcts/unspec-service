@@ -114,11 +114,7 @@ class CreateClaimCallbackHandlerTest extends BaseCallbackHandlerTest {
 
         @Test
         void shouldReturnError_whenOrganisationIsNotRegistered() {
-            CaseData caseData = CaseDataBuilder.builder().atStateClaimDraft()
-                .applicant1(PartyBuilder.builder().individual()
-                                .individualDateOfBirth(LocalDate.now().plusDays(1))
-                                .build())
-                .build();
+            CaseData caseData = CaseDataBuilder.builder().build();
 
             given(onBoardingOrganisationControlService.validateOrganisation("BEARER_TOKEN"))
                 .willReturn(List.of(String.format(ORG_NOT_REGISTERED, "Solicitor tribunal ltd")));
@@ -133,11 +129,7 @@ class CreateClaimCallbackHandlerTest extends BaseCallbackHandlerTest {
 
         @Test
         void shouldNotReturnError_whenOrganisationIsRegistered() {
-            CaseData caseData = CaseDataBuilder.builder().atStateClaimDraft()
-                .applicant1(PartyBuilder.builder().individual()
-                                .individualDateOfBirth(LocalDate.now().plusDays(1))
-                                .build())
-                .build();
+            CaseData caseData = CaseDataBuilder.builder().build();
 
             given(onBoardingOrganisationControlService.validateOrganisation("BEARER_TOKEN"))
                 .willReturn(List.of());
