@@ -20,6 +20,7 @@ import uk.gov.hmcts.reform.unspec.model.IdamUserDetails;
 import uk.gov.hmcts.reform.unspec.model.Party;
 import uk.gov.hmcts.reform.unspec.model.PaymentDetails;
 import uk.gov.hmcts.reform.unspec.model.ResponseDocument;
+import uk.gov.hmcts.reform.unspec.model.SolicitorOrganisationDetails;
 import uk.gov.hmcts.reform.unspec.model.SolicitorReferences;
 import uk.gov.hmcts.reform.unspec.model.StatementOfTruth;
 import uk.gov.hmcts.reform.unspec.model.common.Element;
@@ -121,6 +122,8 @@ public class CaseDataBuilder {
     private OrganisationPolicy applicant1OrganisationPolicy;
     private OrganisationPolicy respondent1OrganisationPolicy;
 
+    private SolicitorOrganisationDetails respondentSolicitor1OrganisationDetails;
+
     public CaseDataBuilder respondentSolicitor1ResponseDeadline(LocalDateTime respondentSolicitor1ResponseDeadline) {
         this.respondentSolicitor1ResponseDeadline = respondentSolicitor1ResponseDeadline;
         return this;
@@ -188,6 +191,11 @@ public class CaseDataBuilder {
 
     public CaseDataBuilder applicant1DQ(Applicant1DQ applicant1DQ) {
         this.applicant1DQ = applicant1DQ;
+        return this;
+    }
+
+    public CaseDataBuilder respondentSolicitor1OrganisationDetails(SolicitorOrganisationDetails organisationDetails) {
+        this.respondentSolicitor1OrganisationDetails = organisationDetails;
         return this;
     }
 
@@ -304,12 +312,9 @@ public class CaseDataBuilder {
     }
 
     public CaseDataBuilder atStateProceedsOfflineUnrepresentedDefendant() {
-        atStateClaimDraft();
-        claimSubmittedDateTime = LocalDateTime.now();
-        legacyCaseReference = LEGACY_CASE_REFERENCE;
-        allocatedTrack = FAST_CLAIM;
+        atStatePaymentSuccessful();
         ccdState = PROCEEDS_WITH_OFFLINE_JOURNEY;
-        ccdCaseReference = CASE_ID;
+        claimIssuedDate = CLAIM_ISSUED_DATE;
         respondent1Represented = NO;
         return this;
     }
@@ -388,6 +393,7 @@ public class CaseDataBuilder {
         applicant1 = PartyBuilder.builder().individual().build();
         respondent1 = PartyBuilder.builder().soleTrader().build();
         respondent1Represented = YES;
+        respondent1OrgRegistered = YES;
         respondentSolicitor1EmailAddress = "civilunspecified@gmail.com";
         applicantSolicitor1ClaimStatementOfTruth = StatementOfTruthBuilder.builder().build();
         claimSubmittedDateTime = LocalDateTime.now();
@@ -589,6 +595,7 @@ public class CaseDataBuilder {
             .discontinueClaim(discontinueClaim)
             .respondent1DQ(respondent1DQ)
             .applicant1DQ(applicant1DQ)
+            .respondentSolicitor1OrganisationDetails(respondentSolicitor1OrganisationDetails)
             .applicant1OrganisationPolicy(applicant1OrganisationPolicy)
             .respondent1OrganisationPolicy(respondent1OrganisationPolicy)
             .build();
