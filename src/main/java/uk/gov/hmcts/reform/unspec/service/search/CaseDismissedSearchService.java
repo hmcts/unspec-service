@@ -18,12 +18,12 @@ public class CaseDismissedSearchService extends ElasticSearchService {
         super(coreCaseDataService);
     }
 
-    //TODO: applicantSolicitor1ClaimDismissedDeadlineToRespondentSolicitor1 is not yet set anywhere. Date is 6 months
+    //TODO: claimDismissedDeadline is not yet set anywhere. Date is 6 months
     // of no activity in state view and respond to defence which is currently AWAITING_CLAIMANT_INTENTION.
     public Query query(int startIndex) {
         return new Query(
             boolQuery()
-                .must(rangeQuery("data.applicantSolicitor1ClaimDismissedDeadlineToRespondentSolicitor1").lt("now"))
+                .must(rangeQuery("data.claimDismissedDeadline").lt("now"))
                 .must(beValidState()),
             List.of("reference"),
             startIndex

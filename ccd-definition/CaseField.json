@@ -595,7 +595,7 @@
   {
     "LiveFrom": "01/01/2017",
     "CaseTypeID": "UNSPECIFIED_CLAIMS",
-    "ID": "applicantSolicitor1ClaimDismissedDeadlineToRespondentSolicitor1",
+    "ID": "claimDismissedDeadline",
     "Label": "Case dismissed deadline",
     "FieldType": "DateTime",
     "SecurityClassification": "Public"
