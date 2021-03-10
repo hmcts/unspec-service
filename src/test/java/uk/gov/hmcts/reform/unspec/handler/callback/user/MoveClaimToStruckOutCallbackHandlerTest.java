@@ -47,7 +47,7 @@ class MoveClaimToStruckOutCallbackHandlerTest extends BaseCallbackHandlerTest {
             assertThat(response.getData())
                 .containsEntry("businessProcess", Map.of(
                     "status", "READY",
-                    "camundaEvent", "MOVE_CLAIM_TO_STRUCK_OUT"
+                    "camundaEvent", "MOVE_CLAIM_TO_DISMISSED"
                 ));
         }
     }

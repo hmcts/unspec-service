@@ -10,17 +10,17 @@ import static org.elasticsearch.index.query.QueryBuilders.boolQuery;
 import static org.elasticsearch.index.query.QueryBuilders.matchQuery;
 import static org.elasticsearch.index.query.QueryBuilders.rangeQuery;
 
-class CaseStrikeoutSearchServiceTest extends ElasticSearchServiceTest {
+class CaseDismissedSearchServiceTest extends ElasticSearchServiceTest {
 
     @BeforeEach
     void setup() {
-        searchService = new CaseStrikeoutSearchService(coreCaseDataService);
+        searchService = new CaseDismissedSearchService(coreCaseDataService);
     }
 
     @Override
     protected Query buildQuery(int fromValue) {
         BoolQueryBuilder query = boolQuery()
-            .must(rangeQuery("data.applicantSolicitor1ClaimStrikeOutDeadlineToRespondentSolicitor1").lt("now"))
+            .must(rangeQuery("data.applicantSolicitor1ClaimDismissedDeadlineToRespondentSolicitor1").lt("now"))
             .must(boolQuery()
                       .minimumShouldMatch(1)
                       .should(matchQuery("state", "AWAITING_CLAIMANT_INTENTION")));

@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service;
 import uk.gov.hmcts.reform.unspec.event.MoveCaseToStuckOutEvent;
 import uk.gov.hmcts.reform.unspec.service.CoreCaseDataService;
 
-import static uk.gov.hmcts.reform.unspec.callback.CaseEvent.MOVE_CLAIM_TO_STRUCK_OUT;
+import static uk.gov.hmcts.reform.unspec.callback.CaseEvent.MOVE_CLAIM_TO_DISMISSED;
 
 @Slf4j
 @Service
@@ -18,6 +18,6 @@ public class MoveCaseToStruckOutEventHandler {
 
     @EventListener
     public void moveCaseToStruckOut(MoveCaseToStuckOutEvent event) {
-        coreCaseDataService.triggerEvent(event.getCaseId(), MOVE_CLAIM_TO_STRUCK_OUT);
+        coreCaseDataService.triggerEvent(event.getCaseId(), MOVE_CLAIM_TO_DISMISSED);
     }
 }

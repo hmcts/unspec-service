@@ -12,7 +12,7 @@ import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import uk.gov.hmcts.reform.ccd.client.model.CaseDetails;
 import uk.gov.hmcts.reform.unspec.event.MoveCaseToStuckOutEvent;
-import uk.gov.hmcts.reform.unspec.service.search.CaseStrikeoutSearchService;
+import uk.gov.hmcts.reform.unspec.service.search.CaseDismissedSearchService;
 
 import java.util.List;
 import java.util.Map;
@@ -29,7 +29,7 @@ import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(SpringExtension.class)
-class ClaimStrikeoutHandlerTest {
+class ClaimDismissedHandlerTest {
 
     @Mock
     private ExternalTask mockTask;
@@ -38,13 +38,13 @@ class ClaimStrikeoutHandlerTest {
     private ExternalTaskService externalTaskService;
 
     @Mock
-    private CaseStrikeoutSearchService searchService;
+    private CaseDismissedSearchService searchService;
 
     @Mock
     private ApplicationEventPublisher applicationEventPublisher;
 
     @InjectMocks
-    private ClaimStrikeoutHandler caseStayedFinder;
+    private ClaimDismissedHandler caseStayedFinder;
 
     @BeforeEach
     void init() {

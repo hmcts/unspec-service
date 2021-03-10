@@ -55,7 +55,7 @@
     <bpmn:sequenceFlow id="Flow_08myj65" sourceRef="Event_0t2zome" targetRef="Activity_0emdthr" />
     <bpmn:sequenceFlow id="Flow_14aod2o" sourceRef="Activity_0emdthr" targetRef="ClaimStrikeoutNotifyRespondentSolicitor1" />
   </bpmn:process>
-  <bpmn:message id="Message_0slk3de" name="MOVE_CLAIM_TO_STRUCK_OUT" />
+  <bpmn:message id="Message_0slk3de" name="MOVE_CLAIM_TO_DISMISSED" />
   <bpmn:error id="Error_0t2ju7k" name="StartBusinessAbort" errorCode="ABORT" />
   <bpmndi:BPMNDiagram id="BPMNDiagram_1">
     <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="CLAIM_STRIKEOUT_PROCESS_ID">

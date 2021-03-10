@@ -4,15 +4,15 @@ import org.camunda.bpm.client.ExternalTaskClient;
 import org.camunda.bpm.client.topic.TopicSubscriptionBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import uk.gov.hmcts.reform.unspec.handler.tasks.ClaimStrikeoutHandler;
+import uk.gov.hmcts.reform.unspec.handler.tasks.ClaimDismissedHandler;
 
 @Component
-public class CaseStrikeOutExternalTaskListener {
+public class CaseDismissedExternalTaskListener {
 
-    private static final String TOPIC = "CASE_STRIKEOUT";
+    private static final String TOPIC = "CASE_DISMISSED";
 
     @Autowired
-    private CaseStrikeOutExternalTaskListener(ClaimStrikeoutHandler caseStrikeoutHandler, ExternalTaskClient client) {
+    private CaseDismissedExternalTaskListener(ClaimDismissedHandler caseStrikeoutHandler, ExternalTaskClient client) {
         TopicSubscriptionBuilder subscriptionBuilder = client.subscribe(TOPIC);
         subscriptionBuilder.handler(caseStrikeoutHandler).open();
     }

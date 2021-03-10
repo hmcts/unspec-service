@@ -9,7 +9,7 @@ import uk.gov.hmcts.reform.unspec.event.MoveCaseToStuckOutEvent;
 import uk.gov.hmcts.reform.unspec.service.CoreCaseDataService;
 
 import static org.mockito.Mockito.verify;
-import static uk.gov.hmcts.reform.unspec.callback.CaseEvent.MOVE_CLAIM_TO_STRUCK_OUT;
+import static uk.gov.hmcts.reform.unspec.callback.CaseEvent.MOVE_CLAIM_TO_DISMISSED;
 
 @ExtendWith(SpringExtension.class)
 class MoveCaseToStruckOutEventHandlerTest {
@@ -26,7 +26,7 @@ class MoveCaseToStruckOutEventHandlerTest {
 
         handler.moveCaseToStruckOut(event);
 
-        verify(coreCaseDataService).triggerEvent(event.getCaseId(), MOVE_CLAIM_TO_STRUCK_OUT);
+        verify(coreCaseDataService).triggerEvent(event.getCaseId(), MOVE_CLAIM_TO_DISMISSED);
     }
 
 }

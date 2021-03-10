@@ -81,7 +81,7 @@ class CoreCaseDataServiceTest {
     @Nested
     class TriggerEvent {
 
-        private static final String EVENT_ID = "MOVE_CLAIM_TO_STRUCK_OUT";
+        private static final String EVENT_ID = "MOVE_CLAIM_TO_DISMISSED";
         private static final String JURISDICTION = "CIVIL";
         private static final String EVENT_TOKEN = "eventToken";
         private static final String CASE_ID = "1";

@@ -10,7 +10,7 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 
 class ClaimStrikeoutTest extends BpmnBaseTest {
 
-    public static final String MESSAGE_NAME = "MOVE_CLAIM_TO_STRUCK_OUT";
+    public static final String MESSAGE_NAME = "MOVE_CLAIM_TO_DISMISSED";
     public static final String PROCESS_ID = "CLAIM_STRIKEOUT_PROCESS_ID";
 
     public static final String NOTIFY_RESPONDENT_SOLICITOR_1 = "NOTIFY_RESPONDENT_SOLICITOR1_CASE_STRIKE_OUT";
@@ -19,7 +19,7 @@ class ClaimStrikeoutTest extends BpmnBaseTest {
     public static final String APPLICANT_SOLICITOR_1_ACTIVITY_ID = "ClaimStrikeoutNotifyApplicantSolicitor1";
 
     public ClaimStrikeoutTest() {
-        super("claim_strikeout.bpmn", "CLAIM_STRIKEOUT_PROCESS_ID");
+        super("claim_dismissed.bpmn", "CLAIM_STRIKEOUT_PROCESS_ID");
     }
 
     @Test

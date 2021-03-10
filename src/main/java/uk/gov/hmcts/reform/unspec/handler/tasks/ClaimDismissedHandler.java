@@ -7,16 +7,16 @@ import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Component;
 import uk.gov.hmcts.reform.ccd.client.model.CaseDetails;
 import uk.gov.hmcts.reform.unspec.event.MoveCaseToStuckOutEvent;
-import uk.gov.hmcts.reform.unspec.service.search.CaseStrikeoutSearchService;
+import uk.gov.hmcts.reform.unspec.service.search.CaseDismissedSearchService;
 
 import java.util.List;
 
 @Slf4j
 @RequiredArgsConstructor
 @Component
-public class ClaimStrikeoutHandler implements BaseExternalTaskHandler {
+public class ClaimDismissedHandler implements BaseExternalTaskHandler {
 
-    private final CaseStrikeoutSearchService caseSearchService;
+    private final CaseDismissedSearchService caseSearchService;
     private final ApplicationEventPublisher applicationEventPublisher;
 
     @Override

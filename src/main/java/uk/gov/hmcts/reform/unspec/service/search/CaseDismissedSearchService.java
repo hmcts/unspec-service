@@ -12,17 +12,18 @@ import static org.elasticsearch.index.query.QueryBuilders.matchQuery;
 import static org.elasticsearch.index.query.QueryBuilders.rangeQuery;
 
 @Service
-public class CaseStrikeoutSearchService extends ElasticSearchService {
+public class CaseDismissedSearchService extends ElasticSearchService {
 
-    public CaseStrikeoutSearchService(CoreCaseDataService coreCaseDataService) {
+    public CaseDismissedSearchService(CoreCaseDataService coreCaseDataService) {
         super(coreCaseDataService);
     }
 
-    //TODO: applicantSolicitor1ClaimStrikeOutDeadlineToRespondentSolicitor1 is not yet set anywhere.
+    //TODO: applicantSolicitor1ClaimDismissedDeadlineToRespondentSolicitor1 is not yet set anywhere. Date is 6 months
+    // of no activity in state view and respond to defence which is currently AWAITING_CLAIMANT_INTENTION.
     public Query query(int startIndex) {
         return new Query(
             boolQuery()
-                .must(rangeQuery("data.applicantSolicitor1ClaimStrikeOutDeadlineToRespondentSolicitor1").lt("now"))
+                .must(rangeQuery("data.applicantSolicitor1ClaimDismissedDeadlineToRespondentSolicitor1").lt("now"))
                 .must(beValidState()),
             List.of("reference"),
             startIndex

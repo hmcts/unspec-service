@@ -10,12 +10,12 @@ import java.util.List;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 
-class CaseStrikeoutSchedulerTest extends BpmnBaseTest {
+class CaseDismissedSchedulerTest extends BpmnBaseTest {
 
-    public static final String TOPIC_NAME = "CASE_STRIKEOUT";
+    public static final String TOPIC_NAME = "CASE_DISMISSED";
 
-    public CaseStrikeoutSchedulerTest() {
-        super("claim_strikeout_scheduler.bpmn", "CASE_STRIKEOUT_SCHEDULER");
+    public CaseDismissedSchedulerTest() {
+        super("claim_dismissed_scheduler.bpmn", "CASE_DISMISSED_SCHEDULER");
     }
 
     @Test
