@@ -21,9 +21,8 @@ import static uk.gov.hmcts.reform.unspec.callback.CaseEvent.CLAIMANT_RESPONSE;
 import static uk.gov.hmcts.reform.unspec.callback.CaseEvent.CREATE_CLAIM;
 import static uk.gov.hmcts.reform.unspec.callback.CaseEvent.DEFENDANT_RESPONSE;
 import static uk.gov.hmcts.reform.unspec.callback.CaseEvent.DISCONTINUE_CLAIM;
+import static uk.gov.hmcts.reform.unspec.callback.CaseEvent.DISMISS_CLAIM;
 import static uk.gov.hmcts.reform.unspec.callback.CaseEvent.INFORM_AGREED_EXTENSION_DATE;
-import static uk.gov.hmcts.reform.unspec.callback.CaseEvent.MOVE_CLAIM_TO_DISMISSED;
-import static uk.gov.hmcts.reform.unspec.callback.CaseEvent.MOVE_TO_STAYED;
 import static uk.gov.hmcts.reform.unspec.callback.CaseEvent.NOTIFY_DEFENDANT_OF_CLAIM;
 import static uk.gov.hmcts.reform.unspec.callback.CaseEvent.NOTIFY_DEFENDANT_OF_CLAIM_DETAILS;
 import static uk.gov.hmcts.reform.unspec.callback.CaseEvent.RESUBMIT_CLAIM;
@@ -89,7 +88,6 @@ public class FlowStateAllowedEventService {
         entry(
             CLAIM_ISSUED.fullName(),
             List.of(
-                MOVE_TO_STAYED,
                 ACKNOWLEDGE_SERVICE,
                 ADD_DEFENDANT_LITIGATION_FRIEND,
                 WITHDRAW_CLAIM,
@@ -127,7 +125,7 @@ public class FlowStateAllowedEventService {
                 WITHDRAW_CLAIM,
                 ADD_DEFENDANT_LITIGATION_FRIEND,
                 DISCONTINUE_CLAIM,
-                MOVE_CLAIM_TO_DISMISSED,
+                DISMISS_CLAIM,
                 CASE_PROCEEDS_IN_CASEMAN
             )
         ),

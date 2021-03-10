@@ -12,8 +12,8 @@ public class CaseDismissedExternalTaskListener {
     private static final String TOPIC = "CASE_DISMISSED";
 
     @Autowired
-    private CaseDismissedExternalTaskListener(ClaimDismissedHandler caseStrikeoutHandler, ExternalTaskClient client) {
+    private CaseDismissedExternalTaskListener(ClaimDismissedHandler claimDismissedHandler, ExternalTaskClient client) {
         TopicSubscriptionBuilder subscriptionBuilder = client.subscribe(TOPIC);
-        subscriptionBuilder.handler(caseStrikeoutHandler).open();
+        subscriptionBuilder.handler(claimDismissedHandler).open();
     }
 }

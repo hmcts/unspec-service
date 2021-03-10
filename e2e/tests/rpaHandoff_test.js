@@ -60,8 +60,8 @@ Scenario('Claimant does not respond to defence with defined timescale', async (I
   await waitForFinishedBusinessProcess(caseId);
   await updateCaseData(caseId, {applicantSolicitorSecondResponseDeadlineToRespondentSolicitor1: dateTime(-1)});
 
-  console.log('Start waiting for Case strikeout scheduler ' + dateTime());
-  // Sleep waiting for Case strikeout scheduler
+  console.log('Start waiting for Case dismissed scheduler ' + dateTime());
+  // Sleep waiting for Case dismissed scheduler
   await sleep(600);
   console.log('Waiting finished ' + dateTime());
   await I.goToCase(caseId);

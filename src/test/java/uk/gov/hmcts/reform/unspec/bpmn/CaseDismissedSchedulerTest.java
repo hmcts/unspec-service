@@ -19,7 +19,7 @@ class CaseDismissedSchedulerTest extends BpmnBaseTest {
     }
 
     @Test
-    void caseStrikeoutSchedulerShouldFireCaseStrikeoutExternalTask_whenStarted() {
+    void claimDismissedSchedulerShouldFireCaseDismissedExternalTask_whenStarted() {
         //assert process has started
         assertFalse(processInstance.isEnded());
 

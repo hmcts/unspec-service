@@ -17,13 +17,13 @@ import java.util.List;
 import java.util.Map;
 
 import static uk.gov.hmcts.reform.unspec.callback.CallbackType.ABOUT_TO_START;
-import static uk.gov.hmcts.reform.unspec.callback.CaseEvent.MOVE_CLAIM_TO_DISMISSED;
+import static uk.gov.hmcts.reform.unspec.callback.CaseEvent.DISMISS_CLAIM;
 
 @Service
 @RequiredArgsConstructor
-public class MoveClaimToStruckOutCallbackHandler extends CallbackHandler {
+public class DismissClaimCallbackHandler extends CallbackHandler {
 
-    private static final List<CaseEvent> EVENTS = List.of(MOVE_CLAIM_TO_DISMISSED);
+    private static final List<CaseEvent> EVENTS = List.of(DISMISS_CLAIM);
 
     @Override
     protected Map<String, Callback> callbacks() {
@@ -44,7 +44,7 @@ public class MoveClaimToStruckOutCallbackHandler extends CallbackHandler {
         CaseData data = caseDetailsConverter.toCaseData(callbackParams.getRequest().getCaseDetails());
 
         CaseData.CaseDataBuilder caseDataBuilder = data.toBuilder()
-            .businessProcess(BusinessProcess.ready(MOVE_CLAIM_TO_DISMISSED));
+            .businessProcess(BusinessProcess.ready(DISMISS_CLAIM));
 
         return AboutToStartOrSubmitCallbackResponse.builder()
             .data(caseDetailsConverter.toMap(caseDataBuilder.build()))

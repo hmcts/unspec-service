@@ -33,9 +33,8 @@ import static uk.gov.hmcts.reform.unspec.callback.CaseEvent.CLAIMANT_RESPONSE;
 import static uk.gov.hmcts.reform.unspec.callback.CaseEvent.CREATE_CLAIM;
 import static uk.gov.hmcts.reform.unspec.callback.CaseEvent.DEFENDANT_RESPONSE;
 import static uk.gov.hmcts.reform.unspec.callback.CaseEvent.DISCONTINUE_CLAIM;
+import static uk.gov.hmcts.reform.unspec.callback.CaseEvent.DISMISS_CLAIM;
 import static uk.gov.hmcts.reform.unspec.callback.CaseEvent.INFORM_AGREED_EXTENSION_DATE;
-import static uk.gov.hmcts.reform.unspec.callback.CaseEvent.MOVE_CLAIM_TO_DISMISSED;
-import static uk.gov.hmcts.reform.unspec.callback.CaseEvent.MOVE_TO_STAYED;
 import static uk.gov.hmcts.reform.unspec.callback.CaseEvent.NOTIFY_DEFENDANT_OF_CLAIM;
 import static uk.gov.hmcts.reform.unspec.callback.CaseEvent.NOTIFY_DEFENDANT_OF_CLAIM_DETAILS;
 import static uk.gov.hmcts.reform.unspec.callback.CaseEvent.RESUBMIT_CLAIM;
@@ -133,7 +132,7 @@ class FlowStateAllowedEventServiceTest {
         @Test
         void shouldReturnValidEvents_whenFlowStateIsClaimIssued() {
             assertThat(flowStateAllowedEventService.getAllowedEvents(CLAIM_ISSUED.fullName()))
-                .containsExactlyInAnyOrder(MOVE_TO_STAYED, ACKNOWLEDGE_SERVICE, ADD_DEFENDANT_LITIGATION_FRIEND,
+                .containsExactlyInAnyOrder(ACKNOWLEDGE_SERVICE, ADD_DEFENDANT_LITIGATION_FRIEND,
                                            WITHDRAW_CLAIM, DISCONTINUE_CLAIM, CASE_PROCEEDS_IN_CASEMAN
                 );
         }
@@ -163,7 +162,7 @@ class FlowStateAllowedEventServiceTest {
         void shouldReturnValidEvents_whenFlowStateIsRespondentFullDefence() {
             assertThat(flowStateAllowedEventService.getAllowedEvents(RESPONDENT_FULL_DEFENCE.fullName()))
                 .containsExactlyInAnyOrder(CLAIMANT_RESPONSE, ADD_DEFENDANT_LITIGATION_FRIEND, WITHDRAW_CLAIM,
-                                           DISCONTINUE_CLAIM, MOVE_CLAIM_TO_DISMISSED, CASE_PROCEEDS_IN_CASEMAN
+                                           DISCONTINUE_CLAIM, DISMISS_CLAIM, CASE_PROCEEDS_IN_CASEMAN
                 );
         }
 
@@ -206,7 +205,6 @@ class FlowStateAllowedEventServiceTest {
         @ParameterizedTest
         @CsvSource({
             "DRAFT,CREATE_CLAIM",
-            "CLAIM_ISSUED,MOVE_TO_STAYED",
             "CLAIM_ISSUED,ACKNOWLEDGE_SERVICE",
             "CLAIM_ISSUED,WITHDRAW_CLAIM",
             "CLAIM_ISSUED,CASE_PROCEEDS_IN_CASEMAN",
@@ -252,7 +250,6 @@ class FlowStateAllowedEventServiceTest {
             return Stream.of(
                 of(CREATE_CLAIM, new String[]{DRAFT.fullName()}),
                 of(RESUBMIT_CLAIM, new String[]{PAYMENT_FAILED.fullName()}),
-                of(MOVE_TO_STAYED, new String[]{CLAIM_ISSUED.fullName()}),
                 of(ACKNOWLEDGE_SERVICE, new String[]{CLAIM_ISSUED.fullName()}),
                 of(NOTIFY_DEFENDANT_OF_CLAIM, new String[]{AWAITING_CASE_NOTIFICATION.fullName()}),
                 of(CLAIMANT_RESPONSE, new String[]{RESPONDENT_FULL_DEFENCE.fullName()}),

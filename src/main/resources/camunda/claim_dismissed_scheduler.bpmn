@@ -3,7 +3,7 @@
   <bpmn:process id="CASE_DISMISSED_SCHEDULER" isExecutable="true">
     <bpmn:sequenceFlow id="Flow_03at42s" sourceRef="StartEvent_1" targetRef="Activity_13h4s1i" />
     <bpmn:sequenceFlow id="Flow_1m5i8op" sourceRef="Activity_13h4s1i" targetRef="Event_1ifnnom" />
-    <bpmn:serviceTask id="Activity_13h4s1i" name="Case strikeout scheduler" camunda:type="external" camunda:topic="CASE_DISMISSED">
+    <bpmn:serviceTask id="Activity_13h4s1i" name="Case dismisssed scheduler" camunda:type="external" camunda:topic="CASE_DISMISSED">
       <bpmn:incoming>Flow_03at42s</bpmn:incoming>
       <bpmn:outgoing>Flow_1m5i8op</bpmn:outgoing>
     </bpmn:serviceTask>

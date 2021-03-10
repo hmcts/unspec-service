@@ -49,9 +49,9 @@ import static uk.gov.hmcts.reform.unspec.enums.AllocatedTrack.FAST_CLAIM;
 import static uk.gov.hmcts.reform.unspec.enums.CaseState.AWAITING_CASE_DETAILS_NOTIFICATION;
 import static uk.gov.hmcts.reform.unspec.enums.CaseState.AWAITING_CASE_NOTIFICATION;
 import static uk.gov.hmcts.reform.unspec.enums.CaseState.AWAITING_CLAIMANT_INTENTION;
+import static uk.gov.hmcts.reform.unspec.enums.CaseState.CLAIM_DISMISSED;
 import static uk.gov.hmcts.reform.unspec.enums.CaseState.CLOSED;
 import static uk.gov.hmcts.reform.unspec.enums.CaseState.CREATED;
-import static uk.gov.hmcts.reform.unspec.enums.CaseState.DISMISSED;
 import static uk.gov.hmcts.reform.unspec.enums.CaseState.PENDING_CASE_ISSUED;
 import static uk.gov.hmcts.reform.unspec.enums.CaseState.PROCEEDS_WITH_OFFLINE_JOURNEY;
 import static uk.gov.hmcts.reform.unspec.enums.PaymentStatus.FAILED;
@@ -508,7 +508,7 @@ public class CaseDataBuilder {
 
     public CaseDataBuilder atStateClaimDismissed() {
         atStateRespondentFullDefence();
-        ccdState = DISMISSED;
+        ccdState = CLAIM_DISMISSED;
         return this;
     }
 

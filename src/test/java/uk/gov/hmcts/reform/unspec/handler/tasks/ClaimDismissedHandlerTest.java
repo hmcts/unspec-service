@@ -11,7 +11,7 @@ import org.mockito.Mock;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import uk.gov.hmcts.reform.ccd.client.model.CaseDetails;
-import uk.gov.hmcts.reform.unspec.event.MoveCaseToStuckOutEvent;
+import uk.gov.hmcts.reform.unspec.event.DismissClaimEvent;
 import uk.gov.hmcts.reform.unspec.service.search.CaseDismissedSearchService;
 
 import java.util.List;
@@ -44,7 +44,7 @@ class ClaimDismissedHandlerTest {
     private ApplicationEventPublisher applicationEventPublisher;
 
     @InjectMocks
-    private ClaimDismissedHandler caseStayedFinder;
+    private ClaimDismissedHandler handler;
 
     @BeforeEach
     void init() {
@@ -60,9 +60,9 @@ class ClaimDismissedHandlerTest {
 
         when(searchService.getCases()).thenReturn(caseDetails);
 
-        caseStayedFinder.execute(mockTask, externalTaskService);
+        handler.execute(mockTask, externalTaskService);
 
-        verify(applicationEventPublisher).publishEvent(new MoveCaseToStuckOutEvent(caseId));
+        verify(applicationEventPublisher).publishEvent(new DismissClaimEvent(caseId));
         verify(externalTaskService).complete(mockTask);
     }
 
@@ -70,7 +70,7 @@ class ClaimDismissedHandlerTest {
     void shouldNotEmitMoveCaseToStuckOutEvent_WhenNoCasesFound() {
         when(searchService.getCases()).thenReturn(List.of());
 
-        caseStayedFinder.execute(mockTask, externalTaskService);
+        handler.execute(mockTask, externalTaskService);
 
         verifyNoInteractions(applicationEventPublisher);
     }
@@ -84,7 +84,7 @@ class ClaimDismissedHandlerTest {
             throw new Exception(errorMessage);
         });
 
-        caseStayedFinder.execute(mockTask, externalTaskService);
+        handler.execute(mockTask, externalTaskService);
 
         verify(externalTaskService, never()).complete(mockTask);
         verify(externalTaskService).handleFailure(
@@ -102,7 +102,7 @@ class ClaimDismissedHandlerTest {
 
         doThrow(new NotFoundException(errorMessage)).when(externalTaskService).complete(mockTask);
 
-        caseStayedFinder.execute(mockTask, externalTaskService);
+        handler.execute(mockTask, externalTaskService);
 
         verify(externalTaskService, never()).handleFailure(
             any(ExternalTask.class),
