@@ -11,4 +11,5 @@ public class Respondent {
     private final String name;
     private final Address primaryAddress;
     private final Representative representative;
+    private final String litigationFriendName;
 }

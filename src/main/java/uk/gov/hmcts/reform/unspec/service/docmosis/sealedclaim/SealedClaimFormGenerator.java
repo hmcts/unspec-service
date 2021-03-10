@@ -95,6 +95,7 @@ public class SealedClaimFormGenerator implements TemplateDataGenerator<SealedCla
                            .primaryAddress(respondent.getPrimaryAddress())
                            .representative(Representative.fromSolicitorOrganisationDetails(
                                caseData.getRespondentSolicitor1OrganisationDetails()))
+                           .litigationFriendName(caseData.getRespondent1LitigationFriend().getFullName())
                            .build());
     }
 
@@ -103,6 +104,7 @@ public class SealedClaimFormGenerator implements TemplateDataGenerator<SealedCla
         return List.of(Applicant.builder()
                            .name(applicant.getPartyName())
                            .primaryAddress(applicant.getPrimaryAddress())
+                           .litigationFriendName(caseData.getApplicant1LitigationFriend().getFullName())
                            .build());
     }
 }
