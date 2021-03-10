@@ -35,7 +35,6 @@ public class SealedClaimFormGenerator implements TemplateDataGenerator<SealedCla
         + "which occurred on 1st July 2017 as a result of the negligence of the first defendant.";
 
     private static final Representative TEMP_REPRESENTATIVE = Representative.builder()
-        .contactName("MiguelSpooner")
         .dxAddress("DX 751Newport")
         .organisationName("DBE Law")
         .phoneNumber("0800 206 1592")
@@ -94,7 +93,8 @@ public class SealedClaimFormGenerator implements TemplateDataGenerator<SealedCla
         return List.of(Respondent.builder()
                            .name(respondent.getPartyName())
                            .primaryAddress(respondent.getPrimaryAddress())
-                           .representative(TEMP_REPRESENTATIVE)
+                           .representative(Representative.fromSolicitorOrganisationDetails(
+                               caseData.getRespondentSolicitor1OrganisationDetails()))
                            .build());
     }
 
