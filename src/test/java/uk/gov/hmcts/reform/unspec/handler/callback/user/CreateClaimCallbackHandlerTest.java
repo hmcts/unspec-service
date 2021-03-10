@@ -178,25 +178,22 @@ class CreateClaimCallbackHandlerTest extends BaseCallbackHandlerTest {
     class MidEventIsRespondentRepresentedCallback {
 
         private final String pageId = "isResp1Represented";
-        private final CaseData.CaseDataBuilder caseDataBuilder =
-            CaseDataBuilder.builder().atStateClaimDraft().build().toBuilder();
 
         @Test
         void shouldReturnRespOrgPolicy_whenRespondentRepresented() {
-            CaseData caseData = caseDataBuilder.respondent1Represented(YES).build();
+            CaseData caseData = CaseDataBuilder.builder().atStateClaimDraft().respondent1Represented(YES).build();
             CallbackParams params = callbackParamsOf(caseData, MID, pageId);
 
             var response = (AboutToStartOrSubmitCallbackResponse) handler.handle(params);
 
             assertThat(response.getData())
                 .extracting("respondent1OrganisationPolicy.OrgPolicyReference")
-                .isNotNull()
                 .isEqualTo("12345");
         }
 
         @Test
         void shouldNotReturnRespOrgPolicy_whenRespondentNotRepresented() {
-            CaseData caseData = caseDataBuilder.respondent1Represented(NO).build();
+            CaseData caseData = CaseDataBuilder.builder().atStateClaimDraft().respondent1Represented(NO).build();
             CallbackParams params = callbackParamsOf(caseData, MID, pageId);
 
             var response = (AboutToStartOrSubmitCallbackResponse) handler.handle(params);
