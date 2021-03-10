@@ -198,7 +198,9 @@ module.exports = {
     await assertCorrectEventsAreAvailableToUser(config.adminUser, 'CREATED');
   },
 
-  amendPartyDetails: async() => {
+  amendPartyDetails: async(user) => {
+    await apiRequest.setupTokens(user);
+
     eventName = 'AMEND_PARTY_DETAILS';
     let returnedCaseData = await apiRequest.startEvent(eventName, caseId);
     assertContainsPopulatedFields(returnedCaseData);
@@ -212,9 +214,12 @@ module.exports = {
 
     await assertCorrectEventsAreAvailableToUser(config.solicitorUser, 'CREATED');
     await assertCorrectEventsAreAvailableToUser(config.defendantSolicitorUser, 'CREATED');
+    await assertCorrectEventsAreAvailableToUser(config.adminUser, 'CREATED');
   },
 
-  acknowledgeService: async () => {
+  acknowledgeService: async (user) => {
+    await apiRequest.setupTokens(user);
+
     eventName = 'ACKNOWLEDGE_SERVICE';
     let returnedCaseData = await apiRequest.startEvent(eventName, caseId);
     assertContainsPopulatedFields(returnedCaseData);

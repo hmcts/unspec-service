@@ -19,11 +19,11 @@ Scenario('Notify claim details', async (api) => {
 });
 
 Scenario('Amend party details', async (api) => {
-  await api.amendPartyDetails();
+  await api.amendPartyDetails(config.adminUser);
 });
 
 Scenario('Acknowledge service', async (api) => {
-  await api.acknowledgeService();
+  await api.acknowledgeService(config.solicitorUser);
 });
 
 Scenario('Inform agreed extension date', async (api) => {
