@@ -23,6 +23,7 @@ import java.util.function.Consumer;
 import static java.time.format.DateTimeFormatter.ISO_DATE;
 import static java.util.Objects.requireNonNull;
 import static java.util.Optional.ofNullable;
+import static uk.gov.hmcts.reform.unspec.enums.YesOrNo.NO;
 import static uk.gov.hmcts.reform.unspec.utils.MonetaryConversions.penniesToPounds;
 
 /**
@@ -109,8 +110,10 @@ public class RoboticsDataMapper {
                            .orElse(null)
             );
 
-        ofNullable(caseData.getRespondentSolicitor1OrganisationDetails())
-            .ifPresent(buildOrganisationDetails(solicitorBuilder));
+        if (caseData.getRespondent1OrgRegistered() == NO) {
+            ofNullable(caseData.getRespondentSolicitor1OrganisationDetails())
+                .ifPresent(buildOrganisationDetails(solicitorBuilder));
+        }
 
         return solicitorBuilder.build();
     }

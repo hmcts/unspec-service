@@ -14,6 +14,7 @@ import uk.gov.hmcts.reform.unspec.sampledata.CaseDataBuilder;
 import uk.gov.hmcts.reform.unspec.service.flowstate.StateFlowEngine;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static uk.gov.hmcts.reform.unspec.enums.YesOrNo.NO;
 
 @SpringBootTest(classes = {
     JacksonAutoConfiguration.class,
@@ -41,6 +42,7 @@ class RoboticsDataMapperTest {
     void shouldMapToRoboticsCaseData_whenDefendantIsNotRegistered() {
         CaseData caseData = CaseDataBuilder.builder()
             .atStatePaymentSuccessful()
+            .respondent1OrgRegistered(NO)
             .respondentSolicitor1OrganisationDetails(SolicitorOrganisationDetails.builder()
                                                          .organisationName("My Organisation")
                                                          .email("me@server.net")

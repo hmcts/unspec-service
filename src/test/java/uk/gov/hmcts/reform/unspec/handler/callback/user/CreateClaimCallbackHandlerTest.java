@@ -16,6 +16,7 @@ import uk.gov.hmcts.reform.ccd.client.model.SubmittedCallbackResponse;
 import uk.gov.hmcts.reform.ccd.model.OrganisationPolicy;
 import uk.gov.hmcts.reform.idam.client.IdamClient;
 import uk.gov.hmcts.reform.idam.client.models.UserDetails;
+import uk.gov.hmcts.reform.prd.model.ContactInformation;
 import uk.gov.hmcts.reform.prd.model.Organisation;
 import uk.gov.hmcts.reform.unspec.callback.CallbackParams;
 import uk.gov.hmcts.reform.unspec.config.ClaimIssueConfiguration;
@@ -52,6 +53,8 @@ import static java.time.LocalDate.now;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoInteractions;
 import static uk.gov.hmcts.reform.unspec.callback.CallbackType.ABOUT_TO_START;
 import static uk.gov.hmcts.reform.unspec.callback.CallbackType.ABOUT_TO_SUBMIT;
 import static uk.gov.hmcts.reform.unspec.callback.CallbackType.MID;
@@ -491,6 +494,19 @@ class CreateClaimCallbackHandlerTest extends BaseCallbackHandlerTest {
         private static final String EMAIL = "example@email.com";
         private static final String DIFFERENT_EMAIL = "other_example@email.com";
 
+        private final ContactInformation contactInformation = ContactInformation.builder()
+            .addressLine1("address line 1")
+            .addressLine2("address line 2")
+            .addressLine3("address line 3")
+            .postCode("SW1 1AA")
+            .county("London")
+            .country("UK")
+            .build();
+        private final Organisation organisation = Organisation.builder()
+            .name("test org")
+            .contactInformation(List.of(contactInformation))
+            .build();
+
         @BeforeEach
         void setup() {
             caseData = CaseDataBuilder.builder().atStateClaimDraft().build();
@@ -542,6 +558,44 @@ class CreateClaimCallbackHandlerTest extends BaseCallbackHandlerTest {
                 .extracting("businessProcess")
                 .extracting("camundaEvent", "status")
                 .containsOnly(CREATE_CLAIM.name(), "READY");
+        }
+
+        @Test
+        void shouldGetAndPersistRespondentSolicitor1OrganisationDetails_whenRespondent1OrgIsRegistered() {
+            given(organisationService.findOrganisation(any())).willReturn(Optional.of(organisation));
+            caseData = caseData.toBuilder().respondent1OrgRegistered(YES).build();
+            params = callbackParamsOf(caseData, ABOUT_TO_SUBMIT);
+
+            var response = (AboutToStartOrSubmitCallbackResponse) handler.handle(params);
+
+            verify(organisationService).findOrganisation(any());
+            assertThat(response.getData())
+                .extracting("respondentSolicitor1OrganisationDetails")
+                .extracting("organisationName")
+                .isEqualTo(organisation.getName());
+            assertThat(response.getData())
+                .extracting("respondentSolicitor1OrganisationDetails")
+                .extracting("address")
+                .extracting("AddressLine1", "AddressLine2", "AddressLine3", "County", "Country", "PostCode")
+                .containsExactly(
+                    contactInformation.getAddressLine1(),
+                    contactInformation.getAddressLine2(),
+                    contactInformation.getAddressLine3(),
+                    contactInformation.getCounty(),
+                    contactInformation.getCountry(),
+                    contactInformation.getPostCode()
+                );
+        }
+
+        @Test
+        void shouldNotGetAndPersistRespondentSolicitor1OrganisationDetails_whenRespondent1OrgIsNotRegistered() {
+            caseData = caseData.toBuilder().respondent1OrgRegistered(NO).build();
+            params = callbackParamsOf(caseData, ABOUT_TO_SUBMIT);
+
+            var response = (AboutToStartOrSubmitCallbackResponse) handler.handle(params);
+
+            verifyNoInteractions(organisationService);
+            assertThat(response.getData()).doesNotContainKey("respondentSolicitor1OrganisationDetails");
         }
 
         @Nested
