@@ -50,7 +50,7 @@ import static uk.gov.hmcts.reform.unspec.enums.CaseState.AWAITING_CASE_DETAILS_N
 import static uk.gov.hmcts.reform.unspec.enums.CaseState.AWAITING_CASE_NOTIFICATION;
 import static uk.gov.hmcts.reform.unspec.enums.CaseState.AWAITING_CLAIMANT_INTENTION;
 import static uk.gov.hmcts.reform.unspec.enums.CaseState.CLOSED;
-import static uk.gov.hmcts.reform.unspec.enums.CaseState.CREATED;
+import static uk.gov.hmcts.reform.unspec.enums.CaseState.AWAITING_DEFENDANT_RESPONSE;
 import static uk.gov.hmcts.reform.unspec.enums.CaseState.PENDING_CASE_ISSUED;
 import static uk.gov.hmcts.reform.unspec.enums.CaseState.PROCEEDS_WITH_OFFLINE_JOURNEY;
 import static uk.gov.hmcts.reform.unspec.enums.CaseState.STAYED;
@@ -447,7 +447,7 @@ public class CaseDataBuilder {
     public CaseDataBuilder atStateClaimCreated() {
         atStateAwaitingCaseDetailsNotification();
         claimDetailsNotificationDate = LocalDate.now();
-        ccdState = CREATED;
+        ccdState = AWAITING_DEFENDANT_RESPONSE;
         respondentSolicitor1ResponseDeadline = RESPONSE_DEADLINE;
         return this;
     }

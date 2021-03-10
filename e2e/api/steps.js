@@ -187,14 +187,14 @@ module.exports = {
 
     await validateEventPages(data.ADD_OR_AMEND_CLAIM_DOCUMENTS);
 
-    await assertSubmittedEvent('CREATED', {
+    await assertSubmittedEvent('AWAITING_DEFENDANT_RESPONSE', {
       header: 'Defendant notified',
       body: 'What happens next'
     });
 
-    await assertCorrectEventsAreAvailableToUser(config.solicitorUser, 'CREATED');
-    await assertCorrectEventsAreAvailableToUser(config.defendantSolicitorUser, 'CREATED');
-    await assertCorrectEventsAreAvailableToUser(config.adminUser, 'CREATED');
+    await assertCorrectEventsAreAvailableToUser(config.solicitorUser, 'AWAITING_DEFENDANT_RESPONSE');
+    await assertCorrectEventsAreAvailableToUser(config.defendantSolicitorUser, 'AWAITING_DEFENDANT_RESPONSE');
+    await assertCorrectEventsAreAvailableToUser(config.adminUser, 'AWAITING_DEFENDANT_RESPONSE');
   },
 
   acknowledgeService: async () => {
@@ -209,14 +209,14 @@ module.exports = {
     await assertError('ConfirmDetails', data[eventName].invalid.ConfirmDetails.futureDateOfBirth,
       'The date entered cannot be in the future');
 
-    await assertSubmittedEvent('CREATED', {
+    await assertSubmittedEvent('AWAITING_DEFENDANT_RESPONSE', {
       header: 'You\'ve acknowledged service',
       body: 'You need to respond before'
     }, true);
 
-    await assertCorrectEventsAreAvailableToUser(config.solicitorUser, 'CREATED');
-    await assertCorrectEventsAreAvailableToUser(config.defendantSolicitorUser, 'CREATED');
-    await assertCorrectEventsAreAvailableToUser(config.adminUser, 'CREATED');
+    await assertCorrectEventsAreAvailableToUser(config.solicitorUser, 'AWAITING_DEFENDANT_RESPONSE');
+    await assertCorrectEventsAreAvailableToUser(config.defendantSolicitorUser, 'AWAITING_DEFENDANT_RESPONSE');
+    await assertCorrectEventsAreAvailableToUser(config.adminUser, 'AWAITING_DEFENDANT_RESPONSE');
   },
 
   informAgreedExtensionDate: async () => {
@@ -233,14 +233,14 @@ module.exports = {
     await assertError('ExtensionDate', data[eventName].invalid.ExtensionDate.beforeCurrentDeadline,
       'The agreed extension date must be after the current deadline');
 
-    await assertSubmittedEvent('CREATED', {
+    await assertSubmittedEvent('AWAITING_DEFENDANT_RESPONSE', {
       header: 'Extension deadline submitted',
       body: 'What happens next'
     }, true);
 
-    await assertCorrectEventsAreAvailableToUser(config.solicitorUser, 'CREATED');
-    await assertCorrectEventsAreAvailableToUser(config.defendantSolicitorUser, 'CREATED');
-    await assertCorrectEventsAreAvailableToUser(config.adminUser, 'CREATED');
+    await assertCorrectEventsAreAvailableToUser(config.solicitorUser, 'AWAITING_DEFENDANT_RESPONSE');
+    await assertCorrectEventsAreAvailableToUser(config.defendantSolicitorUser, 'AWAITING_DEFENDANT_RESPONSE');
+    await assertCorrectEventsAreAvailableToUser(config.adminUser, 'AWAITING_DEFENDANT_RESPONSE');
   },
 
   defendantResponse: async () => {

@@ -12,7 +12,7 @@ import java.util.Map;
 import static uk.gov.hmcts.reform.unspec.enums.CaseState.AWAITING_CASE_DETAILS_NOTIFICATION;
 import static uk.gov.hmcts.reform.unspec.enums.CaseState.AWAITING_CASE_NOTIFICATION;
 import static uk.gov.hmcts.reform.unspec.enums.CaseState.AWAITING_CLAIMANT_INTENTION;
-import static uk.gov.hmcts.reform.unspec.enums.CaseState.CREATED;
+import static uk.gov.hmcts.reform.unspec.enums.CaseState.AWAITING_DEFENDANT_RESPONSE;
 import static uk.gov.hmcts.reform.unspec.enums.CaseState.PENDING_CASE_ISSUED;
 
 @SuppressWarnings("unchecked")
@@ -68,21 +68,21 @@ public class CaseDetailsBuilder {
     public CaseDetailsBuilder atStateClaimCreated() {
         CaseData caseData = CaseDataBuilder.builder().atStateClaimCreated().build();
         this.data = mapper.convertValue(caseData, Map.class);
-        this.state = CREATED.name();
+        this.state = AWAITING_DEFENDANT_RESPONSE.name();
         return this;
     }
 
     public CaseDetailsBuilder atStateServiceAcknowledge() {
         CaseData caseData = CaseDataBuilder.builder().atStateServiceAcknowledge().build();
         this.data = mapper.convertValue(caseData, Map.class);
-        this.state = CREATED.name();
+        this.state = AWAITING_DEFENDANT_RESPONSE.name();
         return this;
     }
 
     public CaseDetailsBuilder atStateExtensionRequested() {
         CaseData caseData = CaseDataBuilder.builder().atStateExtensionRequested().build();
         this.data = mapper.convertValue(caseData, Map.class);
-        this.state = CREATED.name();
+        this.state = AWAITING_DEFENDANT_RESPONSE.name();
         return this;
     }
 

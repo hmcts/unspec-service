@@ -31,7 +31,7 @@ public class CaseStayedSearchService extends ElasticSearchService {
     public BoolQueryBuilder beValidState() {
         return boolQuery()
             .minimumShouldMatch(1)
-            .should(matchQuery("state", "CREATED"))
+            .should(matchQuery("state", "AWAITING_DEFENDANT_RESPONSE"))
             .should(matchQuery("state", "AWAITING_RESPONDENT_ACTION"));
     }
 }
