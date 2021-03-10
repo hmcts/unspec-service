@@ -91,6 +91,7 @@ public class CreateClaimCallbackHandler extends CallbackHandler implements Parti
             callbackKey(MID, "idam-email"), this::getIdamEmail,
             callbackKey(MID, "particulars-of-claim"), this::validateParticularsOfClaim,
             callbackKey(MID, "appOrgPolicy"), this::validateApplicantSolicitorOrgPolicy,
+            callbackKey(MID, "isResp1Represented"), this::prePopulateRespondentOrgReference,
             callbackKey(MID, "repOrgPolicy"), this::validateRespondentSolicitorOrgPolicy,
             callbackKey(ABOUT_TO_SUBMIT), this::submitClaim,
             callbackKey(SUBMITTED), this::buildConfirmation
@@ -108,6 +109,24 @@ public class CreateClaimCallbackHandler extends CallbackHandler implements Parti
 
         return AboutToStartOrSubmitCallbackResponse.builder()
             .errors(errors)
+            .build();
+    }
+
+    private CallbackResponse prePopulateRespondentOrgReference(CallbackParams callbackParams) {
+        CaseData caseData = callbackParams.getCaseData();
+        YesOrNo respondent1Represented = caseData.getRespondent1Represented();
+        CaseData.CaseDataBuilder caseDataBuilder = caseData.toBuilder();
+
+        if (respondent1Represented == YES) {
+            SolicitorReferences solicitorReferences = caseData.getSolicitorReferences();
+            OrganisationPolicy organisationPolicy = OrganisationPolicy.builder()
+                .orgPolicyReference(solicitorReferences.getApplicantSolicitor1Reference())
+                .build();
+            caseDataBuilder.respondent1OrganisationPolicy(organisationPolicy);
+        }
+
+        return AboutToStartOrSubmitCallbackResponse.builder()
+            .data(caseDetailsConverter.toMap(caseDataBuilder.build()))
             .build();
     }
 
@@ -190,6 +209,9 @@ public class CreateClaimCallbackHandler extends CallbackHandler implements Parti
         dataBuilder.allocatedTrack(getAllocatedTrack(caseData.getClaimValue().toPounds(), caseData.getClaimType()));
         dataBuilder.businessProcess(BusinessProcess.ready(CREATE_CLAIM));
 
+        if (caseData.getRespondent1OrgRegistered() == NO) {
+            dataBuilder.respondent1OrganisationPolicy(null);
+        }
         //set check email field to null for GDPR
         dataBuilder.applicantSolicitor1CheckEmail(CorrectEmail.builder().build());
 
