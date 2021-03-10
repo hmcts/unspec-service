@@ -50,7 +50,7 @@ class RespondentClaimStruckOutNotificationHandlerTest {
 
         @Test
         void shouldNotifyRespondentSolicitor_whenInvoked() {
-            CaseData caseData = CaseDataBuilder.builder().atStateFullDefence().build();
+            CaseData caseData = CaseDataBuilder.builder().atStateApplicantRespondToDefence().build();
             CallbackParams params = CallbackParamsBuilder.builder().of(ABOUT_TO_SUBMIT, caseData).build();
 
             handler.handle(params);
@@ -68,8 +68,7 @@ class RespondentClaimStruckOutNotificationHandlerTest {
         return Map.of(
             "claimReferenceNumber", "000LR001",
             "claimantName", "Mr. John Rambo",
-            "frontendBaseUrl", "https://www.MyHMCTS.gov.uk",
-            "defendantName", "Mr. Sole Trader"
+            "frontendBaseUrl", "https://www.MyHMCTS.gov.uk"
         );
     }
 

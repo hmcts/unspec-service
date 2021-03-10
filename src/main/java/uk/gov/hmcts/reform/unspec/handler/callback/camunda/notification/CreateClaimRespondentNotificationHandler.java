@@ -9,14 +9,14 @@ import uk.gov.hmcts.reform.unspec.callback.CallbackHandler;
 import uk.gov.hmcts.reform.unspec.callback.CallbackParams;
 import uk.gov.hmcts.reform.unspec.callback.CaseEvent;
 import uk.gov.hmcts.reform.unspec.config.properties.notification.NotificationsProperties;
+import uk.gov.hmcts.reform.unspec.helpers.CaseDetailsConverter;
 import uk.gov.hmcts.reform.unspec.model.CaseData;
-import uk.gov.hmcts.reform.unspec.model.ServiceMethod;
 import uk.gov.hmcts.reform.unspec.service.NotificationService;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
 
-import static java.util.Optional.ofNullable;
 import static uk.gov.hmcts.reform.unspec.callback.CallbackType.ABOUT_TO_SUBMIT;
 import static uk.gov.hmcts.reform.unspec.callback.CaseEvent.NOTIFY_RESPONDENT_SOLICITOR1_FOR_CLAIM_ISSUE;
 import static uk.gov.hmcts.reform.unspec.helpers.DateFormatHelper.DATE;
@@ -33,6 +33,7 @@ public class CreateClaimRespondentNotificationHandler extends CallbackHandler im
 
     private final NotificationService notificationService;
     private final NotificationsProperties notificationsProperties;
+    private final CaseDetailsConverter caseDetailsConverter;
 
     @Override
     protected Map<String, Callback> callbacks() {
@@ -55,21 +56,25 @@ public class CreateClaimRespondentNotificationHandler extends CallbackHandler im
         CaseData caseData = callbackParams.getCaseData();
 
         notificationService.sendMail(
-            ofNullable(caseData.getServiceMethodToRespondentSolicitor1())
-                .map(ServiceMethod::getEmail)
-                .orElse("civilunspecified@gmail.com"), //TODO need correct email address here
+            caseData.getRespondentSolicitor1EmailAddress(),
             notificationsProperties.getRespondentSolicitorClaimIssueEmailTemplate(),
             addProperties(caseData),
             String.format(REFERENCE_TEMPLATE, caseData.getLegacyCaseReference())
         );
-        return AboutToStartOrSubmitCallbackResponse.builder().build();
+
+        CaseData updatedCaseData = caseData.toBuilder()
+            .claimNotificationDate(LocalDate.now())
+            .build();
+
+        return AboutToStartOrSubmitCallbackResponse.builder()
+            .data(caseDetailsConverter.toMap(updatedCaseData))
+            .build();
     }
 
     @Override
     public Map<String, String> addProperties(CaseData caseData) {
         return Map.of(
             CLAIM_REFERENCE_NUMBER, caseData.getLegacyCaseReference(),
-            RESPONDENT_SOLICITOR_NAME, "Placeholder name",
             APPLICANT_NAME, getPartyNameBasedOnType(caseData.getApplicant1()),
             RESPONDENT_NAME, getPartyNameBasedOnType(caseData.getRespondent1()),
             ISSUED_ON, formatLocalDate(caseData.getClaimIssuedDate(), DATE)

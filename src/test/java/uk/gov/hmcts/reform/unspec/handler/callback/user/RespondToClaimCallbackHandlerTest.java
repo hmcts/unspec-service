@@ -78,7 +78,7 @@ class RespondToClaimCallbackHandlerTest extends BaseCallbackHandlerTest {
 
         @Test
         void shouldReturnError_whenIndividualDateOfBirthIsInTheFuture() {
-            CaseData caseData = CaseDataBuilder.builder().atStateServiceConfirmed()
+            CaseData caseData = CaseDataBuilder.builder().atStateClaimCreated()
                 .respondent1(PartyBuilder.builder().individual()
                                  .individualDateOfBirth(LocalDate.now().plusDays(1))
                                  .build())
@@ -92,7 +92,7 @@ class RespondToClaimCallbackHandlerTest extends BaseCallbackHandlerTest {
 
         @Test
         void shouldReturnError_whenSoleTraderDateOfBirthIsInTheFuture() {
-            CaseData caseData = CaseDataBuilder.builder().atStateServiceConfirmed()
+            CaseData caseData = CaseDataBuilder.builder().atStateClaimCreated()
                 .respondent1(PartyBuilder.builder().individual()
                                  .soleTraderDateOfBirth(LocalDate.now().plusDays(1))
                                  .build())
@@ -106,7 +106,7 @@ class RespondToClaimCallbackHandlerTest extends BaseCallbackHandlerTest {
 
         @Test
         void shouldReturnNoError_whenIndividualDateOfBirthIsInThePast() {
-            CaseData caseData = CaseDataBuilder.builder().atStateServiceConfirmed()
+            CaseData caseData = CaseDataBuilder.builder().atStateClaimCreated()
                 .respondent1(PartyBuilder.builder().individual()
                                  .individualDateOfBirth(LocalDate.now().minusYears(1))
                                  .build())
@@ -121,7 +121,7 @@ class RespondToClaimCallbackHandlerTest extends BaseCallbackHandlerTest {
 
         @Test
         void shouldReturnNoError_whenSoleTraderDateOfBirthIsInThePast() {
-            CaseData caseData = CaseDataBuilder.builder().atStateServiceConfirmed()
+            CaseData caseData = CaseDataBuilder.builder().atStateClaimCreated()
                 .respondent1(PartyBuilder.builder().individual()
                                  .soleTraderDateOfBirth(LocalDate.now().minusYears(1))
                                  .build())
@@ -214,7 +214,7 @@ class RespondToClaimCallbackHandlerTest extends BaseCallbackHandlerTest {
         @Test
         void shouldSetApplicantResponseDeadline_whenInvoked() {
             LocalDateTime applicantResponseDeadline = now().atTime(16, 0);
-            CaseData caseData = CaseDataBuilder.builder().atStateRespondedToClaim().build();
+            CaseData caseData = CaseDataBuilder.builder().atStateRespondentFullDefence().build();
             CallbackParams params = callbackParamsOf(caseData, ABOUT_TO_SUBMIT);
 
             var response = (AboutToStartOrSubmitCallbackResponse) handler.handle(params);
@@ -228,7 +228,7 @@ class RespondToClaimCallbackHandlerTest extends BaseCallbackHandlerTest {
 
         @Test
         void shouldUpdateBusinessProcess_whenInvoked() {
-            CaseData caseData = CaseDataBuilder.builder().atStateRespondedToClaim().build();
+            CaseData caseData = CaseDataBuilder.builder().atStateRespondentFullDefence().build();
 
             var response = (AboutToStartOrSubmitCallbackResponse) handler.handle(callbackParamsOf(
                 caseData,
@@ -252,7 +252,7 @@ class RespondToClaimCallbackHandlerTest extends BaseCallbackHandlerTest {
 
         @Test
         void shouldReturnExpectedResponse_whenInvoked() {
-            CaseData caseData = CaseDataBuilder.builder().atStateRespondedToClaim().build();
+            CaseData caseData = CaseDataBuilder.builder().atStateRespondentFullDefence().build();
             CallbackParams params = callbackParamsOf(caseData, SUBMITTED);
 
             SubmittedCallbackResponse response = (SubmittedCallbackResponse) handler.handle(params);

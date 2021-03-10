@@ -71,7 +71,7 @@ public class RespondToDefenceCallbackHandler extends CallbackHandler {
 
     private CallbackResponse handleNotifications(CallbackParams callbackParams) {
         CaseData caseData = callbackParams.getCaseData();
-        if (getFlowState(caseData) == FlowState.Main.PROCEEDS_WITH_OFFLINE_JOURNEY) {
+        if (getFlowState(caseData) == FlowState.Main.CASE_PROCEEDS_IN_CASEMAN) {
             caseData = caseData.toBuilder().businessProcess(BusinessProcess.ready(CLAIMANT_RESPONSE)).build();
         }
 
