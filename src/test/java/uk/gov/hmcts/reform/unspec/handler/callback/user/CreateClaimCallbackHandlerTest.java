@@ -5,6 +5,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.jackson.JacksonAutoConfiguration;
 import org.springframework.boot.autoconfigure.validation.ValidationAutoConfiguration;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -17,6 +18,7 @@ import uk.gov.hmcts.reform.idam.client.IdamClient;
 import uk.gov.hmcts.reform.idam.client.models.UserDetails;
 import uk.gov.hmcts.reform.prd.model.Organisation;
 import uk.gov.hmcts.reform.unspec.callback.CallbackParams;
+import uk.gov.hmcts.reform.unspec.config.ClaimIssueConfiguration;
 import uk.gov.hmcts.reform.unspec.config.MockDatabaseConfiguration;
 import uk.gov.hmcts.reform.unspec.handler.callback.BaseCallbackHandlerTest;
 import uk.gov.hmcts.reform.unspec.helpers.CaseDetailsConverter;
@@ -40,13 +42,14 @@ import uk.gov.hmcts.reform.unspec.validation.DateOfBirthValidator;
 import uk.gov.hmcts.reform.unspec.validation.OrgPolicyValidator;
 
 import java.math.BigDecimal;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
 import static java.lang.String.format;
+import static java.time.LocalDate.now;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
@@ -59,7 +62,10 @@ import static uk.gov.hmcts.reform.unspec.enums.AllocatedTrack.MULTI_CLAIM;
 import static uk.gov.hmcts.reform.unspec.enums.YesOrNo.NO;
 import static uk.gov.hmcts.reform.unspec.enums.YesOrNo.YES;
 import static uk.gov.hmcts.reform.unspec.handler.callback.user.CreateClaimCallbackHandler.CONFIRMATION_SUMMARY;
+import static uk.gov.hmcts.reform.unspec.handler.callback.user.CreateClaimCallbackHandler.LIP_CONFIRMATION_BODY;
 import static uk.gov.hmcts.reform.unspec.handler.callback.user.CreateClaimCallbackHandler.UNREGISTERED_ORG_CONFIRMATION_BODY;
+import static uk.gov.hmcts.reform.unspec.helpers.DateFormatHelper.DATE_TIME_AT;
+import static uk.gov.hmcts.reform.unspec.helpers.DateFormatHelper.formatLocalDateTime;
 import static uk.gov.hmcts.reform.unspec.launchdarkly.OnBoardingOrganisationControlService.ORG_NOT_REGISTERED;
 import static uk.gov.hmcts.reform.unspec.utils.PartyUtils.getPartyNameBasedOnType;
 
@@ -67,6 +73,7 @@ import static uk.gov.hmcts.reform.unspec.utils.PartyUtils.getPartyNameBasedOnTyp
     CreateClaimCallbackHandler.class,
     JacksonAutoConfiguration.class,
     CaseDetailsConverter.class,
+    ClaimIssueConfiguration.class,
     MockDatabaseConfiguration.class,
     ValidationAutoConfiguration.class,
     DateOfBirthValidator.class,
@@ -91,6 +98,9 @@ class CreateClaimCallbackHandlerTest extends BaseCallbackHandlerTest {
 
     @Autowired
     private CreateClaimCallbackHandler handler;
+
+    @Value("${unspecified.response-pack-url}")
+    private String responsePackLink;
 
     @Nested
     class AboutToStartCallback {
@@ -152,7 +162,7 @@ class CreateClaimCallbackHandlerTest extends BaseCallbackHandlerTest {
         void shouldReturnError_whenIndividualDateOfBirthIsInTheFuture() {
             CaseData caseData = CaseDataBuilder.builder().atStateClaimDraft()
                 .applicant1(PartyBuilder.builder().individual()
-                                .individualDateOfBirth(LocalDate.now().plusDays(1))
+                                .individualDateOfBirth(now().plusDays(1))
                                 .build())
                 .build();
             CallbackParams params = callbackParamsOf(caseData, MID, PAGE_ID);
@@ -166,7 +176,7 @@ class CreateClaimCallbackHandlerTest extends BaseCallbackHandlerTest {
         void shouldReturnError_whenSoleTraderDateOfBirthIsInTheFuture() {
             CaseData caseData = CaseDataBuilder.builder().atStateClaimDraft()
                 .applicant1(PartyBuilder.builder().individual()
-                                .soleTraderDateOfBirth(LocalDate.now().plusDays(1))
+                                .soleTraderDateOfBirth(now().plusDays(1))
                                 .build())
                 .build();
             CallbackParams params = callbackParamsOf(caseData, MID, PAGE_ID);
@@ -180,7 +190,7 @@ class CreateClaimCallbackHandlerTest extends BaseCallbackHandlerTest {
         void shouldReturnNoError_whenIndividualDateOfBirthIsInThePast() {
             CaseData caseData = CaseDataBuilder.builder().atStateClaimDraft()
                 .applicant1(PartyBuilder.builder().individual()
-                                .individualDateOfBirth(LocalDate.now().minusDays(1))
+                                .individualDateOfBirth(now().minusDays(1))
                                 .build())
                 .build();
             CallbackParams params = callbackParamsOf(caseData, MID, PAGE_ID);
@@ -194,7 +204,7 @@ class CreateClaimCallbackHandlerTest extends BaseCallbackHandlerTest {
         void shouldReturnNoError_whenSoleTraderDateOfBirthIsInThePast() {
             CaseData caseData = CaseDataBuilder.builder().atStateClaimDraft()
                 .applicant1(PartyBuilder.builder().individual()
-                                .soleTraderDateOfBirth(LocalDate.now().minusDays(1))
+                                .soleTraderDateOfBirth(now().minusDays(1))
                                 .build())
                 .build();
             CallbackParams params = callbackParamsOf(caseData, MID, PAGE_ID);
@@ -651,19 +661,28 @@ class CreateClaimCallbackHandlerTest extends BaseCallbackHandlerTest {
         @Nested
         class Respondent1DoesNotHaveLegalRepresentation {
 
-            public static final String LIP_CONFIRMATION_BODY = "<br />You do not need to do anything.\n\n"
-                + "Your claim will be considered by the court and you will be informed of the outcome by post.";
-
             @Test
             void shouldReturnExpectedSubmittedCallbackResponse_whenRespondent1DoesNotHaveRepresentation() {
-                CaseData caseData = CaseDataBuilder.builder().atStateClaimCreated().respondent1Represented(NO).build();
+                CaseData caseData = CaseDataBuilder.builder().atStateProceedsOfflineUnrepresentedDefendant().build();
                 CallbackParams params = callbackParamsOf(caseData, SUBMITTED);
                 SubmittedCallbackResponse response = (SubmittedCallbackResponse) handler.handle(params);
 
+                LocalDateTime serviceDeadline = now().plusDays(112).atTime(23, 59);
+
+                String body = format(
+                    LIP_CONFIRMATION_BODY,
+                    format("/cases/case-details/%s#CaseDocuments", CASE_ID),
+                    responsePackLink,
+                    formatLocalDateTime(serviceDeadline, DATE_TIME_AT)
+                );
+
                 assertThat(response).usingRecursiveComparison().isEqualTo(
                     SubmittedCallbackResponse.builder()
-                        .confirmationHeader("# Your claim will now progress offline")
-                        .confirmationBody(LIP_CONFIRMATION_BODY)
+                        .confirmationHeader(format(
+                            "# Your claim has been issued%n## Claim number: %s",
+                            REFERENCE_NUMBER
+                        ))
+                        .confirmationBody(body)
                         .build());
             }
         }
@@ -691,7 +710,6 @@ class CreateClaimCallbackHandlerTest extends BaseCallbackHandlerTest {
                         .confirmationBody(body)
                         .build());
             }
-
         }
 
         @Nested
