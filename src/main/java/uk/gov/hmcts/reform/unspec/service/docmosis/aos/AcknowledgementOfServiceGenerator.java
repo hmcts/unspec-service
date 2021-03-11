@@ -6,12 +6,12 @@ import uk.gov.hmcts.reform.unspec.model.CaseData;
 import uk.gov.hmcts.reform.unspec.model.LitigationFriend;
 import uk.gov.hmcts.reform.unspec.model.docmosis.DocmosisDocument;
 import uk.gov.hmcts.reform.unspec.model.docmosis.aos.AcknowledgementOfServiceForm;
-import uk.gov.hmcts.reform.unspec.model.docmosis.sealedclaim.Representative;
 import uk.gov.hmcts.reform.unspec.model.docmosis.sealedclaim.Respondent;
 import uk.gov.hmcts.reform.unspec.model.documents.CaseDocument;
 import uk.gov.hmcts.reform.unspec.model.documents.DocumentType;
 import uk.gov.hmcts.reform.unspec.model.documents.PDF;
 import uk.gov.hmcts.reform.unspec.service.docmosis.DocumentGeneratorService;
+import uk.gov.hmcts.reform.unspec.service.docmosis.RepresentativeService;
 import uk.gov.hmcts.reform.unspec.service.docmosis.TemplateDataGenerator;
 import uk.gov.hmcts.reform.unspec.service.documentmanagement.DocumentManagementService;
 import uk.gov.hmcts.reform.unspec.utils.DocmosisTemplateDataUtils;
@@ -25,6 +25,7 @@ public class AcknowledgementOfServiceGenerator implements TemplateDataGenerator<
 
     private final DocumentManagementService documentManagementService;
     private final DocumentGeneratorService documentGeneratorService;
+    private final RepresentativeService representativeService;
 
     public CaseDocument generate(CaseData caseData, String authorisation) {
         AcknowledgementOfServiceForm templateData = getTemplateData(caseData);
@@ -57,15 +58,11 @@ public class AcknowledgementOfServiceGenerator implements TemplateDataGenerator<
         return Respondent.builder()
             .name(respondent.getPartyName())
             .primaryAddress(respondent.getPrimaryAddress())
-            .representative(getRepresentative(caseData))
+            .representative(representativeService.getRespondentRepresentative(caseData))
             .litigationFriendName(
                 ofNullable(caseData.getRespondent1LitigationFriend())
                     .map(LitigationFriend::getFullName)
                     .orElse(""))
             .build();
-    }
-
-    private Representative getRepresentative(CaseData caseData) {
-        return Representative.fromSolicitorOrganisationDetails(caseData.getRespondentSolicitor1OrganisationDetails());
     }
 }

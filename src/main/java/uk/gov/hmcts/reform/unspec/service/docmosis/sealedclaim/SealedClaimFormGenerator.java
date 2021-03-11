@@ -15,23 +15,17 @@ import uk.gov.hmcts.reform.unspec.model.docmosis.sealedclaim.SealedClaimForm;
 import uk.gov.hmcts.reform.unspec.model.documents.CaseDocument;
 import uk.gov.hmcts.reform.unspec.model.documents.DocumentType;
 import uk.gov.hmcts.reform.unspec.model.documents.PDF;
-import uk.gov.hmcts.reform.unspec.service.OrganisationService;
 import uk.gov.hmcts.reform.unspec.service.docmosis.DocumentGeneratorService;
+import uk.gov.hmcts.reform.unspec.service.docmosis.RepresentativeService;
 import uk.gov.hmcts.reform.unspec.service.docmosis.TemplateDataGenerator;
 import uk.gov.hmcts.reform.unspec.service.documentmanagement.DocumentManagementService;
-import uk.gov.hmcts.reform.unspec.service.flowstate.FlowState;
-import uk.gov.hmcts.reform.unspec.service.flowstate.StateFlowEngine;
 import uk.gov.hmcts.reform.unspec.utils.DocmosisTemplateDataUtils;
 
 import java.util.List;
 import java.util.Optional;
 
 import static java.util.Optional.ofNullable;
-import static uk.gov.hmcts.reform.unspec.model.docmosis.sealedclaim.Representative.fromOrganisation;
-import static uk.gov.hmcts.reform.unspec.model.docmosis.sealedclaim.Representative.fromSolicitorOrganisationDetails;
 import static uk.gov.hmcts.reform.unspec.service.docmosis.DocmosisTemplates.N1;
-import static uk.gov.hmcts.reform.unspec.service.flowstate.FlowState.Main.PROCEEDS_OFFLINE_UNREPRESENTED_DEFENDANT;
-import static uk.gov.hmcts.reform.unspec.service.flowstate.FlowState.fromFullName;
 
 @Service
 @RequiredArgsConstructor
@@ -58,8 +52,7 @@ public class SealedClaimFormGenerator implements TemplateDataGenerator<SealedCla
 
     private final DocumentManagementService documentManagementService;
     private final DocumentGeneratorService documentGeneratorService;
-    private final StateFlowEngine stateFlowEngine;
-    private final OrganisationService organisationService;
+    private final RepresentativeService representativeService;
 
     public CaseDocument generate(CaseData caseData, String authorisation) {
         SealedClaimForm templateData = getTemplateData(caseData);
@@ -104,7 +97,7 @@ public class SealedClaimFormGenerator implements TemplateDataGenerator<SealedCla
         return List.of(Respondent.builder()
                            .name(respondent.getPartyName())
                            .primaryAddress(respondent.getPrimaryAddress())
-                           .representative(getRepresentative(caseData))
+                           .representative(representativeService.getRespondentRepresentative(caseData))
                            .litigationFriendName(
                                ofNullable(caseData.getRespondent1LitigationFriend())
                                    .map(LitigationFriend::getFullName)
@@ -122,15 +115,5 @@ public class SealedClaimFormGenerator implements TemplateDataGenerator<SealedCla
                                    .map(LitigationFriend::getFullName)
                                    .orElse(""))
                            .build());
-    }
-
-    private Representative getRepresentative(CaseData caseData) {
-        var stateFlow = stateFlowEngine.evaluate(caseData).getState();
-        var organisationId = caseData.getRespondent1OrganisationPolicy().getOrganisation().getOrganisationID();
-        if (fromFullName(stateFlow.getName()) != PROCEEDS_OFFLINE_UNREPRESENTED_DEFENDANT) {
-            return fromOrganisation(organisationService.findOrganisationById(organisationId)
-                                        .orElseThrow(RuntimeException::new));
-        }
-        return fromSolicitorOrganisationDetails(caseData.getRespondentSolicitor1OrganisationDetails());
     }
 }
