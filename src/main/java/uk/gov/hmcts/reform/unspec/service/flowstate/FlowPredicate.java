@@ -66,7 +66,8 @@ public class FlowPredicate {
 
     public static final Predicate<CaseData> applicantRespondToDefence = caseData ->
         caseData.getApplicant1ProceedWithClaim() != null
-            && caseData.getApplicant1DefenceResponseDocument() != null;
+            && caseData.getApplicant1DefenceResponseDocument() != null
+            && caseData.getCcdState() != PROCEEDS_WITH_OFFLINE_JOURNEY;
 
     public static final Predicate<CaseData> claimWithdrawn = caseData ->
         caseData.getWithdrawClaim() != null
@@ -79,6 +80,7 @@ public class FlowPredicate {
         caseData.getDiscontinueClaim() != null
             && caseData.getCcdState() == CLOSED;
 
+    // update with dateClaimTakenOffline date when exists
     public static final Predicate<CaseData> claimTakenOffline = caseData ->
         caseData.getCcdState() == PROCEEDS_WITH_OFFLINE_JOURNEY;
 
