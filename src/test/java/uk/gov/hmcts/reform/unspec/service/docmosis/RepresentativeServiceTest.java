@@ -63,7 +63,7 @@ class RepresentativeServiceTest {
     class GetRespondentRepresentative {
 
         @Test
-        void shouldReturnAssignedOrganisationDetails_whenStateFlowIsNotProceedsOfflineUnrepresentedDefendant() {
+        void shouldReturnValidOrganisationDetails_whenStateFlowIsNotProceedsOfflineUnrepresentedDefendant() {
             CaseData caseData = CaseDataBuilder.builder().atStateAwaitingCaseNotification().build();
 
             Representative representative = representativeService.getRespondentRepresentative(caseData);
@@ -89,7 +89,7 @@ class RepresentativeServiceTest {
         }
 
         @Test
-        void shouldReturnRespondentSolicitor1OrganisationDetails_whenStateFlowIsProceedsOfflineUnrepresentedDefendant() {
+        void shouldReturnValidOrganisationDetails_whenStateFlowIsProceedsOfflineUnrepresentedDefendant() {
             CaseData caseData = CaseDataBuilder.builder().atStateProceedsOfflineUnrepresentedDefendant().build();
             var organisationDetails = caseData.getRespondentSolicitor1OrganisationDetails();
             var organisationAddress = organisationDetails.getAddress();

@@ -8,6 +8,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.ToString;
 import uk.gov.hmcts.reform.unspec.model.SolicitorReferences;
 import uk.gov.hmcts.reform.unspec.model.StatementOfTruth;
 import uk.gov.hmcts.reform.unspec.model.docmosis.DocmosisData;
@@ -19,6 +20,7 @@ import java.time.LocalDate;
 @Builder
 @AllArgsConstructor
 @EqualsAndHashCode
+@ToString
 public class CertificateOfServiceForm implements DocmosisData {
 
     @JsonProperty("courtseal")

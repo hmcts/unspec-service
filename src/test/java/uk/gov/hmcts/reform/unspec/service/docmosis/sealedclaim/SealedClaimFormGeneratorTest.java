@@ -1,6 +1,7 @@
 package uk.gov.hmcts.reform.unspec.service.docmosis.sealedclaim;
 
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -12,6 +13,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import uk.gov.hmcts.reform.unspec.helpers.CaseDetailsConverter;
 import uk.gov.hmcts.reform.unspec.model.Address;
 import uk.gov.hmcts.reform.unspec.model.CaseData;
+import uk.gov.hmcts.reform.unspec.model.LitigationFriend;
 import uk.gov.hmcts.reform.unspec.model.Party;
 import uk.gov.hmcts.reform.unspec.model.SolicitorReferences;
 import uk.gov.hmcts.reform.unspec.model.docmosis.DocmosisData;
@@ -25,6 +27,7 @@ import uk.gov.hmcts.reform.unspec.model.documents.PDF;
 import uk.gov.hmcts.reform.unspec.sampledata.CaseDataBuilder;
 import uk.gov.hmcts.reform.unspec.sampledata.CaseDocumentBuilder;
 import uk.gov.hmcts.reform.unspec.service.docmosis.DocumentGeneratorService;
+import uk.gov.hmcts.reform.unspec.service.docmosis.RepresentativeService;
 import uk.gov.hmcts.reform.unspec.service.documentmanagement.DocumentManagementService;
 import uk.gov.hmcts.reform.unspec.utils.DocmosisTemplateDataUtils;
 
@@ -60,12 +63,21 @@ class SealedClaimFormGeneratorTest {
         .documentType(SEALED_CLAIM)
         .build();
 
+    private final Representative representative = Representative.builder().organisationName("test org").build();
+
     @MockBean
     private DocumentManagementService documentManagementService;
     @MockBean
     private DocumentGeneratorService documentGeneratorService;
     @Autowired
     private SealedClaimFormGenerator sealedClaimFormGenerator;
+    @MockBean
+    private RepresentativeService representativeService;
+
+    @BeforeEach
+    void setup() {
+        when(representativeService.getRespondentRepresentative(any())).thenReturn(representative);
+    }
 
     @Test
     void shouldGenerateSealedClaimForm_whenValidDataIsProvided() {
@@ -80,6 +92,7 @@ class SealedClaimFormGeneratorTest {
         CaseDocument caseDocument = sealedClaimFormGenerator.generate(caseData, BEARER_TOKEN);
         assertThat(caseDocument).isNotNull().isEqualTo(CASE_DOCUMENT);
 
+        verify(representativeService).getRespondentRepresentative(caseData);
         verify(documentManagementService).uploadDocument(BEARER_TOKEN, new PDF(fileName, bytes, SEALED_CLAIM));
         verify(documentGeneratorService).generateDocmosisDocument(any(SealedClaimForm.class), eq(N1));
     }
@@ -89,10 +102,14 @@ class SealedClaimFormGeneratorTest {
 
         @Test
         void whenCaseIsAtClaimCreated_shouldGetSealedClaimFormData() {
-            CaseData caseData = CaseDataBuilder.builder().atStateClaimCreated().build();
+            CaseData caseData = CaseDataBuilder.builder().atStateClaimCreated().build().toBuilder()
+                .applicant1LitigationFriend(LitigationFriend.builder().fullName("applicant LF").build())
+                .respondent1LitigationFriend(LitigationFriend.builder().fullName("respondent LF").build())
+                .build();
 
             var templateData = sealedClaimFormGenerator.getTemplateData(caseData);
 
+            verify(representativeService).getRespondentRepresentative(caseData);
             assertThatFieldsAreCorrect(templateData, caseData);
         }
 
@@ -138,7 +155,8 @@ class SealedClaimFormGeneratorTest {
             return List.of(Respondent.builder()
                                .name(respondent.getPartyName())
                                .primaryAddress(respondent.getPrimaryAddress())
-                               .representative(getRepresentative())
+                               .representative(representative)
+                               .litigationFriendName("respondent LF")
                                .build());
         }
 
@@ -163,6 +181,7 @@ class SealedClaimFormGeneratorTest {
             return List.of(Applicant.builder()
                                .name(applicant.getPartyName())
                                .primaryAddress(applicant.getPrimaryAddress())
+                               .litigationFriendName("applicant LF")
                                .build());
         }
     }

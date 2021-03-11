@@ -8,6 +8,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.ToString;
 import uk.gov.hmcts.reform.unspec.enums.AllocatedTrack;
 import uk.gov.hmcts.reform.unspec.model.SolicitorReferences;
 import uk.gov.hmcts.reform.unspec.model.StatementOfTruth;
@@ -26,6 +27,7 @@ import java.util.List;
 @Builder
 @AllArgsConstructor
 @EqualsAndHashCode
+@ToString
 public class DirectionsQuestionnaireForm implements DocmosisData {
 
     @JsonProperty("courtseal")

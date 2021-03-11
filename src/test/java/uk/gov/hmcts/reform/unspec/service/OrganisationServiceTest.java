@@ -87,7 +87,6 @@ class OrganisationServiceTest {
         }
     }
 
-
     @Nested
     class FindOrganisationById {
 
