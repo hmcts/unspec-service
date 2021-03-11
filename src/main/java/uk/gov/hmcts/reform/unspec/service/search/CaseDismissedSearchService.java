@@ -33,6 +33,6 @@ public class CaseDismissedSearchService extends ElasticSearchService {
     public BoolQueryBuilder beValidState() {
         return boolQuery()
             .minimumShouldMatch(1)
-            .should(matchQuery("state", "AWAITING_CLAIMANT_INTENTION"));
+            .should(matchQuery("state", "CREATED"));
     }
 }
