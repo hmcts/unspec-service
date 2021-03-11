@@ -119,10 +119,10 @@ public class CreateClaimCallbackHandler extends CallbackHandler implements Parti
 
         if (respondent1Represented == YES) {
             SolicitorReferences solicitorReferences = caseData.getSolicitorReferences();
-            OrganisationPolicy organisationPolicy = OrganisationPolicy.builder()
+            OrganisationPolicy respondent1OrganisationPolicy = caseData.getRespondent1OrganisationPolicy().toBuilder()
                 .orgPolicyReference(solicitorReferences.getApplicantSolicitor1Reference())
                 .build();
-            caseDataBuilder.respondent1OrganisationPolicy(organisationPolicy);
+            caseDataBuilder.respondent1OrganisationPolicy(respondent1OrganisationPolicy);
         }
 
         return AboutToStartOrSubmitCallbackResponse.builder()

@@ -547,6 +547,7 @@
     "CaseEventID": "CREATE_CLAIM",
     "CaseFieldID": "respondent1OrganisationPolicy",
     "ListElementCode": "OrgPolicyReference",
+    "DefaultValue": "${solicitorReferences.applicantSolicitor1Reference}",
     "FieldDisplayOrder": 4,
     "DisplayContext": "OPTIONAL"
   },
