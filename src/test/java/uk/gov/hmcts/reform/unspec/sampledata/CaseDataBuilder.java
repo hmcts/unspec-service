@@ -304,7 +304,7 @@ public class CaseDataBuilder {
                 return atStateProceedsOfflineUnrepresentedDefendant();
             case CASE_PROCEEDS_IN_CASEMAN:
                 return atStateCaseProceedsInCaseman();
-            case CLAIM_DISMISSED:
+            case CLAIM_DISMISSED_DEFENDANT_OUT_OF_TIME:
                 return atStateClaimDismissed();
             default:
                 throw new IllegalArgumentException("Invalid internal state: " + flowState);

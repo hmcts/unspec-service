@@ -86,7 +86,7 @@ public class FlowPredicate {
         caseData.getClaimProceedsInCaseman() != null;
 
     public static final Predicate<CaseData> caseDismissed = caseData ->
-        caseData.getCcdState() == CLAIM_DISMISSED;
+        caseData.getCcdState() == CLAIM_DISMISSED && caseData.getRespondent1ClaimResponseType() == null;
 
     private FlowPredicate() {
         //Utility class

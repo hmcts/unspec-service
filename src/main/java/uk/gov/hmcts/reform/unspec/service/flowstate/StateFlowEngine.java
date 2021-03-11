@@ -33,7 +33,7 @@ import static uk.gov.hmcts.reform.unspec.service.flowstate.FlowState.Main.AWAITI
 import static uk.gov.hmcts.reform.unspec.service.flowstate.FlowState.Main.AWAITING_CASE_NOTIFICATION;
 import static uk.gov.hmcts.reform.unspec.service.flowstate.FlowState.Main.CASE_PROCEEDS_IN_CASEMAN;
 import static uk.gov.hmcts.reform.unspec.service.flowstate.FlowState.Main.CLAIM_DISCONTINUED;
-import static uk.gov.hmcts.reform.unspec.service.flowstate.FlowState.Main.CLAIM_DISMISSED;
+import static uk.gov.hmcts.reform.unspec.service.flowstate.FlowState.Main.CLAIM_DISMISSED_DEFENDANT_OUT_OF_TIME;
 import static uk.gov.hmcts.reform.unspec.service.flowstate.FlowState.Main.CLAIM_ISSUED;
 import static uk.gov.hmcts.reform.unspec.service.flowstate.FlowState.Main.CLAIM_WITHDRAWN;
 import static uk.gov.hmcts.reform.unspec.service.flowstate.FlowState.Main.DRAFT;
@@ -83,7 +83,7 @@ public class StateFlowEngine {
                 .transitionTo(CLAIM_WITHDRAWN).onlyIf(claimWithdrawn)
                 .transitionTo(CLAIM_DISCONTINUED).onlyIf(claimDiscontinued)
                 .transitionTo(CASE_PROCEEDS_IN_CASEMAN).onlyIf(caseProceedsInCaseman)
-                .transitionTo(CLAIM_DISMISSED).onlyIf(caseDismissed)
+                .transitionTo(CLAIM_DISMISSED_DEFENDANT_OUT_OF_TIME).onlyIf(caseDismissed)
             .state(SERVICE_ACKNOWLEDGED)
                 .transitionTo(EXTENSION_REQUESTED).onlyIf(respondentAgreedExtension)
                 .transitionTo(CLAIM_DISCONTINUED).onlyIf(claimDiscontinued)
@@ -121,7 +121,7 @@ public class StateFlowEngine {
             .state(APPLICANT_RESPOND_TO_DEFENCE)
                 .transitionTo(CASE_PROCEEDS_IN_CASEMAN)
             .state(CASE_PROCEEDS_IN_CASEMAN)
-            .state(CLAIM_DISMISSED)
+            .state(CLAIM_DISMISSED_DEFENDANT_OUT_OF_TIME)
             .state(PROCEEDS_OFFLINE_UNREPRESENTED_DEFENDANT)
             .state(PROCEEDS_OFFLINE_ADMIT_OR_COUNTER_CLAIM)
             .state(CLAIM_WITHDRAWN)
