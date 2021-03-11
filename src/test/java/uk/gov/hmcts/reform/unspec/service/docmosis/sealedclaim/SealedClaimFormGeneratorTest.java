@@ -104,7 +104,6 @@ class SealedClaimFormGeneratorTest {
         void whenCaseIsAtClaimCreated_shouldGetSealedClaimFormData() {
             CaseData caseData = CaseDataBuilder.builder().atStateClaimCreated().build().toBuilder()
                 .applicant1LitigationFriend(LitigationFriend.builder().fullName("applicant LF").build())
-                .respondent1LitigationFriend(LitigationFriend.builder().fullName("respondent LF").build())
                 .build();
 
             var templateData = sealedClaimFormGenerator.getTemplateData(caseData);
@@ -156,7 +155,6 @@ class SealedClaimFormGeneratorTest {
                                .name(respondent.getPartyName())
                                .primaryAddress(respondent.getPrimaryAddress())
                                .representative(representative)
-                               .litigationFriendName("respondent LF")
                                .build());
         }
 

@@ -98,10 +98,6 @@ public class SealedClaimFormGenerator implements TemplateDataGenerator<SealedCla
                            .name(respondent.getPartyName())
                            .primaryAddress(respondent.getPrimaryAddress())
                            .representative(representativeService.getRespondentRepresentative(caseData))
-                           .litigationFriendName(
-                               ofNullable(caseData.getRespondent1LitigationFriend())
-                                   .map(LitigationFriend::getFullName)
-                                   .orElse(""))
                            .build());
     }
 
