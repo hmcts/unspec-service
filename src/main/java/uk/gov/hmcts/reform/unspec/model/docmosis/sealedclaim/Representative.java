@@ -31,10 +31,7 @@ public class Representative {
 
     public static Representative fromOrganisation(Organisation organisation) {
         return Representative.builder()
-//            .dxAddress("")
             .organisationName(organisation.getName())
-//            .phoneNumber("")
-//            .emailAddress("")
             .serviceAddress(fromContactInformation(organisation.getContactInformation().get(0)))
             .build();
     }

@@ -4,7 +4,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import uk.gov.hmcts.reform.unspec.model.CaseData;
 import uk.gov.hmcts.reform.unspec.model.LitigationFriend;
-import uk.gov.hmcts.reform.unspec.model.Party;
 import uk.gov.hmcts.reform.unspec.model.docmosis.DocmosisDocument;
 import uk.gov.hmcts.reform.unspec.model.docmosis.aos.AcknowledgementOfServiceForm;
 import uk.gov.hmcts.reform.unspec.model.docmosis.sealedclaim.Representative;
@@ -58,12 +57,15 @@ public class AcknowledgementOfServiceGenerator implements TemplateDataGenerator<
         return Respondent.builder()
             .name(respondent.getPartyName())
             .primaryAddress(respondent.getPrimaryAddress())
-            .representative(Representative.fromSolicitorOrganisationDetails(
-                caseData.getRespondentSolicitor1OrganisationDetails()))
+            .representative(getRepresentative(caseData))
             .litigationFriendName(
                 ofNullable(caseData.getRespondent1LitigationFriend())
                     .map(LitigationFriend::getFullName)
                     .orElse(""))
             .build();
+    }
+
+    private Representative getRepresentative(CaseData caseData) {
+        return Representative.fromSolicitorOrganisationDetails(caseData.getRespondentSolicitor1OrganisationDetails());
     }
 }

@@ -8,12 +8,12 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class PrdAdminUserConfiguration {
 
-    private final String userName;
+    private final String username;
     private final String password;
 
-    public PrdAdminUserConfiguration(@Value("${unspecified.prd-adminga.username}") String userName,
-                                     @Value("${unspecified.prd-adminga.password}") String password) {
-        this.userName = userName;
+    public PrdAdminUserConfiguration(@Value("${unspecified.prd-admin.username}") String username,
+                                     @Value("${unspecified.prd-admin.password}") String password) {
+        this.username = username;
         this.password = password;
     }
 }

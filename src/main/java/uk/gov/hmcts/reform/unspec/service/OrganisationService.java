@@ -35,7 +35,7 @@ public class OrganisationService {
     }
 
     public Optional<Organisation> findOrganisationById(String id) {
-        String authToken = idamClient.getAccessToken(userConfig.getUserName(), userConfig.getPassword());
+        String authToken = idamClient.getAccessToken(userConfig.getUsername(), userConfig.getPassword());
         try {
             return ofNullable(organisationApi.findOrganisationById(authToken, authTokenGenerator.generate(), id));
         } catch (FeignException.NotFound ex) {
