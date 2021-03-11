@@ -11,6 +11,7 @@ import lombok.Getter;
 import uk.gov.hmcts.reform.unspec.model.StatementOfTruth;
 import uk.gov.hmcts.reform.unspec.model.docmosis.DocmosisData;
 import uk.gov.hmcts.reform.unspec.model.docmosis.common.Applicant;
+import uk.gov.hmcts.reform.unspec.model.docmosis.common.Respondent;
 
 import java.time.LocalDate;
 import java.util.List;

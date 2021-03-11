@@ -10,7 +10,7 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import uk.gov.hmcts.reform.unspec.model.SolicitorReferences;
 import uk.gov.hmcts.reform.unspec.model.docmosis.DocmosisData;
-import uk.gov.hmcts.reform.unspec.model.docmosis.sealedclaim.Respondent;
+import uk.gov.hmcts.reform.unspec.model.docmosis.common.Respondent;
 
 import java.time.LocalDate;
 
