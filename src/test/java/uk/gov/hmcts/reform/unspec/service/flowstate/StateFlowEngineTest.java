@@ -291,13 +291,12 @@ class StateFlowEngineTest {
                 .isNotNull()
                 .isEqualTo(CLAIM_DISMISSED.fullName());
             assertThat(stateFlow.getStateHistory())
-                .hasSize(8)
+                .hasSize(7)
                 .extracting(State::getName)
                 .containsExactly(
                     DRAFT.fullName(), PENDING_CASE_ISSUED.fullName(), PAYMENT_SUCCESSFUL.fullName(),
                     AWAITING_CASE_NOTIFICATION.fullName(), AWAITING_CASE_DETAILS_NOTIFICATION.fullName(),
-                    CLAIM_ISSUED.fullName(), RESPONDENT_FULL_DEFENCE.fullName(),
-                    CLAIM_DISMISSED.fullName()
+                    CLAIM_ISSUED.fullName(), CLAIM_DISMISSED.fullName()
                 );
         }
 

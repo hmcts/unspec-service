@@ -33,8 +33,7 @@ class CaseDismissedSchedulerTest extends BpmnBaseTest {
         assertThat(jobDefinitions).hasSize(1);
         assertThat(jobDefinitions.get(0).getJobType()).isEqualTo("timer-start-event");
 
-        //TODO update CRON schedule.
-        assertThat(jobDefinitions.get(0).getJobConfiguration()).isEqualTo("CYCLE: 0 0/5 * * * ?");
+        assertThat(jobDefinitions.get(0).getJobConfiguration()).isEqualTo("CYCLE: 5 16 * * * ?");
 
         //get external tasks
         List<ExternalTask> externalTasks = getExternalTasks();

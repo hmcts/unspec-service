@@ -507,7 +507,7 @@ public class CaseDataBuilder {
     }
 
     public CaseDataBuilder atStateClaimDismissed() {
-        atStateRespondentFullDefence();
+        atStateClaimCreated();
         ccdState = CLAIM_DISMISSED;
         return this;
     }
