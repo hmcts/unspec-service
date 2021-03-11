@@ -8,9 +8,7 @@ const respondent1 = {
   primaryAddress: buildAddress('respondent')
 };
 const respondent1WithPartyName = {
-  ...respondent1,
-  partyName: 'Sir John Doe',
-  partyTypeDisplayValue: 'Individual',
+  ...respondent1
 };
 const applicant1 = {
   type: 'COMPANY',
@@ -78,7 +76,10 @@ const createClaimData = (legalRepresentation, useValidPba) => {
       respondent1: respondent1
     },
     LegalRepresentation: {
-      respondent1Represented: `${legalRepresentation}`
+      respondent1Represented: `${legalRepresentation}`,
+      respondent1OrganisationPolicy: {
+        OrgPolicyReference: 'Applicant reference'
+      }
     },
     DefendantSolicitorOrganisation: {
       respondent1OrgRegistered: 'Yes',
