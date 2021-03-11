@@ -1,6 +1,5 @@
 package uk.gov.hmcts.reform.unspec.model.docmosis.sealedclaim;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Builder;
 import lombok.Data;
 import uk.gov.hmcts.reform.prd.model.Organisation;
@@ -19,7 +18,8 @@ public class Representative {
     private final String emailAddress;
     private final Address serviceAddress;
 
-    public static Representative fromSolicitorOrganisationDetails(SolicitorOrganisationDetails solicitorOrganisationDetails) {
+    public static Representative fromSolicitorOrganisationDetails(
+        SolicitorOrganisationDetails solicitorOrganisationDetails) {
         return Representative.builder()
             .dxAddress(solicitorOrganisationDetails.getDx())
             .organisationName(solicitorOrganisationDetails.getOrganisationName())

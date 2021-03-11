@@ -17,8 +17,8 @@ import uk.gov.hmcts.reform.unspec.model.SolicitorReferences;
 import uk.gov.hmcts.reform.unspec.model.docmosis.DocmosisData;
 import uk.gov.hmcts.reform.unspec.model.docmosis.DocmosisDocument;
 import uk.gov.hmcts.reform.unspec.model.docmosis.common.Applicant;
-import uk.gov.hmcts.reform.unspec.model.docmosis.sealedclaim.Representative;
 import uk.gov.hmcts.reform.unspec.model.docmosis.common.Respondent;
+import uk.gov.hmcts.reform.unspec.model.docmosis.sealedclaim.Representative;
 import uk.gov.hmcts.reform.unspec.model.docmosis.sealedclaim.SealedClaimForm;
 import uk.gov.hmcts.reform.unspec.model.documents.CaseDocument;
 import uk.gov.hmcts.reform.unspec.model.documents.PDF;
@@ -144,7 +144,7 @@ class SealedClaimFormGeneratorTest {
 
         private Representative getRepresentative() {
             return Representative.builder()
-                .contactName("MiguelSpooner")
+                .organisationName("MiguelSpooner")
                 .dxAddress("DX 751Newport")
                 .organisationName("DBE Law")
                 .phoneNumber("0800 206 1592")

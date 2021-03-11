@@ -21,8 +21,8 @@ public class RepresentativeService {
 
     public Representative getRespondentRepresentative(CaseData caseData) {
         var stateFlow = stateFlowEngine.evaluate(caseData).getState();
-        var organisationId = caseData.getRespondent1OrganisationPolicy().getOrganisation().getOrganisationID();
         if (fromFullName(stateFlow.getName()) != PROCEEDS_OFFLINE_UNREPRESENTED_DEFENDANT) {
+            var organisationId = caseData.getRespondent1OrganisationPolicy().getOrganisation().getOrganisationID();
             return fromOrganisation(organisationService.findOrganisationById(organisationId)
                                         .orElseThrow(RuntimeException::new));
         }
