@@ -8,7 +8,9 @@ const respondent1 = {
   primaryAddress: buildAddress('respondent')
 };
 const respondent1WithPartyName = {
-  ...respondent1
+  ...respondent1,
+  partyName: 'Sir John Doe',
+  partyTypeDisplayValue: 'Individual',
 };
 const applicant1 = {
   type: 'COMPANY',
