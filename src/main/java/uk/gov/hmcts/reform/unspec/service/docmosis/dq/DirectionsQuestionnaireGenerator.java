@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import uk.gov.hmcts.reform.unspec.enums.ExpertReportsSent;
 import uk.gov.hmcts.reform.unspec.enums.dq.Language;
 import uk.gov.hmcts.reform.unspec.model.CaseData;
+import uk.gov.hmcts.reform.unspec.model.LitigationFriend;
 import uk.gov.hmcts.reform.unspec.model.Party;
 import uk.gov.hmcts.reform.unspec.model.docmosis.DocmosisDocument;
 import uk.gov.hmcts.reform.unspec.model.docmosis.common.Applicant;
@@ -89,6 +90,10 @@ public class DirectionsQuestionnaireGenerator implements TemplateDataGenerator<D
         return Applicant.builder()
             .name(applicant.getPartyName())
             .primaryAddress(applicant.getPrimaryAddress())
+            .litigationFriendName(
+                ofNullable(caseData.getApplicant1LitigationFriend())
+                    .map(LitigationFriend::getFullName)
+                    .orElse(""))
             .build();
     }
 

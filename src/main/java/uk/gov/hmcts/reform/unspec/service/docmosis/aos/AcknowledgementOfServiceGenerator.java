@@ -3,9 +3,11 @@ package uk.gov.hmcts.reform.unspec.service.docmosis.aos;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import uk.gov.hmcts.reform.unspec.model.CaseData;
+import uk.gov.hmcts.reform.unspec.model.LitigationFriend;
 import uk.gov.hmcts.reform.unspec.model.Party;
 import uk.gov.hmcts.reform.unspec.model.docmosis.DocmosisDocument;
 import uk.gov.hmcts.reform.unspec.model.docmosis.aos.AcknowledgementOfServiceForm;
+import uk.gov.hmcts.reform.unspec.model.docmosis.sealedclaim.Representative;
 import uk.gov.hmcts.reform.unspec.model.docmosis.sealedclaim.Respondent;
 import uk.gov.hmcts.reform.unspec.model.documents.CaseDocument;
 import uk.gov.hmcts.reform.unspec.model.documents.DocumentType;
@@ -15,6 +17,7 @@ import uk.gov.hmcts.reform.unspec.service.docmosis.TemplateDataGenerator;
 import uk.gov.hmcts.reform.unspec.service.documentmanagement.DocumentManagementService;
 import uk.gov.hmcts.reform.unspec.utils.DocmosisTemplateDataUtils;
 
+import static java.util.Optional.ofNullable;
 import static uk.gov.hmcts.reform.unspec.service.docmosis.DocmosisTemplates.N9;
 
 @Service
@@ -46,14 +49,21 @@ public class AcknowledgementOfServiceGenerator implements TemplateDataGenerator<
             .solicitorReferences(DocmosisTemplateDataUtils.fetchSolicitorReferences(caseData.getSolicitorReferences()))
             .claimIssuedDate(caseData.getClaimIssuedDate())
             .responseDeadline(caseData.getRespondentSolicitor1ResponseDeadline().toLocalDate())
-            .respondent(prepareRespondent(caseData.getRespondent1()))
+            .respondent(prepareRespondent(caseData))
             .build();
     }
 
-    private Respondent prepareRespondent(Party respondent) {
+    private Respondent prepareRespondent(CaseData caseData) {
+        var respondent = caseData.getRespondent1();
         return Respondent.builder()
             .name(respondent.getPartyName())
             .primaryAddress(respondent.getPrimaryAddress())
+            .representative(Representative.fromSolicitorOrganisationDetails(
+                caseData.getRespondentSolicitor1OrganisationDetails()))
+            .litigationFriendName(
+                ofNullable(caseData.getRespondent1LitigationFriend())
+                    .map(LitigationFriend::getFullName)
+                    .orElse(""))
             .build();
     }
 }

@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import uk.gov.hmcts.reform.unspec.model.Address;
 import uk.gov.hmcts.reform.unspec.model.CaseData;
+import uk.gov.hmcts.reform.unspec.model.LitigationFriend;
 import uk.gov.hmcts.reform.unspec.model.Party;
 import uk.gov.hmcts.reform.unspec.model.SolicitorReferences;
 import uk.gov.hmcts.reform.unspec.model.docmosis.DocmosisDocument;
@@ -14,15 +15,23 @@ import uk.gov.hmcts.reform.unspec.model.docmosis.sealedclaim.SealedClaimForm;
 import uk.gov.hmcts.reform.unspec.model.documents.CaseDocument;
 import uk.gov.hmcts.reform.unspec.model.documents.DocumentType;
 import uk.gov.hmcts.reform.unspec.model.documents.PDF;
+import uk.gov.hmcts.reform.unspec.service.OrganisationService;
 import uk.gov.hmcts.reform.unspec.service.docmosis.DocumentGeneratorService;
 import uk.gov.hmcts.reform.unspec.service.docmosis.TemplateDataGenerator;
 import uk.gov.hmcts.reform.unspec.service.documentmanagement.DocumentManagementService;
+import uk.gov.hmcts.reform.unspec.service.flowstate.FlowState;
+import uk.gov.hmcts.reform.unspec.service.flowstate.StateFlowEngine;
 import uk.gov.hmcts.reform.unspec.utils.DocmosisTemplateDataUtils;
 
 import java.util.List;
 import java.util.Optional;
 
+import static java.util.Optional.ofNullable;
+import static uk.gov.hmcts.reform.unspec.model.docmosis.sealedclaim.Representative.fromOrganisation;
+import static uk.gov.hmcts.reform.unspec.model.docmosis.sealedclaim.Representative.fromSolicitorOrganisationDetails;
 import static uk.gov.hmcts.reform.unspec.service.docmosis.DocmosisTemplates.N1;
+import static uk.gov.hmcts.reform.unspec.service.flowstate.FlowState.Main.PROCEEDS_OFFLINE_UNREPRESENTED_DEFENDANT;
+import static uk.gov.hmcts.reform.unspec.service.flowstate.FlowState.fromFullName;
 
 @Service
 @RequiredArgsConstructor
@@ -49,6 +58,8 @@ public class SealedClaimFormGenerator implements TemplateDataGenerator<SealedCla
 
     private final DocumentManagementService documentManagementService;
     private final DocumentGeneratorService documentGeneratorService;
+    private final StateFlowEngine stateFlowEngine;
+    private final OrganisationService organisationService;
 
     public CaseDocument generate(CaseData caseData, String authorisation) {
         SealedClaimForm templateData = getTemplateData(caseData);
@@ -66,7 +77,7 @@ public class SealedClaimFormGenerator implements TemplateDataGenerator<SealedCla
 
     @Override
     public SealedClaimForm getTemplateData(CaseData caseData) {
-        Optional<SolicitorReferences> solicitorReferences = Optional.ofNullable(caseData.getSolicitorReferences());
+        Optional<SolicitorReferences> solicitorReferences = ofNullable(caseData.getSolicitorReferences());
         return SealedClaimForm.builder()
             .applicants(getApplicants(caseData))
             .respondents(getRespondents(caseData))
@@ -93,9 +104,11 @@ public class SealedClaimFormGenerator implements TemplateDataGenerator<SealedCla
         return List.of(Respondent.builder()
                            .name(respondent.getPartyName())
                            .primaryAddress(respondent.getPrimaryAddress())
-                           .representative(Representative.fromSolicitorOrganisationDetails(
-                               caseData.getRespondentSolicitor1OrganisationDetails()))
-                           .litigationFriendName(caseData.getRespondent1LitigationFriend().getFullName())
+                           .representative(getRepresentative(caseData))
+                           .litigationFriendName(
+                               ofNullable(caseData.getRespondent1LitigationFriend())
+                                   .map(LitigationFriend::getFullName)
+                                   .orElse(""))
                            .build());
     }
 
@@ -104,7 +117,20 @@ public class SealedClaimFormGenerator implements TemplateDataGenerator<SealedCla
         return List.of(Applicant.builder()
                            .name(applicant.getPartyName())
                            .primaryAddress(applicant.getPrimaryAddress())
-                           .litigationFriendName(caseData.getApplicant1LitigationFriend().getFullName())
+                           .litigationFriendName(
+                               ofNullable(caseData.getApplicant1LitigationFriend())
+                                   .map(LitigationFriend::getFullName)
+                                   .orElse(""))
                            .build());
+    }
+
+    private Representative getRepresentative(CaseData caseData) {
+        var stateFlow = stateFlowEngine.evaluate(caseData).getState();
+        var organisationId = caseData.getRespondent1OrganisationPolicy().getOrganisation().getOrganisationID();
+        if (fromFullName(stateFlow.getName()) != PROCEEDS_OFFLINE_UNREPRESENTED_DEFENDANT) {
+            return fromOrganisation(organisationService.findOrganisationById(organisationId)
+                                        .orElseThrow(RuntimeException::new));
+        }
+        return fromSolicitorOrganisationDetails(caseData.getRespondentSolicitor1OrganisationDetails());
     }
 }
