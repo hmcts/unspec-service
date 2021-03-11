@@ -24,7 +24,7 @@ public class OnBoardingOrganisationControlService {
     public List<String> validateOrganisation(String userBearer) {
         Optional<Organisation> userOrganisation = organisationService.findOrganisation(userBearer);
 
-        Boolean organisationOnboarded = userOrganisation
+        boolean organisationOnboarded = userOrganisation
             .map(userOrg -> featureToggleService.isOrganisationOnboarded(userOrg.getOrganisationIdentifier()))
             .orElse(false);
 
