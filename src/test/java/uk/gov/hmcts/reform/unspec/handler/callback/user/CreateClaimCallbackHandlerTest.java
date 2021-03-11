@@ -66,7 +66,7 @@ import static uk.gov.hmcts.reform.unspec.handler.callback.user.CreateClaimCallba
 import static uk.gov.hmcts.reform.unspec.handler.callback.user.CreateClaimCallbackHandler.UNREGISTERED_ORG_CONFIRMATION_BODY;
 import static uk.gov.hmcts.reform.unspec.helpers.DateFormatHelper.DATE_TIME_AT;
 import static uk.gov.hmcts.reform.unspec.helpers.DateFormatHelper.formatLocalDateTime;
-import static uk.gov.hmcts.reform.unspec.launchdarkly.OnBoardingOrganisationControlService.ORG_NOT_REGISTERED;
+import static uk.gov.hmcts.reform.unspec.launchdarkly.OnBoardingOrganisationControlService.ORG_NOT_ONBOARDED;
 import static uk.gov.hmcts.reform.unspec.utils.PartyUtils.getPartyNameBasedOnType;
 
 @SpringBootTest(classes = {
@@ -127,14 +127,14 @@ class CreateClaimCallbackHandlerTest extends BaseCallbackHandlerTest {
             CaseData caseData = CaseDataBuilder.builder().build();
 
             given(onBoardingOrganisationControlService.validateOrganisation("BEARER_TOKEN"))
-                .willReturn(List.of(String.format(ORG_NOT_REGISTERED, "Solicitor tribunal ltd")));
+                .willReturn(List.of(String.format(ORG_NOT_ONBOARDED, "Solicitor tribunal ltd")));
 
             CallbackParams params = callbackParamsOf(caseData, MID, PAGE_ID);
 
             var response = (AboutToStartOrSubmitCallbackResponse) handler.handle(params);
 
             assertThat(response.getErrors())
-                .containsExactly(String.format(ORG_NOT_REGISTERED, "Solicitor tribunal ltd"));
+                .containsExactly(String.format(ORG_NOT_ONBOARDED, "Solicitor tribunal ltd"));
         }
 
         @Test

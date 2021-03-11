@@ -15,26 +15,22 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class OnBoardingOrganisationControlService {
 
-    public static final String ORG_NOT_REGISTERED = "your organisation is %s, unfortunately that org "
-        + "is not part of pilot and therefore cannot use Civil Damages service";
+    public static final String ORG_NOT_ONBOARDED = "You cannot use this service because your organisation is"
+        + " not part of the HMCTS civil damages pilot.";
 
     private final FeatureToggleService featureToggleService;
     private final OrganisationService organisationService;
 
     public List<String> validateOrganisation(String userBearer) {
-        List<String> errors = new ArrayList<>();
-
         Optional<Organisation> userOrganisation = organisationService.findOrganisation(userBearer);
 
         Boolean organisationOnboarded = userOrganisation
             .map(userOrg -> featureToggleService.isOrganisationOnboarded(userOrg.getOrganisationIdentifier()))
             .orElse(false);
 
+        List<String> errors = new ArrayList<>();
         if (!organisationOnboarded) {
-            errors.add(String.format(
-                ORG_NOT_REGISTERED,
-                userOrganisation.map(Organisation::getName).orElse("UnRegistered")
-            ));
+            errors.add(ORG_NOT_ONBOARDED);
         }
 
         return errors;

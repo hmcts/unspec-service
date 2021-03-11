@@ -14,7 +14,7 @@ import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.when;
-import static uk.gov.hmcts.reform.unspec.launchdarkly.OnBoardingOrganisationControlService.ORG_NOT_REGISTERED;
+import static uk.gov.hmcts.reform.unspec.launchdarkly.OnBoardingOrganisationControlService.ORG_NOT_ONBOARDED;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(classes = {
@@ -51,6 +51,6 @@ class OnBoardingOrganisationControlServiceTest {
         when(featureToggleService.isOrganisationOnboarded("0F99S99")).thenReturn(false);
 
         assertThat(onBoardingOrganisationControlService.validateOrganisation(USER_TOKEN))
-            .contains(String.format(ORG_NOT_REGISTERED, firm));
+            .contains(ORG_NOT_ONBOARDED);
     }
 }
