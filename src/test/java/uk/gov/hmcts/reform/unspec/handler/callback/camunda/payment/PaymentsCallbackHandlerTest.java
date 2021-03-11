@@ -114,7 +114,7 @@ class PaymentsCallbackHandlerTest extends BaseCallbackHandlerTest {
         assertThat(response.getData()).extracting("paymentReference").isNull();
         assertThat(response.getData()).extracting("paymentErrorMessage").isNull();
         assertThat(response.getData()).extracting("paymentErrorCode").isNull();
-        assertThat(response.getErrors()).containsOnly("Technical error occurred");
+        assertThat(response.getErrors()).containsOnly("Due to technical limitations please wait for 2 minutes and then try again.");
     }
 
     @Test

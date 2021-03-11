@@ -35,7 +35,7 @@ import static uk.gov.hmcts.reform.unspec.enums.PaymentStatus.SUCCESS;
 public class PaymentsCallbackHandler extends CallbackHandler {
 
     private static final List<CaseEvent> EVENTS = Collections.singletonList(MAKE_PBA_PAYMENT);
-    private static final String ERROR_MESSAGE = "Technical error occurred";
+    private static final String ERROR_MESSAGE = "Due to technical limitations please wait for 2 minutes and then try again.";
 
     private final CaseDetailsConverter caseDetailsConverter;
     private final PaymentsService paymentsService;
