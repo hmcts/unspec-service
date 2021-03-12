@@ -20,7 +20,7 @@ import static uk.gov.hmcts.reform.unspec.callback.CaseEvent.NOTIFY_APPLICANT_SOL
 
 @Service
 @RequiredArgsConstructor
-public class AcknowledgeServiceApplicantNotificationHandler extends CallbackHandler implements NotificationData {
+public class AcknowledgeClaimApplicantNotificationHandler extends CallbackHandler implements NotificationData {
 
     private static final List<CaseEvent> EVENTS = List.of(NOTIFY_APPLICANT_SOLICITOR1_FOR_SERVICE_ACKNOWLEDGEMENT);
     public static final String TASK_ID = "AcknowledgeServiceNotifyApplicantSolicitor1";

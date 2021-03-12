@@ -25,7 +25,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.params.provider.Arguments.of;
-import static uk.gov.hmcts.reform.unspec.callback.CaseEvent.ACKNOWLEDGE_SERVICE;
+import static uk.gov.hmcts.reform.unspec.callback.CaseEvent.ACKNOWLEDGE_CLAIM;
 import static uk.gov.hmcts.reform.unspec.callback.CaseEvent.ADD_DEFENDANT_LITIGATION_FRIEND;
 import static uk.gov.hmcts.reform.unspec.callback.CaseEvent.ADD_OR_AMEND_CLAIM_DOCUMENTS;
 import static uk.gov.hmcts.reform.unspec.callback.CaseEvent.AMEND_PARTY_DETAILS;
@@ -139,7 +139,7 @@ class FlowStateAllowedEventServiceTest {
         @Test
         void shouldReturnValidEvents_whenFlowStateIsClaimIssued() {
             assertThat(flowStateAllowedEventService.getAllowedEvents(CLAIM_ISSUED.fullName()))
-                .containsExactlyInAnyOrder(MOVE_TO_STAYED, ACKNOWLEDGE_SERVICE, ADD_DEFENDANT_LITIGATION_FRIEND,
+                .containsExactlyInAnyOrder(MOVE_TO_STAYED, ACKNOWLEDGE_CLAIM, ADD_DEFENDANT_LITIGATION_FRIEND,
                                            WITHDRAW_CLAIM, DISCONTINUE_CLAIM, CASE_PROCEEDS_IN_CASEMAN,
                                            AMEND_PARTY_DETAILS
                 );
@@ -223,7 +223,7 @@ class FlowStateAllowedEventServiceTest {
         @CsvSource({
             "DRAFT,CREATE_CLAIM",
             "CLAIM_ISSUED,MOVE_TO_STAYED",
-            "CLAIM_ISSUED,ACKNOWLEDGE_SERVICE",
+            "CLAIM_ISSUED,ACKNOWLEDGE_CLAIM",
             "CLAIM_ISSUED,WITHDRAW_CLAIM",
             "CLAIM_ISSUED,CASE_PROCEEDS_IN_CASEMAN",
             "AWAITING_CASE_NOTIFICATION,NOTIFY_DEFENDANT_OF_CLAIM",
@@ -252,8 +252,8 @@ class FlowStateAllowedEventServiceTest {
             "DRAFT,CASE_PROCEEDS_IN_CASEMAN",
             "CLAIM_STAYED,DEFENDANT_RESPONSE",
             "AWAITING_CASE_NOTIFICATION,NOTIFY_DEFENDANT_OF_CLAIM_DETAILS",
-            "AWAITING_CASE_DETAILS_NOTIFICATION,ACKNOWLEDGE_SERVICE",
-            "APPLICANT_RESPOND_TO_DEFENCE,ACKNOWLEDGE_SERVICE",
+            "AWAITING_CASE_DETAILS_NOTIFICATION,ACKNOWLEDGE_CLAIM",
+            "APPLICANT_RESPOND_TO_DEFENCE,ACKNOWLEDGE_CLAIM",
             "EXTENSION_REQUESTED, INFORM_AGREED_EXTENSION_DATE"
         })
         void shouldReturnFalse_whenEventIsNotAllowedAtGivenState(FlowState.Main flowState, CaseEvent caseEvent) {
@@ -270,7 +270,7 @@ class FlowStateAllowedEventServiceTest {
                 of(CREATE_CLAIM, new String[]{DRAFT.fullName()}),
                 of(RESUBMIT_CLAIM, new String[]{PAYMENT_FAILED.fullName()}),
                 of(MOVE_TO_STAYED, new String[]{CLAIM_ISSUED.fullName()}),
-                of(ACKNOWLEDGE_SERVICE, new String[]{CLAIM_ISSUED.fullName()}),
+                of(ACKNOWLEDGE_CLAIM, new String[]{CLAIM_ISSUED.fullName()}),
                 of(NOTIFY_DEFENDANT_OF_CLAIM, new String[]{AWAITING_CASE_NOTIFICATION.fullName()}),
                 of(CLAIMANT_RESPONSE, new String[]{RESPONDENT_FULL_DEFENCE.fullName()}),
                 of(DEFENDANT_RESPONSE, new String[]{SERVICE_ACKNOWLEDGED.fullName(), EXTENSION_REQUESTED.fullName()}),
@@ -405,7 +405,7 @@ class FlowStateAllowedEventServiceTest {
                 of(
                     false,
                     CaseDetailsBuilder.builder().atStateAwaitingCaseDetailsNotification().build(),
-                    ACKNOWLEDGE_SERVICE
+                    ACKNOWLEDGE_CLAIM
                 ),
                 of(false, CaseDetailsBuilder.builder().atStateProceedsOffline().build(), AMEND_PARTY_DETAILS),
                 of(true, CaseDetailsBuilder.builder().atStateClaimCreated().build(), AMEND_PARTY_DETAILS)

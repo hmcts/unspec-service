@@ -12,7 +12,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import uk.gov.hmcts.reform.unspec.model.CaseData;
 import uk.gov.hmcts.reform.unspec.model.docmosis.DocmosisData;
 import uk.gov.hmcts.reform.unspec.model.docmosis.DocmosisDocument;
-import uk.gov.hmcts.reform.unspec.model.docmosis.aos.AcknowledgementOfServiceForm;
+import uk.gov.hmcts.reform.unspec.model.docmosis.aos.AcknowledgementOfClaimForm;
 import uk.gov.hmcts.reform.unspec.model.docmosis.sealedclaim.Respondent;
 import uk.gov.hmcts.reform.unspec.model.documents.CaseDocument;
 import uk.gov.hmcts.reform.unspec.model.documents.PDF;
@@ -36,10 +36,10 @@ import static uk.gov.hmcts.reform.unspec.utils.DocmosisTemplateDataUtils.toCaseN
 
 @ExtendWith(SpringExtension.class)
 @ContextConfiguration(classes = {
-    AcknowledgementOfServiceGenerator.class,
+    AcknowledgementOfClaimGenerator.class,
     JacksonAutoConfiguration.class
 })
-class AcknowledgementOfServiceGeneratorTest {
+class AcknowledgementOfClaimGeneratorTest {
 
     private static final String BEARER_TOKEN = "Bearer Token";
     private static final String REFERENCE_NUMBER = "000LR001";
@@ -57,7 +57,7 @@ class AcknowledgementOfServiceGeneratorTest {
     private DocumentGeneratorService documentGeneratorService;
 
     @Autowired
-    private AcknowledgementOfServiceGenerator generator;
+    private AcknowledgementOfClaimGenerator generator;
 
     @Test
     void shouldGenerateCertificateOfService_whenValidDataIsProvided() {
@@ -70,7 +70,7 @@ class AcknowledgementOfServiceGeneratorTest {
 
         CaseData caseData = CaseDataBuilder.builder().atStateServiceAcknowledge().build();
 
-        AcknowledgementOfServiceForm expectedDocmosisData = AcknowledgementOfServiceForm.builder()
+        AcknowledgementOfClaimForm expectedDocmosisData = AcknowledgementOfClaimForm.builder()
             .caseName("Mr. John Rambo v Mr. Sole Trader T/A Sole Trader co")
             .referenceNumber(LEGACY_CASE_REFERENCE)
             .solicitorReferences(caseData.getSolicitorReferences())
@@ -95,7 +95,7 @@ class AcknowledgementOfServiceGeneratorTest {
     class GetTemplateData {
 
         @Test
-        void whenCaseIsAtServiceAcknowledge_shouldGetAcknowledgementOfServiceFormData() {
+        void whenCaseIsAtServiceAcknowledge_shouldGetAcknowledgementOfClaimFormData() {
             CaseData caseData = CaseDataBuilder.builder().atStateServiceAcknowledge().build();
 
             var templateData = generator.getTemplateData(caseData);
@@ -103,9 +103,9 @@ class AcknowledgementOfServiceGeneratorTest {
             assertThatFieldsAreCorrect(templateData, caseData);
         }
 
-        private void assertThatFieldsAreCorrect(AcknowledgementOfServiceForm templateData, CaseData caseData) {
+        private void assertThatFieldsAreCorrect(AcknowledgementOfClaimForm templateData, CaseData caseData) {
             Assertions.assertAll(
-                "AcknowledgementOfService data should be as expected",
+                "AcknowledgementOfClaim data should be as expected",
                 () -> assertEquals(templateData.getCaseName(), toCaseName.apply(caseData)),
                 () -> assertEquals(templateData.getReferenceNumber(), caseData.getLegacyCaseReference()),
                 () -> assertEquals(

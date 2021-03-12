@@ -18,7 +18,7 @@ import java.time.LocalDate;
 @Builder
 @AllArgsConstructor
 @EqualsAndHashCode
-public class AcknowledgementOfServiceForm implements DocmosisData {
+public class AcknowledgementOfClaimForm implements DocmosisData {
 
     @JsonProperty("courtseal")
     private final String courtSeal = "[userImage:courtseal.PNG]"; //NOSONAR

@@ -99,7 +99,7 @@ public class CaseDataBuilder {
     private IdamUserDetails applicantSolicitor1UserDetails;
     //Deadline extension
     private LocalDate respondentSolicitor1AgreedDeadlineExtension;
-    //Acknowledge Service
+    //Acknowledge Claim
     private ResponseIntention respondent1ClaimResponseIntentionType;
     // Defendant Response
     private RespondentResponseType respondent1ClaimResponseType;
@@ -571,7 +571,7 @@ public class CaseDataBuilder {
             .applicantSolicitor1UserDetails(applicantSolicitor1UserDetails)
             //Deadline extension
             .respondentSolicitor1AgreedDeadlineExtension(respondentSolicitor1AgreedDeadlineExtension)
-            // Acknowledge Service
+            // Acknowledge Claim
             .respondent1ClaimResponseIntentionType(respondent1ClaimResponseIntentionType)
             // Defendant Response
             .respondent1ClaimResponseType(respondent1ClaimResponseType)

@@ -8,19 +8,20 @@ import org.junit.jupiter.api.Test;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 
-class AcknowledgeServiceTest extends BpmnBaseTest {
+class AcknowledgeClaimTest extends BpmnBaseTest {
 
-    private static final String MESSAGE_NAME = "ACKNOWLEDGE_SERVICE";
-    private static final String PROCESS_ID = "ACKNOWLEDGE_SERVICE_PROCESS_ID";
+    private static final String MESSAGE_NAME = "ACKNOWLEDGE_CLAIM";
+    private static final String PROCESS_ID = "ACKNOWLEDGE_CLAIM_PROCESS_ID";
 
     private static final String NOTIFY_APPLICANT_SOLICITOR_1
         = "NOTIFY_APPLICANT_SOLICITOR1_FOR_SERVICE_ACKNOWLEDGEMENT";
-    private static final String GENERATE_ACKNOWLEDGEMENT_OF_CLAIM = "GENERATE_ACKNOWLEDGEMENT_OF_CLAIM";
+    //TODO: CMC-957 backwards compatibility
+    private static final String GENERATE_ACKNOWLEDGEMENT_OF_CLAIM = "GENERATE_ACKNOWLEDGEMENT_OF_SERVICE";
     private static final String NOTIFICATION_ACTIVITY_ID = "AcknowledgeServiceNotifyApplicantSolicitor1";
-    private static final String GENERATE_CERTIFICATE_ACTIVITY_ID = "AcknowledgeServiceGenerateAcknowledgementOfService";
+    private static final String GENERATE_CERTIFICATE_ACTIVITY_ID = "AcknowledgeClaimGenerateAcknowledgementOfClaim";
 
-    public AcknowledgeServiceTest() {
-        super("acknowledge_service.bpmn", "ACKNOWLEDGE_SERVICE_PROCESS_ID");
+    public AcknowledgeClaimTest() {
+        super("acknowledge_claim.bpmn", "ACKNOWLEDGE_CLAIM_PROCESS_ID");
     }
 
     @Test

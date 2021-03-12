@@ -27,17 +27,17 @@ import static uk.gov.hmcts.reform.unspec.handler.callback.camunda.notification.N
 import static uk.gov.hmcts.reform.unspec.sampledata.CaseDataBuilder.LEGACY_CASE_REFERENCE;
 
 @SpringBootTest(classes = {
-    AcknowledgeServiceApplicantNotificationHandler.class,
+    AcknowledgeClaimApplicantNotificationHandler.class,
     JacksonAutoConfiguration.class
 })
-class AcknowledgeServiceApplicantNotificationHandlerTest extends BaseCallbackHandlerTest {
+class AcknowledgeClaimApplicantNotificationHandlerTest extends BaseCallbackHandlerTest {
 
     @MockBean
     private NotificationService notificationService;
     @MockBean
     private NotificationsProperties notificationsProperties;
     @Autowired
-    private AcknowledgeServiceApplicantNotificationHandler handler;
+    private AcknowledgeClaimApplicantNotificationHandler handler;
 
     @Nested
     class AboutToSubmitCallback {

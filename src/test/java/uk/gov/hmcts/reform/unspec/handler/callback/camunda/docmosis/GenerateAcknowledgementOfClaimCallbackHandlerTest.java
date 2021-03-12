@@ -17,7 +17,7 @@ import uk.gov.hmcts.reform.unspec.model.CaseData;
 import uk.gov.hmcts.reform.unspec.model.documents.CaseDocument;
 import uk.gov.hmcts.reform.unspec.model.documents.Document;
 import uk.gov.hmcts.reform.unspec.sampledata.CaseDataBuilder;
-import uk.gov.hmcts.reform.unspec.service.docmosis.aos.AcknowledgementOfServiceGenerator;
+import uk.gov.hmcts.reform.unspec.service.docmosis.aos.AcknowledgementOfClaimGenerator;
 
 import java.time.LocalDateTime;
 
@@ -53,7 +53,7 @@ class GenerateAcknowledgementOfClaimCallbackHandlerTest extends BaseCallbackHand
         .build();
 
     @MockBean
-    private AcknowledgementOfServiceGenerator acknowledgementOfServiceGenerator;
+    private AcknowledgementOfClaimGenerator acknowledgementOfClaimGenerator;
 
     @Autowired
     private GenerateAcknowledgementOfClaimCallbackHandler handler;
@@ -63,7 +63,7 @@ class GenerateAcknowledgementOfClaimCallbackHandlerTest extends BaseCallbackHand
 
     @BeforeEach
     void setup() {
-        when(acknowledgementOfServiceGenerator.generate(any(CaseData.class), anyString())).thenReturn(DOCUMENT);
+        when(acknowledgementOfClaimGenerator.generate(any(CaseData.class), anyString())).thenReturn(DOCUMENT);
     }
 
     @Test
@@ -75,7 +75,7 @@ class GenerateAcknowledgementOfClaimCallbackHandlerTest extends BaseCallbackHand
 
         var response = (AboutToStartOrSubmitCallbackResponse) handler.handle(params);
 
-        verify(acknowledgementOfServiceGenerator).generate(caseData, "BEARER_TOKEN");
+        verify(acknowledgementOfClaimGenerator).generate(caseData, "BEARER_TOKEN");
 
         CaseData updatedData = mapper.convertValue(response.getData(), CaseData.class);
 
