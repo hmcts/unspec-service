@@ -21,7 +21,7 @@ import static uk.gov.hmcts.reform.unspec.service.flowstate.FlowPredicate.payment
 import static uk.gov.hmcts.reform.unspec.service.flowstate.FlowPredicate.paymentSuccessful;
 import static uk.gov.hmcts.reform.unspec.service.flowstate.FlowPredicate.pendingCaseIssued;
 import static uk.gov.hmcts.reform.unspec.service.flowstate.FlowPredicate.respondent1NotRepresented;
-import static uk.gov.hmcts.reform.unspec.service.flowstate.FlowPredicate.respondentAcknowledgeService;
+import static uk.gov.hmcts.reform.unspec.service.flowstate.FlowPredicate.respondentAcknowledgeClaim;
 import static uk.gov.hmcts.reform.unspec.service.flowstate.FlowPredicate.respondentCounterClaim;
 import static uk.gov.hmcts.reform.unspec.service.flowstate.FlowPredicate.respondentFullAdmission;
 import static uk.gov.hmcts.reform.unspec.service.flowstate.FlowPredicate.respondentFullDefence;
@@ -144,18 +144,18 @@ class FlowPredicateTest {
     }
 
     @Nested
-    class RespondentAcknowledgedServicePredicate {
+    class RespondentAcknowledgedClaimPredicate {
 
         @Test
-        void shouldReturnTrue_whenCaseDataAtStateServiceAcknowledged() {
+        void shouldReturnTrue_whenCaseDataAtStateClaimAcknowledged() {
             CaseData caseData = CaseDataBuilder.builder().atStateClaimAcknowledge().build();
-            assertTrue(respondentAcknowledgeService.test(caseData));
+            assertTrue(respondentAcknowledgeClaim.test(caseData));
         }
 
         @Test
         void shouldReturnFalse_whenCaseDataAtStateClaimCreated() {
             CaseData caseData = CaseDataBuilder.builder().atStateClaimCreated().build();
-            assertFalse(respondentAcknowledgeService.test(caseData));
+            assertFalse(respondentAcknowledgeClaim.test(caseData));
         }
     }
 

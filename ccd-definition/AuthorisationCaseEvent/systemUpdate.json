@@ -18,7 +18,8 @@
     "CaseTypeID": "UNSPECIFIED_CLAIMS",
     "CaseEventID": "NOTIFY_APPLICANT_SOLICITOR1_FOR_SERVICE_ACKNOWLEDGEMENT",
     "UserRole": "caseworker-civil-systemupdate",
-    "CRUD": "CRU"
+    "CRUD": "CRU",
+    "_Comments": "//TODO: CMC-957 backwards compatibility"
   },
   {
     "LiveFrom": "01/01/2017",
@@ -130,7 +131,8 @@
     "CaseTypeID": "UNSPECIFIED_CLAIMS",
     "CaseEventID": "GENERATE_ACKNOWLEDGEMENT_OF_SERVICE",
     "UserRole": "caseworker-civil-systemupdate",
-    "CRUD": "CRU"
+    "CRUD": "CRU",
+    "_Comments": "//TODO: CMC-957 backwards compatibility"
   },
   {
     "LiveFrom": "01/01/2017",

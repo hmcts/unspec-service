@@ -35,7 +35,7 @@ import static uk.gov.hmcts.reform.unspec.service.flowstate.FlowState.Main.RESPON
 import static uk.gov.hmcts.reform.unspec.service.flowstate.FlowState.Main.RESPONDENT_FULL_ADMISSION;
 import static uk.gov.hmcts.reform.unspec.service.flowstate.FlowState.Main.RESPONDENT_FULL_DEFENCE;
 import static uk.gov.hmcts.reform.unspec.service.flowstate.FlowState.Main.RESPONDENT_PART_ADMISSION;
-import static uk.gov.hmcts.reform.unspec.service.flowstate.FlowState.Main.SERVICE_ACKNOWLEDGED;
+import static uk.gov.hmcts.reform.unspec.service.flowstate.FlowState.Main.CLAIM_ACKNOWLEDGED;
 
 @SpringBootTest(classes = {
     JacksonAutoConfiguration.class,
@@ -181,7 +181,7 @@ class StateFlowEngineTest {
         }
 
         @Test
-        void shouldReturnServiceAcknowledge_whenCaseDataAtStateServiceAcknowledge() {
+        void shouldReturnServiceAcknowledge_whenCaseDataAtStateClaimAcknowledge() {
             CaseData caseData = CaseDataBuilder.builder().atStateClaimAcknowledge().build();
 
             StateFlow stateFlow = stateFlowEngine.evaluate(caseData);
@@ -189,14 +189,14 @@ class StateFlowEngineTest {
             assertThat(stateFlow.getState())
                 .extracting(State::getName)
                 .isNotNull()
-                .isEqualTo(SERVICE_ACKNOWLEDGED.fullName());
+                .isEqualTo(CLAIM_ACKNOWLEDGED.fullName());
             assertThat(stateFlow.getStateHistory())
                 .hasSize(7)
                 .extracting(State::getName)
                 .containsExactly(
                     DRAFT.fullName(), PENDING_CASE_ISSUED.fullName(), PAYMENT_SUCCESSFUL.fullName(),
                     AWAITING_CASE_NOTIFICATION.fullName(), AWAITING_CASE_DETAILS_NOTIFICATION.fullName(),
-                    CLAIM_ISSUED.fullName(), SERVICE_ACKNOWLEDGED.fullName()
+                    CLAIM_ISSUED.fullName(), CLAIM_ACKNOWLEDGED.fullName()
                 );
         }
 
@@ -216,7 +216,7 @@ class StateFlowEngineTest {
                 .containsExactly(
                     DRAFT.fullName(), PENDING_CASE_ISSUED.fullName(), PAYMENT_SUCCESSFUL.fullName(),
                     AWAITING_CASE_NOTIFICATION.fullName(), AWAITING_CASE_DETAILS_NOTIFICATION.fullName(),
-                    CLAIM_ISSUED.fullName(), SERVICE_ACKNOWLEDGED.fullName(), EXTENSION_REQUESTED.fullName()
+                    CLAIM_ISSUED.fullName(), CLAIM_ACKNOWLEDGED.fullName(), EXTENSION_REQUESTED.fullName()
                 );
         }
 
@@ -374,7 +374,7 @@ class StateFlowEngineTest {
             "false,RESPONDENT_FULL_DEFENCE",
             "false,APPLICANT_RESPOND_TO_DEFENCE",
             "false,CLAIM_STAYED",
-            "false,SERVICE_ACKNOWLEDGED",
+            "false,CLAIM_ACKNOWLEDGED",
         })
         void shouldReturnValidResult_whenCaseDataAtStateClaimCreated(boolean expected, FlowState.Main state) {
             CaseDetails caseDetails = CaseDetailsBuilder.builder()

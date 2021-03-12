@@ -284,7 +284,7 @@ public class CaseDataBuilder {
                 return atStateExtensionRequested();
             case CLAIM_STAYED:
                 return atStateClaimStayed();
-            case SERVICE_ACKNOWLEDGED:
+            case CLAIM_ACKNOWLEDGED:
                 return atStateClaimAcknowledge();
             case RESPONDENT_FULL_DEFENCE:
                 return atStateRespondentFullDefence();
