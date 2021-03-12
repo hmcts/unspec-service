@@ -30,8 +30,8 @@ Scenario('Solicitor notifies defendant solicitor of claim details', async (I) =>
 });
 
 Scenario('Solicitor acknowledges service', async (I) => {
-  await I.acknowledgeService('fullDefence');
-  await I.see(caseEventMessage('Acknowledge service'));
+  await I.acknowledgeClaim('fullDefence');
+  await I.see(caseEventMessage('Acknowledge claim'));
 });
 
 Scenario('Solicitor requests deadline extension', async (I) => {
