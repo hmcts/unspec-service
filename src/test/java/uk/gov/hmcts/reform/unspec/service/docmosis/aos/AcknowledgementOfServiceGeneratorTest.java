@@ -74,7 +74,7 @@ class AcknowledgementOfServiceGeneratorTest {
     }
 
     @Test
-    void shouldGenerateCertificateOfService_whenValidDataIsProvided() {
+    void shouldGenerateAcknowledgementOfService_whenValidDataIsProvided() {
         when(documentGeneratorService.generateDocmosisDocument(any(DocmosisData.class), eq(N9)))
             .thenReturn(new DocmosisDocument(N9.getDocumentTitle(), bytes));
 
