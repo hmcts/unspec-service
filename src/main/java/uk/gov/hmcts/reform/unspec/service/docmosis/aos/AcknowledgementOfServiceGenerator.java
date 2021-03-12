@@ -30,7 +30,7 @@ public class AcknowledgementOfServiceGenerator implements TemplateDataGenerator<
         DocmosisDocument docmosisDocument = documentGeneratorService.generateDocmosisDocument(templateData, N9);
         return documentManagementService.uploadDocument(
             authorisation,
-            new PDF(getFileName(caseData), docmosisDocument.getBytes(), DocumentType.ACKNOWLEDGEMENT_OF_SERVICE)
+            new PDF(getFileName(caseData), docmosisDocument.getBytes(), DocumentType.ACKNOWLEDGEMENT_OF_CLAIM)
         );
     }
 

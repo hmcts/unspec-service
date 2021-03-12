@@ -15,7 +15,7 @@ class AcknowledgeServiceTest extends BpmnBaseTest {
 
     private static final String NOTIFY_APPLICANT_SOLICITOR_1
         = "NOTIFY_APPLICANT_SOLICITOR1_FOR_SERVICE_ACKNOWLEDGEMENT";
-    private static final String GENERATE_ACKNOWLEDGEMENT_OF_SERVICE = "GENERATE_ACKNOWLEDGEMENT_OF_SERVICE";
+    private static final String GENERATE_ACKNOWLEDGEMENT_OF_CLAIM = "GENERATE_ACKNOWLEDGEMENT_OF_CLAIM";
     private static final String NOTIFICATION_ACTIVITY_ID = "AcknowledgeServiceNotifyApplicantSolicitor1";
     private static final String GENERATE_CERTIFICATE_ACTIVITY_ID = "AcknowledgeServiceGenerateAcknowledgementOfService";
 
@@ -37,7 +37,7 @@ class AcknowledgeServiceTest extends BpmnBaseTest {
 
         //complete the document generation
         ExternalTask documentGeneration = assertNextExternalTask(PROCESS_CASE_EVENT);
-        assertCompleteExternalTask(documentGeneration, PROCESS_CASE_EVENT, GENERATE_ACKNOWLEDGEMENT_OF_SERVICE,
+        assertCompleteExternalTask(documentGeneration, PROCESS_CASE_EVENT, GENERATE_ACKNOWLEDGEMENT_OF_CLAIM,
                                    GENERATE_CERTIFICATE_ACTIVITY_ID);
 
         //complete the notification to applicant

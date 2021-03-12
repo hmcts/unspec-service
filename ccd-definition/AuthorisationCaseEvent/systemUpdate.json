@@ -128,6 +128,13 @@
   {
     "LiveFrom": "01/01/2017",
     "CaseTypeID": "UNSPECIFIED_CLAIMS",
+    "CaseEventID": "GENERATE_ACKNOWLEDGEMENT_OF_CLAIM",
+    "UserRole": "caseworker-civil-systemupdate",
+    "CRUD": "CRU"
+  },
+  {
+    "LiveFrom": "01/01/2017",
+    "CaseTypeID": "UNSPECIFIED_CLAIMS",
     "CaseEventID": "NOTIFY_APPLICANT_SOLICITOR1_FOR_RESPONDENT_LITIGANT_IN_PERSON",
     "UserRole": "caseworker-civil-systemupdate",
     "CRUD": "CRU"

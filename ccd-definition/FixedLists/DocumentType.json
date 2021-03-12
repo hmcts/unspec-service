@@ -23,8 +23,15 @@
   {
     "LiveFrom": "01/01/2017",
     "ID": "DocumentType",
+    "ListElementCode": "ACKNOWLEDGEMENT_OF_CLAIM",
+    "ListElement": "Acknowledgement of claim form",
+    "DisplayOrder": 4
+  },
+  {
+    "LiveFrom": "01/01/2017",
+    "ID": "DocumentType",
     "ListElementCode": "DIRECTIONS_QUESTIONNAIRE",
     "ListElement": "Directions questionnaire form",
-    "DisplayOrder": 4
+    "DisplayOrder": 5
   }
 ]

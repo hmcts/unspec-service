@@ -27,23 +27,23 @@ import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static uk.gov.hmcts.reform.unspec.callback.CallbackType.ABOUT_TO_SUBMIT;
-import static uk.gov.hmcts.reform.unspec.model.documents.DocumentType.ACKNOWLEDGEMENT_OF_SERVICE;
+import static uk.gov.hmcts.reform.unspec.model.documents.DocumentType.ACKNOWLEDGEMENT_OF_CLAIM;
 import static uk.gov.hmcts.reform.unspec.model.documents.DocumentType.SEALED_CLAIM;
 import static uk.gov.hmcts.reform.unspec.utils.ElementUtils.wrapElements;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(classes = {
-    GenerateAcknowledgementOfServiceCallbackHandler.class,
+    GenerateAcknowledgementOfClaimCallbackHandler.class,
     JacksonAutoConfiguration.class,
     CaseDetailsConverter.class
 })
-class GenerateAcknowledgementOfServiceCallbackHandlerTest extends BaseCallbackHandlerTest {
+class GenerateAcknowledgementOfClaimCallbackHandlerTest extends BaseCallbackHandlerTest {
 
     public static final CaseDocument DOCUMENT = CaseDocument.builder()
         .createdBy("John")
         .documentName("document name")
         .documentSize(0L)
-        .documentType(ACKNOWLEDGEMENT_OF_SERVICE)
+        .documentType(ACKNOWLEDGEMENT_OF_CLAIM)
         .createdDatetime(LocalDateTime.now())
         .documentLink(Document.builder()
             .documentUrl("fake-url")
@@ -56,7 +56,7 @@ class GenerateAcknowledgementOfServiceCallbackHandlerTest extends BaseCallbackHa
     private AcknowledgementOfServiceGenerator acknowledgementOfServiceGenerator;
 
     @Autowired
-    private GenerateAcknowledgementOfServiceCallbackHandler handler;
+    private GenerateAcknowledgementOfClaimCallbackHandler handler;
 
     @Autowired
     private final ObjectMapper mapper = new ObjectMapper();

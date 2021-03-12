@@ -28,7 +28,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static uk.gov.hmcts.reform.unspec.model.documents.DocumentType.ACKNOWLEDGEMENT_OF_SERVICE;
+import static uk.gov.hmcts.reform.unspec.model.documents.DocumentType.ACKNOWLEDGEMENT_OF_CLAIM;
 import static uk.gov.hmcts.reform.unspec.sampledata.CaseDataBuilder.LEGACY_CASE_REFERENCE;
 import static uk.gov.hmcts.reform.unspec.service.docmosis.DocmosisTemplates.N9;
 import static uk.gov.hmcts.reform.unspec.utils.DocmosisTemplateDataUtils.fetchSolicitorReferences;
@@ -47,7 +47,7 @@ class AcknowledgementOfServiceGeneratorTest {
     private static final String fileName = format(N9.getDocumentTitle(), REFERENCE_NUMBER);
     private static final CaseDocument CASE_DOCUMENT = CaseDocumentBuilder.builder()
         .documentName(fileName)
-        .documentType(ACKNOWLEDGEMENT_OF_SERVICE)
+        .documentType(ACKNOWLEDGEMENT_OF_CLAIM)
         .build();
 
     @MockBean
@@ -65,7 +65,7 @@ class AcknowledgementOfServiceGeneratorTest {
             .thenReturn(new DocmosisDocument(N9.getDocumentTitle(), bytes));
 
         when(documentManagementService
-                 .uploadDocument(BEARER_TOKEN, new PDF(fileName, bytes, ACKNOWLEDGEMENT_OF_SERVICE)))
+                 .uploadDocument(BEARER_TOKEN, new PDF(fileName, bytes, ACKNOWLEDGEMENT_OF_CLAIM)))
             .thenReturn(CASE_DOCUMENT);
 
         CaseData caseData = CaseDataBuilder.builder().atStateServiceAcknowledge().build();
@@ -86,7 +86,7 @@ class AcknowledgementOfServiceGeneratorTest {
         assertThat(caseDocument).isNotNull().isEqualTo(CASE_DOCUMENT);
 
         verify(documentManagementService)
-            .uploadDocument(BEARER_TOKEN, new PDF(fileName, bytes, ACKNOWLEDGEMENT_OF_SERVICE));
+            .uploadDocument(BEARER_TOKEN, new PDF(fileName, bytes, ACKNOWLEDGEMENT_OF_CLAIM));
         verify(documentGeneratorService)
             .generateDocmosisDocument(expectedDocmosisData, N9);
     }
