@@ -148,7 +148,7 @@ class FlowPredicateTest {
 
         @Test
         void shouldReturnTrue_whenCaseDataAtStateServiceAcknowledged() {
-            CaseData caseData = CaseDataBuilder.builder().atStateServiceAcknowledge().build();
+            CaseData caseData = CaseDataBuilder.builder().atStateClaimAcknowledge().build();
             assertTrue(respondentAcknowledgeService.test(caseData));
         }
 

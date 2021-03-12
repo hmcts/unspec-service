@@ -285,7 +285,7 @@ public class CaseDataBuilder {
             case CLAIM_STAYED:
                 return atStateClaimStayed();
             case SERVICE_ACKNOWLEDGED:
-                return atStateServiceAcknowledge();
+                return atStateClaimAcknowledge();
             case RESPONDENT_FULL_DEFENCE:
                 return atStateRespondentFullDefence();
             case RESPONDENT_FULL_ADMISSION:
@@ -453,7 +453,7 @@ public class CaseDataBuilder {
     }
 
     public CaseDataBuilder atStateExtensionRequested() {
-        atStateServiceAcknowledge();
+        atStateClaimAcknowledge();
         respondentSolicitor1AgreedDeadlineExtension = LocalDate.now();
         return this;
     }
@@ -498,7 +498,7 @@ public class CaseDataBuilder {
     }
 
     public CaseDataBuilder atStateRespondentRespondToClaim(RespondentResponseType respondentResponseType) {
-        atStateServiceAcknowledge();
+        atStateClaimAcknowledge();
         respondent1ClaimResponseType = respondentResponseType;
         applicantSolicitorResponseDeadlineToRespondentSolicitor1 = APPLICANT_RESPONSE_DEADLINE;
         defendantResponseDate = LocalDate.now();
@@ -522,7 +522,7 @@ public class CaseDataBuilder {
         return this;
     }
 
-    public CaseDataBuilder atStateServiceAcknowledge() {
+    public CaseDataBuilder atStateClaimAcknowledge() {
         atStateClaimCreated();
         respondent1ClaimResponseIntentionType = FULL_DEFENCE;
         return this;

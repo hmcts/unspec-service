@@ -29,7 +29,7 @@ Scenario('Solicitor notifies defendant solicitor of claim details', async (I) =>
   await I.see(caseEventMessage('Notify claim details'));
 });
 
-Scenario('Solicitor acknowledges service', async (I) => {
+Scenario('Solicitor acknowledges claim', async (I) => {
   await I.acknowledgeClaim('fullDefence');
   await I.see(caseEventMessage('Acknowledge claim'));
 });

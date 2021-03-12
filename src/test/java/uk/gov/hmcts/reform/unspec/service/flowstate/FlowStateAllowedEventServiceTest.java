@@ -81,7 +81,7 @@ class FlowStateAllowedEventServiceTest {
                 ),
                 of(CaseDataBuilder.builder().atStateClaimCreated().build(), CLAIM_ISSUED),
                 of(CaseDataBuilder.builder().atStateClaimStayed().build(), CLAIM_STAYED),
-                of(CaseDataBuilder.builder().atStateServiceAcknowledge().build(), SERVICE_ACKNOWLEDGED),
+                of(CaseDataBuilder.builder().atStateClaimAcknowledge().build(), SERVICE_ACKNOWLEDGED),
                 of(CaseDataBuilder.builder().atStateRespondentFullDefence().build(), RESPONDENT_FULL_DEFENCE),
                 of(CaseDataBuilder.builder().atStateRespondentFullAdmission().build(), RESPONDENT_FULL_ADMISSION),
                 of(CaseDataBuilder.builder().atStateRespondentPartAdmission().build(), RESPONDENT_PART_ADMISSION),
@@ -348,15 +348,15 @@ class FlowStateAllowedEventServiceTest {
             return Stream.of(
                 of(
                     true,
-                    CaseDetailsBuilder.builder().atStateServiceAcknowledge().build(),
+                    CaseDetailsBuilder.builder().atStateClaimAcknowledge().build(),
                     INFORM_AGREED_EXTENSION_DATE
                 ),
-                of(true, CaseDetailsBuilder.builder().atStateServiceAcknowledge().build(), WITHDRAW_CLAIM),
-                of(true, CaseDetailsBuilder.builder().atStateServiceAcknowledge().build(), DEFENDANT_RESPONSE),
-                of(true, CaseDetailsBuilder.builder().atStateServiceAcknowledge().build(), DISCONTINUE_CLAIM),
-                of(true, CaseDetailsBuilder.builder().atStateServiceAcknowledge().build(), CASE_PROCEEDS_IN_CASEMAN),
-                of(false, CaseDetailsBuilder.builder().atStateServiceAcknowledge().build(), CREATE_CLAIM),
-                of(false, CaseDetailsBuilder.builder().atStateServiceAcknowledge().build(), CLAIMANT_RESPONSE),
+                of(true, CaseDetailsBuilder.builder().atStateClaimAcknowledge().build(), WITHDRAW_CLAIM),
+                of(true, CaseDetailsBuilder.builder().atStateClaimAcknowledge().build(), DEFENDANT_RESPONSE),
+                of(true, CaseDetailsBuilder.builder().atStateClaimAcknowledge().build(), DISCONTINUE_CLAIM),
+                of(true, CaseDetailsBuilder.builder().atStateClaimAcknowledge().build(), CASE_PROCEEDS_IN_CASEMAN),
+                of(false, CaseDetailsBuilder.builder().atStateClaimAcknowledge().build(), CREATE_CLAIM),
+                of(false, CaseDetailsBuilder.builder().atStateClaimAcknowledge().build(), CLAIMANT_RESPONSE),
                 of(
                     true,
                     CaseDetailsBuilder.builder().atStateAwaitingCaseNotification().build(),

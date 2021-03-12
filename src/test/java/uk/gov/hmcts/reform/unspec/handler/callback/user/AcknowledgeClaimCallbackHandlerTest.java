@@ -140,7 +140,7 @@ class AcknowledgeClaimCallbackHandlerTest extends BaseCallbackHandlerTest {
 
         @Test
         void shouldSetNewResponseDeadline_whenInvoked() {
-            CaseData caseData = CaseDataBuilder.builder().atStateServiceAcknowledge().build();
+            CaseData caseData = CaseDataBuilder.builder().atStateClaimAcknowledge().build();
             CallbackParams params = callbackParamsOf(caseData, ABOUT_TO_SUBMIT);
 
             var response = (AboutToStartOrSubmitCallbackResponse) handler.handle(params);
@@ -151,7 +151,7 @@ class AcknowledgeClaimCallbackHandlerTest extends BaseCallbackHandlerTest {
 
         @Test
         void shouldUpdateBusinessProcess_whenInvoked() {
-            CaseData caseData = CaseDataBuilder.builder().atStateServiceAcknowledge().build();
+            CaseData caseData = CaseDataBuilder.builder().atStateClaimAcknowledge().build();
             CallbackParams params = callbackParamsOf(caseData, ABOUT_TO_SUBMIT);
 
             var response = (AboutToStartOrSubmitCallbackResponse) handler.handle(params);
@@ -173,7 +173,7 @@ class AcknowledgeClaimCallbackHandlerTest extends BaseCallbackHandlerTest {
 
         @Test
         void shouldReturnExpectedResponse_whenInvoked() {
-            CaseData caseData = CaseDataBuilder.builder().atStateServiceAcknowledge().build();
+            CaseData caseData = CaseDataBuilder.builder().atStateClaimAcknowledge().build();
             CallbackParams params = callbackParamsOf(caseData, CallbackType.SUBMITTED);
 
             SubmittedCallbackResponse response = (SubmittedCallbackResponse) handler.handle(params);
