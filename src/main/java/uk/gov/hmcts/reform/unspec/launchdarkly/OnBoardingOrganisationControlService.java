@@ -1,7 +1,6 @@
 package uk.gov.hmcts.reform.unspec.launchdarkly;
 
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import uk.gov.hmcts.reform.prd.model.Organisation;
 import uk.gov.hmcts.reform.unspec.service.OrganisationService;
@@ -10,7 +9,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-@Slf4j
 @Service
 @RequiredArgsConstructor
 public class OnBoardingOrganisationControlService {
@@ -23,15 +21,6 @@ public class OnBoardingOrganisationControlService {
 
     public List<String> validateOrganisation(String userBearer) {
         Optional<Organisation> userOrganisation = organisationService.findOrganisation(userBearer);
-
-        if (userOrganisation.isPresent()) {
-            String organisationIdentifier = userOrganisation.get().getOrganisationIdentifier();
-            log.info("user organisation is {}", organisationIdentifier);
-            log.info(
-                "is organisation onboarded {}",
-                featureToggleService.isOrganisationOnboarded(organisationIdentifier)
-            );
-        }
         
         boolean organisationOnboarded = userOrganisation
             .map(userOrg -> featureToggleService.isOrganisationOnboarded(userOrg.getOrganisationIdentifier()))
