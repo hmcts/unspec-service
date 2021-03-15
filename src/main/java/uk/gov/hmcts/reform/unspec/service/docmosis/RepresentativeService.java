@@ -7,8 +7,8 @@ import uk.gov.hmcts.reform.unspec.model.docmosis.sealedclaim.Representative;
 import uk.gov.hmcts.reform.unspec.service.OrganisationService;
 import uk.gov.hmcts.reform.unspec.service.flowstate.StateFlowEngine;
 
+import static java.util.Optional.ofNullable;
 import static uk.gov.hmcts.reform.unspec.model.docmosis.sealedclaim.Representative.fromOrganisation;
-import static uk.gov.hmcts.reform.unspec.model.docmosis.sealedclaim.Representative.fromSolicitorOrganisationDetails;
 import static uk.gov.hmcts.reform.unspec.service.flowstate.FlowState.Main.PROCEEDS_OFFLINE_UNREPRESENTED_DEFENDANT;
 import static uk.gov.hmcts.reform.unspec.service.flowstate.FlowState.fromFullName;
 
@@ -26,6 +26,8 @@ public class RepresentativeService {
             return fromOrganisation(organisationService.findOrganisationById(organisationId)
                                         .orElseThrow(RuntimeException::new));
         }
-        return fromSolicitorOrganisationDetails(caseData.getRespondentSolicitor1OrganisationDetails());
+        return ofNullable(caseData.getRespondentSolicitor1OrganisationDetails())
+            .map(Representative::fromSolicitorOrganisationDetails)
+            .orElse(Representative.builder().build());
     }
 }
