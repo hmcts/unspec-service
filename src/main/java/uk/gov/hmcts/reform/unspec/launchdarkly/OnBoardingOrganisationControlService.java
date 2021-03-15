@@ -24,10 +24,15 @@ public class OnBoardingOrganisationControlService {
     public List<String> validateOrganisation(String userBearer) {
         Optional<Organisation> userOrganisation = organisationService.findOrganisation(userBearer);
 
-        String organisationIdentifier = userOrganisation.get().getOrganisationIdentifier();
-        log.info("user organisation is {}", organisationIdentifier);
-        log.info("is organisation onboarded {}", featureToggleService.isOrganisationOnboarded(organisationIdentifier));
-
+        if (userOrganisation.isPresent()) {
+            String organisationIdentifier = userOrganisation.get().getOrganisationIdentifier();
+            log.info("user organisation is {}", organisationIdentifier);
+            log.info(
+                "is organisation onboarded {}",
+                featureToggleService.isOrganisationOnboarded(organisationIdentifier)
+            );
+        }
+        
         boolean organisationOnboarded = userOrganisation
             .map(userOrg -> featureToggleService.isOrganisationOnboarded(userOrg.getOrganisationIdentifier()))
             .orElse(false);
