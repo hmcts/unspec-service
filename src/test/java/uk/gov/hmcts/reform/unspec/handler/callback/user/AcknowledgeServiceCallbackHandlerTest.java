@@ -19,15 +19,15 @@ import uk.gov.hmcts.reform.unspec.helpers.CaseDetailsConverter;
 import uk.gov.hmcts.reform.unspec.model.CaseData;
 import uk.gov.hmcts.reform.unspec.sampledata.CaseDataBuilder;
 import uk.gov.hmcts.reform.unspec.sampledata.PartyBuilder;
-import uk.gov.hmcts.reform.unspec.service.WorkingDayIndicator;
+import uk.gov.hmcts.reform.unspec.service.DeadlinesCalculator;
+import uk.gov.hmcts.reform.unspec.service.Time;
 import uk.gov.hmcts.reform.unspec.validation.DateOfBirthValidator;
 
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
+import java.time.LocalDateTime;
 
 import static java.lang.String.format;
-import static java.time.LocalDate.now;
-import static java.time.LocalTime.MIDNIGHT;
+import static java.time.format.DateTimeFormatter.ISO_DATE_TIME;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
@@ -50,7 +50,10 @@ import static uk.gov.hmcts.reform.unspec.sampledata.CaseDataBuilder.RESPONSE_DEA
 class AcknowledgeServiceCallbackHandlerTest extends BaseCallbackHandlerTest {
 
     @MockBean
-    private WorkingDayIndicator workingDayIndicator;
+    private DeadlinesCalculator deadlinesCalculator;
+
+    @MockBean
+    private Time time;
 
     @Autowired
     private AcknowledgeServiceCallbackHandler handler;
@@ -133,25 +136,19 @@ class AcknowledgeServiceCallbackHandlerTest extends BaseCallbackHandlerTest {
 
     @Nested
     class AboutToSubmitCallback {
+        private LocalDateTime newDeadline;
+        private LocalDateTime acknowledgementDate;
 
         @BeforeEach
         void setup() {
-            when(workingDayIndicator.getNextWorkingDay(any())).thenReturn(now().plusDays(14));
+            newDeadline = LocalDateTime.now().plusDays(14);
+            when(deadlinesCalculator.plus14DaysAt4pmDeadline(any())).thenReturn(newDeadline);
+            acknowledgementDate = LocalDateTime.now();
+            when(time.now()).thenReturn(acknowledgementDate);
         }
 
         @Test
-        void shouldSetNewResponseDeadline_whenInvoked() {
-            CaseData caseData = CaseDataBuilder.builder().atStateServiceAcknowledge().build();
-            CallbackParams params = callbackParamsOf(caseData, ABOUT_TO_SUBMIT);
-
-            var response = (AboutToStartOrSubmitCallbackResponse) handler.handle(params);
-
-            assertThat(response.getData()).extracting("respondentSolicitor1ResponseDeadline")
-                .isEqualTo(now().atTime(MIDNIGHT).plusDays(14).format(DateTimeFormatter.ISO_DATE_TIME));
-        }
-
-        @Test
-        void shouldUpdateBusinessProcess_whenInvoked() {
+        void shouldSetNewResponseDeadlineAndUpdateBusinessProcess_whenInvoked() {
             CaseData caseData = CaseDataBuilder.builder().atStateServiceAcknowledge().build();
             CallbackParams params = callbackParamsOf(caseData, ABOUT_TO_SUBMIT);
 
@@ -166,6 +163,10 @@ class AcknowledgeServiceCallbackHandlerTest extends BaseCallbackHandlerTest {
                 .extracting("businessProcess")
                 .extracting("status")
                 .isEqualTo("READY");
+
+            assertThat(response.getData())
+                .containsEntry("respondent1ResponseDeadline", newDeadline.format(ISO_DATE_TIME))
+                .containsEntry("respondent1AcknowledgeNotificationDate", acknowledgementDate.format(ISO_DATE_TIME));
         }
     }
 
@@ -179,7 +180,7 @@ class AcknowledgeServiceCallbackHandlerTest extends BaseCallbackHandlerTest {
 
             SubmittedCallbackResponse response = (SubmittedCallbackResponse) handler.handle(params);
 
-            assertThat(response).isEqualToComparingFieldByField(
+            assertThat(response).usingRecursiveComparison().isEqualTo(
                 SubmittedCallbackResponse.builder()
                     .confirmationHeader("# You've acknowledged service")
                     .confirmationBody(format(

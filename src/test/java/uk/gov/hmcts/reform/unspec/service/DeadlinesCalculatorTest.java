@@ -3,14 +3,17 @@ package uk.gov.hmcts.reform.unspec.service;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.ArgumentsProvider;
 import org.junit.jupiter.params.provider.ArgumentsSource;
+import org.junit.jupiter.params.provider.EnumSource;
 import org.mockito.Mock;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
+import uk.gov.hmcts.reform.unspec.enums.AllocatedTrack;
 import uk.gov.hmcts.reform.unspec.helpers.ResourceReader;
 import uk.gov.hmcts.reform.unspec.service.bankholidays.BankHolidays;
 import uk.gov.hmcts.reform.unspec.service.bankholidays.BankHolidaysApi;
@@ -32,6 +35,8 @@ import static java.time.Month.NOVEMBER;
 import static java.time.Month.OCTOBER;
 import static org.mockito.Mockito.when;
 import static uk.gov.hmcts.reform.unspec.assertion.DayAssert.assertThat;
+import static uk.gov.hmcts.reform.unspec.enums.AllocatedTrack.SMALL_CLAIM;
+import static uk.gov.hmcts.reform.unspec.service.DeadlinesCalculator.END_OF_BUSINESS_DAY;
 
 @ExtendWith(SpringExtension.class)
 public class DeadlinesCalculatorTest {
@@ -103,7 +108,7 @@ public class DeadlinesCalculatorTest {
             LocalDate issueDate,
             LocalDateTime expectedResponseDeadline
         ) {
-            LocalDateTime responseDeadline = calculator.calculateClaimNotificationDeadline(issueDate);
+            LocalDateTime responseDeadline = calculator.plus6MonthsAtMidnight(issueDate);
 
             assertThat(responseDeadline)
                 .isWeekday()
@@ -146,6 +151,56 @@ public class DeadlinesCalculatorTest {
             assertThat(responseDeadline)
                 .isWeekday()
                 .isTheSame(expectedResponseDeadline);
+        }
+    }
+
+    @Nested
+    class ApplicantResponseDeadline {
+
+        @Test
+        void shouldReturnDeadlinePlus14Days_whenResponseDateIsWeekdayAndTrackIsSmallClaim() {
+            LocalDateTime weekdayDate = LocalDate.of(2021, 2, 4).atTime(16, 0);
+            LocalDateTime expectedDeadline = weekdayDate.toLocalDate().plusDays(14).atTime(END_OF_BUSINESS_DAY);
+            LocalDateTime responseDeadline = calculator.calculateApplicantResponseDeadline(weekdayDate, SMALL_CLAIM);
+
+            assertThat(responseDeadline)
+                .isWeekday()
+                .isTheSame(expectedDeadline);
+        }
+
+        @Test
+        void shouldReturnDeadlinePlus14Days_whenResponseDateIsWeekendAndTrackIsSmallClaim() {
+            LocalDateTime weekendDate = LocalDate.of(2021, 2, 6).atTime(16, 0);
+            LocalDateTime expectedDeadline = LocalDate.of(2021, 2, 22).atTime(END_OF_BUSINESS_DAY);
+            LocalDateTime responseDeadline = calculator.calculateApplicantResponseDeadline(weekendDate, SMALL_CLAIM);
+
+            assertThat(responseDeadline)
+                .isWeekday()
+                .isTheSame(expectedDeadline);
+        }
+
+        @ParameterizedTest
+        @EnumSource(value = AllocatedTrack.class, mode = EnumSource.Mode.EXCLUDE, names = "SMALL_CLAIM")
+        void shouldReturnDeadlinePlus28Days_whenResponseDateIsWeekdayAndTrackIsNotSmallClaim(AllocatedTrack track) {
+            LocalDateTime weekdayDate = LocalDate.of(2021, 2, 4).atTime(16, 0);
+            LocalDateTime expectedDeadline = weekdayDate.toLocalDate().plusDays(28).atTime(END_OF_BUSINESS_DAY);
+            LocalDateTime responseDeadline = calculator.calculateApplicantResponseDeadline(weekdayDate, track);
+
+            assertThat(responseDeadline)
+                .isWeekday()
+                .isTheSame(expectedDeadline);
+        }
+
+        @ParameterizedTest
+        @EnumSource(value = AllocatedTrack.class, mode = EnumSource.Mode.EXCLUDE, names = "SMALL_CLAIM")
+        void shouldReturnDeadlinePlus28Days_whenResponseDateIsWeekendAndTrackIsNotSmallClaim(AllocatedTrack track) {
+            LocalDateTime weekendDate = LocalDate.of(2021, 2, 6).atTime(16, 0);
+            LocalDateTime expectedDeadline = LocalDate.of(2021, 3, 8).atTime(END_OF_BUSINESS_DAY);
+            LocalDateTime responseDeadline = calculator.calculateApplicantResponseDeadline(weekendDate, track);
+
+            assertThat(responseDeadline)
+                .isWeekday()
+                .isTheSame(expectedDeadline);
         }
     }
 

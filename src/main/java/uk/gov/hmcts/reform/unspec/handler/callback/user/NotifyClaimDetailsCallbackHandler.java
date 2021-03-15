@@ -64,6 +64,7 @@ public class NotifyClaimDetailsCallbackHandler extends CallbackHandler implement
             .businessProcess(BusinessProcess.ready(NOTIFY_DEFENDANT_OF_CLAIM_DETAILS))
             .claimDetailsNotificationDate(notificationDate)
             .respondent1ResponseDeadline(deadlinesCalculator.plus14DaysAt4pmDeadline(notificationDate.toLocalDate()))
+            .claimDismissedDeadline(deadlinesCalculator.plus6MonthsAtMidnight(notificationDate.toLocalDate()))
             .build();
 
         return AboutToStartOrSubmitCallbackResponse.builder()

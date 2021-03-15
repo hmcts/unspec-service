@@ -74,8 +74,6 @@ public class CaseData implements MappableObject {
 
     private final RespondentResponseType respondent1ClaimResponseType;
     private final ResponseDocument respondent1ClaimResponseDocument;
-    private final LocalDateTime applicantSolicitorResponseDeadlineToRespondentSolicitor1;
-    private final LocalDate defendantResponseDate;
 
     private final YesOrNo applicant1ProceedWithClaim;
     private final ResponseDocument applicant1DefenceResponseDocument;
@@ -121,4 +119,11 @@ public class CaseData implements MappableObject {
     private final LocalDateTime claimDetailsNotificationDeadline;
     private final LocalDateTime claimDetailsNotificationDate;
     private final LocalDateTime respondent1ResponseDeadline;
+    private final LocalDateTime claimDismissedDeadline;
+    private final LocalDateTime respondent1TimeExtensionDate;
+    private final LocalDateTime respondent1AcknowledgeNotificationDate;
+    private final LocalDateTime respondent1ResponseDate;
+    private final LocalDateTime applicant1ResponseDeadline;
+    private final LocalDateTime applicant1ResponseDate;
+    private final LocalDateTime takenOfflineDate;
 }

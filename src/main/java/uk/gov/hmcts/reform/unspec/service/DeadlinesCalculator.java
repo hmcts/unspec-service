@@ -2,12 +2,14 @@ package uk.gov.hmcts.reform.unspec.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import uk.gov.hmcts.reform.unspec.enums.AllocatedTrack;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 
 import static java.time.LocalTime.MIDNIGHT;
+import static uk.gov.hmcts.reform.unspec.enums.AllocatedTrack.getDaysToAddToDeadline;
 
 @Service
 @RequiredArgsConstructor
@@ -17,7 +19,7 @@ public class DeadlinesCalculator {
 
     private final WorkingDayIndicator workingDayIndicator;
 
-    public LocalDateTime calculateClaimNotificationDeadline(LocalDate claimIssueDate) {
+    public LocalDateTime plus6MonthsAtMidnight(LocalDate claimIssueDate) {
         LocalDate notificationDeadline = claimIssueDate.plusMonths(4);
         return calculateFirstWorkingDay(notificationDeadline).atTime(MIDNIGHT);
     }
@@ -25,6 +27,12 @@ public class DeadlinesCalculator {
     public LocalDateTime plus14DaysAt4pmDeadline(LocalDate startDate) {
         LocalDate notificationDeadline = startDate.plusDays(14);
         return calculateFirstWorkingDay(notificationDeadline).atTime(END_OF_BUSINESS_DAY);
+    }
+
+    public LocalDateTime calculateApplicantResponseDeadline(LocalDateTime responseDate, AllocatedTrack track) {
+        int daysToAdd = getDaysToAddToDeadline(track);
+
+        return calculateFirstWorkingDay(responseDate.toLocalDate()).plusDays(daysToAdd).atTime(END_OF_BUSINESS_DAY);
     }
 
     public LocalDate calculateFirstWorkingDay(LocalDate date) {

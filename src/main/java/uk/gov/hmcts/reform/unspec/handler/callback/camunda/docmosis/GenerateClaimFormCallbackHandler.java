@@ -68,7 +68,7 @@ public class GenerateClaimFormCallbackHandler extends CallbackHandler {
         CaseState state = getState(caseDataBuilder.build());
 
         if (state.equals(CaseState.AWAITING_CASE_NOTIFICATION)) {
-            LocalDateTime deadline = deadlinesCalculator.calculateClaimNotificationDeadline(issueDate);
+            LocalDateTime deadline = deadlinesCalculator.plus6MonthsAtMidnight(issueDate);
             caseDataBuilder.claimNotificationDeadline(deadline);
         }
 

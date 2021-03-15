@@ -88,13 +88,16 @@ class NotifyClaimDetailsCallbackHandlerTest extends BaseCallbackHandlerTest {
         class AboutToSubmit {
             private LocalDateTime localDateTime;
             private LocalDateTime newDate;
+            private LocalDateTime sixMonthDate;
 
             @BeforeEach
             void setup() {
                 localDateTime = LocalDateTime.of(2020, 1, 1, 12, 0, 0);
                 newDate = LocalDateTime.of(2020, 1, 15, 16, 0, 0);
+                sixMonthDate = LocalDateTime.of(2020, 7, 1, 0, 0, 0);
                 when(time.now()).thenReturn(localDateTime);
                 when(deadlinesCalculator.plus14DaysAt4pmDeadline(localDateTime.toLocalDate())).thenReturn(newDate);
+                when(deadlinesCalculator.plus6MonthsAtMidnight(localDateTime.toLocalDate())).thenReturn(sixMonthDate);
             }
 
             @Test
@@ -110,7 +113,8 @@ class NotifyClaimDetailsCallbackHandlerTest extends BaseCallbackHandlerTest {
 
                 assertThat(response.getData())
                     .containsEntry("claimDetailsNotificationDate", localDateTime.format(ISO_DATE_TIME))
-                    .containsEntry("respondent1ResponseDeadline", newDate.format(ISO_DATE_TIME));
+                    .containsEntry("respondent1ResponseDeadline", newDate.format(ISO_DATE_TIME))
+                    .containsEntry("claimDismissedDeadline", sixMonthDate.format(ISO_DATE_TIME));
             }
         }
 

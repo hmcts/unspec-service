@@ -104,8 +104,8 @@ public class CaseDataBuilder {
     // Defendant Response
     private RespondentResponseType respondent1ClaimResponseType;
     private ResponseDocument respondent1ClaimResponseDocument;
-    private LocalDateTime applicantSolicitorResponseDeadlineToRespondentSolicitor1;
-    private LocalDate defendantResponseDate;
+    private LocalDateTime applicant1ResponseDeadline;
+    private LocalDateTime defendantResponseDate;
     private Respondent1DQ respondent1DQ;
     private Applicant1DQ applicant1DQ;
     // Claimant Response
@@ -500,8 +500,8 @@ public class CaseDataBuilder {
     public CaseDataBuilder atStateRespondentRespondToClaim(RespondentResponseType respondentResponseType) {
         atStateServiceAcknowledge();
         respondent1ClaimResponseType = respondentResponseType;
-        applicantSolicitorResponseDeadlineToRespondentSolicitor1 = APPLICANT_RESPONSE_DEADLINE;
-        defendantResponseDate = LocalDate.now();
+        applicant1ResponseDeadline = APPLICANT_RESPONSE_DEADLINE;
+        defendantResponseDate = LocalDateTime.now();
         ccdState = AWAITING_CLAIMANT_INTENTION;
         return this;
     }
@@ -576,10 +576,10 @@ public class CaseDataBuilder {
             // Defendant Response
             .respondent1ClaimResponseType(respondent1ClaimResponseType)
             .respondent1ClaimResponseDocument(respondent1ClaimResponseDocument)
-            .applicantSolicitorResponseDeadlineToRespondentSolicitor1(
-                applicantSolicitorResponseDeadlineToRespondentSolicitor1
+            .applicant1ResponseDeadline(
+                applicant1ResponseDeadline
             )
-            .defendantResponseDate(defendantResponseDate)
+            .respondent1ResponseDate(defendantResponseDate)
             // Claimant Response
             .applicant1ProceedWithClaim(applicant1ProceedWithClaim)
             .applicant1DefenceResponseDocument(applicant1DefenceResponseDocument)

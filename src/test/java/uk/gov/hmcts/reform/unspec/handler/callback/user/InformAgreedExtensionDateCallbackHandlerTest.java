@@ -1,5 +1,6 @@
 package uk.gov.hmcts.reform.unspec.handler.callback.user;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +18,7 @@ import uk.gov.hmcts.reform.unspec.sampledata.CallbackParamsBuilder;
 import uk.gov.hmcts.reform.unspec.sampledata.CaseDataBuilder;
 import uk.gov.hmcts.reform.unspec.sampledata.CaseDetailsBuilder;
 import uk.gov.hmcts.reform.unspec.service.DeadlinesCalculator;
+import uk.gov.hmcts.reform.unspec.service.Time;
 import uk.gov.hmcts.reform.unspec.validation.DeadlineExtensionValidator;
 
 import java.time.LocalDate;
@@ -26,8 +28,9 @@ import static com.google.common.collect.ImmutableMap.of;
 import static java.lang.String.format;
 import static java.time.LocalDate.now;
 import static java.time.LocalTime.MIDNIGHT;
+import static java.time.format.DateTimeFormatter.ISO_DATE_TIME;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.when;
 import static uk.gov.hmcts.reform.unspec.callback.CallbackType.ABOUT_TO_START;
 import static uk.gov.hmcts.reform.unspec.callback.CallbackType.ABOUT_TO_SUBMIT;
 import static uk.gov.hmcts.reform.unspec.callback.CallbackType.MID;
@@ -50,6 +53,9 @@ class InformAgreedExtensionDateCallbackHandlerTest extends BaseCallbackHandlerTe
 
     @MockBean
     private DeadlinesCalculator deadlinesCalculator;
+
+    @MockBean
+    private Time time;
 
     @Nested
     class AboutToStartCallback {
@@ -105,13 +111,21 @@ class InformAgreedExtensionDateCallbackHandlerTest extends BaseCallbackHandlerTe
 
     @Nested
     class AboutToSubmitCallback {
+        LocalDateTime timeExtensionDate;
+        LocalDate extensionDate;
+
+        @BeforeEach
+        void setup() {
+            timeExtensionDate = LocalDateTime.of(2020, 1, 1, 12, 0, 0);
+            when(time.now()).thenReturn(timeExtensionDate);
+
+            extensionDate = now().plusDays(14);
+            when(deadlinesCalculator.calculateFirstWorkingDay(extensionDate)).thenReturn(extensionDate);
+        }
 
         @Test
         void shouldUpdateResponseDeadlineToExtensionDate_whenInvoked() {
-            LocalDate extensionDate = now().plusDays(14);
             LocalDateTime responseDeadline = now().atTime(MIDNIGHT);
-
-            given(deadlinesCalculator.calculateFirstWorkingDay(extensionDate)).willReturn(extensionDate);
 
             CaseData caseData = CaseDataBuilder.builder()
                 .respondentSolicitor1AgreedDeadlineExtension(extensionDate)
@@ -121,11 +135,11 @@ class InformAgreedExtensionDateCallbackHandlerTest extends BaseCallbackHandlerTe
 
             var response = (AboutToStartOrSubmitCallbackResponse) handler.handle(params);
 
+            LocalDateTime newDeadline = extensionDate.atTime(END_OF_BUSINESS_DAY);
+
             assertThat(response.getData())
-                .containsEntry(
-                    "respondentSolicitor1ResponseDeadline",
-                    formatLocalDateTime(extensionDate.atTime(END_OF_BUSINESS_DAY), "yyyy-MM-dd'T'HH:mm:ss")
-                );
+                .containsEntry("respondent1ResponseDeadline", newDeadline.format(ISO_DATE_TIME))
+                .containsEntry("respondent1TimeExtensionDate", timeExtensionDate.format(ISO_DATE_TIME));
         }
     }
 

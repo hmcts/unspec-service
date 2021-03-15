@@ -13,17 +13,16 @@ import uk.gov.hmcts.reform.unspec.callback.CaseEvent;
 import uk.gov.hmcts.reform.unspec.model.BusinessProcess;
 import uk.gov.hmcts.reform.unspec.model.CaseData;
 import uk.gov.hmcts.reform.unspec.model.Party;
-import uk.gov.hmcts.reform.unspec.service.WorkingDayIndicator;
+import uk.gov.hmcts.reform.unspec.service.DeadlinesCalculator;
+import uk.gov.hmcts.reform.unspec.service.Time;
 import uk.gov.hmcts.reform.unspec.validation.DateOfBirthValidator;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
 import static java.lang.String.format;
-import static java.time.LocalTime.MIDNIGHT;
 import static uk.gov.hmcts.reform.unspec.callback.CallbackType.ABOUT_TO_START;
 import static uk.gov.hmcts.reform.unspec.callback.CallbackType.ABOUT_TO_SUBMIT;
 import static uk.gov.hmcts.reform.unspec.callback.CallbackType.MID;
@@ -42,8 +41,9 @@ public class AcknowledgeServiceCallbackHandler extends CallbackHandler {
         + "\n\n[Download the Acknowledgement of Service form](%s)";
 
     private final DateOfBirthValidator dateOfBirthValidator;
-    private final WorkingDayIndicator workingDayIndicator;
+    private final DeadlinesCalculator deadlinesCalculator;
     private final ObjectMapper objectMapper;
+    private final Time time;
 
     @Override
     protected Map<String, Callback> callbacks() {
@@ -72,9 +72,11 @@ public class AcknowledgeServiceCallbackHandler extends CallbackHandler {
     private CallbackResponse setNewResponseDeadline(CallbackParams callbackParams) {
         CaseData caseData = callbackParams.getCaseData();
         LocalDateTime responseDeadline = caseData.getRespondent1ResponseDeadline();
-        LocalDate newResponseDate = workingDayIndicator.getNextWorkingDay(responseDeadline.plusDays(14).toLocalDate());
+        LocalDateTime newResponseDate = deadlinesCalculator.plus14DaysAt4pmDeadline(responseDeadline.toLocalDate());
+
         CaseData caseDataUpdated = caseData.toBuilder()
-            .respondent1ResponseDeadline(newResponseDate.atTime(MIDNIGHT))
+            .respondent1AcknowledgeNotificationDate(time.now())
+            .respondent1ResponseDeadline(newResponseDate)
             .businessProcess(BusinessProcess.ready(ACKNOWLEDGE_SERVICE))
             .build();
 

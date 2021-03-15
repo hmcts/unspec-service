@@ -12,6 +12,7 @@ import uk.gov.hmcts.reform.unspec.callback.CallbackParams;
 import uk.gov.hmcts.reform.unspec.callback.CaseEvent;
 import uk.gov.hmcts.reform.unspec.model.CaseData;
 import uk.gov.hmcts.reform.unspec.service.DeadlinesCalculator;
+import uk.gov.hmcts.reform.unspec.service.Time;
 import uk.gov.hmcts.reform.unspec.validation.DeadlineExtensionValidator;
 
 import java.time.LocalDate;
@@ -38,6 +39,7 @@ public class InformAgreedExtensionDateCallbackHandler extends CallbackHandler {
     private final DeadlineExtensionValidator validator;
     private final ObjectMapper objectMapper;
     private final DeadlinesCalculator deadlinesCalculator;
+    private final Time time;
 
     @Override
     protected Map<String, Callback> callbacks() {
@@ -67,6 +69,7 @@ public class InformAgreedExtensionDateCallbackHandler extends CallbackHandler {
             .atTime(END_OF_BUSINESS_DAY);
 
         CaseData.CaseDataBuilder caseDataBuilder = caseData.toBuilder()
+            .respondent1TimeExtensionDate(time.now())
             .respondent1ResponseDeadline(newDeadline);
 
         return AboutToStartOrSubmitCallbackResponse.builder()
