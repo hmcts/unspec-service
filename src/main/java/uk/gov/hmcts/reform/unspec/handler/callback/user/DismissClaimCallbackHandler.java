@@ -1,5 +1,6 @@
 package uk.gov.hmcts.reform.unspec.handler.callback.user;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import uk.gov.hmcts.reform.ccd.client.model.AboutToStartOrSubmitCallbackResponse;
@@ -26,6 +27,8 @@ public class DismissClaimCallbackHandler extends CallbackHandler {
 
     private static final List<CaseEvent> EVENTS = List.of(DISMISS_CLAIM);
 
+    private final ObjectMapper objectMapper;
+
     @Override
     protected Map<String, Callback> callbacks() {
         return Map.of(
@@ -49,7 +52,7 @@ public class DismissClaimCallbackHandler extends CallbackHandler {
             .claimDismissedDate(now());
 
         return AboutToStartOrSubmitCallbackResponse.builder()
-            .data(caseDetailsConverter.toMap(caseDataBuilder.build()))
+            .data(caseDataBuilder.build().toMap(objectMapper))
             .build();
     }
 }
