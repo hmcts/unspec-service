@@ -122,6 +122,8 @@ public class CaseDataBuilder {
     private OrganisationPolicy applicant1OrganisationPolicy;
     private OrganisationPolicy respondent1OrganisationPolicy;
 
+    private LocalDate claimDismissedDate;
+
     private SolicitorOrganisationDetails respondentSolicitor1OrganisationDetails;
 
     public CaseDataBuilder respondentSolicitor1ResponseDeadline(LocalDateTime respondentSolicitor1ResponseDeadline) {
@@ -261,6 +263,11 @@ public class CaseDataBuilder {
 
     public CaseDataBuilder caseReference(Long ccdCaseReference) {
         this.ccdCaseReference = ccdCaseReference;
+        return this;
+    }
+
+    public CaseDataBuilder claimDismissedDate(LocalDate date) {
+        this.claimDismissedDate = date;
         return this;
     }
 
@@ -509,6 +516,7 @@ public class CaseDataBuilder {
     public CaseDataBuilder atStateClaimDismissed() {
         atStateClaimCreated();
         ccdState = CLAIM_DISMISSED;
+        claimDismissedDate = now();
         return this;
     }
 
@@ -598,6 +606,7 @@ public class CaseDataBuilder {
             .respondentSolicitor1OrganisationDetails(respondentSolicitor1OrganisationDetails)
             .applicant1OrganisationPolicy(applicant1OrganisationPolicy)
             .respondent1OrganisationPolicy(respondent1OrganisationPolicy)
+            .claimDismissedDate(claimDismissedDate)
             .build();
     }
 }

@@ -11,6 +11,7 @@ import uk.gov.hmcts.reform.unspec.stateflow.model.State;
 
 import static uk.gov.hmcts.reform.unspec.service.flowstate.FlowPredicate.applicantRespondToDefence;
 import static uk.gov.hmcts.reform.unspec.service.flowstate.FlowPredicate.caseDismissed;
+import static uk.gov.hmcts.reform.unspec.service.flowstate.FlowPredicate.caseDismissedAfterServiceAcknowledged;
 import static uk.gov.hmcts.reform.unspec.service.flowstate.FlowPredicate.caseProceedsInCaseman;
 import static uk.gov.hmcts.reform.unspec.service.flowstate.FlowPredicate.claimDetailsNotified;
 import static uk.gov.hmcts.reform.unspec.service.flowstate.FlowPredicate.claimDiscontinued;
@@ -89,6 +90,7 @@ public class StateFlowEngine {
                 .transitionTo(CLAIM_DISCONTINUED).onlyIf(claimDiscontinued)
                 .transitionTo(CLAIM_WITHDRAWN).onlyIf(claimWithdrawn)
                 .transitionTo(CASE_PROCEEDS_IN_CASEMAN).onlyIf(caseProceedsInCaseman)
+                .transitionTo(CLAIM_DISMISSED_DEFENDANT_OUT_OF_TIME).onlyIf(caseDismissedAfterServiceAcknowledged)
             .state(EXTENSION_REQUESTED)
                 .transitionTo(RESPONDENT_FULL_DEFENCE).onlyIf(respondentFullDefence)
                 .transitionTo(RESPONDENT_FULL_ADMISSION).onlyIf(respondentFullAdmission)

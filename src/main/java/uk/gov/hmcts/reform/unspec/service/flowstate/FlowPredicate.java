@@ -4,7 +4,6 @@ import uk.gov.hmcts.reform.unspec.model.CaseData;
 
 import java.util.function.Predicate;
 
-import static uk.gov.hmcts.reform.unspec.enums.CaseState.CLAIM_DISMISSED;
 import static uk.gov.hmcts.reform.unspec.enums.CaseState.CLOSED;
 import static uk.gov.hmcts.reform.unspec.enums.CaseState.PROCEEDS_WITH_OFFLINE_JOURNEY;
 import static uk.gov.hmcts.reform.unspec.enums.PaymentStatus.FAILED;
@@ -88,7 +87,10 @@ public class FlowPredicate {
         caseData.getClaimProceedsInCaseman() != null;
 
     public static final Predicate<CaseData> caseDismissed = caseData ->
-        caseData.getCcdState() == CLAIM_DISMISSED && caseData.getRespondent1ClaimResponseType() == null;
+        caseData.getClaimDismissedDate() != null && caseData.getRespondent1ClaimResponseIntentionType() == null;
+
+    public static final Predicate<CaseData> caseDismissedAfterServiceAcknowledged = caseData ->
+        caseData.getClaimDismissedDate() != null && caseData.getRespondent1ClaimResponseIntentionType() != null;
 
     private FlowPredicate() {
         //Utility class
