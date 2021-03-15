@@ -9,7 +9,7 @@ import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import uk.gov.hmcts.reform.unspec.model.SolicitorReferences;
-import uk.gov.hmcts.reform.unspec.model.docmosis.DocmosisData;
+import uk.gov.hmcts.reform.unspec.model.common.MappableObject;
 import uk.gov.hmcts.reform.unspec.model.docmosis.sealedclaim.Respondent;
 
 import java.time.LocalDate;
@@ -18,7 +18,7 @@ import java.time.LocalDate;
 @Builder
 @AllArgsConstructor
 @EqualsAndHashCode
-public class AcknowledgementOfClaimForm implements DocmosisData {
+public class AcknowledgementOfClaimForm implements MappableObject {
 
     @JsonProperty("courtseal")
     private final String courtSeal = "[userImage:courtseal.PNG]"; //NOSONAR
