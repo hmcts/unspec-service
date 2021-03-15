@@ -17,6 +17,7 @@ import uk.gov.hmcts.reform.unspec.sampledata.CaseDataBuilder;
 
 import java.util.Map;
 
+import static java.time.LocalDate.now;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest(classes = {
@@ -48,7 +49,8 @@ class DismissClaimCallbackHandlerTest extends BaseCallbackHandlerTest {
                 .containsEntry("businessProcess", Map.of(
                     "status", "READY",
                     "camundaEvent", "DISMISS_CLAIM"
-                ));
+                ))
+                .containsEntry("claimDismissedDate", now().toString());
         }
     }
 }

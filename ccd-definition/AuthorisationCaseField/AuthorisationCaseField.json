@@ -1483,5 +1483,12 @@
     "CaseFieldID": "claimProceedsInCaseman",
     "UserRole": "caseworker-civil-admin",
     "CRUD": "CRU"
+  },
+  {
+    "LiveFrom": "01/01/2017",
+    "CaseTypeID": "UNSPECIFIED_CLAIMS",
+    "CaseFieldID": "claimDismissedDate",
+    "UserRoles": ["caseworker-civil-solicitor","caseworker-civil-admin"],
+    "CRUD": "CRU"
   }
 ]

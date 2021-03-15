@@ -18,10 +18,10 @@ import uk.gov.hmcts.reform.unspec.model.documents.CaseDocument;
 import uk.gov.hmcts.reform.unspec.model.dq.Applicant1DQ;
 import uk.gov.hmcts.reform.unspec.model.dq.Respondent1DQ;
 
+import javax.validation.Valid;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
-import javax.validation.Valid;
 
 import static uk.gov.hmcts.reform.unspec.enums.BusinessProcessStatus.FINISHED;
 
@@ -118,4 +118,5 @@ public class CaseData {
 
     //TODO: field is currently not set anywhere
     private final LocalDate claimDismissedDeadline;
+    private final LocalDate claimDismissedDate;
 }

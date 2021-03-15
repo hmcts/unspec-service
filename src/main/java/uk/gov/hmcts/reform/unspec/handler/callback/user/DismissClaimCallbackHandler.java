@@ -16,6 +16,7 @@ import uk.gov.hmcts.reform.unspec.model.CaseData;
 import java.util.List;
 import java.util.Map;
 
+import static java.time.LocalDate.now;
 import static uk.gov.hmcts.reform.unspec.callback.CallbackType.ABOUT_TO_START;
 import static uk.gov.hmcts.reform.unspec.callback.CaseEvent.DISMISS_CLAIM;
 
@@ -44,7 +45,8 @@ public class DismissClaimCallbackHandler extends CallbackHandler {
         CaseData data = caseDetailsConverter.toCaseData(callbackParams.getRequest().getCaseDetails());
 
         CaseData.CaseDataBuilder caseDataBuilder = data.toBuilder()
-            .businessProcess(BusinessProcess.ready(DISMISS_CLAIM));
+            .businessProcess(BusinessProcess.ready(DISMISS_CLAIM))
+            .claimDismissedDate(now());
 
         return AboutToStartOrSubmitCallbackResponse.builder()
             .data(caseDetailsConverter.toMap(caseDataBuilder.build()))
