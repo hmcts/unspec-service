@@ -1,5 +1,6 @@
 package uk.gov.hmcts.reform.unspec.handler.callback.user;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import uk.gov.hmcts.reform.ccd.client.model.AboutToStartOrSubmitCallbackResponse;
@@ -15,7 +16,6 @@ import uk.gov.hmcts.reform.unspec.callback.CallbackParams;
 import uk.gov.hmcts.reform.unspec.callback.CaseEvent;
 import uk.gov.hmcts.reform.unspec.config.ClaimIssueConfiguration;
 import uk.gov.hmcts.reform.unspec.enums.YesOrNo;
-import uk.gov.hmcts.reform.unspec.helpers.CaseDetailsConverter;
 import uk.gov.hmcts.reform.unspec.model.BusinessProcess;
 import uk.gov.hmcts.reform.unspec.model.CaseData;
 import uk.gov.hmcts.reform.unspec.model.CorrectEmail;
@@ -72,13 +72,13 @@ public class CreateClaimCallbackHandler extends CallbackHandler implements Parti
         + "\n* File the certificate of service with CCMC by Date2.";
 
     private final ClaimIssueConfiguration claimIssueConfiguration;
-    private final CaseDetailsConverter caseDetailsConverter;
     private final ReferenceNumberRepository referenceNumberRepository;
     private final DateOfBirthValidator dateOfBirthValidator;
     private final FeesService feesService;
     private final OrganisationService organisationService;
     private final IdamClient idamClient;
     private final OrgPolicyValidator orgPolicyValidator;
+    private final ObjectMapper objectMapper;
 
     @Override
     protected Map<String, Callback> callbacks() {
@@ -146,7 +146,7 @@ public class CreateClaimCallbackHandler extends CallbackHandler implements Parti
             .paymentReference(paymentReference);
 
         return AboutToStartOrSubmitCallbackResponse.builder()
-            .data(caseDetailsConverter.toMap(caseDataBuilder.build()))
+            .data(caseDataBuilder.build().toMap(objectMapper))
             .build();
     }
 
@@ -158,7 +158,7 @@ public class CreateClaimCallbackHandler extends CallbackHandler implements Parti
             .applicantSolicitor1UserDetails(IdamUserDetails.builder().build());
 
         return AboutToStartOrSubmitCallbackResponse.builder()
-            .data(caseDetailsConverter.toMap(caseDataBuilder.build()))
+            .data(caseDataBuilder.build().toMap(objectMapper))
             .build();
     }
 
@@ -192,7 +192,7 @@ public class CreateClaimCallbackHandler extends CallbackHandler implements Parti
         dataBuilder.applicantSolicitor1CheckEmail(CorrectEmail.builder().build());
 
         return AboutToStartOrSubmitCallbackResponse.builder()
-            .data(caseDetailsConverter.toMap(dataBuilder.build()))
+            .data(dataBuilder.build().toMap(objectMapper))
             .build();
     }
 

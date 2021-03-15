@@ -16,7 +16,7 @@ import uk.gov.hmcts.reform.unspec.helpers.CaseDetailsConverter;
 import uk.gov.hmcts.reform.unspec.model.CaseData;
 import uk.gov.hmcts.reform.unspec.model.LitigationFriend;
 import uk.gov.hmcts.reform.unspec.model.Party;
-import uk.gov.hmcts.reform.unspec.model.docmosis.DocmosisData;
+import uk.gov.hmcts.reform.unspec.model.common.MappableObject;
 import uk.gov.hmcts.reform.unspec.model.docmosis.DocmosisDocument;
 import uk.gov.hmcts.reform.unspec.model.docmosis.common.Applicant;
 import uk.gov.hmcts.reform.unspec.model.docmosis.common.Respondent;
@@ -95,7 +95,7 @@ class DirectionsQuestionnaireGeneratorTest {
 
     @Test
     void shouldGenerateCertificateOfService_whenValidDataIsProvided() {
-        when(documentGeneratorService.generateDocmosisDocument(any(DocmosisData.class), eq(N181)))
+        when(documentGeneratorService.generateDocmosisDocument(any(MappableObject.class), eq(N181)))
             .thenReturn(new DocmosisDocument(N181.getDocumentTitle(), bytes));
 
         when(documentManagementService.uploadDocument(BEARER_TOKEN, new PDF(fileName, bytes, DIRECTIONS_QUESTIONNAIRE)))

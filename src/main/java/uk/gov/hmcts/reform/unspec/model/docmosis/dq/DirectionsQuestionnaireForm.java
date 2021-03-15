@@ -12,7 +12,7 @@ import lombok.ToString;
 import uk.gov.hmcts.reform.unspec.enums.AllocatedTrack;
 import uk.gov.hmcts.reform.unspec.model.SolicitorReferences;
 import uk.gov.hmcts.reform.unspec.model.StatementOfTruth;
-import uk.gov.hmcts.reform.unspec.model.docmosis.DocmosisData;
+import uk.gov.hmcts.reform.unspec.model.common.MappableObject;
 import uk.gov.hmcts.reform.unspec.model.docmosis.common.Applicant;
 import uk.gov.hmcts.reform.unspec.model.docmosis.common.Respondent;
 import uk.gov.hmcts.reform.unspec.model.dq.DisclosureOfElectronicDocuments;
@@ -28,7 +28,7 @@ import java.util.List;
 @AllArgsConstructor
 @EqualsAndHashCode
 @ToString
-public class DirectionsQuestionnaireForm implements DocmosisData {
+public class DirectionsQuestionnaireForm implements MappableObject {
 
     @JsonProperty("courtseal")
     private final String courtSeal = "[userImage:courtseal.PNG]"; //NOSONAR
