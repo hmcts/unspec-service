@@ -146,7 +146,8 @@ public class RoboticsDataMapper {
 
     private Optional<String> getOrganisationId(OrganisationPolicy respondent1OrganisationPolicy) {
         return ofNullable(respondent1OrganisationPolicy)
-            .map(organisationPolicy -> organisationPolicy.getOrganisation().getOrganisationID());
+            .map(OrganisationPolicy::getOrganisation)
+            .map(Organisation::getOrganisationID);
     }
 
     private Consumer<SolicitorOrganisationDetails> buildOrganisationDetails(
@@ -163,7 +164,7 @@ public class RoboticsDataMapper {
     }
 
     private Solicitor buildApplicantSolicitor(CaseData caseData, String id) {
-        Optional<String> organisationId = getOrganisationId(caseData.getRespondent1OrganisationPolicy());
+        Optional<String> organisationId = getOrganisationId(caseData.getApplicant1OrganisationPolicy());
         Solicitor.SolicitorBuilder solicitorBuilder = Solicitor.builder()
             .id(id)
             .isPayee(true)
