@@ -1,10 +1,13 @@
 package uk.gov.hmcts.reform.unspec.handler.callback.user;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInstance;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.jackson.JacksonAutoConfiguration;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import uk.gov.hmcts.reform.ccd.client.model.AboutToStartOrSubmitCallbackResponse;
 import uk.gov.hmcts.reform.ccd.client.model.SubmittedCallbackResponse;
 import uk.gov.hmcts.reform.unspec.callback.CallbackParams;
@@ -14,20 +17,44 @@ import uk.gov.hmcts.reform.unspec.helpers.CaseDetailsConverter;
 import uk.gov.hmcts.reform.unspec.model.CaseData;
 import uk.gov.hmcts.reform.unspec.sampledata.CallbackParamsBuilder;
 import uk.gov.hmcts.reform.unspec.sampledata.CaseDataBuilder;
+import uk.gov.hmcts.reform.unspec.service.DeadlinesCalculator;
+import uk.gov.hmcts.reform.unspec.service.Time;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+
+import static java.time.LocalDate.now;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.when;
 import static uk.gov.hmcts.reform.unspec.callback.CallbackType.SUBMITTED;
 import static uk.gov.hmcts.reform.unspec.callback.CaseEvent.NOTIFY_DEFENDANT_OF_CLAIM;
+import static uk.gov.hmcts.reform.unspec.service.DeadlinesCalculator.END_OF_BUSINESS_DAY;
 
 @SpringBootTest(classes = {
     NotifyClaimCallbackHandler.class,
     JacksonAutoConfiguration.class,
     CaseDetailsConverter.class
 })
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class NotifyClaimCallbackHandlerTest extends BaseCallbackHandlerTest {
+
+    @MockBean
+    private DeadlinesCalculator deadlinesCalculator;
+
+    @MockBean
+    private Time time;
 
     @Autowired
     private NotifyClaimCallbackHandler handler;
+
+    private final LocalDateTime deadline = now().atTime(END_OF_BUSINESS_DAY);
+
+    @BeforeEach
+    void setup() {
+        when(deadlinesCalculator.plus14DaysAt4pmDeadline(any(LocalDate.class))).thenReturn(deadline);
+        when(time.now()).thenReturn(LocalDateTime.of(2020, 1, 1, 12, 0, 0));
+    }
 
     @Nested
     class AboutToSubmit {
@@ -42,6 +69,10 @@ class NotifyClaimCallbackHandlerTest extends BaseCallbackHandlerTest {
                 .extracting("businessProcess")
                 .extracting("camundaEvent", "status")
                 .containsOnly(NOTIFY_DEFENDANT_OF_CLAIM.name(), "READY");
+
+            assertThat(response.getData())
+                .containsEntry("claimNotificationDate", "2020-01-01T12:00:00")
+                .containsEntry("claimDetailsNotificationDeadline", "2021-03-16T16:00:00");
         }
     }
 

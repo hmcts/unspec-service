@@ -184,7 +184,7 @@ public class CreateClaimCallbackHandler extends CallbackHandler implements Parti
         }
 
         dataBuilder.legacyCaseReference(referenceNumberRepository.getReferenceNumber());
-        dataBuilder.claimSubmittedDateTime(LocalDateTime.now());
+        dataBuilder.claimSubmittedDate(LocalDateTime.now());
         dataBuilder.allocatedTrack(getAllocatedTrack(caseData.getClaimValue().toPounds(), caseData.getClaimType()));
         dataBuilder.businessProcess(BusinessProcess.ready(CREATE_CLAIM));
 

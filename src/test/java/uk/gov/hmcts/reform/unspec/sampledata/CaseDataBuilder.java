@@ -84,7 +84,7 @@ public class CaseDataBuilder {
     private PersonalInjuryType personalInjuryType;
     private String personalInjuryTypeOther;
     private StatementOfTruth applicantSolicitor1ClaimStatementOfTruth;
-    private LocalDateTime claimSubmittedDateTime;
+    private LocalDateTime claimSubmittedDate;
     private LocalDate claimIssuedDate;
     private String legacyCaseReference;
     private LocalDateTime confirmationOfServiceDeadline;
@@ -93,8 +93,8 @@ public class CaseDataBuilder {
     private List<Element<CaseDocument>> systemGeneratedCaseDocuments;
     private PaymentDetails paymentDetails;
     private LocalDateTime respondentSolicitor1ResponseDeadline;
-    private LocalDate claimNotificationDate;
-    private LocalDate claimDetailsNotificationDate;
+    private LocalDateTime claimNotificationDate;
+    private LocalDateTime claimDetailsNotificationDate;
     private CorrectEmail applicantSolicitor1CheckEmail;
     private IdamUserDetails applicantSolicitor1UserDetails;
     //Deadline extension
@@ -396,7 +396,7 @@ public class CaseDataBuilder {
         respondent1OrgRegistered = YES;
         respondentSolicitor1EmailAddress = "civilunspecified@gmail.com";
         applicantSolicitor1ClaimStatementOfTruth = StatementOfTruthBuilder.builder().build();
-        claimSubmittedDateTime = LocalDateTime.now();
+        claimSubmittedDate = LocalDateTime.now();
         applicantSolicitor1CheckEmail = CorrectEmail.builder().email("civilunspecified@gmail.com").correct(YES).build();
         return this;
     }
@@ -439,14 +439,14 @@ public class CaseDataBuilder {
 
     public CaseDataBuilder atStateAwaitingCaseDetailsNotification() {
         atStateAwaitingCaseNotification();
-        claimNotificationDate = LocalDate.now();
+        claimNotificationDate = LocalDateTime.now();
         ccdState = AWAITING_CASE_DETAILS_NOTIFICATION;
         return this;
     }
 
     public CaseDataBuilder atStateClaimCreated() {
         atStateAwaitingCaseDetailsNotification();
-        claimDetailsNotificationDate = LocalDate.now();
+        claimDetailsNotificationDate = LocalDateTime.now();
         ccdState = CREATED;
         respondentSolicitor1ResponseDeadline = RESPONSE_DEADLINE;
         return this;
@@ -545,8 +545,8 @@ public class CaseDataBuilder {
     public CaseData build() {
         return CaseData.builder()
             // Create Claim
-            .claimSubmittedDateTime(claimSubmittedDateTime)
-            .claimIssuedDate(claimIssuedDate)
+            .claimSubmittedDate(claimSubmittedDate)
+            .issueDate(claimIssuedDate)
             .legacyCaseReference(legacyCaseReference)
             .confirmationOfServiceDeadline(confirmationOfServiceDeadline)
             .allocatedTrack(allocatedTrack)
@@ -564,7 +564,7 @@ public class CaseDataBuilder {
             .respondentSolicitor1EmailAddress(respondentSolicitor1EmailAddress)
             .applicantSolicitor1ClaimStatementOfTruth(applicantSolicitor1ClaimStatementOfTruth)
             .paymentDetails(paymentDetails)
-            .respondentSolicitor1ResponseDeadline(respondentSolicitor1ResponseDeadline)
+            .respondent1ResponseDeadline(respondentSolicitor1ResponseDeadline)
             .claimNotificationDate(claimNotificationDate)
             .claimDetailsNotificationDate(claimDetailsNotificationDate)
             .applicantSolicitor1CheckEmail(applicantSolicitor1CheckEmail)

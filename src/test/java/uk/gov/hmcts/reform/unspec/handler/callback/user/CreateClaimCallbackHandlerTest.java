@@ -506,7 +506,7 @@ class CreateClaimCallbackHandlerTest extends BaseCallbackHandlerTest {
             var response = (AboutToStartOrSubmitCallbackResponse) handler.handle(params);
 
             assertThat(response.getData()).containsEntry("legacyCaseReference", REFERENCE_NUMBER);
-            assertThat(response.getData()).containsKey("claimSubmittedDateTime");
+            assertThat(response.getData()).containsKey("claimSubmittedDate");
         }
 
         @Test

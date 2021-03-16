@@ -99,7 +99,7 @@ public class RoboticsCaseDataAssert extends CustomAssert<RoboticsCaseDataAssert,
     private void assertClaimDetails(CaseData expected, ClaimDetails actual) {
         compare(
             "caseIssuedDate",
-            ofNullable(expected.getClaimIssuedDate())
+            ofNullable(expected.getIssueDate())
                 .map(date -> date.format(ISO_DATE))
                 .orElse(null),
             ofNullable(actual.getCaseIssuedDate())
@@ -107,7 +107,7 @@ public class RoboticsCaseDataAssert extends CustomAssert<RoboticsCaseDataAssert,
 
         compare(
             "caseRequestReceivedDate",
-            expected.getClaimSubmittedDateTime().toLocalDate().format(ISO_DATE),
+            expected.getClaimSubmittedDate().toLocalDate().format(ISO_DATE),
             ofNullable(actual.getCaseRequestReceivedDate())
         );
 

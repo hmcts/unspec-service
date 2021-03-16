@@ -100,7 +100,7 @@
   {
     "LiveFrom": "01/01/2017",
     "CaseTypeID": "UNSPECIFIED_CLAIMS",
-    "CaseFieldID": "claimSubmittedDateTime",
+    "CaseFieldID": "claimSubmittedDate",
     "UserRole": "caseworker-civil-systemupdate",
     "CRUD": "R"
   },

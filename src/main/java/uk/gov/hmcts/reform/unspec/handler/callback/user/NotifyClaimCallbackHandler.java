@@ -12,7 +12,10 @@ import uk.gov.hmcts.reform.unspec.callback.CallbackParams;
 import uk.gov.hmcts.reform.unspec.callback.CaseEvent;
 import uk.gov.hmcts.reform.unspec.model.BusinessProcess;
 import uk.gov.hmcts.reform.unspec.model.CaseData;
+import uk.gov.hmcts.reform.unspec.service.DeadlinesCalculator;
+import uk.gov.hmcts.reform.unspec.service.Time;
 
+import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -33,6 +36,8 @@ public class NotifyClaimCallbackHandler extends CallbackHandler {
         + "You must notify the defendant with the claim details by %s";
 
     private final ObjectMapper objectMapper;
+    private final DeadlinesCalculator deadlinesCalculator;
+    private final Time time;
 
     @Override
     protected Map<String, Callback> callbacks() {
@@ -50,14 +55,22 @@ public class NotifyClaimCallbackHandler extends CallbackHandler {
 
     private CallbackResponse submitClaim(CallbackParams callbackParams) {
         CaseData caseData = callbackParams.getCaseData();
+        LocalDateTime claimNotificationDate = time.now();
+        LocalDateTime deadline = getDeadline(claimNotificationDate);
 
         CaseData updatedCaseData = caseData.toBuilder()
             .businessProcess(BusinessProcess.ready(NOTIFY_DEFENDANT_OF_CLAIM))
+            .claimNotificationDate(claimNotificationDate)
+            .claimDetailsNotificationDeadline(deadline)
             .build();
 
         return AboutToStartOrSubmitCallbackResponse.builder()
             .data(updatedCaseData.toMap(objectMapper))
             .build();
+    }
+
+    private LocalDateTime getDeadline(LocalDateTime claimNotificationDate) {
+        return deadlinesCalculator.plus14DaysAt4pmDeadline(claimNotificationDate.toLocalDate());
     }
 
     private SubmittedCallbackResponse buildConfirmation(CallbackParams callbackParams) {

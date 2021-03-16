@@ -55,11 +55,7 @@ public class CaseData implements MappableObject {
     private final PersonalInjuryType personalInjuryType;
     private final String personalInjuryTypeOther;
     private final StatementOfTruth applicantSolicitor1ClaimStatementOfTruth;
-    private final LocalDateTime claimSubmittedDateTime;
-    private final LocalDate claimIssuedDate;
     private final LocalDateTime confirmationOfServiceDeadline;
-    private final LocalDate claimNotificationDate;
-    private final LocalDate claimDetailsNotificationDate;
     private final String legacyCaseReference;
     private final AllocatedTrack allocatedTrack;
     private final PaymentDetails paymentDetails;
@@ -72,7 +68,6 @@ public class CaseData implements MappableObject {
     private final StatementOfTruth applicant1ServiceStatementOfTruthToRespondentSolicitor1;
     private final List<Element<CaseDocument>> systemGeneratedCaseDocuments;
 
-    private final LocalDateTime respondentSolicitor1ResponseDeadline;
     private final LocalDate respondentSolicitor1AgreedDeadlineExtension;
     private final ResponseIntention respondent1ClaimResponseIntentionType;
     private final ServedDocumentFiles servedDocumentFiles;
@@ -116,4 +111,14 @@ public class CaseData implements MappableObject {
 
     //CCD UI flag
     private final YesOrNo applicantSolicitor1PbaAccountsIsEmpty;
+
+    // dates
+    private final LocalDateTime claimSubmittedDate;
+    private final LocalDateTime paymentSuccessfulDate;
+    private final LocalDate issueDate;
+    private final LocalDateTime claimNotificationDeadline;
+    private final LocalDateTime claimNotificationDate;
+    private final LocalDateTime claimDetailsNotificationDeadline;
+    private final LocalDateTime claimDetailsNotificationDate;
+    private final LocalDateTime respondent1ResponseDeadline;
 }

@@ -25,6 +25,7 @@ import java.time.LocalDateTime;
 import static com.google.common.collect.ImmutableMap.of;
 import static java.lang.String.format;
 import static java.time.LocalDate.now;
+import static java.time.LocalTime.MIDNIGHT;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.BDDMockito.given;
 import static uk.gov.hmcts.reform.unspec.callback.CallbackType.ABOUT_TO_START;
@@ -34,7 +35,6 @@ import static uk.gov.hmcts.reform.unspec.callback.CallbackType.SUBMITTED;
 import static uk.gov.hmcts.reform.unspec.helpers.DateFormatHelper.DATE;
 import static uk.gov.hmcts.reform.unspec.helpers.DateFormatHelper.formatLocalDateTime;
 import static uk.gov.hmcts.reform.unspec.service.DeadlinesCalculator.END_OF_BUSINESS_DAY;
-import static uk.gov.hmcts.reform.unspec.service.DeadlinesCalculator.MID_NIGHT;
 
 @SpringBootTest(classes = {
     InformAgreedExtensionDateCallbackHandler.class,
@@ -109,7 +109,7 @@ class InformAgreedExtensionDateCallbackHandlerTest extends BaseCallbackHandlerTe
         @Test
         void shouldUpdateResponseDeadlineToExtensionDate_whenInvoked() {
             LocalDate extensionDate = now().plusDays(14);
-            LocalDateTime responseDeadline = now().atTime(MID_NIGHT);
+            LocalDateTime responseDeadline = now().atTime(MIDNIGHT);
 
             given(deadlinesCalculator.calculateFirstWorkingDay(extensionDate)).willReturn(extensionDate);
 

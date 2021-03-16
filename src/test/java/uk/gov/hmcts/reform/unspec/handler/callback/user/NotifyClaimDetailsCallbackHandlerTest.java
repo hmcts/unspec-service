@@ -1,10 +1,12 @@
 package uk.gov.hmcts.reform.unspec.handler.callback.user;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.jackson.JacksonAutoConfiguration;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import uk.gov.hmcts.reform.ccd.client.model.AboutToStartOrSubmitCallbackResponse;
 import uk.gov.hmcts.reform.ccd.client.model.SubmittedCallbackResponse;
 import uk.gov.hmcts.reform.unspec.callback.CallbackParams;
@@ -13,9 +15,15 @@ import uk.gov.hmcts.reform.unspec.helpers.CaseDetailsConverter;
 import uk.gov.hmcts.reform.unspec.model.CaseData;
 import uk.gov.hmcts.reform.unspec.model.ServedDocumentFiles;
 import uk.gov.hmcts.reform.unspec.sampledata.CaseDataBuilder;
+import uk.gov.hmcts.reform.unspec.service.DeadlinesCalculator;
+import uk.gov.hmcts.reform.unspec.service.Time;
+
+import java.time.LocalDateTime;
 
 import static java.lang.String.format;
+import static java.time.format.DateTimeFormatter.ISO_DATE_TIME;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.when;
 import static uk.gov.hmcts.reform.unspec.callback.CallbackType.ABOUT_TO_SUBMIT;
 import static uk.gov.hmcts.reform.unspec.callback.CallbackType.MID;
 import static uk.gov.hmcts.reform.unspec.callback.CallbackType.SUBMITTED;
@@ -27,6 +35,12 @@ import static uk.gov.hmcts.reform.unspec.callback.CaseEvent.NOTIFY_DEFENDANT_OF_
     CaseDetailsConverter.class
 })
 class NotifyClaimDetailsCallbackHandlerTest extends BaseCallbackHandlerTest {
+
+    @MockBean
+    private Time time;
+
+    @MockBean
+    private DeadlinesCalculator deadlinesCalculator;
 
     @Autowired
     private NotifyClaimDetailsCallbackHandler handler;
@@ -72,6 +86,16 @@ class NotifyClaimDetailsCallbackHandlerTest extends BaseCallbackHandlerTest {
 
         @Nested
         class AboutToSubmit {
+            private LocalDateTime localDateTime;
+            private LocalDateTime newDate;
+
+            @BeforeEach
+            void setup() {
+                localDateTime = LocalDateTime.of(2020, 1, 1, 12, 0, 0);
+                newDate = LocalDateTime.of(2020, 1, 15, 16, 0, 0);
+                when(time.now()).thenReturn(localDateTime);
+                when(deadlinesCalculator.plus14DaysAt4pmDeadline(localDateTime.toLocalDate())).thenReturn(newDate);
+            }
 
             @Test
             void shouldUpdateBusinessProcess_whenInvoked() {
@@ -83,6 +107,10 @@ class NotifyClaimDetailsCallbackHandlerTest extends BaseCallbackHandlerTest {
                     .extracting("businessProcess")
                     .extracting("camundaEvent", "status")
                     .containsOnly(NOTIFY_DEFENDANT_OF_CLAIM_DETAILS.name(), "READY");
+
+                assertThat(response.getData())
+                    .containsEntry("claimDetailsNotificationDate", localDateTime.format(ISO_DATE_TIME))
+                    .containsEntry("respondent1ResponseDeadline", newDate.format(ISO_DATE_TIME));
             }
         }
 

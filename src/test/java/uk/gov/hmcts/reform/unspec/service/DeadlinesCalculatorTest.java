@@ -3,7 +3,6 @@ package uk.gov.hmcts.reform.unspec.service;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
-import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -23,10 +22,14 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.stream.Stream;
 
+import static java.time.LocalTime.MIDNIGHT;
 import static java.time.Month.AUGUST;
 import static java.time.Month.DECEMBER;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static java.time.Month.FEBRUARY;
+import static java.time.Month.JULY;
+import static java.time.Month.JUNE;
+import static java.time.Month.NOVEMBER;
+import static java.time.Month.OCTOBER;
 import static org.mockito.Mockito.when;
 import static uk.gov.hmcts.reform.unspec.assertion.DayAssert.assertThat;
 
@@ -52,7 +55,63 @@ public class DeadlinesCalculatorTest {
         calculator = new DeadlinesCalculator(workingDayIndicator);
     }
 
-    static class ResponseDeadLineArgumentsProvider implements ArgumentsProvider {
+    static class ClaimNotificationDeadlineArgumentsProvider implements ArgumentsProvider {
+
+        private static final LocalDate SATURDAY_DATE = LocalDate.of(2020, AUGUST, 5);
+        private static final LocalDate SUNDAY_DATE = LocalDate.of(2020, AUGUST, 6);
+        private static final LocalDate MONDAY_DATE = LocalDate.of(2020, AUGUST, 7);
+        private static final LocalDateTime EXPECTED_DEADLINE = LocalDate.of(2020, DECEMBER, 7).atTime(MIDNIGHT);
+        private static final LocalDate CHRISTMAS_DAY = LocalDate.of(2020, DECEMBER, 25).minusMonths(4);
+        private static final LocalDateTime EXPECTED_CHRISTMAS = LocalDate.of(2020, DECEMBER, 29).atTime(MIDNIGHT);
+        private static final LocalDate AUGUST_25_2017 = LocalDate.of(2017, AUGUST, 25);
+        private static final LocalDateTime CHRISTMAS_27TH_WEDNESDAY = LocalDate.of(2017, DECEMBER, 27)
+            .atTime(MIDNIGHT);
+        private static final LocalDate DATE_31ST = LocalDate.of(2020, JULY, 31);
+        private static final LocalDateTime EXPECTED_DATE_30TH = LocalDate.of(2020, NOVEMBER, 30).atTime(MIDNIGHT);
+        private static final LocalDate OCTOBER_DATE_2018 = LocalDate.of(2018, OCTOBER, 30);
+        private static final LocalDateTime FEBRUARY_28_2019_NON_LEAP_YEAR = LocalDate.of(2019, FEBRUARY, 28)
+            .atTime(MIDNIGHT);
+        private static final LocalDate OCTOBER_DATE_2015 = LocalDate.of(2015, OCTOBER, 30);
+        private static final LocalDateTime FEBRUARY_29_2016_LEAP_YEAR = LocalDate.of(2016, FEBRUARY, 29)
+            .atTime(MIDNIGHT);
+
+        private static final LocalDate FEBRUARY_28TH = LocalDate.of(2018, FEBRUARY, 28);
+        private static final LocalDateTime JUNE_28TH = LocalDate.of(2018, JUNE, 28).atTime(MIDNIGHT);
+
+        @Override
+        public Stream<Arguments> provideArguments(ExtensionContext context) {
+            return Stream.of(
+                Arguments.of(SATURDAY_DATE, EXPECTED_DEADLINE),
+                Arguments.of(SUNDAY_DATE, EXPECTED_DEADLINE),
+                Arguments.of(MONDAY_DATE, EXPECTED_DEADLINE),
+                Arguments.of(CHRISTMAS_DAY, EXPECTED_CHRISTMAS),
+                Arguments.of(AUGUST_25_2017, CHRISTMAS_27TH_WEDNESDAY),
+                Arguments.of(DATE_31ST, EXPECTED_DATE_30TH),
+                Arguments.of(OCTOBER_DATE_2018, FEBRUARY_28_2019_NON_LEAP_YEAR),
+                Arguments.of(OCTOBER_DATE_2015, FEBRUARY_29_2016_LEAP_YEAR),
+                Arguments.of(FEBRUARY_28TH, JUNE_28TH)
+            );
+        }
+    }
+
+    @Nested
+    class ClaimNotificationDeadline {
+
+        @ParameterizedTest(name = "{index} => should return responseDeadline {1} when issueDate {0}")
+        @ArgumentsSource(ClaimNotificationDeadlineArgumentsProvider.class)
+        void shouldReturnExpectedClaimNotificationDate_whenGivenIssueDate(
+            LocalDate issueDate,
+            LocalDateTime expectedResponseDeadline
+        ) {
+            LocalDateTime responseDeadline = calculator.calculateClaimNotificationDeadline(issueDate);
+
+            assertThat(responseDeadline)
+                .isWeekday()
+                .isTheSame(expectedResponseDeadline);
+        }
+    }
+
+    static class ClaimDetailsNotificationDeadlineArgumentsProvider implements ArgumentsProvider {
 
         private static final LocalDate PLUS_14_DAYS_AS_SATURDAY = LocalDate.of(2020, AUGUST, 1);
         private static final LocalDate PLUS_14_DAYS_AS_SUNDAY = LocalDate.of(2020, AUGUST, 2);
@@ -74,29 +133,19 @@ public class DeadlinesCalculatorTest {
     }
 
     @Nested
-    class RespondentResponseDeadline {
+    class ClaimDetailsNotificationDeadline {
 
-        @ParameterizedTest(name = "{index} => should return responseDeadline {1} when claimIssueDate {0}")
-        @ArgumentsSource(ResponseDeadLineArgumentsProvider.class)
+        @ParameterizedTest(name = "{index} => should return responseDeadline {1} when issueDate {0}")
+        @ArgumentsSource(ClaimDetailsNotificationDeadlineArgumentsProvider.class)
         void shouldReturnExpectedResponseDeadline_whenClaimIssueDate(
             LocalDate claimIssueDate,
             LocalDateTime expectedResponseDeadline
         ) {
-            LocalDateTime responseDeadline = calculator.calculateResponseDeadline(claimIssueDate);
+            LocalDateTime responseDeadline = calculator.plus14DaysAt4pmDeadline(claimIssueDate);
 
             assertThat(responseDeadline)
                 .isWeekday()
                 .isTheSame(expectedResponseDeadline);
-        }
-
-        @Test
-        void shouldThrowNullPointerException_whenClaimIssueDateIsNull() {
-            Exception exception = assertThrows(
-                NullPointerException.class,
-                () -> calculator.calculateResponseDeadline(null)
-            );
-
-            assertEquals("claimIssueDate is marked non-null but is null", exception.getMessage());
         }
     }
 

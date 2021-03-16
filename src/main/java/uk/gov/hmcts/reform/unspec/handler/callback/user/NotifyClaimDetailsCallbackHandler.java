@@ -12,8 +12,11 @@ import uk.gov.hmcts.reform.unspec.callback.CallbackParams;
 import uk.gov.hmcts.reform.unspec.callback.CaseEvent;
 import uk.gov.hmcts.reform.unspec.model.BusinessProcess;
 import uk.gov.hmcts.reform.unspec.model.CaseData;
+import uk.gov.hmcts.reform.unspec.service.DeadlinesCalculator;
+import uk.gov.hmcts.reform.unspec.service.Time;
 import uk.gov.hmcts.reform.unspec.validation.interfaces.ParticularsOfClaimValidator;
 
+import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -35,6 +38,8 @@ public class NotifyClaimDetailsCallbackHandler extends CallbackHandler implement
         + "They must respond by %s. Your account will be updated and you will be sent an email.";
 
     private final ObjectMapper objectMapper;
+    private final Time time;
+    private final DeadlinesCalculator deadlinesCalculator;
 
     @Override
     protected Map<String, Callback> callbacks() {
@@ -53,9 +58,12 @@ public class NotifyClaimDetailsCallbackHandler extends CallbackHandler implement
 
     private CallbackResponse submitClaim(CallbackParams callbackParams) {
         CaseData caseData = callbackParams.getCaseData();
+        LocalDateTime notificationDate = time.now();
 
         CaseData updatedCaseData = caseData.toBuilder()
             .businessProcess(BusinessProcess.ready(NOTIFY_DEFENDANT_OF_CLAIM_DETAILS))
+            .claimDetailsNotificationDate(notificationDate)
+            .respondent1ResponseDeadline(deadlinesCalculator.plus14DaysAt4pmDeadline(notificationDate.toLocalDate()))
             .build();
 
         return AboutToStartOrSubmitCallbackResponse.builder()

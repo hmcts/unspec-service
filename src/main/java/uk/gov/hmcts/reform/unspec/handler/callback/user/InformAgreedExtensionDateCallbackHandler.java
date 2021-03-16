@@ -67,7 +67,7 @@ public class InformAgreedExtensionDateCallbackHandler extends CallbackHandler {
             .atTime(END_OF_BUSINESS_DAY);
 
         CaseData.CaseDataBuilder caseDataBuilder = caseData.toBuilder()
-            .respondentSolicitor1ResponseDeadline(newDeadline);
+            .respondent1ResponseDeadline(newDeadline);
 
         return AboutToStartOrSubmitCallbackResponse.builder()
             .data(caseDataBuilder.build().toMap(objectMapper))
@@ -76,7 +76,7 @@ public class InformAgreedExtensionDateCallbackHandler extends CallbackHandler {
 
     private SubmittedCallbackResponse buildConfirmation(CallbackParams callbackParams) {
         CaseData caseData = callbackParams.getCaseData();
-        LocalDateTime responseDeadline = caseData.getRespondentSolicitor1ResponseDeadline();
+        LocalDateTime responseDeadline = caseData.getRespondent1ResponseDeadline();
 
         String body = format("<br />What happens next.%n%n You must respond to the claimant by %s",
             formatLocalDateTime(responseDeadline, DATE)

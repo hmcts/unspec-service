@@ -23,6 +23,7 @@ import java.util.List;
 import java.util.Map;
 
 import static java.lang.String.format;
+import static java.time.LocalTime.MIDNIGHT;
 import static uk.gov.hmcts.reform.unspec.callback.CallbackType.ABOUT_TO_START;
 import static uk.gov.hmcts.reform.unspec.callback.CallbackType.ABOUT_TO_SUBMIT;
 import static uk.gov.hmcts.reform.unspec.callback.CallbackType.MID;
@@ -30,7 +31,6 @@ import static uk.gov.hmcts.reform.unspec.callback.CallbackType.SUBMITTED;
 import static uk.gov.hmcts.reform.unspec.callback.CaseEvent.ACKNOWLEDGE_SERVICE;
 import static uk.gov.hmcts.reform.unspec.helpers.DateFormatHelper.DATE;
 import static uk.gov.hmcts.reform.unspec.helpers.DateFormatHelper.formatLocalDateTime;
-import static uk.gov.hmcts.reform.unspec.service.DeadlinesCalculator.MID_NIGHT;
 
 @Service
 @RequiredArgsConstructor
@@ -71,10 +71,10 @@ public class AcknowledgeServiceCallbackHandler extends CallbackHandler {
 
     private CallbackResponse setNewResponseDeadline(CallbackParams callbackParams) {
         CaseData caseData = callbackParams.getCaseData();
-        LocalDateTime responseDeadline = caseData.getRespondentSolicitor1ResponseDeadline();
+        LocalDateTime responseDeadline = caseData.getRespondent1ResponseDeadline();
         LocalDate newResponseDate = workingDayIndicator.getNextWorkingDay(responseDeadline.plusDays(14).toLocalDate());
         CaseData caseDataUpdated = caseData.toBuilder()
-            .respondentSolicitor1ResponseDeadline(newResponseDate.atTime(MID_NIGHT))
+            .respondent1ResponseDeadline(newResponseDate.atTime(MIDNIGHT))
             .businessProcess(BusinessProcess.ready(ACKNOWLEDGE_SERVICE))
             .build();
 
@@ -88,7 +88,7 @@ public class AcknowledgeServiceCallbackHandler extends CallbackHandler {
 
         String body = format(
             CONFIRMATION_SUMMARY,
-            formatLocalDateTime(caseData.getRespondentSolicitor1ResponseDeadline(), DATE),
+            formatLocalDateTime(caseData.getRespondent1ResponseDeadline(), DATE),
             format("/cases/case-details/%s#CaseDocuments", caseData.getCcdCaseReference())
         );
 
