@@ -38,16 +38,6 @@ public class RoboticsAddressMapper {
         if (isEmpty(contactInformation)) {
             return null;
         }
-
-        ContactInformation information = contactInformation.get(0);
-        return toRoboticsAddresses(Address.builder()
-                                       .addressLine1(information.getAddressLine1())
-                                       .addressLine2(information.getAddressLine2())
-                                       .addressLine3(information.getAddressLine3())
-                                       .postCode(information.getPostCode())
-                                       .postTown(information.getTownCity())
-                                       .county(information.getCounty())
-                                       .country(information.getCountry())
-                                       .build());
+        return toRoboticsAddresses(Address.fromContactInformation(contactInformation.get(0)));
     }
 }

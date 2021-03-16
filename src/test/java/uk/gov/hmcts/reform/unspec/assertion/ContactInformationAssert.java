@@ -24,16 +24,7 @@ public class ContactInformationAssert extends CustomAssert<ContactInformationAss
             return this;
         }
 
-        ContactInformation information = contactInformation.get(0);
-        Address expected = Address.builder()
-            .addressLine1(information.getAddressLine1())
-            .addressLine2(information.getAddressLine2())
-            .addressLine3(information.getAddressLine3())
-            .postCode(information.getPostCode())
-            .postTown(information.getTownCity())
-            .county(information.getCounty())
-            .country(information.getCountry())
-            .build();
+        Address expected = Address.fromContactInformation(contactInformation.get(0));
 
         assertThat(roboticsAddress).isEqualTo(expected);
         return this;
