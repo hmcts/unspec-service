@@ -85,7 +85,7 @@ public class SealedClaimFormGenerator implements TemplateDataGenerator<SealedCla
             .respondentExternalReference(solicitorReferences
                                             .map(SolicitorReferences::getRespondentSolicitor1Reference)
                                             .orElse(""))
-            .caseName(DocmosisTemplateDataUtils.toCaseName.apply(caseData))
+            .caseName(DocmosisTemplateDataUtils.getCaseName(caseData))
             .build();
     }
 

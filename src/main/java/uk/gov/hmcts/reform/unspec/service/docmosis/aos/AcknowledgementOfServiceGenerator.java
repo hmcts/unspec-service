@@ -41,7 +41,7 @@ public class AcknowledgementOfServiceGenerator implements TemplateDataGenerator<
     @Override
     public AcknowledgementOfServiceForm getTemplateData(CaseData caseData) {
         return AcknowledgementOfServiceForm.builder()
-            .caseName(DocmosisTemplateDataUtils.toCaseName.apply(caseData))
+            .caseName(DocmosisTemplateDataUtils.getCaseName(caseData))
             .referenceNumber(caseData.getLegacyCaseReference())
             .solicitorReferences(DocmosisTemplateDataUtils.fetchSolicitorReferences(caseData.getSolicitorReferences()))
             .claimIssuedDate(caseData.getClaimIssuedDate())

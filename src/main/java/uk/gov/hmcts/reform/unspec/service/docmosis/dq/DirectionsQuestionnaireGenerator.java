@@ -65,7 +65,7 @@ public class DirectionsQuestionnaireGenerator implements TemplateDataGenerator<D
             : caseData.getApplicant1DQ();
 
         return DirectionsQuestionnaireForm.builder()
-            .caseName(DocmosisTemplateDataUtils.toCaseName.apply(caseData))
+            .caseName(DocmosisTemplateDataUtils.getCaseName(caseData))
             .referenceNumber(caseData.getLegacyCaseReference())
             .solicitorReferences(DocmosisTemplateDataUtils.fetchSolicitorReferences(caseData.getSolicitorReferences()))
             .submittedOn(caseData.getDefendantResponseDate())

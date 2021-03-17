@@ -32,7 +32,7 @@ import static uk.gov.hmcts.reform.unspec.model.documents.DocumentType.ACKNOWLEDG
 import static uk.gov.hmcts.reform.unspec.sampledata.CaseDataBuilder.LEGACY_CASE_REFERENCE;
 import static uk.gov.hmcts.reform.unspec.service.docmosis.DocmosisTemplates.N9;
 import static uk.gov.hmcts.reform.unspec.utils.DocmosisTemplateDataUtils.fetchSolicitorReferences;
-import static uk.gov.hmcts.reform.unspec.utils.DocmosisTemplateDataUtils.toCaseName;
+import static uk.gov.hmcts.reform.unspec.utils.DocmosisTemplateDataUtils.getCaseName;
 
 @ExtendWith(SpringExtension.class)
 @ContextConfiguration(classes = {
@@ -71,7 +71,7 @@ class AcknowledgementOfServiceGeneratorTest {
         CaseData caseData = CaseDataBuilder.builder().atStateServiceAcknowledge().build();
 
         AcknowledgementOfServiceForm expectedDocmosisData = AcknowledgementOfServiceForm.builder()
-            .caseName("Mr. John Rambo v Mr. Sole Trader T/A Sole Trader co")
+            .caseName("Mr. John Rambo \nvs Mr. Sole Trader T/A Sole Trader co")
             .referenceNumber(LEGACY_CASE_REFERENCE)
             .solicitorReferences(caseData.getSolicitorReferences())
             .claimIssuedDate(caseData.getClaimIssuedDate())
@@ -106,7 +106,7 @@ class AcknowledgementOfServiceGeneratorTest {
         private void assertThatFieldsAreCorrect(AcknowledgementOfServiceForm templateData, CaseData caseData) {
             Assertions.assertAll(
                 "AcknowledgementOfService data should be as expected",
-                () -> assertEquals(templateData.getCaseName(), toCaseName.apply(caseData)),
+                () -> assertEquals(templateData.getCaseName(), getCaseName(caseData)),
                 () -> assertEquals(templateData.getReferenceNumber(), caseData.getLegacyCaseReference()),
                 () -> assertEquals(
                     templateData.getSolicitorReferences(),
