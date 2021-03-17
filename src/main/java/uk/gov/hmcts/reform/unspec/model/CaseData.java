@@ -118,6 +118,6 @@ public class CaseData implements MappableObject {
     private final YesOrNo applicantSolicitor1PbaAccountsIsEmpty;
 
     //TODO: field is currently not set anywhere
-    private final LocalDate claimDismissedDeadline;
+    private final LocalDateTime claimDismissedDeadline;
     private final LocalDate claimDismissedDate;
 }

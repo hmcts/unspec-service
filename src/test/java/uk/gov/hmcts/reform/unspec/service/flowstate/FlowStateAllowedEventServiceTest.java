@@ -135,9 +135,14 @@ class FlowStateAllowedEventServiceTest {
         @Test
         void shouldReturnValidEvents_whenFlowStateIsClaimIssued() {
             assertThat(flowStateAllowedEventService.getAllowedEvents(CLAIM_ISSUED.fullName()))
-                .containsExactlyInAnyOrder(ACKNOWLEDGE_SERVICE, ADD_DEFENDANT_LITIGATION_FRIEND,
-                                           WITHDRAW_CLAIM, DISCONTINUE_CLAIM, CASE_PROCEEDS_IN_CASEMAN,
-                                           AMEND_PARTY_DETAILS
+                .containsExactlyInAnyOrder(
+                    ACKNOWLEDGE_SERVICE,
+                    ADD_DEFENDANT_LITIGATION_FRIEND,
+                    WITHDRAW_CLAIM,
+                    DISCONTINUE_CLAIM,
+                    CASE_PROCEEDS_IN_CASEMAN,
+                    AMEND_PARTY_DETAILS,
+                    DISMISS_CLAIM
                 );
         }
 
@@ -151,16 +156,22 @@ class FlowStateAllowedEventServiceTest {
                     DISCONTINUE_CLAIM,
                     CASE_PROCEEDS_IN_CASEMAN,
                     INFORM_AGREED_EXTENSION_DATE,
-                    AMEND_PARTY_DETAILS
+                    AMEND_PARTY_DETAILS,
+                    DISMISS_CLAIM
                 );
         }
 
         @Test
         void shouldReturnValidEvents_whenFlowStateIsExtensionRequested() {
             assertThat(flowStateAllowedEventService.getAllowedEvents(EXTENSION_REQUESTED.fullName()))
-                .containsExactlyInAnyOrder(DEFENDANT_RESPONSE, ADD_DEFENDANT_LITIGATION_FRIEND,
-                                           WITHDRAW_CLAIM, DISCONTINUE_CLAIM, CASE_PROCEEDS_IN_CASEMAN,
-                                           AMEND_PARTY_DETAILS
+                .containsExactlyInAnyOrder(
+                    DEFENDANT_RESPONSE,
+                    ADD_DEFENDANT_LITIGATION_FRIEND,
+                    WITHDRAW_CLAIM,
+                    DISCONTINUE_CLAIM,
+                    CASE_PROCEEDS_IN_CASEMAN,
+                    AMEND_PARTY_DETAILS,
+                    DISMISS_CLAIM
                 );
         }
 
@@ -168,7 +179,7 @@ class FlowStateAllowedEventServiceTest {
         void shouldReturnValidEvents_whenFlowStateIsRespondentFullDefence() {
             assertThat(flowStateAllowedEventService.getAllowedEvents(RESPONDENT_FULL_DEFENCE.fullName()))
                 .containsExactlyInAnyOrder(CLAIMANT_RESPONSE, ADD_DEFENDANT_LITIGATION_FRIEND, WITHDRAW_CLAIM,
-                                           DISCONTINUE_CLAIM, DISMISS_CLAIM, CASE_PROCEEDS_IN_CASEMAN,
+                                           DISCONTINUE_CLAIM, CASE_PROCEEDS_IN_CASEMAN,
                                            AMEND_PARTY_DETAILS
                 );
         }
@@ -311,7 +322,8 @@ class FlowStateAllowedEventServiceTest {
                         RESPONDENT_FULL_DEFENCE.fullName(), RESPONDENT_FULL_ADMISSION.fullName(),
                         RESPONDENT_PART_ADMISSION.fullName(), RESPONDENT_COUNTER_CLAIM.fullName(),
                         APPLICANT_RESPOND_TO_DEFENCE.fullName()
-                    })
+                    }
+                )
             );
         }
     }
