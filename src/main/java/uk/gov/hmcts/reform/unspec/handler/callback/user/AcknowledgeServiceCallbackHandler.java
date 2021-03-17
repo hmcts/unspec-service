@@ -28,7 +28,7 @@ import static uk.gov.hmcts.reform.unspec.callback.CallbackType.ABOUT_TO_SUBMIT;
 import static uk.gov.hmcts.reform.unspec.callback.CallbackType.MID;
 import static uk.gov.hmcts.reform.unspec.callback.CallbackType.SUBMITTED;
 import static uk.gov.hmcts.reform.unspec.callback.CaseEvent.ACKNOWLEDGE_SERVICE;
-import static uk.gov.hmcts.reform.unspec.helpers.DateFormatHelper.DATE;
+import static uk.gov.hmcts.reform.unspec.helpers.DateFormatHelper.DATE_TIME_AT;
 import static uk.gov.hmcts.reform.unspec.helpers.DateFormatHelper.formatLocalDateTime;
 
 @Service
@@ -37,7 +37,7 @@ public class AcknowledgeServiceCallbackHandler extends CallbackHandler {
 
     private static final List<CaseEvent> EVENTS = Collections.singletonList(ACKNOWLEDGE_SERVICE);
 
-    public static final String CONFIRMATION_SUMMARY = "<br />You need to respond before 4pm on %s."
+    public static final String CONFIRMATION_SUMMARY = "<br />You need to respond before %s."
         + "\n\n[Download the Acknowledgement of Service form](%s)";
 
     private final DateOfBirthValidator dateOfBirthValidator;
@@ -90,7 +90,7 @@ public class AcknowledgeServiceCallbackHandler extends CallbackHandler {
 
         String body = format(
             CONFIRMATION_SUMMARY,
-            formatLocalDateTime(caseData.getRespondent1ResponseDeadline(), DATE),
+            formatLocalDateTime(caseData.getRespondent1ResponseDeadline(), DATE_TIME_AT),
             format("/cases/case-details/%s#CaseDocuments", caseData.getCcdCaseReference())
         );
 

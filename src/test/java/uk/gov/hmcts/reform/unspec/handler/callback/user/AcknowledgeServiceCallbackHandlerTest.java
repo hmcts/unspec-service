@@ -35,7 +35,7 @@ import static uk.gov.hmcts.reform.unspec.callback.CallbackType.ABOUT_TO_START;
 import static uk.gov.hmcts.reform.unspec.callback.CallbackType.ABOUT_TO_SUBMIT;
 import static uk.gov.hmcts.reform.unspec.callback.CallbackType.MID;
 import static uk.gov.hmcts.reform.unspec.callback.CaseEvent.ACKNOWLEDGE_SERVICE;
-import static uk.gov.hmcts.reform.unspec.helpers.DateFormatHelper.DATE;
+import static uk.gov.hmcts.reform.unspec.helpers.DateFormatHelper.DATE_TIME_AT;
 import static uk.gov.hmcts.reform.unspec.helpers.DateFormatHelper.formatLocalDateTime;
 import static uk.gov.hmcts.reform.unspec.sampledata.CaseDataBuilder.RESPONSE_DEADLINE;
 
@@ -184,10 +184,10 @@ class AcknowledgeServiceCallbackHandlerTest extends BaseCallbackHandlerTest {
                 SubmittedCallbackResponse.builder()
                     .confirmationHeader("# You've acknowledged service")
                     .confirmationBody(format(
-                        "<br />You need to respond before 4pm on %s."
-                            + "\n\n[Download the Acknowledgement of Service form]"
+                        "<br />You need to respond before %s."
+                            + "%n%n[Download the Acknowledgement of Service form]"
                             + "(/cases/case-details/%s#CaseDocuments)",
-                        formatLocalDateTime(RESPONSE_DEADLINE, DATE), caseData.getCcdCaseReference()
+                        formatLocalDateTime(RESPONSE_DEADLINE, DATE_TIME_AT), caseData.getCcdCaseReference()
                     ))
                     .build());
         }

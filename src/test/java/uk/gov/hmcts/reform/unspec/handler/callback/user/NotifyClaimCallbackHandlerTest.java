@@ -29,6 +29,9 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import static uk.gov.hmcts.reform.unspec.callback.CallbackType.SUBMITTED;
 import static uk.gov.hmcts.reform.unspec.callback.CaseEvent.NOTIFY_DEFENDANT_OF_CLAIM;
+import static uk.gov.hmcts.reform.unspec.helpers.DateFormatHelper.DATE_TIME_AT;
+import static uk.gov.hmcts.reform.unspec.helpers.DateFormatHelper.formatLocalDateTime;
+import static uk.gov.hmcts.reform.unspec.sampledata.CaseDataBuilder.DEADLINE;
 import static uk.gov.hmcts.reform.unspec.service.DeadlinesCalculator.END_OF_BUSINESS_DAY;
 
 @SpringBootTest(classes = {
@@ -80,18 +83,19 @@ class NotifyClaimCallbackHandlerTest extends BaseCallbackHandlerTest {
     @Nested
     class SubmittedCallback {
 
-        public static final String CONFIRMATION_BODY = "<br />What happens next\n\n"
+        private static final String CONFIRMATION_BODY = "<br />What happens next\n\n"
             + "The defendant legal representative's organisation has been notified and granted access to this "
             + "claim.\n\n"
             + "You must notify the defendant with the claim details by %s";
 
         @Test
         void shouldReturnExpectedSubmittedCallbackResponse_whenInvoked() {
-            CaseData caseData = CaseDataBuilder.builder().atStateAwaitingCaseNotification().build();
+            CaseData caseData = CaseDataBuilder.builder().atStateAwaitingCaseDetailsNotification().build();
             CallbackParams params = callbackParamsOf(caseData, SUBMITTED);
             SubmittedCallbackResponse response = (SubmittedCallbackResponse) handler.handle(params);
 
-            String confirmationBody = String.format(CONFIRMATION_BODY, "DATE");
+            String formattedDeadline = formatLocalDateTime(DEADLINE, DATE_TIME_AT);
+            String confirmationBody = String.format(CONFIRMATION_BODY, formattedDeadline);
 
             assertThat(response).usingRecursiveComparison().isEqualTo(
                 SubmittedCallbackResponse.builder()

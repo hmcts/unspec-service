@@ -26,7 +26,7 @@ import static uk.gov.hmcts.reform.unspec.callback.CallbackType.ABOUT_TO_SUBMIT;
 import static uk.gov.hmcts.reform.unspec.callback.CallbackType.MID;
 import static uk.gov.hmcts.reform.unspec.callback.CallbackType.SUBMITTED;
 import static uk.gov.hmcts.reform.unspec.callback.CaseEvent.INFORM_AGREED_EXTENSION_DATE;
-import static uk.gov.hmcts.reform.unspec.helpers.DateFormatHelper.DATE;
+import static uk.gov.hmcts.reform.unspec.helpers.DateFormatHelper.DATE_TIME_AT;
 import static uk.gov.hmcts.reform.unspec.helpers.DateFormatHelper.formatLocalDateTime;
 import static uk.gov.hmcts.reform.unspec.service.DeadlinesCalculator.END_OF_BUSINESS_DAY;
 
@@ -83,7 +83,7 @@ public class InformAgreedExtensionDateCallbackHandler extends CallbackHandler {
 
         String body = format(
             "<br />What happens next.%n%n You must respond to the claimant by %s",
-            formatLocalDateTime(responseDeadline, DATE)
+            formatLocalDateTime(responseDeadline, DATE_TIME_AT)
         );
         return SubmittedCallbackResponse.builder()
             .confirmationHeader("# Extension deadline submitted")

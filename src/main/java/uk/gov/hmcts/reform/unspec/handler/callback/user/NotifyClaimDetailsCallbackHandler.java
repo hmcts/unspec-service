@@ -28,6 +28,8 @@ import static uk.gov.hmcts.reform.unspec.callback.CallbackType.ABOUT_TO_SUBMIT;
 import static uk.gov.hmcts.reform.unspec.callback.CallbackType.MID;
 import static uk.gov.hmcts.reform.unspec.callback.CallbackType.SUBMITTED;
 import static uk.gov.hmcts.reform.unspec.callback.CaseEvent.NOTIFY_DEFENDANT_OF_CLAIM_DETAILS;
+import static uk.gov.hmcts.reform.unspec.helpers.DateFormatHelper.DATE_TIME_AT;
+import static uk.gov.hmcts.reform.unspec.helpers.DateFormatHelper.formatLocalDateTime;
 
 @Service
 @RequiredArgsConstructor
@@ -75,8 +77,10 @@ public class NotifyClaimDetailsCallbackHandler extends CallbackHandler implement
     }
 
     private SubmittedCallbackResponse buildConfirmation(CallbackParams callbackParams) {
-        //TODO: update with date logic
-        String body = format(CONFIRMATION_SUMMARY, "DATE");
+        CaseData caseData = callbackParams.getCaseData();
+        String formattedDeadline = formatLocalDateTime(caseData.getRespondent1ResponseDeadline(), DATE_TIME_AT);
+
+        String body = format(CONFIRMATION_SUMMARY, formattedDeadline);
 
         return SubmittedCallbackResponse.builder()
             .confirmationHeader("# Defendant notified")

@@ -28,6 +28,9 @@ import static uk.gov.hmcts.reform.unspec.callback.CallbackType.ABOUT_TO_SUBMIT;
 import static uk.gov.hmcts.reform.unspec.callback.CallbackType.MID;
 import static uk.gov.hmcts.reform.unspec.callback.CallbackType.SUBMITTED;
 import static uk.gov.hmcts.reform.unspec.callback.CaseEvent.NOTIFY_DEFENDANT_OF_CLAIM_DETAILS;
+import static uk.gov.hmcts.reform.unspec.helpers.DateFormatHelper.DATE_TIME_AT;
+import static uk.gov.hmcts.reform.unspec.helpers.DateFormatHelper.formatLocalDateTime;
+import static uk.gov.hmcts.reform.unspec.sampledata.CaseDataBuilder.RESPONSE_DEADLINE;
 
 @SpringBootTest(classes = {
     NotifyClaimDetailsCallbackHandler.class,
@@ -128,14 +131,17 @@ class NotifyClaimDetailsCallbackHandlerTest extends BaseCallbackHandlerTest {
 
             @Test
             void shouldReturnExpectedSubmittedCallbackResponse_whenInvoked() {
-                CaseData caseData = CaseDataBuilder.builder().atStateAwaitingCaseDetailsNotification().build();
+                CaseData caseData = CaseDataBuilder.builder().atStateClaimCreated().build();
                 CallbackParams params = callbackParamsOf(caseData, SUBMITTED);
                 SubmittedCallbackResponse response = (SubmittedCallbackResponse) handler.handle(params);
+
+                String formattedDeadline = formatLocalDateTime(RESPONSE_DEADLINE, DATE_TIME_AT);
+                String confirmationBody = format(CONFIRMATION_SUMMARY, formattedDeadline);
 
                 assertThat(response).usingRecursiveComparison().isEqualTo(
                     SubmittedCallbackResponse.builder()
                         .confirmationHeader("# Defendant notified")
-                        .confirmationBody(format(CONFIRMATION_SUMMARY, "DATE"))
+                        .confirmationBody(confirmationBody)
                         .build());
             }
         }

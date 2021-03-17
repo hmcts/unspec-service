@@ -109,18 +109,15 @@ public class RespondToClaimCallbackHandler extends CallbackHandler {
     private SubmittedCallbackResponse buildConfirmation(CallbackParams callbackParams) {
         CaseData caseData = callbackParams.getCaseData();
         LocalDateTime responseDeadline = caseData.getApplicant1ResponseDeadline();
-
-        String claimNumber = "TBC";
+        String claimNumber = caseData.getLegacyCaseReference();
 
         String body = format(
             "<br />The claimant has until %s to proceed. We will let you know when they respond.",
             formatLocalDateTime(responseDeadline, DATE)
         );
+
         return SubmittedCallbackResponse.builder()
-            .confirmationHeader(format(
-                "# You've submitted your response%n## Claim number: %s",
-                claimNumber
-            ))
+            .confirmationHeader(format("# You've submitted your response%n## Claim number: %s", claimNumber))
             .confirmationBody(body)
             .build();
     }

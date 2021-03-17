@@ -278,16 +278,11 @@ class RespondToClaimCallbackHandlerTest extends BaseCallbackHandlerTest {
 
             SubmittedCallbackResponse response = (SubmittedCallbackResponse) handler.handle(params);
 
-            assertSubmittedCallbackResponse(response);
-        }
-
-        private void assertSubmittedCallbackResponse(SubmittedCallbackResponse response) {
             assertThat(response).usingRecursiveComparison().isEqualTo(
                 SubmittedCallbackResponse.builder()
-                    .confirmationHeader(format("# You've submitted your response%n## Claim number: TBC"))
+                    .confirmationHeader(format("# You've submitted your response%n## Claim number: 000LR001"))
                     .confirmationBody(format(
-                        "<br />The claimant has until %s to proceed. "
-                            + "We will let you know when they respond.",
+                        "<br />The claimant has until %s to proceed. We will let you know when they respond.",
                         formatLocalDateTime(APPLICANT_RESPONSE_DEADLINE, DATE)
                     ))
                     .build());

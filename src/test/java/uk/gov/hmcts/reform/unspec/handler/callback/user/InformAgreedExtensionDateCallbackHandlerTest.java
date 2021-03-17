@@ -35,7 +35,7 @@ import static uk.gov.hmcts.reform.unspec.callback.CallbackType.ABOUT_TO_START;
 import static uk.gov.hmcts.reform.unspec.callback.CallbackType.ABOUT_TO_SUBMIT;
 import static uk.gov.hmcts.reform.unspec.callback.CallbackType.MID;
 import static uk.gov.hmcts.reform.unspec.callback.CallbackType.SUBMITTED;
-import static uk.gov.hmcts.reform.unspec.helpers.DateFormatHelper.DATE;
+import static uk.gov.hmcts.reform.unspec.helpers.DateFormatHelper.DATE_TIME_AT;
 import static uk.gov.hmcts.reform.unspec.helpers.DateFormatHelper.formatLocalDateTime;
 import static uk.gov.hmcts.reform.unspec.service.DeadlinesCalculator.END_OF_BUSINESS_DAY;
 
@@ -161,7 +161,7 @@ class InformAgreedExtensionDateCallbackHandlerTest extends BaseCallbackHandlerTe
             assertThat(response).isEqualTo(
                 SubmittedCallbackResponse.builder()
                     .confirmationHeader("# Extension deadline submitted")
-                    .confirmationBody(format(BODY, formatLocalDateTime(responseDeadline, DATE)))
+                    .confirmationBody(format(BODY, formatLocalDateTime(responseDeadline, DATE_TIME_AT)))
                     .build());
         }
     }

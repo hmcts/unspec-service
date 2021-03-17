@@ -69,6 +69,7 @@ public class CaseDataBuilder {
     public static final LocalDateTime RESPONSE_DEADLINE = now().plusDays(14).atTime(23, 59, 59);
     public static final LocalDateTime APPLICANT_RESPONSE_DEADLINE = LocalDateTime.now().plusDays(120);
     public static final LocalDate CLAIM_ISSUED_DATE = now();
+    public static final LocalDateTime DEADLINE = LocalDate.of(2020, 1, 1).atStartOfDay();
 
     // Create Claim
     private Long ccdCaseReference;
@@ -453,7 +454,7 @@ public class CaseDataBuilder {
     public CaseDataBuilder atStateAwaitingCaseDetailsNotification() {
         atStateAwaitingCaseNotification();
         claimNotificationDate = LocalDateTime.now();
-        claimDetailsNotificationDeadline = LocalDateTime.now();
+        claimDetailsNotificationDeadline = DEADLINE;
         ccdState = AWAITING_CASE_DETAILS_NOTIFICATION;
         return this;
     }
@@ -461,7 +462,6 @@ public class CaseDataBuilder {
     public CaseDataBuilder atStateClaimCreated() {
         atStateAwaitingCaseDetailsNotification();
         claimDetailsNotificationDate = LocalDateTime.now();
-        respondent1ResponseDeadline = LocalDateTime.now();
         claimDismissedDeadline = LocalDateTime.now().plusMonths(6);
         ccdState = CREATED;
         respondent1ResponseDeadline = RESPONSE_DEADLINE;
