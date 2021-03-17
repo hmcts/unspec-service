@@ -13,6 +13,7 @@ import uk.gov.hmcts.reform.unspec.enums.CaseState;
 import uk.gov.hmcts.reform.unspec.model.CaseData;
 import uk.gov.hmcts.reform.unspec.model.documents.CaseDocument;
 import uk.gov.hmcts.reform.unspec.service.DeadlinesCalculator;
+import uk.gov.hmcts.reform.unspec.service.Time;
 import uk.gov.hmcts.reform.unspec.service.docmosis.sealedclaim.SealedClaimFormGenerator;
 import uk.gov.hmcts.reform.unspec.service.flowstate.FlowState;
 import uk.gov.hmcts.reform.unspec.service.flowstate.StateFlowEngine;
@@ -23,7 +24,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
-import static java.time.LocalDate.now;
 import static uk.gov.hmcts.reform.unspec.callback.CallbackParams.Params.BEARER_TOKEN;
 import static uk.gov.hmcts.reform.unspec.callback.CallbackType.ABOUT_TO_SUBMIT;
 import static uk.gov.hmcts.reform.unspec.callback.CaseEvent.GENERATE_CLAIM_FORM;
@@ -41,6 +41,7 @@ public class GenerateClaimFormCallbackHandler extends CallbackHandler {
     private final ObjectMapper objectMapper;
     private final StateFlowEngine stateFlowEngine;
     private final DeadlinesCalculator deadlinesCalculator;
+    private final Time time;
 
     @Override
     protected Map<String, Callback> callbacks() {
@@ -54,7 +55,7 @@ public class GenerateClaimFormCallbackHandler extends CallbackHandler {
 
     private CallbackResponse generateClaimForm(CallbackParams callbackParams) {
         CaseData caseData = callbackParams.getCaseData();
-        LocalDate issueDate = now();
+        LocalDate issueDate = time.now().toLocalDate();
 
         CaseData.CaseDataBuilder caseDataBuilder = caseData.toBuilder().issueDate(issueDate);
 
@@ -68,7 +69,7 @@ public class GenerateClaimFormCallbackHandler extends CallbackHandler {
         CaseState state = getState(caseDataBuilder.build());
 
         if (state.equals(CaseState.AWAITING_CASE_NOTIFICATION)) {
-            LocalDateTime deadline = deadlinesCalculator.plus6MonthsAtMidnight(issueDate);
+            LocalDateTime deadline = deadlinesCalculator.addMonthsToDateToNextWorkingDayAtMidnight(4, issueDate);
             caseDataBuilder.claimNotificationDeadline(deadline);
         }
 

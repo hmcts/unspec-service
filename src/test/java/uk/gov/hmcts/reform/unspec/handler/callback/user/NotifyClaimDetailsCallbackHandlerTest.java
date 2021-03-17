@@ -97,7 +97,8 @@ class NotifyClaimDetailsCallbackHandlerTest extends BaseCallbackHandlerTest {
                 sixMonthDate = LocalDateTime.of(2020, 7, 1, 0, 0, 0);
                 when(time.now()).thenReturn(localDateTime);
                 when(deadlinesCalculator.plus14DaysAt4pmDeadline(localDateTime.toLocalDate())).thenReturn(newDate);
-                when(deadlinesCalculator.plus6MonthsAtMidnight(localDateTime.toLocalDate())).thenReturn(sixMonthDate);
+                when(deadlinesCalculator.addMonthsToDateToNextWorkingDayAtMidnight(6, localDateTime.toLocalDate()))
+                    .thenReturn(sixMonthDate);
             }
 
             @Test

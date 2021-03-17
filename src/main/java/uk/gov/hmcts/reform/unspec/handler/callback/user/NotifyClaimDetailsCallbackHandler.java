@@ -16,6 +16,7 @@ import uk.gov.hmcts.reform.unspec.service.DeadlinesCalculator;
 import uk.gov.hmcts.reform.unspec.service.Time;
 import uk.gov.hmcts.reform.unspec.validation.interfaces.ParticularsOfClaimValidator;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
@@ -58,13 +59,14 @@ public class NotifyClaimDetailsCallbackHandler extends CallbackHandler implement
 
     private CallbackResponse submitClaim(CallbackParams callbackParams) {
         CaseData caseData = callbackParams.getCaseData();
-        LocalDateTime notificationDate = time.now();
+        LocalDateTime notificationDateTime = time.now();
 
+        LocalDate notificationDate = notificationDateTime.toLocalDate();
         CaseData updatedCaseData = caseData.toBuilder()
             .businessProcess(BusinessProcess.ready(NOTIFY_DEFENDANT_OF_CLAIM_DETAILS))
-            .claimDetailsNotificationDate(notificationDate)
-            .respondent1ResponseDeadline(deadlinesCalculator.plus14DaysAt4pmDeadline(notificationDate.toLocalDate()))
-            .claimDismissedDeadline(deadlinesCalculator.plus6MonthsAtMidnight(notificationDate.toLocalDate()))
+            .claimDetailsNotificationDate(notificationDateTime)
+            .respondent1ResponseDeadline(deadlinesCalculator.plus14DaysAt4pmDeadline(notificationDate))
+            .claimDismissedDeadline(deadlinesCalculator.addMonthsToDateToNextWorkingDayAtMidnight(6, notificationDate))
             .build();
 
         return AboutToStartOrSubmitCallbackResponse.builder()

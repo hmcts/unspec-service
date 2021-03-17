@@ -26,6 +26,7 @@ import uk.gov.hmcts.reform.unspec.model.common.DynamicList;
 import uk.gov.hmcts.reform.unspec.repositories.ReferenceNumberRepository;
 import uk.gov.hmcts.reform.unspec.service.FeesService;
 import uk.gov.hmcts.reform.unspec.service.OrganisationService;
+import uk.gov.hmcts.reform.unspec.service.Time;
 import uk.gov.hmcts.reform.unspec.validation.DateOfBirthValidator;
 import uk.gov.hmcts.reform.unspec.validation.OrgPolicyValidator;
 import uk.gov.hmcts.reform.unspec.validation.interfaces.ParticularsOfClaimValidator;
@@ -79,6 +80,7 @@ public class CreateClaimCallbackHandler extends CallbackHandler implements Parti
     private final IdamClient idamClient;
     private final OrgPolicyValidator orgPolicyValidator;
     private final ObjectMapper objectMapper;
+    private final Time time;
 
     @Override
     protected Map<String, Callback> callbacks() {
@@ -184,7 +186,7 @@ public class CreateClaimCallbackHandler extends CallbackHandler implements Parti
         }
 
         dataBuilder.legacyCaseReference(referenceNumberRepository.getReferenceNumber());
-        dataBuilder.submittedDate(LocalDateTime.now());
+        dataBuilder.submittedDate(time.now());
         dataBuilder.allocatedTrack(getAllocatedTrack(caseData.getClaimValue().toPounds(), caseData.getClaimType()));
         dataBuilder.businessProcess(BusinessProcess.ready(CREATE_CLAIM));
 

@@ -19,6 +19,7 @@ import uk.gov.hmcts.reform.unspec.model.documents.CaseDocument;
 import uk.gov.hmcts.reform.unspec.model.documents.Document;
 import uk.gov.hmcts.reform.unspec.sampledata.CaseDataBuilder;
 import uk.gov.hmcts.reform.unspec.service.DeadlinesCalculator;
+import uk.gov.hmcts.reform.unspec.service.Time;
 import uk.gov.hmcts.reform.unspec.service.docmosis.sealedclaim.SealedClaimFormGenerator;
 import uk.gov.hmcts.reform.unspec.service.flowstate.StateFlowEngine;
 
@@ -47,6 +48,9 @@ import static uk.gov.hmcts.reform.unspec.model.documents.DocumentType.SEALED_CLA
     StateFlowEngine.class
 })
 class GenerateClaimFormCallbackHandlerTest extends BaseCallbackHandlerTest {
+
+    @MockBean
+    private Time time;
 
     @MockBean
     private DeadlinesCalculator deadlinesCalculator;
@@ -79,7 +83,9 @@ class GenerateClaimFormCallbackHandlerTest extends BaseCallbackHandlerTest {
     @BeforeEach
     void setup() {
         when(sealedClaimFormGenerator.generate(any(CaseData.class), anyString())).thenReturn(DOCUMENT);
-        when(deadlinesCalculator.plus6MonthsAtMidnight(any(LocalDate.class))).thenReturn(deadline);
+        when(deadlinesCalculator.addMonthsToDateToNextWorkingDayAtMidnight(eq(4), any(LocalDate.class)))
+            .thenReturn(deadline);
+        when(time.now()).thenReturn(issueDate.atStartOfDay());
     }
 
     @Nested

@@ -23,7 +23,7 @@ import uk.gov.hmcts.reform.unspec.service.Time;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
-import static java.time.LocalDate.now;
+import static java.time.format.DateTimeFormatter.ISO_DATE_TIME;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
@@ -48,12 +48,13 @@ class NotifyClaimCallbackHandlerTest extends BaseCallbackHandlerTest {
     @Autowired
     private NotifyClaimCallbackHandler handler;
 
-    private final LocalDateTime deadline = now().atTime(END_OF_BUSINESS_DAY);
+    private final LocalDateTime notificationDate = LocalDateTime.now();
+    private final LocalDateTime deadline = notificationDate.toLocalDate().atTime(END_OF_BUSINESS_DAY);
 
     @BeforeEach
     void setup() {
+        when(time.now()).thenReturn(notificationDate);
         when(deadlinesCalculator.plus14DaysAt4pmDeadline(any(LocalDate.class))).thenReturn(deadline);
-        when(time.now()).thenReturn(LocalDateTime.of(2020, 1, 1, 12, 0, 0));
     }
 
     @Nested
@@ -71,8 +72,8 @@ class NotifyClaimCallbackHandlerTest extends BaseCallbackHandlerTest {
                 .containsOnly(NOTIFY_DEFENDANT_OF_CLAIM.name(), "READY");
 
             assertThat(response.getData())
-                .containsEntry("claimNotificationDate", "2020-01-01T12:00:00")
-                .containsEntry("claimDetailsNotificationDeadline", "2021-03-16T16:00:00");
+                .containsEntry("claimNotificationDate", notificationDate.format(ISO_DATE_TIME))
+                .containsEntry("claimDetailsNotificationDeadline", deadline.format(ISO_DATE_TIME));
         }
     }
 

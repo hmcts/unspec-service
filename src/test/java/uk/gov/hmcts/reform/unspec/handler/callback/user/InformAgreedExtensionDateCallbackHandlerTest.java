@@ -77,7 +77,7 @@ class InformAgreedExtensionDateCallbackHandlerTest extends BaseCallbackHandlerTe
 
         private static final String PAGE_ID = "extension-date";
         private static final String EXTENSION_DATE = "respondentSolicitor1AgreedDeadlineExtension";
-        private static final String RESPONSE_DEADLINE = "respondentSolicitor1ResponseDeadline";
+        private static final String RESPONSE_DEADLINE = "respondent1ResponseDeadline";
 
         @Test
         void shouldReturnExpectedError_whenValuesAreInvalid() {
@@ -129,7 +129,7 @@ class InformAgreedExtensionDateCallbackHandlerTest extends BaseCallbackHandlerTe
 
             CaseData caseData = CaseDataBuilder.builder()
                 .respondentSolicitor1AgreedDeadlineExtension(extensionDate)
-                .respondentSolicitor1ResponseDeadline(responseDeadline)
+                .respondent1ResponseDeadline(responseDeadline)
                 .build();
             CallbackParams params = CallbackParamsBuilder.builder().of(ABOUT_TO_SUBMIT, caseData).build();
 
@@ -152,7 +152,7 @@ class InformAgreedExtensionDateCallbackHandlerTest extends BaseCallbackHandlerTe
         void shouldReturnExpectedResponse_whenInvoked() {
             LocalDateTime responseDeadline = now().atTime(END_OF_BUSINESS_DAY);
             CaseData caseData = CaseDataBuilder.builder()
-                .respondentSolicitor1ResponseDeadline(responseDeadline)
+                .respondent1ResponseDeadline(responseDeadline)
                 .build();
             CallbackParams params = callbackParamsOf(caseData, SUBMITTED);
 
