@@ -8,6 +8,7 @@ import java.util.List;
 
 import static io.jsonwebtoken.lang.Collections.isEmpty;
 import static uk.gov.hmcts.reform.unspec.assertion.CustomAssertions.assertThat;
+import static uk.gov.hmcts.reform.unspec.model.Address.fromContactInformation;
 
 public class ContactInformationAssert extends CustomAssert<ContactInformationAssert, List<ContactInformation>> {
 
@@ -24,8 +25,7 @@ public class ContactInformationAssert extends CustomAssert<ContactInformationAss
             return this;
         }
 
-        Address expected = Address.fromContactInformation(contactInformation.get(0));
-
+        Address expected = fromContactInformation(contactInformation.get(0));
         assertThat(roboticsAddress).isEqualTo(expected);
         return this;
     }

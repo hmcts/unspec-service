@@ -27,6 +27,7 @@ import uk.gov.hmcts.reform.unspec.service.flowstate.StateFlowEngine;
 
 import java.util.List;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
@@ -43,18 +44,19 @@ import static org.mockito.BDDMockito.given;
 @ExtendWith(SpringExtension.class)
 class RoboticsDataMapperTest {
 
-    private final Organisation expectedOrganisation = Organisation.builder()
+    private static final ContactInformation CONTACT_INFORMATION = ContactInformation.builder()
+        .addressLine1("line 1")
+        .addressLine2("line 2")
+        .postCode("AB1 2XY")
+        .county("My county")
+        .dxAddress(List.of(DxAddress.builder()
+                               .dxNumber("DX 12345")
+                               .build()))
+        .build();
+    private static final Organisation ORGANISATION = Organisation.builder()
         .organisationIdentifier("QWERTY")
         .name("Org Name")
-        .contactInformation(List.of(ContactInformation.builder()
-                                        .addressLine1("line 1")
-                                        .addressLine2("line 2")
-                                        .postCode("AB1 2XY")
-                                        .county("My county")
-                                        .dxAddress(List.of(DxAddress.builder()
-                                                               .dxNumber("DX 12345")
-                                                               .build()))
-                                        .build()))
+        .contactInformation(List.of(CONTACT_INFORMATION))
         .build();
 
     @MockBean
@@ -68,7 +70,7 @@ class RoboticsDataMapperTest {
 
     @BeforeEach
     void setUp() {
-        given(organisationApi.findOrganisationById(any(), any(), any())).willReturn(expectedOrganisation);
+        given(organisationApi.findOrganisationById(any(), any(), any())).willReturn(ORGANISATION);
     }
 
     @Autowired
@@ -100,6 +102,29 @@ class RoboticsDataMapperTest {
         RoboticsCaseData roboticsCaseData = mapper.toRoboticsCaseData(caseData);
 
         CustomAssertions.assertThat(roboticsCaseData).isEqualTo(caseData);
+    }
+
+    @Test
+    void shouldMapToRoboticsCaseData_whenOrganisationPolicyIsPresent() {
+        CaseData caseData = CaseDataBuilder.builder().atStatePaymentSuccessful().build();
+
+        RoboticsCaseData roboticsCaseData = mapper.toRoboticsCaseData(caseData);
+
+        CustomAssertions.assertThat(roboticsCaseData).isEqualTo(caseData);
+        assertThat(roboticsCaseData.getSolicitors()).hasSize(2);
+        roboticsCaseData.getSolicitors()
+            .stream()
+            .forEach(
+                solicitor -> {
+                    assertThat(solicitor.getOrganisationId())
+                        .isEqualTo("QWERTY");
+                    assertThat(solicitor.getName())
+                        .isEqualTo("Org Name");
+                    assertThat(solicitor.getContactDX())
+                        .isEqualTo("DX 12345");
+                    CustomAssertions.assertThat(List.of(CONTACT_INFORMATION))
+                        .isEqualTo(solicitor.getAddresses().getContactAddress());
+                });
     }
 
     @Test

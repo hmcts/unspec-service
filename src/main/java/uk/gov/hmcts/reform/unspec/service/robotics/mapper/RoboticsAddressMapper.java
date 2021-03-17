@@ -11,6 +11,7 @@ import java.util.Optional;
 
 import static io.jsonwebtoken.lang.Collections.isEmpty;
 import static java.util.Objects.requireNonNull;
+import static uk.gov.hmcts.reform.unspec.model.Address.fromContactInformation;
 
 @Component
 public class RoboticsAddressMapper {
@@ -35,9 +36,8 @@ public class RoboticsAddressMapper {
     }
 
     public RoboticsAddresses toRoboticsAddresses(List<ContactInformation> contactInformation) {
-        if (isEmpty(contactInformation)) {
-            return null;
-        }
-        return toRoboticsAddresses(Address.fromContactInformation(contactInformation.get(0)));
+        return isEmpty(contactInformation)
+            ? null
+            : toRoboticsAddresses(fromContactInformation(contactInformation.get(0)));
     }
 }
