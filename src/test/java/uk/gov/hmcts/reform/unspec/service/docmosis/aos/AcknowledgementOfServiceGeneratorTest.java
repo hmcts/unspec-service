@@ -74,7 +74,7 @@ class AcknowledgementOfServiceGeneratorTest {
             .caseName("Mr. John Rambo v Mr. Sole Trader T/A Sole Trader co")
             .referenceNumber(LEGACY_CASE_REFERENCE)
             .solicitorReferences(caseData.getSolicitorReferences())
-            .claimIssuedDate(caseData.getIssueDate())
+            .issueDate(caseData.getIssueDate())
             .responseDeadline(caseData.getRespondent1ResponseDeadline().toLocalDate())
             .respondent(Respondent.builder()
                             .name(caseData.getRespondent1().getPartyName())
@@ -112,7 +112,7 @@ class AcknowledgementOfServiceGeneratorTest {
                     templateData.getSolicitorReferences(),
                     fetchSolicitorReferences(caseData.getSolicitorReferences())
                 ),
-                () -> assertEquals(templateData.getClaimIssuedDate(), caseData.getIssueDate()),
+                () -> assertEquals(templateData.getIssueDate(), caseData.getIssueDate()),
                 () -> assertEquals(
                     templateData.getResponseDeadline(),
                     caseData.getRespondent1ResponseDeadline().toLocalDate()

@@ -78,7 +78,7 @@ public class SealedClaimFormGenerator implements TemplateDataGenerator<SealedCla
             .applicantRepresentative(TEMP_REPRESENTATIVE)
             .referenceNumber(caseData.getLegacyCaseReference())
             .issueDate(caseData.getIssueDate())
-            .submittedOn(caseData.getClaimSubmittedDate().toLocalDate())
+            .submittedOn(caseData.getSubmittedDate().toLocalDate())
             .applicantExternalReference(solicitorReferences
                                            .map(SolicitorReferences::getApplicantSolicitor1Reference)
                                            .orElse(""))

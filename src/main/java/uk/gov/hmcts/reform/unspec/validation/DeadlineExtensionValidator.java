@@ -42,7 +42,7 @@ public class DeadlineExtensionValidator {
         );
 
         LocalDateTime responseDeadline = mapper.convertValue(
-            caseDetails.getData().get("respondentSolicitor1ResponseDeadline"),
+            caseDetails.getData().get("respondent1ResponseDeadline"),
             LocalDateTime.class
         );
 

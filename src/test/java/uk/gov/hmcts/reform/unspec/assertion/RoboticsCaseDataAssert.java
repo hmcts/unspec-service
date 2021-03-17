@@ -107,7 +107,7 @@ public class RoboticsCaseDataAssert extends CustomAssert<RoboticsCaseDataAssert,
 
         compare(
             "caseRequestReceivedDate",
-            expected.getClaimSubmittedDate().toLocalDate().format(ISO_DATE),
+            expected.getSubmittedDate().toLocalDate().format(ISO_DATE),
             ofNullable(actual.getCaseRequestReceivedDate())
         );
 

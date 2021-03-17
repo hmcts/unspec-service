@@ -199,7 +199,7 @@
   {
     "LiveFrom": "01/01/2017",
     "CaseTypeID": "UNSPECIFIED_CLAIMS",
-    "ID": "claimIssuedDate",
+    "ID": "issueDate",
     "Label": "Date claim issued",
     "FieldType": "Date",
     "SecurityClassification": "Public",
@@ -209,7 +209,7 @@
   {
     "LiveFrom": "01/01/2017",
     "CaseTypeID": "UNSPECIFIED_CLAIMS",
-    "ID": "claimSubmittedDate",
+    "ID": "submittedDate",
     "Label": "Date claim Submitted",
     "FieldType": "DateTime",
     "SecurityClassification": "Public"
@@ -677,7 +677,7 @@
     "CaseTypeID": "UNSPECIFIED_CLAIMS",
     "ID": "claimNotificationDate",
     "Label": "Date claim notified",
-    "FieldType": "Date",
+    "FieldType": "DateTime",
     "SecurityClassification": "Public"
   },
   {
@@ -725,7 +725,7 @@
     "CaseTypeID": "UNSPECIFIED_CLAIMS",
     "ID": "claimDetailsNotificationDate",
     "Label": "Case details notification date",
-    "FieldType": "Date",
+    "FieldType": "DateTime",
     "SecurityClassification": "Public"
   },
   {
@@ -749,7 +749,7 @@
     "CaseTypeID": "UNSPECIFIED_CLAIMS",
     "ID": "paymentSuccessfulDate",
     "Label": "Payment successful date",
-    "FieldType": "Date",
+    "FieldType": "DateTime",
     "SecurityClassification": "Public"
   },
   {

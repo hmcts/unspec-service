@@ -73,7 +73,7 @@ class GenerateClaimFormCallbackHandlerTest extends BaseCallbackHandlerTest {
                           .build())
         .build();
 
-    private final LocalDate claimIssuedDate = now();
+    private final LocalDate issueDate = now();
     private final LocalDateTime deadline = now().atTime(MIDNIGHT);
 
     @BeforeEach
@@ -98,7 +98,7 @@ class GenerateClaimFormCallbackHandlerTest extends BaseCallbackHandlerTest {
             CaseData updatedData = mapper.convertValue(response.getData(), CaseData.class);
 
             assertThat(updatedData.getSystemGeneratedCaseDocuments().get(0).getValue()).isEqualTo(DOCUMENT);
-            assertThat(updatedData.getIssueDate()).isEqualTo(claimIssuedDate);
+            assertThat(updatedData.getIssueDate()).isEqualTo(issueDate);
             assertThat(updatedData.getClaimNotificationDeadline()).isEqualTo(deadline);
             assertThat(response.getState()).isEqualTo(AWAITING_CASE_NOTIFICATION.toString());
         }

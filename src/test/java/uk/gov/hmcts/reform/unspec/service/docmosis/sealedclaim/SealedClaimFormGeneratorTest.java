@@ -116,7 +116,7 @@ class SealedClaimFormGeneratorTest {
                 () -> assertEquals(templateData.getApplicantRepresentative(), getRepresentative()),
                 () -> assertEquals(templateData.getReferenceNumber(), caseData.getLegacyCaseReference()),
                 () -> assertEquals(templateData.getIssueDate(), caseData.getIssueDate()),
-                () -> assertEquals(templateData.getSubmittedOn(), caseData.getClaimSubmittedDate().toLocalDate()),
+                () -> assertEquals(templateData.getSubmittedOn(), caseData.getSubmittedDate().toLocalDate()),
                 () -> assertEquals(
                     templateData.getApplicantExternalReference(),
                     ofNullable(caseData.getSolicitorReferences())

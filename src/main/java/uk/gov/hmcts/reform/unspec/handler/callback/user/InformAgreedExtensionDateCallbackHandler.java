@@ -81,7 +81,8 @@ public class InformAgreedExtensionDateCallbackHandler extends CallbackHandler {
         CaseData caseData = callbackParams.getCaseData();
         LocalDateTime responseDeadline = caseData.getRespondent1ResponseDeadline();
 
-        String body = format("<br />What happens next.%n%n You must respond to the claimant by %s",
+        String body = format(
+            "<br />What happens next.%n%n You must respond to the claimant by %s",
             formatLocalDateTime(responseDeadline, DATE)
         );
         return SubmittedCallbackResponse.builder()

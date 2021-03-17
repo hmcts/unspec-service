@@ -502,11 +502,11 @@ class CreateClaimCallbackHandlerTest extends BaseCallbackHandlerTest {
         }
 
         @Test
-        void shouldAddClaimIssuedDateAndSubmittedAt_whenInvoked() {
+        void shouldAddIssueDateAndSubmittedAt_whenInvoked() {
             var response = (AboutToStartOrSubmitCallbackResponse) handler.handle(params);
 
             assertThat(response.getData()).containsEntry("legacyCaseReference", REFERENCE_NUMBER);
-            assertThat(response.getData()).containsKey("claimSubmittedDate");
+            assertThat(response.getData()).containsKey("submittedDate");
         }
 
         @Test

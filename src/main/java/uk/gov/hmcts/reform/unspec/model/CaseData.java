@@ -111,7 +111,7 @@ public class CaseData implements MappableObject {
     private final YesOrNo applicantSolicitor1PbaAccountsIsEmpty;
 
     // dates
-    private final LocalDateTime claimSubmittedDate;
+    private final LocalDateTime submittedDate;
     private final LocalDateTime paymentSuccessfulDate;
     private final LocalDate issueDate;
     private final LocalDateTime claimNotificationDeadline;

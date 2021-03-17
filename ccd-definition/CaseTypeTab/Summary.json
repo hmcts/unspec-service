@@ -44,7 +44,7 @@
     "TabID": "Summary",
     "TabLabel": "Summary",
     "TabDisplayOrder": 1,
-    "CaseFieldID": "claimIssuedDate",
+    "CaseFieldID": "issueDate",
     "TabFieldDisplayOrder": 6
   },
   {
@@ -52,7 +52,7 @@
     "TabID": "Summary",
     "TabLabel": "Summary",
     "TabDisplayOrder": 1,
-    "CaseFieldID": "claimSubmittedDate",
+    "CaseFieldID": "submittedDate",
     "TabFieldDisplayOrder": 7
   },
   {

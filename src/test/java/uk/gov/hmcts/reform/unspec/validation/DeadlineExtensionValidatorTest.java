@@ -25,7 +25,7 @@ class DeadlineExtensionValidatorTest {
     DeadlineExtensionValidator validator;
 
     private static final String AGREED_DEADLINE_EXTENSION = "respondentSolicitor1AgreedDeadlineExtension";
-    private static final String RESPONSE_DEADLINE = "respondentSolicitor1ResponseDeadline";
+    private static final String RESPONSE_DEADLINE = "respondent1ResponseDeadline";
 
     @Nested
     class ValidateProposedDeadLine {

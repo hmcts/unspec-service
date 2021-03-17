@@ -84,8 +84,8 @@ public class CaseDataBuilder {
     private PersonalInjuryType personalInjuryType;
     private String personalInjuryTypeOther;
     private StatementOfTruth applicantSolicitor1ClaimStatementOfTruth;
-    private LocalDateTime claimSubmittedDate;
-    private LocalDate claimIssuedDate;
+    private LocalDateTime submittedDate;
+    private LocalDate issueDate;
     private String legacyCaseReference;
     private LocalDateTime confirmationOfServiceDeadline;
     private AllocatedTrack allocatedTrack;
@@ -209,8 +209,8 @@ public class CaseDataBuilder {
         return this;
     }
 
-    public CaseDataBuilder claimIssuedDate(LocalDate claimIssuedDate) {
-        this.claimIssuedDate = claimIssuedDate;
+    public CaseDataBuilder issueDate(LocalDate issueDate) {
+        this.issueDate = issueDate;
         return this;
     }
 
@@ -314,7 +314,7 @@ public class CaseDataBuilder {
     public CaseDataBuilder atStateProceedsOfflineUnrepresentedDefendant() {
         atStatePaymentSuccessful();
         ccdState = PROCEEDS_WITH_OFFLINE_JOURNEY;
-        claimIssuedDate = CLAIM_ISSUED_DATE;
+        issueDate = CLAIM_ISSUED_DATE;
         respondent1Represented = NO;
         return this;
     }
@@ -396,7 +396,7 @@ public class CaseDataBuilder {
         respondent1OrgRegistered = YES;
         respondentSolicitor1EmailAddress = "civilunspecified@gmail.com";
         applicantSolicitor1ClaimStatementOfTruth = StatementOfTruthBuilder.builder().build();
-        claimSubmittedDate = LocalDateTime.now();
+        submittedDate = LocalDateTime.now();
         applicantSolicitor1CheckEmail = CorrectEmail.builder().email("civilunspecified@gmail.com").correct(YES).build();
         return this;
     }
@@ -433,7 +433,7 @@ public class CaseDataBuilder {
     public CaseDataBuilder atStateAwaitingCaseNotification() {
         atStatePaymentSuccessful();
         ccdState = AWAITING_CASE_NOTIFICATION;
-        claimIssuedDate = CLAIM_ISSUED_DATE;
+        issueDate = CLAIM_ISSUED_DATE;
         return this;
     }
 
@@ -545,8 +545,8 @@ public class CaseDataBuilder {
     public CaseData build() {
         return CaseData.builder()
             // Create Claim
-            .claimSubmittedDate(claimSubmittedDate)
-            .issueDate(claimIssuedDate)
+            .submittedDate(submittedDate)
+            .issueDate(issueDate)
             .legacyCaseReference(legacyCaseReference)
             .confirmationOfServiceDeadline(confirmationOfServiceDeadline)
             .allocatedTrack(allocatedTrack)

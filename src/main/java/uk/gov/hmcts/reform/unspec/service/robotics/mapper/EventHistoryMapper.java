@@ -49,7 +49,7 @@ public class EventHistoryMapper {
                 Event.builder()
                     .eventSequence(1)
                     .eventCode("999")
-                    .dateReceived(caseData.getClaimSubmittedDate().toLocalDate().format(ISO_DATE))
+                    .dateReceived(caseData.getSubmittedDate().toLocalDate().format(ISO_DATE))
                     .eventDetails(EventDetails.builder()
                                       .miscText("RPA Reason: Unrepresented defendant.")
                                       .build())
