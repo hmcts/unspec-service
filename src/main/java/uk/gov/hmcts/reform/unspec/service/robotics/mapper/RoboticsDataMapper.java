@@ -217,14 +217,7 @@ public class RoboticsDataMapper {
             .name(PartyUtils.getLitigiousPartyName(party, litigationFriend))
             .dateOfBirth(PartyUtils.getDateOfBirth(party).map(d -> d.format(ISO_DATE)).orElse(null))
             .addresses(addressMapper.toRoboticsAddresses(party.getPrimaryAddress()))
-            .solicitorOrganisationID(getOrganisationID(organisationPolicy))
+            .solicitorOrganisationID(getOrganisationId(organisationPolicy).orElse(null))
             .build();
-    }
-
-    private String getOrganisationID(OrganisationPolicy organisationPolicy) {
-        return ofNullable(organisationPolicy)
-            .map(OrganisationPolicy::getOrganisation)
-            .map(Organisation::getOrganisationID)
-            .orElse(null);
     }
 }
