@@ -275,6 +275,11 @@ public class CaseDataBuilder {
         return this;
     }
 
+    public CaseDataBuilder claimNotificationDeadline(LocalDateTime deadline) {
+        this.claimNotificationDeadline = deadline;
+        return this;
+    }
+
     public CaseDataBuilder atState(FlowState.Main flowState) {
         switch (flowState) {
             case DRAFT:

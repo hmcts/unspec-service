@@ -19,6 +19,10 @@ public class DeadlinesCalculator {
 
     private final WorkingDayIndicator workingDayIndicator;
 
+    public LocalDateTime addMonthsToDateAtMidnight(int months, LocalDate claimIssueDate) {
+        return claimIssueDate.plusMonths(months).atTime(MIDNIGHT);
+    }
+
     public LocalDateTime addMonthsToDateToNextWorkingDayAtMidnight(int months, LocalDate claimIssueDate) {
         LocalDate notificationDeadline = claimIssueDate.plusMonths(months);
         return calculateFirstWorkingDay(notificationDeadline).atTime(MIDNIGHT);

@@ -83,7 +83,7 @@ class GenerateClaimFormCallbackHandlerTest extends BaseCallbackHandlerTest {
     @BeforeEach
     void setup() {
         when(sealedClaimFormGenerator.generate(any(CaseData.class), anyString())).thenReturn(DOCUMENT);
-        when(deadlinesCalculator.addMonthsToDateToNextWorkingDayAtMidnight(eq(4), any(LocalDate.class)))
+        when(deadlinesCalculator.addMonthsToDateAtMidnight(eq(4), any(LocalDate.class)))
             .thenReturn(deadline);
         when(time.now()).thenReturn(issueDate.atStartOfDay());
     }

@@ -58,16 +58,22 @@ public class NotifyClaimCallbackHandler extends CallbackHandler {
     private CallbackResponse submitClaim(CallbackParams callbackParams) {
         CaseData caseData = callbackParams.getCaseData();
         LocalDateTime claimNotificationDate = time.now();
-        LocalDateTime deadline = getDeadline(claimNotificationDate);
 
-        CaseData updatedCaseData = caseData.toBuilder()
+        CaseData.CaseDataBuilder caseDataBuilder = caseData.toBuilder()
             .businessProcess(BusinessProcess.ready(NOTIFY_DEFENDANT_OF_CLAIM))
-            .claimNotificationDate(claimNotificationDate)
-            .claimDetailsNotificationDeadline(deadline)
-            .build();
+            .claimNotificationDate(claimNotificationDate);
+
+        LocalDateTime deadline = getDeadline(claimNotificationDate);
+        LocalDateTime claimNotificationDeadline = caseData.getClaimNotificationDeadline();
+
+        if (deadline.isAfter(claimNotificationDeadline)) {
+            caseDataBuilder.claimDetailsNotificationDeadline(claimNotificationDeadline);
+        } else {
+            caseDataBuilder.claimDetailsNotificationDeadline(deadline);
+        }
 
         return AboutToStartOrSubmitCallbackResponse.builder()
-            .data(updatedCaseData.toMap(objectMapper))
+            .data(caseDataBuilder.build().toMap(objectMapper))
             .build();
     }
 

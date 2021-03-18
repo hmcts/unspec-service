@@ -64,8 +64,11 @@ class NotifyClaimCallbackHandlerTest extends BaseCallbackHandlerTest {
     class AboutToSubmit {
 
         @Test
-        void shouldUpdateBusinessProcess_whenInvoked() {
-            CaseData caseData = CaseDataBuilder.builder().atStateAwaitingCaseNotification().build();
+        void shouldUpdateBusinessProcessAndAddNotificationDeadline_when14DaysIsBeforeThe4MonthDeadline() {
+            LocalDateTime claimNotificationDeadline = notificationDate.plusMonths(4);
+            CaseData caseData = CaseDataBuilder.builder().atStateAwaitingCaseDetailsNotification()
+                .claimNotificationDeadline(claimNotificationDeadline)
+                .build();
             CallbackParams params = CallbackParamsBuilder.builder().of(CallbackType.ABOUT_TO_SUBMIT, caseData).build();
             var response = (AboutToStartOrSubmitCallbackResponse) handler.handle(params);
 
@@ -76,6 +79,31 @@ class NotifyClaimCallbackHandlerTest extends BaseCallbackHandlerTest {
 
             assertThat(response.getData())
                 .containsEntry("claimNotificationDate", notificationDate.format(ISO_DATE_TIME))
+                .containsEntry("claimDetailsNotificationDeadline", deadline.format(ISO_DATE_TIME));
+        }
+
+        @Test
+        void shouldSetClaimDetailsNotificationAsClaimNotificationDeadline_when14DaysIsAfterThe4MonthDeadline() {
+            LocalDateTime claimNotificationDeadline = notificationDate.minusDays(5);
+            CaseData caseData = CaseDataBuilder.builder().atStateAwaitingCaseDetailsNotification()
+                .claimNotificationDeadline(claimNotificationDeadline)
+                .build();
+            CallbackParams params = CallbackParamsBuilder.builder().of(CallbackType.ABOUT_TO_SUBMIT, caseData).build();
+            var response = (AboutToStartOrSubmitCallbackResponse) handler.handle(params);
+
+            assertThat(response.getData())
+                .containsEntry("claimDetailsNotificationDeadline", claimNotificationDeadline.format(ISO_DATE_TIME));
+        }
+
+        @Test
+        void shouldSetClaimDetailsNotificationAsClaimNotificationDeadline_when14DaysIsSameDayAs4MonthDeadline() {
+            CaseData caseData = CaseDataBuilder.builder().atStateAwaitingCaseDetailsNotification()
+                .claimNotificationDeadline(deadline)
+                .build();
+            CallbackParams params = CallbackParamsBuilder.builder().of(CallbackType.ABOUT_TO_SUBMIT, caseData).build();
+            var response = (AboutToStartOrSubmitCallbackResponse) handler.handle(params);
+
+            assertThat(response.getData())
                 .containsEntry("claimDetailsNotificationDeadline", deadline.format(ISO_DATE_TIME));
         }
     }

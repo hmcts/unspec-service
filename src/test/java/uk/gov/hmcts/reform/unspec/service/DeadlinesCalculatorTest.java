@@ -100,7 +100,7 @@ public class DeadlinesCalculatorTest {
     }
 
     @Nested
-    class ClaimNotificationDeadline {
+    class AddMonthsToDateToNextWorkingDayAtMidnight {
 
         @ParameterizedTest(name = "{index} => should return responseDeadline {1} when issueDate {0}")
         @ArgumentsSource(ClaimNotificationDeadlineArgumentsProvider.class)
@@ -113,6 +113,31 @@ public class DeadlinesCalculatorTest {
             assertThat(responseDeadline)
                 .isWeekday()
                 .isTheSame(expectedResponseDeadline);
+        }
+    }
+
+    @Nested
+    class AddMonthsToDateAtMidnight {
+
+        @Test
+        void shouldReturnDatePlus4Months_whenWeekday() {
+            LocalDate weekdayDate = LocalDate.of(2021, 2, 4);
+            LocalDateTime expectedDeadline = LocalDate.of(2021, 6, 4).atTime(END_OF_BUSINESS_DAY);
+            LocalDateTime responseDeadline = calculator.addMonthsToDateAtMidnight(4, weekdayDate);
+
+            assertThat(responseDeadline)
+                .isWeekday()
+                .isTheSame(expectedDeadline);
+        }
+
+        @Test
+        void shouldReturnDatePlus4Months_whenWeekend() {
+            LocalDate weekendDate = LocalDate.of(2021, 2, 6);
+            LocalDateTime expectedDeadline = LocalDate.of(2021, 6, 6).atTime(END_OF_BUSINESS_DAY);
+            LocalDateTime responseDeadline = calculator.addMonthsToDateAtMidnight(4, weekendDate);
+
+            assertThat(responseDeadline)
+                .isTheSame(expectedDeadline);
         }
     }
 
