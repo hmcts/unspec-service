@@ -14,6 +14,7 @@ import uk.gov.hmcts.reform.unspec.enums.ResponseIntention;
 import uk.gov.hmcts.reform.unspec.enums.YesOrNo;
 import uk.gov.hmcts.reform.unspec.model.common.DynamicList;
 import uk.gov.hmcts.reform.unspec.model.common.Element;
+import uk.gov.hmcts.reform.unspec.model.common.MappableObject;
 import uk.gov.hmcts.reform.unspec.model.documents.CaseDocument;
 import uk.gov.hmcts.reform.unspec.model.dq.Applicant1DQ;
 import uk.gov.hmcts.reform.unspec.model.dq.Respondent1DQ;
@@ -27,7 +28,7 @@ import static uk.gov.hmcts.reform.unspec.enums.BusinessProcessStatus.FINISHED;
 
 @Data
 @Builder(toBuilder = true)
-public class CaseData {
+public class CaseData implements MappableObject {
 
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private final Long ccdCaseReference;
@@ -42,6 +43,7 @@ public class CaseData {
     private final Party respondent1;
     private final Party respondent2;
     private final YesOrNo respondent1Represented;
+    private final YesOrNo respondent1OrgRegistered;
     private final String respondentSolicitor1EmailAddress;
     private final String detailsOfClaim;
     private final ClaimValue claimValue;
@@ -55,7 +57,7 @@ public class CaseData {
     private final StatementOfTruth applicantSolicitor1ClaimStatementOfTruth;
     private final LocalDateTime claimSubmittedDateTime;
     private final LocalDate claimIssuedDate;
-    private LocalDateTime confirmationOfServiceDeadline;
+    private final LocalDateTime confirmationOfServiceDeadline;
     private final LocalDate claimNotificationDate;
     private final LocalDate claimDetailsNotificationDate;
     private final String legacyCaseReference;
@@ -66,6 +68,7 @@ public class CaseData {
     private final OrganisationPolicy applicant2OrganisationPolicy;
     private final OrganisationPolicy respondent1OrganisationPolicy;
     private final OrganisationPolicy respondent2OrganisationPolicy;
+    private final SolicitorOrganisationDetails respondentSolicitor1OrganisationDetails;
     private final StatementOfTruth applicant1ServiceStatementOfTruthToRespondentSolicitor1;
     private final List<Element<CaseDocument>> systemGeneratedCaseDocuments;
 
