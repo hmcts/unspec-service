@@ -53,6 +53,22 @@ class RpaConsumerTest extends BaseRpaTest {
 
             assertEquals(PactVerificationResult.Ok.INSTANCE, result);
         }
+
+        @Test
+        @SneakyThrows
+        void shouldGeneratePact_whenClaimAgainstUnrepresentedDefendantWithMinimalData() {
+            CaseData caseData = CaseDataBuilder.builder()
+                .atStateProceedsOfflineUnrepresentedDefendantWithMinimalData()
+                .build();
+            String payload = roboticsDataMapper.toRoboticsCaseData(caseData).toJsonString();
+
+            assertThat(payload, validateJson());
+
+            String description = "Robotics case data for claim against unrepresented defendant - minimal data";
+            PactVerificationResult result = getPactVerificationResult(payload, description);
+
+            assertEquals(PactVerificationResult.Ok.INSTANCE, result);
+        }
     }
 
     @Nested

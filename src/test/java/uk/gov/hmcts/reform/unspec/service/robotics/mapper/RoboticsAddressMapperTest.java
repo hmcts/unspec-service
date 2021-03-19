@@ -20,7 +20,7 @@ class RoboticsAddressMapperTest {
 
         @Test
         void shouldMapToRoboticsAddress_whenAddressIsProvided() {
-            Address address = AddressBuilder.builder().build();
+            Address address = AddressBuilder.defaults().build();
 
             RoboticsAddress roboticsAddress = mapper.toRoboticsAddress(address);
 
@@ -52,7 +52,7 @@ class RoboticsAddressMapperTest {
 
         @Test
         void shouldMapToRoboticsAddresses_whenAddressIsProvided() {
-            Address address = AddressBuilder.builder().build();
+            Address address = AddressBuilder.defaults().build();
 
             RoboticsAddresses roboticsAddresses = mapper.toRoboticsAddresses(address);
 

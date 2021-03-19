@@ -1,5 +1,6 @@
 package uk.gov.hmcts.reform.unspec.sampledata;
 
+import uk.gov.hmcts.reform.ccd.model.Organisation;
 import uk.gov.hmcts.reform.ccd.model.OrganisationPolicy;
 import uk.gov.hmcts.reform.unspec.enums.AllocatedTrack;
 import uk.gov.hmcts.reform.unspec.enums.CaseState;
@@ -16,6 +17,7 @@ import uk.gov.hmcts.reform.unspec.model.ClaimValue;
 import uk.gov.hmcts.reform.unspec.model.CloseClaim;
 import uk.gov.hmcts.reform.unspec.model.CorrectEmail;
 import uk.gov.hmcts.reform.unspec.model.CourtLocation;
+import uk.gov.hmcts.reform.unspec.model.Fee;
 import uk.gov.hmcts.reform.unspec.model.IdamUserDetails;
 import uk.gov.hmcts.reform.unspec.model.Party;
 import uk.gov.hmcts.reform.unspec.model.PaymentDetails;
@@ -44,6 +46,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import static java.math.BigDecimal.TEN;
 import static java.time.LocalDate.now;
 import static uk.gov.hmcts.reform.unspec.enums.AllocatedTrack.FAST_CLAIM;
 import static uk.gov.hmcts.reform.unspec.enums.CaseState.AWAITING_CASE_DETAILS_NOTIFICATION;
@@ -75,6 +78,7 @@ public class CaseDataBuilder {
     private SolicitorReferences solicitorReferences;
     private CourtLocation courtLocation;
     private Party applicant1;
+    private YesOrNo applicant1LitigationFriendRequired;
     private Party respondent1;
     private YesOrNo respondent1Represented;
     private String respondentSolicitor1EmailAddress;
@@ -84,6 +88,8 @@ public class CaseDataBuilder {
     private PersonalInjuryType personalInjuryType;
     private String personalInjuryTypeOther;
     private StatementOfTruth applicantSolicitor1ClaimStatementOfTruth;
+    private Fee claimFee;
+    private String paymentReference;
     private LocalDateTime claimSubmittedDateTime;
     private LocalDate claimIssuedDate;
     private String legacyCaseReference;
@@ -319,6 +325,14 @@ public class CaseDataBuilder {
         return this;
     }
 
+    public CaseDataBuilder atStateProceedsOfflineUnrepresentedDefendantWithMinimalData() {
+        atStatePaymentSuccessfulWithMinimalData();
+        ccdState = PROCEEDS_WITH_OFFLINE_JOURNEY;
+        claimIssuedDate = CLAIM_ISSUED_DATE;
+        respondent1Represented = NO;
+        return this;
+    }
+
     public CaseDataBuilder atStateClaimDiscontinued() {
         atStateClaimCreated();
         return discontinueClaim();
@@ -395,14 +409,54 @@ public class CaseDataBuilder {
         respondent1Represented = YES;
         respondent1OrgRegistered = YES;
         respondentSolicitor1EmailAddress = "civilunspecified@gmail.com";
-        applicantSolicitor1ClaimStatementOfTruth = StatementOfTruthBuilder.builder().build();
+        applicantSolicitor1ClaimStatementOfTruth = StatementOfTruthBuilder.defaults().build();
         claimSubmittedDateTime = LocalDateTime.now();
         applicantSolicitor1CheckEmail = CorrectEmail.builder().email("civilunspecified@gmail.com").correct(YES).build();
         return this;
     }
 
+    public CaseDataBuilder atStateClaimDraftWithMinimalData() {
+        courtLocation = CourtLocation.builder()
+            .applicantPreferredCourt("121")
+            .build();
+        applicant1 = PartyBuilder.builder().companyWithMinimalData().build();
+        applicant1LitigationFriendRequired = NO;
+        applicantSolicitor1CheckEmail = CorrectEmail.builder()
+            .email("civilunspecified@gmail.com")
+            .correct(YES)
+            .build();
+        applicant1OrganisationPolicy = OrganisationPolicy.builder()
+            .organisation(Organisation.builder().organisationID("QWERTY").build())
+            .build();
+        respondent1 = PartyBuilder.builder().companyWithMinimalData().build();
+        respondent1Represented = NO;
+        claimType = ClaimType.CLINICAL_NEGLIGENCE;
+        claimValue = ClaimValue.builder()
+            .statementOfValueInPennies(BigDecimal.valueOf(10000000))
+            .build();
+        claimFee = Fee.builder()
+            .calculatedAmountInPence(TEN)
+            .code("fee code")
+            .version("version 1")
+            .build();
+        paymentReference = "some reference";
+        respondentSolicitor1EmailAddress = "civilunspecified@gmail.com";
+        applicantSolicitor1ClaimStatementOfTruth = StatementOfTruthBuilder.minimal().build();
+        claimSubmittedDateTime = LocalDateTime.now();
+        return this;
+    }
+
     public CaseDataBuilder atStatePendingCaseIssued() {
         atStateClaimDraft();
+        legacyCaseReference = LEGACY_CASE_REFERENCE;
+        allocatedTrack = FAST_CLAIM;
+        ccdState = PENDING_CASE_ISSUED;
+        ccdCaseReference = CASE_ID;
+        return this;
+    }
+
+    public CaseDataBuilder atStatePendingCaseIssuedWithMinimalData() {
+        atStateClaimDraftWithMinimalData();
         legacyCaseReference = LEGACY_CASE_REFERENCE;
         allocatedTrack = FAST_CLAIM;
         ccdState = PENDING_CASE_ISSUED;
@@ -423,6 +477,15 @@ public class CaseDataBuilder {
 
     public CaseDataBuilder atStatePaymentSuccessful() {
         atStatePendingCaseIssued();
+        paymentDetails = PaymentDetails.builder()
+            .status(SUCCESS)
+            .reference("RC-1604-0739-2145-4711")
+            .build();
+        return this;
+    }
+
+    public CaseDataBuilder atStatePaymentSuccessfulWithMinimalData() {
+        atStatePendingCaseIssuedWithMinimalData();
         paymentDetails = PaymentDetails.builder()
             .status(SUCCESS)
             .reference("RC-1604-0739-2145-4711")
@@ -563,6 +626,8 @@ public class CaseDataBuilder {
             .respondent1OrgRegistered(respondent1OrgRegistered)
             .respondentSolicitor1EmailAddress(respondentSolicitor1EmailAddress)
             .applicantSolicitor1ClaimStatementOfTruth(applicantSolicitor1ClaimStatementOfTruth)
+            .claimFee(claimFee)
+            .paymentReference(paymentReference)
             .paymentDetails(paymentDetails)
             .respondentSolicitor1ResponseDeadline(respondentSolicitor1ResponseDeadline)
             .claimNotificationDate(claimNotificationDate)
