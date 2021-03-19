@@ -71,6 +71,8 @@ class RepresentativeServiceTest {
             verify(organisationService).findOrganisationById(
                 caseData.getRespondent1OrganisationPolicy().getOrganisation().getOrganisationID());
             assertThat(representative).extracting("organisationName").isEqualTo(organisation.getName());
+            assertThat(representative).extracting("emailAddress").isEqualTo(
+                caseData.getRespondentSolicitor1EmailAddress());
             assertThat(representative).extracting("serviceAddress").extracting(
                 "AddressLine1",
                 "AddressLine2",
