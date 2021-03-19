@@ -17,7 +17,10 @@ import uk.gov.hmcts.reform.unspec.helpers.CaseDetailsConverter;
 import uk.gov.hmcts.reform.unspec.model.CaseData;
 import uk.gov.hmcts.reform.unspec.model.UnavailableDate;
 import uk.gov.hmcts.reform.unspec.model.dq.Applicant1DQ;
+import uk.gov.hmcts.reform.unspec.model.dq.Expert;
+import uk.gov.hmcts.reform.unspec.model.dq.Experts;
 import uk.gov.hmcts.reform.unspec.model.dq.Hearing;
+import uk.gov.hmcts.reform.unspec.model.dq.Applicant1DQ;
 import uk.gov.hmcts.reform.unspec.sampledata.CallbackParamsBuilder;
 import uk.gov.hmcts.reform.unspec.sampledata.CaseDataBuilder;
 import uk.gov.hmcts.reform.unspec.sampledata.CaseDetailsBuilder;
@@ -145,6 +148,61 @@ class RespondToDefenceCallbackHandlerTest extends BaseCallbackHandlerTest {
 
             AboutToStartOrSubmitCallbackResponse response = (AboutToStartOrSubmitCallbackResponse) handler
                 .handle(params);
+
+            assertThat(response.getErrors()).isEmpty();
+        }
+    }
+
+    @Nested
+    class MidEventCallbackValidateExperts {
+
+        private static final String PAGE_ID = "experts";
+
+        @Test
+        void shouldReturnError_whenExpertRequiredAndNullDetails() {
+            CaseData caseData = CaseDataBuilder.builder()
+                .applicant1DQ(Applicant1DQ.builder()
+                                   .applicant1DQExperts(Experts.builder()
+                                                             .expertRequired(YES)
+                                                             .build())
+                                   .build())
+                .build();
+            CallbackParams params = callbackParamsOf(caseData, MID, PAGE_ID);
+
+            var response = (AboutToStartOrSubmitCallbackResponse) handler.handle(params);
+
+            assertThat(response.getErrors()).containsExactly("Expert details required");
+        }
+
+        @Test
+        void shouldReturnNoError_whenExpertRequiredAndDetailsProvided() {
+            CaseData caseData = CaseDataBuilder.builder()
+                .applicant1DQ(Applicant1DQ.builder()
+                                   .applicant1DQExperts(Experts.builder()
+                                                             .expertRequired(YES)
+                                                             .details(wrapElements(Expert.builder().name("test expert").build()))
+                                                             .build())
+                                   .build())
+                .build();
+            CallbackParams params = callbackParamsOf(caseData, MID, PAGE_ID);
+
+            var response = (AboutToStartOrSubmitCallbackResponse) handler.handle(params);
+
+            assertThat(response.getErrors()).isEmpty();
+        }
+
+        @Test
+        void shouldReturnNoError_whenExpertNotRequired() {
+            CaseData caseData = CaseDataBuilder.builder()
+                .applicant1DQ(Applicant1DQ.builder()
+                                   .applicant1DQExperts(Experts.builder()
+                                                             .expertRequired(NO)
+                                                             .build())
+                                   .build())
+                .build();
+            CallbackParams params = callbackParamsOf(caseData, MID, PAGE_ID);
+
+            var response = (AboutToStartOrSubmitCallbackResponse) handler.handle(params);
 
             assertThat(response.getErrors()).isEmpty();
         }

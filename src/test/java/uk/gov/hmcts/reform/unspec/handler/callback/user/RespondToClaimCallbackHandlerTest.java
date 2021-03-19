@@ -12,10 +12,13 @@ import uk.gov.hmcts.reform.ccd.client.model.AboutToStartOrSubmitCallbackResponse
 import uk.gov.hmcts.reform.ccd.client.model.CaseDetails;
 import uk.gov.hmcts.reform.ccd.client.model.SubmittedCallbackResponse;
 import uk.gov.hmcts.reform.unspec.callback.CallbackParams;
+import uk.gov.hmcts.reform.unspec.enums.YesOrNo;
 import uk.gov.hmcts.reform.unspec.handler.callback.BaseCallbackHandlerTest;
 import uk.gov.hmcts.reform.unspec.helpers.CaseDetailsConverter;
 import uk.gov.hmcts.reform.unspec.model.CaseData;
 import uk.gov.hmcts.reform.unspec.model.UnavailableDate;
+import uk.gov.hmcts.reform.unspec.model.dq.Expert;
+import uk.gov.hmcts.reform.unspec.model.dq.Experts;
 import uk.gov.hmcts.reform.unspec.model.dq.Hearing;
 import uk.gov.hmcts.reform.unspec.model.dq.Respondent1DQ;
 import uk.gov.hmcts.reform.unspec.sampledata.CallbackParamsBuilder;
@@ -27,6 +30,7 @@ import uk.gov.hmcts.reform.unspec.validation.UnavailableDateValidator;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
 
 import static java.lang.String.format;
 import static java.time.LocalDate.now;
@@ -37,9 +41,12 @@ import static uk.gov.hmcts.reform.unspec.callback.CallbackType.ABOUT_TO_SUBMIT;
 import static uk.gov.hmcts.reform.unspec.callback.CallbackType.MID;
 import static uk.gov.hmcts.reform.unspec.callback.CallbackType.SUBMITTED;
 import static uk.gov.hmcts.reform.unspec.callback.CaseEvent.DEFENDANT_RESPONSE;
+import static uk.gov.hmcts.reform.unspec.enums.YesOrNo.NO;
+import static uk.gov.hmcts.reform.unspec.enums.YesOrNo.YES;
 import static uk.gov.hmcts.reform.unspec.helpers.DateFormatHelper.DATE;
 import static uk.gov.hmcts.reform.unspec.helpers.DateFormatHelper.formatLocalDateTime;
 import static uk.gov.hmcts.reform.unspec.sampledata.CaseDataBuilder.APPLICANT_RESPONSE_DEADLINE;
+import static uk.gov.hmcts.reform.unspec.utils.ElementUtils.element;
 import static uk.gov.hmcts.reform.unspec.utils.ElementUtils.wrapElements;
 
 @ExtendWith(SpringExtension.class)
@@ -203,6 +210,61 @@ class RespondToClaimCallbackHandlerTest extends BaseCallbackHandlerTest {
 
             AboutToStartOrSubmitCallbackResponse response = (AboutToStartOrSubmitCallbackResponse) handler
                 .handle(params);
+
+            assertThat(response.getErrors()).isEmpty();
+        }
+    }
+
+    @Nested
+    class MidEventCallbackValidateExperts {
+
+        private static final String PAGE_ID = "experts";
+
+        @Test
+        void shouldReturnError_whenExpertRequiredAndNullDetails() {
+            CaseData caseData = CaseDataBuilder.builder()
+                .respondent1DQ(Respondent1DQ.builder()
+                    .respondent1DQExperts(Experts.builder()
+                        .expertRequired(YES)
+                        .build())
+                    .build())
+                .build();
+            CallbackParams params = callbackParamsOf(caseData, MID, PAGE_ID);
+
+            var response = (AboutToStartOrSubmitCallbackResponse) handler.handle(params);
+
+            assertThat(response.getErrors()).containsExactly("Expert details required");
+        }
+
+        @Test
+        void shouldReturnNoError_whenExpertRequiredAndDetailsProvided() {
+            CaseData caseData = CaseDataBuilder.builder()
+                .respondent1DQ(Respondent1DQ.builder()
+                    .respondent1DQExperts(Experts.builder()
+                        .expertRequired(YES)
+                        .details(wrapElements(Expert.builder().name("test expert").build()))
+                        .build())
+                    .build())
+                .build();
+            CallbackParams params = callbackParamsOf(caseData, MID, PAGE_ID);
+
+            var response = (AboutToStartOrSubmitCallbackResponse) handler.handle(params);
+
+            assertThat(response.getErrors()).isEmpty();
+        }
+
+        @Test
+        void shouldReturnNoError_whenExpertNotRequired() {
+            CaseData caseData = CaseDataBuilder.builder()
+                .respondent1DQ(Respondent1DQ.builder()
+                    .respondent1DQExperts(Experts.builder()
+                        .expertRequired(NO)
+                        .build())
+                    .build())
+                .build();
+            CallbackParams params = callbackParamsOf(caseData, MID, PAGE_ID);
+
+            var response = (AboutToStartOrSubmitCallbackResponse) handler.handle(params);
 
             assertThat(response.getErrors()).isEmpty();
         }
