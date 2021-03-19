@@ -10,6 +10,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import uk.gov.hmcts.reform.prd.model.ContactInformation;
+import uk.gov.hmcts.reform.prd.model.DxAddress;
 import uk.gov.hmcts.reform.prd.model.Organisation;
 import uk.gov.hmcts.reform.unspec.helpers.CaseDetailsConverter;
 import uk.gov.hmcts.reform.unspec.model.CaseData;
@@ -42,6 +43,7 @@ class RepresentativeServiceTest {
         .postCode("SW1 1AA")
         .county("London")
         .country("UK")
+        .dxAddress(List.of(DxAddress.builder().dxNumber("DX12345").build()))
         .build();
     private final Organisation organisation = Organisation.builder()
         .name("test org")
@@ -71,6 +73,8 @@ class RepresentativeServiceTest {
             verify(organisationService).findOrganisationById(
                 caseData.getRespondent1OrganisationPolicy().getOrganisation().getOrganisationID());
             assertThat(representative).extracting("organisationName").isEqualTo(organisation.getName());
+            assertThat(representative).extracting("dxAddress").isEqualTo(
+                contactInformation.getDxAddress().get(0).getDxNumber());
             assertThat(representative).extracting("emailAddress").isEqualTo(
                 caseData.getRespondentSolicitor1EmailAddress());
             assertThat(representative).extracting("serviceAddress").extracting(

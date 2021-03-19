@@ -2,10 +2,15 @@ package uk.gov.hmcts.reform.unspec.model.docmosis.sealedclaim;
 
 import lombok.Builder;
 import lombok.Data;
+import uk.gov.hmcts.reform.prd.model.DxAddress;
 import uk.gov.hmcts.reform.prd.model.Organisation;
 import uk.gov.hmcts.reform.unspec.model.Address;
 import uk.gov.hmcts.reform.unspec.model.SolicitorOrganisationDetails;
 
+import java.util.List;
+
+import static java.util.Optional.ofNullable;
+import static java.util.function.Predicate.not;
 import static uk.gov.hmcts.reform.unspec.model.Address.fromContactInformation;
 
 @Data
@@ -30,10 +35,15 @@ public class Representative {
     }
 
     public static Representative fromOrganisation(Organisation organisation) {
+        var contactInformation = organisation.getContactInformation().get(0);
         return Representative.builder()
             .organisationName(organisation.getName())
-            .serviceAddress(fromContactInformation(organisation.getContactInformation().get(0)))
+            .dxAddress(ofNullable(contactInformation.getDxAddress())
+                           .filter(not(List::isEmpty))
+                           .map(dxAddressList -> dxAddressList.get(0))
+                           .map(DxAddress::getDxNumber)
+                           .orElse(""))
+            .serviceAddress(fromContactInformation(contactInformation))
             .build();
     }
-
 }
