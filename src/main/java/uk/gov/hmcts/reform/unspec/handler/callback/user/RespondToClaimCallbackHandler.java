@@ -10,6 +10,7 @@ import uk.gov.hmcts.reform.unspec.callback.Callback;
 import uk.gov.hmcts.reform.unspec.callback.CallbackHandler;
 import uk.gov.hmcts.reform.unspec.callback.CallbackParams;
 import uk.gov.hmcts.reform.unspec.callback.CaseEvent;
+import uk.gov.hmcts.reform.unspec.enums.YesOrNo;
 import uk.gov.hmcts.reform.unspec.model.BusinessProcess;
 import uk.gov.hmcts.reform.unspec.model.CaseData;
 import uk.gov.hmcts.reform.unspec.model.Party;
@@ -19,6 +20,7 @@ import uk.gov.hmcts.reform.unspec.validation.DateOfBirthValidator;
 import uk.gov.hmcts.reform.unspec.validation.UnavailableDateValidator;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -32,6 +34,7 @@ import static uk.gov.hmcts.reform.unspec.callback.CallbackType.ABOUT_TO_SUBMIT;
 import static uk.gov.hmcts.reform.unspec.callback.CallbackType.MID;
 import static uk.gov.hmcts.reform.unspec.callback.CallbackType.SUBMITTED;
 import static uk.gov.hmcts.reform.unspec.callback.CaseEvent.DEFENDANT_RESPONSE;
+import static uk.gov.hmcts.reform.unspec.enums.YesOrNo.YES;
 import static uk.gov.hmcts.reform.unspec.helpers.DateFormatHelper.DATE;
 import static uk.gov.hmcts.reform.unspec.helpers.DateFormatHelper.formatLocalDateTime;
 import static uk.gov.hmcts.reform.unspec.service.DeadlinesCalculator.END_OF_BUSINESS_DAY;
@@ -58,6 +61,7 @@ public class RespondToClaimCallbackHandler extends CallbackHandler {
             callbackKey(MID, "confirm-details"), this::validateDateOfBirth,
             callbackKey(MID, "validate-unavailable-dates"), this::validateUnavailableDates,
             callbackKey(MID, "upload"), this::emptyCallbackResponse,
+            callbackKey(MID, "experts"), this::validateExperts,
             callbackKey(ABOUT_TO_SUBMIT), this::setApplicantResponseDeadline,
             callbackKey(SUBMITTED), this::buildConfirmation
         );
@@ -68,6 +72,19 @@ public class RespondToClaimCallbackHandler extends CallbackHandler {
         List<Element<UnavailableDate>> unavailableDates =
             ofNullable(caseData.getRespondent1DQ().getHearing().getUnavailableDates()).orElse(emptyList());
         List<String> errors = unavailableDateValidator.validate(unavailableDates);
+
+        return AboutToStartOrSubmitCallbackResponse.builder()
+            .errors(errors)
+            .build();
+    }
+
+    private CallbackResponse validateExperts(CallbackParams callbackParams) {
+        CaseData caseData = callbackParams.getCaseData();
+        var experts = caseData.getRespondent1DQ().getExperts();
+        List<String> errors = new ArrayList<>();
+        if (experts.getExpertRequired() == YES && experts.getDetails() == null) {
+            errors.add("Expert details required");
+        }
 
         return AboutToStartOrSubmitCallbackResponse.builder()
             .errors(errors)

@@ -19,6 +19,7 @@ import uk.gov.hmcts.reform.unspec.service.flowstate.FlowState;
 import uk.gov.hmcts.reform.unspec.service.flowstate.StateFlowEngine;
 import uk.gov.hmcts.reform.unspec.validation.UnavailableDateValidator;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -53,6 +54,7 @@ public class RespondToDefenceCallbackHandler extends CallbackHandler {
         return Map.of(
             callbackKey(ABOUT_TO_START), this::emptyCallbackResponse,
             callbackKey(MID, "validate-unavailable-dates"), this::validateUnavailableDates,
+            callbackKey(MID, "experts"), this::validateExperts,
             callbackKey(ABOUT_TO_SUBMIT), this::handleNotifications,
             callbackKey(SUBMITTED), this::buildConfirmation
         );
@@ -63,6 +65,19 @@ public class RespondToDefenceCallbackHandler extends CallbackHandler {
         List<Element<UnavailableDate>> unavailableDates =
             ofNullable(caseData.getApplicant1DQ().getHearing().getUnavailableDates()).orElse(emptyList());
         List<String> errors = unavailableDateValidator.validate(unavailableDates);
+
+        return AboutToStartOrSubmitCallbackResponse.builder()
+            .errors(errors)
+            .build();
+    }
+
+    private CallbackResponse validateExperts(CallbackParams callbackParams) {
+        CaseData caseData = callbackParams.getCaseData();
+        var experts = caseData.getApplicant1DQ().getExperts();
+        List<String> errors = new ArrayList<>();
+        if (experts.getExpertRequired() == YES && experts.getDetails() == null) {
+            errors.add("Expert details required");
+        }
 
         return AboutToStartOrSubmitCallbackResponse.builder()
             .errors(errors)
