@@ -500,6 +500,13 @@ public class CaseDataBuilder {
         return this;
     }
 
+    public CaseDataBuilder atStateAwaitingCaseNotificationWithMinimalData() {
+        atStatePaymentSuccessfulWithMinimalData();
+        ccdState = AWAITING_CASE_NOTIFICATION;
+        claimIssuedDate = CLAIM_ISSUED_DATE;
+        return this;
+    }
+
     public CaseDataBuilder atStateAwaitingCaseDetailsNotification() {
         atStateAwaitingCaseNotification();
         claimNotificationDate = LocalDate.now();
@@ -507,8 +514,23 @@ public class CaseDataBuilder {
         return this;
     }
 
+    public CaseDataBuilder atStateAwaitingCaseDetailsNotificationWithMinimalData() {
+        atStateAwaitingCaseNotificationWithMinimalData();
+        claimNotificationDate = LocalDate.now();
+        ccdState = AWAITING_CASE_DETAILS_NOTIFICATION;
+        return this;
+    }
+
     public CaseDataBuilder atStateClaimCreated() {
         atStateAwaitingCaseDetailsNotification();
+        claimDetailsNotificationDate = LocalDate.now();
+        ccdState = CREATED;
+        respondentSolicitor1ResponseDeadline = RESPONSE_DEADLINE;
+        return this;
+    }
+
+    public CaseDataBuilder atStateClaimCreatedWithMinimalData() {
+        atStateAwaitingCaseDetailsNotificationWithMinimalData();
         claimDetailsNotificationDate = LocalDate.now();
         ccdState = CREATED;
         respondentSolicitor1ResponseDeadline = RESPONSE_DEADLINE;
@@ -569,6 +591,17 @@ public class CaseDataBuilder {
         return this;
     }
 
+    public CaseDataBuilder atStateRespondentRespondToClaimWithMinimalData(
+        RespondentResponseType respondentResponseType
+    ) {
+        atStateServiceAcknowledgeWithMinimalData();
+        respondent1ClaimResponseType = respondentResponseType;
+        applicantSolicitorResponseDeadlineToRespondentSolicitor1 = APPLICANT_RESPONSE_DEADLINE;
+        defendantResponseDate = LocalDate.now();
+        ccdState = AWAITING_CLAIMANT_INTENTION;
+        return this;
+    }
+
     public CaseDataBuilder atStateProceedsOfflineAdmissionOrCounterClaim() {
         atStateRespondentFullDefence();
         ccdState = PROCEEDS_WITH_OFFLINE_JOURNEY;
@@ -587,6 +620,12 @@ public class CaseDataBuilder {
 
     public CaseDataBuilder atStateServiceAcknowledge() {
         atStateClaimCreated();
+        respondent1ClaimResponseIntentionType = FULL_DEFENCE;
+        return this;
+    }
+
+    public CaseDataBuilder atStateServiceAcknowledgeWithMinimalData() {
+        atStateClaimCreatedWithMinimalData();
         respondent1ClaimResponseIntentionType = FULL_DEFENCE;
         return this;
     }

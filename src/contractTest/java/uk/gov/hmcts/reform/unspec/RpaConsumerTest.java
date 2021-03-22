@@ -19,6 +19,9 @@ import uk.gov.hmcts.reform.unspec.service.robotics.mapper.RoboticsDataMapper;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static uk.gov.hmcts.reform.unspec.enums.RespondentResponseType.COUNTER_CLAIM;
+import static uk.gov.hmcts.reform.unspec.enums.RespondentResponseType.FULL_ADMISSION;
+import static uk.gov.hmcts.reform.unspec.enums.RespondentResponseType.PART_ADMISSION;
 import static uk.gov.hmcts.reform.unspec.matcher.IsValidJson.validateJson;
 
 @Slf4j
@@ -43,6 +46,7 @@ class RpaConsumerTest extends BaseRpaTest {
         void shouldGeneratePact_whenClaimAgainstUnrepresentedDefendant() {
             CaseData caseData = CaseDataBuilder.builder()
                 .atState(FlowState.Main.PROCEEDS_OFFLINE_UNREPRESENTED_DEFENDANT)
+                .legacyCaseReference("000LR001")
                 .build();
             String payload = roboticsDataMapper.toRoboticsCaseData(caseData).toJsonString();
 
@@ -59,6 +63,7 @@ class RpaConsumerTest extends BaseRpaTest {
         void shouldGeneratePact_whenClaimAgainstUnrepresentedDefendantWithMinimalData() {
             CaseData caseData = CaseDataBuilder.builder()
                 .atStateProceedsOfflineUnrepresentedDefendantWithMinimalData()
+                .legacyCaseReference("000LR002")
                 .build();
             String payload = roboticsDataMapper.toRoboticsCaseData(caseData).toJsonString();
 
@@ -72,12 +77,15 @@ class RpaConsumerTest extends BaseRpaTest {
     }
 
     @Nested
-    class AdmissionsOrCounterClaim {
+    class PartAdmissionResponse {
 
         @Test
         @SneakyThrows
         void shouldGeneratePact_whenDefendantRespondedWithPartAdmission() {
-            CaseData caseData = CaseDataBuilder.builder().atStateRespondentPartAdmission().build();
+            CaseData caseData = CaseDataBuilder.builder()
+                .atStateRespondentPartAdmission()
+                .legacyCaseReference("000LR003")
+                .build();
             String payload = roboticsDataMapper.toRoboticsCaseData(caseData).toJsonString();
 
             assertThat(payload, validateJson());
@@ -90,8 +98,32 @@ class RpaConsumerTest extends BaseRpaTest {
 
         @Test
         @SneakyThrows
+        void shouldGeneratePact_whenDefendantRespondedWithPartAdmissionWithMinimalData() {
+            CaseData caseData = CaseDataBuilder.builder()
+                .atStateRespondentRespondToClaimWithMinimalData(PART_ADMISSION)
+                .legacyCaseReference("000LR004")
+                .build();
+            String payload = roboticsDataMapper.toRoboticsCaseData(caseData).toJsonString();
+
+            assertThat(payload, validateJson());
+
+            String description = "Robotics case data for defendant responded with part admission - minimal data";
+            PactVerificationResult result = getPactVerificationResult(payload, description);
+
+            assertEquals(PactVerificationResult.Ok.INSTANCE, result);
+        }
+    }
+
+    @Nested
+    class FullAdmissionResponse {
+
+        @Test
+        @SneakyThrows
         void shouldGeneratePact_whenDefendantRespondedWithFullAdmission() {
-            CaseData caseData = CaseDataBuilder.builder().atStateRespondentFullAdmission().build();
+            CaseData caseData = CaseDataBuilder.builder()
+                .atStateRespondentFullAdmission()
+                .legacyCaseReference("000LR005")
+                .build();
             String payload = roboticsDataMapper.toRoboticsCaseData(caseData).toJsonString();
 
             assertThat(payload, validateJson());
@@ -104,13 +136,54 @@ class RpaConsumerTest extends BaseRpaTest {
 
         @Test
         @SneakyThrows
+        void shouldGeneratePact_whenDefendantRespondedWithFullAdmissionWithMinimalData() {
+            CaseData caseData = CaseDataBuilder.builder()
+                .atStateRespondentRespondToClaimWithMinimalData(FULL_ADMISSION)
+                .legacyCaseReference("000LR006")
+                .build();
+            String payload = roboticsDataMapper.toRoboticsCaseData(caseData).toJsonString();
+
+            assertThat(payload, validateJson());
+
+            String description = "Robotics case data for defendant responded with full admission - minimal data";
+            PactVerificationResult result = getPactVerificationResult(payload, description);
+
+            assertEquals(PactVerificationResult.Ok.INSTANCE, result);
+        }
+    }
+
+    @Nested
+    class CounterClaimResponse {
+
+        @Test
+        @SneakyThrows
         void shouldGeneratePact_whenDefendantRespondedWithCounterClaim() {
-            CaseData caseData = CaseDataBuilder.builder().atStateRespondentCounterClaim().build();
+            CaseData caseData = CaseDataBuilder.builder()
+                .atStateRespondentCounterClaim()
+                .legacyCaseReference("000LR007")
+                .build();
             String payload = roboticsDataMapper.toRoboticsCaseData(caseData).toJsonString();
 
             assertThat(payload, validateJson());
 
             String description = "Robotics case data for defendant responded with counter claim";
+            PactVerificationResult result = getPactVerificationResult(payload, description);
+
+            assertEquals(PactVerificationResult.Ok.INSTANCE, result);
+        }
+
+        @Test
+        @SneakyThrows
+        void shouldGeneratePact_whenDefendantRespondedWithCounterClaimWithMinimalData() {
+            CaseData caseData = CaseDataBuilder.builder()
+                .atStateRespondentRespondToClaimWithMinimalData(COUNTER_CLAIM)
+                .legacyCaseReference("000LR008")
+                .build();
+            String payload = roboticsDataMapper.toRoboticsCaseData(caseData).toJsonString();
+
+            assertThat(payload, validateJson());
+
+            String description = "Robotics case data for defendant responded with counter claim - minimal data";
             PactVerificationResult result = getPactVerificationResult(payload, description);
 
             assertEquals(PactVerificationResult.Ok.INSTANCE, result);
