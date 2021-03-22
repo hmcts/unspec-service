@@ -17,7 +17,7 @@ class AcknowledgeClaimTest extends BpmnBaseTest {
         = "NOTIFY_APPLICANT_SOLICITOR1_FOR_SERVICE_ACKNOWLEDGEMENT";
     //TODO: CMC-957 backwards compatibility
     private static final String GENERATE_ACKNOWLEDGEMENT_OF_CLAIM = "GENERATE_ACKNOWLEDGEMENT_OF_SERVICE";
-    private static final String NOTIFICATION_ACTIVITY_ID = "AcknowledgeServiceNotifyApplicantSolicitor1";
+    private static final String NOTIFICATION_ACTIVITY_ID = "AcknowledgeClaimNotifyApplicantSolicitor1";
     private static final String GENERATE_CERTIFICATE_ACTIVITY_ID = "AcknowledgeClaimGenerateAcknowledgementOfClaim";
 
     public AcknowledgeClaimTest() {
@@ -25,7 +25,7 @@ class AcknowledgeClaimTest extends BpmnBaseTest {
     }
 
     @Test
-    void shouldSuccessfullyCompleteAcknowledgeService() {
+    void shouldSuccessfullyCompleteAcknowledgeClaim() {
         //assert process has started
         assertFalse(processInstance.isEnded());
 
