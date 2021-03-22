@@ -183,7 +183,7 @@ class AcknowledgeClaimCallbackHandlerTest extends BaseCallbackHandlerTest {
                     .confirmationHeader("# You've acknowledged claim")
                     .confirmationBody(format(
                         "<br />You need to respond before 4pm on %s."
-                            + "\n\n[Download the Acknowledgement of Service form]"
+                            + "\n\n[Download the Acknowledgement of Claim form]"
                             + "(/cases/case-details/%s#CaseDocuments)",
                         formatLocalDateTime(RESPONSE_DEADLINE, DATE), caseData.getCcdCaseReference()
                     ))
