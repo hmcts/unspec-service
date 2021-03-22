@@ -30,7 +30,7 @@ public class AcknowledgeClaimApplicantNotificationHandler extends CallbackHandle
     );
 
     public static final String TASK_ID = "AcknowledgeClaimNotifyApplicantSolicitor1";
-    private static final String REFERENCE_TEMPLATE = "acknowledge-service-applicant-notification-%s";
+    private static final String REFERENCE_TEMPLATE = "acknowledge-claim-applicant-notification-%s";
 
     private final NotificationService notificationService;
     private final NotificationsProperties notificationsProperties;
