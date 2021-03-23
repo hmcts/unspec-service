@@ -23,13 +23,6 @@
   {
     "LiveFrom": "01/01/2017",
     "CaseTypeID": "UNSPECIFIED_CLAIMS",
-    "CaseStateID": "CLOSED",
-    "UserRole": "caseworker-approver",
-    "CRUD": "CRUD"
-  },
-  {
-    "LiveFrom": "01/01/2017",
-    "CaseTypeID": "UNSPECIFIED_CLAIMS",
     "CaseStateID": "PROCEEDS_IN_HERITAGE_SYSTEM",
     "UserRole": "caseworker-approver",
     "CRUD": "CRUD"

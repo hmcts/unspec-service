@@ -49,11 +49,10 @@ import static uk.gov.hmcts.reform.unspec.enums.AllocatedTrack.FAST_CLAIM;
 import static uk.gov.hmcts.reform.unspec.enums.CaseState.AWAITING_APPLICANT_INTENTION;
 import static uk.gov.hmcts.reform.unspec.enums.CaseState.AWAITING_CASE_DETAILS_NOTIFICATION;
 import static uk.gov.hmcts.reform.unspec.enums.CaseState.AWAITING_RESPONDENT_ACKNOWLEDGEMENT;
+import static uk.gov.hmcts.reform.unspec.enums.CaseState.CASE_DISMISSED;
 import static uk.gov.hmcts.reform.unspec.enums.CaseState.CASE_ISSUED;
-import static uk.gov.hmcts.reform.unspec.enums.CaseState.CLOSED;
 import static uk.gov.hmcts.reform.unspec.enums.CaseState.PENDING_CASE_ISSUED;
 import static uk.gov.hmcts.reform.unspec.enums.CaseState.PROCEEDS_IN_HERITAGE_SYSTEM;
-import static uk.gov.hmcts.reform.unspec.enums.CaseState.STAYED;
 import static uk.gov.hmcts.reform.unspec.enums.PaymentStatus.FAILED;
 import static uk.gov.hmcts.reform.unspec.enums.PaymentStatus.SUCCESS;
 import static uk.gov.hmcts.reform.unspec.enums.PersonalInjuryType.ROAD_ACCIDENT;
@@ -325,7 +324,7 @@ public class CaseDataBuilder {
     }
 
     public CaseDataBuilder discontinueClaim() {
-        this.ccdState = CLOSED;
+        this.ccdState = CASE_DISMISSED;
         this.discontinueClaim = CloseClaim.builder()
             .date(LocalDate.now())
             .reason("My reason")
@@ -340,7 +339,7 @@ public class CaseDataBuilder {
 
     public CaseDataBuilder discontinueClaimFrom(FlowState.Main flowState) {
         atState(flowState);
-        this.ccdState = CLOSED;
+        this.ccdState = CASE_DISMISSED;
         this.discontinueClaim = CloseClaim.builder()
             .date(LocalDate.now())
             .reason("My reason")
@@ -359,7 +358,7 @@ public class CaseDataBuilder {
     }
 
     public CaseDataBuilder withdrawClaim() {
-        this.ccdState = CLOSED;
+        this.ccdState = CASE_DISMISSED;
         this.withdrawClaim = CloseClaim.builder()
             .date(LocalDate.now())
             .reason("My reason")
@@ -369,7 +368,7 @@ public class CaseDataBuilder {
 
     public CaseDataBuilder withdrawClaimFrom(FlowState.Main flowState) {
         atState(flowState);
-        this.ccdState = CLOSED;
+        this.ccdState = CASE_DISMISSED;
         this.withdrawClaim = CloseClaim.builder()
             .date(LocalDate.now())
             .reason("My reason")
@@ -460,7 +459,7 @@ public class CaseDataBuilder {
 
     public CaseDataBuilder atStateClaimStayed() {
         atStateClaimCreated();
-        ccdState = STAYED;
+        ccdState = CASE_DISMISSED;
         return this;
     }
 

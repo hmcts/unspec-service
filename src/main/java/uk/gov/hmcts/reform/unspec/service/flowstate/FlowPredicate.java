@@ -4,9 +4,8 @@ import uk.gov.hmcts.reform.unspec.model.CaseData;
 
 import java.util.function.Predicate;
 
-import static uk.gov.hmcts.reform.unspec.enums.CaseState.CLOSED;
+import static uk.gov.hmcts.reform.unspec.enums.CaseState.CASE_DISMISSED;
 import static uk.gov.hmcts.reform.unspec.enums.CaseState.PROCEEDS_IN_HERITAGE_SYSTEM;
-import static uk.gov.hmcts.reform.unspec.enums.CaseState.STAYED;
 import static uk.gov.hmcts.reform.unspec.enums.PaymentStatus.FAILED;
 import static uk.gov.hmcts.reform.unspec.enums.PaymentStatus.SUCCESS;
 import static uk.gov.hmcts.reform.unspec.enums.RespondentResponseType.COUNTER_CLAIM;
@@ -46,45 +45,43 @@ public class FlowPredicate {
         caseData.getRespondent1ClaimResponseIntentionType() != null
             && caseData.getRespondent1ClaimResponseType() == null
             && caseData.getRespondent1ClaimResponseDocument() == null
-            && caseData.getCcdState() != CLOSED;
+            && caseData.getCcdState() != CASE_DISMISSED;
 
     public static final Predicate<CaseData> respondentFullDefence = caseData ->
         caseData.getRespondent1ClaimResponseType() == FULL_DEFENCE
-            && caseData.getCcdState() != CLOSED
-            && caseData.getCcdState() != STAYED;
+            && caseData.getCcdState() != CASE_DISMISSED;
 
     public static final Predicate<CaseData> respondentFullAdmission = caseData ->
         caseData.getRespondent1ClaimResponseType() == FULL_ADMISSION
-            && caseData.getCcdState() != CLOSED
-            && caseData.getCcdState() != STAYED;
+            && caseData.getCcdState() != CASE_DISMISSED;
 
     public static final Predicate<CaseData> respondentPartAdmission = caseData ->
         caseData.getRespondent1ClaimResponseType() == PART_ADMISSION
-            && caseData.getCcdState() != CLOSED
-            && caseData.getCcdState() != STAYED;
+            && caseData.getCcdState() != CASE_DISMISSED;
 
     public static final Predicate<CaseData> respondentCounterClaim = caseData ->
         caseData.getRespondent1ClaimResponseType() == COUNTER_CLAIM
-            && caseData.getCcdState() != CLOSED
-            && caseData.getCcdState() != STAYED;
+            && caseData.getCcdState() != CASE_DISMISSED;
 
     public static final Predicate<CaseData> applicantRespondToDefence = caseData ->
         caseData.getApplicant1ProceedWithClaim() != null
             && caseData.getApplicant1DefenceResponseDocument() != null;
 
     public static final Predicate<CaseData> schedulerStayClaim = caseData ->
-        caseData.getCcdState() == STAYED;
+        caseData.getWithdrawClaim() == null
+            && caseData.getDiscontinueClaim() == null
+            && caseData.getCcdState() == CASE_DISMISSED;
 
     public static final Predicate<CaseData> claimWithdrawn = caseData ->
         caseData.getWithdrawClaim() != null
-            && caseData.getCcdState() == CLOSED;
+            && caseData.getCcdState() == CASE_DISMISSED;
 
     public static final Predicate<CaseData> respondentAgreedExtension = caseData ->
         caseData.getRespondentSolicitor1AgreedDeadlineExtension() != null;
 
     public static final Predicate<CaseData> claimDiscontinued = caseData ->
         caseData.getDiscontinueClaim() != null
-            && caseData.getCcdState() == CLOSED;
+            && caseData.getCcdState() == CASE_DISMISSED;
 
     public static final Predicate<CaseData> claimTakenOffline = caseData ->
         caseData.getCcdState() == PROCEEDS_IN_HERITAGE_SYSTEM;
