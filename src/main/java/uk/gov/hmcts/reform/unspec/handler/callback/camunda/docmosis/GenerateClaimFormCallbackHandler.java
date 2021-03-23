@@ -80,8 +80,8 @@ public class GenerateClaimFormCallbackHandler extends CallbackHandler {
     private String getState(CaseData data) {
         FlowState flowState = fromFullName(stateFlowEngine.evaluate(data).getState().getName());
         return String.valueOf(
-            flowState == AWAITING_CASE_NOTIFICATION ? CaseState.AWAITING_CASE_NOTIFICATION :
-                CaseState.PROCEEDS_WITH_OFFLINE_JOURNEY
+            flowState == AWAITING_CASE_NOTIFICATION ? CaseState.CASE_ISSUED :
+                CaseState.PROCEEDS_IN_HERITAGE_SYSTEM
         );
     }
 

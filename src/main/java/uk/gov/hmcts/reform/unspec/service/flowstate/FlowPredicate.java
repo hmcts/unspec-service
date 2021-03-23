@@ -5,7 +5,7 @@ import uk.gov.hmcts.reform.unspec.model.CaseData;
 import java.util.function.Predicate;
 
 import static uk.gov.hmcts.reform.unspec.enums.CaseState.CLOSED;
-import static uk.gov.hmcts.reform.unspec.enums.CaseState.PROCEEDS_WITH_OFFLINE_JOURNEY;
+import static uk.gov.hmcts.reform.unspec.enums.CaseState.PROCEEDS_IN_HERITAGE_SYSTEM;
 import static uk.gov.hmcts.reform.unspec.enums.CaseState.STAYED;
 import static uk.gov.hmcts.reform.unspec.enums.PaymentStatus.FAILED;
 import static uk.gov.hmcts.reform.unspec.enums.PaymentStatus.SUCCESS;
@@ -87,7 +87,7 @@ public class FlowPredicate {
             && caseData.getCcdState() == CLOSED;
 
     public static final Predicate<CaseData> claimTakenOffline = caseData ->
-        caseData.getCcdState() == PROCEEDS_WITH_OFFLINE_JOURNEY;
+        caseData.getCcdState() == PROCEEDS_IN_HERITAGE_SYSTEM;
 
     public static final Predicate<CaseData> caseProceedsInCaseman = caseData ->
         caseData.getClaimProceedsInCaseman() != null;

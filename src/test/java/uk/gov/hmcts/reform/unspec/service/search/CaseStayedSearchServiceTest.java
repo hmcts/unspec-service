@@ -23,7 +23,7 @@ class CaseStayedSearchServiceTest extends ElasticSearchServiceTest {
             .must(rangeQuery("last_modified").lt("now-6M"))
             .must(boolQuery()
                         .minimumShouldMatch(1)
-                        .should(matchQuery("state", "CREATED"))
+                        .should(matchQuery("state", "AWAITING_RESPONDENT_ACKNOWLEDGEMENT"))
                         .should(matchQuery("state", "AWAITING_RESPONDENT_ACTION")));
 
         return new Query(query, List.of("reference"), fromValue);
