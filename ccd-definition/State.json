@@ -20,7 +20,7 @@
     "CaseTypeID": "UNSPECIFIED_CLAIMS",
     "ID": "AWAITING_CASE_DETAILS_NOTIFICATION",
     "Name": "Awaiting Claim Details Notification",
-    "Description": "The Claimant has created a claim and now needs to notify the defendant of the claim and claim details",
+    "Description": "Awaiting Claim Details Notification",
     "DisplayOrder": 3
   },
   {
@@ -28,7 +28,7 @@
     "CaseTypeID": "UNSPECIFIED_CLAIMS",
     "ID": "AWAITING_RESPONDENT_ACKNOWLEDGEMENT",
     "Name": "Awaiting Defendant Response",
-    "Description": "The claimant has notified the defendant of the claim and claim details. The Defendant has to provide their response to the claim",
+    "Description": "Awaiting Defendant Response",
     "DisplayOrder": 4
   },
   {
@@ -36,7 +36,7 @@
     "CaseTypeID": "UNSPECIFIED_CLAIMS",
     "ID": "AWAITING_APPLICANT_INTENTION",
     "Name": "Claimant Intent Pending",
-    "Description": "The defendant has submitted their response to the claim and the claim is now awaiting the claimants intention",
+    "Description": "Claimant Intent Pending",
     "DisplayOrder": 5
   },
   {
