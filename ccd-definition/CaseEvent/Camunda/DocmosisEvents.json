@@ -26,7 +26,7 @@
     "ShowSummary": "N",
     "ShowEventNotes": "N",
     "RetriesTimeoutURLAboutToSubmitEvent": 0,
-    "_Comments": "//TODO: CMC-957 backwards compatibility"
+    "_Comments": "//TODO: CMC-1271 backwards compatibility"
   },
   {
     "LiveFrom": "01/01/2017",

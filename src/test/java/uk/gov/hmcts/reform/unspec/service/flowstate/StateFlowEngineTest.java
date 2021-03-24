@@ -163,7 +163,7 @@ class StateFlowEngineTest {
         }
 
         @Test
-        void shouldReturnServiceAcknowledge_whenCaseDataatStateClaimAcknowledge() {
+        void shouldReturnClaimAcknowledge_whenCaseDataAtStateClaimAcknowledge() {
             CaseData caseData = CaseDataBuilder.builder().atStateClaimAcknowledge().build();
 
             StateFlow stateFlow = stateFlowEngine.evaluate(caseData);

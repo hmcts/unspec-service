@@ -28,7 +28,7 @@ import static uk.gov.hmcts.reform.unspec.utils.ElementUtils.element;
 public class GenerateAcknowledgementOfClaimCallbackHandler extends CallbackHandler {
 
     private static final List<CaseEvent> EVENTS = List.of(
-        //TODO: CMC-957 backwards compatibility
+        //TODO: CMC-1271 backwards compatibility
         GENERATE_ACKNOWLEDGEMENT_OF_SERVICE,
         GENERATE_ACKNOWLEDGEMENT_OF_CLAIM
     );

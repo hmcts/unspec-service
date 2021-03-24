@@ -74,7 +74,7 @@ class AcknowledgementOfClaimGeneratorTest {
     }
 
     @Test
-    void shouldGenerateAcknowledgementOfService_whenValidDataIsProvided() {
+    void shouldGenerateAcknowledgementOfClaim_whenValidDataIsProvided() {
         when(documentGeneratorService.generateDocmosisDocument(any(MappableObject.class), eq(N9)))
             .thenReturn(new DocmosisDocument(N9.getDocumentTitle(), bytes));
 
@@ -112,7 +112,7 @@ class AcknowledgementOfClaimGeneratorTest {
     class GetTemplateData {
 
         @Test
-        void whenCaseIsAtServiceAcknowledge_shouldGetAcknowledgementOfClaimFormData() {
+        void whenCaseIsAtClaimAcknowledge_shouldGetAcknowledgementOfClaimFormData() {
             CaseData caseData = CaseDataBuilder.builder().atStateClaimAcknowledge().build().toBuilder()
                 .respondent1LitigationFriend(LitigationFriend.builder().fullName("LF name").build())
                 .build();

@@ -24,7 +24,7 @@ import static uk.gov.hmcts.reform.unspec.callback.CaseEvent.NOTIFY_APPLICANT_SOL
 public class AcknowledgeClaimApplicantNotificationHandler extends CallbackHandler implements NotificationData {
 
     private static final List<CaseEvent> EVENTS = List.of(
-        //TODO: CMC-957 backwards compatibility
+        //TODO: CMC-1271 backwards compatibility
         NOTIFY_APPLICANT_SOLICITOR1_FOR_SERVICE_ACKNOWLEDGEMENT,
         NOTIFY_APPLICANT_SOLICITOR1_FOR_CLAIM_ACKNOWLEDGEMENT
     );
@@ -38,7 +38,7 @@ public class AcknowledgeClaimApplicantNotificationHandler extends CallbackHandle
     @Override
     protected Map<String, Callback> callbacks() {
         return Map.of(
-            callbackKey(ABOUT_TO_SUBMIT), this::notifyApplicantSolicitorForServiceAcknowledgement
+            callbackKey(ABOUT_TO_SUBMIT), this::notifyApplicantSolicitorForClaimAcknowledgement
         );
     }
 
@@ -52,7 +52,7 @@ public class AcknowledgeClaimApplicantNotificationHandler extends CallbackHandle
         return EVENTS;
     }
 
-    private CallbackResponse notifyApplicantSolicitorForServiceAcknowledgement(CallbackParams callbackParams) {
+    private CallbackResponse notifyApplicantSolicitorForClaimAcknowledgement(CallbackParams callbackParams) {
         CaseData caseData = callbackParams.getCaseData();
 
         notificationService.sendMail(

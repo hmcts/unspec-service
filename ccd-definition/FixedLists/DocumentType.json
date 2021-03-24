@@ -12,7 +12,7 @@
     "ListElementCode": "ACKNOWLEDGEMENT_OF_SERVICE",
     "ListElement": "Acknowledgement of service form",
     "DisplayOrder": 2,
-    "_Comments": "//TODO: CMC-957 backwards compatibility"
+    "_Comments": "//TODO: CMC-1271 backwards compatibility"
   },
   {
     "LiveFrom": "01/01/2017",
