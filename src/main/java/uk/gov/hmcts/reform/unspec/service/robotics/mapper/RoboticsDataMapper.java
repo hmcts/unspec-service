@@ -105,6 +105,12 @@ public class RoboticsDataMapper {
     private Solicitor buildRespondentSolicitor(CaseData caseData, String id) {
         Solicitor.SolicitorBuilder solicitorBuilder = Solicitor.builder();
         Optional<String> organisationId = getOrganisationId(caseData.getRespondent1OrganisationPolicy());
+        var organisationDetails = ofNullable(
+            caseData.getRespondentSolicitor1OrganisationDetails()
+        );
+        if (organisationId.isEmpty() && organisationDetails.isEmpty()) {
+            return solicitorBuilder.build();
+        }
         solicitorBuilder
             .id(id)
             .isPayee(false)
@@ -118,8 +124,7 @@ public class RoboticsDataMapper {
             .flatMap(organisationService::findOrganisationById)
             .ifPresent(buildOrganisation(solicitorBuilder));
 
-        ofNullable(caseData.getRespondentSolicitor1OrganisationDetails())
-            .ifPresent(buildOrganisationDetails(solicitorBuilder));
+        organisationDetails.ifPresent(buildOrganisationDetails(solicitorBuilder));
 
         return solicitorBuilder.build();
     }

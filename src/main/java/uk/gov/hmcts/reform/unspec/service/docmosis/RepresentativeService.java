@@ -23,8 +23,11 @@ public class RepresentativeService {
         var stateFlow = stateFlowEngine.evaluate(caseData).getState();
         if (fromFullName(stateFlow.getName()) != PROCEEDS_OFFLINE_UNREPRESENTED_DEFENDANT) {
             var organisationId = caseData.getRespondent1OrganisationPolicy().getOrganisation().getOrganisationID();
-            return fromOrganisation(organisationService.findOrganisationById(organisationId)
-                                        .orElseThrow(RuntimeException::new));
+            var representative = fromOrganisation(organisationService.findOrganisationById(organisationId)
+                                                      .orElseThrow(RuntimeException::new));
+            return representative.toBuilder()
+                .emailAddress(caseData.getRespondentSolicitor1EmailAddress())
+                .build();
         }
         return ofNullable(caseData.getRespondentSolicitor1OrganisationDetails())
             .map(Representative::fromSolicitorOrganisationDetails)
