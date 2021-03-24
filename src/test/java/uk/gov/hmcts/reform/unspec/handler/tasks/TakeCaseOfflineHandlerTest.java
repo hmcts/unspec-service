@@ -29,7 +29,7 @@ import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(SpringExtension.class)
-class ClaimProceedsOfflineHandlerTest {
+class TakeCaseOfflineHandlerTest {
 
     @Mock
     private ExternalTask mockTask;
