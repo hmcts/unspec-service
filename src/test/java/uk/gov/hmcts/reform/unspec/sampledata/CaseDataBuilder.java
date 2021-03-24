@@ -304,6 +304,8 @@ public class CaseDataBuilder {
                 return atStateProceedsOfflineAdmissionOrCounterClaim();
             case PROCEEDS_OFFLINE_UNREPRESENTED_DEFENDANT:
                 return atStateProceedsOfflineUnrepresentedDefendant();
+            case PENDING_CLAIM_ISSUED_UNREGISTERED_DEFENDANT:
+                return atStateProceedsOfflineUnregisteredDefendant();
             case CASE_PROCEEDS_IN_CASEMAN:
                 return atStateCaseProceedsInCaseman();
             default:
@@ -316,6 +318,15 @@ public class CaseDataBuilder {
         ccdState = PROCEEDS_WITH_OFFLINE_JOURNEY;
         claimIssuedDate = CLAIM_ISSUED_DATE;
         respondent1Represented = NO;
+        return this;
+    }
+
+    public CaseDataBuilder atStateProceedsOfflineUnregisteredDefendant() {
+        atStatePaymentSuccessful();
+        ccdState = PROCEEDS_WITH_OFFLINE_JOURNEY;
+        claimIssuedDate = CLAIM_ISSUED_DATE;
+        respondent1Represented = YES;
+        respondent1OrgRegistered = NO;
         return this;
     }
 
