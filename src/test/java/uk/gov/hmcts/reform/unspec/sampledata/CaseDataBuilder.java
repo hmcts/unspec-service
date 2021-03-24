@@ -126,6 +126,8 @@ public class CaseDataBuilder {
 
     private SolicitorOrganisationDetails respondentSolicitor1OrganisationDetails;
 
+    private LocalDateTime takenOfflineDate;
+
     public CaseDataBuilder respondentSolicitor1ResponseDeadline(LocalDateTime respondentSolicitor1ResponseDeadline) {
         this.respondentSolicitor1ResponseDeadline = respondentSolicitor1ResponseDeadline;
         return this;
@@ -313,6 +315,8 @@ public class CaseDataBuilder {
                 return atStateCaseProceedsInCaseman();
             case CLAIM_DISMISSED_DEFENDANT_OUT_OF_TIME:
                 return atStateClaimDismissed();
+            case TAKEN_OFFLINE_PAST_APPLICANT_RESPONSE_DEADLINE:
+                return atStateTakenOfflinePastApplicantResponseDeadline();
             default:
                 throw new IllegalArgumentException("Invalid internal state: " + flowState);
         }
@@ -536,6 +540,12 @@ public class CaseDataBuilder {
         return this;
     }
 
+    public CaseDataBuilder atStateTakenOfflinePastApplicantResponseDeadline() {
+        atStateRespondentFullDefence();
+        takenOfflineDate = LocalDateTime.now().plusDays(2);
+        return this;
+    }
+
     public CaseDataBuilder businessProcess(BusinessProcess businessProcess) {
         this.businessProcess = businessProcess;
         return this;
@@ -607,6 +617,7 @@ public class CaseDataBuilder {
             .applicant1OrganisationPolicy(applicant1OrganisationPolicy)
             .respondent1OrganisationPolicy(respondent1OrganisationPolicy)
             .claimDismissedDate(claimDismissedDate)
+            .takenOfflineDate(takenOfflineDate)
             .build();
     }
 }
