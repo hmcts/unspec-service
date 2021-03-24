@@ -1,5 +1,6 @@
 package uk.gov.hmcts.reform.unspec.handler.callback.user;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import uk.gov.hmcts.reform.ccd.client.model.AboutToStartOrSubmitCallbackResponse;
@@ -13,9 +14,9 @@ import uk.gov.hmcts.reform.unspec.callback.Callback;
 import uk.gov.hmcts.reform.unspec.callback.CallbackHandler;
 import uk.gov.hmcts.reform.unspec.callback.CallbackParams;
 import uk.gov.hmcts.reform.unspec.callback.CaseEvent;
-import uk.gov.hmcts.reform.unspec.enums.CaseState;
+import uk.gov.hmcts.reform.unspec.config.ClaimIssueConfiguration;
 import uk.gov.hmcts.reform.unspec.enums.YesOrNo;
-import uk.gov.hmcts.reform.unspec.helpers.CaseDetailsConverter;
+import uk.gov.hmcts.reform.unspec.launchdarkly.OnBoardingOrganisationControlService;
 import uk.gov.hmcts.reform.unspec.model.BusinessProcess;
 import uk.gov.hmcts.reform.unspec.model.CaseData;
 import uk.gov.hmcts.reform.unspec.model.CorrectEmail;
@@ -26,8 +27,6 @@ import uk.gov.hmcts.reform.unspec.model.common.DynamicList;
 import uk.gov.hmcts.reform.unspec.repositories.ReferenceNumberRepository;
 import uk.gov.hmcts.reform.unspec.service.FeesService;
 import uk.gov.hmcts.reform.unspec.service.OrganisationService;
-import uk.gov.hmcts.reform.unspec.service.flowstate.FlowState;
-import uk.gov.hmcts.reform.unspec.service.flowstate.StateFlowEngine;
 import uk.gov.hmcts.reform.unspec.validation.DateOfBirthValidator;
 import uk.gov.hmcts.reform.unspec.validation.OrgPolicyValidator;
 import uk.gov.hmcts.reform.unspec.validation.interfaces.ParticularsOfClaimValidator;
@@ -53,8 +52,6 @@ import static uk.gov.hmcts.reform.unspec.enums.YesOrNo.NO;
 import static uk.gov.hmcts.reform.unspec.enums.YesOrNo.YES;
 import static uk.gov.hmcts.reform.unspec.helpers.DateFormatHelper.DATE_TIME_AT;
 import static uk.gov.hmcts.reform.unspec.helpers.DateFormatHelper.formatLocalDateTime;
-import static uk.gov.hmcts.reform.unspec.service.flowstate.FlowState.Main.PENDING_CASE_ISSUED;
-import static uk.gov.hmcts.reform.unspec.service.flowstate.FlowState.fromFullName;
 
 @Service
 @RequiredArgsConstructor
@@ -64,26 +61,32 @@ public class CreateClaimCallbackHandler extends CallbackHandler implements Parti
     public static final String CONFIRMATION_SUMMARY = "<br/>[Download the sealed claim form](%s)"
         + "\n\n You have until DATE to notify the defendant of the claim and claim details.";
 
-    public static final String LIP_CONFIRMATION_BODY = "<br />You do not need to do anything.\n\n"
-        + "Your claim will be considered by the court and you will be informed of the outcome by post.";
+    public static final String LIP_CONFIRMATION_BODY = "<br />To continue your claim by post you need to:"
+        + "%n* [Download the sealed claim form](%s)"
+        + "%n* Send the claim form, <a href=\"%s\" target=\"_blank\">a response pack</a> (PDF, 266 KB) "
+        + "and any supporting documents to the defendant by %s"
+        + "%n%nOnce you have served the claim send the Certificate of Service and any supporting documents to the "
+        + "County Court Claims Centre.";
 
     public static final String UNREGISTERED_ORG_CONFIRMATION_BODY = "<br />\n\n### What you need to do\n\n"
         + "\n* Serve the claim on the defendant by Date1."
         + "\n* File the certificate of service with CCMC by Date2.";
 
-    private final CaseDetailsConverter caseDetailsConverter;
+    private final ClaimIssueConfiguration claimIssueConfiguration;
     private final ReferenceNumberRepository referenceNumberRepository;
     private final DateOfBirthValidator dateOfBirthValidator;
     private final FeesService feesService;
     private final OrganisationService organisationService;
-    private final StateFlowEngine stateFlowEngine;
     private final IdamClient idamClient;
     private final OrgPolicyValidator orgPolicyValidator;
+    private final OnBoardingOrganisationControlService onboardingOrganisationControlService;
+    private final ObjectMapper objectMapper;
 
     @Override
     protected Map<String, Callback> callbacks() {
         return Map.of(
             callbackKey(ABOUT_TO_START), this::emptyCallbackResponse,
+            callbackKey(MID, "eligibilityCheck"), this::eligibilityCheck,
             callbackKey(MID, "applicant"), this::validateDateOfBirth,
             callbackKey(MID, "fee"), this::calculateFee,
             callbackKey(MID, "idam-email"), this::getIdamEmail,
@@ -98,6 +101,14 @@ public class CreateClaimCallbackHandler extends CallbackHandler implements Parti
     @Override
     public List<CaseEvent> handledEvents() {
         return EVENTS;
+    }
+
+    private CallbackResponse eligibilityCheck(CallbackParams callbackParams) {
+        String userBearerToken = callbackParams.getParams().get(BEARER_TOKEN).toString();
+        List<String> errors = onboardingOrganisationControlService.validateOrganisation(userBearerToken);
+        return AboutToStartOrSubmitCallbackResponse.builder()
+            .errors(errors)
+            .build();
     }
 
     private CallbackResponse validateDateOfBirth(CallbackParams callbackParams) {
@@ -146,7 +157,7 @@ public class CreateClaimCallbackHandler extends CallbackHandler implements Parti
             .paymentReference(paymentReference);
 
         return AboutToStartOrSubmitCallbackResponse.builder()
-            .data(caseDetailsConverter.toMap(caseDataBuilder.build()))
+            .data(caseDataBuilder.build().toMap(objectMapper))
             .build();
     }
 
@@ -158,7 +169,7 @@ public class CreateClaimCallbackHandler extends CallbackHandler implements Parti
             .applicantSolicitor1UserDetails(IdamUserDetails.builder().build());
 
         return AboutToStartOrSubmitCallbackResponse.builder()
-            .data(caseDetailsConverter.toMap(caseDataBuilder.build()))
+            .data(caseDataBuilder.build().toMap(objectMapper))
             .build();
     }
 
@@ -192,46 +203,36 @@ public class CreateClaimCallbackHandler extends CallbackHandler implements Parti
         dataBuilder.applicantSolicitor1CheckEmail(CorrectEmail.builder().build());
 
         return AboutToStartOrSubmitCallbackResponse.builder()
-            .data(caseDetailsConverter.toMap(dataBuilder.build()))
-            .state(getState(dataBuilder.build()))
+            .data(dataBuilder.build().toMap(objectMapper))
             .build();
-    }
-
-    private String getState(CaseData updatedCaseData) {
-        FlowState flowState = fromFullName(stateFlowEngine.evaluate(updatedCaseData).getState().getName());
-        return String.valueOf(
-            flowState == PENDING_CASE_ISSUED ? CaseState.PENDING_CASE_ISSUED : CaseState.PROCEEDS_WITH_OFFLINE_JOURNEY
-        );
     }
 
     private SubmittedCallbackResponse buildConfirmation(CallbackParams callbackParams) {
         CaseData caseData = callbackParams.getCaseData();
         String claimNumber = caseData.getLegacyCaseReference();
 
-        if (caseData.getRespondent1Represented() == NO) {
-            return SubmittedCallbackResponse.builder()
-                .confirmationHeader("# Your claim will now progress offline")
-                .confirmationBody(LIP_CONFIRMATION_BODY)
-                .build();
-        } else if (caseData.getRespondent1OrgRegistered() == NO) {
+        if (caseData.getRespondent1OrgRegistered() == NO) {
             return SubmittedCallbackResponse.builder()
                 .confirmationHeader(format("# Your claim will now progress offline: %s", claimNumber))
                 .confirmationBody(UNREGISTERED_ORG_CONFIRMATION_BODY)
                 .build();
         }
 
+        return SubmittedCallbackResponse.builder()
+            .confirmationHeader(format("# Your claim has been issued%n## Claim number: %s", claimNumber))
+            .confirmationBody(getBody(caseData.getRespondent1Represented(), caseData.getCcdCaseReference()))
+            .build();
+    }
+
+    private String getBody(YesOrNo respondentRepresented, Long caseReference) {
         LocalDateTime serviceDeadline = LocalDate.now().plusDays(112).atTime(23, 59);
         String formattedServiceDeadline = formatLocalDateTime(serviceDeadline, DATE_TIME_AT);
 
-        String body = format(
-            CONFIRMATION_SUMMARY,
-            format("/cases/case-details/%s#CaseDocuments", caseData.getCcdCaseReference()),
+        return format(
+            respondentRepresented == YesOrNo.NO ? LIP_CONFIRMATION_BODY : CONFIRMATION_SUMMARY,
+            format("/cases/case-details/%s#CaseDocuments", caseReference),
+            claimIssueConfiguration.getResponsePackLink(),
             formattedServiceDeadline
         );
-
-        return SubmittedCallbackResponse.builder()
-            .confirmationHeader(format("# Your claim has been issued%n## Claim number: %s", claimNumber))
-            .confirmationBody(body)
-            .build();
     }
 }

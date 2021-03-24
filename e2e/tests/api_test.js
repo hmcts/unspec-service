@@ -18,8 +18,12 @@ Scenario('Notify claim details', async (api) => {
   await api.notifyClaimDetails();
 });
 
+Scenario('Amend party details', async (api) => {
+  await api.amendPartyDetails(config.adminUser);
+});
+
 Scenario('Acknowledge service', async (api) => {
-  await api.acknowledgeService();
+  await api.acknowledgeService(config.solicitorUser);
 });
 
 Scenario('Inform agreed extension date', async (api) => {
@@ -44,7 +48,7 @@ Scenario('Create claim where respondent solicitor is not registered in my hmcts'
 
 Scenario('Create claim and move it to caseman', async (api) => {
   await api.createClaimWithRepresentedRespondent(config.solicitorUser);
-  await api.caseProceedsInCaseman();
+  await api.moveCaseToCaseman(config.adminUser);
 });
 
 // This will be enabled when PAY-3817 issue of two minutes is fixed

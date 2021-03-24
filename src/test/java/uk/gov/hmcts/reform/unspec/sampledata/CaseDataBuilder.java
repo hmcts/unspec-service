@@ -1,5 +1,6 @@
 package uk.gov.hmcts.reform.unspec.sampledata;
 
+import uk.gov.hmcts.reform.ccd.model.Organisation;
 import uk.gov.hmcts.reform.ccd.model.OrganisationPolicy;
 import uk.gov.hmcts.reform.unspec.enums.AllocatedTrack;
 import uk.gov.hmcts.reform.unspec.enums.CaseState;
@@ -20,6 +21,7 @@ import uk.gov.hmcts.reform.unspec.model.IdamUserDetails;
 import uk.gov.hmcts.reform.unspec.model.Party;
 import uk.gov.hmcts.reform.unspec.model.PaymentDetails;
 import uk.gov.hmcts.reform.unspec.model.ResponseDocument;
+import uk.gov.hmcts.reform.unspec.model.SolicitorOrganisationDetails;
 import uk.gov.hmcts.reform.unspec.model.SolicitorReferences;
 import uk.gov.hmcts.reform.unspec.model.StatementOfTruth;
 import uk.gov.hmcts.reform.unspec.model.common.Element;
@@ -48,11 +50,11 @@ import static uk.gov.hmcts.reform.unspec.enums.AllocatedTrack.FAST_CLAIM;
 import static uk.gov.hmcts.reform.unspec.enums.CaseState.AWAITING_CASE_DETAILS_NOTIFICATION;
 import static uk.gov.hmcts.reform.unspec.enums.CaseState.AWAITING_CASE_NOTIFICATION;
 import static uk.gov.hmcts.reform.unspec.enums.CaseState.AWAITING_CLAIMANT_INTENTION;
+import static uk.gov.hmcts.reform.unspec.enums.CaseState.CLAIM_DISMISSED;
 import static uk.gov.hmcts.reform.unspec.enums.CaseState.CLOSED;
 import static uk.gov.hmcts.reform.unspec.enums.CaseState.CREATED;
 import static uk.gov.hmcts.reform.unspec.enums.CaseState.PENDING_CASE_ISSUED;
 import static uk.gov.hmcts.reform.unspec.enums.CaseState.PROCEEDS_WITH_OFFLINE_JOURNEY;
-import static uk.gov.hmcts.reform.unspec.enums.CaseState.STAYED;
 import static uk.gov.hmcts.reform.unspec.enums.PaymentStatus.FAILED;
 import static uk.gov.hmcts.reform.unspec.enums.PaymentStatus.SUCCESS;
 import static uk.gov.hmcts.reform.unspec.enums.PersonalInjuryType.ROAD_ACCIDENT;
@@ -121,6 +123,10 @@ public class CaseDataBuilder {
     private OrganisationPolicy applicant1OrganisationPolicy;
     private OrganisationPolicy respondent1OrganisationPolicy;
 
+    private LocalDate claimDismissedDate;
+
+    private SolicitorOrganisationDetails respondentSolicitor1OrganisationDetails;
+
     public CaseDataBuilder respondentSolicitor1ResponseDeadline(LocalDateTime respondentSolicitor1ResponseDeadline) {
         this.respondentSolicitor1ResponseDeadline = respondentSolicitor1ResponseDeadline;
         return this;
@@ -150,7 +156,7 @@ public class CaseDataBuilder {
             .respondent1DQRequestedCourt(RequestedCourt.builder().requestHearingAtSpecificCourt(NO).build())
             .respondent1DQHearingSupport(HearingSupport.builder().requirements(List.of()).build())
             .respondent1DQFurtherInformation(FurtherInformation.builder().futureApplications(NO).build())
-            .respondent1DQLanguage(WelshLanguageRequirements.builder().isPartyWelsh(NO).build())
+            .respondent1DQLanguage(WelshLanguageRequirements.builder().build())
             .respondent1DQStatementOfTruth(StatementOfTruth.builder().name("John Doe").role("Solicitor").build())
             .build();
         return this;
@@ -180,7 +186,7 @@ public class CaseDataBuilder {
             .applicant1DQRequestedCourt(RequestedCourt.builder().requestHearingAtSpecificCourt(NO).build())
             .applicant1DQHearingSupport(HearingSupport.builder().requirements(List.of()).build())
             .applicant1DQFurtherInformation(FurtherInformation.builder().futureApplications(NO).build())
-            .applicant1DQLanguage(WelshLanguageRequirements.builder().isPartyWelsh(NO).build())
+            .applicant1DQLanguage(WelshLanguageRequirements.builder().build())
             .applicant1DQStatementOfTruth(StatementOfTruth.builder().name("Bob Jones").role("Solicitor").build())
             .build();
         return this;
@@ -188,6 +194,11 @@ public class CaseDataBuilder {
 
     public CaseDataBuilder applicant1DQ(Applicant1DQ applicant1DQ) {
         this.applicant1DQ = applicant1DQ;
+        return this;
+    }
+
+    public CaseDataBuilder respondentSolicitor1OrganisationDetails(SolicitorOrganisationDetails organisationDetails) {
+        this.respondentSolicitor1OrganisationDetails = organisationDetails;
         return this;
     }
 
@@ -256,6 +267,11 @@ public class CaseDataBuilder {
         return this;
     }
 
+    public CaseDataBuilder claimDismissedDate(LocalDate date) {
+        this.claimDismissedDate = date;
+        return this;
+    }
+
     public CaseDataBuilder atState(FlowState.Main flowState) {
         switch (flowState) {
             case DRAFT:
@@ -274,8 +290,6 @@ public class CaseDataBuilder {
                 return atStateClaimCreated();
             case EXTENSION_REQUESTED:
                 return atStateExtensionRequested();
-            case CLAIM_STAYED:
-                return atStateClaimStayed();
             case SERVICE_ACKNOWLEDGED:
                 return atStateServiceAcknowledge();
             case RESPONDENT_FULL_DEFENCE:
@@ -298,19 +312,26 @@ public class CaseDataBuilder {
                 return atStateProceedsOfflineUnrepresentedDefendant();
             case CASE_PROCEEDS_IN_CASEMAN:
                 return atStateCaseProceedsInCaseman();
+            case CLAIM_DISMISSED_DEFENDANT_OUT_OF_TIME:
+                return atStateClaimDismissed();
             default:
                 throw new IllegalArgumentException("Invalid internal state: " + flowState);
         }
     }
 
     public CaseDataBuilder atStateProceedsOfflineUnrepresentedDefendant() {
-        atStateClaimDraft();
-        claimSubmittedDateTime = LocalDateTime.now();
-        legacyCaseReference = LEGACY_CASE_REFERENCE;
-        allocatedTrack = FAST_CLAIM;
+        atStatePaymentSuccessful();
         ccdState = PROCEEDS_WITH_OFFLINE_JOURNEY;
-        ccdCaseReference = CASE_ID;
+        claimIssuedDate = CLAIM_ISSUED_DATE;
         respondent1Represented = NO;
+        respondentSolicitor1OrganisationDetails = SolicitorOrganisationDetails.builder()
+            .email("testorg@email.com")
+            .organisationName("test org name")
+            .fax("123123123")
+            .dx("test org dx")
+            .phoneNumber("0123456789")
+            .address(AddressBuilder.builder().build())
+            .build();
         return this;
     }
 
@@ -388,6 +409,10 @@ public class CaseDataBuilder {
         applicant1 = PartyBuilder.builder().individual().build();
         respondent1 = PartyBuilder.builder().soleTrader().build();
         respondent1Represented = YES;
+        respondent1OrgRegistered = YES;
+        respondent1OrganisationPolicy = OrganisationPolicy.builder()
+            .organisation(Organisation.builder().organisationID("QWERTY").build())
+            .build();
         respondentSolicitor1EmailAddress = "civilunspecified@gmail.com";
         applicantSolicitor1ClaimStatementOfTruth = StatementOfTruthBuilder.builder().build();
         claimSubmittedDateTime = LocalDateTime.now();
@@ -452,12 +477,6 @@ public class CaseDataBuilder {
         return this;
     }
 
-    public CaseDataBuilder atStateClaimStayed() {
-        atStateClaimCreated();
-        ccdState = STAYED;
-        return this;
-    }
-
     public CaseDataBuilder atStateCaseProceedsInCaseman() {
         atStateAwaitingCaseNotification();
         claimProceedsInCaseman = ClaimProceedsInCaseman.builder()
@@ -503,6 +522,13 @@ public class CaseDataBuilder {
     public CaseDataBuilder atStateProceedsOfflineAdmissionOrCounterClaim() {
         atStateRespondentFullDefence();
         ccdState = PROCEEDS_WITH_OFFLINE_JOURNEY;
+        return this;
+    }
+
+    public CaseDataBuilder atStateClaimDismissed() {
+        atStateClaimCreated();
+        ccdState = CLAIM_DISMISSED;
+        claimDismissedDate = now();
         return this;
     }
 
@@ -589,8 +615,10 @@ public class CaseDataBuilder {
             .discontinueClaim(discontinueClaim)
             .respondent1DQ(respondent1DQ)
             .applicant1DQ(applicant1DQ)
+            .respondentSolicitor1OrganisationDetails(respondentSolicitor1OrganisationDetails)
             .applicant1OrganisationPolicy(applicant1OrganisationPolicy)
             .respondent1OrganisationPolicy(respondent1OrganisationPolicy)
+            .claimDismissedDate(claimDismissedDate)
             .build();
     }
 }
