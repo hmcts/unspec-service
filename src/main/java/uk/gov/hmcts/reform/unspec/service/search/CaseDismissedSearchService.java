@@ -21,18 +21,32 @@ public class CaseDismissedSearchService extends ElasticSearchService {
     //TODO: claimDismissedDeadline is not yet set anywhere. Date is 6 months
     // of no activity in state view and respond to defence which is currently AWAITING_CLAIMANT_INTENTION.
     public Query query(int startIndex) {
-        return new Query(
-            boolQuery()
-                .must(rangeQuery("data.claimDismissedDeadline").lt("now"))
-                .must(beValidState()),
+        return new Query(boolQuery()
+                          .must(rangeQuery("data.claimNotificationDeadline").lt("now-1d")),
             List.of("reference"),
             startIndex
         );
     }
+//:TODO:Need to fix query not bringing back any cases
 
-    public BoolQueryBuilder beValidState() {
+//    public Query query(int startIndex) {
+//        return new Query(
+//            boolQuery()
+//                .minimumShouldMatch(1)
+//                .must(boolQuery()
+//                          .must(rangeQuery("data.claimNotificationDeadline").lt("now"))
+//                          .must(beState("AWAITING_CASE_NOTIFICATION")))
+//                .must(boolQuery()
+//                          .must(rangeQuery("data.claimDismissedDeadline").lt("now"))
+//                          .must(beState("CREATED"))),
+//            List.of("reference"),
+//            startIndex
+//        );
+//    }
+
+    public BoolQueryBuilder beState(String state) {
         return boolQuery()
             .minimumShouldMatch(1)
-            .should(matchQuery("state", "CREATED"));
+            .should(matchQuery("state", state));
     }
 }

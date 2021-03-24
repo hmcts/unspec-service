@@ -20,10 +20,17 @@ class CaseDismissedSearchServiceTest extends ElasticSearchServiceTest {
     @Override
     protected Query buildQuery(int fromValue) {
         BoolQueryBuilder query = boolQuery()
-            .must(rangeQuery("data.claimDismissedDeadline").lt("now"))
+            .minimumShouldMatch(1)
             .must(boolQuery()
-                      .minimumShouldMatch(1)
-                      .should(matchQuery("state", "CREATED")));
+                      .must(rangeQuery("data.claimNotificationDeadline").lt("now"))
+                      .must(boolQuery()
+                                .minimumShouldMatch(1)
+                                .should(matchQuery("state", "AWAITING_CASE_NOTIFICATION"))))
+            .must(boolQuery()
+                      .must(rangeQuery("data.claimDismissedDeadline").lt("now"))
+                      .must(boolQuery()
+                                .minimumShouldMatch(1)
+                                .should(matchQuery("state", "CREATED"))));
 
         return new Query(query, List.of("reference"), fromValue);
     }

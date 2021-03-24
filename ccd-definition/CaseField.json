@@ -759,5 +759,13 @@
     "Label": "Taken offline date",
     "FieldType": "DateTime",
     "SecurityClassification": "Public"
+  },
+  {
+    "LiveFrom": "01/01/2017",
+    "CaseTypeID": "UNSPECIFIED_CLAIMS",
+    "ID": "claimNotificationDeadline",
+    "Label": "Claim notification deadline",
+    "FieldType": "DateTime",
+    "SecurityClassification": "Public"
   }
 ]
