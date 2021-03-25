@@ -36,7 +36,7 @@ import static uk.gov.hmcts.reform.unspec.model.documents.DocumentType.ACKNOWLEDG
 import static uk.gov.hmcts.reform.unspec.sampledata.CaseDataBuilder.LEGACY_CASE_REFERENCE;
 import static uk.gov.hmcts.reform.unspec.service.docmosis.DocmosisTemplates.N9;
 import static uk.gov.hmcts.reform.unspec.utils.DocmosisTemplateDataUtils.fetchSolicitorReferences;
-import static uk.gov.hmcts.reform.unspec.utils.DocmosisTemplateDataUtils.getCaseName;
+import static uk.gov.hmcts.reform.unspec.utils.DocmosisTemplateDataUtils.toCaseName;
 
 @ExtendWith(SpringExtension.class)
 @ContextConfiguration(classes = {
@@ -126,7 +126,7 @@ class AcknowledgementOfClaimGeneratorTest {
         private void assertThatFieldsAreCorrect(AcknowledgementOfClaimForm templateData, CaseData caseData) {
             Assertions.assertAll(
                 "AcknowledgementOfClaim data should be as expected",
-                () -> assertEquals(templateData.getCaseName(), getCaseName(caseData)),
+                () -> assertEquals(templateData.getCaseName(), toCaseName.apply(caseData)),
                 () -> assertEquals(templateData.getReferenceNumber(), caseData.getLegacyCaseReference()),
                 () -> assertEquals(
                     templateData.getSolicitorReferences(),

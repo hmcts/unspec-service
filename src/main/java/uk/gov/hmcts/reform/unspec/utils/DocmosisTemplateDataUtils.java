@@ -7,6 +7,7 @@ import uk.gov.hmcts.reform.unspec.model.Party;
 import uk.gov.hmcts.reform.unspec.model.SolicitorReferences;
 
 import java.util.Optional;
+import java.util.function.Function;
 
 import static java.lang.String.format;
 import static java.util.Optional.ofNullable;
@@ -16,14 +17,14 @@ public class DocmosisTemplateDataUtils {
     public static final int CASE_NAME_LENGTH_TO_FIT_IN_DOCS = 37;
 
     //TODO Need to confirm the case name logic
-    public static String getCaseName(CaseData caseData) {
+    public static final Function<CaseData, String> toCaseName = caseData -> {
         String caseName = fetchApplicantName(caseData) + " vs " + fetchRespondentName(caseData);
 
         return caseName.length() > CASE_NAME_LENGTH_TO_FIT_IN_DOCS
             ? caseName.replace(" vs ", " \nvs ")
             : caseName;
-    }
-
+    };
+    
     private DocmosisTemplateDataUtils() {
         //NO-OP
     }

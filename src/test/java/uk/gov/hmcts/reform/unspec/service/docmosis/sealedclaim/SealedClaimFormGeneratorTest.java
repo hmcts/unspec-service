@@ -44,7 +44,7 @@ import static org.mockito.Mockito.when;
 import static uk.gov.hmcts.reform.unspec.model.documents.DocumentType.SEALED_CLAIM;
 import static uk.gov.hmcts.reform.unspec.service.docmosis.DocmosisTemplates.N1;
 import static uk.gov.hmcts.reform.unspec.service.docmosis.sealedclaim.SealedClaimFormGenerator.TEMP_CLAIM_DETAILS;
-import static uk.gov.hmcts.reform.unspec.utils.DocmosisTemplateDataUtils.getCaseName;
+import static uk.gov.hmcts.reform.unspec.utils.DocmosisTemplateDataUtils.toCaseName;
 
 @ExtendWith(SpringExtension.class)
 @ContextConfiguration(classes = {
@@ -115,7 +115,7 @@ class SealedClaimFormGeneratorTest {
         private void assertThatFieldsAreCorrect(SealedClaimForm templateData, CaseData caseData) {
             Assertions.assertAll(
                 "SealedClaimForm data should be as expected",
-                () -> assertEquals(templateData.getCaseName(), getCaseName(caseData)),
+                () -> assertEquals(templateData.getCaseName(), toCaseName.apply(caseData)),
 
                 () -> assertEquals(templateData.getApplicants(), getApplicants(caseData)),
                 () -> assertEquals(templateData.getRespondents(), getRespondents(caseData)),
@@ -145,7 +145,7 @@ class SealedClaimFormGeneratorTest {
                         .map(SolicitorReferences::getRespondentSolicitor1Reference)
                         .orElse("")
                 ),
-                () -> assertEquals(templateData.getCaseName(), DocmosisTemplateDataUtils.getCaseName(caseData))
+                () -> assertEquals(templateData.getCaseName(), DocmosisTemplateDataUtils.toCaseName.apply(caseData))
             );
         }
 

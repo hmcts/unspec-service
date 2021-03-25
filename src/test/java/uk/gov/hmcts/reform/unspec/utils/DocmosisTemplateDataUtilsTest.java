@@ -11,7 +11,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static uk.gov.hmcts.reform.unspec.utils.DocmosisTemplateDataUtils.fetchSolicitorReferences;
-import static uk.gov.hmcts.reform.unspec.utils.DocmosisTemplateDataUtils.getCaseName;
+import static uk.gov.hmcts.reform.unspec.utils.DocmosisTemplateDataUtils.toCaseName;
 
 class DocmosisTemplateDataUtilsTest {
 
@@ -27,7 +27,7 @@ class DocmosisTemplateDataUtilsTest {
                              .partyName("Mr. Alex Richards")
                              .build())
             .build();
-        String caseName = getCaseName(caseData);
+        String caseName = toCaseName.apply(caseData);
         assertThat(caseName).isEqualTo("Mr. Sam Clark vs Mr. Alex Richards");
     }
 
@@ -48,7 +48,7 @@ class DocmosisTemplateDataUtilsTest {
                              .build())
             .build();
 
-        String caseName = getCaseName(caseData);
+        String caseName = toCaseName.apply(caseData);
         assertThat(caseName).isEqualTo("1 Mr. Sam Clark & 2 Mr. White Clark \nvs Mr. Alex Richards");
     }
 
@@ -69,7 +69,7 @@ class DocmosisTemplateDataUtilsTest {
                              .build())
             .build();
 
-        String caseName = getCaseName(caseData);
+        String caseName = toCaseName.apply(caseData);
         assertThat(caseName).isEqualTo("Mr. Sam Clark \nvs 1 Mr. Alex Richards & 2 Mr. White Richards");
     }
 
@@ -87,7 +87,7 @@ class DocmosisTemplateDataUtilsTest {
                              .build())
             .build();
 
-        String caseName = getCaseName(caseData);
+        String caseName = toCaseName.apply(caseData);
         assertThat(caseName).isEqualTo("Mrs. Georgina Hammersmith T/A EuroStar \nvs Mr. Alex Richards");
     }
 
@@ -105,7 +105,7 @@ class DocmosisTemplateDataUtilsTest {
                              .build())
             .build();
 
-        String caseName = getCaseName(caseData);
+        String caseName = toCaseName.apply(caseData);
         assertThat(caseName).isEqualTo("Mr. White Richards \nvs Mr. Boris Johnson T/A UberFlip");
     }
 
@@ -124,7 +124,7 @@ class DocmosisTemplateDataUtilsTest {
                              .build())
             .build();
 
-        String caseName = getCaseName(caseData);
+        String caseName = toCaseName.apply(caseData);
         assertThat(caseName).isEqualTo("Mrs. Georgina Hammersmith T/A EuroStar \nvs Mr. Boris Johnson T/A UberFlip");
     }
 
@@ -141,7 +141,7 @@ class DocmosisTemplateDataUtilsTest {
                              .build())
             .respondent1LitigationFriend(LitigationFriend.builder().fullName("Mr. Litigation Friend").build())
             .build();
-        String caseName = getCaseName(caseData);
+        String caseName = toCaseName.apply(caseData);
         assertThat(caseName)
             .isEqualTo("Mr. Sam Clark \nvs Mr. Alex Richards (proceeding by L/F Mr. Litigation Friend)");
     }
@@ -159,7 +159,7 @@ class DocmosisTemplateDataUtilsTest {
                              .partyName("Mr. Alex Richards")
                              .build())
             .build();
-        String caseName = getCaseName(caseData);
+        String caseName = toCaseName.apply(caseData);
         assertThat(caseName)
             .isEqualTo("Mr. Sam Clark (proceeding by L/F Mr. Litigation Friend) \nvs Mr. Alex Richards");
     }
@@ -178,7 +178,7 @@ class DocmosisTemplateDataUtilsTest {
                              .build())
             .respondent1LitigationFriend(LitigationFriend.builder().fullName("Mr. Respondent Friend").build())
             .build();
-        String caseName = getCaseName(caseData);
+        String caseName = toCaseName.apply(caseData);
         assertThat(caseName).isEqualTo("Mr. Sam Clark (proceeding by L/F Mr. Applicant Friend) \nvs Mr. Alex Richards "
                                            + "(proceeding by L/F Mr. Respondent Friend)");
     }
