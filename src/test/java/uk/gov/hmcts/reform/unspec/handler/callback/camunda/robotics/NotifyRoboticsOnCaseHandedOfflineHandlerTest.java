@@ -4,16 +4,20 @@ import com.networknt.schema.ValidationMessage;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.jackson.JacksonAutoConfiguration;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import uk.gov.hmcts.reform.unspec.callback.CallbackParams;
 import uk.gov.hmcts.reform.unspec.handler.callback.BaseCallbackHandlerTest;
+import uk.gov.hmcts.reform.unspec.helpers.CaseDetailsConverter;
 import uk.gov.hmcts.reform.unspec.model.CaseData;
 import uk.gov.hmcts.reform.unspec.sampledata.CallbackParamsBuilder;
 import uk.gov.hmcts.reform.unspec.sampledata.CaseDataBuilder;
+import uk.gov.hmcts.reform.unspec.service.flowstate.StateFlowEngine;
 import uk.gov.hmcts.reform.unspec.service.robotics.JsonSchemaValidationService;
 import uk.gov.hmcts.reform.unspec.service.robotics.RoboticsNotificationService;
 import uk.gov.hmcts.reform.unspec.service.robotics.exception.JsonSchemaValidationException;
+import uk.gov.hmcts.reform.unspec.service.robotics.mapper.EventHistoryMapper;
 import uk.gov.hmcts.reform.unspec.service.robotics.mapper.RoboticsAddressMapper;
 import uk.gov.hmcts.reform.unspec.service.robotics.mapper.RoboticsDataMapper;
 
@@ -30,7 +34,11 @@ import static uk.gov.hmcts.reform.unspec.callback.CallbackType.ABOUT_TO_SUBMIT;
     NotifyRoboticsOnCaseHandedOfflineHandler.class,
     JsonSchemaValidationService.class,
     RoboticsDataMapper.class,
-    RoboticsAddressMapper.class
+    RoboticsAddressMapper.class,
+    EventHistoryMapper.class,
+    JacksonAutoConfiguration.class,
+    CaseDetailsConverter.class,
+    StateFlowEngine.class
 })
 class NotifyRoboticsOnCaseHandedOfflineHandlerTest extends BaseCallbackHandlerTest {
 
@@ -45,7 +53,7 @@ class NotifyRoboticsOnCaseHandedOfflineHandlerTest extends BaseCallbackHandlerTe
 
         @Test
         void shouldNotifyRobotics_whenNoSchemaErrors() {
-            CaseData caseData = CaseDataBuilder.builder().atStateProceedsOffline().build();
+            CaseData caseData = CaseDataBuilder.builder().atStateProceedsOfflineAdmissionOrCounterClaim().build();
             CallbackParams params = CallbackParamsBuilder.builder().of(ABOUT_TO_SUBMIT, caseData).build();
 
             handler.handle(params);
@@ -65,7 +73,7 @@ class NotifyRoboticsOnCaseHandedOfflineHandlerTest extends BaseCallbackHandlerTe
         @Test
         void shouldThrowJsonSchemaValidationException_whenSchemaErrors() {
             when(validationService.validate(anyString())).thenReturn(Set.of(new ValidationMessage.Builder().build()));
-            CaseData caseData = CaseDataBuilder.builder().atStateProceedsOffline().build();
+            CaseData caseData = CaseDataBuilder.builder().atStateProceedsOfflineAdmissionOrCounterClaim().build();
             CallbackParams params = CallbackParamsBuilder.builder().of(ABOUT_TO_SUBMIT, caseData).build();
 
             assertThrows(

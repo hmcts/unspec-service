@@ -4,12 +4,14 @@ import org.camunda.bpm.engine.externaltask.ExternalTask;
 import org.camunda.bpm.engine.variable.VariableMap;
 import org.camunda.bpm.engine.variable.Variables;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.EnumSource;
+import uk.gov.hmcts.reform.unspec.service.flowstate.FlowState;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static uk.gov.hmcts.reform.unspec.handler.tasks.StartBusinessProcessTaskHandler.FLOW_STATE;
-import static uk.gov.hmcts.reform.unspec.service.flowstate.FlowState.Main.PROCEEDS_WITH_OFFLINE_JOURNEY;
-import static uk.gov.hmcts.reform.unspec.service.flowstate.FlowState.Main.RESPONDED_TO_CLAIM;
+import static uk.gov.hmcts.reform.unspec.service.flowstate.FlowState.Main.RESPONDENT_FULL_DEFENCE;
 
 class DefendantResponseTest extends BpmnBaseTest {
 
@@ -39,8 +41,10 @@ class DefendantResponseTest extends BpmnBaseTest {
         super("defendant_response.bpmn", "DEFENDANT_RESPONSE_PROCESS_ID");
     }
 
-    @Test
-    void shouldSuccessfullyCompleteOfflineDefendantResponse() {
+    @ParameterizedTest
+    @EnumSource(value = FlowState.Main.class,
+        names = {"RESPONDENT_FULL_ADMISSION", "RESPONDENT_PART_ADMISSION", "RESPONDENT_COUNTER_CLAIM"})
+    void shouldSuccessfullyCompleteOfflineDefendantResponse(FlowState.Main flowState) {
         //assert process has started
         assertFalse(processInstance.isEnded());
 
@@ -50,7 +54,7 @@ class DefendantResponseTest extends BpmnBaseTest {
         //complete the start business process
         ExternalTask startBusinessTask = assertNextExternalTask(START_BUSINESS_TOPIC);
         VariableMap variables = Variables.createVariables();
-        variables.putValue(FLOW_STATE, "MAIN.OFFLINE");
+        variables.putValue(FLOW_STATE, flowState.fullName());
         assertCompleteExternalTask(
             startBusinessTask,
             START_BUSINESS_TOPIC,
@@ -94,7 +98,7 @@ class DefendantResponseTest extends BpmnBaseTest {
     }
 
     @Test
-    void shouldSuccessfullyCompleteOnlineFullDefenceResponse() {
+    void shouldSuccessfullyCompleteOnline_whenRespondentFullDefenceResponse() {
         //assert process has started
         assertFalse(processInstance.isEnded());
 
@@ -105,7 +109,7 @@ class DefendantResponseTest extends BpmnBaseTest {
         ExternalTask startBusiness = assertNextExternalTask(START_BUSINESS_TOPIC);
 
         VariableMap variables = Variables.createVariables();
-        variables.putValue(FLOW_STATE, RESPONDED_TO_CLAIM.fullName());
+        variables.putValue(FLOW_STATE, RESPONDENT_FULL_DEFENCE.fullName());
 
         assertCompleteExternalTask(
             startBusiness,
@@ -149,7 +153,6 @@ class DefendantResponseTest extends BpmnBaseTest {
         assertThat(getProcessDefinitionByMessage(MESSAGE_NAME).getKey()).isEqualTo(PROCESS_ID);
 
         VariableMap variables = Variables.createVariables();
-        variables.putValue(FLOW_STATE, PROCEEDS_WITH_OFFLINE_JOURNEY.fullName());
 
         //fail the start business process
         ExternalTask startBusiness = assertNextExternalTask(START_BUSINESS_TOPIC);
