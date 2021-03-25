@@ -1,5 +1,6 @@
 package uk.gov.hmcts.reform.unspec.handler.callback.camunda.notification;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import uk.gov.hmcts.reform.ccd.client.model.AboutToStartOrSubmitCallbackResponse;
@@ -12,6 +13,7 @@ import uk.gov.hmcts.reform.unspec.config.properties.notification.NotificationsPr
 import uk.gov.hmcts.reform.unspec.model.CaseData;
 import uk.gov.hmcts.reform.unspec.service.NotificationService;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
 
@@ -31,6 +33,7 @@ public class CreateClaimRespondentNotificationHandler extends CallbackHandler im
 
     private final NotificationService notificationService;
     private final NotificationsProperties notificationsProperties;
+    private final ObjectMapper objectMapper;
 
     @Override
     protected Map<String, Callback> callbacks() {
@@ -53,19 +56,25 @@ public class CreateClaimRespondentNotificationHandler extends CallbackHandler im
         CaseData caseData = callbackParams.getCaseData();
 
         notificationService.sendMail(
-            "civilunspecified@gmail.com", //TODO need correct email address here
+            caseData.getRespondentSolicitor1EmailAddress(),
             notificationsProperties.getRespondentSolicitorClaimIssueEmailTemplate(),
             addProperties(caseData),
             String.format(REFERENCE_TEMPLATE, caseData.getLegacyCaseReference())
         );
-        return AboutToStartOrSubmitCallbackResponse.builder().build();
+
+        CaseData updatedCaseData = caseData.toBuilder()
+            .claimNotificationDate(LocalDate.now())
+            .build();
+
+        return AboutToStartOrSubmitCallbackResponse.builder()
+            .data(updatedCaseData.toMap(objectMapper))
+            .build();
     }
 
     @Override
     public Map<String, String> addProperties(CaseData caseData) {
         return Map.of(
             CLAIM_REFERENCE_NUMBER, caseData.getLegacyCaseReference(),
-            RESPONDENT_SOLICITOR_NAME, "Placeholder name",
             APPLICANT_NAME, getPartyNameBasedOnType(caseData.getApplicant1()),
             RESPONDENT_NAME, getPartyNameBasedOnType(caseData.getRespondent1()),
             ISSUED_ON, formatLocalDate(caseData.getClaimIssuedDate(), DATE)
