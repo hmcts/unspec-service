@@ -95,7 +95,7 @@ public class CaseDataBuilder {
     private IdamUserDetails applicantSolicitor1UserDetails;
     //Deadline extension
     private LocalDate respondentSolicitor1AgreedDeadlineExtension;
-    //Acknowledge Service
+    //Acknowledge Claim
     private ResponseIntention respondent1ClaimResponseIntentionType;
     // Defendant Response
     private RespondentResponseType respondent1ClaimResponseType;
@@ -305,8 +305,8 @@ public class CaseDataBuilder {
                 return atStateClaimCreated();
             case EXTENSION_REQUESTED:
                 return atStateExtensionRequested();
-            case SERVICE_ACKNOWLEDGED:
-                return atStateServiceAcknowledge();
+            case CLAIM_ACKNOWLEDGED:
+                return atStateClaimAcknowledge();
             case RESPONDENT_FULL_DEFENCE:
                 return atStateRespondentFullDefence();
             case RESPONDENT_FULL_ADMISSION:
@@ -492,7 +492,7 @@ public class CaseDataBuilder {
     }
 
     public CaseDataBuilder atStateExtensionRequested() {
-        atStateServiceAcknowledge();
+        atStateClaimAcknowledge();
         respondentSolicitor1AgreedDeadlineExtension = LocalDate.now();
         respondent1TimeExtensionDate = LocalDateTime.now();
         return this;
@@ -536,7 +536,7 @@ public class CaseDataBuilder {
     }
 
     public CaseDataBuilder atStateRespondentRespondToClaim(RespondentResponseType respondentResponseType) {
-        atStateServiceAcknowledge();
+        atStateClaimAcknowledge();
         respondent1ClaimResponseType = respondentResponseType;
         applicant1ResponseDeadline = APPLICANT_RESPONSE_DEADLINE;
         respondent1ResponseDate = LocalDateTime.now();
@@ -568,7 +568,7 @@ public class CaseDataBuilder {
         return this;
     }
 
-    public CaseDataBuilder atStateServiceAcknowledge() {
+    public CaseDataBuilder atStateClaimAcknowledge() {
         atStateClaimCreated();
         respondent1ClaimResponseIntentionType = FULL_DEFENCE;
         respondent1AcknowledgeNotificationDate = LocalDateTime.now();
@@ -613,7 +613,7 @@ public class CaseDataBuilder {
             .applicantSolicitor1UserDetails(applicantSolicitor1UserDetails)
             //Deadline extension
             .respondentSolicitor1AgreedDeadlineExtension(respondentSolicitor1AgreedDeadlineExtension)
-            // Acknowledge Service
+            // Acknowledge Claim
             .respondent1ClaimResponseIntentionType(respondent1ClaimResponseIntentionType)
             // Defendant Response
             .respondent1ClaimResponseType(respondent1ClaimResponseType)

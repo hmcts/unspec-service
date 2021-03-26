@@ -18,6 +18,7 @@ import uk.gov.hmcts.reform.unspec.service.Time;
 import uk.gov.hmcts.reform.unspec.validation.DateOfBirthValidator;
 
 import java.time.LocalDateTime;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -27,21 +28,17 @@ import static uk.gov.hmcts.reform.unspec.callback.CallbackType.ABOUT_TO_SUBMIT;
 import static uk.gov.hmcts.reform.unspec.callback.CallbackType.MID;
 import static uk.gov.hmcts.reform.unspec.callback.CallbackType.SUBMITTED;
 import static uk.gov.hmcts.reform.unspec.callback.CaseEvent.ACKNOWLEDGE_CLAIM;
-import static uk.gov.hmcts.reform.unspec.callback.CaseEvent.ACKNOWLEDGE_SERVICE;
 import static uk.gov.hmcts.reform.unspec.helpers.DateFormatHelper.DATE_TIME_AT;
 import static uk.gov.hmcts.reform.unspec.helpers.DateFormatHelper.formatLocalDateTime;
 
 @Service
 @RequiredArgsConstructor
-public class AcknowledgeServiceCallbackHandler extends CallbackHandler {
+public class AcknowledgeClaimCallbackHandler extends CallbackHandler {
 
-    private static final List<CaseEvent> EVENTS = List.of(
-        ACKNOWLEDGE_CLAIM,
-        ACKNOWLEDGE_SERVICE
-    );
+    private static final List<CaseEvent> EVENTS = Collections.singletonList(ACKNOWLEDGE_CLAIM);
 
     public static final String CONFIRMATION_SUMMARY = "<br />You need to respond before %s."
-        + "\n\n[Download the Acknowledgement of Service form](%s)";
+        + "\n\n[Download the Acknowledgement of Claim form](%s)";
 
     private final DateOfBirthValidator dateOfBirthValidator;
     private final DeadlinesCalculator deadlinesCalculator;
@@ -80,7 +77,7 @@ public class AcknowledgeServiceCallbackHandler extends CallbackHandler {
         CaseData caseDataUpdated = caseData.toBuilder()
             .respondent1AcknowledgeNotificationDate(time.now())
             .respondent1ResponseDeadline(newResponseDate)
-            .businessProcess(BusinessProcess.ready(ACKNOWLEDGE_SERVICE))
+            .businessProcess(BusinessProcess.ready(ACKNOWLEDGE_CLAIM))
             .build();
 
         return AboutToStartOrSubmitCallbackResponse.builder()
@@ -98,7 +95,7 @@ public class AcknowledgeServiceCallbackHandler extends CallbackHandler {
         );
 
         return SubmittedCallbackResponse.builder()
-            .confirmationHeader("# You've acknowledged service")
+            .confirmationHeader("# You've acknowledged claim")
             .confirmationBody(body)
             .build();
     }

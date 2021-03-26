@@ -34,20 +34,20 @@ import static org.mockito.Mockito.when;
 import static uk.gov.hmcts.reform.unspec.callback.CallbackType.ABOUT_TO_START;
 import static uk.gov.hmcts.reform.unspec.callback.CallbackType.ABOUT_TO_SUBMIT;
 import static uk.gov.hmcts.reform.unspec.callback.CallbackType.MID;
-import static uk.gov.hmcts.reform.unspec.callback.CaseEvent.ACKNOWLEDGE_SERVICE;
+import static uk.gov.hmcts.reform.unspec.callback.CaseEvent.ACKNOWLEDGE_CLAIM;
 import static uk.gov.hmcts.reform.unspec.helpers.DateFormatHelper.DATE_TIME_AT;
 import static uk.gov.hmcts.reform.unspec.helpers.DateFormatHelper.formatLocalDateTime;
 import static uk.gov.hmcts.reform.unspec.sampledata.CaseDataBuilder.RESPONSE_DEADLINE;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(classes = {
-    AcknowledgeServiceCallbackHandler.class,
+    AcknowledgeClaimCallbackHandler.class,
     JacksonAutoConfiguration.class,
     ValidationAutoConfiguration.class,
     DateOfBirthValidator.class,
     CaseDetailsConverter.class,
 })
-class AcknowledgeServiceCallbackHandlerTest extends BaseCallbackHandlerTest {
+class AcknowledgeClaimCallbackHandlerTest extends BaseCallbackHandlerTest {
 
     @MockBean
     private DeadlinesCalculator deadlinesCalculator;
@@ -56,7 +56,7 @@ class AcknowledgeServiceCallbackHandlerTest extends BaseCallbackHandlerTest {
     private Time time;
 
     @Autowired
-    private AcknowledgeServiceCallbackHandler handler;
+    private AcknowledgeClaimCallbackHandler handler;
 
     @Nested
     class AboutToStartCallback {
@@ -149,7 +149,7 @@ class AcknowledgeServiceCallbackHandlerTest extends BaseCallbackHandlerTest {
 
         @Test
         void shouldSetNewResponseDeadlineAndUpdateBusinessProcess_whenInvoked() {
-            CaseData caseData = CaseDataBuilder.builder().atStateServiceAcknowledge().build();
+            CaseData caseData = CaseDataBuilder.builder().atStateClaimAcknowledge().build();
             CallbackParams params = callbackParamsOf(caseData, ABOUT_TO_SUBMIT);
 
             var response = (AboutToStartOrSubmitCallbackResponse) handler.handle(params);
@@ -157,7 +157,7 @@ class AcknowledgeServiceCallbackHandlerTest extends BaseCallbackHandlerTest {
             assertThat(response.getData())
                 .extracting("businessProcess")
                 .extracting("camundaEvent")
-                .isEqualTo(ACKNOWLEDGE_SERVICE.name());
+                .isEqualTo(ACKNOWLEDGE_CLAIM.name());
 
             assertThat(response.getData())
                 .extracting("businessProcess")
@@ -175,17 +175,17 @@ class AcknowledgeServiceCallbackHandlerTest extends BaseCallbackHandlerTest {
 
         @Test
         void shouldReturnExpectedResponse_whenInvoked() {
-            CaseData caseData = CaseDataBuilder.builder().atStateServiceAcknowledge().build();
+            CaseData caseData = CaseDataBuilder.builder().atStateClaimAcknowledge().build();
             CallbackParams params = callbackParamsOf(caseData, CallbackType.SUBMITTED);
 
             SubmittedCallbackResponse response = (SubmittedCallbackResponse) handler.handle(params);
 
             assertThat(response).usingRecursiveComparison().isEqualTo(
                 SubmittedCallbackResponse.builder()
-                    .confirmationHeader("# You've acknowledged service")
+                    .confirmationHeader("# You've acknowledged claim")
                     .confirmationBody(format(
                         "<br />You need to respond before %s."
-                            + "%n%n[Download the Acknowledgement of Service form]"
+                            + "%n%n[Download the Acknowledgement of Claim form]"
                             + "(/cases/case-details/%s#CaseDocuments)",
                         formatLocalDateTime(RESPONSE_DEADLINE, DATE_TIME_AT), caseData.getCcdCaseReference()
                     ))
