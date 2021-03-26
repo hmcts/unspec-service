@@ -28,14 +28,14 @@ data "azurerm_key_vault" "cmc_vault" {
   resource_group_name = "cmc-${var.env}"
 }
 
-data "azurerm_key_vault_secret" "s2s_secret" {
-  key_vault_id = "${data.azurerm_key_vault.s2s_vault.id}"
-  name = "microservicekey-unspec-service"
+data "azurerm_key_vault_secret" "db_password_secret" {
+  key_vault_id = "${data.azurerm_key_vault.cmc_vault.id}"
+  name = "cmc-db-password"
 }
 
-resource "azurerm_key_vault_secret" "unspec_s2s_secret" {
-  name         = "microservicekey-unspec-service"
-  value        = data.azurerm_key_vault_secret.s2s_secret.value
+resource "azurerm_key_vault_secret" "unspec_db_password_secret" {
+  name         = "cmc-db-password"
+  value        = data.azurerm_key_vault_secret.db_password_secret.value
   key_vault_id = data.azurerm_key_vault.unspec_key_vault.id
 }
 
