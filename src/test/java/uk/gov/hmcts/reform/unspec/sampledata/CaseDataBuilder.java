@@ -69,6 +69,7 @@ public class CaseDataBuilder {
     public static final LocalDateTime RESPONSE_DEADLINE = now().plusDays(14).atTime(23, 59, 59);
     public static final LocalDateTime APPLICANT_RESPONSE_DEADLINE = LocalDateTime.now().plusDays(120);
     public static final LocalDate CLAIM_ISSUED_DATE = now();
+    public static final LocalDateTime CLAIM_NOTIFICATION_DEADLINE = LocalDateTime.now().plusDays(1);
 
     // Create Claim
     private Long ccdCaseReference;
@@ -127,6 +128,7 @@ public class CaseDataBuilder {
     private SolicitorOrganisationDetails respondentSolicitor1OrganisationDetails;
 
     private LocalDateTime takenOfflineDate;
+    private LocalDateTime claimNotificationDeadline;
 
     public CaseDataBuilder respondentSolicitor1ResponseDeadline(LocalDateTime respondentSolicitor1ResponseDeadline) {
         this.respondentSolicitor1ResponseDeadline = respondentSolicitor1ResponseDeadline;
@@ -317,9 +319,19 @@ public class CaseDataBuilder {
                 return atStateClaimDismissed();
             case TAKEN_OFFLINE_PAST_APPLICANT_RESPONSE_DEADLINE:
                 return atStateTakenOfflinePastApplicantResponseDeadline();
+            case CLAIM_DISMISSED_PAST_CLAIM_NOTIFICATION_DEADLINE:
+                return atStateClaimDismissedPastClaimNotificationDeadline();
             default:
                 throw new IllegalArgumentException("Invalid internal state: " + flowState);
         }
+    }
+
+    public CaseDataBuilder atStateClaimDismissedPastClaimNotificationDeadline() {
+        atStateAwaitingCaseNotification();
+        ccdState = CLAIM_DISMISSED;
+        claimNotificationDeadline = LocalDateTime.now().minusDays(1);
+        claimDismissedDate = LocalDate.now();
+        return this;
     }
 
     public CaseDataBuilder atStateProceedsOfflineUnrepresentedDefendant() {
@@ -445,6 +457,7 @@ public class CaseDataBuilder {
         atStatePaymentSuccessful();
         ccdState = AWAITING_CASE_NOTIFICATION;
         claimIssuedDate = CLAIM_ISSUED_DATE;
+        claimNotificationDeadline = CLAIM_NOTIFICATION_DEADLINE;
         return this;
     }
 
@@ -618,6 +631,7 @@ public class CaseDataBuilder {
             .respondent1OrganisationPolicy(respondent1OrganisationPolicy)
             .claimDismissedDate(claimDismissedDate)
             .takenOfflineDate(takenOfflineDate)
+            .claimNotificationDeadline(claimNotificationDeadline)
             .build();
     }
 }

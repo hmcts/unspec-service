@@ -25,6 +25,7 @@ import static uk.gov.hmcts.reform.unspec.service.flowstate.FlowState.Main.AWAITI
 import static uk.gov.hmcts.reform.unspec.service.flowstate.FlowState.Main.CASE_PROCEEDS_IN_CASEMAN;
 import static uk.gov.hmcts.reform.unspec.service.flowstate.FlowState.Main.CLAIM_DISCONTINUED;
 import static uk.gov.hmcts.reform.unspec.service.flowstate.FlowState.Main.CLAIM_DISMISSED_DEFENDANT_OUT_OF_TIME;
+import static uk.gov.hmcts.reform.unspec.service.flowstate.FlowState.Main.CLAIM_DISMISSED_PAST_CLAIM_NOTIFICATION_DEADLINE;
 import static uk.gov.hmcts.reform.unspec.service.flowstate.FlowState.Main.CLAIM_ISSUED;
 import static uk.gov.hmcts.reform.unspec.service.flowstate.FlowState.Main.CLAIM_WITHDRAWN;
 import static uk.gov.hmcts.reform.unspec.service.flowstate.FlowState.Main.DRAFT;
@@ -407,6 +408,25 @@ class StateFlowEngineTest {
                     TAKEN_OFFLINE_PAST_APPLICANT_RESPONSE_DEADLINE.fullName()
                 );
         }
+
+        @Test
+        void shouldReturnClaimDismissedPastNotificationDeadline_whenPastClaimNotificationDeadline() {
+            CaseData caseData = CaseDataBuilder.builder().atStateClaimDismissedPastClaimNotificationDeadline().build();
+
+            StateFlow stateFlow = stateFlowEngine.evaluate(caseData);
+
+            assertThat(stateFlow.getState())
+                .extracting(State::getName)
+                .isNotNull()
+                .isEqualTo(CLAIM_DISMISSED_PAST_CLAIM_NOTIFICATION_DEADLINE.fullName());
+            assertThat(stateFlow.getStateHistory())
+                .hasSize(5)
+                .extracting(State::getName)
+                .containsExactly(
+                    DRAFT.fullName(), PENDING_CASE_ISSUED.fullName(), PAYMENT_SUCCESSFUL.fullName(),
+                    AWAITING_CASE_NOTIFICATION.fullName(),  CLAIM_DISMISSED_PAST_CLAIM_NOTIFICATION_DEADLINE.fullName()
+                );
+        }
     }
 
     @Nested
@@ -447,7 +467,8 @@ class StateFlowEngineTest {
                 "AWAITING_CASE_NOTIFICATION",
                 "AWAITING_CASE_DETAILS_NOTIFICATION",
                 "CASE_PROCEEDS_IN_CASEMAN",
-                "CLAIM_DISMISSED_DEFENDANT_OUT_OF_TIME"
+                "CLAIM_DISMISSED_DEFENDANT_OUT_OF_TIME",
+                "CLAIM_DISMISSED_PAST_CLAIM_NOTIFICATION_DEADLINE"
             })
         @ParameterizedTest(name = "{index} => should withdraw claim after claim state {0}")
         void shouldReturnValidState_whenCaseIsWithdrawnAfter(FlowState.Main flowState) {
@@ -476,7 +497,8 @@ class StateFlowEngineTest {
                 "AWAITING_CASE_NOTIFICATION",
                 "AWAITING_CASE_DETAILS_NOTIFICATION",
                 "CASE_PROCEEDS_IN_CASEMAN",
-                "CLAIM_DISMISSED_DEFENDANT_OUT_OF_TIME"
+                "CLAIM_DISMISSED_DEFENDANT_OUT_OF_TIME",
+                "CLAIM_DISMISSED_PAST_CLAIM_NOTIFICATION_DEADLINE"
             })
         @ParameterizedTest(name = "{index} => should discontinue claim after claim state {0}")
         void shouldReturnValidState_whenCaseIsDiscontinuedAfter(FlowState.Main flowState) {
