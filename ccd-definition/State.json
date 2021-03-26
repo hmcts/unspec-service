@@ -54,5 +54,13 @@
     "Name": "Claim Dismissed",
     "Description": "Claim has been dismissed",
     "DisplayOrder": 7
+  },
+  {
+    "LiveFrom": "01/01/2017",
+    "CaseTypeID": "UNSPECIFIED_CLAIMS",
+    "ID": "CLAIM_DISMISSED",
+    "Name": "Claim dismissed",
+    "Description": "Case is dismissed",
+    "DisplayOrder": 8
   }
 ]

@@ -44,7 +44,7 @@
   {
     "LiveFrom": "01/01/2017",
     "CaseTypeID": "UNSPECIFIED_CLAIMS",
-    "CaseStateID": "AWAITING_CASE_DETAILS_NOTIFICATION",
+    "CaseStateID": "CLAIM_DISMISSED",
     "UserRole": "caseworker-civil-systemupdate",
     "CRUD": "CRUD"
   }

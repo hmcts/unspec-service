@@ -20,7 +20,7 @@ const data = {
   RESUBMIT_CLAIM: require('../fixtures/events/resubmitClaim.js'),
   ADD_OR_AMEND_CLAIM_DOCUMENTS: require('../fixtures/events/addOrAmendClaimDocuments.js'),
   CREATE_CLAIM_RESPONDENT_SOLICITOR_FIRM_NOT_IN_MY_HMCTS: claimData.createClaimRespondentSolFirmNotInMyHmcts,
-  ACKNOWLEDGE_SERVICE: require('../fixtures/events/acknowledgeService.js'),
+  ACKNOWLEDGE_CLAIM: require('../fixtures/events/acknowledgeClaim.js'),
   INFORM_AGREED_EXTENSION_DATE: require('../fixtures/events/informAgreeExtensionDate.js'),
   DEFENDANT_RESPONSE: require('../fixtures/events/defendantResponse.js'),
   CLAIMANT_RESPONSE: require('../fixtures/events/claimantResponse.js'),
@@ -217,22 +217,22 @@ module.exports = {
     await assertCorrectEventsAreAvailableToUser(config.adminUser, 'AWAITING_RESPONDENT_ACKNOWLEDGEMENT');
   },
 
-  acknowledgeService: async (user) => {
+  acknowledgeClaim: async (user) => {
     await apiRequest.setupTokens(user);
 
-    eventName = 'ACKNOWLEDGE_SERVICE';
+    eventName = 'ACKNOWLEDGE_CLAIM';
     let returnedCaseData = await apiRequest.startEvent(eventName, caseId);
     assertContainsPopulatedFields(returnedCaseData);
     caseData = returnedCaseData;
     deleteCaseFields('systemGeneratedCaseDocuments');
 
-    await validateEventPages(data.ACKNOWLEDGE_SERVICE);
+    await validateEventPages(data.ACKNOWLEDGE_CLAIM);
 
     await assertError('ConfirmDetails', data[eventName].invalid.ConfirmDetails.futureDateOfBirth,
       'The date entered cannot be in the future');
 
     await assertSubmittedEvent('AWAITING_RESPONDENT_ACKNOWLEDGEMENT', {
-      header: 'You\'ve acknowledged service',
+      header: 'You\'ve acknowledged claim',
       body: 'You need to respond before'
     }, true);
 
@@ -310,11 +310,9 @@ module.exports = {
     }, true);
     await waitForFinishedBusinessProcess(caseId);
 
-    //TODO: event currently puts claim into stayed state and users do no have permissions to see it.
-
-    // await assertCorrectEventsAreAvailableToUser(config.solicitorUser, 'PROCEEDS_IN_HERITAGE_SYSTEM');
-    // await assertCorrectEventsAreAvailableToUser(config.defendantSolicitorUser, 'PROCEEDS_IN_HERITAGE_SYSTEM');
-    // await assertCorrectEventsAreAvailableToUser(config.adminUser, 'PROCEEDS_IN_HERITAGE_SYSTEM');
+    await assertCorrectEventsAreAvailableToUser(config.solicitorUser, 'PROCEEDS_IN_HERITAGE_SYSTEM');
+    await assertCorrectEventsAreAvailableToUser(config.defendantSolicitorUser, 'PROCEEDS_IN_HERITAGE_SYSTEM');
+    await assertCorrectEventsAreAvailableToUser(config.adminUser, 'PROCEEDS_IN_HERITAGE_SYSTEM');
   },
 
   //TODO this method is not used in api tests
