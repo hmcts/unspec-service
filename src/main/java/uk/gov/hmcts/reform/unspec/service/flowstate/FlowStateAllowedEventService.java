@@ -13,6 +13,7 @@ import java.util.stream.Collectors;
 
 import static java.util.Collections.emptyList;
 import static java.util.Map.entry;
+import static uk.gov.hmcts.reform.unspec.callback.CaseEvent.ACKNOWLEDGE_CLAIM;
 import static uk.gov.hmcts.reform.unspec.callback.CaseEvent.ACKNOWLEDGE_SERVICE;
 import static uk.gov.hmcts.reform.unspec.callback.CaseEvent.ADD_DEFENDANT_LITIGATION_FRIEND;
 import static uk.gov.hmcts.reform.unspec.callback.CaseEvent.ADD_OR_AMEND_CLAIM_DOCUMENTS;
@@ -22,9 +23,8 @@ import static uk.gov.hmcts.reform.unspec.callback.CaseEvent.CLAIMANT_RESPONSE;
 import static uk.gov.hmcts.reform.unspec.callback.CaseEvent.CREATE_CLAIM;
 import static uk.gov.hmcts.reform.unspec.callback.CaseEvent.DEFENDANT_RESPONSE;
 import static uk.gov.hmcts.reform.unspec.callback.CaseEvent.DISCONTINUE_CLAIM;
+import static uk.gov.hmcts.reform.unspec.callback.CaseEvent.DISMISS_CLAIM;
 import static uk.gov.hmcts.reform.unspec.callback.CaseEvent.INFORM_AGREED_EXTENSION_DATE;
-import static uk.gov.hmcts.reform.unspec.callback.CaseEvent.MOVE_CLAIM_TO_STRUCK_OUT;
-import static uk.gov.hmcts.reform.unspec.callback.CaseEvent.MOVE_TO_STAYED;
 import static uk.gov.hmcts.reform.unspec.callback.CaseEvent.NOTIFY_DEFENDANT_OF_CLAIM;
 import static uk.gov.hmcts.reform.unspec.callback.CaseEvent.NOTIFY_DEFENDANT_OF_CLAIM_DETAILS;
 import static uk.gov.hmcts.reform.unspec.callback.CaseEvent.RESUBMIT_CLAIM;
@@ -33,7 +33,6 @@ import static uk.gov.hmcts.reform.unspec.service.flowstate.FlowState.Main.APPLIC
 import static uk.gov.hmcts.reform.unspec.service.flowstate.FlowState.Main.AWAITING_CASE_DETAILS_NOTIFICATION;
 import static uk.gov.hmcts.reform.unspec.service.flowstate.FlowState.Main.AWAITING_CASE_NOTIFICATION;
 import static uk.gov.hmcts.reform.unspec.service.flowstate.FlowState.Main.CLAIM_ISSUED;
-import static uk.gov.hmcts.reform.unspec.service.flowstate.FlowState.Main.CLAIM_STAYED;
 import static uk.gov.hmcts.reform.unspec.service.flowstate.FlowState.Main.DRAFT;
 import static uk.gov.hmcts.reform.unspec.service.flowstate.FlowState.Main.EXTENSION_REQUESTED;
 import static uk.gov.hmcts.reform.unspec.service.flowstate.FlowState.Main.PAYMENT_FAILED;
@@ -94,13 +93,14 @@ public class FlowStateAllowedEventService {
         entry(
             CLAIM_ISSUED.fullName(),
             List.of(
-                MOVE_TO_STAYED,
+                ACKNOWLEDGE_CLAIM,
                 ACKNOWLEDGE_SERVICE,
                 ADD_DEFENDANT_LITIGATION_FRIEND,
                 WITHDRAW_CLAIM,
                 DISCONTINUE_CLAIM,
                 CASE_PROCEEDS_IN_CASEMAN,
-                AMEND_PARTY_DETAILS
+                AMEND_PARTY_DETAILS,
+                DISMISS_CLAIM
             )
         ),
 
@@ -112,15 +112,8 @@ public class FlowStateAllowedEventService {
                 WITHDRAW_CLAIM,
                 DISCONTINUE_CLAIM,
                 CASE_PROCEEDS_IN_CASEMAN,
-                AMEND_PARTY_DETAILS
-            )
-        ),
-
-        entry(
-            CLAIM_STAYED.fullName(),
-            List.of(
-                WITHDRAW_CLAIM,
-                DISCONTINUE_CLAIM
+                AMEND_PARTY_DETAILS,
+                DISMISS_CLAIM
             )
         ),
 
@@ -133,7 +126,8 @@ public class FlowStateAllowedEventService {
                 DISCONTINUE_CLAIM,
                 CASE_PROCEEDS_IN_CASEMAN,
                 INFORM_AGREED_EXTENSION_DATE,
-                AMEND_PARTY_DETAILS
+                AMEND_PARTY_DETAILS,
+                DISMISS_CLAIM
             )
         ),
 
@@ -144,7 +138,6 @@ public class FlowStateAllowedEventService {
                 WITHDRAW_CLAIM,
                 ADD_DEFENDANT_LITIGATION_FRIEND,
                 DISCONTINUE_CLAIM,
-                MOVE_CLAIM_TO_STRUCK_OUT,
                 CASE_PROCEEDS_IN_CASEMAN,
                 AMEND_PARTY_DETAILS
             )

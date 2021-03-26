@@ -74,7 +74,7 @@ public class RespondToDefenceCallbackHandler extends CallbackHandler {
     private CallbackResponse handleNotifications(CallbackParams callbackParams) {
         CaseData caseData = callbackParams.getCaseData();
         CaseData.CaseDataBuilder builder = caseData.toBuilder();
-        if (fromFullName(stateFlowEngine.evaluate(caseData).getState().getName()) == FlowState.Main.CLAIM_STAYED) {
+        if (getFlowState(caseData) == FlowState.Main.CASE_PROCEEDS_IN_CASEMAN) {
             builder.businessProcess(BusinessProcess.ready(CLAIMANT_RESPONSE)).build();
         }
 
@@ -83,6 +83,10 @@ public class RespondToDefenceCallbackHandler extends CallbackHandler {
         return AboutToStartOrSubmitCallbackResponse.builder()
             .data(builder.build().toMap(objectMapper))
             .build();
+    }
+
+    private FlowState getFlowState(CaseData caseData) {
+        return fromFullName(stateFlowEngine.evaluate(caseData).getState().getName());
     }
 
     private SubmittedCallbackResponse buildConfirmation(CallbackParams callbackParams) {
