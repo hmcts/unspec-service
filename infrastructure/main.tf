@@ -23,6 +23,22 @@ resource "azurerm_key_vault_secret" "unspec_s2s_secret" {
   key_vault_id = data.azurerm_key_vault.unspec_key_vault.id
 }
 
+data "azurerm_key_vault" "cmc_vault" {
+  name                = "cmc-${var.env}"
+  resource_group_name = "cmc-${var.env}"
+}
+
+data "azurerm_key_vault_secret" "s2s_secret" {
+  key_vault_id = "${data.azurerm_key_vault.s2s_vault.id}"
+  name = "microservicekey-unspec-service"
+}
+
+resource "azurerm_key_vault_secret" "unspec_s2s_secret" {
+  name         = "microservicekey-unspec-service"
+  value        = data.azurerm_key_vault_secret.s2s_secret.value
+  key_vault_id = data.azurerm_key_vault.unspec_key_vault.id
+}
+
 resource "azurerm_resource_group" "rg" {
   name     = "${var.product}-${var.component}-${var.env}"
   location = var.location
