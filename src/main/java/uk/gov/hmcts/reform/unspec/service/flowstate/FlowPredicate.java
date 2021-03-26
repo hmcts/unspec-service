@@ -65,12 +65,8 @@ public class FlowPredicate {
 
     public static final Predicate<CaseData> applicantRespondToDefence = caseData ->
         caseData.getApplicant1ProceedWithClaim() != null
-            && caseData.getApplicant1DefenceResponseDocument() != null;
-
-    public static final Predicate<CaseData> schedulerStayClaim = caseData ->
-        caseData.getWithdrawClaim() == null
-            && caseData.getDiscontinueClaim() == null
-            && caseData.getCcdState() == CASE_DISMISSED;
+            && caseData.getApplicant1DefenceResponseDocument() != null
+            && caseData.getCcdState() != PROCEEDS_IN_HERITAGE_SYSTEM;
 
     public static final Predicate<CaseData> claimWithdrawn = caseData ->
         caseData.getWithdrawClaim() != null
