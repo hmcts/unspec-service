@@ -96,6 +96,11 @@ public class FlowPredicate {
     public static final Predicate<CaseData> applicantOutOfTime = caseData ->
         caseData.getTakenOfflineDate() != null && caseData.getTakenOfflineDate().isAfter(LocalDateTime.now());
 
+    public static final Predicate<CaseData> pastClaimDetailsNotificationDeadline = caseData ->
+        caseData.getClaimDetailsNotificationDeadline().isAfter(LocalDateTime.now())
+            && caseData.getClaimDetailsNotificationDate() == null
+            && caseData.getClaimNotificationDate() != null;
+
     private FlowPredicate() {
         //Utility class
     }
