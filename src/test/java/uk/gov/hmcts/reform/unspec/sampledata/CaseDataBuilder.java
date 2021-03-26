@@ -100,7 +100,7 @@ public class CaseDataBuilder {
     private IdamUserDetails applicantSolicitor1UserDetails;
     //Deadline extension
     private LocalDate respondentSolicitor1AgreedDeadlineExtension;
-    //Acknowledge Service
+    //Acknowledge Claim
     private ResponseIntention respondent1ClaimResponseIntentionType;
     // Defendant Response
     private RespondentResponseType respondent1ClaimResponseType;
@@ -292,8 +292,8 @@ public class CaseDataBuilder {
                 return atStateClaimCreated();
             case EXTENSION_REQUESTED:
                 return atStateExtensionRequested();
-            case SERVICE_ACKNOWLEDGED:
-                return atStateServiceAcknowledge();
+            case CLAIM_ACKNOWLEDGED:
+                return atStateClaimAcknowledge();
             case RESPONDENT_FULL_DEFENCE:
                 return atStateRespondentFullDefence();
             case RESPONDENT_FULL_ADMISSION:
@@ -328,6 +328,7 @@ public class CaseDataBuilder {
         ccdState = PROCEEDS_WITH_OFFLINE_JOURNEY;
         claimIssuedDate = CLAIM_ISSUED_DATE;
         respondent1Represented = NO;
+        respondent1OrganisationPolicy = null;
         respondentSolicitor1OrganisationDetails = SolicitorOrganisationDetails.builder()
             .email("testorg@email.com")
             .organisationName("test org name")
@@ -414,6 +415,9 @@ public class CaseDataBuilder {
         respondent1 = PartyBuilder.builder().soleTrader().build();
         respondent1Represented = YES;
         respondent1OrgRegistered = YES;
+        applicant1OrganisationPolicy = OrganisationPolicy.builder()
+            .organisation(Organisation.builder().organisationID("QWERTY").build())
+            .build();
         respondent1OrganisationPolicy = OrganisationPolicy.builder()
             .organisation(Organisation.builder().organisationID("QWERTY").build())
             .build();
@@ -476,7 +480,7 @@ public class CaseDataBuilder {
     }
 
     public CaseDataBuilder atStateExtensionRequested() {
-        atStateServiceAcknowledge();
+        atStateClaimAcknowledge();
         respondentSolicitor1AgreedDeadlineExtension = LocalDate.now();
         return this;
     }
@@ -515,7 +519,7 @@ public class CaseDataBuilder {
     }
 
     public CaseDataBuilder atStateRespondentRespondToClaim(RespondentResponseType respondentResponseType) {
-        atStateServiceAcknowledge();
+        atStateClaimAcknowledge();
         respondent1ClaimResponseType = respondentResponseType;
         applicantSolicitorResponseDeadlineToRespondentSolicitor1 = APPLICANT_RESPONSE_DEADLINE;
         defendantResponseDate = LocalDate.now();
@@ -546,7 +550,7 @@ public class CaseDataBuilder {
         return this;
     }
 
-    public CaseDataBuilder atStateServiceAcknowledge() {
+    public CaseDataBuilder atStateClaimAcknowledge() {
         atStateClaimCreated();
         respondent1ClaimResponseIntentionType = FULL_DEFENCE;
         return this;
@@ -601,7 +605,7 @@ public class CaseDataBuilder {
             .applicantSolicitor1UserDetails(applicantSolicitor1UserDetails)
             //Deadline extension
             .respondentSolicitor1AgreedDeadlineExtension(respondentSolicitor1AgreedDeadlineExtension)
-            // Acknowledge Service
+            // Acknowledge Claim
             .respondent1ClaimResponseIntentionType(respondent1ClaimResponseIntentionType)
             // Defendant Response
             .respondent1ClaimResponseType(respondent1ClaimResponseType)
