@@ -751,5 +751,13 @@
     "Label": "Claim dismissed date",
     "FieldType": "Date",
     "SecurityClassification": "Public"
+  },
+  {
+    "LiveFrom": "01/01/2017",
+    "CaseTypeID": "UNSPECIFIED_CLAIMS",
+    "ID": "claimDetailsNotificationDeadline",
+    "Label": "Claim details notification deadline",
+    "FieldType": "DateTime",
+    "SecurityClassification": "Public"
   }
 ]

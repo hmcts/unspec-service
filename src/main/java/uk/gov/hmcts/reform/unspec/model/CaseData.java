@@ -120,4 +120,7 @@ public class CaseData implements MappableObject {
     //TODO: field is currently not set anywhere
     private final LocalDateTime claimDismissedDeadline;
     private final LocalDate claimDismissedDate;
+
+    private final LocalDateTime takenOfflineDate;
+    private final LocalDateTime claimDetailsNotificationDeadline;
 }

@@ -127,6 +127,8 @@ public class CaseDataBuilder {
 
     private SolicitorOrganisationDetails respondentSolicitor1OrganisationDetails;
 
+    private LocalDateTime claimDetailsNotificationDeadline;
+
     public CaseDataBuilder respondentSolicitor1ResponseDeadline(LocalDateTime respondentSolicitor1ResponseDeadline) {
         this.respondentSolicitor1ResponseDeadline = respondentSolicitor1ResponseDeadline;
         return this;
@@ -314,9 +316,19 @@ public class CaseDataBuilder {
                 return atStateCaseProceedsInCaseman();
             case CLAIM_DISMISSED_DEFENDANT_OUT_OF_TIME:
                 return atStateClaimDismissed();
+            case CLAIM_DISMISSED_PAST_CLAIM_DETAILS_NOTIFICATION_DEADLINE:
+                return atStateClaimDismissedPastClaimDetailsNotificationDeadline();
             default:
                 throw new IllegalArgumentException("Invalid internal state: " + flowState);
         }
+    }
+
+    public CaseDataBuilder atStateClaimDismissedPastClaimDetailsNotificationDeadline() {
+        atStateAwaitingCaseDetailsNotification();
+        claimDetailsNotificationDeadline = LocalDateTime.now().minusDays(5);
+        ccdState = CLAIM_DISMISSED;
+        claimDismissedDate = LocalDate.now();
+        return this;
     }
 
     public CaseDataBuilder atStateProceedsOfflineUnrepresentedDefendant() {
@@ -450,6 +462,7 @@ public class CaseDataBuilder {
             .status(SUCCESS)
             .reference("RC-1604-0739-2145-4711")
             .build();
+        claimDetailsNotificationDeadline = LocalDateTime.now().plusDays(1);
         return this;
     }
 
@@ -623,6 +636,7 @@ public class CaseDataBuilder {
             .applicant1OrganisationPolicy(applicant1OrganisationPolicy)
             .respondent1OrganisationPolicy(respondent1OrganisationPolicy)
             .claimDismissedDate(claimDismissedDate)
+            .claimDetailsNotificationDeadline(claimDetailsNotificationDeadline)
             .build();
     }
 }

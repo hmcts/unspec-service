@@ -13,6 +13,7 @@ import uk.gov.hmcts.reform.unspec.callback.CaseEvent;
 import uk.gov.hmcts.reform.unspec.model.BusinessProcess;
 import uk.gov.hmcts.reform.unspec.model.CaseData;
 
+import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -51,8 +52,10 @@ public class NotifyClaimCallbackHandler extends CallbackHandler {
     private CallbackResponse submitClaim(CallbackParams callbackParams) {
         CaseData caseData = callbackParams.getCaseData();
 
+        // temporarily set claimDetailsNotificationDeadline. Proper implementation in CMC-596.
         CaseData updatedCaseData = caseData.toBuilder()
             .businessProcess(BusinessProcess.ready(NOTIFY_DEFENDANT_OF_CLAIM))
+            .claimDetailsNotificationDeadline(LocalDateTime.now())
             .build();
 
         return AboutToStartOrSubmitCallbackResponse.builder()
