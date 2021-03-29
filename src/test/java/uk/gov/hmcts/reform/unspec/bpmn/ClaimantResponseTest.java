@@ -17,6 +17,8 @@ class ClaimantResponseTest extends BpmnBaseTest {
     private static final String GENERATE_DIRECTIONS_QUESTIONNAIRE = "GENERATE_DIRECTIONS_QUESTIONNAIRE";
     private static final String GENERATE_DIRECTIONS_QUESTIONNAIRE_ACTIVITY_ID
         = "ClaimantResponseGenerateDirectionsQuestionnaire";
+    private static final String NOTIFY_RPA_ON_CASE_HANDED_OFFLINE = "NOTIFY_RPA_ON_CASE_HANDED_OFFLINE";
+    private static final String NOTIFY_RPA_ON_CASE_HANDED_OFFLINE_ACTIVITY_ID = "NotifyRoboticsOnCaseHandedOffline";
 
     public ClaimantResponseTest() {
         super("claimant_response.bpmn", "CLAIMANT_RESPONSE_PROCESS_ID");
@@ -50,6 +52,15 @@ class ClaimantResponseTest extends BpmnBaseTest {
             PROCESS_CASE_EVENT,
             GENERATE_DIRECTIONS_QUESTIONNAIRE,
             GENERATE_DIRECTIONS_QUESTIONNAIRE_ACTIVITY_ID
+        );
+
+        //complete the Robotics notification
+        ExternalTask forRobotics = assertNextExternalTask(PROCESS_CASE_EVENT);
+        assertCompleteExternalTask(
+            forRobotics,
+            PROCESS_CASE_EVENT,
+            NOTIFY_RPA_ON_CASE_HANDED_OFFLINE,
+            NOTIFY_RPA_ON_CASE_HANDED_OFFLINE_ACTIVITY_ID
         );
 
         //end business process

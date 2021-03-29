@@ -16,7 +16,6 @@ import uk.gov.hmcts.reform.unspec.model.CaseData;
 import uk.gov.hmcts.reform.unspec.model.UnavailableDate;
 import uk.gov.hmcts.reform.unspec.model.common.Element;
 import uk.gov.hmcts.reform.unspec.service.Time;
-import uk.gov.hmcts.reform.unspec.service.flowstate.FlowState;
 import uk.gov.hmcts.reform.unspec.service.flowstate.StateFlowEngine;
 import uk.gov.hmcts.reform.unspec.validation.UnavailableDateValidator;
 
@@ -33,6 +32,8 @@ import static uk.gov.hmcts.reform.unspec.callback.CallbackType.MID;
 import static uk.gov.hmcts.reform.unspec.callback.CallbackType.SUBMITTED;
 import static uk.gov.hmcts.reform.unspec.callback.CaseEvent.CLAIMANT_RESPONSE;
 import static uk.gov.hmcts.reform.unspec.enums.YesOrNo.YES;
+import static uk.gov.hmcts.reform.unspec.service.flowstate.FlowState.Main.FULL_DEFENCE_NOT_PROCEED;
+import static uk.gov.hmcts.reform.unspec.service.flowstate.FlowState.Main.FULL_DEFENCE_PROCEED;
 import static uk.gov.hmcts.reform.unspec.service.flowstate.FlowState.fromFullName;
 
 @Service
@@ -74,7 +75,7 @@ public class RespondToDefenceCallbackHandler extends CallbackHandler {
     private CallbackResponse handleNotifications(CallbackParams callbackParams) {
         CaseData caseData = callbackParams.getCaseData();
         CaseData.CaseDataBuilder builder = caseData.toBuilder();
-        if (getFlowState(caseData) == FlowState.Main.CASE_PROCEEDS_IN_CASEMAN) {
+        if (isCaseProceedsOffline(caseData)) {
             builder.businessProcess(BusinessProcess.ready(CLAIMANT_RESPONSE)).build();
         }
 
@@ -85,8 +86,9 @@ public class RespondToDefenceCallbackHandler extends CallbackHandler {
             .build();
     }
 
-    private FlowState getFlowState(CaseData caseData) {
-        return fromFullName(stateFlowEngine.evaluate(caseData).getState().getName());
+    private boolean isCaseProceedsOffline(CaseData caseData) {
+        var flowState = fromFullName(stateFlowEngine.evaluate(caseData).getState().getName());
+        return flowState == FULL_DEFENCE_PROCEED || flowState == FULL_DEFENCE_NOT_PROCEED;
     }
 
     private SubmittedCallbackResponse buildConfirmation(CallbackParams callbackParams) {

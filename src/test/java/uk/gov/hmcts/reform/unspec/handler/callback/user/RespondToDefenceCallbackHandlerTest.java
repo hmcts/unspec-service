@@ -42,7 +42,6 @@ import static uk.gov.hmcts.reform.unspec.callback.CallbackType.SUBMITTED;
 import static uk.gov.hmcts.reform.unspec.callback.CaseEvent.CLAIMANT_RESPONSE;
 import static uk.gov.hmcts.reform.unspec.enums.BusinessProcessStatus.READY;
 import static uk.gov.hmcts.reform.unspec.enums.YesOrNo.NO;
-import static uk.gov.hmcts.reform.unspec.enums.YesOrNo.YES;
 import static uk.gov.hmcts.reform.unspec.utils.ElementUtils.wrapElements;
 
 @ExtendWith(SpringExtension.class)
@@ -172,7 +171,7 @@ class RespondToDefenceCallbackHandlerTest extends BaseCallbackHandlerTest {
         @Test
         void shouldUpdateBusinessProcess_whenAtFullDefenceState() {
             var params = callbackParamsOf(
-                CaseDataBuilder.builder().atStateApplicantRespondToDefence().build(),
+                CaseDataBuilder.builder().atStateApplicantRespondToDefenceAndProceed().build(),
                 ABOUT_TO_SUBMIT
             );
 
@@ -205,8 +204,7 @@ class RespondToDefenceCallbackHandlerTest extends BaseCallbackHandlerTest {
         @Test
         void shouldReturnExpectedResponse_whenApplicantIsProceedingWithClaim() {
             CaseData caseData = CaseDataBuilder.builder()
-                .atStateApplicantRespondToDefence()
-                .applicant1ProceedWithClaim(YES)
+                .atStateApplicantRespondToDefenceAndProceed()
                 .build();
             CallbackParams params = callbackParamsOf(caseData, SUBMITTED);
 
@@ -224,7 +222,7 @@ class RespondToDefenceCallbackHandlerTest extends BaseCallbackHandlerTest {
         @Test
         void shouldReturnExpectedResponse_whenApplicantIsNotProceedingWithClaim() {
             CaseData caseData = CaseDataBuilder.builder()
-                .atStateApplicantRespondToDefence()
+                .atStateApplicantRespondToDefenceAndProceed()
                 .applicant1ProceedWithClaim(NO)
                 .build();
             CallbackParams params = callbackParamsOf(caseData, SUBMITTED);

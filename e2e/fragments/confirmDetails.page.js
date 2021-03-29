@@ -10,7 +10,7 @@ module.exports = {
 
   async confirmReference() {
     I.waitForElement(this.fields.solicitorReferences.id);
-    I.fillField(this.fields.solicitorReferences.id, 'Updated Defendant Reference');
+    I.fillField(this.fields.solicitorReferences.id, 'Updated Def Reference');
 
     await I.clickContinue();
   }

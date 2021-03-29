@@ -10,9 +10,12 @@ import uk.gov.hmcts.reform.unspec.service.flowstate.FlowState;
 import uk.gov.hmcts.reform.unspec.service.flowstate.StateFlowEngine;
 import uk.gov.hmcts.reform.unspec.stateflow.model.State;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import static java.time.format.DateTimeFormatter.ISO_DATE;
+import static uk.gov.hmcts.reform.unspec.enums.YesOrNo.YES;
+import static uk.gov.hmcts.reform.unspec.service.robotics.mapper.RoboticsDataMapper.RESPONDENT_ID;
 
 @Component
 @RequiredArgsConstructor
@@ -37,10 +40,47 @@ public class EventHistoryMapper {
             case RESPONDENT_COUNTER_CLAIM:
                 buildRespondentCounterClaim(caseData, builder);
                 break;
+            case FULL_DEFENCE_NOT_PROCEED:
+                buildFullDefenceNotProceed(caseData, builder);
+                break;
             default:
                 break;
         }
         return builder.build();
+    }
+
+    private void buildFullDefenceNotProceed(CaseData caseData, EventHistory.EventHistoryBuilder builder) {
+        buildMiscellaneousEvents(builder, caseData, "Claimant intends not to proceed", 6);
+        buildAcknowledgementOfServiceReceived(builder, caseData);
+        buildConsentExtensionFilingDefence(builder, caseData);
+        builder.defenceFiled(
+            List.of(
+                Event.builder()
+                    .eventSequence(4)
+                    .eventCode("50")
+                    .dateReceived(caseData.getRespondent1ResponseDate().format(ISO_DATE))
+                    .litigiousPartyID(RESPONDENT_ID)
+                    .build()
+            )
+        ).directionsQuestionnaireFiled(
+            List.of(
+                Event.builder()
+                    .eventSequence(5)
+                    .eventCode("197")
+                    .dateReceived(caseData.getRespondent1ResponseDate().format(ISO_DATE))
+                    .litigiousPartyID(RESPONDENT_ID)
+                    .eventDetails(EventDetails.builder()
+                                      .preferredCourtCode(caseData
+                                                              .getRespondent1DQ()
+                                                              .getRespondent1DQRequestedCourt()
+                                                              .getResponseCourtCode())
+                                      .stayClaim(caseData.getRespondent1DQ()
+                                                     .getRespondent1DQFileDirectionsQuestionnaire()
+                                                     .getOneMonthStayRequested() == YES ? true : false)
+                                      .build())
+                    .build()
+            )
+        );
     }
 
     private void buildUnrepresentedDefendant(CaseData caseData, EventHistory.EventHistoryBuilder builder) {
@@ -55,6 +95,26 @@ public class EventHistoryMapper {
                                       .build())
                     .build()
             ));
+    }
+
+    private void buildAcknowledgementOfServiceReceived(EventHistory.EventHistoryBuilder builder, CaseData caseData) {
+        LocalDateTime dateAcknowledge = caseData.getRespondent1AcknowledgeNotificationDate();
+        if (dateAcknowledge == null) {
+            return;
+        }
+        builder
+            .acknowledgementOfServiceReceived(
+                List.of(
+                    Event.builder()
+                        .eventSequence(2)
+                        .eventCode("38")
+                        .dateReceived(dateAcknowledge.format(ISO_DATE))
+                        .litigiousPartyID("002")
+                        .eventDetails(EventDetails.builder()
+                                          .responseIntention("contest jurisdiction")
+                                          .build())
+                        .build()
+                ));
     }
 
     private void buildRespondentFullAdmission(CaseData caseData, EventHistory.EventHistoryBuilder builder) {
@@ -99,8 +159,44 @@ public class EventHistoryMapper {
         buildCommonDefendantResponseEvents(builder, caseData, "Defendant rejects and counter claims.");
     }
 
-    private void buildCommonDefendantResponseEvents(EventHistory.EventHistoryBuilder builder, CaseData caseData,
-                                                    String rpaReason) {
+    private void buildCommonDefendantResponseEvents(
+        EventHistory.EventHistoryBuilder builder,
+        CaseData caseData,
+        String rpaReason
+    ) {
+        buildMiscellaneousEvents(builder, caseData, rpaReason, 5);
+        buildAcknowledgementOfServiceReceived(builder, caseData);
+        buildConsentExtensionFilingDefence(builder, caseData);
+    }
+
+    private void buildConsentExtensionFilingDefence(EventHistory.EventHistoryBuilder builder, CaseData caseData) {
+        LocalDateTime dateReceived = caseData.getRespondent1TimeExtensionDate();
+        if (dateReceived == null) {
+            return;
+        }
+        builder.consentExtensionFilingDefence(
+            List.of(
+                Event.builder()
+                    .eventSequence(3)
+                    .eventCode("45")
+                    .dateReceived(dateReceived.format(ISO_DATE))
+                    .litigiousPartyID("002")
+                    .eventDetails(EventDetails.builder()
+                                      .agreedExtensionDate(caseData
+                                                               .getRespondentSolicitor1AgreedDeadlineExtension()
+                                                               .format(ISO_DATE))
+                                      .build())
+                    .build()
+            )
+        );
+    }
+
+    private void buildMiscellaneousEvents(
+        EventHistory.EventHistoryBuilder builder,
+        CaseData caseData,
+        String rpaReason,
+        Integer eventSequence
+    ) {
         builder.miscellaneous(
             List.of(
                 Event.builder()
@@ -112,35 +208,11 @@ public class EventHistoryMapper {
                                       .build())
                     .build(),
                 Event.builder()
-                    .eventSequence(5)
+                    .eventSequence(eventSequence)
                     .eventCode("999")
                     .dateReceived(caseData.getRespondent1ResponseDate().format(ISO_DATE))
                     .eventDetails(EventDetails.builder()
                                       .miscText("RPA Reason: " + rpaReason)
-                                      .build())
-                    .build()
-            )
-        ).acknowledgementOfServiceReceived(
-            List.of(
-                Event.builder()
-                    .eventSequence(2)
-                    .eventCode("38")
-                    .dateReceived(caseData.getRespondent1ResponseDate().format(ISO_DATE))
-                    .litigiousPartyID("002")
-                    .eventDetails(EventDetails.builder()
-                                      .responseIntention("contest jurisdiction")
-                                      .build())
-                    .build()
-            )
-        ).consentExtensionFilingDefence(
-            List.of(
-                Event.builder()
-                    .eventSequence(3)
-                    .eventCode("45")
-                    .dateReceived(caseData.getRespondent1ResponseDate().format(ISO_DATE))
-                    .litigiousPartyID("002")
-                    .eventDetails(EventDetails.builder()
-                                      .agreedExtensionDate("")
                                       .build())
                     .build()
             )
