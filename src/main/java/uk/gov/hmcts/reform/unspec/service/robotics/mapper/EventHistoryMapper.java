@@ -13,6 +13,7 @@ import uk.gov.hmcts.reform.unspec.stateflow.model.State;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import static java.lang.String.format;
 import static java.time.format.DateTimeFormatter.ISO_DATE;
 import static uk.gov.hmcts.reform.unspec.enums.YesOrNo.YES;
 import static uk.gov.hmcts.reform.unspec.service.robotics.mapper.RoboticsDataMapper.RESPONDENT_ID;
@@ -69,15 +70,16 @@ public class EventHistoryMapper {
                     .eventCode("197")
                     .dateReceived(caseData.getRespondent1ResponseDate().format(ISO_DATE))
                     .litigiousPartyID(RESPONDENT_ID)
-                    .eventDetails(EventDetails.builder()
-                                      .preferredCourtCode(caseData
-                                                              .getRespondent1DQ()
-                                                              .getRespondent1DQRequestedCourt()
-                                                              .getResponseCourtCode())
-                                      .stayClaim(caseData.getRespondent1DQ()
-                                                     .getRespondent1DQFileDirectionsQuestionnaire()
-                                                     .getOneMonthStayRequested() == YES ? true : false)
-                                      .build())
+                    .eventDetailsText(format(
+                        "preferredCourtCode: %s; stayClaim: %s",
+                        caseData
+                            .getRespondent1DQ()
+                            .getRespondent1DQRequestedCourt()
+                            .getResponseCourtCode(),
+                        caseData.getRespondent1DQ()
+                            .getRespondent1DQFileDirectionsQuestionnaire()
+                            .getOneMonthStayRequested() == YES ? true : false
+                    ))
                     .build()
             )
         );

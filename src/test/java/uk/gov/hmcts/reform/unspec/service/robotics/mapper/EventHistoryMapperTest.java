@@ -18,6 +18,7 @@ import uk.gov.hmcts.reform.unspec.service.flowstate.StateFlowEngine;
 import java.util.List;
 import java.util.stream.Stream;
 
+import static java.lang.String.format;
 import static java.time.format.DateTimeFormatter.ISO_DATE;
 import static org.assertj.core.api.Assertions.assertThat;
 import static uk.gov.hmcts.reform.unspec.enums.YesOrNo.YES;
@@ -257,15 +258,16 @@ class EventHistoryMapperTest {
             .eventCode("197")
             .dateReceived(caseData.getRespondent1ResponseDate().format(ISO_DATE))
             .litigiousPartyID("002")
-            .eventDetails(EventDetails.builder()
-                              .preferredCourtCode(caseData
-                                                      .getRespondent1DQ()
-                                                      .getRespondent1DQRequestedCourt()
-                                                      .getResponseCourtCode())
-                              .stayClaim(caseData.getRespondent1DQ()
-                                             .getRespondent1DQFileDirectionsQuestionnaire()
-                                             .getOneMonthStayRequested() == YES ? true : false)
-                              .build())
+            .eventDetailsText(format(
+                "preferredCourtCode: %s; stayClaim: %s",
+                caseData
+                    .getRespondent1DQ()
+                    .getRespondent1DQRequestedCourt()
+                    .getResponseCourtCode(),
+                caseData.getRespondent1DQ()
+                    .getRespondent1DQFileDirectionsQuestionnaire()
+                    .getOneMonthStayRequested() == YES ? true : false
+            ))
             .build();
         List<Event> expectedMiscellaneousEvents = List.of(
             Event.builder()
