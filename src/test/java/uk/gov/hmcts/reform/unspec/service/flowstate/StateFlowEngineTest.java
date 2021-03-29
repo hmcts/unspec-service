@@ -202,7 +202,7 @@ class StateFlowEngineTest {
         }
 
         @Test
-        void shouldReturnClaimDismissed_whenCaseDataatStateClaimAcknowledgeAndCcdStateIsDismissed() {
+        void shouldReturnClaimDismissed_whenCaseDataAtStateClaimAcknowledgeAndCcdStateIsDismissed() {
             CaseData caseData = CaseDataBuilder.builder().atStateClaimAcknowledge()
                 .claimDismissedDate(LocalDate.now())
                 .build();

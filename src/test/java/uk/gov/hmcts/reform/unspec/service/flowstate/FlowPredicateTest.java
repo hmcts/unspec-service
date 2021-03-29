@@ -260,7 +260,7 @@ class FlowPredicateTest {
         }
 
         @Test
-        void shouldReturnFalse_whenCaseDataatStateClaimAcknowledged() {
+        void shouldReturnFalse_whenCaseDataAtStateClaimAcknowledged() {
             CaseData caseData = CaseDataBuilder.builder().atStateRespondentFullDefence().build();
             assertFalse(applicantRespondToDefence.test(caseData));
         }
@@ -362,7 +362,7 @@ class FlowPredicateTest {
         }
 
         @Test
-        void shouldReturnFalse_whenCaseDataatStateClaimAcknowledge() {
+        void shouldReturnFalse_whenCaseDataAtStateClaimAcknowledge() {
             CaseData caseData = CaseDataBuilder.builder().atStateClaimAcknowledge().build();
             assertFalse(caseDismissedAfterClaimAcknowledged.test(caseData));
         }
