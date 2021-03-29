@@ -4,9 +4,6 @@ const {waitForFinishedBusinessProcess} = require('../api/testingSupport');
 const caseEventMessage = eventName => `Case ${caseNumber} has been updated with event: ${eventName}`;
 const caseId = () => `${caseNumber.split('-').join('').replace(/#/, '')}`;
 
-const CASE_HEADER = 'ccd-case-header > h1';
-const CASE_LIST = 'exui-case-list';
-
 let caseNumber;
 
 Feature('Claim creation @e2e-tests');
@@ -29,9 +26,9 @@ Scenario('Solicitor notifies defendant solicitor of claim details', async (I) =>
   await I.see(caseEventMessage('Notify claim details'));
 });
 
-Scenario('Solicitor acknowledges service', async (I) => {
-  await I.acknowledgeService('fullDefence');
-  await I.see(caseEventMessage('Acknowledge service'));
+Scenario('Solicitor acknowledges claim', async (I) => {
+  await I.acknowledgeClaim('fullDefence');
+  await I.see(caseEventMessage('Acknowledge claim'));
 });
 
 Scenario('Solicitor requests deadline extension', async (I) => {
@@ -51,12 +48,6 @@ Scenario('Solicitor responds to claim', async (I) => {
 
 Scenario('Solicitor responds to defence', async (I) => {
   await I.respondToDefence();
-  if (config.idamStub.enabled) {
-    I.waitForElement(CASE_HEADER);
-    await I.see(caseEventMessage('View and respond to defence'));
-  } else {
-    I.waitForElement(CASE_LIST);
-    await I.see('Case List');
-  }
+  await I.see(caseEventMessage('View and respond to defence'));
   await waitForFinishedBusinessProcess(caseId());
 });
