@@ -18,7 +18,6 @@ import uk.gov.hmcts.reform.unspec.service.docmosis.sealedclaim.SealedClaimFormGe
 import uk.gov.hmcts.reform.unspec.service.flowstate.FlowState;
 import uk.gov.hmcts.reform.unspec.service.flowstate.StateFlowEngine;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
@@ -55,7 +54,7 @@ public class GenerateClaimFormCallbackHandler extends CallbackHandler {
 
     private CallbackResponse generateClaimForm(CallbackParams callbackParams) {
         CaseData caseData = callbackParams.getCaseData();
-        LocalDate issueDate = time.now().toLocalDate();
+        LocalDateTime issueDate = time.now();
 
         CaseData.CaseDataBuilder caseDataBuilder = caseData.toBuilder().issueDate(issueDate);
 
@@ -69,7 +68,7 @@ public class GenerateClaimFormCallbackHandler extends CallbackHandler {
         CaseState state = getState(caseDataBuilder.build());
 
         if (state.equals(CaseState.AWAITING_CASE_NOTIFICATION)) {
-            LocalDateTime deadline = deadlinesCalculator.addMonthsToDateAtMidnight(4, issueDate);
+            LocalDateTime deadline = deadlinesCalculator.addMonthsToDateAtMidnight(4, issueDate.toLocalDate());
             caseDataBuilder.claimNotificationDeadline(deadline);
         }
 

@@ -201,7 +201,7 @@
     "CaseTypeID": "UNSPECIFIED_CLAIMS",
     "ID": "issueDate",
     "Label": "Date claim issued",
-    "FieldType": "Date",
+    "FieldType": "DateTime",
     "SecurityClassification": "Public",
     "_Definition":  "The derived legal date the claim is deemed issued. It is based on the date time when the claim was submitted digitally",
     "_Category":  "CIVIL"

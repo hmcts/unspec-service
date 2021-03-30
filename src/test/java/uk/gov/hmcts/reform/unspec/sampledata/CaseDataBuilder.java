@@ -69,7 +69,7 @@ public class CaseDataBuilder {
     public static final Long CASE_ID = 1594901956117591L;
     public static final LocalDateTime RESPONSE_DEADLINE = now().plusDays(14).atTime(23, 59, 59);
     public static final LocalDateTime APPLICANT_RESPONSE_DEADLINE = LocalDateTime.now().plusDays(120);
-    public static final LocalDate CLAIM_ISSUED_DATE = now();
+    public static final LocalDateTime CLAIM_ISSUED_DATE = LocalDateTime.now();
     public static final LocalDateTime DEADLINE = LocalDate.of(2020, 1, 1).atStartOfDay();
 
     // Create Claim
@@ -119,7 +119,7 @@ public class CaseDataBuilder {
     //dates
     private LocalDateTime submittedDate;
     private LocalDateTime paymentSuccessfulDate;
-    private LocalDate issueDate;
+    private LocalDateTime issueDate;
     private LocalDateTime claimNotificationDeadline;
     private LocalDateTime claimNotificationDate;
     private LocalDateTime claimDetailsNotificationDeadline;
@@ -222,7 +222,7 @@ public class CaseDataBuilder {
         return this;
     }
 
-    public CaseDataBuilder issueDate(LocalDate issueDate) {
+    public CaseDataBuilder issueDate(LocalDateTime issueDate) {
         this.issueDate = issueDate;
         return this;
     }

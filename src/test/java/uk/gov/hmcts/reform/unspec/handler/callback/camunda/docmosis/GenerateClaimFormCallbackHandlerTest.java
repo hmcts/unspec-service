@@ -77,7 +77,7 @@ class GenerateClaimFormCallbackHandlerTest extends BaseCallbackHandlerTest {
                           .build())
         .build();
 
-    private final LocalDate issueDate = now();
+    private final LocalDateTime issueDate = LocalDateTime.now();
     private final LocalDateTime deadline = now().atTime(MIDNIGHT);
 
     @BeforeEach
@@ -85,7 +85,7 @@ class GenerateClaimFormCallbackHandlerTest extends BaseCallbackHandlerTest {
         when(sealedClaimFormGenerator.generate(any(CaseData.class), anyString())).thenReturn(DOCUMENT);
         when(deadlinesCalculator.addMonthsToDateAtMidnight(eq(4), any(LocalDate.class)))
             .thenReturn(deadline);
-        when(time.now()).thenReturn(issueDate.atStartOfDay());
+        when(time.now()).thenReturn(issueDate);
     }
 
     @Nested

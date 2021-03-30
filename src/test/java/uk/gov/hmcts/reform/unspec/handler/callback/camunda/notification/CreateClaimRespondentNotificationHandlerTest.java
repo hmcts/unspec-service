@@ -20,7 +20,7 @@ import java.util.Map;
 import static org.mockito.Mockito.verify;
 import static uk.gov.hmcts.reform.unspec.callback.CallbackType.ABOUT_TO_SUBMIT;
 import static uk.gov.hmcts.reform.unspec.helpers.DateFormatHelper.DATE;
-import static uk.gov.hmcts.reform.unspec.helpers.DateFormatHelper.formatLocalDate;
+import static uk.gov.hmcts.reform.unspec.helpers.DateFormatHelper.formatLocalDateTime;
 import static uk.gov.hmcts.reform.unspec.sampledata.CaseDataBuilder.CLAIM_ISSUED_DATE;
 
 @SpringBootTest(classes = {
@@ -62,7 +62,7 @@ class CreateClaimRespondentNotificationHandlerTest extends BaseCallbackHandlerTe
                 "claimReferenceNumber", "000LR001",
                 "claimantName", "Mr. John Rambo",
                 "defendantName", "Mr. Sole Trader",
-                "issuedOn", formatLocalDate(CLAIM_ISSUED_DATE, DATE)
+                "issuedOn", formatLocalDateTime(CLAIM_ISSUED_DATE, DATE)
             );
         }
     }

@@ -19,7 +19,7 @@ import java.util.Map;
 import static uk.gov.hmcts.reform.unspec.callback.CallbackType.ABOUT_TO_SUBMIT;
 import static uk.gov.hmcts.reform.unspec.callback.CaseEvent.NOTIFY_RESPONDENT_SOLICITOR1_FOR_CLAIM_ISSUE;
 import static uk.gov.hmcts.reform.unspec.helpers.DateFormatHelper.DATE;
-import static uk.gov.hmcts.reform.unspec.helpers.DateFormatHelper.formatLocalDate;
+import static uk.gov.hmcts.reform.unspec.helpers.DateFormatHelper.formatLocalDateTime;
 import static uk.gov.hmcts.reform.unspec.utils.PartyUtils.getPartyNameBasedOnType;
 
 @Service
@@ -72,7 +72,7 @@ public class CreateClaimRespondentNotificationHandler extends CallbackHandler im
             CLAIM_REFERENCE_NUMBER, caseData.getLegacyCaseReference(),
             APPLICANT_NAME, getPartyNameBasedOnType(caseData.getApplicant1()),
             RESPONDENT_NAME, getPartyNameBasedOnType(caseData.getRespondent1()),
-            ISSUED_ON, formatLocalDate(caseData.getIssueDate(), DATE)
+            ISSUED_ON, formatLocalDateTime(caseData.getIssueDate(), DATE)
         );
     }
 }

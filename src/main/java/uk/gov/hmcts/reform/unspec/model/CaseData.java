@@ -112,7 +112,7 @@ public class CaseData implements MappableObject {
     // dates
     private final LocalDateTime submittedDate;
     private final LocalDateTime paymentSuccessfulDate;
-    private final LocalDate issueDate;
+    private final LocalDateTime issueDate;
     private final LocalDateTime claimNotificationDeadline;
     private final LocalDateTime claimNotificationDate;
     private final LocalDateTime claimDetailsNotificationDeadline;
