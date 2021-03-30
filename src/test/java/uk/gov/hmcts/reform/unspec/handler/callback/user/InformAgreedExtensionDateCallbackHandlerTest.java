@@ -24,7 +24,6 @@ import uk.gov.hmcts.reform.unspec.validation.DeadlineExtensionValidator;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
-import static com.google.common.collect.ImmutableMap.of;
 import static java.lang.String.format;
 import static java.time.LocalDate.now;
 import static java.time.LocalTime.MIDNIGHT;
@@ -37,6 +36,7 @@ import static uk.gov.hmcts.reform.unspec.callback.CallbackType.MID;
 import static uk.gov.hmcts.reform.unspec.callback.CallbackType.SUBMITTED;
 import static uk.gov.hmcts.reform.unspec.helpers.DateFormatHelper.DATE_TIME_AT;
 import static uk.gov.hmcts.reform.unspec.helpers.DateFormatHelper.formatLocalDateTime;
+import static uk.gov.hmcts.reform.unspec.sampledata.CaseDataBuilder.RESPONSE_DEADLINE;
 import static uk.gov.hmcts.reform.unspec.service.DeadlinesCalculator.END_OF_BUSINESS_DAY;
 
 @SpringBootTest(classes = {
@@ -76,16 +76,14 @@ class InformAgreedExtensionDateCallbackHandlerTest extends BaseCallbackHandlerTe
     class ExtensionValidation {
 
         private static final String PAGE_ID = "extension-date";
-        private static final String EXTENSION_DATE = "respondentSolicitor1AgreedDeadlineExtension";
-        private static final String RESPONSE_DEADLINE = "respondent1ResponseDeadline";
 
         @Test
         void shouldReturnExpectedError_whenValuesAreInvalid() {
-            CallbackParams params = callbackParamsOf(
-                of(EXTENSION_DATE, now().minusDays(1), RESPONSE_DEADLINE, now().atTime(16, 0)),
-                MID,
-                PAGE_ID
-            );
+            CaseData caseData = CaseDataBuilder.builder().atStateExtensionRequested()
+                .extensionDate(now().minusDays(1))
+                .build();
+
+            CallbackParams params = callbackParamsOf(caseData, MID, PAGE_ID);
 
             AboutToStartOrSubmitCallbackResponse response = (AboutToStartOrSubmitCallbackResponse) handler
                 .handle(params);
@@ -96,11 +94,11 @@ class InformAgreedExtensionDateCallbackHandlerTest extends BaseCallbackHandlerTe
 
         @Test
         void shouldReturnNoError_whenValuesAreValid() {
-            CallbackParams params = callbackParamsOf(
-                of(EXTENSION_DATE, now().plusDays(14), RESPONSE_DEADLINE, now().atTime(16, 0)),
-                MID,
-                PAGE_ID
-            );
+            CaseData caseData = CaseDataBuilder.builder().atStateExtensionRequested()
+                .extensionDate(RESPONSE_DEADLINE.toLocalDate().plusDays(14))
+                .build();
+
+            CallbackParams params = callbackParamsOf(caseData, MID, PAGE_ID);
 
             AboutToStartOrSubmitCallbackResponse response = (AboutToStartOrSubmitCallbackResponse) handler
                 .handle(params);
