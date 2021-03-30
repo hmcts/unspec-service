@@ -16,6 +16,7 @@ import java.util.List;
 import static java.lang.String.format;
 import static java.time.format.DateTimeFormatter.ISO_DATE;
 import static uk.gov.hmcts.reform.unspec.enums.YesOrNo.YES;
+import static uk.gov.hmcts.reform.unspec.service.robotics.mapper.RoboticsDataMapper.APPLICANT_ID;
 import static uk.gov.hmcts.reform.unspec.service.robotics.mapper.RoboticsDataMapper.RESPONDENT_ID;
 
 @Component
@@ -44,26 +45,21 @@ public class EventHistoryMapper {
             case FULL_DEFENCE_NOT_PROCEED:
                 buildFullDefenceNotProceed(caseData, builder);
                 break;
+            case FULL_DEFENCE_PROCEED:
+                buildFullDefenceProceed(caseData, builder);
+                break;
             default:
                 break;
         }
         return builder.build();
     }
 
-    private void buildFullDefenceNotProceed(CaseData caseData, EventHistory.EventHistoryBuilder builder) {
-        buildMiscellaneousEvents(builder, caseData, "Claimant intends not to proceed", 6);
+    private void buildFullDefenceProceed(CaseData caseData, EventHistory.EventHistoryBuilder builder) {
+        buildMiscellaneousEvents(builder, caseData, "Applicant proceeds", 8);
         buildAcknowledgementOfServiceReceived(builder, caseData);
         buildConsentExtensionFilingDefence(builder, caseData);
-        builder.defenceFiled(
-            List.of(
-                Event.builder()
-                    .eventSequence(4)
-                    .eventCode("50")
-                    .dateReceived(caseData.getRespondent1ResponseDate().format(ISO_DATE))
-                    .litigiousPartyID(RESPONDENT_ID)
-                    .build()
-            )
-        ).directionsQuestionnaireFiled(
+        buildDefenceFiled(builder, caseData);
+        builder.directionsQuestionnaireFiled(
             List.of(
                 Event.builder()
                     .eventSequence(5)
@@ -80,6 +76,70 @@ public class EventHistoryMapper {
                             .getRespondent1DQFileDirectionsQuestionnaire()
                             .getOneMonthStayRequested() == YES
                     ))
+                    .build(),
+                Event.builder()
+                    .eventSequence(7)
+                    .eventCode("197")
+                    .dateReceived(caseData.getApplicant1ResponseDate().format(ISO_DATE))
+                    .litigiousPartyID(APPLICANT_ID)
+                    .eventDetailsText(format(
+                        "preferredCourtCode: %s; stayClaim: %s",
+                        caseData
+                            .getApplicant1DQ()
+                            .getApplicant1DQRequestedCourt()
+                            .getResponseCourtCode(),
+                        caseData.getApplicant1DQ()
+                            .getApplicant1DQFileDirectionsQuestionnaire()
+                            .getOneMonthStayRequested() == YES
+                    ))
+                    .build()
+            )
+        ).replyToDefence(List.of(
+            Event.builder()
+                .eventSequence(6)
+                .eventCode("66")
+                .dateReceived(caseData.getApplicant1ResponseDate().format(ISO_DATE))
+                .litigiousPartyID(APPLICANT_ID)
+                .build()
+        ));
+
+    }
+
+    private void buildFullDefenceNotProceed(CaseData caseData, EventHistory.EventHistoryBuilder builder) {
+        buildMiscellaneousEvents(builder, caseData, "Claimant intends not to proceed", 6);
+        buildAcknowledgementOfServiceReceived(builder, caseData);
+        buildConsentExtensionFilingDefence(builder, caseData);
+        buildDefenceFiled(builder, caseData);
+        builder.directionsQuestionnaireFiled(
+            List.of(
+                Event.builder()
+                    .eventSequence(5)
+                    .eventCode("197")
+                    .dateReceived(caseData.getRespondent1ResponseDate().format(ISO_DATE))
+                    .litigiousPartyID(RESPONDENT_ID)
+                    .eventDetailsText(format(
+                        "preferredCourtCode: %s; stayClaim: %s",
+                        caseData
+                            .getRespondent1DQ()
+                            .getRespondent1DQRequestedCourt()
+                            .getResponseCourtCode(),
+                        caseData.getRespondent1DQ()
+                            .getRespondent1DQFileDirectionsQuestionnaire()
+                            .getOneMonthStayRequested() == YES
+                    ))
+                    .build()
+            )
+        );
+    }
+
+    private void buildDefenceFiled(EventHistory.EventHistoryBuilder builder, CaseData caseData) {
+        builder.defenceFiled(
+            List.of(
+                Event.builder()
+                    .eventSequence(4)
+                    .eventCode("50")
+                    .dateReceived(caseData.getRespondent1ResponseDate().format(ISO_DATE))
+                    .litigiousPartyID(RESPONDENT_ID)
                     .build()
             )
         );
