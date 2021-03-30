@@ -14,6 +14,7 @@ import static uk.gov.hmcts.reform.unspec.enums.CaseState.AWAITING_CASE_NOTIFICAT
 import static uk.gov.hmcts.reform.unspec.enums.CaseState.AWAITING_CLAIMANT_INTENTION;
 import static uk.gov.hmcts.reform.unspec.enums.CaseState.CREATED;
 import static uk.gov.hmcts.reform.unspec.enums.CaseState.PENDING_CASE_ISSUED;
+import static uk.gov.hmcts.reform.unspec.enums.CaseState.PROCEEDS_WITH_OFFLINE_JOURNEY;
 
 @SuppressWarnings("unchecked")
 public class CaseDetailsBuilder {
@@ -72,8 +73,8 @@ public class CaseDetailsBuilder {
         return this;
     }
 
-    public CaseDetailsBuilder atStateServiceAcknowledge() {
-        CaseData caseData = CaseDataBuilder.builder().atStateServiceAcknowledge().build();
+    public CaseDetailsBuilder atStateClaimAcknowledge() {
+        CaseData caseData = CaseDataBuilder.builder().atStateClaimAcknowledge().build();
         this.data = mapper.convertValue(caseData, Map.class);
         this.state = CREATED.name();
         return this;
@@ -97,6 +98,13 @@ public class CaseDetailsBuilder {
         CaseData caseData = CaseDataBuilder.builder().atStateApplicantRespondToDefence().build();
         this.data = mapper.convertValue(caseData, Map.class);
         this.state = AWAITING_CLAIMANT_INTENTION.name();
+        return this;
+    }
+
+    public CaseDetailsBuilder atStateProceedsOffline() {
+        CaseData caseData = CaseDataBuilder.builder().atStateProceedsOfflineUnrepresentedDefendant().build();
+        this.data = mapper.convertValue(caseData, Map.class);
+        this.state = PROCEEDS_WITH_OFFLINE_JOURNEY.name();
         return this;
     }
 

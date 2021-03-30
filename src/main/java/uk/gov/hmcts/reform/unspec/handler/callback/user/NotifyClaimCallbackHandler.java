@@ -1,5 +1,6 @@
 package uk.gov.hmcts.reform.unspec.handler.callback.user;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import uk.gov.hmcts.reform.ccd.client.model.AboutToStartOrSubmitCallbackResponse;
@@ -9,10 +10,12 @@ import uk.gov.hmcts.reform.unspec.callback.Callback;
 import uk.gov.hmcts.reform.unspec.callback.CallbackHandler;
 import uk.gov.hmcts.reform.unspec.callback.CallbackParams;
 import uk.gov.hmcts.reform.unspec.callback.CaseEvent;
-import uk.gov.hmcts.reform.unspec.helpers.CaseDetailsConverter;
 import uk.gov.hmcts.reform.unspec.model.BusinessProcess;
 import uk.gov.hmcts.reform.unspec.model.CaseData;
+import uk.gov.hmcts.reform.unspec.service.DeadlinesCalculator;
+import uk.gov.hmcts.reform.unspec.service.Time;
 
+import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -22,6 +25,8 @@ import static uk.gov.hmcts.reform.unspec.callback.CallbackType.ABOUT_TO_START;
 import static uk.gov.hmcts.reform.unspec.callback.CallbackType.ABOUT_TO_SUBMIT;
 import static uk.gov.hmcts.reform.unspec.callback.CallbackType.SUBMITTED;
 import static uk.gov.hmcts.reform.unspec.callback.CaseEvent.NOTIFY_DEFENDANT_OF_CLAIM;
+import static uk.gov.hmcts.reform.unspec.helpers.DateFormatHelper.DATE_TIME_AT;
+import static uk.gov.hmcts.reform.unspec.helpers.DateFormatHelper.formatLocalDateTime;
 
 @Service
 @RequiredArgsConstructor
@@ -32,7 +37,9 @@ public class NotifyClaimCallbackHandler extends CallbackHandler {
         + "The defendant legal representative's organisation has been notified and granted access to this claim.\n\n"
         + "You must notify the defendant with the claim details by %s";
 
-    private final CaseDetailsConverter caseDetailsConverter;
+    private final ObjectMapper objectMapper;
+    private final DeadlinesCalculator deadlinesCalculator;
+    private final Time time;
 
     @Override
     protected Map<String, Callback> callbacks() {
@@ -50,19 +57,35 @@ public class NotifyClaimCallbackHandler extends CallbackHandler {
 
     private CallbackResponse submitClaim(CallbackParams callbackParams) {
         CaseData caseData = callbackParams.getCaseData();
+        LocalDateTime claimNotificationDate = time.now();
 
-        CaseData updatedCaseData = caseData.toBuilder()
+        CaseData.CaseDataBuilder caseDataBuilder = caseData.toBuilder()
             .businessProcess(BusinessProcess.ready(NOTIFY_DEFENDANT_OF_CLAIM))
-            .build();
+            .claimNotificationDate(claimNotificationDate);
+
+        LocalDateTime deadline = getDeadline(claimNotificationDate);
+        LocalDateTime claimNotificationDeadline = caseData.getClaimNotificationDeadline();
+
+        if (deadline.isAfter(claimNotificationDeadline)) {
+            caseDataBuilder.claimDetailsNotificationDeadline(claimNotificationDeadline);
+        } else {
+            caseDataBuilder.claimDetailsNotificationDeadline(deadline);
+        }
 
         return AboutToStartOrSubmitCallbackResponse.builder()
-            .data(caseDetailsConverter.toMap(updatedCaseData))
+            .data(caseDataBuilder.build().toMap(objectMapper))
             .build();
     }
 
+    private LocalDateTime getDeadline(LocalDateTime claimNotificationDate) {
+        return deadlinesCalculator.plus14DaysAt4pmDeadline(claimNotificationDate.toLocalDate());
+    }
+
     private SubmittedCallbackResponse buildConfirmation(CallbackParams callbackParams) {
-        //TODO: update with date logic
-        String body = format(CONFIRMATION_SUMMARY, "DATE");
+        CaseData caseData = callbackParams.getCaseData();
+        String formattedDeadline = formatLocalDateTime(caseData.getClaimDetailsNotificationDeadline(), DATE_TIME_AT);
+
+        String body = format(CONFIRMATION_SUMMARY, formattedDeadline);
 
         return SubmittedCallbackResponse.builder()
             .confirmationHeader("# Notification of claim sent")

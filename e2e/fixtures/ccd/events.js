@@ -11,10 +11,10 @@ module.exports = {
     description: 'Inform the defendant of particulars of claim',
     order: 3
   },
-  ACKNOWLEDGE_SERVICE: {
-    id: 'ACKNOWLEDGE_SERVICE',
-    name: 'Acknowledge service',
-    description: 'Defendant solicitor is acknowledging service',
+  ACKNOWLEDGE_CLAIM: {
+    id: 'ACKNOWLEDGE_CLAIM',
+    name: 'Acknowledge claim',
+    description: 'Defendant solicitor is acknowledging claim',
     order: 4
   },
   ADD_DEFENDANT_LITIGATION_FRIEND: {
@@ -70,5 +70,11 @@ module.exports = {
     id: 'INFORM_AGREED_EXTENSION_DATE',
     name: 'Inform agreed extension date',
     order: 13
+  },
+  AMEND_PARTY_DETAILS: {
+    description: 'Update defendant and claimant solicitor email addresses',
+    id: 'AMEND_PARTY_DETAILS',
+    name: 'Amend party details',
+    order: 14
   }
 };

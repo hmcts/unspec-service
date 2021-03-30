@@ -40,7 +40,7 @@
   {
     "LiveFrom": "01/01/2017",
     "CaseTypeID": "UNSPECIFIED_CLAIMS",
-    "CaseEventID": "ACKNOWLEDGE_SERVICE",
+    "CaseEventID": "ACKNOWLEDGE_CLAIM",
     "AccessControl": [
       {
         "UserRoles": [
@@ -201,6 +201,25 @@
     "LiveFrom": "01/01/2017",
     "CaseTypeID": "UNSPECIFIED_CLAIMS",
     "CaseEventID": "CASE_PROCEEDS_IN_CASEMAN",
+    "AccessControl": [
+      {
+        "UserRoles": [
+          "caseworker-civil-solicitor"
+        ],
+        "CRUD": "R"
+      },
+      {
+        "UserRoles": [
+          "caseworker-civil-admin"
+        ],
+        "CRUD": "CRU"
+      }
+    ]
+  },
+  {
+    "LiveFrom": "01/01/2017",
+    "CaseTypeID": "UNSPECIFIED_CLAIMS",
+    "CaseEventID": "AMEND_PARTY_DETAILS",
     "AccessControl": [
       {
         "UserRoles": [

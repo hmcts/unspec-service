@@ -14,6 +14,7 @@ import uk.gov.hmcts.reform.unspec.enums.ResponseIntention;
 import uk.gov.hmcts.reform.unspec.enums.YesOrNo;
 import uk.gov.hmcts.reform.unspec.model.common.DynamicList;
 import uk.gov.hmcts.reform.unspec.model.common.Element;
+import uk.gov.hmcts.reform.unspec.model.common.MappableObject;
 import uk.gov.hmcts.reform.unspec.model.documents.CaseDocument;
 import uk.gov.hmcts.reform.unspec.model.dq.Applicant1DQ;
 import uk.gov.hmcts.reform.unspec.model.dq.Respondent1DQ;
@@ -27,7 +28,7 @@ import static uk.gov.hmcts.reform.unspec.enums.BusinessProcessStatus.FINISHED;
 
 @Data
 @Builder(toBuilder = true)
-public class CaseData {
+public class CaseData implements MappableObject {
 
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private final Long ccdCaseReference;
@@ -54,11 +55,6 @@ public class CaseData {
     private final PersonalInjuryType personalInjuryType;
     private final String personalInjuryTypeOther;
     private final StatementOfTruth applicantSolicitor1ClaimStatementOfTruth;
-    private final LocalDateTime claimSubmittedDateTime;
-    private final LocalDate claimIssuedDate;
-    private final LocalDateTime confirmationOfServiceDeadline;
-    private final LocalDate claimNotificationDate;
-    private final LocalDate claimDetailsNotificationDate;
     private final String legacyCaseReference;
     private final AllocatedTrack allocatedTrack;
     private final PaymentDetails paymentDetails;
@@ -71,15 +67,12 @@ public class CaseData {
     private final StatementOfTruth applicant1ServiceStatementOfTruthToRespondentSolicitor1;
     private final List<Element<CaseDocument>> systemGeneratedCaseDocuments;
 
-    private final LocalDateTime respondentSolicitor1ResponseDeadline;
     private final LocalDate respondentSolicitor1AgreedDeadlineExtension;
     private final ResponseIntention respondent1ClaimResponseIntentionType;
     private final ServedDocumentFiles servedDocumentFiles;
 
     private final RespondentResponseType respondent1ClaimResponseType;
     private final ResponseDocument respondent1ClaimResponseDocument;
-    private final LocalDateTime applicantSolicitorResponseDeadlineToRespondentSolicitor1;
-    private final LocalDate defendantResponseDate;
 
     private final YesOrNo applicant1ProceedWithClaim;
     private final ResponseDocument applicant1DefenceResponseDocument;
@@ -115,4 +108,22 @@ public class CaseData {
 
     //CCD UI flag
     private final YesOrNo applicantSolicitor1PbaAccountsIsEmpty;
+
+    // dates
+    private final LocalDateTime submittedDate;
+    private final LocalDateTime paymentSuccessfulDate;
+    private final LocalDate issueDate;
+    private final LocalDateTime claimNotificationDeadline;
+    private final LocalDateTime claimNotificationDate;
+    private final LocalDateTime claimDetailsNotificationDeadline;
+    private final LocalDateTime claimDetailsNotificationDate;
+    private final LocalDateTime respondent1ResponseDeadline;
+    private final LocalDateTime claimDismissedDeadline;
+    private final LocalDateTime respondent1TimeExtensionDate;
+    private final LocalDateTime respondent1AcknowledgeNotificationDate;
+    private final LocalDateTime respondent1ResponseDate;
+    private final LocalDateTime applicant1ResponseDeadline;
+    private final LocalDateTime applicant1ResponseDate;
+    private final LocalDateTime takenOfflineDate;
+    private final LocalDate claimDismissedDate;
 }

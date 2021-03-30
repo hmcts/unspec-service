@@ -1,5 +1,6 @@
 package uk.gov.hmcts.reform.unspec.handler.callback.camunda.notification;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import uk.gov.hmcts.reform.ccd.client.model.AboutToStartOrSubmitCallbackResponse;
@@ -9,11 +10,9 @@ import uk.gov.hmcts.reform.unspec.callback.CallbackHandler;
 import uk.gov.hmcts.reform.unspec.callback.CallbackParams;
 import uk.gov.hmcts.reform.unspec.callback.CaseEvent;
 import uk.gov.hmcts.reform.unspec.config.properties.notification.NotificationsProperties;
-import uk.gov.hmcts.reform.unspec.helpers.CaseDetailsConverter;
 import uk.gov.hmcts.reform.unspec.model.CaseData;
 import uk.gov.hmcts.reform.unspec.service.NotificationService;
 
-import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
 
@@ -33,7 +32,7 @@ public class DefendantClaimDetailsNotificationHandler extends CallbackHandler im
 
     private final NotificationService notificationService;
     private final NotificationsProperties notificationsProperties;
-    private final CaseDetailsConverter caseDetailsConverter;
+    private final ObjectMapper objectMapper;
 
     @Override
     protected Map<String, Callback> callbacks() {
@@ -62,12 +61,8 @@ public class DefendantClaimDetailsNotificationHandler extends CallbackHandler im
             String.format(REFERENCE_TEMPLATE, caseData.getLegacyCaseReference())
         );
 
-        CaseData updatedCaseData = caseData.toBuilder()
-            .claimDetailsNotificationDate(LocalDate.now())
-            .build();
-
         return AboutToStartOrSubmitCallbackResponse.builder()
-            .data(caseDetailsConverter.toMap(updatedCaseData))
+            .data(caseData.toMap(objectMapper))
             .build();
     }
 
@@ -76,7 +71,7 @@ public class DefendantClaimDetailsNotificationHandler extends CallbackHandler im
         return Map.of(
             CLAIM_REFERENCE_NUMBER, caseData.getLegacyCaseReference(),
             RESPONDENT_NAME, getPartyNameBasedOnType(caseData.getRespondent1()),
-            ISSUED_ON, formatLocalDate(caseData.getClaimIssuedDate(), DATE)
+            ISSUED_ON, formatLocalDate(caseData.getIssueDate(), DATE)
         );
     }
 }
