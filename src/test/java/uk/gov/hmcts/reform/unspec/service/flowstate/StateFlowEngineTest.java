@@ -16,7 +16,7 @@ import uk.gov.hmcts.reform.unspec.sampledata.CaseDetailsBuilder;
 import uk.gov.hmcts.reform.unspec.stateflow.StateFlow;
 import uk.gov.hmcts.reform.unspec.stateflow.model.State;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static uk.gov.hmcts.reform.unspec.service.flowstate.FlowState.Main.APPLICANT_RESPOND_TO_DEFENCE;
@@ -185,9 +185,9 @@ class StateFlowEngineTest {
         }
 
         @Test
-        void shouldReturnClaimDismissed_whenCaseDataatStateClaimAcknowledgeAndCcdStateIsDismissed() {
+        void shouldReturnClaimDismissed_whenCaseDataAtStateClaimAcknowledgeAndCcdStateIsDismissed() {
             CaseData caseData = CaseDataBuilder.builder().atStateClaimAcknowledge()
-                .claimDismissedDate(LocalDate.now())
+                .claimDismissedDate(LocalDateTime.now())
                 .build();
 
             StateFlow stateFlow = stateFlowEngine.evaluate(caseData);
