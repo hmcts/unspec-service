@@ -78,7 +78,7 @@ public class EventHistoryMapper {
                             .getResponseCourtCode(),
                         caseData.getRespondent1DQ()
                             .getRespondent1DQFileDirectionsQuestionnaire()
-                            .getOneMonthStayRequested() == YES ? true : false
+                            .getOneMonthStayRequested() == YES
                     ))
                     .build()
             )
