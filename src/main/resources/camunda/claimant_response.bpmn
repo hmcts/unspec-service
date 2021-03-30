@@ -70,17 +70,17 @@
         </camunda:inputOutput>
       </bpmn:extensionElements>
       <bpmn:incoming>Flow_1hr7okm</bpmn:incoming>
-      <bpmn:incoming>Flow_ULL_DEFENCE_NOT_PROCEED</bpmn:incoming>
+      <bpmn:incoming>Flow_FULL_DEFENCE_NOT_PROCEED</bpmn:incoming>
       <bpmn:outgoing>Flow_17evp7q</bpmn:outgoing>
     </bpmn:serviceTask>
     <bpmn:sequenceFlow id="Flow_1hr7okm" sourceRef="ClaimantResponseGenerateDirectionsQuestionnaire" targetRef="NotifyRoboticsOnCaseHandedOffline" />
     <bpmn:sequenceFlow id="Flow_17evp7q" sourceRef="NotifyRoboticsOnCaseHandedOffline" targetRef="Activity_1cweuly" />
     <bpmn:exclusiveGateway id="Gateway_PROCEED_OR_NOT_PROCEED">
       <bpmn:incoming>Flow_0veyd24</bpmn:incoming>
-      <bpmn:outgoing>Flow_ULL_DEFENCE_NOT_PROCEED</bpmn:outgoing>
-      <bpmn:outgoing>Flow_ULL_DEFENCE_PROCEED</bpmn:outgoing>
+      <bpmn:outgoing>Flow_FULL_DEFENCE_NOT_PROCEED</bpmn:outgoing>
+      <bpmn:outgoing>Flow_FULL_DEFENCE_PROCEED</bpmn:outgoing>
     </bpmn:exclusiveGateway>
-    <bpmn:sequenceFlow id="Flow_ULL_DEFENCE_NOT_PROCEED" sourceRef="Gateway_PROCEED_OR_NOT_PROCEED" targetRef="NotifyRoboticsOnCaseHandedOffline">
+    <bpmn:sequenceFlow id="Flow_FULL_DEFENCE_NOT_PROCEED" sourceRef="Gateway_PROCEED_OR_NOT_PROCEED" targetRef="NotifyRoboticsOnCaseHandedOffline">
       <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${flowState == "MAIN.FULL_DEFENCE_NOT_PROCEED"}</bpmn:conditionExpression>
     </bpmn:sequenceFlow>
     <bpmn:sequenceFlow id="Flow_ULL_DEFENCE_PROCEED" sourceRef="Gateway_PROCEED_OR_NOT_PROCEED" targetRef="ClaimantResponseGenerateDirectionsQuestionnaire">
@@ -130,11 +130,11 @@
         <di:waypoint x="480" y="257" />
         <di:waypoint x="530" y="257" />
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_185dsos_di" bpmnElement="Flow_ULL_DEFENCE_NOT_PROCEED">
+      <bpmndi:BPMNEdge id="Flow_185dsos_di" bpmnElement="Flow_FULL_DEFENCE_NOT_PROCEED">
         <di:waypoint x="705" y="257" />
         <di:waypoint x="910" y="257" />
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_0fz18qx_di" bpmnElement="Flow_ULL_DEFENCE_PROCEED">
+      <bpmndi:BPMNEdge id="Flow_0fz18qx_di" bpmnElement="Flow_FULL_DEFENCE_PROCEED">
         <di:waypoint x="680" y="232" />
         <di:waypoint x="680" y="120" />
         <di:waypoint x="720" y="120" />
