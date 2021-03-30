@@ -20,7 +20,7 @@ const data = {
   RESUBMIT_CLAIM: require('../fixtures/events/resubmitClaim.js'),
   ADD_OR_AMEND_CLAIM_DOCUMENTS: require('../fixtures/events/addOrAmendClaimDocuments.js'),
   CREATE_CLAIM_RESPONDENT_SOLICITOR_FIRM_NOT_IN_MY_HMCTS: claimData.createClaimRespondentSolFirmNotInMyHmcts,
-  ACKNOWLEDGE_SERVICE: require('../fixtures/events/acknowledgeService.js'),
+  ACKNOWLEDGE_CLAIM: require('../fixtures/events/acknowledgeClaim.js'),
   INFORM_AGREED_EXTENSION_DATE: require('../fixtures/events/informAgreeExtensionDate.js'),
   DEFENDANT_RESPONSE: require('../fixtures/events/defendantResponse.js'),
   CLAIMANT_RESPONSE: require('../fixtures/events/claimantResponse.js'),
@@ -217,22 +217,22 @@ module.exports = {
     await assertCorrectEventsAreAvailableToUser(config.adminUser, 'CREATED');
   },
 
-  acknowledgeService: async (user) => {
+  acknowledgeClaim: async (user) => {
     await apiRequest.setupTokens(user);
 
-    eventName = 'ACKNOWLEDGE_SERVICE';
+    eventName = 'ACKNOWLEDGE_CLAIM';
     let returnedCaseData = await apiRequest.startEvent(eventName, caseId);
     assertContainsPopulatedFields(returnedCaseData);
     caseData = returnedCaseData;
     deleteCaseFields('systemGeneratedCaseDocuments');
 
-    await validateEventPages(data.ACKNOWLEDGE_SERVICE);
+    await validateEventPages(data.ACKNOWLEDGE_CLAIM);
 
     await assertError('ConfirmDetails', data[eventName].invalid.ConfirmDetails.futureDateOfBirth,
       'The date entered cannot be in the future');
 
     await assertSubmittedEvent('CREATED', {
-      header: 'You\'ve acknowledged service',
+      header: 'You\'ve acknowledged claim',
       body: 'You need to respond before'
     }, true);
 
@@ -304,17 +304,15 @@ module.exports = {
     await assertError('Hearing', data[eventName].invalid.Hearing.moreThanYear,
       'The date cannot be in the past and must not be more than a year in the future');
 
-    await assertSubmittedEvent('STAYED', {
+    await assertSubmittedEvent('PROCEEDS_WITH_OFFLINE_JOURNEY', {
       header: 'You\'ve decided to proceed with the claim',
       body: 'We\'ll review the case. We\'ll contact you to tell you what to do next.'
     }, true);
     await waitForFinishedBusinessProcess(caseId);
 
-    //TODO: event currently puts claim into stayed state and users do no have permissions to see it.
-
-    // await assertCorrectEventsAreAvailableToUser(config.solicitorUser, 'PROCEEDS_WITH_OFFLINE_JOURNEY');
-    // await assertCorrectEventsAreAvailableToUser(config.defendantSolicitorUser, 'PROCEEDS_WITH_OFFLINE_JOURNEY');
-    // await assertCorrectEventsAreAvailableToUser(config.adminUser, 'PROCEEDS_WITH_OFFLINE_JOURNEY');
+    await assertCorrectEventsAreAvailableToUser(config.solicitorUser, 'PROCEEDS_WITH_OFFLINE_JOURNEY');
+    await assertCorrectEventsAreAvailableToUser(config.defendantSolicitorUser, 'PROCEEDS_WITH_OFFLINE_JOURNEY');
+    await assertCorrectEventsAreAvailableToUser(config.adminUser, 'PROCEEDS_WITH_OFFLINE_JOURNEY');
   },
 
   //TODO this method is not used in api tests
