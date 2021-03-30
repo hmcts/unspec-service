@@ -113,16 +113,7 @@ public class EventHistoryMapper {
                     .eventCode("197")
                     .dateReceived(caseData.getRespondent1ResponseDate().format(ISO_DATE))
                     .litigiousPartyID(RESPONDENT_ID)
-                    .eventDetailsText(format(
-                        "preferredCourtCode: %s; stayClaim: %s",
-                        caseData
-                            .getRespondent1DQ()
-                            .getRespondent1DQRequestedCourt()
-                            .getResponseCourtCode(),
-                        caseData.getRespondent1DQ()
-                            .getRespondent1DQFileDirectionsQuestionnaire()
-                            .getOneMonthStayRequested() == YES
-                    ))
+                    .eventDetailsText(prepareEventDetailsText(caseData.getRespondent1DQ()))
                     .build()
             )
         );
