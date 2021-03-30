@@ -3,6 +3,8 @@ package uk.gov.hmcts.reform.unspec.service.robotics.mapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import uk.gov.hmcts.reform.unspec.model.CaseData;
+import uk.gov.hmcts.reform.unspec.model.dq.DQ;
+import uk.gov.hmcts.reform.unspec.model.dq.RequestedCourt;
 import uk.gov.hmcts.reform.unspec.model.robotics.Event;
 import uk.gov.hmcts.reform.unspec.model.robotics.EventDetails;
 import uk.gov.hmcts.reform.unspec.model.robotics.EventHistory;
@@ -15,6 +17,7 @@ import java.util.List;
 
 import static java.lang.String.format;
 import static java.time.format.DateTimeFormatter.ISO_DATE;
+import static java.util.Optional.ofNullable;
 import static uk.gov.hmcts.reform.unspec.enums.YesOrNo.YES;
 import static uk.gov.hmcts.reform.unspec.service.robotics.mapper.RoboticsDataMapper.APPLICANT_ID;
 import static uk.gov.hmcts.reform.unspec.service.robotics.mapper.RoboticsDataMapper.RESPONDENT_ID;
@@ -66,32 +69,14 @@ public class EventHistoryMapper {
                     .eventCode("197")
                     .dateReceived(caseData.getRespondent1ResponseDate().format(ISO_DATE))
                     .litigiousPartyID(RESPONDENT_ID)
-                    .eventDetailsText(format(
-                        "preferredCourtCode: %s; stayClaim: %s",
-                        caseData
-                            .getRespondent1DQ()
-                            .getRespondent1DQRequestedCourt()
-                            .getResponseCourtCode(),
-                        caseData.getRespondent1DQ()
-                            .getRespondent1DQFileDirectionsQuestionnaire()
-                            .getOneMonthStayRequested() == YES
-                    ))
+                    .eventDetailsText(prepareEventDetailsText(caseData.getRespondent1DQ()))
                     .build(),
                 Event.builder()
                     .eventSequence(7)
                     .eventCode("197")
                     .dateReceived(caseData.getApplicant1ResponseDate().format(ISO_DATE))
                     .litigiousPartyID(APPLICANT_ID)
-                    .eventDetailsText(format(
-                        "preferredCourtCode: %s; stayClaim: %s",
-                        caseData
-                            .getApplicant1DQ()
-                            .getApplicant1DQRequestedCourt()
-                            .getResponseCourtCode(),
-                        caseData.getApplicant1DQ()
-                            .getApplicant1DQFileDirectionsQuestionnaire()
-                            .getOneMonthStayRequested() == YES
-                    ))
+                    .eventDetailsText(prepareEventDetailsText(caseData.getApplicant1DQ()))
                     .build()
             )
         ).replyToDefence(List.of(
@@ -103,6 +88,17 @@ public class EventHistoryMapper {
                 .build()
         ));
 
+    }
+
+    private String prepareEventDetailsText(DQ dq) {
+        return format(
+            "preferredCourtCode: %s; stayClaim: %s",
+            ofNullable(dq.getRequestedCourt())
+                .map(RequestedCourt::getResponseCourtCode)
+                .orElse(null),
+            dq.getFileDirectionQuestionnaire()
+                .getOneMonthStayRequested() == YES
+        );
     }
 
     private void buildFullDefenceNotProceed(CaseData caseData, EventHistory.EventHistoryBuilder builder) {

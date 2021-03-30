@@ -8,6 +8,7 @@ import org.springframework.boot.autoconfigure.jackson.JacksonAutoConfiguration;
 import org.springframework.boot.test.context.SpringBootTest;
 import uk.gov.hmcts.reform.unspec.helpers.CaseDetailsConverter;
 import uk.gov.hmcts.reform.unspec.model.CaseData;
+import uk.gov.hmcts.reform.unspec.model.dq.RequestedCourt;
 import uk.gov.hmcts.reform.unspec.model.robotics.Event;
 import uk.gov.hmcts.reform.unspec.model.robotics.EventDetails;
 import uk.gov.hmcts.reform.unspec.model.robotics.EventHistory;
@@ -20,6 +21,7 @@ import java.util.stream.Stream;
 
 import static java.lang.String.format;
 import static java.time.format.DateTimeFormatter.ISO_DATE;
+import static java.util.Optional.ofNullable;
 import static org.assertj.core.api.Assertions.assertThat;
 import static uk.gov.hmcts.reform.unspec.enums.YesOrNo.YES;
 
@@ -260,13 +262,11 @@ class EventHistoryMapperTest {
             .litigiousPartyID("002")
             .eventDetailsText(format(
                 "preferredCourtCode: %s; stayClaim: %s",
-                caseData
-                    .getRespondent1DQ()
-                    .getRespondent1DQRequestedCourt()
-                    .getResponseCourtCode(),
-                caseData.getRespondent1DQ()
-                    .getRespondent1DQFileDirectionsQuestionnaire()
-                    .getOneMonthStayRequested() == YES ? true : false
+                ofNullable(caseData.getRespondent1DQ().getRequestedCourt())
+                    .map(RequestedCourt::getResponseCourtCode)
+                    .orElse(null),
+                caseData.getRespondent1DQ().getFileDirectionQuestionnaire()
+                    .getOneMonthStayRequested() == YES
             ))
             .build();
         List<Event> expectedMiscellaneousEvents = List.of(
@@ -358,13 +358,11 @@ class EventHistoryMapperTest {
             .litigiousPartyID("001")
             .eventDetailsText(format(
                 "preferredCourtCode: %s; stayClaim: %s",
-                caseData
-                    .getApplicant1DQ()
-                    .getApplicant1DQRequestedCourt()
-                    .getResponseCourtCode(),
-                caseData.getApplicant1DQ()
-                    .getApplicant1DQFileDirectionsQuestionnaire()
-                    .getOneMonthStayRequested() == YES ? true : false
+                ofNullable(caseData.getApplicant1DQ().getRequestedCourt())
+                    .map(RequestedCourt::getResponseCourtCode)
+                    .orElse(null),
+                caseData.getApplicant1DQ().getFileDirectionQuestionnaire()
+                    .getOneMonthStayRequested() == YES
             ))
             .build();
         List<Event> expectedMiscellaneousEvents = List.of(
@@ -405,8 +403,7 @@ class EventHistoryMapperTest {
         assertThat(eventHistory).extracting("directionsQuestionnaireFiled").asList()
             .containsExactlyInAnyOrder(
                 expectedDirectionsQuestionnaireRespondent,
-                expectedDirectionsQuestionnaireApplicant
-            );
+                expectedDirectionsQuestionnaireApplicant);
         assertThat(eventHistory).extracting("miscellaneous").asList()
             .containsExactly(expectedMiscellaneousEvents.get(0), expectedMiscellaneousEvents.get(1));
         assertThat(eventHistory).extracting("acknowledgementOfServiceReceived").asList()
