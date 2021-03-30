@@ -42,7 +42,7 @@
           <camunda:inputParameter name="caseEvent">GENERATE_DIRECTIONS_QUESTIONNAIRE</camunda:inputParameter>
         </camunda:inputOutput>
       </bpmn:extensionElements>
-      <bpmn:incoming>Flow_ULL_DEFENCE_PROCEED</bpmn:incoming>
+      <bpmn:incoming>Flow_FULL_DEFENCE_PROCEED</bpmn:incoming>
       <bpmn:outgoing>Flow_1hr7okm</bpmn:outgoing>
     </bpmn:serviceTask>
     <bpmn:callActivity id="Activity_0gt1863" name="Start Business Process" calledElement="StartBusinessProcess">
@@ -84,7 +84,7 @@
       <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${flowState == "MAIN.FULL_DEFENCE_NOT_PROCEED"}</bpmn:conditionExpression>
     </bpmn:sequenceFlow>
     <bpmn:sequenceFlow id="Flow_ULL_DEFENCE_PROCEED" sourceRef="Gateway_PROCEED_OR_NOT_PROCEED" targetRef="ClaimantResponseGenerateDirectionsQuestionnaire">
-      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${flowState == "MAIN.FULL_DEFENCE_PROCEED"}</bpmn:conditionExpression>
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${flowState == "MAIN.FULL_DEFENCE_PROCEED" || flowState == "MAIN.APPLICANT_RESPOND_TO_DEFENCE"}</bpmn:conditionExpression>
     </bpmn:sequenceFlow>
     <bpmn:textAnnotation id="TextAnnotation_1cdav8i">
       <bpmn:text>Applicant confirms to proceed</bpmn:text>
