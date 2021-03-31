@@ -142,6 +142,11 @@ public class CaseDataBuilder {
         return this;
     }
 
+    public CaseDataBuilder respondent1AcknowledgeNotificationDate(LocalDateTime dateTime) {
+        this.respondent1AcknowledgeNotificationDate = dateTime;
+        return this;
+    }
+
     public CaseDataBuilder respondentSolicitor1AgreedDeadlineExtension(LocalDate extensionDate) {
         this.respondentSolicitor1AgreedDeadlineExtension = extensionDate;
         return this;
