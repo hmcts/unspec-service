@@ -436,7 +436,7 @@ public class CaseDataBuilder {
         personalInjuryType = ROAD_ACCIDENT;
         applicantSolicitor1PbaAccounts = DynamicList.builder()
             .value(DynamicListElement.builder().label("PBA0077597").build())
-            .build();;
+            .build();
         claimFee = Fee.builder()
             .version("1")
             .code("CODE")
