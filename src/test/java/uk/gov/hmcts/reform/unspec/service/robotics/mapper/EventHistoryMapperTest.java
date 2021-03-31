@@ -72,7 +72,7 @@ class EventHistoryMapperTest {
         Event expectedEvent = Event.builder()
             .eventSequence(1)
             .eventCode("999")
-            .dateReceived(caseData.getClaimSubmittedDateTime().toLocalDate().format(ISO_DATE))
+            .dateReceived(caseData.getSubmittedDate().toLocalDate().format(ISO_DATE))
             .eventDetails(EventDetails.builder()
                               .miscText("RPA Reason: Unregistered defendant solicitor firm.")
                               .build())

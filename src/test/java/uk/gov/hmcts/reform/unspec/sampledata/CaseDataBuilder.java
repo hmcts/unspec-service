@@ -363,7 +363,7 @@ public class CaseDataBuilder {
     public CaseDataBuilder atStateProceedsOfflineUnregisteredDefendant() {
         atStatePaymentSuccessful();
         ccdState = PROCEEDS_WITH_OFFLINE_JOURNEY;
-        claimIssuedDate = CLAIM_ISSUED_DATE;
+        issueDate = CLAIM_ISSUED_DATE;
         respondent1Represented = YES;
         respondent1OrgRegistered = NO;
         return this;
