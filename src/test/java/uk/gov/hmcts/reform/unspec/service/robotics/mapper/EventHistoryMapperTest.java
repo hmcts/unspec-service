@@ -23,6 +23,8 @@ import static java.lang.String.format;
 import static java.time.format.DateTimeFormatter.ISO_DATE;
 import static java.util.Optional.ofNullable;
 import static org.assertj.core.api.Assertions.assertThat;
+import static uk.gov.hmcts.reform.unspec.enums.ResponseIntention.CONTEST_JURISDICTION;
+import static uk.gov.hmcts.reform.unspec.enums.ResponseIntention.PART_DEFENCE;
 import static uk.gov.hmcts.reform.unspec.enums.YesOrNo.YES;
 
 @SpringBootTest(classes = {
@@ -72,7 +74,9 @@ class EventHistoryMapperTest {
 
     @Test
     void shouldPrepareExpectedEvents_whenClaimWithRespondentFullAdmission() {
-        CaseData caseData = CaseDataBuilder.builder().atStateRespondentFullAdmission().build();
+        CaseData caseData = CaseDataBuilder.builder()
+            .atStateRespondentFullAdmission()
+            .build();
         Event expectedReceiptOfAdmission = Event.builder()
             .eventSequence(4)
             .eventCode("40")
@@ -131,7 +135,10 @@ class EventHistoryMapperTest {
 
     @Test
     void shouldPrepareExpectedEvents_whenClaimWithRespondentPartAdmission() {
-        CaseData caseData = CaseDataBuilder.builder().atStateRespondentPartAdmission().build();
+        CaseData caseData = CaseDataBuilder.builder()
+            .atStateRespondentPartAdmission()
+            .respondent1ClaimResponseIntentionType(PART_DEFENCE)
+            .build();
         Event expectedReceiptOfPartAdmission = Event.builder()
             .eventSequence(4)
             .eventCode("60")
@@ -190,7 +197,10 @@ class EventHistoryMapperTest {
 
     @Test
     void shouldPrepareExpectedEvents_whenClaimWithRespondentCounterClaim() {
-        CaseData caseData = CaseDataBuilder.builder().atStateRespondentCounterClaim().build();
+        CaseData caseData = CaseDataBuilder.builder()
+            .atStateRespondentCounterClaim()
+            .respondent1ClaimResponseIntentionType(CONTEST_JURISDICTION)
+            .build();
         Event expectedDefenceAndCounterClaim = Event.builder()
             .eventSequence(4)
             .eventCode("52")

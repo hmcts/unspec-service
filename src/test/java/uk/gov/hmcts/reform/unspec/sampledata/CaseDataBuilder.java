@@ -217,6 +217,11 @@ public class CaseDataBuilder {
         return this;
     }
 
+    public CaseDataBuilder respondent1ClaimResponseIntentionType(ResponseIntention responseIntention) {
+        this.respondent1ClaimResponseIntentionType = respondent1ClaimResponseIntentionType;
+        return this;
+    }
+
     public CaseDataBuilder claimValue(ClaimValue claimValue) {
         this.claimValue = claimValue;
         return this;
