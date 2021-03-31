@@ -22,7 +22,6 @@ import uk.gov.hmcts.reform.unspec.model.dq.Applicant1DQ;
 import uk.gov.hmcts.reform.unspec.model.dq.Expert;
 import uk.gov.hmcts.reform.unspec.model.dq.Experts;
 import uk.gov.hmcts.reform.unspec.model.dq.Hearing;
-import uk.gov.hmcts.reform.unspec.model.dq.Applicant1DQ;
 import uk.gov.hmcts.reform.unspec.sampledata.CallbackParamsBuilder;
 import uk.gov.hmcts.reform.unspec.sampledata.CaseDataBuilder;
 import uk.gov.hmcts.reform.unspec.sampledata.CaseDetailsBuilder;
@@ -88,12 +87,12 @@ class RespondToDefenceCallbackHandlerTest extends BaseCallbackHandlerTest {
             CaseData.CaseDataBuilder caseDataBuilder = CaseData.builder();
             caseDataBuilder
                 .applicant1DQ(Applicant1DQ.builder()
-                                  .applicant1DQHearing(Hearing.builder()
-                                                           .unavailableDates(wrapElements(
-                                                               UnavailableDate.builder().date(
-                                                                   LocalDate.now().plusYears(5)).build()))
-                                                           .build())
-                                  .build())
+                    .applicant1DQHearing(Hearing.builder()
+                        .unavailableDates(wrapElements(
+                            UnavailableDate.builder().date(
+                            LocalDate.now().plusYears(5)).build()))
+                        .build())
+                    .build())
                 .build();
 
             CallbackParams params = callbackParamsOf(caseDataBuilder.build(), MID, "validate-unavailable-dates");
@@ -110,12 +109,12 @@ class RespondToDefenceCallbackHandlerTest extends BaseCallbackHandlerTest {
             CaseData.CaseDataBuilder caseDataBuilder = CaseData.builder();
             caseDataBuilder
                 .applicant1DQ(Applicant1DQ.builder()
-                                  .applicant1DQHearing(Hearing.builder()
-                                                           .unavailableDates(wrapElements(
-                                                               UnavailableDate.builder().date(
-                                                                   LocalDate.now().minusYears(5)).build()))
-                                                           .build())
-                                  .build())
+                    .applicant1DQHearing(Hearing.builder()
+                        .unavailableDates(wrapElements(
+                            UnavailableDate.builder().date(
+                                LocalDate.now().minusYears(5)).build()))
+                        .build())
+                    .build())
                 .build();
 
             CallbackParams params = callbackParamsOf(caseDataBuilder.build(), MID, "validate-unavailable-dates");
@@ -132,12 +131,12 @@ class RespondToDefenceCallbackHandlerTest extends BaseCallbackHandlerTest {
             CaseData.CaseDataBuilder caseDataBuilder = CaseData.builder();
             caseDataBuilder
                 .applicant1DQ(Applicant1DQ.builder()
-                                  .applicant1DQHearing(Hearing.builder()
-                                                           .unavailableDates(wrapElements(
-                                                               UnavailableDate.builder().date(
-                                                                   LocalDate.now().plusDays(5)).build()))
-                                                           .build())
-                                  .build())
+                    .applicant1DQHearing(Hearing.builder()
+                        .unavailableDates(wrapElements(
+                            UnavailableDate.builder().date(
+                                LocalDate.now().plusDays(5)).build()))
+                        .build())
+                    .build())
                 .build();
 
             CallbackParams params = callbackParamsOf(caseDataBuilder.build(), MID, "validate-unavailable-dates");
@@ -172,10 +171,10 @@ class RespondToDefenceCallbackHandlerTest extends BaseCallbackHandlerTest {
         void shouldReturnError_whenExpertRequiredAndNullDetails() {
             CaseData caseData = CaseDataBuilder.builder()
                 .applicant1DQ(Applicant1DQ.builder()
-                                   .applicant1DQExperts(Experts.builder()
-                                                             .expertRequired(YES)
-                                                             .build())
-                                   .build())
+                    .applicant1DQExperts(Experts.builder()
+                        .expertRequired(YES)
+                        .build())
+                    .build())
                 .build();
             CallbackParams params = callbackParamsOf(caseData, MID, PAGE_ID);
 
@@ -188,11 +187,11 @@ class RespondToDefenceCallbackHandlerTest extends BaseCallbackHandlerTest {
         void shouldReturnNoError_whenExpertRequiredAndDetailsProvided() {
             CaseData caseData = CaseDataBuilder.builder()
                 .applicant1DQ(Applicant1DQ.builder()
-                                   .applicant1DQExperts(Experts.builder()
-                                                             .expertRequired(YES)
-                                                             .details(wrapElements(Expert.builder().name("test expert").build()))
-                                                             .build())
-                                   .build())
+                    .applicant1DQExperts(Experts.builder()
+                        .expertRequired(YES)
+                        .details(wrapElements(Expert.builder().name("test expert").build()))
+                        .build())
+                    .build())
                 .build();
             CallbackParams params = callbackParamsOf(caseData, MID, PAGE_ID);
 
@@ -205,10 +204,10 @@ class RespondToDefenceCallbackHandlerTest extends BaseCallbackHandlerTest {
         void shouldReturnNoError_whenExpertNotRequired() {
             CaseData caseData = CaseDataBuilder.builder()
                 .applicant1DQ(Applicant1DQ.builder()
-                                   .applicant1DQExperts(Experts.builder()
-                                                             .expertRequired(NO)
-                                                             .build())
-                                   .build())
+                    .applicant1DQExperts(Experts.builder()
+                        .expertRequired(NO)
+                        .build())
+                    .build())
                 .build();
             CallbackParams params = callbackParamsOf(caseData, MID, PAGE_ID);
 
