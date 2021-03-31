@@ -159,9 +159,10 @@ public class EventHistoryMapper {
                         .eventCode("38")
                         .dateReceived(dateAcknowledge.format(ISO_DATE))
                         .litigiousPartyID("002")
-                        .eventDetails(EventDetails.builder()
-                                          .responseIntention("contest jurisdiction")
-                                          .build())
+                        .eventDetailsText(format(
+                            "responseIntention: %s",
+                            caseData.getRespondent1ClaimResponseIntentionType().getLabel()
+                        ))
                         .build()
                 ));
     }
@@ -230,11 +231,9 @@ public class EventHistoryMapper {
                     .eventCode("45")
                     .dateReceived(dateReceived.format(ISO_DATE))
                     .litigiousPartyID("002")
-                    .eventDetails(EventDetails.builder()
-                                      .agreedExtensionDate(caseData
-                                                               .getRespondentSolicitor1AgreedDeadlineExtension()
-                                                               .format(ISO_DATE))
-                                      .build())
+                    .eventDetailsText(format("agreedExtensionDate: %s", caseData
+                        .getRespondentSolicitor1AgreedDeadlineExtension()
+                        .format(ISO_DATE)))
                     .build()
             )
         );

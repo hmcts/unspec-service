@@ -102,9 +102,10 @@ class EventHistoryMapperTest {
             .eventCode("38")
             .dateReceived(caseData.getRespondent1ResponseDate().format(ISO_DATE))
             .litigiousPartyID("002")
-            .eventDetails(EventDetails.builder()
-                              .responseIntention("contest jurisdiction")
-                              .build())
+            .eventDetailsText(format(
+                "responseIntention: %s",
+                caseData.getRespondent1ClaimResponseIntentionType().getLabel()
+            ))
             .build();
 
         var eventHistory = mapper.buildEvents(caseData);
@@ -160,9 +161,10 @@ class EventHistoryMapperTest {
             .eventCode("38")
             .dateReceived(caseData.getRespondent1ResponseDate().format(ISO_DATE))
             .litigiousPartyID("002")
-            .eventDetails(EventDetails.builder()
-                              .responseIntention("contest jurisdiction")
-                              .build())
+            .eventDetailsText(format(
+                "responseIntention: %s",
+                caseData.getRespondent1ClaimResponseIntentionType().getLabel()
+            ))
             .build();
 
         var eventHistory = mapper.buildEvents(caseData);
@@ -218,9 +220,10 @@ class EventHistoryMapperTest {
             .eventCode("38")
             .dateReceived(caseData.getRespondent1ResponseDate().format(ISO_DATE))
             .litigiousPartyID("002")
-            .eventDetails(EventDetails.builder()
-                              .responseIntention("contest jurisdiction")
-                              .build())
+            .eventDetailsText(format(
+                "responseIntention: %s",
+                caseData.getRespondent1ClaimResponseIntentionType().getLabel()
+            ))
             .build();
 
         var eventHistory = mapper.buildEvents(caseData);
@@ -292,9 +295,10 @@ class EventHistoryMapperTest {
             .eventCode("38")
             .dateReceived(caseData.getRespondent1ResponseDate().format(ISO_DATE))
             .litigiousPartyID("002")
-            .eventDetails(EventDetails.builder()
-                              .responseIntention("contest jurisdiction")
-                              .build())
+            .eventDetailsText(format(
+                "responseIntention: %s",
+                caseData.getRespondent1ClaimResponseIntentionType().getLabel()
+            ))
             .build();
 
         var eventHistory = mapper.buildEvents(caseData);
@@ -388,9 +392,10 @@ class EventHistoryMapperTest {
             .eventCode("38")
             .dateReceived(caseData.getRespondent1ResponseDate().format(ISO_DATE))
             .litigiousPartyID("002")
-            .eventDetails(EventDetails.builder()
-                              .responseIntention("contest jurisdiction")
-                              .build())
+            .eventDetailsText(format(
+                "responseIntention: %s",
+                caseData.getRespondent1ClaimResponseIntentionType().getLabel()
+            ))
             .build();
 
         var eventHistory = mapper.buildEvents(caseData);
