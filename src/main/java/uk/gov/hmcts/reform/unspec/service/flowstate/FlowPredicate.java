@@ -2,6 +2,7 @@ package uk.gov.hmcts.reform.unspec.service.flowstate;
 
 import uk.gov.hmcts.reform.unspec.model.CaseData;
 
+import java.time.LocalDateTime;
 import java.util.function.Predicate;
 
 import static uk.gov.hmcts.reform.unspec.enums.CaseState.CLOSED;
@@ -21,7 +22,7 @@ public class FlowPredicate {
         caseData.getLegacyCaseReference() != null;
 
     public static final Predicate<CaseData> respondent1NotRepresented = caseData ->
-        (caseData.getClaimIssuedDate() != null || caseData.getIssueDate() != null)
+        caseData.getIssueDate() != null
             && (caseData.getRespondent1Represented() == NO || caseData.getRespondent1OrgRegistered() == NO);
 
     public static final Predicate<CaseData> paymentFailed = caseData ->
@@ -31,7 +32,7 @@ public class FlowPredicate {
         caseData.getPaymentDetails() != null && caseData.getPaymentDetails().getStatus() == SUCCESS;
 
     public static final Predicate<CaseData> claimIssued = caseData ->
-        (caseData.getClaimIssuedDate() != null || caseData.getIssueDate() != null)
+        caseData.getIssueDate() != null
             && caseData.getRespondent1Represented() == YES
             && caseData.getRespondent1OrgRegistered() == YES;
 
@@ -91,6 +92,9 @@ public class FlowPredicate {
 
     public static final Predicate<CaseData> caseDismissedAfterClaimAcknowledged = caseData ->
         caseData.getClaimDismissedDate() != null && caseData.getRespondent1ClaimResponseIntentionType() != null;
+
+    public static final Predicate<CaseData> applicantOutOfTime = caseData ->
+        caseData.getTakenOfflineDate() != null && caseData.getTakenOfflineDate().isAfter(LocalDateTime.now());
 
     private FlowPredicate() {
         //Utility class
