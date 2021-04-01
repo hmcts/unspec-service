@@ -1,10 +1,10 @@
 [
   {
-    "ID": "DocumentWorkaround",
+    "ID": "DocumentWithRegex",
     "ListElementCode": "document",
     "FieldType": "Document",
     "ElementLabel": "Document",
     "SecurityClassification": "Public",
-    "RegularExpression": ".pdf"
+    "RegularExpression": ".csv,.ods,.xls,.xlsx,.docm,.docx,.html,.odf,.ooxml,.pdf,.rtf,.sgml,.txt,.xhtml"
   }
 ]
