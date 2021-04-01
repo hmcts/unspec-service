@@ -1387,14 +1387,14 @@
     "AccessControl": [
       {
         "UserRoles": [
-          "caseworker-civil-solicitor",
-          "caseworker-civil-systemupdate"
+          "caseworker-civil-solicitor"
         ],
         "CRUD": "CRU"
       },
       {
         "UserRoles": [
-          "caseworker-civil-admin"
+          "caseworker-civil-admin",
+          "caseworker-civil-systemupdate"
         ],
         "CRUD": "R"
       }
@@ -1472,14 +1472,14 @@
     "AccessControl": [
       {
         "UserRoles": [
-          "caseworker-civil-solicitor",
-          "caseworker-civil-systemupdate"
+          "caseworker-civil-solicitor"
         ],
         "CRUD": "CRU"
       },
       {
         "UserRoles": [
-          "caseworker-civil-admin"
+          "caseworker-civil-admin",
+          "caseworker-civil-systemupdate"
         ],
         "CRUD": "R"
       }
@@ -1595,14 +1595,14 @@
     "AccessControl": [
       {
         "UserRoles": [
-          "caseworker-civil-solicitor",
-          "caseworker-civil-systemupdate"
+          "caseworker-civil-solicitor"
         ],
         "CRUD": "CRU"
       },
       {
         "UserRoles": [
-          "caseworker-civil-admin"
+          "caseworker-civil-admin",
+          "caseworker-civil-systemupdate"
         ],
         "CRUD": "R"
       }
@@ -1698,26 +1698,5 @@
       "caseworker-civil-systemupdate"
     ],
     "CRUD": "CRU"
-  },
-  {
-    "Comment": "Backwards compatible",
-    "LiveFrom": "01/01/2017",
-    "CaseTypeID": "UNSPECIFIED_CLAIMS",
-    "CaseFieldID": "defendantResponseDate",
-    "AccessControl": [
-      {
-        "UserRoles": [
-          "caseworker-civil-solicitor"
-        ],
-        "CRUD": "CRU"
-      },
-      {
-        "UserRoles": [
-          "caseworker-civil-admin",
-          "caseworker-civil-systemupdate"
-        ],
-        "CRUD": "R"
-      }
-    ]
   }
 ]
