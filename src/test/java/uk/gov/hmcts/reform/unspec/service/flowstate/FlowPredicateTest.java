@@ -23,6 +23,7 @@ import static uk.gov.hmcts.reform.unspec.service.flowstate.FlowPredicate.claimNo
 import static uk.gov.hmcts.reform.unspec.service.flowstate.FlowPredicate.claimTakenOffline;
 import static uk.gov.hmcts.reform.unspec.service.flowstate.FlowPredicate.claimWithdrawn;
 import static uk.gov.hmcts.reform.unspec.service.flowstate.FlowPredicate.failToNotifyClaim;
+import static uk.gov.hmcts.reform.unspec.service.flowstate.FlowPredicate.pastClaimDetailsNotificationDeadline;
 import static uk.gov.hmcts.reform.unspec.service.flowstate.FlowPredicate.paymentFailed;
 import static uk.gov.hmcts.reform.unspec.service.flowstate.FlowPredicate.paymentSuccessful;
 import static uk.gov.hmcts.reform.unspec.service.flowstate.FlowPredicate.pendingCaseIssued;
@@ -388,6 +389,24 @@ class FlowPredicateTest {
         void shouldReturnFalse_whenCaseDataAtStateAwaitingCaseNotification() {
             CaseData caseData = CaseDataBuilder.builder().atStateAwaitingCaseNotification().build();
             assertFalse(failToNotifyClaim.test(caseData));
+        }
+    }
+
+    @Nested
+    class PastClaimDetailsNotificationDeadline {
+
+        @Test
+        void shouldReturnTrue_whenCaseDataAtStateClaimDismissedPastClaimDetailsNotificationDeadline() {
+            CaseData caseData = CaseDataBuilder.builder()
+                .atStateClaimDismissedPastClaimDetailsNotificationDeadline()
+                .build();
+            assertTrue(pastClaimDetailsNotificationDeadline.test(caseData));
+        }
+
+        @Test
+        void shouldReturnFalse_whenCaseDataAtStateAwaitingCaseDetailsNotification() {
+            CaseData caseData = CaseDataBuilder.builder().atStateAwaitingCaseDetailsNotification().build();
+            assertFalse(pastClaimDetailsNotificationDeadline.test(caseData));
         }
     }
 }
