@@ -10,7 +10,7 @@ import static org.elasticsearch.index.query.QueryBuilders.boolQuery;
 import static org.elasticsearch.index.query.QueryBuilders.matchQuery;
 import static org.elasticsearch.index.query.QueryBuilders.rangeQuery;
 
-class CaseProceedsOfflineSearchServiceTest extends ElasticSearchServiceTest {
+class TakeCaseOfflineSearchServiceTest extends ElasticSearchServiceTest {
 
     @BeforeEach
     void setup() {
@@ -20,7 +20,7 @@ class CaseProceedsOfflineSearchServiceTest extends ElasticSearchServiceTest {
     @Override
     protected Query buildQuery(int fromValue) {
         BoolQueryBuilder query = boolQuery()
-            .must(rangeQuery("data.applicantSolicitorResponseDeadlineToRespondentSolicitor1").lt("now"))
+            .must(rangeQuery("data.applicant1ResponseDeadline").lt("now"))
             .must(boolQuery()
                       .minimumShouldMatch(1)
                       .should(matchQuery("state", "AWAITING_CLAIMANT_INTENTION")));

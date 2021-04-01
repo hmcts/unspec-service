@@ -21,7 +21,7 @@ public class TakeCaseOfflineSearchService extends ElasticSearchService {
     public Query query(int startIndex) {
         return new Query(
             boolQuery()
-                .must(rangeQuery("data.applicantSolicitorResponseDeadlineToRespondentSolicitor1").lt("now"))
+                .must(rangeQuery("data.applicant1ResponseDeadline").lt("now"))
                 .must(beValidState()),
             List.of("reference"),
             startIndex
