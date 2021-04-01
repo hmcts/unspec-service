@@ -852,5 +852,14 @@
     "Label": "Claim dismissed date",
     "FieldType": "Date",
     "SecurityClassification": "Public"
+  },
+  {
+    "LiveFrom": "01/01/2017",
+    "CaseTypeID": "UNSPECIFIED_CLAIMS",
+    "ID": "documentExample",
+    "Label": "Example document",
+    "FieldType": "Collection",
+    "FieldTypeParameter": "DocumentWorkaround",
+    "SecurityClassification": "Public"
   }
 ]

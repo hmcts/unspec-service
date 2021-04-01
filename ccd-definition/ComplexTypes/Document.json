@@ -1,0 +1,10 @@
+[
+  {
+    "ID": "DocumentWorkaround",
+    "ListElementCode": "document",
+    "FieldType": "Document",
+    "ElementLabel": "Document",
+    "SecurityClassification": "Public",
+    "RegularExpression": ".pdf"
+  }
+]

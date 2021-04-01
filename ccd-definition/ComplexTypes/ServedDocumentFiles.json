@@ -34,9 +34,8 @@
     "ID": "ServedDocumentFiles",
     "ListElementCode": "scheduleOfLoss",
     "FieldType": "Collection",
-    "FieldTypeParameter": "Document",
+    "FieldTypeParameter": "DocumentWorkaround",
     "ElementLabel": "Schedule of loss",
-    "RegularExpression": ".csv,.ods,.xls,.xlsx,.docm,.docx,.html,.odf,.ooxml,.pdf,.rtf,.sgml,.txt,.xhtml",
     "SecurityClassification": "Public"
   },
   {

@@ -414,7 +414,7 @@
     "ID": "Upload",
     "CaseEventID": "CREATE_CLAIM",
     "CaseFieldID": "servedDocumentFiles",
-    "ListElementCode": "scheduleOfLoss",
+    "ListElementCode": "scheduleOfLoss.document",
     "FieldDisplayOrder": 5,
     "DisplayContext": "OPTIONAL"
   },
