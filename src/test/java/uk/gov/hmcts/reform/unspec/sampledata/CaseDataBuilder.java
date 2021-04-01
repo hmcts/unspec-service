@@ -335,6 +335,8 @@ public class CaseDataBuilder {
                 return atStateClaimDismissed();
             case CLAIM_DISMISSED_PAST_CLAIM_DETAILS_NOTIFICATION_DEADLINE:
                 return atStateClaimDismissedPastClaimDetailsNotificationDeadline();
+            case TAKEN_OFFLINE_PAST_APPLICANT_RESPONSE_DEADLINE:
+                return atStateTakenOfflinePastApplicantResponseDeadline();
             default:
                 throw new IllegalArgumentException("Invalid internal state: " + flowState);
         }
@@ -599,6 +601,12 @@ public class CaseDataBuilder {
         return this;
     }
 
+    public CaseDataBuilder atStateTakenOfflinePastApplicantResponseDeadline() {
+        atStateRespondentFullDefence();
+        takenOfflineDate = LocalDateTime.now().plusDays(2);
+        return this;
+    }
+
     public CaseDataBuilder businessProcess(BusinessProcess businessProcess) {
         this.businessProcess = businessProcess;
         return this;
@@ -632,7 +640,6 @@ public class CaseDataBuilder {
             .respondentSolicitor1EmailAddress(respondentSolicitor1EmailAddress)
             .applicantSolicitor1ClaimStatementOfTruth(applicantSolicitor1ClaimStatementOfTruth)
             .paymentDetails(paymentDetails)
-            .respondent1ResponseDeadline(respondent1ResponseDeadline)
             .applicantSolicitor1CheckEmail(applicantSolicitor1CheckEmail)
             .applicantSolicitor1UserDetails(applicantSolicitor1UserDetails)
             //Deadline extension
