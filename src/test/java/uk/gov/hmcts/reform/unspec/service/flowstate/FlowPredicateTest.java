@@ -11,6 +11,7 @@ import java.time.LocalDate;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static uk.gov.hmcts.reform.unspec.service.flowstate.FlowPredicate.applicantOutOfTime;
 import static uk.gov.hmcts.reform.unspec.service.flowstate.FlowPredicate.applicantRespondToDefence;
 import static uk.gov.hmcts.reform.unspec.service.flowstate.FlowPredicate.caseDismissed;
 import static uk.gov.hmcts.reform.unspec.service.flowstate.FlowPredicate.caseDismissedAfterClaimAcknowledged;
@@ -21,6 +22,7 @@ import static uk.gov.hmcts.reform.unspec.service.flowstate.FlowPredicate.claimIs
 import static uk.gov.hmcts.reform.unspec.service.flowstate.FlowPredicate.claimNotified;
 import static uk.gov.hmcts.reform.unspec.service.flowstate.FlowPredicate.claimTakenOffline;
 import static uk.gov.hmcts.reform.unspec.service.flowstate.FlowPredicate.claimWithdrawn;
+import static uk.gov.hmcts.reform.unspec.service.flowstate.FlowPredicate.pastClaimDetailsNotificationDeadline;
 import static uk.gov.hmcts.reform.unspec.service.flowstate.FlowPredicate.paymentFailed;
 import static uk.gov.hmcts.reform.unspec.service.flowstate.FlowPredicate.paymentSuccessful;
 import static uk.gov.hmcts.reform.unspec.service.flowstate.FlowPredicate.pendingCaseIssued;
@@ -295,7 +297,14 @@ class FlowPredicateTest {
         }
 
         @ParameterizedTest
-        @EnumSource(value = FlowState.Main.class, mode = EnumSource.Mode.EXCLUDE, names = {"CLAIM_DISCONTINUED"})
+        @EnumSource(
+            value = FlowState.Main.class,
+            mode = EnumSource.Mode.EXCLUDE,
+            names = {
+                "TAKEN_OFFLINE_PAST_APPLICANT_RESPONSE_DEADLINE",
+                "CLAIM_DISCONTINUED"
+            }
+        )
         void shouldReturnFalse_whenCaseDataIsNotAtStateClaimDiscontinued(FlowState.Main flowState) {
             CaseData caseData = CaseDataBuilder.builder().atState(flowState).build();
             assertFalse(claimDiscontinued.test(caseData));
@@ -365,6 +374,40 @@ class FlowPredicateTest {
         void shouldReturnFalse_whenCaseDataAtStateClaimAcknowledge() {
             CaseData caseData = CaseDataBuilder.builder().atStateClaimAcknowledge().build();
             assertFalse(caseDismissedAfterClaimAcknowledged.test(caseData));
+        }
+    }
+
+    @Nested
+    class ApplicantOutOfTime {
+
+        @Test
+        void shouldReturnTrue_whenCaseDataAtStateServiceAcknowledgeWithClaimDismissedDate() {
+            CaseData caseData = CaseDataBuilder.builder().atStateTakenOfflinePastApplicantResponseDeadline().build();
+            assertTrue(applicantOutOfTime.test(caseData));
+        }
+
+        @Test
+        void shouldReturnFalse_whenCaseDataAtStateServiceAcknowledge() {
+            CaseData caseData = CaseDataBuilder.builder().atStateRespondentFullDefence().build();
+            assertFalse(applicantOutOfTime.test(caseData));
+        }
+    }
+
+    @Nested
+    class PastClaimDetailsNotificationDeadline {
+
+        @Test
+        void shouldReturnTrue_whenCaseDataAtStateClaimDismissedPastClaimDetailsNotificationDeadline() {
+            CaseData caseData = CaseDataBuilder.builder()
+                .atStateClaimDismissedPastClaimDetailsNotificationDeadline()
+                .build();
+            assertTrue(pastClaimDetailsNotificationDeadline.test(caseData));
+        }
+
+        @Test
+        void shouldReturnFalse_whenCaseDataAtStateAwaitingCaseDetailsNotification() {
+            CaseData caseData = CaseDataBuilder.builder().atStateAwaitingCaseDetailsNotification().build();
+            assertFalse(pastClaimDetailsNotificationDeadline.test(caseData));
         }
     }
 }
