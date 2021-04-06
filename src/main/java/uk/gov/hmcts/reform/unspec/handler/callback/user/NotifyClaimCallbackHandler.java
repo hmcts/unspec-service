@@ -88,7 +88,10 @@ public class NotifyClaimCallbackHandler extends CallbackHandler {
         String body = format(CONFIRMATION_SUMMARY, formattedDeadline);
 
         return SubmittedCallbackResponse.builder()
-            .confirmationHeader("# Notification of claim sent")
+            .confirmationHeader(String.format(
+                "# Notification of claim sent%n## Claim number: %s",
+                caseData.getLegacyCaseReference()
+            ))
             .confirmationBody(body)
             .build();
     }
