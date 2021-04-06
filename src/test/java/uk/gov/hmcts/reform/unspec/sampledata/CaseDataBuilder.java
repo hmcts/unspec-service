@@ -382,7 +382,7 @@ public class CaseDataBuilder {
 
     public CaseDataBuilder atStateProceedsOfflineUnregisteredDefendant() {
         atStatePaymentSuccessful();
-        ccdState = PROCEEDS_WITH_OFFLINE_JOURNEY;
+        ccdState = PROCEEDS_IN_HERITAGE_SYSTEM;
         issueDate = CLAIM_ISSUED_DATE;
         respondent1Represented = YES;
         respondent1OrgRegistered = NO;
