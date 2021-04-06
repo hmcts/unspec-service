@@ -245,6 +245,7 @@ class EventHistoryMapperTest {
     @Test
     void shouldPrepareExpectedEvents_whenClaimWithFullDefenceNotProceeds() {
         CaseData caseData = CaseDataBuilder.builder()
+            .atStateExtensionRequested()
             .atState(FlowState.Main.FULL_DEFENCE_NOT_PROCEED)
             .build();
         Event expectedDefenceFiled = Event.builder()
@@ -297,6 +298,18 @@ class EventHistoryMapperTest {
                               .build())
             .build();
 
+        Event expectedConsentExtensionFilingDefence = Event.builder()
+            .eventSequence(3)
+            .eventCode("45")
+            .dateReceived(caseData.getRespondent1TimeExtensionDate().format(ISO_DATE))
+            .litigiousPartyID("002")
+            .eventDetails(EventDetails.builder()
+                              .agreedExtensionDate(caseData
+                                                       .getRespondentSolicitor1AgreedDeadlineExtension()
+                                                       .format(ISO_DATE))
+                              .build())
+            .build();
+
         var eventHistory = mapper.buildEvents(caseData);
 
         assertThat(eventHistory).isNotNull();
@@ -308,13 +321,14 @@ class EventHistoryMapperTest {
             .containsExactly(expectedMiscellaneousEvents.get(0), expectedMiscellaneousEvents.get(1));
         assertThat(eventHistory).extracting("acknowledgementOfServiceReceived").asList()
             .containsExactly(expectedAcknowledgementOfServiceReceived);
+        assertThat(eventHistory).extracting("consentExtensionFilingDefence").asList()
+            .containsExactly(expectedConsentExtensionFilingDefence);
 
         assertEmptyEvents(
             eventHistory,
             "receiptOfAdmission",
             "receiptOfPartAdmission",
-            "replyToDefence",
-            "consentExtensionFilingDefence"
+            "replyToDefence"
         );
     }
 
