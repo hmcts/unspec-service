@@ -16,14 +16,14 @@
   {
     "LiveFrom": "01/01/2017",
     "CaseTypeID": "UNSPECIFIED_CLAIMS",
-    "CaseStateID": "PROCEEDS_IN_HERITAGE_SYSTEM",
+    "CaseStateID": "CASE_DISMISSED",
     "UserRole": "caseworker-caa",
     "CRUD": "CRUD"
   },
   {
     "LiveFrom": "01/01/2017",
     "CaseTypeID": "UNSPECIFIED_CLAIMS",
-    "CaseStateID": "CASE_DISMISSED",
+    "CaseStateID": "PROCEEDS_IN_HERITAGE_SYSTEM",
     "UserRole": "caseworker-caa",
     "CRUD": "CRUD"
   },
