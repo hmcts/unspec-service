@@ -116,7 +116,6 @@ public class StateFlowEngine {
                 .transitionTo(CLAIM_DISCONTINUED).onlyIf(claimDiscontinued)
                 .transitionTo(CLAIM_WITHDRAWN).onlyIf(claimWithdrawn)
                 .transitionTo(CASE_PROCEEDS_IN_CASEMAN).onlyIf(caseProceedsInCaseman)
-                .transitionTo(PROCEEDS_OFFLINE_ADMIT_OR_COUNTER_CLAIM).onlyIf(claimTakenOffline)
                 .transitionTo(TAKEN_OFFLINE_PAST_APPLICANT_RESPONSE_DEADLINE).onlyIf(applicantOutOfTime)
             .state(RESPONDENT_FULL_ADMISSION)
                 .transitionTo(CLAIM_DISCONTINUED).onlyIf(claimDiscontinued)
