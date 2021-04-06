@@ -7,7 +7,7 @@ import lombok.Value;
 
 @Value
 @Builder(toBuilder = true)
-public class Document {
+public class   Document {
 
     @JsonProperty("document_url")
     String documentUrl;

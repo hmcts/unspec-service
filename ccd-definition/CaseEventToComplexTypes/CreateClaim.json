@@ -384,7 +384,7 @@
     "ID": "Upload",
     "CaseEventID": "CREATE_CLAIM",
     "CaseFieldID": "servedDocumentFiles",
-    "ListElementCode": "particularsOfClaimDocument",
+    "ListElementCode": "particularsOfClaimFile",
     "FieldDisplayOrder": 2,
     "DisplayContext": "OPTIONAL"
   },

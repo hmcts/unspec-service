@@ -1,4 +1,4 @@
-const { document, listElement, buildAddress } = require('../../api/dataHelper');
+const { document, element, listElement, buildAddress } = require('../../api/dataHelper');
 
 const respondent1 = {
   type: 'INDIVIDUAL',
@@ -104,7 +104,7 @@ const createClaimData = (legalRepresentation, useValidPba) => {
     },
     Upload: {
       servedDocumentFiles: {
-        particularsOfClaimDocument: document('particularsOfClaim.pdf')
+        particularsOfClaimFile: [element(document('particularsOfClaim.pdf'))]
       }
     },
     ClaimValue: {

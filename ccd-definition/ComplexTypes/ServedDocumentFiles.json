@@ -8,11 +8,13 @@
   },
   {
     "ID": "ServedDocumentFiles",
-    "ListElementCode": "particularsOfClaimDocument",
-    "FieldType": "Document",
+    "ListElementCode": "particularsOfClaimFile",
+    "FieldType": "Collection",
+    "FieldTypeParameter": "Document",
     "ElementLabel": "Particulars of claim",
     "RegularExpression": ".csv,.ods,.xls,.xlsx,.docm,.docx,.html,.odf,.ooxml,.pdf,.rtf,.sgml,.txt,.xhtml",
-    "SecurityClassification": "Public"
+    "SecurityClassification": "Public",
+    "Max": 1
   },
   {
     "ID": "ServedDocumentFiles",
