@@ -73,11 +73,13 @@ public class FlowPredicate {
 
     public static final Predicate<CaseData> fullDefenceProceed = caseData ->
         caseData.getApplicant1ProceedWithClaim() != null
-            && caseData.getApplicant1ProceedWithClaim() == YES;
+            && caseData.getApplicant1ProceedWithClaim() == YES
+            && caseData.getTakenOfflineDate() == null;
 
     public static final Predicate<CaseData> fullDefenceNotProceed = caseData ->
         caseData.getApplicant1ProceedWithClaim() != null
-            && caseData.getApplicant1ProceedWithClaim() == NO;
+            && caseData.getApplicant1ProceedWithClaim() == NO
+            && caseData.getTakenOfflineDate() == null;
 
     public static final Predicate<CaseData> claimWithdrawn = caseData ->
         caseData.getWithdrawClaim() != null
