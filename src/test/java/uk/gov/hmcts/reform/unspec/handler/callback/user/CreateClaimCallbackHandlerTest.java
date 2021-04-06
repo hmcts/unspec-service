@@ -85,6 +85,15 @@ class CreateClaimCallbackHandlerTest extends BaseCallbackHandlerTest {
 
     public static final String REFERENCE_NUMBER = "000LR001";
 
+    public static final String LIP_CONFIRMATION_SCREEN = "<br />Your claim will not be issued"
+        + " until payment is confirmed."
+        + " Once payment is confirmed you will receive an email. The claim will then progress offline."
+        + "\n\n To continue the claim you need to send <a href=\"%s\" target=\"_blank\">the sealed claim form</a>, "
+        + "<a href=\"%s\" target=\"_blank\">a response pack</a> and any supporting documents to "
+        + "the defendant within four months. "
+        + "\n\nOnce you have served the claim, send the Certificate of Service and supporting documents to the County"
+        + " Court Claims Centre.";
+
     @MockBean
     private Time time;
 
@@ -131,14 +140,14 @@ class CreateClaimCallbackHandlerTest extends BaseCallbackHandlerTest {
             CaseData caseData = CaseDataBuilder.builder().build();
 
             given(onBoardingOrganisationControlService.validateOrganisation("BEARER_TOKEN"))
-                .willReturn(List.of(String.format(ORG_NOT_ONBOARDED, "Solicitor tribunal ltd")));
+                .willReturn(List.of(format(ORG_NOT_ONBOARDED, "Solicitor tribunal ltd")));
 
             CallbackParams params = callbackParamsOf(caseData, MID, PAGE_ID);
 
             var response = (AboutToStartOrSubmitCallbackResponse) handler.handle(params);
 
             assertThat(response.getErrors())
-                .containsExactly(String.format(ORG_NOT_ONBOARDED, "Solicitor tribunal ltd"));
+                .containsExactly(format(ORG_NOT_ONBOARDED, "Solicitor tribunal ltd"));
         }
 
         @Test
@@ -730,9 +739,10 @@ class CreateClaimCallbackHandlerTest extends BaseCallbackHandlerTest {
                     SubmittedCallbackResponse.builder()
                         .confirmationHeader(format("# Your claim has been received and will progress offline%n## "
                                                        + "Claim number: %s", REFERENCE_NUMBER))
-                        .confirmationBody(format(LIP_CONFIRMATION_BODY,
-                                                 format("/cases/case-details/%s#CaseDocuments", CASE_ID),
-                                                 responsePackLink))
+                        .confirmationBody(format(
+                            LIP_CONFIRMATION_SCREEN,
+                            format("/cases/case-details/%s#CaseDocuments", CASE_ID),
+                            responsePackLink))
                         .build());
             }
         }
