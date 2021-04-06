@@ -94,8 +94,6 @@ public class RespondToDefenceCallbackHandler extends CallbackHandler {
         YesOrNo proceeding = caseData.getApplicant1ProceedWithClaim();
 
         String claimNumber = caseData.getLegacyCaseReference();
-
-        String body = getBody(proceeding);
         String title = getTitle(proceeding);
 
         return SubmittedCallbackResponse.builder()
