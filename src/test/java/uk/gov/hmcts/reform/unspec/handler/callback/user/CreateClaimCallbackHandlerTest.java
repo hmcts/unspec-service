@@ -90,7 +90,7 @@ class CreateClaimCallbackHandlerTest extends BaseCallbackHandlerTest {
         + " Once payment is confirmed you will receive an email. The claim will then progress offline."
         + "\n\n To continue the claim you need to send <a href=\"%s\" target=\"_blank\">the sealed claim form</a>, "
         + "<a href=\"%s\" target=\"_blank\">a response pack</a> and any supporting documents to "
-        + "the defendant within four months. "
+        + "the defendant within 4 months. "
         + "\n\nOnce you have served the claim, send the Certificate of Service and supporting documents to the County"
         + " Court Claims Centre.";
 

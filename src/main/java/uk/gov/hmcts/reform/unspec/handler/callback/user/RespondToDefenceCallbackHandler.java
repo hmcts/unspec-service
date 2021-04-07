@@ -119,6 +119,6 @@ public class RespondToDefenceCallbackHandler extends CallbackHandler {
                 dqLink
             );
         }
-        return null;
+        return "<br />";
     }
 }

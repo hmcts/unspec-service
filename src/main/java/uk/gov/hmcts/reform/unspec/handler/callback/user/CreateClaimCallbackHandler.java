@@ -62,7 +62,7 @@ public class CreateClaimCallbackHandler extends CallbackHandler implements Parti
     public static final String CONFIRMATION_SUMMARY = "<br/>[Download the sealed claim form](%s)"
         + "\n\n Your claim will not be issued until payment is confirmed. Once payment is confirmed you will "
         + "receive an email. The email will also include the date when you need to notify the defendant of the claim."
-        + "\n\n You must notify the defendant of the claim within four months of the claim being issued. The exact "
+        + "\n\n You must notify the defendant of the claim within 4 months of the claim being issued. The exact "
         + "date when you must notify the claim details will be provided when you first notify "
         + "the defendant of the claim.";
 
@@ -70,7 +70,7 @@ public class CreateClaimCallbackHandler extends CallbackHandler implements Parti
         + " Once payment is confirmed you will receive an email. The claim will then progress offline."
         + "\n\n To continue the claim you need to send <a href=\"%s\" target=\"_blank\">the sealed claim form</a>, "
         + "<a href=\"%s\" target=\"_blank\">a response pack</a> and any supporting documents to "
-        + "the defendant within four months. "
+        + "the defendant within 4 months. "
         + "\n\nOnce you have served the claim, send the Certificate of Service and supporting documents to the County"
         + " Court Claims Centre.";
 

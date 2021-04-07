@@ -235,7 +235,7 @@ class RespondToDefenceCallbackHandlerTest extends BaseCallbackHandlerTest {
                 SubmittedCallbackResponse.builder()
                     .confirmationHeader(format("# You've chosen not to proceed with the claim%n## Claim number:"
                                                    + " 000LR001"))
-                    .confirmationBody(null)
+                    .confirmationBody("<br />")
                     .build());
         }
     }
