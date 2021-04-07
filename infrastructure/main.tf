@@ -23,7 +23,7 @@ module "key-vault" {
 }
 
 locals {
-  vaultName = "${var.raw_product}-${var.env}"
+  vaultName = "${var.product}-${var.env}"
 }
 
 data "azurerm_key_vault" "damages_key_vault" {

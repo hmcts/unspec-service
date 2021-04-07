@@ -1,6 +1,4 @@
-variable "product" {}
-
-variable "raw_product" {
+variable "product" {
   default = "unspec"
 }
 
