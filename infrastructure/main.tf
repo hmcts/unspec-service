@@ -27,7 +27,7 @@ locals {
 }
 
 data "azurerm_key_vault" "damages_key_vault" {
-  name = "${local.vaultName}"
+  name = local.vaultName
   resource_group_name = "${local.vaultName}"
 }
 
