@@ -1,5 +1,9 @@
 variable "product" {}
 
+variable "raw_product" {
+  default = "unspec"
+}
+
 variable "component" {}
 
 variable "location" {
@@ -32,4 +36,8 @@ variable "appinsights_location" {
   type        = string
   default     = "West Europe"
   description = "Location for Application Insights"
+}
+
+variable "send_grid_subscription" {
+  default = "1c4f0704-a29e-403d-b719-b90c34ef14c9"
 }
