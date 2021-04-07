@@ -19,7 +19,7 @@ import uk.gov.hmcts.reform.unspec.model.documents.CaseDocument;
 import uk.gov.hmcts.reform.unspec.model.documents.Document;
 import uk.gov.hmcts.reform.unspec.sampledata.CaseDataBuilder;
 import uk.gov.hmcts.reform.unspec.service.DeadlinesCalculator;
-import uk.gov.hmcts.reform.unspec.service.IssueDateCalculator;
+import uk.gov.hmcts.reform.unspec.service.Time;
 import uk.gov.hmcts.reform.unspec.service.docmosis.sealedclaim.SealedClaimFormGenerator;
 import uk.gov.hmcts.reform.unspec.service.flowstate.StateFlowEngine;
 
@@ -27,6 +27,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 import static java.time.LocalDate.now;
+import static java.time.LocalTime.MIDNIGHT;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
@@ -34,8 +35,8 @@ import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static uk.gov.hmcts.reform.unspec.callback.CallbackType.ABOUT_TO_SUBMIT;
-import static uk.gov.hmcts.reform.unspec.enums.CaseState.AWAITING_CASE_NOTIFICATION;
-import static uk.gov.hmcts.reform.unspec.enums.CaseState.PROCEEDS_WITH_OFFLINE_JOURNEY;
+import static uk.gov.hmcts.reform.unspec.enums.CaseState.CASE_ISSUED;
+import static uk.gov.hmcts.reform.unspec.enums.CaseState.PROCEEDS_IN_HERITAGE_SYSTEM;
 import static uk.gov.hmcts.reform.unspec.enums.YesOrNo.NO;
 import static uk.gov.hmcts.reform.unspec.model.documents.DocumentType.SEALED_CLAIM;
 
@@ -49,7 +50,7 @@ import static uk.gov.hmcts.reform.unspec.model.documents.DocumentType.SEALED_CLA
 class GenerateClaimFormCallbackHandlerTest extends BaseCallbackHandlerTest {
 
     @MockBean
-    private IssueDateCalculator issueDateCalculator;
+    private Time time;
 
     @MockBean
     private DeadlinesCalculator deadlinesCalculator;
@@ -76,21 +77,40 @@ class GenerateClaimFormCallbackHandlerTest extends BaseCallbackHandlerTest {
                           .build())
         .build();
 
-    private final LocalDate claimIssuedDate = now();
-    private final LocalDateTime deadline = now().atTime(23, 59, 59);
+    private final LocalDate issueDate = now();
+    private final LocalDateTime deadline = now().atTime(MIDNIGHT);
 
     @BeforeEach
     void setup() {
         when(sealedClaimFormGenerator.generate(any(CaseData.class), anyString())).thenReturn(DOCUMENT);
-        when(issueDateCalculator.calculateIssueDay(any(LocalDateTime.class))).thenReturn(claimIssuedDate);
-        when(deadlinesCalculator.calculateResponseDeadline(any(LocalDate.class))).thenReturn(deadline);
+        when(deadlinesCalculator.addMonthsToDateAtMidnight(eq(4), any(LocalDate.class)))
+            .thenReturn(deadline);
+        when(time.now()).thenReturn(issueDate.atStartOfDay());
     }
 
     @Nested
     class AboutToSubmitCallback {
 
         @Test
-        void shouldGenerateDocumentAndSetStateAsProceedsWithOfflineJourney_whenRespondentIsNotRepresented() {
+        void shouldGenerateDocumentAndSetStateAsCaseIssued_whenRespondentIsRepresented() {
+            CaseData caseData = CaseDataBuilder.builder().atStateAwaitingCaseNotification()
+                .build();
+            CallbackParams params = callbackParamsOf(caseData, ABOUT_TO_SUBMIT);
+
+            var response = (AboutToStartOrSubmitCallbackResponse) handler.handle(params);
+
+            verify(sealedClaimFormGenerator).generate(any(CaseData.class), eq("BEARER_TOKEN"));
+
+            CaseData updatedData = mapper.convertValue(response.getData(), CaseData.class);
+
+            assertThat(updatedData.getSystemGeneratedCaseDocuments().get(0).getValue()).isEqualTo(DOCUMENT);
+            assertThat(updatedData.getIssueDate()).isEqualTo(issueDate);
+            assertThat(updatedData.getClaimNotificationDeadline()).isEqualTo(deadline);
+            assertThat(response.getState()).isEqualTo(CASE_ISSUED.toString());
+        }
+
+        @Test
+        void shouldGenerateDocumentAndSetStateAsProceedsInHeritageSystem_whenRespondentIsNotRepresented() {
             CaseData caseData = CaseDataBuilder.builder().atStateProceedsOfflineUnrepresentedDefendant().build();
             CallbackParams params = callbackParamsOf(caseData, ABOUT_TO_SUBMIT);
 
@@ -101,42 +121,24 @@ class GenerateClaimFormCallbackHandlerTest extends BaseCallbackHandlerTest {
             CaseData updatedData = mapper.convertValue(response.getData(), CaseData.class);
 
             assertThat(updatedData.getSystemGeneratedCaseDocuments().get(0).getValue()).isEqualTo(DOCUMENT);
-            assertThat(response.getState()).isEqualTo(PROCEEDS_WITH_OFFLINE_JOURNEY.toString());
+            assertThat(response.getState()).isEqualTo(PROCEEDS_IN_HERITAGE_SYSTEM.toString());
         }
-    }
 
-    @Test
-    void shouldGenerateDocumentAndSetStateAsAwaitingCaseNotification_whenRespondentIsRepresented() {
-        CaseData caseData = CaseDataBuilder.builder().atStateAwaitingCaseNotification()
-            .build();
-        CallbackParams params = callbackParamsOf(caseData, ABOUT_TO_SUBMIT);
+        @Test
+        void shouldGenerateDocumentAndSetStateAsProceedsInHeritageSystem_whenRespondentSolicitorUnregistered() {
+            CaseData caseData = CaseDataBuilder.builder().atStateAwaitingCaseNotification()
+                .respondent1OrgRegistered(NO)
+                .build();
+            CallbackParams params = callbackParamsOf(caseData, ABOUT_TO_SUBMIT);
 
-        var response = (AboutToStartOrSubmitCallbackResponse) handler.handle(params);
+            var response = (AboutToStartOrSubmitCallbackResponse) handler.handle(params);
 
-        verify(sealedClaimFormGenerator).generate(any(CaseData.class), eq("BEARER_TOKEN"));
+            verify(sealedClaimFormGenerator).generate(any(CaseData.class), eq("BEARER_TOKEN"));
 
-        CaseData updatedData = mapper.convertValue(response.getData(), CaseData.class);
+            CaseData updatedData = mapper.convertValue(response.getData(), CaseData.class);
 
-        assertThat(updatedData.getSystemGeneratedCaseDocuments().get(0).getValue()).isEqualTo(DOCUMENT);
-        assertThat(updatedData.getClaimIssuedDate()).isEqualTo(claimIssuedDate);
-        assertThat(updatedData.getRespondentSolicitor1ResponseDeadline()).isEqualTo(deadline);
-        assertThat(response.getState()).isEqualTo(AWAITING_CASE_NOTIFICATION.toString());
-    }
-
-    @Test
-    void shouldGenerateDocumentAndSetStateAsProceedsWithOfflineJourney_whenRespondentSolicitorUnregistered() {
-        CaseData caseData = CaseDataBuilder.builder().atStateAwaitingCaseNotification()
-            .respondent1OrgRegistered(NO)
-            .build();
-        CallbackParams params = callbackParamsOf(caseData, ABOUT_TO_SUBMIT);
-
-        var response = (AboutToStartOrSubmitCallbackResponse) handler.handle(params);
-
-        verify(sealedClaimFormGenerator).generate(any(CaseData.class), eq("BEARER_TOKEN"));
-
-        CaseData updatedData = mapper.convertValue(response.getData(), CaseData.class);
-
-        assertThat(updatedData.getSystemGeneratedCaseDocuments().get(0).getValue()).isEqualTo(DOCUMENT);
-        assertThat(response.getState()).isEqualTo(PROCEEDS_WITH_OFFLINE_JOURNEY.toString());
+            assertThat(updatedData.getSystemGeneratedCaseDocuments().get(0).getValue()).isEqualTo(DOCUMENT);
+            assertThat(response.getState()).isEqualTo(PROCEEDS_IN_HERITAGE_SYSTEM.toString());
+        }
     }
 }
