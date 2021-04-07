@@ -40,9 +40,41 @@ class EventHistoryMapperTest {
         Event expectedEvent = Event.builder()
             .eventSequence(1)
             .eventCode("999")
-            .dateReceived(caseData.getClaimSubmittedDateTime().toLocalDate().format(ISO_DATE))
+            .dateReceived(caseData.getSubmittedDate().toLocalDate().format(ISO_DATE))
             .eventDetails(EventDetails.builder()
                               .miscText("RPA Reason: Unrepresented defendant.")
+                              .build())
+            .build();
+
+        var eventHistory = mapper.buildEvents(caseData);
+
+        assertThat(eventHistory).isNotNull();
+        assertThat(eventHistory)
+            .extracting("miscellaneous")
+            .asList()
+            .containsExactly(expectedEvent);
+        assertEmptyEvents(
+            eventHistory,
+            "acknowledgementOfServiceReceived",
+            "consentExtensionFilingDefence",
+            "defenceFiled",
+            "defenceAndCounterClaim",
+            "receiptOfPartAdmission",
+            "receiptOfAdmission",
+            "replyToDefence",
+            "directionsQuestionnaireFiled"
+        );
+    }
+
+    @Test
+    void shouldPrepareMiscellaneousEvent_whenClaimWithUnregisteredDefendant() {
+        CaseData caseData = CaseDataBuilder.builder().atStateProceedsOfflineUnregisteredDefendant().build();
+        Event expectedEvent = Event.builder()
+            .eventSequence(1)
+            .eventCode("999")
+            .dateReceived(caseData.getSubmittedDate().toLocalDate().format(ISO_DATE))
+            .eventDetails(EventDetails.builder()
+                              .miscText("RPA Reason: Unregistered defendant solicitor firm.")
                               .build())
             .build();
 
@@ -72,14 +104,14 @@ class EventHistoryMapperTest {
         Event expectedReceiptOfAdmission = Event.builder()
             .eventSequence(4)
             .eventCode("40")
-            .dateReceived(caseData.getDefendantResponseDate().format(ISO_DATE))
+            .dateReceived(caseData.getRespondent1ResponseDate().format(ISO_DATE))
             .litigiousPartyID("002")
             .build();
         List<Event> expectedMiscellaneousEvents = List.of(
             Event.builder()
                 .eventSequence(1)
                 .eventCode("999")
-                .dateReceived(caseData.getDefendantResponseDate().format(ISO_DATE))
+                .dateReceived(caseData.getRespondent1ResponseDate().format(ISO_DATE))
                 .eventDetails(EventDetails.builder()
                                   .miscText("Claimant has notified defendant")
                                   .build())
@@ -87,7 +119,7 @@ class EventHistoryMapperTest {
             Event.builder()
                 .eventSequence(5)
                 .eventCode("999")
-                .dateReceived(caseData.getDefendantResponseDate().format(ISO_DATE))
+                .dateReceived(caseData.getRespondent1ResponseDate().format(ISO_DATE))
                 .eventDetails(EventDetails.builder()
                                   .miscText("RPA Reason: Defendant fully admits.")
                                   .build())
@@ -96,7 +128,7 @@ class EventHistoryMapperTest {
         Event expectedAcknowledgementOfServiceReceived = Event.builder()
             .eventSequence(2)
             .eventCode("38")
-            .dateReceived(caseData.getDefendantResponseDate().format(ISO_DATE))
+            .dateReceived(caseData.getRespondent1ResponseDate().format(ISO_DATE))
             .litigiousPartyID("002")
             .eventDetails(EventDetails.builder()
                               .responseIntention("contest jurisdiction")
@@ -105,7 +137,7 @@ class EventHistoryMapperTest {
         Event expectedConsentExtensionFilingDefence = Event.builder()
             .eventSequence(3)
             .eventCode("45")
-            .dateReceived(caseData.getDefendantResponseDate().format(ISO_DATE))
+            .dateReceived(caseData.getRespondent1ResponseDate().format(ISO_DATE))
             .litigiousPartyID("002")
             .eventDetails(EventDetails.builder()
                               .agreedExtensionDate("")
@@ -139,14 +171,14 @@ class EventHistoryMapperTest {
         Event expectedReceiptOfPartAdmission = Event.builder()
             .eventSequence(4)
             .eventCode("60")
-            .dateReceived(caseData.getDefendantResponseDate().format(ISO_DATE))
+            .dateReceived(caseData.getRespondent1ResponseDate().format(ISO_DATE))
             .litigiousPartyID("002")
             .build();
         List<Event> expectedMiscellaneousEvents = List.of(
             Event.builder()
                 .eventSequence(1)
                 .eventCode("999")
-                .dateReceived(caseData.getDefendantResponseDate().format(ISO_DATE))
+                .dateReceived(caseData.getRespondent1ResponseDate().format(ISO_DATE))
                 .eventDetails(EventDetails.builder()
                                   .miscText("Claimant has notified defendant")
                                   .build())
@@ -154,7 +186,7 @@ class EventHistoryMapperTest {
             Event.builder()
                 .eventSequence(5)
                 .eventCode("999")
-                .dateReceived(caseData.getDefendantResponseDate().format(ISO_DATE))
+                .dateReceived(caseData.getRespondent1ResponseDate().format(ISO_DATE))
                 .eventDetails(EventDetails.builder()
                                   .miscText("RPA Reason: Defendant partial admission.")
                                   .build())
@@ -163,7 +195,7 @@ class EventHistoryMapperTest {
         Event expectedAcknowledgementOfServiceReceived = Event.builder()
             .eventSequence(2)
             .eventCode("38")
-            .dateReceived(caseData.getDefendantResponseDate().format(ISO_DATE))
+            .dateReceived(caseData.getRespondent1ResponseDate().format(ISO_DATE))
             .litigiousPartyID("002")
             .eventDetails(EventDetails.builder()
                               .responseIntention("contest jurisdiction")
@@ -172,7 +204,7 @@ class EventHistoryMapperTest {
         Event expectedConsentExtensionFilingDefence = Event.builder()
             .eventSequence(3)
             .eventCode("45")
-            .dateReceived(caseData.getDefendantResponseDate().format(ISO_DATE))
+            .dateReceived(caseData.getRespondent1ResponseDate().format(ISO_DATE))
             .litigiousPartyID("002")
             .eventDetails(EventDetails.builder()
                               .agreedExtensionDate("")
@@ -206,14 +238,14 @@ class EventHistoryMapperTest {
         Event expectedDefenceAndCounterClaim = Event.builder()
             .eventSequence(4)
             .eventCode("52")
-            .dateReceived(caseData.getDefendantResponseDate().format(ISO_DATE))
+            .dateReceived(caseData.getRespondent1ResponseDate().format(ISO_DATE))
             .litigiousPartyID("002")
             .build();
         List<Event> expectedMiscellaneousEvents = List.of(
             Event.builder()
                 .eventSequence(1)
                 .eventCode("999")
-                .dateReceived(caseData.getDefendantResponseDate().format(ISO_DATE))
+                .dateReceived(caseData.getRespondent1ResponseDate().format(ISO_DATE))
                 .eventDetails(EventDetails.builder()
                                   .miscText("Claimant has notified defendant")
                                   .build())
@@ -221,7 +253,7 @@ class EventHistoryMapperTest {
             Event.builder()
                 .eventSequence(5)
                 .eventCode("999")
-                .dateReceived(caseData.getDefendantResponseDate().format(ISO_DATE))
+                .dateReceived(caseData.getRespondent1ResponseDate().format(ISO_DATE))
                 .eventDetails(EventDetails.builder()
                                   .miscText("RPA Reason: Defendant rejects and counter claims.")
                                   .build())
@@ -230,7 +262,7 @@ class EventHistoryMapperTest {
         Event expectedAcknowledgementOfServiceReceived = Event.builder()
             .eventSequence(2)
             .eventCode("38")
-            .dateReceived(caseData.getDefendantResponseDate().format(ISO_DATE))
+            .dateReceived(caseData.getRespondent1ResponseDate().format(ISO_DATE))
             .litigiousPartyID("002")
             .eventDetails(EventDetails.builder()
                               .responseIntention("contest jurisdiction")
@@ -239,7 +271,7 @@ class EventHistoryMapperTest {
         Event expectedConsentExtensionFilingDefence = Event.builder()
             .eventSequence(3)
             .eventCode("45")
-            .dateReceived(caseData.getDefendantResponseDate().format(ISO_DATE))
+            .dateReceived(caseData.getRespondent1ResponseDate().format(ISO_DATE))
             .litigiousPartyID("002")
             .eventDetails(EventDetails.builder()
                               .agreedExtensionDate("")
@@ -272,7 +304,8 @@ class EventHistoryMapperTest {
         "RESPONDENT_FULL_ADMISSION",
         "RESPONDENT_PART_ADMISSION",
         "RESPONDENT_COUNTER_CLAIM",
-        "PROCEEDS_OFFLINE_UNREPRESENTED_DEFENDANT"
+        "PROCEEDS_OFFLINE_UNREPRESENTED_DEFENDANT",
+        "PENDING_CLAIM_ISSUED_UNREGISTERED_DEFENDANT"
     })
     void shouldBuildEmptyEventHistory_whenNoMappingsDefinedForStateFlow(FlowState.Main flowStateMain) {
         CaseData caseData = CaseDataBuilder.builder().atState(flowStateMain).build();

@@ -9,9 +9,13 @@ Feature('RPA handoff points tests @rpa-handoff-tests');
 Scenario('Take claim offline', async (I) => {
   await I.login(config.solicitorUser);
   await I.createCase();
+  let caseId = getCaseId(await I.grabCaseNumber());
   await I.notifyClaim();
   await I.notifyClaimDetails();
-  await I.acknowledgeService('fullDefence');
+  await I.acknowledgeClaim('fullDefence');
+
+  await I.login(config.adminUser);
+  await I.goToCase(caseId);
   await I.caseProceedsInCaseman();
   await I.assertNoEventsAvailable();
 });
@@ -25,7 +29,7 @@ Scenario('Defendant - Defend part of Claim', async (I) => {
   await I.createCase();
   await I.notifyClaim();
   await I.notifyClaimDetails();
-  await I.acknowledgeService('partDefence');
+  await I.acknowledgeClaim('partDefence');
   await I.respondToClaim('partAdmission');
 });
 
@@ -33,7 +37,7 @@ Scenario('Defendant - Defends, Claimant decides not to proceed', async (I) => {
   await I.createCase();
   await I.notifyClaim();
   await I.notifyClaimDetails();
-  await I.acknowledgeService('fullDefence');
+  await I.acknowledgeClaim('fullDefence');
   await I.respondToClaim('fullDefence');
   await I.respondToDefenceDropClaim();
   await I.assertNoEventsAvailable();
@@ -43,7 +47,7 @@ Scenario('Defendant - Defends, Claimant decides to proceed', async (I) => {
   await I.createCase();
   await I.notifyClaim();
   await I.notifyClaimDetails();
-  await I.acknowledgeService('fullDefence');
+  await I.acknowledgeClaim('fullDefence');
   await I.respondToClaim('fullDefence');
   await I.respondToDefence();
   await I.assertNoEventsAvailable();
@@ -54,14 +58,14 @@ Scenario('Claimant does not respond to defence with defined timescale', async (I
   let caseId = getCaseId(await I.grabCaseNumber());
   await I.notifyClaim();
   await I.notifyClaimDetails();
-  await I.acknowledgeService('partDefence');
+  await I.acknowledgeClaim('partDefence');
   await I.respondToClaim('fullDefence');
 
   await waitForFinishedBusinessProcess(caseId);
-  await updateCaseData(caseId, {applicantSolicitorSecondResponseDeadlineToRespondentSolicitor1: dateTime(-1)});
+  await updateCaseData(caseId, {claimDismissedDeadline: dateTime(-1)});
 
-  console.log('Start waiting for Case strikeout scheduler ' + dateTime());
-  // Sleep waiting for Case strikeout scheduler
+  console.log('Start waiting for Case dismissed scheduler ' + dateTime());
+  // Sleep waiting for Case dismissed scheduler
   await sleep(600);
   console.log('Waiting finished ' + dateTime());
   await I.goToCase(caseId);

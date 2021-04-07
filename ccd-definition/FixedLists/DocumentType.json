@@ -9,8 +9,8 @@
   {
     "LiveFrom": "01/01/2017",
     "ID": "DocumentType",
-    "ListElementCode": "ACKNOWLEDGEMENT_OF_SERVICE",
-    "ListElement": "Acknowledgement of service form",
+    "ListElementCode": "ACKNOWLEDGEMENT_OF_CLAIM",
+    "ListElement": "Acknowledgement of claim form",
     "DisplayOrder": 2
   },
   {
