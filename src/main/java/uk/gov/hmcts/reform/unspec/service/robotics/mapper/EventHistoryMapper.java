@@ -19,6 +19,7 @@ import java.util.List;
 import static java.lang.String.format;
 import static java.time.format.DateTimeFormatter.ISO_DATE;
 import static java.util.Optional.ofNullable;
+import static uk.gov.hmcts.reform.unspec.enums.YesOrNo.NO;
 import static uk.gov.hmcts.reform.unspec.service.robotics.mapper.RoboticsDataMapper.RESPONDENT_ID;
 
 @Component
@@ -85,7 +86,7 @@ public class EventHistoryMapper {
                         ofNullable(caseData.getRespondent1DQ())
                             .map(Respondent1DQ::getRespondent1DQFileDirectionsQuestionnaire)
                             .map(FileDirectionsQuestionnaire::getOneMonthStayRequested)
-                            .orElse(null)
+                            .orElse(NO)
                     ))
                     .build()
             )
