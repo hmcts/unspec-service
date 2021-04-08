@@ -78,6 +78,42 @@ class EventHistoryMapperTest {
     }
 
     @Nested
+    class UnregisteredDefendant {
+
+        @Test
+        void shouldPrepareMiscellaneousEvent_whenClaimWithUnregisteredDefendant() {
+            CaseData caseData = CaseDataBuilder.builder().atStateProceedsOfflineUnregisteredDefendant().build();
+            Event expectedEvent = Event.builder()
+                .eventSequence(1)
+                .eventCode("999")
+                .dateReceived(caseData.getSubmittedDate().toLocalDate().format(ISO_DATE))
+                .eventDetails(EventDetails.builder()
+                                  .miscText("RPA Reason: Unregistered defendant solicitor firm.")
+                                  .build())
+                .build();
+
+            var eventHistory = mapper.buildEvents(caseData);
+
+            assertThat(eventHistory).isNotNull();
+            assertThat(eventHistory)
+                .extracting("miscellaneous")
+                .asList()
+                .containsExactly(expectedEvent);
+            assertEmptyEvents(
+                eventHistory,
+                "acknowledgementOfServiceReceived",
+                "consentExtensionFilingDefence",
+                "defenceFiled",
+                "defenceAndCounterClaim",
+                "receiptOfPartAdmission",
+                "receiptOfAdmission",
+                "replyToDefence",
+                "directionsQuestionnaireFiled"
+            );
+        }
+    }
+
+    @Nested
     class RespondentFullAdmission {
 
         @Test
@@ -830,6 +866,7 @@ class EventHistoryMapperTest {
         "RESPONDENT_PART_ADMISSION",
         "RESPONDENT_COUNTER_CLAIM",
         "PROCEEDS_OFFLINE_UNREPRESENTED_DEFENDANT",
+        "PENDING_CLAIM_ISSUED_UNREGISTERED_DEFENDANT",
         "FULL_DEFENCE_NOT_PROCEED",
         "FULL_DEFENCE_PROCEED"
     })

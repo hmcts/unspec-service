@@ -36,6 +36,9 @@ public class EventHistoryMapper {
             case PROCEEDS_OFFLINE_UNREPRESENTED_DEFENDANT:
                 buildUnrepresentedDefendant(caseData, builder);
                 break;
+            case PENDING_CLAIM_ISSUED_UNREGISTERED_DEFENDANT:
+                buildUnregisteredDefendant(caseData, builder);
+                break;
             case RESPONDENT_FULL_ADMISSION:
                 buildRespondentFullAdmission(caseData, builder);
                 break;
@@ -87,7 +90,6 @@ public class EventHistoryMapper {
                 .litigiousPartyID(APPLICANT_ID)
                 .build()
         ));
-
     }
 
     private String prepareEventDetailsText(DQ dq) {
@@ -141,6 +143,20 @@ public class EventHistoryMapper {
                     .dateReceived(caseData.getSubmittedDate().toLocalDate().format(ISO_DATE))
                     .eventDetails(EventDetails.builder()
                                       .miscText("RPA Reason: Unrepresented defendant.")
+                                      .build())
+                    .build()
+            ));
+    }
+
+    private void buildUnregisteredDefendant(CaseData caseData, EventHistory.EventHistoryBuilder builder) {
+        builder.miscellaneous(
+            List.of(
+                Event.builder()
+                    .eventSequence(1)
+                    .eventCode("999")
+                    .dateReceived(caseData.getSubmittedDate().toLocalDate().format(ISO_DATE))
+                    .eventDetails(EventDetails.builder()
+                                      .miscText("RPA Reason: Unregistered defendant solicitor firm.")
                                       .build())
                     .build()
             ));
