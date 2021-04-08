@@ -2,7 +2,11 @@ package uk.gov.hmcts.reform.unspec.service.robotics.mapper;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
+import uk.gov.hmcts.reform.unspec.enums.YesOrNo;
 import uk.gov.hmcts.reform.unspec.model.CaseData;
+import uk.gov.hmcts.reform.unspec.model.dq.FileDirectionsQuestionnaire;
+import uk.gov.hmcts.reform.unspec.model.dq.RequestedCourt;
+import uk.gov.hmcts.reform.unspec.model.dq.Respondent1DQ;
 import uk.gov.hmcts.reform.unspec.model.robotics.Event;
 import uk.gov.hmcts.reform.unspec.model.robotics.EventDetails;
 import uk.gov.hmcts.reform.unspec.model.robotics.EventHistory;
@@ -15,7 +19,8 @@ import java.util.List;
 
 import static java.lang.String.format;
 import static java.time.format.DateTimeFormatter.ISO_DATE;
-import static uk.gov.hmcts.reform.unspec.enums.YesOrNo.YES;
+import static java.util.Optional.ofNullable;
+import static uk.gov.hmcts.reform.unspec.enums.YesOrNo.NO;
 import static uk.gov.hmcts.reform.unspec.service.robotics.mapper.RoboticsDataMapper.RESPONDENT_ID;
 
 @Component
@@ -75,13 +80,14 @@ public class EventHistoryMapper {
                     .litigiousPartyID(RESPONDENT_ID)
                     .eventDetailsText(format(
                         "preferredCourtCode: %s; stayClaim: %s",
-                        caseData
-                            .getRespondent1DQ()
-                            .getRespondent1DQRequestedCourt()
-                            .getResponseCourtCode(),
-                        caseData.getRespondent1DQ()
-                            .getRespondent1DQFileDirectionsQuestionnaire()
-                            .getOneMonthStayRequested() == YES
+                        ofNullable(caseData.getRespondent1DQ())
+                            .map(Respondent1DQ::getRespondent1DQRequestedCourt)
+                            .map(RequestedCourt::getResponseCourtCode)
+                            .orElse("None"),
+                        ofNullable(caseData.getRespondent1DQ())
+                            .map(Respondent1DQ::getRespondent1DQFileDirectionsQuestionnaire)
+                            .map(FileDirectionsQuestionnaire::getOneMonthStayRequested)
+                            .orElse(NO)
                     ))
                     .build()
             )
