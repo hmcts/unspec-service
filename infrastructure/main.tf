@@ -28,7 +28,7 @@ locals {
 
 data "azurerm_key_vault" "damages_key_vault" {
   name = local.vaultName
-  resource_group_name = local.vaultName
+  resource_group_name = "${var.product}-service-${var.env}"
 }
 
 resource "azurerm_application_insights" "appinsights" {
