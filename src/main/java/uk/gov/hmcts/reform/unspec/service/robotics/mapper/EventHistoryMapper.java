@@ -2,7 +2,6 @@ package uk.gov.hmcts.reform.unspec.service.robotics.mapper;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
-import uk.gov.hmcts.reform.unspec.enums.YesOrNo;
 import uk.gov.hmcts.reform.unspec.model.CaseData;
 import uk.gov.hmcts.reform.unspec.model.dq.FileDirectionsQuestionnaire;
 import uk.gov.hmcts.reform.unspec.model.dq.RequestedCourt;
