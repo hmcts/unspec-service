@@ -4,6 +4,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.EnumSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.jackson.JacksonAutoConfiguration;
 import org.springframework.boot.autoconfigure.validation.ValidationAutoConfiguration;
@@ -24,7 +26,7 @@ import uk.gov.hmcts.reform.unspec.sampledata.CallbackParamsBuilder;
 import uk.gov.hmcts.reform.unspec.sampledata.CaseDataBuilder;
 import uk.gov.hmcts.reform.unspec.sampledata.CaseDetailsBuilder;
 import uk.gov.hmcts.reform.unspec.service.Time;
-import uk.gov.hmcts.reform.unspec.service.flowstate.StateFlowEngine;
+import uk.gov.hmcts.reform.unspec.service.flowstate.FlowState;
 import uk.gov.hmcts.reform.unspec.validation.UnavailableDateValidator;
 
 import java.time.LocalDate;
@@ -50,8 +52,7 @@ import static uk.gov.hmcts.reform.unspec.utils.ElementUtils.wrapElements;
     JacksonAutoConfiguration.class,
     ValidationAutoConfiguration.class,
     UnavailableDateValidator.class,
-    CaseDetailsConverter.class,
-    StateFlowEngine.class
+    CaseDetailsConverter.class
 })
 class RespondToDefenceCallbackHandlerTest extends BaseCallbackHandlerTest {
 
@@ -168,10 +169,13 @@ class RespondToDefenceCallbackHandlerTest extends BaseCallbackHandlerTest {
             when(time.now()).thenReturn(localDateTime);
         }
 
-        @Test
-        void shouldUpdateBusinessProcess_whenAtFullDefenceState() {
+        @ParameterizedTest
+        @EnumSource(value = FlowState.Main.class,
+            names = {"FULL_DEFENCE_PROCEED", "FULL_DEFENCE_NOT_PROCEED"},
+            mode = EnumSource.Mode.INCLUDE)
+        void shouldUpdateBusinessProcess_whenAtFullDefenceState(FlowState.Main flowState) {
             var params = callbackParamsOf(
-                CaseDataBuilder.builder().atStateApplicantRespondToDefenceAndProceed().build(),
+                CaseDataBuilder.builder().atState(flowState).build(),
                 ABOUT_TO_SUBMIT
             );
 
@@ -181,19 +185,6 @@ class RespondToDefenceCallbackHandlerTest extends BaseCallbackHandlerTest {
                 .extracting("status", "camundaEvent")
                 .containsExactly(READY.name(), CLAIMANT_RESPONSE.name());
 
-            assertThat(response.getData()).containsEntry("applicant1ResponseDate", localDateTime.format(ISO_DATE_TIME));
-        }
-
-        @Test
-        void shouldNotUpdateBusinessProcess_whenNotAtFullDefenceState() {
-            var params = callbackParamsOf(
-                CaseDataBuilder.builder().atStateRespondentFullDefence().build(),
-                ABOUT_TO_SUBMIT
-            );
-
-            var response = (AboutToStartOrSubmitCallbackResponse) handler.handle(params);
-
-            assertThat(response.getData()).doesNotContainKey("businessProcess");
             assertThat(response.getData()).containsEntry("applicant1ResponseDate", localDateTime.format(ISO_DATE_TIME));
         }
     }

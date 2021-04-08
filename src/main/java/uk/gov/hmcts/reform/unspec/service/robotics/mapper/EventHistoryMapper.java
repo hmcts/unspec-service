@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import uk.gov.hmcts.reform.unspec.model.CaseData;
 import uk.gov.hmcts.reform.unspec.model.dq.DQ;
+import uk.gov.hmcts.reform.unspec.model.dq.FileDirectionsQuestionnaire;
 import uk.gov.hmcts.reform.unspec.model.dq.RequestedCourt;
 import uk.gov.hmcts.reform.unspec.model.robotics.Event;
 import uk.gov.hmcts.reform.unspec.model.robotics.EventDetails;
@@ -18,6 +19,7 @@ import java.util.List;
 import static java.lang.String.format;
 import static java.time.format.DateTimeFormatter.ISO_DATE;
 import static java.util.Optional.ofNullable;
+import static uk.gov.hmcts.reform.unspec.enums.YesOrNo.NO;
 import static uk.gov.hmcts.reform.unspec.enums.YesOrNo.YES;
 import static uk.gov.hmcts.reform.unspec.service.robotics.mapper.RoboticsDataMapper.APPLICANT_ID;
 import static uk.gov.hmcts.reform.unspec.service.robotics.mapper.RoboticsDataMapper.RESPONDENT_ID;
@@ -35,6 +37,9 @@ public class EventHistoryMapper {
         switch (mainFlowState) {
             case PROCEEDS_OFFLINE_UNREPRESENTED_DEFENDANT:
                 buildUnrepresentedDefendant(caseData, builder);
+                break;
+            case PENDING_CLAIM_ISSUED_UNREGISTERED_DEFENDANT:
+                buildUnregisteredDefendant(caseData, builder);
                 break;
             case RESPONDENT_FULL_ADMISSION:
                 buildRespondentFullAdmission(caseData, builder);
@@ -87,7 +92,6 @@ public class EventHistoryMapper {
                 .litigiousPartyID(APPLICANT_ID)
                 .build()
         ));
-
     }
 
     private String prepareEventDetailsText(DQ dq) {
@@ -96,8 +100,9 @@ public class EventHistoryMapper {
             ofNullable(dq.getRequestedCourt())
                 .map(RequestedCourt::getResponseCourtCode)
                 .orElse(null),
-            dq.getFileDirectionQuestionnaire()
-                .getOneMonthStayRequested() == YES
+            ofNullable(dq.getFileDirectionQuestionnaire())
+                .map(FileDirectionsQuestionnaire::getOneMonthStayRequested)
+                .orElse(NO) == YES
         );
     }
 
@@ -141,6 +146,20 @@ public class EventHistoryMapper {
                     .dateReceived(caseData.getSubmittedDate().toLocalDate().format(ISO_DATE))
                     .eventDetails(EventDetails.builder()
                                       .miscText("RPA Reason: Unrepresented defendant.")
+                                      .build())
+                    .build()
+            ));
+    }
+
+    private void buildUnregisteredDefendant(CaseData caseData, EventHistory.EventHistoryBuilder builder) {
+        builder.miscellaneous(
+            List.of(
+                Event.builder()
+                    .eventSequence(1)
+                    .eventCode("999")
+                    .dateReceived(caseData.getSubmittedDate().toLocalDate().format(ISO_DATE))
+                    .eventDetails(EventDetails.builder()
+                                      .miscText("RPA Reason: Unregistered defendant solicitor firm.")
                                       .build())
                     .build()
             ));
