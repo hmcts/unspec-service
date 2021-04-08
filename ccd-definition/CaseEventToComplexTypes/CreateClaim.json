@@ -415,7 +415,7 @@
     "CaseEventID": "CREATE_CLAIM",
     "CaseFieldID": "servedDocumentFiles",
     "ListElementCode": "certificateOfSuitability.document",
-    "FieldDisplayOrder": ,
+    "FieldDisplayOrder": 5,
     "DisplayContext": "OPTIONAL"
   },
   {
