@@ -266,12 +266,13 @@ class RpaConsumerTest extends BaseRpaTest {
         void shouldGeneratePact_whenFullDefenceNotProceeds() {
             CaseData caseData = CaseDataBuilder.builder()
                 .atState(FlowState.Main.FULL_DEFENCE_NOT_PROCEED)
+                .legacyCaseReference("000LR010")
                 .build();
             String payload = roboticsDataMapper.toRoboticsCaseData(caseData).toJsonString();
 
             assertThat(payload, validateJson());
 
-            String description = "Robotics case data for defendant responded with full defence not proceeds";
+            String description = "Robotics case data for applicant responded with confirms not to proceeds";
             PactVerificationResult result = getPactVerificationResult(payload, description);
 
             assertEquals(PactVerificationResult.Ok.INSTANCE, result);
@@ -286,12 +287,13 @@ class RpaConsumerTest extends BaseRpaTest {
         void shouldGeneratePact_whenFullDefenceProceeds() {
             CaseData caseData = CaseDataBuilder.builder()
                 .atState(FlowState.Main.FULL_DEFENCE_PROCEED)
+                .legacyCaseReference("000LR011")
                 .build();
             String payload = roboticsDataMapper.toRoboticsCaseData(caseData).toJsonString();
 
             assertThat(payload, validateJson());
 
-            String description = "Robotics case data for defendant responded with full defence confirms to proceeds";
+            String description = "Robotics case data for applicant responded with confirms to proceeds";
             PactVerificationResult result = getPactVerificationResult(payload, description);
 
             assertEquals(PactVerificationResult.Ok.INSTANCE, result);
