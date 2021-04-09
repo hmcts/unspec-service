@@ -68,8 +68,8 @@ public class CreateClaimCallbackHandler extends CallbackHandler implements Parti
 
     public static final String LIP_CONFIRMATION_BODY = "<br />Your claim will not be issued until payment is confirmed."
         + " Once payment is confirmed you will receive an email. The claim will then progress offline."
-        + "\n\n To continue the claim you need to send <a href=\"%s\" target=\"_blank\">the sealed claim form</a>, "
-        + "<a href=\"%s\" target=\"_blank\">a response pack</a> and any supporting documents to "
+        + "\n\n To continue the claim you need to send the <a href=\"%s\" target=\"_blank\">sealed claim form</a>, "
+        + "a <a href=\"%s\" target=\"_blank\">response pack</a> and any supporting documents to "
         + "the defendant within 4 months. "
         + "\n\nOnce you have served the claim, send the Certificate of Service and supporting documents to the County"
         + " Court Claims Centre.";
