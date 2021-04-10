@@ -60,14 +60,19 @@ public class CreateClaimCallbackHandler extends CallbackHandler implements Parti
 
     private static final List<CaseEvent> EVENTS = Collections.singletonList(CREATE_CLAIM);
     public static final String CONFIRMATION_SUMMARY = "<br/>[Download the sealed claim form](%s)"
-        + "\n\n You have until DATE to notify the defendant of the claim and claim details.";
+        + "\n\n Your claim will not be issued until payment is confirmed. Once payment is confirmed you will "
+        + "receive an email. The email will also include the date when you need to notify the defendant of the claim."
+        + "\n\n You must notify the defendant of the claim within four months of the claim being issued. The exact "
+        + "date when you must notify the claim details will be provided when you first notify "
+        + "the defendant of the claim.";
 
-    public static final String LIP_CONFIRMATION_BODY = "<br />To continue your claim by post you need to:"
-        + "%n* [Download the sealed claim form](%s)"
-        + "%n* Send the claim form, <a href=\"%s\" target=\"_blank\">a response pack</a> (PDF, 266 KB) "
-        + "and any supporting documents to the defendant by %s"
-        + "%n%nOnce you have served the claim send the Certificate of Service and any supporting documents to the "
-        + "County Court Claims Centre.";
+    public static final String LIP_CONFIRMATION_BODY = "<br />Your claim will not be issued until payment is confirmed."
+        + " Once payment is confirmed you will receive an email. The claim will then progress offline."
+        + "\n\n To continue the claim you need to send <a href=\"%s\" target=\"_blank\">the sealed claim form</a>, "
+        + "<a href=\"%s\" target=\"_blank\">a response pack</a> and any supporting documents to "
+        + "the defendant within four  months. "
+        + "\n\nOnce you have served the claim, send the Certificate of Service and supporting documents to the County"
+        + " Court Claims Centre.";
 
     public static final String UNREGISTERED_ORG_CONFIRMATION_BODY = "<br />\n\n### What you need to do\n\n"
         + "\n* Serve the claim on the defendant by Date1."
@@ -211,19 +216,21 @@ public class CreateClaimCallbackHandler extends CallbackHandler implements Parti
 
     private SubmittedCallbackResponse buildConfirmation(CallbackParams callbackParams) {
         CaseData caseData = callbackParams.getCaseData();
-        String claimNumber = caseData.getLegacyCaseReference();
-
-        if (caseData.getRespondent1OrgRegistered() == NO) {
-            return SubmittedCallbackResponse.builder()
-                .confirmationHeader(format("# Your claim will now progress offline: %s", claimNumber))
-                .confirmationBody(UNREGISTERED_ORG_CONFIRMATION_BODY)
-                .build();
-        }
 
         return SubmittedCallbackResponse.builder()
-            .confirmationHeader(format("# Your claim has been issued%n## Claim number: %s", claimNumber))
+            .confirmationHeader(getHeader(caseData))
             .confirmationBody(getBody(caseData.getRespondent1Represented(), caseData.getCcdCaseReference()))
             .build();
+    }
+
+    private String getHeader(CaseData caseData) {
+        if (caseData.getRespondent1Represented() == NO || caseData.getRespondent1OrgRegistered() == NO) {
+            return format(
+                "# Your claim has been received and will progress offline%n## Claim number: %s",
+                caseData.getLegacyCaseReference()
+            );
+        }
+        return format("# Your claim has been received%n## Claim number: %s", caseData.getLegacyCaseReference());
     }
 
     private String getBody(YesOrNo respondentRepresented, Long caseReference) {
