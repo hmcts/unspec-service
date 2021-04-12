@@ -140,6 +140,11 @@ public class CaseDataBuilder {
         return this;
     }
 
+    public CaseDataBuilder respondent1AcknowledgeNotificationDate(LocalDateTime dateTime) {
+        this.respondent1AcknowledgeNotificationDate = dateTime;
+        return this;
+    }
+
     public CaseDataBuilder respondentSolicitor1AgreedDeadlineExtension(LocalDate extensionDate) {
         this.respondentSolicitor1AgreedDeadlineExtension = extensionDate;
         return this;
@@ -212,6 +217,11 @@ public class CaseDataBuilder {
 
     public CaseDataBuilder applicant1ProceedWithClaim(YesOrNo yesOrNo) {
         this.applicant1ProceedWithClaim = yesOrNo;
+        return this;
+    }
+
+    public CaseDataBuilder respondent1ClaimResponseIntentionType(ResponseIntention responseIntention) {
+        this.respondent1ClaimResponseIntentionType = respondent1ClaimResponseIntentionType;
         return this;
     }
 
@@ -318,8 +328,10 @@ public class CaseDataBuilder {
                 return atStateRespondentPartAdmission();
             case RESPONDENT_COUNTER_CLAIM:
                 return atStateRespondentCounterClaim();
-            case APPLICANT_RESPOND_TO_DEFENCE:
-                return atStateApplicantRespondToDefence();
+            case FULL_DEFENCE_PROCEED:
+                return atStateApplicantRespondToDefenceAndProceed();
+            case FULL_DEFENCE_NOT_PROCEED:
+                return atStateApplicantRespondToDefenceAndNotProceed();
             case CLAIM_WITHDRAWN:
                 return atStateClaimWithdrawn();
             case CLAIM_DISCONTINUED:
@@ -328,6 +340,8 @@ public class CaseDataBuilder {
                 return atStateProceedsOfflineAdmissionOrCounterClaim();
             case PROCEEDS_OFFLINE_UNREPRESENTED_DEFENDANT:
                 return atStateProceedsOfflineUnrepresentedDefendant();
+            case PENDING_CLAIM_ISSUED_UNREGISTERED_DEFENDANT:
+                return atStateProceedsOfflineUnregisteredDefendant();
             case CASE_PROCEEDS_IN_CASEMAN:
                 return atStateCaseProceedsInCaseman();
             case CLAIM_DISMISSED_DEFENDANT_OUT_OF_TIME:
@@ -375,6 +389,15 @@ public class CaseDataBuilder {
             .phoneNumber("0123456789")
             .address(AddressBuilder.builder().build())
             .build();
+        return this;
+    }
+
+    public CaseDataBuilder atStateProceedsOfflineUnregisteredDefendant() {
+        atStatePaymentSuccessful();
+        ccdState = PROCEEDS_IN_HERITAGE_SYSTEM;
+        issueDate = CLAIM_ISSUED_DATE;
+        respondent1Represented = YES;
+        respondent1OrgRegistered = NO;
         return this;
     }
 
@@ -592,13 +615,20 @@ public class CaseDataBuilder {
         return this;
     }
 
-    public CaseDataBuilder atStateApplicantRespondToDefence() {
+    public CaseDataBuilder atStateApplicantRespondToDefenceAndProceed() {
         atStateRespondentFullDefence();
         applicant1ProceedWithClaim = YES;
         applicant1DefenceResponseDocument = ResponseDocument.builder()
             .file(DocumentBuilder.builder().documentName("claimant-response.pdf").build())
             .build();
         applicant1DQ();
+        applicant1ResponseDate = LocalDateTime.now();
+        return this;
+    }
+
+    public CaseDataBuilder atStateApplicantRespondToDefenceAndNotProceed() {
+        atStateRespondentFullDefence();
+        applicant1ProceedWithClaim = NO;
         applicant1ResponseDate = LocalDateTime.now();
         return this;
     }
