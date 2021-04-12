@@ -392,7 +392,6 @@ const assertSubmittedEvent = async (expectedState, submittedCallbackResponseCont
 
   assert.equal(response.status, 201);
   assert.equal(responseBody.state, expectedState);
-  console.log(responseBody.after_submit_callback_response)
   if (hasSubmittedCallback) {
     assert.equal(responseBody.callback_response_status_code, 200);
     assert.equal(responseBody.after_submit_callback_response.confirmation_header.includes(submittedCallbackResponseContains.header), true);
