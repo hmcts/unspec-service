@@ -103,7 +103,7 @@ public class RespondToDefenceCallbackHandler extends CallbackHandler {
 
         if (proceeding == YES) {
             return format(
-                "<br />We’ll review the case and contact you to tell you what to do next.%n%n"
+                "<br />We'll review the case and contact you to tell you what to do next.%n%n"
                     + "[Download directions questionnaire](%s)",
                 dqLink
             );
