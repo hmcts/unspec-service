@@ -3,9 +3,8 @@ package uk.gov.hmcts.reform.unspec.service.robotics.mapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import uk.gov.hmcts.reform.unspec.model.CaseData;
-import uk.gov.hmcts.reform.unspec.model.dq.FileDirectionsQuestionnaire;
+import uk.gov.hmcts.reform.unspec.model.dq.DQ;
 import uk.gov.hmcts.reform.unspec.model.dq.RequestedCourt;
-import uk.gov.hmcts.reform.unspec.model.dq.Respondent1DQ;
 import uk.gov.hmcts.reform.unspec.model.robotics.Event;
 import uk.gov.hmcts.reform.unspec.model.robotics.EventDetails;
 import uk.gov.hmcts.reform.unspec.model.robotics.EventHistory;
@@ -19,7 +18,8 @@ import java.util.List;
 import static java.lang.String.format;
 import static java.time.format.DateTimeFormatter.ISO_DATE;
 import static java.util.Optional.ofNullable;
-import static uk.gov.hmcts.reform.unspec.enums.YesOrNo.NO;
+import static uk.gov.hmcts.reform.unspec.enums.YesOrNo.YES;
+import static uk.gov.hmcts.reform.unspec.service.robotics.mapper.RoboticsDataMapper.APPLICANT_ID;
 import static uk.gov.hmcts.reform.unspec.service.robotics.mapper.RoboticsDataMapper.RESPONDENT_ID;
 
 @Component
@@ -51,16 +51,77 @@ public class EventHistoryMapper {
             case FULL_DEFENCE_NOT_PROCEED:
                 buildFullDefenceNotProceed(caseData, builder);
                 break;
+            case FULL_DEFENCE_PROCEED:
+                buildFullDefenceProceed(caseData, builder);
+                break;
             default:
                 break;
         }
         return builder.build();
     }
 
+    private void buildFullDefenceProceed(CaseData caseData, EventHistory.EventHistoryBuilder builder) {
+        buildMiscellaneousEvents(builder, caseData, "Applicant proceeds", 8);
+        buildAcknowledgementOfServiceReceived(builder, caseData);
+        buildConsentExtensionFilingDefence(builder, caseData);
+        buildDefenceFiled(builder, caseData);
+        builder.directionsQuestionnaireFiled(
+            List.of(
+                Event.builder()
+                    .eventSequence(5)
+                    .eventCode("197")
+                    .dateReceived(caseData.getRespondent1ResponseDate().format(ISO_DATE))
+                    .litigiousPartyID(RESPONDENT_ID)
+                    .eventDetailsText(prepareEventDetailsText(caseData.getRespondent1DQ()))
+                    .build(),
+                Event.builder()
+                    .eventSequence(7)
+                    .eventCode("197")
+                    .dateReceived(caseData.getApplicant1ResponseDate().format(ISO_DATE))
+                    .litigiousPartyID(APPLICANT_ID)
+                    .eventDetailsText(prepareEventDetailsText(caseData.getApplicant1DQ()))
+                    .build()
+            )
+        ).replyToDefence(List.of(
+            Event.builder()
+                .eventSequence(6)
+                .eventCode("66")
+                .dateReceived(caseData.getApplicant1ResponseDate().format(ISO_DATE))
+                .litigiousPartyID(APPLICANT_ID)
+                .build()
+        ));
+    }
+
+    private String prepareEventDetailsText(DQ dq) {
+        return format(
+            "preferredCourtCode: %s; stayClaim: %s",
+            ofNullable(dq.getRequestedCourt())
+                .map(RequestedCourt::getResponseCourtCode)
+                .orElse(null),
+            dq.getFileDirectionQuestionnaire()
+                .getOneMonthStayRequested() == YES
+        );
+    }
+
     private void buildFullDefenceNotProceed(CaseData caseData, EventHistory.EventHistoryBuilder builder) {
         buildMiscellaneousEvents(builder, caseData, "Claimant intends not to proceed", 6);
         buildAcknowledgementOfServiceReceived(builder, caseData);
         buildConsentExtensionFilingDefence(builder, caseData);
+        buildDefenceFiled(builder, caseData);
+        builder.directionsQuestionnaireFiled(
+            List.of(
+                Event.builder()
+                    .eventSequence(5)
+                    .eventCode("197")
+                    .dateReceived(caseData.getRespondent1ResponseDate().format(ISO_DATE))
+                    .litigiousPartyID(RESPONDENT_ID)
+                    .eventDetailsText(prepareEventDetailsText(caseData.getRespondent1DQ()))
+                    .build()
+            )
+        );
+    }
+
+    private void buildDefenceFiled(EventHistory.EventHistoryBuilder builder, CaseData caseData) {
         builder.defenceFiled(
             List.of(
                 Event.builder()
@@ -68,26 +129,6 @@ public class EventHistoryMapper {
                     .eventCode("50")
                     .dateReceived(caseData.getRespondent1ResponseDate().format(ISO_DATE))
                     .litigiousPartyID(RESPONDENT_ID)
-                    .build()
-            )
-        ).directionsQuestionnaireFiled(
-            List.of(
-                Event.builder()
-                    .eventSequence(5)
-                    .eventCode("197")
-                    .dateReceived(caseData.getRespondent1ResponseDate().format(ISO_DATE))
-                    .litigiousPartyID(RESPONDENT_ID)
-                    .eventDetailsText(format(
-                        "preferredCourtCode: %s; stayClaim: %s",
-                        ofNullable(caseData.getRespondent1DQ())
-                            .map(Respondent1DQ::getRespondent1DQRequestedCourt)
-                            .map(RequestedCourt::getResponseCourtCode)
-                            .orElse("None"),
-                        ofNullable(caseData.getRespondent1DQ())
-                            .map(Respondent1DQ::getRespondent1DQFileDirectionsQuestionnaire)
-                            .map(FileDirectionsQuestionnaire::getOneMonthStayRequested)
-                            .orElse(NO)
-                    ))
                     .build()
             )
         );
@@ -134,9 +175,10 @@ public class EventHistoryMapper {
                         .eventCode("38")
                         .dateReceived(dateAcknowledge.format(ISO_DATE))
                         .litigiousPartyID("002")
-                        .eventDetails(EventDetails.builder()
-                                          .responseIntention("contest jurisdiction")
-                                          .build())
+                        .eventDetailsText(format(
+                            "responseIntention: %s",
+                            caseData.getRespondent1ClaimResponseIntentionType().getLabel()
+                        ))
                         .build()
                 ));
     }
@@ -205,11 +247,9 @@ public class EventHistoryMapper {
                     .eventCode("45")
                     .dateReceived(dateReceived.format(ISO_DATE))
                     .litigiousPartyID("002")
-                    .eventDetails(EventDetails.builder()
-                                      .agreedExtensionDate(caseData
-                                                               .getRespondentSolicitor1AgreedDeadlineExtension()
-                                                               .format(ISO_DATE))
-                                      .build())
+                    .eventDetailsText(format("agreedExtensionDate: %s", caseData
+                        .getRespondentSolicitor1AgreedDeadlineExtension()
+                        .format(ISO_DATE)))
                     .build()
             )
         );
