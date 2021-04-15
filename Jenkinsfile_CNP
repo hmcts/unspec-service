@@ -145,8 +145,6 @@ withPipeline(type, product, component) {
     env.URL = "https://manage-case.aat.platform.hmcts.net"
     env.UNSPEC_SERVICE_URL="http://unspec-service-staging.service.core-compute-aat.internal"
     archiveCoreCaseDataDefinitions('staging')
-    uploadCoreCaseDataDefinitions('staging')
-    uploadBpmnDiagrams('aat')
   }
 
   after('smoketest:aat') {
@@ -164,8 +162,6 @@ withPipeline(type, product, component) {
     env.URL = "https://manage-case.aat.platform.hmcts.net"
     steps.archiveArtifacts allowEmptyArchive: true, artifacts: 'output/**/*'
     archiveCoreCaseDataDefinitions('aat')
-    uploadCoreCaseDataDefinitions('aat')
-    publishRpaContract()
   }
 
   before('buildinfra:demo') {
@@ -173,8 +169,6 @@ withPipeline(type, product, component) {
     withSubscription(subscription) {
       withTeamSecrets(pipelineConf, 'demo') {
         archiveCoreCaseDataDefinitions('demo')
-        uploadCoreCaseDataDefinitions('demo')
-        uploadBpmnDiagrams('demo')
         dir("${WORKSPACE}/bin") {
           sh """
             ./wait-for.sh https://manage-case.demo.platform.hmcts.net
