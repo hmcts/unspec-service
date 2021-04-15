@@ -1,3 +1,8 @@
+# This repo is now deprecated the following ones are used instead
+- [civil-damages-service](https://github.com/hmcts/civil-damages-service)
+- [civil-damages-ccd-definition](https://github.com/hmcts/civil-damages-ccd-definition)
+- [civil-damages-camunda-bpmn-definition](https://github.com/hmcts/civil-damages-camunda-bpmn-definition)
+
 # civil-damages-claims
 
 [![Build Status](https://travis-ci.org/hmcts/unspec-service.svg?branch=master)](https://travis-ci.org/hmcts/unspec-service)
